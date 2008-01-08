@@ -1,0 +1,334 @@
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c module_internal_header_util.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+"module_internal_header_util.f", line 1074.9: 1515-009 (E) Null literal string is not permitted.  A single blank is assumed.
+** module_internal_header_util   === End of Compilation 1 ===
+1501-510  Compilation successful for file module_internal_header_util.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c getVariable.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** getvariable   === End of Compilation 1 ===
+1501-510  Compilation successful for file getVariable.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c getIVariable.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** getivariable   === End of Compilation 1 ===
+1501-510  Compilation successful for file getIVariable.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c getVariableB.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** getvariableb   === End of Compilation 1 ===
+1501-510  Compilation successful for file getVariableB.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c getIVariableN.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** getivariablen   === End of Compilation 1 ===
+1501-510  Compilation successful for file getIVariableN.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c getVariableRSM.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** getvariablersm   === End of Compilation 1 ===
+1501-510  Compilation successful for file getVariableRSM.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c kinds_mod.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** kinds   === End of Compilation 1 ===
+1501-510  Compilation successful for file kinds_mod.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c count_recs_wrf_binary_file.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** count_recs_wrf_binary_file   === End of Compilation 1 ===
+1501-510  Compilation successful for file count_recs_wrf_binary_file.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c inventory_wrf_binary_file.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** inventory_wrf_binary_file   === End of Compilation 1 ===
+** wrf_sizeof_integer   === End of Compilation 2 ===
+** wrf_sizeof_real   === End of Compilation 3 ===
+1501-510  Compilation successful for file inventory_wrf_binary_file.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c next_buf.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** next_buf   === End of Compilation 1 ===
+1501-510  Compilation successful for file next_buf.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000  -qfree   -g  -I/usrx/local/netcdf.3.5.0/include   -c retrieve_index.f
+COMMAND LINE  1520-022 (W) The FREE option has been replaced by the option FREE(F90).
+** retrieve_index   === End of Compilation 1 ===
+1501-510  Compilation successful for file retrieve_index.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MASKS_mod.f
+** masks   === End of Compilation 1 ===
+1501-510  Compilation successful for file MASKS_mod.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SOIL_mod.f
+** soil   === End of Compilation 1 ===
+1501-510  Compilation successful for file SOIL_mod.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c VRBLS2D_mod.f
+** vrbls2d   === End of Compilation 1 ===
+1501-510  Compilation successful for file VRBLS2D_mod.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c VRBLS3D_mod.f
+** vrbls3d   === End of Compilation 1 ===
+1501-510  Compilation successful for file VRBLS3D_mod.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c BNDLYR.f
+** bndlyr   === End of Compilation 1 ===
+1501-510  Compilation successful for file BNDLYR.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c BOUND.f
+** bound   === End of Compilation 1 ===
+1501-510  Compilation successful for file BOUND.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALCAPE.f
+** calcape   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALCAPE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALDWP.f
+** caldwp   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALDWP.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALDRG.f
+** caldrg   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALDRG.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALHEL.f
+** calhel   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALHEL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALLCL.f
+** callcl   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALLCL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALMCVG.f
+** calmcvg   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALMCVG.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALMXW.f
+** calmxw   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALMXW.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALPOT.f
+** calpot   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALPOT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALPW.f
+** calpw   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALPW.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALRH.f
+** calrh   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALRH.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALRCH.f
+** calrch   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALRCH.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALSTRM.f
+** calstrm   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALSTRM.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALTAU.f
+** caltau   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALTAU.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALTHTE.f
+** calthte   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALTHTE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALVIS.f
+** calvis   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALVIS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALVIS.f
+** calvis   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALVIS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALVOR.f
+** calvor   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALVOR.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALWXT.f
+** calwxt   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALWXT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALWXT_RAMER.f
+** calwxt_ramer   === End of Compilation 1 ===
+** esat   === End of Compilation 2 ===
+** tdofesat   === End of Compilation 3 ===
+** xmytw   === End of Compilation 4 ===
+1501-510  Compilation successful for file CALWXT_RAMER.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALWXT_BOURG.f
+** calwxt_bourg   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALWXT_BOURG.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALWXT_REVISED.f
+** calwxt_revised   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALWXT_REVISED.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALWXT_EXPLICIT.f
+** calwxt_explicit   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALWXT_EXPLICIT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALWXT_DOMINANT.f
+** calwxt_dominant   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALWXT_DOMINANT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CLDRAD.f
+** cldrad   === End of Compilation 1 ===
+1501-510  Compilation successful for file CLDRAD.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CLMAX.f
+** clmax   === End of Compilation 1 ===
+1501-510  Compilation successful for file CLMAX.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c COLLECT.f
+** collect   === End of Compilation 1 ===
+1501-510  Compilation successful for file COLLECT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c COLLECT_LOC.f
+** collect_loc   === End of Compilation 1 ===
+1501-510  Compilation successful for file COLLECT_LOC.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c DEWPOINT.f
+** dewpoint   === End of Compilation 1 ===
+1501-510  Compilation successful for file DEWPOINT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c FDLVL.f
+** fdlvl   === End of Compilation 1 ===
+1501-510  Compilation successful for file FDLVL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c FIXED.f
+** fixed   === End of Compilation 1 ===
+1501-510  Compilation successful for file FIXED.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c FRZLVL.f
+** frzlvl   === End of Compilation 1 ===
+1501-510  Compilation successful for file FRZLVL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c FRZLVL2.f
+** frzlvl2   === End of Compilation 1 ===
+1501-510  Compilation successful for file FRZLVL2.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c GET_BITS.f
+** get_bits   === End of Compilation 1 ===
+** fndbit   === End of Compilation 2 ===
+1501-510  Compilation successful for file GET_BITS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c GRIBIT.f
+** gribit   === End of Compilation 1 ===
+1501-510  Compilation successful for file GRIBIT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c INITPOST.f
+** initpost   === End of Compilation 1 ===
+1501-510  Compilation successful for file INITPOST.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c LFMFLD.f
+** lfmfld   === End of Compilation 1 ===
+1501-510  Compilation successful for file LFMFLD.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c INITPOST_BIN.f
+** initpost_bin   === End of Compilation 1 ===
+1501-510  Compilation successful for file INITPOST_BIN.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MISCLN.f
+** miscln   === End of Compilation 1 ===
+1501-510  Compilation successful for file MISCLN.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MIXLEN.f
+** mixlen   === End of Compilation 1 ===
+1501-510  Compilation successful for file MIXLEN.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MDL2P.f
+** mdl2p   === End of Compilation 1 ===
+1501-510  Compilation successful for file MDL2P.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MDLFLD.f
+** mdlfld   === End of Compilation 1 ===
+1501-510  Compilation successful for file MDLFLD.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MPI_FIRST.f
+** mpi_first   === End of Compilation 1 ===
+1501-510  Compilation successful for file MPI_FIRST.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MPI_LAST.f
+** mpi_last   === End of Compilation 1 ===
+1501-510  Compilation successful for file MPI_LAST.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c NGMFLD.f
+** ngmfld   === End of Compilation 1 ===
+1501-510  Compilation successful for file NGMFLD.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c NGMSLP.f
+** ngmslp   === End of Compilation 1 ===
+1501-510  Compilation successful for file NGMSLP.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c OTLFT.f
+** otlft   === End of Compilation 1 ===
+1501-510  Compilation successful for file OTLFT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c OTLIFT.f
+** otlift   === End of Compilation 1 ===
+1501-510  Compilation successful for file OTLIFT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SLP_new.f
+** memslp   === End of Compilation 1 ===
+1501-510  Compilation successful for file SLP_new.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SLP_NMM.f
+** memslp_nmm   === End of Compilation 1 ===
+1501-510  Compilation successful for file SLP_NMM.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c EXCH.f
+** exch   === End of Compilation 1 ===
+** exch_f   === End of Compilation 2 ===
+1501-510  Compilation successful for file EXCH.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c PARA_RANGE.f
+** para_range   === End of Compilation 1 ===
+1501-510  Compilation successful for file PARA_RANGE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c POSTDATA.f
+** postdata   === End of Compilation 1 ===
+1501-510  Compilation successful for file POSTDATA.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c PROCESS.f
+** process   === End of Compilation 1 ===
+1501-510  Compilation successful for file PROCESS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c INITPOST_NMM.f
+** initpost_nmm   === End of Compilation 1 ===
+1501-510  Compilation successful for file INITPOST_NMM.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c EXCH2.f
+** exch2   === End of Compilation 1 ===
+1501-510  Compilation successful for file EXCH2.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c READCNTRL.f
+** readcntrl   === End of Compilation 1 ===
+1501-510  Compilation successful for file READCNTRL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SCLFLD.f
+** sclfld   === End of Compilation 1 ===
+1501-510  Compilation successful for file SCLFLD.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SERVER.f
+** server   === End of Compilation 1 ===
+1501-510  Compilation successful for file SERVER.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SETUP_SERVERS.f
+** setup_servers   === End of Compilation 1 ===
+1501-510  Compilation successful for file SETUP_SERVERS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SURFCE.f
+** surfce   === End of Compilation 1 ===
+1501-510  Compilation successful for file SURFCE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SPLINE.f
+** spline   === End of Compilation 1 ===
+1501-510  Compilation successful for file SPLINE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c TABLE.f
+** table   === End of Compilation 1 ===
+1501-510  Compilation successful for file TABLE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c TABLEQ.f
+** tableq   === End of Compilation 1 ===
+1501-510  Compilation successful for file TABLEQ.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c TRPAUS.f
+** trpaus   === End of Compilation 1 ===
+1501-510  Compilation successful for file TRPAUS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c TTBLEX.f
+** ttblex   === End of Compilation 1 ===
+1501-510  Compilation successful for file TTBLEX.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c WETBULB.f
+** wetbulb   === End of Compilation 1 ===
+1501-510  Compilation successful for file WETBULB.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c WRFPOST.f
+** wrfpost   === End of Compilation 1 ===
+1501-510  Compilation successful for file WRFPOST.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c INITPOST_NMM_BIN.f
+** initpost_nmm_bin   === End of Compilation 1 ===
+1501-510  Compilation successful for file INITPOST_NMM_BIN.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALMICT.f
+** calmict   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALMICT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MICROINIT.f
+** microinit   === End of Compilation 1 ===
+1501-510  Compilation successful for file MICROINIT.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c GPVS.f
+** gpvs   === End of Compilation 1 ===
+** fpvs   === End of Compilation 2 ===
+** fpvs0   === End of Compilation 3 ===
+** fpvsx   === End of Compilation 4 ===
+** fpvsx0   === End of Compilation 5 ===
+1501-510  Compilation successful for file GPVS.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MDL2SIGMA.f
+** mdl2sigma   === End of Compilation 1 ===
+1501-510  Compilation successful for file MDL2SIGMA.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c ETCALC.f
+** etcalc   === End of Compilation 1 ===
+1501-510  Compilation successful for file ETCALC.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CANRES.f
+** canres   === End of Compilation 1 ===
+1501-510  Compilation successful for file CANRES.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALGUST.f
+** calgust   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALGUST.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c WETFRZLVL.f
+** wetfrzlvl   === End of Compilation 1 ===
+1501-510  Compilation successful for file WETFRZLVL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c SNFRAC.f
+** snfrac   === End of Compilation 1 ===
+1501-510  Compilation successful for file SNFRAC.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MDL2AGL.f
+** mdl2agl   === End of Compilation 1 ===
+1501-510  Compilation successful for file MDL2AGL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c INITPOST_RSM.f
+** initpost_rsm   === End of Compilation 1 ===
+1501-510  Compilation successful for file INITPOST_RSM.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c AVIATION.f
+** calllws   === End of Compilation 1 ===
+** calicing   === End of Compilation 2 ===
+** calcat   === End of Compilation 3 ===
+** calceiling   === End of Compilation 4 ===
+** calfltcnd   === End of Compilation 5 ===
+1501-510  Compilation successful for file AVIATION.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c DEALLOCATE.f
+** de_allocate   === End of Compilation 1 ===
+1501-510  Compilation successful for file DEALLOCATE.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c INITPOST_NMM_BIN_MPIIO_IJK.f
+** initpost_nmm_bin_mpiio   === End of Compilation 1 ===
+1501-510  Compilation successful for file INITPOST_NMM_BIN_MPIIO_IJK.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c CALPBL.f
+** calpbl   === End of Compilation 1 ===
+1501-510  Compilation successful for file CALPBL.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c MDL2SIGMA2.f
+** mdl2sigma2   === End of Compilation 1 ===
+1501-510  Compilation successful for file MDL2SIGMA2.f.
+	mpxlf_r -O -g   -qnosave -qarch=auto -qmaxmem=-1 -NS2000    -g  -I/usrx/local/netcdf.3.5.0/include   -c fake_rsl_error.f
+** rsl_error_dup1   === End of Compilation 1 ===
+1501-510  Compilation successful for file fake_rsl_error.f.
+	mpxlf_r     -o hiresw_post module_internal_header_util.o getVariable.o getIVariable.o  getVariableB.o getIVariableN.o getVariableRSM.o  kinds_mod.o  count_recs_wrf_binary_file.o inventory_wrf_binary_file.o  next_buf.o retrieve_index.o  MASKS_mod.o SOIL_mod.o VRBLS2D_mod.o VRBLS3D_mod.o  BNDLYR.o  BOUND.o  CALCAPE.o  CALDWP.o  CALDRG.o CALHEL.o  CALLCL.o   CALMCVG.o  CALMXW.o  CALPOT.o  CALPW.o CALRH.o  CALRCH.o   CALSTRM.o CALTAU.o CALTHTE.o CALVIS.o CALVOR.o CALWXT.o  CALWXT_RAMER.o CALWXT_BOURG.o CALWXT_REVISED.o  CALWXT_EXPLICIT.o CALWXT_DOMINANT.o  CLDRAD.o  CLMAX.o COLLECT.o  COLLECT_LOC.o  DEWPOINT.o  FDLVL.o  FIXED.o  FRZLVL.o  FRZLVL2.o  GET_BITS.o  GRIBIT.o INITPOST.o LFMFLD.o  INITPOST_BIN.o  MISCLN.o MIXLEN.o MDL2P.o MDLFLD.o MPI_FIRST.o  MPI_LAST.o  NGMFLD.o NGMSLP.o  OTLFT.o OTLIFT.o SLP_new.o SLP_NMM.o EXCH.o  PARA_RANGE.o  POSTDATA.o  PROCESS.o INITPOST_NMM.o EXCH2.o  READCNTRL.o  SCLFLD.o  SERVER.o  SETUP_SERVERS.o SURFCE.o  SPLINE.o  TABLE.o  TABLEQ.o  TRPAUS.o  TTBLEX.o WETBULB.o WRFPOST.o  INITPOST_NMM_BIN.o CALMICT.o CALVIS.o MICROINIT.o GPVS.o MDL2SIGMA.o  ETCALC.o CANRES.o CALGUST.o WETFRZLVL.o SNFRAC.o MDL2AGL.o  INITPOST_RSM.o AVIATION.o DEALLOCATE.o INITPOST_NMM_BIN_MPIIO_IJK.o  CALPBL.o MDL2SIGMA2.o fake_rsl_error.o -lessl -lmass  -L/usrx/local/netcdf.3.5.0/lib -lnetcdf /meso/save/wx20py/JIF_CODES/WRFV2_ijk/main/libwrflib.a  /meso/save/wx20py/JIF_CODES/WRFV2_ijk/external/io_int/libwrfio_int.a  /meso/save/wx20py/JIF_CODES/WRFV2_ijk/external/io_netcdf/libwrfio_nf.a  /meso/save/wx20py/JIF_CODES/WRFV2_ijk/frame/pack_utils.o  /meso/save/wx20py/JIF_CODES/WRFV2_ijk/external/esmf_time_f90/libesmf_time.a  /meso/save/wx20py/JIF_CODES/WRFV2_ijk/external/RSL_LITE/task_for_point.o fake_rsl_error.o  -L/nwprod/lib -lw3_4 -lbacio_4 

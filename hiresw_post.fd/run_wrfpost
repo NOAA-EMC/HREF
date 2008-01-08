@@ -1,0 +1,71 @@
+#!/bin/ksh
+#
+#@ output = out.post
+#@ error = err.post
+#@ job_type = parallel
+#@ class = dev
+##@ class = 1
+#
+#
+#@ total_tasks = 4
+#@ node = 1
+#@ wall_clock_limit = 00:20:50
+##@ preferences = Feature == "bigmem"
+#@ preferences = Feature == "dev"
+#@ network.MPI = css0,shared,us
+#@ queue
+#
+#
+set -x
+
+export PATH=$PATH:/usrx/local/totalview/bin
+export DISPLAY=140.90.173.56:0.0
+export MP_SHARED_MEMORY=yes
+
+export MP_LABELIO=yes
+export MP_STDOUTMODE=0
+
+#mkdir -p /gpfstmp/wx20mb
+#cd /gpfstmp/wx20mb
+mkdir -p /gpfstmp/wx20hc/WRF
+cd /gpfstmp/wx20hc/WRF
+
+# Initial setup.
+# Each post job gets a unique .assign file (.asgn01, .asgn02, etc.)     .
+# This was done so that multiple post jobs could run at the same
+# time in the same directory.  This could happen if the model
+# submits external post jobs.
+#
+
+export tmmark=tm00
+#
+
+pwd
+ls -x
+#
+#
+
+cp /emcsrc/wx20hc/WRF/wrfpost/wrf_cntrl.all ./wrf_cntrl.parm
+cat > itag <<EOF
+/ptmp/wx20hc/WRF/wrfout_01_030500
+2002-03-05_00:00:00
+2002-03-06_00:00:00
+EOF
+
+#
+#-----------------------------------------------------------------------
+#   Run etapost.
+
+ln -sf wrf_cntrl.parm fort.14
+
+#poe /emcsrc/wx20mb/wrfpost/wrfpost.x < itag > outpost
+poe /emcsrc/wx20hc/WRF/wrfpost/wrfpost.x < itag > outpost
+
+#
+#------------------------------------------------------------------------
+#----------------------------------------------------------------------
+#   End of output job
+#
+date
+echo "End of Output Job"
+exit
