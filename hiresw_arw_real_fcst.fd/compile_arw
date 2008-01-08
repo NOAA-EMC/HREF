@@ -1,0 +1,17 @@
+#! /bin/ksh
+
+export WRF_NMM_CORE=0
+export WRF_EM_CORE=1
+
+TARGDIR=/meso/save/wx20py/JIF_CODES/exec
+
+
+# clean -a
+# ./configure 
+# 3
+
+./compile em_real > compile_arw.log 2>&1
+
+cp ./main/real.exe $TARGDIR/hiresw_arw_real
+cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
+
