@@ -1,0 +1,58 @@
+#! /bin/ksh
+# @ step_name = wrfsi
+# @ output = /emc2/wx20py/test.out
+# @ error = /emc2/wx20py/test.out
+# @ notification = never
+# @ group=devonprod
+# @ arguments = 2004051012_emwrf_allncep.grd
+# @ wall_clock_limit = 00:25:00
+# @ job_type = serial
+# @ class = dev
+# @ queue
+
+. ~/.profile
+
+outfile=$1
+
+hrs="00 06 12 18 24 30 36 42 48"
+
+indir=/emc2/wx20py/FRESHWRF/cent10/output/2004051012_allncep
+
+workdir=/ptmp/wx20py/
+
+cd $workdir
+
+rm $outfile
+
+for hr in $hrs
+
+do
+
+rm WRFPRS${hr}.tm00
+
+cat $indir/wrf.EMCEN${hr}.tm00 $indir/WRFPCP${hr}.tm00 > WRFPRS${hr}.tm00
+
+nagrib << endgrib2
+ GBFILE   = WRFPRS${hr}.tm00
+ INDXFL   =
+ GDOUTF   = $outfile
+ PROJ     =
+ GRDAREA  =
+ KXKY     =
+ MAXGRD   = 4999
+ CPYFIL   = GDS
+ GAREA    = dset
+ OUTPUT   = T
+ GBTBLS   =
+ GBDIAG   =
+ PDSEXT   = NO
+
+r
+
+ex
+
+endgrib2
+
+done
+
+gpend

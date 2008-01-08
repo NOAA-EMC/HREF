@@ -1,0 +1,5 @@
+rm -f module_initialize_real.o
+sed -f ../arch/standard.sed module_initialize_real.F > module_initialize_real.b
+/lib/cpp -I../inc -I. -C -P -DEM_CORE=0  -DNMM_CORE=1 -DNMM_MAX_DIM=2600  -DCOAMPS_CORE=0  -DEXP_CORE=0 -DRSL_LITE -DDM_PARALLEL -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4  -DLWORDSIZE=4 -DNETCDF   -DTRIEDNTRUE -DGRIB1  -DINTIO  -DLIMIT_ARGS -DNO_NAMELIST_PRINT -DNATIVE_MASSV -DNMM_NEST=0 -I../external/RSL_LITE `cat ../inc/dm_comm_cpp_flags` -DEM_CORE=0  -DNMM_CORE=1 -DNMM_MAX_DIM=2600  -DCOAMPS_CORE=0  -DEXP_CORE=0  -DNONSTANDARD_SYSTEM -DCONFIG_BUF_LEN=16384 -DMAX_DOMAINS_F=21 module_initialize_real.b  > module_initialize_real.f90
+rm -f module_initialize_real.b
+mpxlf90_r -c -qrealsize=4 -qintsize=4 -w -qspill=20000  -qmaxmem=32767  -C -I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc -qsuffix=f=f90 -qnoopt module_initialize_real.f90

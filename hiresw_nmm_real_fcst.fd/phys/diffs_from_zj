@@ -1,0 +1,458 @@
+5c5,6
+<       USE MODULE_MODEL_CONSTANTS
+---
+>       USE MODULE_MPP
+>       USE module_model_constants
+7,8d7
+<       LOGICAL :: UNIS=.TRUE.,UNIL=.FALSE.
+< !
+10c9
+<      &                  C0=2.E-3,DSPC=-3000.                            &
+---
+>      &                  DSPC=-3000.                                     &
+13,16c12,15
+<      &                 ,EPSDN=1.05,EPSDT=0.,EPSNTP=0.005                &
+<      &                 ,EPSP=1.E-7,EPSPR=5.E-8,EPSUP=0.95               &
+<      &                 ,FCC=0.90,FR=1.0,FSL=0.85,FSS=0.85               &
+<      &                 ,FUP=0.07/3000.                                  &
+---
+> !mptest     &                 ,EPSDN=1.05,EPSDT=0.,EPSNTP=800.0                
+>      &                 ,EPSDN=1.05,EPSDT=0.,EPSNTP=100.0,epspr=5.e-5    &
+>      &                 ,EPSUP=0.95                                      &
+>      &                 ,FR=1.0,FSL=0.85,FSS=0.85               &
+20,22c19,21
+<      &                 ,RHLSC=0.60,RHHSC=0.99                           &
+<      &                 ,RHF=0.10,ROW=1.E3                               &
+<      &                 ,STABDF=0.80,STABDS=1.05                         &
+---
+>      &                 ,rhlsc=0.60,rhhsc=1.                             &
+>      &                 ,ROW=1.E3                                        &
+>      &                 ,stabdf=0.80,STABDS=1.05                         &
+24c23
+<      &                 ,T1=274.16,TREL=2400.
+---
+>      &                 ,TREL=2400.
+60a60
+> !make consistent     &                 ,RAINCV,LTOP,LBOT,LPBL           &
+62c62,65
+<      &                 ,TH,T,QV,PINT,PMID,PI,RHO,DZ8W,W,SFCZ            &
+---
+>      &                 ,TH,T,                                           &
+>      &                 QV,                                              &
+>      &                 PINT,PMID,PI,RHO,DZ8W                            &
+> !make consistent   &                 ,CP,R,eliv,ELWV,G,TFRZ,D608        &
+81c84
+<       REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: SFCZ,XLAND
+---
+>       REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: XLAND
+86c89
+<      &                                                     ,RHO,T,TH,W
+---
+>      &                                                     ,RHO,T,TH
+106d108
+<       REAL,DIMENSION(KTS:KTE+1) :: WCOL,ZCOL
+147,148d148
+<           ZCOL(KTE+1)=SFCZ(I,J) ! ZCOL goes from top downward
+<           WCOL(KTE+1)=0.
+156c156
+< !***  COUNTS DOWNWARD FROM THE DOMAIN'S TOP.
+---
+> !***  COUNTS DOWNWARD FROM THE DOMAIN'S TOP
+158c158
+<           DO K=KTE,KTS,-1
+---
+>           DO K=KTS,KTE
+168,169d167
+<             ZCOL(K)=ZCOL(K+1)+DZ8W(I,KFLIP,J)
+<             WCOL(K)=W(I,KFLIP+1,J)
+182c180
+<      &            ,DPCOL,PCOL,QCOL,TCOL,WCOL,ZCOL,PSFC,PTOP             &
+---
+>      &            ,DPCOL,PCOL,QCOL,TCOL,PSFC,PTOP                       &
+184,185c182,183
+<      &            ,CP,R,ELWV,ELIV,G,TFRZ,D608                           &        
+<      &            ,IDS,IDE,JDS,JDE,KDS,KDE                              &        
+---
+>      &            ,CP,R,ELWV,ELIV,G,TFRZ,D608                           &   
+>      &            ,IDS,IDE,JDS,JDE,KDS,KDE                              &     
+222c220
+<      & ,DPRS,PRSMID,Q,T,W,Z,PSFC,PT                                     &
+---
+>      & ,DPRS,PRSMID,Q,T,PSFC,PT                                         &
+234c232
+<                            ,I,J,ITIMESTEP
+---
+>                            ,I,J,itimestep
+240c238
+<       REAL,INTENT(IN) :: CP,D608,DTCNVC,ELIV,ELWV,G,PSFC,PT,R,SM,TFRZ
+---
+>       REAL,INTENT(IN) :: CP,D608,DTCNVC,eliv,ELWV,G,PSFC,PT,R,SM,TFRZ
+244,245d241
+<       REAL,DIMENSION(KTS:KTE+1),INTENT(IN) :: W,Z
+< !
+254c250
+<       REAL,DIMENSION(KTS:KTE) :: APEK,APESK,EL,FPK                      &
+---
+>       REAL,DIMENSION(KTS:KTE) :: APEK,APESK,el,FPK                         &
+256c252
+<                                 ,THERK,THES,THEVRF,THSK                 &
+---
+>                                 ,THERK,THEVRF,THSK                      &
+259c255
+<       REAL,DIMENSION(KTS:KTE) :: APE,DIFQ,DIFT,TREF
+---
+>       REAL,DIMENSION(KTS:KTE) :: APE,DIFQ,DIFT,thes,TREF
+267,285c263,280
+<      &       ,AVRGT,AVRGTL,BQ,BQK,BQS00K,BQS10K                         &
+<      &       ,CAPA,CPSP,CUP,DEN,DENTPY,DEPMIN,DEPTH                     &
+<      &       ,DEPWL,DHDT,DIFQL,DIFTL,DPKL,DPLO,DPMIX,DPOT               &
+<      &       ,DPUP,DQREF,DRHDP,DRHEAT,DSP                               &
+<      &       ,DSP0,DSP0K,DSPB,DSPBK,DSPT,DSPTK                          &
+<      &       ,DSQ,DST,DSTQ,DTHEM,DTDP,DTRF,DW,EFI                       &
+<      &       ,FEFI,FFUP,FPTK,HCORR,OTSUM,P,P00K,P01K,P10K,P11K          &
+<      &       ,PART1,PART2,PART3,PBOT,PBOTFC,PBTK                        &
+<      &       ,PFLO,PFUP,PK0,PKB,PKL,PKT,PKXXXX,PKXXXY                   &
+<      &       ,PLMH,PLO,POTSUM,PP1,PPK,PRECK                             &
+<      &       ,PRESK,PSP,PSUM,PTHRS,PTOP,PTPK,PUP                        &
+<      &       ,QBT,QKL,QNEW,QOTSUM,QQ1,QQK,QRFKL,QRFTP,QSUM              &
+<      &       ,RDP0T,RDPF,RDPSUM,RDPUP,RDTCNVC                           &
+<      &       ,RHH,RHL,RHMAX,ROTSUM,RTBAR                                &
+<      &       ,SM1,SMIX,SQ,SQK,SQS00K,SQS10K,STABDL,SUMDE,SUMDP          &
+<      &       ,SUMDT,TAUK,TAUKSC,TCORR,THBT,THERKX,THERKY                &
+<      &       ,THESP,THSKL,THTPK,THVMKL,TKL,TNEW                         &
+<      &       ,TPSP,TQ,TQK,TREFKX,TRFKL,TRFPSP,TSKL                      &
+<      &       ,TTH,TTHBT,TTHES,TTHK,WPSP,ZPSP
+---
+>      &            ,AVRGT,AVRGTL,BQ,BQK,BQS00K,BQS10K                    &
+>      &            ,CAPA,CUP,DEN,DENTPY,DEPMIN,DEPTH                     &
+>      &            ,DEPWL,DHDT,DIFQL,DIFTL,DPKL,DPMIX,DPOT               &
+>      &            ,DQREF,DRHDP,DRHEAT,DSP                               &
+>      &            ,DSP0,DSP0K,DSPB,DSPBK,DSPT,DSPTK                     &
+>      &            ,DSQ,DST,DSTQ,DTHEM,DTDP,EFI                          &
+>      &            ,FEFI,FPTK,HCORR,OTSUM,P,P00K,P01K,P10K,P11K          &
+>      &            ,PART1,PART2,PART3,PBOT,PBOTFC,PBTK                   &
+>      &            ,PK0,PKB,PKL,PKT,PKXXXX,PKXXXY                        &
+>      &            ,PLMH,POTSUM,PP1,PPK,PRECK                            &
+>      &            ,PRESK,PSP,PSUM,PTHRS,PTOP,PTPK                       &
+>      &            ,QBT,QKL,QNEW,QOTSUM,QQ1,QQK,QRFKL,QRFTP,QSUM,RDP0T   &
+>      &            ,RDPSUM,RDTCNVC,RHH,RHL,RHMAX,ROTSUM,RTBAR            &
+>      &            ,SM1,SMIX,SQ,SQK,SQS00K,SQS10K,STABDL,SUMDE,SUMDP     &
+>      &            ,SUMDT,TAUK,TAUKSC,TCORR,THBT,THERKX,THERKY           &
+>      &            ,THESP,THSKL,THTPK,THVMKL,TKL,TNEW                    &
+>      &            ,TPSP,TQ,TQK,TREFKX,TRFKL,TSKL,TTH,TTHBT,TTHES,TTHK   &
+>      &            ,dpup,dplo,rdpup,ffup,pflo,pfup
+287,288c282
+<       INTEGER :: IQ,IQTB,IT,ITER,ITREFI,ITTB,ITTBK                      &
+<      &          ,KB,KBMAX,KNUMH,KNUML                                   &
+---
+>       INTEGER :: IQ,IQTB,IT,ITER,ITREFI,ITTB,ITTBK,KB,KNUMH,KNUML       &
+290c284
+<      &          ,LQM,LSHU,LTP1,LTP2,LTSH
+---
+>      &          ,LQM,LSHU,LTP1,LTP2,LTSH,kbmax
+298c292
+<       REAL,PARAMETER :: ELEVFC=0.8,STEFI=1.
+---
+>       REAL,PARAMETER :: ELEVFC=0.8,fup=0.070/3000.,STEFI=1.
+309,310c303,304
+<       REAL :: A23M4L,CPRLG,ELOCP,FCB,RCP
+< !-----------------------------------------------------------------------
+---
+>       REAL :: A23M4L,CPRLG,ELOCP,RCP
+> !-----00----------------------------------------------------------------
+318d311
+<       FCB=1.-FCC
+337c330
+<       TREF(KTS)=T(KTS)
+---
+>       TREF(1)=T(1)
+339c332,334
+<       DO L=KTS,LMH
+---
+>       kbmax=lmh
+> !
+>       DO L=1,LMH
+356c351
+< !
+---
+> !-----------------------------------------------------------------------
+357a353
+> !-----------------------------------------------------------------------
+407c403,405
+<         THES(KB)=TTHES
+---
+>         thes(kb)=tthes
+> !-----------------------------------------------------------------------
+>         IF(PKL.GE.ELEVFC*PLMH)THEN
+409,415c407,415
+<         IF(PKL.GE.ELEVFC*PLMH.AND.TTHES.GT.THESP)THEN
+<           PSP  =TPSP
+<           THBT =TTHBT
+<           THESP=TTHES
+<           KBMAX=KB
+<         ENDIF
+< !
+---
+>           IF(TTHES.GT.THESP)THEN
+>             PSP  =TPSP
+>             THBT =TTHBT
+>             THESP=TTHES
+>             kbmax=kb
+>           ENDIF
+> !-----------------------------------------------------------------------
+>         endif ! end of search for maximum buoyancy level
+> !-----------------------------------------------------------------------
+422,459c422,426
+<       DTRF=0.
+< !     PUP=PT+DPRS(KTS)
+< !
+< !     DO L=KTS+1,LMH
+< !       PLO=PUP+DPRS(L)
+< !
+< !       IF(PLO.GE.PSP.AND.PLO.GT.PQM)THEN
+< !         LBOT=L
+< !
+< !         IF(ITIMESTEP.GT.4)THEN
+< !           RDPF=(PSP-PUP)/DPRS(L)
+< !           ZPSP=(Z(L)-Z(L-1))*RDPF+Z(L-1)
+< !           WPSP=(W(L)-W(L-1))*RDPF+W(L-1)
+< !
+< !           IF(ZPSP.LE.2000.)THEN
+< !             CPSP=ZPSP*(C0*0.0005)
+< !           ELSE
+< !             CPSP=C0
+< !           ENDIF
+< !
+< !           DW=(WPSP-CPSP)*100.
+< !
+< !           IF(DW.GT.0.)THEN
+< !             DTRF=DW**.33333333
+< !           ELSE
+< !             DTRF=-(-DW)**.33333333
+< !           ENDIF
+< !
+< !         ENDIF
+< !
+< !         GO TO 240
+< !       ENDIF
+< !
+< !       PUP=PLO
+< !     ENDDO
+< ! 240 CONTINUE
+< !
+< !-----------------------------------------------------------------------
+---
+>       DO L=1,LMH-1
+>         P=PRSMID(L)
+>         IF(P.LT.PSP.AND.P.GE.PQM)LBOT=L+1
+>       ENDDO
+> !***
+462,463c429
+< !-----------------------------------------------------------------------
+< !
+---
+> !***
+468c434
+<         DO L=KTS,LMH-1
+---
+>         DO L=1,LMH-1
+475d440
+< !-----------------------------------------------------------------------
+477d441
+< !-----------------------------------------------------------------------
+480c444,447
+< !-----------------------------------------------------------------------
+---
+> !----------------entrainment during particle ascent---------------------
+>       do l=lmh,kbmax,-1
+>         thes(l)=thesp
+>       enddo
+482,484c449,451
+<       DO L=LMH,KBMAX,-1
+<         THES(L)=THESP
+<       ENDDO
+---
+>       fefi=(cldefi-efimn)*slope+efmnt
+>       ffup=fup/(fefi*fefi)
+>       dpup=dprs(kbmax)
+486,488c453,456
+<       FEFI=(CLDEFI-EFIMN)*SLOPE+EFMNT
+<       FFUP=FUP/(FEFI*FEFI)
+<       DPUP=DPRS(KBMAX)
+---
+>       do l=kbmax-1,1,-1
+>         dplo=dpup
+>         dpup=dprs(l)
+>         rdpup=2./(dplo+dpup)
+490,493c458,459
+<       DO L=KBMAX-1,KTS,-1
+<         DPLO=DPUP
+<         DPUP=DPRS(L)
+<         RDPUP=2./(DPLO+DPUP)
+---
+>         pfup=ffup*dpup*dpup*rdpup
+>         pflo=1.-pfup
+495,499c461,463
+<         PFUP=FFUP*DPUP*DPUP*RDPUP
+<         PFLO=1.-PFUP
+< !
+<         THES(L)=THES(L)*PFUP+THES(L+1)*PFLO
+<       ENDDO
+---
+>         thes(l)=thes(l)*pfup+thes(l+1)*pflo
+>       enddo
+> !-----------------------------------------------------------------------
+501c465
+< !***  COMPUTE PARCEL TEMPERATURE ALONG MOIST ADIABAT
+---
+> !***  compute parcel temperature along the ascent trajectory
+505c469
+<       DO L=LMH,KTS,-1
+---
+>       DO L=LMH,1,-1
+511c475
+<      &               ,STHE,THE0,THES(L),TTBL,TREF(L))
+---
+>      &               ,STHE,THE0,thes(l),TTBL,TREF(L))
+514c478
+<      &               ,STHEQ,THE0Q,THES(L),TTBLQ,TREF(L))
+---
+>      &               ,STHEQ,THE0Q,thes(l),TTBLQ,TREF(L))
+521,526c485,487
+<       LTOP=LBOT
+<       PLO=PRSMID(LBOT)
+<       PUP=PRSMID(LBOT-1)
+<       RDPF=(PSP-PUP)/(PLO-PUP)
+<       TPSP  =(T   (LBOT)-T   (LBOT-1))*RDPF+T   (LBOT-1)
+<       TRFPSP=(TREF(LBOT)-TREF(LBOT-1))*RDPF+TREF(LBOT-1)
+---
+>       DO L=LMH,1,-1
+>         IF(TREF(L).GT.T(L)-DTTOP)LTOP=L
+>       ENDDO
+528,533d488
+<       IF(DTRF+TRFPSP.GE.TPSP)THEN
+<         DO L=LMH,KTS,-1
+<           IF(TREF(L).GT.T(L)-DTTOP)LTOP=L
+<         ENDDO
+<       ENDIF
+< !
+588c543
+<       DO L=KTS,LMH
+---
+>       DO L=1,LMH
+624c579
+<         EL(L)=ELWV
+---
+>         el(l)=elwv
+633d587
+<       L0M1=L0-1
+642c596
+<         EL(L)=ELIV
+---
+>         el(l)=eliv
+694d647
+< !       IF(PKB-PK0.GE.PFRZ)THEN
+726,727d678
+<       LQM=0
+< !
+734c685
+<           SUMDE=((TK(L)-TREFK(L))*CP+(QK(L)-QREFK(L))*EL(L))*DPRS(L)    &
+---
+>           SUMDE=((TK(L)-TREFK(L))*CP+(QK(L)-QREFK(L))*el(l))*DPRS(L)    &
+744,746c695,696
+<         LQM=1
+< !
+<         DO L=KTS,LB
+---
+>         lqm=1
+>         DO L=1,LB
+788c738
+<         DSQ=DIFQL*EL(L)*DPOT+DSQ
+---
+>         dsq=(difql*el(l))*dpot+dsq
+796c746
+<       DSQ=DSQ+DSQ
+---
+>       dsq=(dsq+dsq)
+800a751
+>       drheat=max(drheat,1.e-20)
+805,808d755
+< !
+<       IF(PRECK.LE.0.)THEN
+<         EFI=1.
+<       ENDIF
+816c763
+<       IF(DENTPY.GE.EPSNTP.AND.PRECK.GT.EPSPR)THEN
+---
+>       if(dentpy.ge.epsntp.and.preck.gt.epspr)then
+819,820c766,767
+<         FEFI=EFMNT+SLOPE*(EFI-EFIMN)
+<         FEFI=(DENTPY-EPSNTP)*FEFI/DENTPY
+---
+>         FEFI=(EFI-EFIMN)*SLOPE+EFMNT
+>         fefi=fefi*(dentpy-epsntp)/dentpy
+839,842c786,789
+< !       LTOP=LTOP+3
+< !       PTOP=PRSMID(LTOP)
+< !       DEPMIN=PSH*PSFC*RSFCP
+< !       DEPTH=PBOT-PTOP
+---
+> !zj        LTOP=LTOP+3
+> !zj        PTOP=PRSMID(LTOP)
+> !zj        DEPMIN=PSH*PSFC*RSFCP
+> !zj        DEPTH=PBOT-PTOP
+846,848c793,795
+< !       IF(DEPTH.GE.DEPMIN)THEN
+< !         GO TO 300
+< !       ENDIF
+---
+> !zj        IF(DEPTH.GE.DEPMIN)THEN
+> !zj          GO TO 300
+> !zj        ENDIF
+851,858d797
+<         IF(PRECK.LT.EPSPR)CLDEFI=1.
+< !
+<         IF(DENTPY.LT.EPSNTP)THEN
+<           LBOT=0
+<           LTOP=KTE
+<           PTOP=PBOT
+<           GO TO 600
+<         ENDIF
+870c809
+<         DO L=KTS,LMH
+---
+>         DO L=1,LMH
+880c819
+<           DO L=KTS,LMH
+---
+>           DO L=1,LMH
+891a831
+>           PBOT=PK(LBOT)
+893d832
+<           PBOT=PTOP
+962c901
+<       DO L=KTS,LMH
+---
+>       DO L=1,LMH
+977,981c916,920
+<         IF(TKL.GE.TFRZ)THEN
+<           EL(L)=ELWV
+<         ELSE
+<           EL(L)=ELIV
+<         ENDIF
+---
+>         if(tkl.ge.tfrz) then
+>           el(l)=elwv
+>         else
+>           el(l)=eliv
+>         endif
+1104c1043
+<         DST   =(TREFK(L)-TK(L))*RTBAR*DPRS(L)/EL(L)+DST
+---
+>         dst   =(trefk(l)-tk(l))*rtbar*dprs(l)/el(l)+dst
+1112c1051
+<       DST   =DST*ROTSUM*CP
+---
+>       dst   =dst*rotsum*cp
+1115a1055
+>         LBOT=0
