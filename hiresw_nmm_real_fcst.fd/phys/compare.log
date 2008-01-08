@@ -1,0 +1,684 @@
+COMPARE module_bl_lsm.F
+DONE module_bl_lsm.F
+COMPARE module_bl_lsm_nmm.F
+185c185
+< 	
+---
+> 
+187d186
+<         DO I=ITS,ITE
+188a188
+>         DO I=ITS,ITE
+219d218
+< 
+458,459d456
+< 
+< 
+527d523
+< 
+536d531
+< 
+543,544d537
+< 
+< 
+925,927d917
+< 
+<       CHARACTER(LEN=4) :: veg_def
+< 
+944,945d933
+< 
+< 
+979,982d966
+<         veg_def='9999'
+<         call get_mminlu(veg_def)
+< 
+<         if (veg_def .ne. 'USGS') then
+989,997d972
+< 	else 
+<         CALL REDPRM_USGS(VEGTYP,SOILTYP, SLOPETYP,                         &
+<           CFACTR, CMCMAX, RSMAX, TOPT, REFKDT, KDT, SBETA,            &
+<           SHDFAC, RCMIN, RGL, HS, ZBOT, FRZX, PSISAT, SLOPE,          &
+<           SNUP, SALP, B, DKSAT, DWSAT, SMCMAX, SMCWLT, SMCREF,        &
+<           SMCDRY, F1, QUARTZ, FXEXP, RTDIS, SLDPTH, ZSOIL,            &
+<           NROOT, NSOIL, Z0, CZIL, XLAI, CSOIL, PTU)
+<         endif
+< 
+1286a1262
+>         
+1332c1308
+< 
+---
+> !
+1589d1564
+< 
+1614c1589
+< 
+---
+>  
+1617c1592
+< 	
+---
+> 
+1930d1904
+< !
+2739,3257d2712
+< ! --------------------------------------------------------------
+< 
+<       SUBROUTINE REDPRM_USGS(VEGTYP, SOILTYP, SLOPETYP,              &
+<            CFACTR, CMCMAX, RSMAX, TOPT, REFKDT, KDT, SBETA,     &
+<            SHDFAC, RCMIN, RGL, HS, ZBOT, FRZX, PSISAT, SLOPE,   &
+<            SNUP, SALP, B, DKSAT, DWSAT, SMCMAX, SMCWLT, SMCREF, &
+<            SMCDRY, F1, QUARTZ, FXEXP, RTDIS, SLDPTH, ZSOIL,     &
+<            NROOT, NSOIL, Z0, CZIL, LAI, CSOIL, PTU)
+< 
+< 
+<       IMPLICIT NONE
+< 
+< 
+< !  This subroutine internally sets (defaults), or optionally reads-in
+< !  via namelist I/O, all the soil and vegetation parameters
+< !  required for the execusion of the NOAH - LSM
+< !
+< ! optional non-default parameters can be read in, accommodating up
+< !  to 30 soil, veg, or slope classes, if the default max number of
+< !  soil, veg, and/or slope types is reset.
+< 
+< ! future upgrades of routine REDPRM must expand to incorporate some
+< ! of the empirical parameters of the frozen soil and snowpack physics
+< ! (such as in routines FRH2O, SNOWPACK, and SNOW_NEW) not yet set in
+< !  this REDPRM routine, but rather set in lower level subroutines
+< 
+< !  Set maximum number of soil-, veg-, and slopetyp in data statement
+< 
+<       INTEGER MAX_SOILTYP
+<       INTEGER MAX_VEGTYP
+<       INTEGER MAX_SLOPETYP
+<       PARAMETER (MAX_SOILTYP  = 30)
+<       PARAMETER (MAX_VEGTYP   = 30)
+<       PARAMETER (MAX_SLOPETYP = 30)
+< 
+< !  Number of defined soil-, veg-, and slopetyps used
+< 
+<       INTEGER DEFINED_VEG
+<       INTEGER DEFINED_SOIL
+<       INTEGER DEFINED_SLOPE
+<       DATA DEFINED_VEG/24/
+<       DATA DEFINED_SOIL/16/
+<       DATA DEFINED_SLOPE/9/
+< 
+< !  SET-UP SOIL PARAMETERS FOR GIVEN SOIL TYPE
+< !  INPUT: SOLTYP: SOIL TYPE (INTEGER INDEX)
+< !  OUTPUT: SOIL PARAMETERS:
+< 
+< !    MAXSMC: MAX SOIL MOISTURE CONTENT (POROSITY)
+< !    REFSMC: REFERENCE SOIL MOISTURE (ONSET OF SOIL MOISTURE
+< !            STRESS IN TRANSPIRATION)
+< !    WLTSMC: WILTING PT SOIL MOISTURE CONTENTS
+< !    DRYSMC: AIR DRY SOIL MOIST CONTENT LIMITS
+< !    SATPSI: SATURATED SOIL POTENTIAL
+< !    SATDK:  SATURATED SOIL HYDRAULIC CONDUCTIVITY
+< !    BB:     THE 'B' PARAMETER
+< !    SATDW:  SATURATED SOIL DIFFUSIVITY
+< !    F11:    USED TO COMPUTE SOIL DIFFUSIVITY/CONDUCTIVITY
+< !    QUARTZ:  SOIL QUARTZ CONTENT
+< !
+< !C     SOIL TYPES    STATSGO (Miller ??, 199?)  Cosby et al (1984)
+< !C             1          SAND                  SAND
+< !C             2          LOAMY SAND            LOAMY SAND
+< !C             3          SANDY LOAM            SANDY LOAM
+< !C             4          SILT LOAM             SILTY LOAM
+< !C             5          SILT                  SILTY LOAM
+< !C             6          LOAM                  LOAM
+< !C             7          SANDY CLAY LOAM       SANDY CLAY LOAM
+< !C             8          SILTY CLAY LOAM       SILTY CLAY LOAM
+< !C             9          CLAY LOAM             CLAY LOAM
+< !C            10          SANDY CLAY            SANDY CLAY
+< !C            11          SILTY CLAY            SILTY CLAY
+< !C            12          CLAY                  LIGHT CLAY
+< !C            13          ORGANIC MATERIALS     LOAM
+< !C            14          WATER
+< !C            15          BEDROCK
+< !C                        Bedrock is reclassified as class 14
+< !C            16          OTHER (land-ice)
+< !C                        the value of this class is the same as in class
+< 
+< 
+<       REAL BB(MAX_SOILTYP)
+<       REAL DRYSMC(MAX_SOILTYP)
+<       REAL F11(MAX_SOILTYP)
+<       REAL MAXSMC(MAX_SOILTYP)
+<       REAL REFSMC(MAX_SOILTYP)
+<       REAL SATPSI(MAX_SOILTYP)
+<       REAL SATDK(MAX_SOILTYP)
+<       REAL SATDW(MAX_SOILTYP)
+<       REAL WLTSMC(MAX_SOILTYP)
+<       REAL QTZ(MAX_SOILTYP)
+< 
+<       REAL B
+<       REAL DKSAT
+<       REAL DWSAT
+<       REAL SMCMAX
+<       REAL SMCWLT
+<       REAL SMCREF
+<       REAL SMCDRY
+<       REAL PTU
+<       REAL F1
+<       REAL QUARTZ
+<       REAL REFSMC1
+<       REAL WLTSMC1
+< 
+<       DATA MAXSMC/0.339, 0.421, 0.434, 0.476, 0.476, 0.439,  &
+<                   0.404, 0.464, 0.465, 0.406, 0.468, 0.468,  &
+<                   0.439, 1.000, 0.200, 0.421, 0.000, 0.000,  &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000,  &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+<       DATA SATPSI/0.069, 0.036, 0.141, 0.759, 0.759, 0.355,   &
+<                   0.135, 0.617, 0.263, 0.098, 0.324, 0.468,   &
+<                   0.355, 0.000, 0.069, 0.036, 0.000, 0.000,   &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000,   &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+<       DATA SATDK /1.07E-6, 1.41E-5, 5.23E-6, 2.81E-6, 2.81E-6, &
+<                   3.38E-6, 4.45E-6, 2.04E-6, 2.45E-6, 7.22E-6, &
+<                   1.34E-6, 9.74E-7, 3.38E-6, 0.00000, 1.41E-4, &
+<                   1.41E-5, 0.00   , 0.00   , 0.00   , 0.00,    &
+<                   0.00   , 0.00   , 0.00   , 0.00   , 0.00,    &
+<                   0.00   , 0.00   , 0.00   , 0.00   , 0.00/
+<       DATA BB    /2.79,  4.26,  4.74,  5.33,  5.33,  5.25,    &
+<                   6.66,  8.72,  8.17, 10.73, 10.39, 11.55,    &
+<                   5.25,  0.00,  2.79,  4.26,  0.00,  0.00,    &
+<                   0.00,  0.00,  0.00,  0.00,  0.00,  0.00,    &
+<                   0.00,  0.00,  0.00,  0.00,  0.00,  0.00/
+< 
+<       DATA QTZ   /0.92, 0.82, 0.60, 0.25, 0.10, 0.40,        &
+<                   0.60, 0.10, 0.35, 0.52, 0.10, 0.25,        &
+<                   0.05, 0.60, 0.07, 0.25, 0.00, 0.00,        &
+<                   0.00, 0.00, 0.00, 0.00, 0.00, 0.00,        &
+<                   0.00, 0.00, 0.00, 0.00, 0.00, 0.00/
+< 
+< ! The following 5 parameters are derived later in REDPRM.f
+< ! from the soil data, and are just given here for reference
+< ! and to force static storage allocation
+< ! Dag Lohmann, Feb. 2001
+< 
+<       DATA REFSMC/0.236, 0.283, 0.312, 0.360, 0.360, 0.329,     &
+<                   0.314, 0.387, 0.382, 0.338, 0.404, 0.412,     &
+<                   0.329, 0.000, 0.108, 0.283, 0.000, 0.000,     &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000,     &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+<       DATA WLTSMC/0.010, 0.028, 0.047, 0.084, 0.084, 0.066,     &
+<                   0.067, 0.120, 0.103, 0.100, 0.126, 0.138,     &
+<                   0.066, 0.000, 0.006, 0.028, 0.000, 0.000,     &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000,     &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+<       DATA DRYSMC/0.010, 0.028, 0.047, 0.084, 0.084, 0.066,     &
+<                   0.067, 0.120, 0.103, 0.100, 0.126, 0.138,     &
+<                   0.066, 0.000, 0.006, 0.028, 0.000, 0.000,     &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000,     &
+<                   0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+<       DATA SATDW /0.608E-6, 0.514E-5, 0.805E-5, 0.239E-4, 0.239E-4,  &
+<                   0.143E-4, 0.990E-5, 0.237E-4, 0.113E-4, 0.187E-4,  &
+<                   0.964E-5, 0.112E-4, 0.143E-4, 0.000000, 0.136E-3,  &
+<                   0.514E-5, 0.00   , 0.00   , 0.00   , 0.00,     &
+<                   0.00    , 0.00   , 0.00   , 0.00   , 0.00,     &
+<                   0.00    , 0.00   , 0.00   , 0.00   , 0.00/
+<       DATA F11  /-0.472, -1.044, -0.569, 0.162, 0.162, -0.327, &
+<                   -1.491, -1.118, -1.297, -3.209, -1.916, -2.138, &
+<                   -0.327,  0.000, -1.111, -1.044,  0.000,  0.000, &
+<                   0.000,  0.000,  0.000,  0.000,  0.000,  0.000, &
+<                   0.000,  0.000,  0.000,  0.000,  0.000,  0.000/
+< 
+< !#######################################################################
+< 
+< !  SET-UP VEGETATION PARAMETERS FOR A GIVEN VEGETAION TYPE
+< !
+< !  INPUT: VEGTYP = VEGETATION TYPE (INTEGER INDEX)
+< !  OUPUT: VEGETATION PARAMETERS
+< !         SHDFAC: VEGETATION GREENNESS FRACTION
+< !         RCMIN:  MIMIMUM STOMATAL RESISTANCE
+< !         RGL:    PARAMETER USED IN SOLAR RAD TERM OF
+< !                 CANOPY RESISTANCE FUNCTION
+< !         HS:     PARAMETER USED IN VAPOR PRESSURE DEFICIT TERM OF
+< !                 CANOPY RESISTANCE FUNCTION
+< !         SNUP:   THRESHOLD SNOW DEPTH (IN WATER EQUIVALENT M) THAT
+< !                 IMPLIES 100% SNOW COVER
+< !
+< !     USGS Vegetation Types
+< !C
+< !C    1:   Urban and Built-Up Land
+< !C    2:   Dryland Cropland and Pasture
+< !     3:   Irrigated Cropland and Pasture
+< !     4:   Mixed Dryland/Irrigated Cropland and Pasture
+< !     5:   Cropland/Grassland Mosaic
+< !C    6:   Cropland/Woodland Mosaic
+< !C    7:   Grassland
+< !C    8:   Shrubland
+< !C    9:   Mixed Shrubland/Grassland
+< !C   10:   Savanna
+< !C   11:   Deciduous Broadleaf Forest
+< !C   12:   Deciduous Needleleaf Forest
+< !C   13:   Evergreen Broadleaf Forest
+< !C   14:   Evergreen Needleleaf Forest
+< !C   15:   Mixed Forest
+< !C   16:   Water Bodies
+< !C   17:   Herbaceous Wetland
+< !C   18:   Wooded Wetland
+< !C   19:   Barren or Sparsely Vegetated
+< !C   20:   Herbaceous Tundra
+< !C   21:   Wooded Tundra
+< !C   22:   Mixed Tundra
+< !C   23:   Bare Ground Tundra
+< !C   24:   Snow or Ice
+< 
+< 
+<       INTEGER NROOT_DATA(MAX_VEGTYP)
+<       REAL    RSMTBL(MAX_VEGTYP)
+<       REAL    RGLTBL(MAX_VEGTYP)
+<       REAL    HSTBL(MAX_VEGTYP)
+<       REAL    SNUPX(MAX_VEGTYP)
+<       REAL    Z0_DATA(MAX_VEGTYP)
+<       REAL    LAI_DATA(MAX_VEGTYP)
+< 
+<       INTEGER NROOT
+<       REAL    SHDFAC
+<       REAL    RCMIN
+<       REAL    RGL
+<       REAL    HS
+<       REAL    FRZFACT
+<       REAL    PSISAT
+<       REAL    SNUP
+<       REAL    Z0
+<       REAL    LAI
+< 
+< 
+<       DATA NROOT_DATA /1,3,3,3,3,3,3,3,3,3,4,4,4,4,4,       &
+<                        0,2,2,1,3,3,3,2,1,0,0,0,0,0,0/
+< 
+<       DATA RSMTBL /200.0,  40.0,  40.0,  40.0,  40.0, 70.0, &
+<                     40.0, 300.0, 170.0,  70.0, 100.0, 150.0, &
+<                    150.0, 125.0, 125.0, 100.0,  40.0, 100.0, &
+<                    999.0, 150.0, 150.0, 150.0, 200.0, 999.0, &
+<                      0.0,   0.0,   0.0,   0.0,   0.0,  0.0/
+<       DATA RGLTBL / 999., 100., 100., 100., 100.,  65., 100., 100., &
+<                     100.,  65.,  30.,  30.,  30.,  30.,  30.,  30., &
+<                     100.,  30., 999., 100., 100., 100., 100., 999., &
+<                     0.0,  0.0,  0.0,   0.0,  0.0,  0.0/
+<       DATA HSTBL/999.0, 36.25, 36.25, 36.25, 36.25, 44.14, 36.35, &
+<                  42.00, 39.18, 54.53, 54.53, 47.35, 41.69, 47.35, &
+<                  51.93, 51.75, 60.00, 51.93, 999.0, 42.00, 42.00, &
+<                  42.00, 42.00, 999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0/
+< 
+<       DATA SNUPX  /0.040, 0.040, 0.040, 0.040, 0.040, 0.040, &
+<                    0.040, 0.030, 0.035, 0.040, 0.080, 0.080, &
+<                    0.080, 0.080, 0.080, 0.010, 0.010, 0.020, &
+<                    0.020, 0.025, 0.025, 0.025, 0.020, 0.020, &
+<                    0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+<       DATA Z0_DATA /1.00,  0.07,  0.07,  0.07,  0.07,  0.15, &
+<                     0.08,  0.03,  0.05,  0.86,  0.80,  0.85, &
+<                     2.65,  1.09,  0.80,  0.001,  0.04,  0.05, &
+<                     0.01,  0.04,  0.06,  0.05,  0.03,  0.001, &
+<                     0.000, 0.000, 0.000, 0.000, 0.000, 0.000/
+< 
+<       DATA LAI_DATA /4.0, 4.0, 4.0, 4.0, 4.0, 4.0,  &
+<                      4.0, 4.0, 4.0, 4.0, 4.0, 4.0,  &
+<                      4.0, 4.0, 4.0, 0.0, 4.0, 4.0,  &
+<                      4.0, 4.0, 4.0, 4.0, 4.0, 4.0,  &
+<                      0.0, 0.0, 0.0, 0.0, 0.0, 0.0/
+< 
+< !#######################################################################
+< 
+< !  CLASS PARAMETER 'SLOPETYP' WAS INCLUDED TO ESTIMATE
+< !  LINEAR RESERVOIR COEFFICIENT 'SLOPE' TO THE BASEFLOW RUNOFF
+< !  OUT OF THE BOTTOM LAYER. LOWEST CLASS (SLOPETYP=0)MEANS
+< !  HIGHEST SLOPE PARAMETER= 1
+< !  DEFINITION OF SLOPETYP FROM 'ZOBLER' SLOPE TYPE
+< !  SLOPE CLASS      PERCENT SLOPE
+< !  1                0-8
+< !  2                8-30
+< !  3                > 30
+< !  4                0-30
+< !  5                0-8 & > 30
+< !  6                8-30 & > 30
+< !  7                0-8, 8-30, > 30
+< !  9                GLACIAL ICE
+< !  BLANK            OCEAN/SEA
+< !  NOTE:  CLASS 9 FROM 'ZOBLER' FILE SHOULD BE REPLACED BY 8
+< !  AND 'BLANK'  9
+< 
+<       REAL SLOPE
+<       REAL SLOPE_DATA(MAX_SLOPETYP)
+<       DATA SLOPE_DATA /0.1,  0.6, 1.0, 0.35, 0.55, 0.8,  &
+<                        0.63, 0.0, 0.0, 0.0,  0.0,  0.0,  &
+<                        0.0 , 0.0, 0.0, 0.0,  0.0,  0.0,  &
+<                        0.0 , 0.0, 0.0, 0.0,  0.0,  0.0,  &
+<                        0.0 , 0.0, 0.0, 0.0,  0.0,  0.0/
+< 
+< !#######################################################################
+< 
+< !  Set namelist file name
+< 
+<       CHARACTER*50 NAMELIST_NAME
+< 
+< !#######################################################################
+< 
+< ! SET UNIVERSAL PARAMETERS (NOT DEPENDENT ON SOIL, VEG, SLOPE TYPE)
+< 
+<       INTEGER VEGTYP
+<       INTEGER SOILTYP
+<       INTEGER SLOPETYP
+< 
+<       INTEGER NSOIL
+<       INTEGER I
+< 
+<       INTEGER BARE
+<       DATA    BARE /11/
+< 
+<       LOGICAL LPARAM
+<       DATA    LPARAM /.TRUE./
+< 
+<       LOGICAL LFIRST
+<       DATA    LFIRST /.TRUE./
+< 
+< !  Parameter used to calculate roughness length of heat
+<       REAL CZIL, CZIL_DATA
+<       DATA CZIL_DATA /0.2/
+< 
+< !  Parameter used to caluculate vegetation effect on soil heat flux
+<       REAL SBETA, SBETA_DATA
+<       DATA SBETA_DATA /-2.0/
+< 
+< ! BARE SOIL EVAPORATION EXPONENT USED IN DEVAP
+< 
+<       REAL FXEXP, FXEXP_DATA
+<       DATA FXEXP_DATA /2.0/
+< 
+< ! Soil heat capacity [J/m^3/K]
+< 
+<       REAL CSOIL, CSOIL_DATA
+<       DATA CSOIL_DATA /1.26E+6/
+< 
+< !  SPECIFY SNOW DISTRIBUTION SHAPE PARAMETER
+< !  SALP   - SHAPE PARAMETER OF DISTRIBUTION FUNCTION
+< !  OF SNOW COVER. FROM ANDERSON'S DATA (HYDRO-17)
+< !  BEST FIT IS WHEN SALP = 2.6
+<       REAL SALP, SALP_DATA
+<       DATA SALP_DATA /2.6/
+< 
+< !  KDT IS DEFINED BY REFERENCE REFKDT AND DKSAT
+< !  REFDK=2.E-6 IS THE SAT. DK. VALUE FOR THE SOIL TYPE 2
+<       REAL REFDK, REFDK_DATA
+<       DATA REFDK_DATA /2.0E-6/
+< 
+<       REAL REFKDT, REFKDT_DATA
+<       DATA REFKDT_DATA /3.0/
+< 
+<       REAL KDT
+<       REAL FRZX
+< 
+< !  FROZEN GROUND PARAMETER, FRZK, DEFINITION
+< !  FRZK IS ICE CONTENT THRESHOLD ABOVE WHICH FROZEN SOIL IS IMPERMEABLE
+< !  REFERENCE VALUE OF THIS PARAMETER FOR THE LIGHT CLAY SOIL (TYPE=3)
+< !  FRZK = 0.15 M
+<       REAL FRZK, FRZK_DATA
+<       DATA FRZK_DATA /0.15/
+< 
+<       REAL RTDIS(NSOIL)
+<       REAL SLDPTH(NSOIL)
+<       REAL ZSOIL(NSOIL)
+< 
+< !  Set two canopy water parameters
+<       REAL CFACTR, CFACTR_DATA
+<       REAL CMCMAX, CMCMAX_DATA
+<       DATA CFACTR_DATA /0.5/
+<       DATA CMCMAX_DATA /0.5E-3/
+< 
+< !  Set max. stomatal resistance
+<       REAL RSMAX, RSMAX_DATA
+<       DATA RSMAX_DATA /5000.0/
+< 
+< !  Set optimum transpiration air temperature
+<       REAL TOPT, TOPT_DATA
+<       DATA TOPT_DATA /298.0/
+< 
+< !  Specify depth[m] of lower boundary soil temperature
+<       REAL ZBOT, ZBOT_DATA
+<       DATA ZBOT_DATA /-3.0/
+< 
+< !#######################################################################
+< 
+< !  Namelist definition
+< 
+<       NAMELIST /SOIL_VEG/ SLOPE_DATA, RSMTBL, RGLTBL, HSTBL, SNUPX,     &
+<            BB, DRYSMC, F11, MAXSMC, REFSMC, SATPSI, SATDK, SATDW,       &
+<            WLTSMC, QTZ, LPARAM, ZBOT_DATA, SALP_DATA, CFACTR_DATA,      &
+<            CMCMAX_DATA, SBETA_DATA, RSMAX_DATA, TOPT_DATA,              &
+<            REFDK_DATA, FRZK_DATA, BARE, DEFINED_VEG, DEFINED_SOIL,      &
+<            DEFINED_SLOPE, FXEXP_DATA, NROOT_DATA, REFKDT_DATA, Z0_DATA, &
+<            CZIL_DATA, LAI_DATA, CSOIL_DATA
+< 
+< !  Read namelist file to override default parameters
+< !  only once.
+< !
+< !  7/6/01 : E. Rogers commented out read of unit 58 since
+< !           NCO does not allow hardwired file names in the code.
+< 
+< !     IF (LFIRST) THEN
+< !        OPEN(58, FILE = 'namelist_filename.txt')
+< ! NAMELIST_NAME must be 50 characters or less.
+< !        READ(58,'(A)') NAMELIST_NAME
+< !        CLOSE(58)
+< !        WRITE(*,*) 'Namelist Filename is ', NAMELIST_NAME
+< !        OPEN(59, FILE = NAMELIST_NAME)
+<  50      CONTINUE
+< !           READ(59, SOIL_VEG, END=100)
+< !        IF (LPARAM) GOTO 50
+<  100     CONTINUE
+< !        CLOSE(59)
+< !        WRITE(*,NML=SOIL_VEG)
+< !        LFIRST = .FALSE.
+<          IF (DEFINED_SOIL .GT. MAX_SOILTYP) THEN
+<             WRITE(*,*) 'Warning: DEFINED_SOIL too large in namelist'
+<             STOP 222
+<          END IF
+<          IF (DEFINED_VEG .GT. MAX_VEGTYP) THEN
+<             WRITE(*,*) 'Warning: DEFINED_VEG too large in namelist'
+<             STOP 222
+<          END IF
+<          IF (DEFINED_SLOPE .GT. MAX_SLOPETYP) THEN
+<             WRITE(*,*) 'Warning: DEFINED_SLOPE too large in namelist'
+<             STOP 222
+<          END IF
+< 
+<          DO I = 1, DEFINED_SOIL
+<             SATDW(I)  = BB(I)*SATDK(I)*(SATPSI(I)/MAXSMC(I))
+<             F11(I)    = ALOG10(SATPSI(I)) + BB(I)*ALOG10(MAXSMC(I)) + 2.0
+<             REFSMC1   = MAXSMC(I)*(5.79E-9/SATDK(I))  &
+<                                           **(1.0/(2.0*BB(I)+3.0))
+<             REFSMC(I) = REFSMC1 + (MAXSMC(I)-REFSMC1) / 3.0
+<             WLTSMC1   = MAXSMC(I) * (200.0/SATPSI(I))**(-1.0/BB(I))
+<             WLTSMC(I) = WLTSMC1 - 0.5 * WLTSMC1
+< ! Current version DRYSMC values that equate to WLTSMC
+< ! Future version could let DRYSMC be independently set via namelist
+<             DRYSMC(I) = WLTSMC(I)
+<          END DO
+< 
+< !     END IF
+< 
+<       IF (SOILTYP .GT. DEFINED_SOIL) THEN
+<          WRITE(*,*) 'Warning: too many soil types'
+<          STOP 333
+<       END IF
+<       IF (VEGTYP .GT. DEFINED_VEG) THEN
+<          WRITE(*,*) 'Warning: too many veg types'
+<          STOP 333
+<       END IF
+<       IF (SLOPETYP .GT. DEFINED_SLOPE) THEN
+<          WRITE(*,*) 'Warning: too many slope types'
+<          STOP 333
+<       END IF
+< 
+< !  SET-UP UNIVERSAL PARAMETERS
+< ! (NOT DEPENDENT ON SOILTYP, VEGTYP OR SLOPETYP)
+<       ZBOT   = ZBOT_DATA
+<       SALP   = SALP_DATA
+<       CFACTR = CFACTR_DATA
+<       CMCMAX = CMCMAX_DATA
+<       SBETA  = SBETA_DATA
+<       RSMAX  = RSMAX_DATA
+<       TOPT   = TOPT_DATA
+<       REFDK  = REFDK_DATA
+<       FRZK   = FRZK_DATA
+<       FXEXP  = FXEXP_DATA
+<       REFKDT = REFKDT_DATA
+<       CZIL   = CZIL_DATA
+<       CSOIL  = CSOIL_DATA
+< 
+< !  SET-UP SOIL PARAMETERS
+<       B       = BB(SOILTYP)
+<       SMCDRY  = DRYSMC(SOILTYP)
+<       F1      = F11(SOILTYP)
+<       SMCMAX  = MAXSMC(SOILTYP)
+<       SMCREF  = REFSMC(SOILTYP)
+<       PSISAT  = SATPSI(SOILTYP)
+<       DKSAT   = SATDK(SOILTYP)
+<       DWSAT   = SATDW(SOILTYP)
+<       SMCWLT  = WLTSMC(SOILTYP)
+<       QUARTZ  = QTZ(SOILTYP)
+<       FRZFACT = (SMCMAX / SMCREF) * (0.412 / 0.468)
+<       KDT     = REFKDT * DKSAT/REFDK
+< 
+< !  TO ADJUST FRZK PARAMETER TO ACTUAL SOIL TYPE: FRZK * FRZFACT
+< 
+<       FRZX = FRZK * FRZFACT
+< 
+< !  SET-UP VEGETATION PARAMETERS
+<       NROOT = NROOT_DATA(VEGTYP)
+<       SNUP  = SNUPX(VEGTYP)
+<       RCMIN = RSMTBL(VEGTYP)
+<       RGL   = RGLTBL(VEGTYP)
+<       HS    = HSTBL(VEGTYP)
+<       Z0    = Z0_DATA(VEGTYP)
+<       LAI   = LAI_DATA(VEGTYP)
+<       IF(VEGTYP .EQ. BARE) SHDFAC = 0.0
+< 
+<       IF (NROOT .GT. NSOIL) THEN
+<          WRITE(*,*) 'Warning: too many root layers'
+<          WRITE(*,*) 'nroot=',nroot,' nsoil=',nsoil
+<          STOP 333
+<       END IF
+< 
+< !  CALCULATE ROOT DISTRIBUTION
+< !  PRESENT VERSION ASSUMES UNIFORM DISTRIBUTION BASED ON SOIL LAYERS
+< 
+<       DO I=1,NROOT
+<          RTDIS(I) = -SLDPTH(I)/ZSOIL(NROOT)
+<       END DO
+< 
+< !  SET-UP SLOPE PARAMETER
+<       SLOPE = SLOPE_DATA(SLOPETYP)
+< !
+<       END SUBROUTINE REDPRM_USGS
+< 
+< !--------------------------------------------------------------------!
+< 
+< 
+3344,3345c2799
+< !believewrong      REAL RHSTS ( NSOLD )
+<       REAL RHSTS ( NSOIL )
+---
+>       REAL RHSTS ( NSOLD )
+3361d2814
+< 
+3368d2820
+< 
+3384d2835
+< 
+3402c2853
+< 
+---
+>       
+3478d2928
+< 
+3672,3673c3122
+< 
+< 
+---
+>          
+3790d3238
+< 
+3901d3348
+< 
+4002a3450
+> 
+4016d3463
+< !
+4031c3478
+< 	
+---
+>       
+4660c4107
+< 
+---
+>         
+DONE module_bl_lsm_nmm.F
+COMPARE module_bl_mrf.F
+DONE module_bl_mrf.F
+COMPARE module_bl_myjpbl.F
+DONE module_bl_myjpbl.F
+COMPARE module_bl_myjpbl_nmm.F
+DONE module_bl_myjpbl_nmm.F
+COMPARE module_bl_myjsfc.F
+DONE module_bl_myjsfc.F
+COMPARE module_bl_myjsfc_nmm.F
+DONE module_bl_myjsfc_nmm.F
+COMPARE module_bl_sfclay.F
+DONE module_bl_sfclay.F
+COMPARE module_bl_slab.F
+DONE module_bl_slab.F
+COMPARE module_cu_bmj.F
+DONE module_cu_bmj.F
+COMPARE module_cu_bmj_nmm.F
+DONE module_cu_bmj_nmm.F
+COMPARE module_cu_kf.F
+DONE module_cu_kf.F
+COMPARE module_cu_kfeta.F
+DONE module_cu_kfeta.F
+COMPARE module_cu_kfeta_nmm.F
+DONE module_cu_kfeta_nmm.F
+COMPARE module_cumulus_driver.F
+DONE module_cumulus_driver.F
+COMPARE module_microphysics_driver.F
+DONE module_microphysics_driver.F
+COMPARE module_mp_eta.F
+DONE module_mp_eta.F
+COMPARE module_mp_etanew.F
+DONE module_mp_etanew.F
+COMPARE module_mp_etanew_nmm.F
+DONE module_mp_etanew_nmm.F
+COMPARE module_mp_kessler.F
+DONE module_mp_kessler.F
+COMPARE module_mp_lin.F
+DONE module_mp_lin.F
+COMPARE module_mp_ncloud3.F
+DONE module_mp_ncloud3.F
+COMPARE module_mp_ncloud5.F
+DONE module_mp_ncloud5.F
+COMPARE module_pbl_driver.F
+600d599
+< 
+DONE module_pbl_driver.F
+COMPARE module_physics_addtendc.F
+DONE module_physics_addtendc.F
+COMPARE module_physics_init.F
+DONE module_physics_init.F
+COMPARE module_ra_gfdleta.F
+DONE module_ra_gfdleta.F
+COMPARE module_ra_gfdleta_nmm.F
+DONE module_ra_gfdleta_nmm.F
+COMPARE module_ra_gsfcsw.F
+DONE module_ra_gsfcsw.F
+COMPARE module_ra_rrtm.F
+DONE module_ra_rrtm.F
+COMPARE module_ra_sw.F
+DONE module_ra_sw.F
+COMPARE module_radiation_driver.F
+DONE module_radiation_driver.F

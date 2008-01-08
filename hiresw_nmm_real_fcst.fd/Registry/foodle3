@@ -1,0 +1,234 @@
+3a4,9
+> 
+> #  TEST REGISTRY for nesting.
+> #  We are forcing the velocities, surface pressure, potential temperature,
+> #  geopotential and moisture variables in the Eulerian mass-coordinate model.
+> #  Bill Skamarock, 10 January 2003
+> 
+180d185
+< 
+192d196
+< 
+200d203
+< 
+217d219
+< 
+230,231d231
+< #-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+< 
+285a286
+> 
+305a307,318
+> !state   real    qv             ikjft   moist       2         -     \
+> !   i01rhud  "QVAPOR"           "Water vapor mixing ratio"      "kg kg{-1}"
+> !state   real    qc             ikjft   moist       2         -     \
+> !   i01rhud  "QCLOUD"           "Cloud water mixing ratio"      "kg kg{-1}"
+> !state   real    qr             ikjft   moist       2         -     \
+> !   i01rhud  "QRAIN"            "Rain water mixing ratio"       "kg kg{-1}"
+> !state   real    qi             ikjft   moist       2         -     \
+> !   i01rhud  "QICE"             "Ice mixing ratio"              "kg kg{-1}"
+> !state   real    qs             ikjft   moist       2         -     \
+> !   i01rhud  "QSNOW"            "Snow mixing ratio"             "kg kg{-1}"
+> !state   real    qg             ikjft   moist       2         -     \
+> !   i01rhud  "QGRAUP"           "Graupel mixing ratio"          "kg kg{-1}"
+336d348
+< 
+339d350
+< 
+348d358
+< 
+367a378
+> 
+372d382
+< 
+378d387
+< 
+386d394
+< 
+392d399
+< 
+404d410
+< 
+411d416
+< 
+414d418
+< 
+474d477
+< 
+477a481
+>                                                 
+552d555
+< 
+563d565
+< 
+665,671c667
+< 
+< 
+< # NAMELIST 01
+< rconfig   integer time_step               namelist,namelist_01      1             -       ih   "time_step"     
+< rconfig   integer time_step_fract_num     namelist,namelist_01      1             0       ih   "time_step_fract_num"     
+< rconfig   integer time_step_fract_den     namelist,namelist_01      1             1       ih   "time_step_fract_den"     
+< rconfig   logical restart                 namelist,namelist_01      1             .false. h    "restart"              ""      ""
+---
+> rconfig   integer time_step_max           namelist,namelist_01      1             1       ih   "time_step_max"         ""      ""
+683a680
+> #                                               
+696,712d692
+< # NAMELIST 02
+< rconfig   integer run_days                namelist,namelist_02      1             0       irh   "run_days"              "NUMBER OF DAYS TO RUN"
+< rconfig   integer run_hours               namelist,namelist_02      1             0       irh   "run_hours"             "NUMBER OF HOURS TO RUN"
+< rconfig   integer run_minutes             namelist,namelist_02      1             0       irh   "run_minutes"           "NUMBER OF MINUTES TO RUN"
+< rconfig   integer run_seconds             namelist,namelist_02      1             0       irh   "run_seconds"           "NUMBER OF SECONDS TO RUN"
+< rconfig   integer start_year              namelist,namelist_02     max_domains    1993    irh   "start_year"            "4 DIGIT YEAR OF START OF MODEL" "YEARS"
+< rconfig   integer start_month             namelist,namelist_02     max_domains      03    irh   "start_month"           "2 DIGIT MONTH OF THE YEAR OF START OF MODEL, 1-12" "MONTHS"
+< rconfig   integer start_day               namelist,namelist_02     max_domains      13    irh   "start_day"             "2 DIGIT DAY OF THE MONTH OF START OF MODEL, 1-31" "DAYS"
+< rconfig   integer start_hour              namelist,namelist_02     max_domains      12    irh   "start_hour"            "2 DIGIT HOUR OF THE DAY OF START OF MODEL, 0-23" "HOURS"
+< rconfig   integer start_minute            namelist,namelist_02     max_domains      00    irh   "start_minute"          "2 DIGIT MINUTE OF THE HOUR OF START OF MODEL, 0-59" "MINUTES"
+< rconfig   integer start_second            namelist,namelist_02     max_domains      00    irh   "start_second"          "2 DIGIT SECOND OF THE MINUTE OF START OF MODEL, 0-59" "SECONDS"
+< rconfig   integer end_year                namelist,namelist_02     max_domains    1993    irh   "end_year"              "4 DIGIT YEAR OF END OF MODEL" "YEARS"
+< rconfig   integer end_month               namelist,namelist_02     max_domains      03    irh   "end_month"             "2 DIGIT MONTH OF THE YEAR OF END OF MODEL, 1-12" "MONTHS"
+< rconfig   integer end_day                 namelist,namelist_02     max_domains      14    irh   "end_day"               "2 DIGIT DAY OF THE MONTH OF END OF MODEL, 1-31" "DAYS"
+< rconfig   integer end_hour                namelist,namelist_02     max_domains      12    irh   "end_hour"              "2 DIGIT HOUR OF THE DAY OF END OF MODEL, 0-23" "HOURS"
+< rconfig   integer end_minute              namelist,namelist_02     max_domains      00    irh   "end_minute"            "2 DIGIT MINUTE OF THE HOUR OF END OF MODEL, 0-59" "MINUTES"
+< rconfig   integer end_second              namelist,namelist_02     max_domains      00    irh   "end_second"            "2 DIGIT SECOND OF THE MINUTE OF END OF MODEL, 0-59" "SECONDS"
+714a695
+>                                                 
+721,732c702,717
+< rconfig   integer history_interval        namelist,namelist_02     max_domains    0       h     "history_interval"       ""      "MINUTES"
+< rconfig   integer auxhist1_interval       namelist,namelist_02     max_domains    0       h     "auxhist1_interval"      ""      "MINUTES"
+< rconfig   integer auxhist2_interval       namelist,namelist_02     max_domains    0       h     "auxhist2_interval"      ""      "MINUTES"
+< rconfig   integer auxhist3_interval       namelist,namelist_02     max_domains    0       h     "auxhist3_interval"      ""      "MINUTES"
+< rconfig   integer auxhist4_interval       namelist,namelist_02     max_domains    0       h     "auxhist4_interval"      ""      "MINUTES"
+< rconfig   integer auxhist5_interval       namelist,namelist_02     max_domains    0       h     "auxhist5_interval"      ""      "MINUTES"
+< rconfig   integer auxinput1_interval      namelist,namelist_02     max_domains    0       h     "auxinput1_interval"     ""      "MINUTES"
+< rconfig   integer auxinput2_interval      namelist,namelist_02     max_domains    0       h     "auxinput2_interval"     ""      "MINUTES"
+< rconfig   integer auxinput3_interval      namelist,namelist_02     max_domains    0       h     "auxinput3_interval"     ""      "MINUTES"
+< rconfig   integer auxinput4_interval      namelist,namelist_02     max_domains    0       h     "auxinput4_interval"     ""      "MINUTES"
+< rconfig   integer auxinput5_interval      namelist,namelist_02     max_domains    0       h     "auxinput5_interval"     ""      "MINUTES"
+< rconfig   integer restart_interval        namelist,namelist_02     1              0       h     "restart_interval"       ""      "MINUTES"
+---
+> rconfig   integer time_step_count_start   namelist,namelist_02     max_domains    0       h     "time_step_count_start"         ""      ""
+> rconfig   integer time_step_count_end     namelist,namelist_02     max_domains    10      h     "time_step_count_end"           ""      ""
+> rconfig   integer time_step_count_history  namelist,namelist_02     max_domains    10      h     "time_step_count_history"                ""      ""
+> 
+> rconfig   integer time_step_count_auxhist1  namelist,namelist_02     max_domains  0      h     "time_step_count_auxhist1"                ""      ""
+> rconfig   integer time_step_count_auxhist2  namelist,namelist_02     max_domains  0      h     "time_step_count_auxhist2"                ""      ""
+> rconfig   integer time_step_count_auxhist3  namelist,namelist_02     max_domains  0      h     "time_step_count_auxhist3"                ""      ""
+> rconfig   integer time_step_count_auxhist4  namelist,namelist_02     max_domains  0      h     "time_step_count_auxhist4"                ""      ""
+> rconfig   integer time_step_count_auxhist5  namelist,namelist_02     max_domains  0      h     "time_step_count_auxhist5"                ""      ""
+> 
+> rconfig   integer time_step_count_auxinput1  namelist,namelist_02     max_domains  0      h     "time_step_count_auxinput1"                ""      ""
+> rconfig   integer time_step_count_auxinput2  namelist,namelist_02     max_domains  0      h     "time_step_count_auxinput2"                ""      ""
+> rconfig   integer time_step_count_auxinput3  namelist,namelist_02     max_domains  0      h     "time_step_count_auxinput3"                ""      ""
+> rconfig   integer time_step_count_auxinput4  namelist,namelist_02     max_domains  0      h     "time_step_count_auxinput4"                ""      ""
+> rconfig   integer time_step_count_auxinput5  namelist,namelist_02     max_domains  0      h     "time_step_count_auxinput5"                ""      ""
+> 
+733a719,720
+> rconfig   integer time_step_count_restart namelist,namelist_02     1              10      h     "time_step_count_restart"               ""      ""
+> rconfig   integer time_step_begin_restart namelist,namelist_02     1              0       h     "time_step_begin_restart"               ""      ""
+737a725
+>                                                
+744d731
+< # NAMELIST 03
+748c735
+< rconfig   real    dt                      derived                  max_domains    2.      h     "dt"        "TEMPORAL RESOLUTION"      "SECONDS"
+---
+> rconfig   real    dt                      namelist,namelist_03     max_domains    2.      h     "dt"        "TEMPORAL RESOLUTION"      "SECONDS"
+768d754
+< # NAMELIST 04
+782,807d767
+< rconfig   integer     chem_opt            namelist,namelist_04     max_domains    0       rh       "chem_opt"              ""      ""
+< rconfig   integer     mp_physics          namelist,namelist_04     max_domains    0       rh       "mp_physics"            ""      ""
+< rconfig   integer     ra_lw_physics       namelist,namelist_04     max_domains    0       rh       "ra_lw_physics"         ""      ""
+< rconfig   integer     ra_sw_physics       namelist,namelist_04     max_domains    0       rh       "ra_sw_physics"         ""      ""
+< rconfig   integer     bl_sfclay_physics   namelist,namelist_04     max_domains    0       rh       "bl_sfclay_physics"             ""      ""
+< rconfig   integer     bl_surface_physics  namelist,namelist_04     max_domains    0       rh       "bl_surface_physics"            ""      ""
+< rconfig   integer     bl_pbl_physics      namelist,namelist_04     max_domains    0       rh       "bl_pbl_physics"                ""      ""
+< rconfig   integer     cu_physics          namelist,namelist_04     max_domains    0       rh       "cu_physics"            ""      ""
+< rconfig   integer     h_mom_adv_order     namelist,namelist_04     max_domains    3       rh       "h_mom_adv_order"               ""      ""
+< rconfig   integer     v_mom_adv_order     namelist,namelist_04     max_domains    3       rh       "v_mom_adv_order"               ""      ""
+< rconfig   integer     h_sca_adv_order     namelist,namelist_04     max_domains    3       rh       "h_sca_adv_order"               ""      ""
+< rconfig   integer     v_sca_adv_order     namelist,namelist_04     max_domains    3       rh       "v_sca_adv_order"               ""      ""
+< rconfig   integer     io_form_input       namelist,namelist_04     1              2       h        "io_form_input"                 ""      ""
+< rconfig   integer     io_form_auxinput1   namelist,namelist_04     1              0       h        "io_form_auxinput1"                 ""      ""
+< rconfig   integer     io_form_auxinput2   namelist,namelist_04     1              0       h        "io_form_auxinput2"                 ""      ""
+< rconfig   integer     io_form_auxinput3   namelist,namelist_04     1              0       h        "io_form_auxinput3"                 ""      ""
+< rconfig   integer     io_form_auxinput4   namelist,namelist_04     1              0       h        "io_form_auxinput4"                 ""      ""
+< rconfig   integer     io_form_auxinput5   namelist,namelist_04     1              0       h        "io_form_auxinput5"                 ""      ""
+< rconfig   integer     io_form_history     namelist,namelist_04     1              2       h        "io_form_history"               ""      ""
+< rconfig   integer     io_form_auxhist1    namelist,namelist_04     1              0       h        "io_form_auxhist1"               ""      ""
+< rconfig   integer     io_form_auxhist2    namelist,namelist_04     1              0       h        "io_form_auxhist2"               ""      ""
+< rconfig   integer     io_form_auxhist3    namelist,namelist_04     1              0       h        "io_form_auxhist3"               ""      ""
+< rconfig   integer     io_form_auxhist4    namelist,namelist_04     1              0       h        "io_form_auxhist4"               ""      ""
+< rconfig   integer     io_form_auxhist5    namelist,namelist_04     1              0       h        "io_form_auxhist5"               ""      ""
+< rconfig   integer     io_form_restart     namelist,namelist_04     1              2       h        "io_form_restart"               ""      ""
+< rconfig   integer     io_form_boundary    namelist,namelist_04     1              2       h        "io_form_boundary"               ""      ""
+809c769,781
+< # NAMELIST 05
+---
+> rconfig   integer start_year              namelist,namelist_05     max_domains    1993    irh   "start_year"            "4 DIGIT YEAR OF START OF MODEL" "YEARS"
+> rconfig   integer start_month             namelist,namelist_05     max_domains      03    irh   "start_month"           "2 DIGIT MONTH OF THE YEAR OF START OF MODEL, 1-12" "MONTHS"
+> rconfig   integer start_day               namelist,namelist_05     max_domains      13    irh   "start_day"             "2 DIGIT DAY OF THE MONTH OF START OF MODEL, 1-31" "DAYS"
+> rconfig   integer start_hour              namelist,namelist_05     max_domains      12    irh   "start_hour"            "2 DIGIT HOUR OF THE DAY OF START OF MODEL, 0-23" "HOURS"
+> rconfig   integer start_minute            namelist,namelist_05     max_domains      00    irh   "start_minute"          "2 DIGIT MINUTE OF THE HOUR OF START OF MODEL, 0-59" "MINUTES"
+> rconfig   integer start_second            namelist,namelist_05     max_domains      00    irh   "start_second"          "2 DIGIT SECOND OF THE MINUTE OF START OF MODEL, 0-59" "SECONDS"
+> 
+> rconfig   integer end_year                namelist,namelist_05     max_domains    1993    irh   "end_year"              "4 DIGIT YEAR OF END OF MODEL" "YEARS"
+> rconfig   integer end_month               namelist,namelist_05     max_domains      03    irh   "end_month"             "2 DIGIT MONTH OF THE YEAR OF END OF MODEL, 1-12" "MONTHS"
+> rconfig   integer end_day                 namelist,namelist_05     max_domains      14    irh   "end_day"               "2 DIGIT DAY OF THE MONTH OF END OF MODEL, 1-31" "DAYS"
+> rconfig   integer end_hour                namelist,namelist_05     max_domains      12    irh   "end_hour"              "2 DIGIT HOUR OF THE DAY OF END OF MODEL, 0-23" "HOURS"
+> rconfig   integer end_minute              namelist,namelist_05     max_domains      00    irh   "end_minute"            "2 DIGIT MINUTE OF THE HOUR OF END OF MODEL, 0-59" "MINUTES"
+> rconfig   integer end_second              namelist,namelist_05     max_domains      00    irh   "end_second"            "2 DIGIT SECOND OF THE MINUTE OF END OF MODEL, 0-59" "SECONDS"
+813,823d784
+< # NAMELIST DERIVED
+< rconfig   real    cen_lat                 derived                  max_domains    0       -        "cen_lat"              "center latitude"      "degrees, negative is south"
+< rconfig   real    cen_lon                 derived                  max_domains    0       -        "cen_lon"              "central longitude"      "degrees, negative is west"
+< rconfig   real    truelat1                derived                  max_domains    0       -        "true_lat1"             "first standard parallel"      "degrees, negative is south"
+< rconfig   real    truelat2                derived                  max_domains    0       -        "true_lat2"             "second standard parallel"      "degrees, negative is south"
+< rconfig   real    bdyfrq                  derived                  max_domains    0       -        "bdyfrq"               "lateral boundary input frequency"      "seconds"
+< rconfig   integer iswater                 derived                  max_domains    0       -        "iswater"              "land use index of water"      "index category"
+< rconfig   integer isice                   derived                  max_domains    0       -        "isice"                "land use index of ice"        "index category"
+< rconfig   integer map_proj                derived                  max_domains    0       -        "map_proj"             "domain map projection"      "0=none, 1=Lambert, 2=polar, 3=Mercator"
+< 
+< 
+867a829,855
+> rconfig   integer     chem_opt            namelist,namelist_04     max_domains    0       rh       "chem_opt"              ""      ""
+> rconfig   integer     mp_physics          namelist,namelist_04     max_domains    0       rh       "mp_physics"            ""      ""
+> rconfig   integer     ra_lw_physics       namelist,namelist_04     max_domains    0       rh       "ra_lw_physics"         ""      ""
+> rconfig   integer     ra_sw_physics       namelist,namelist_04     max_domains    0       rh       "ra_sw_physics"         ""      ""
+> rconfig   integer     bl_sfclay_physics   namelist,namelist_04     max_domains    0       rh       "bl_sfclay_physics"             ""      ""
+> rconfig   integer     bl_surface_physics  namelist,namelist_04     max_domains    0       rh       "bl_surface_physics"            ""      ""
+> rconfig   integer     bl_pbl_physics      namelist,namelist_04     max_domains    0       rh       "bl_pbl_physics"                ""      ""
+> rconfig   integer     cu_physics          namelist,namelist_04     max_domains    0       rh       "cu_physics"            ""      ""
+> rconfig   integer     h_mom_adv_order     namelist,namelist_04     max_domains    3       rh       "h_mom_adv_order"               ""      ""
+> rconfig   integer     v_mom_adv_order     namelist,namelist_04     max_domains    3       rh       "v_mom_adv_order"               ""      ""
+> rconfig   integer     h_sca_adv_order     namelist,namelist_04     max_domains    3       rh       "h_sca_adv_order"               ""      ""
+> rconfig   integer     v_sca_adv_order     namelist,namelist_04     max_domains    3       rh       "v_sca_adv_order"               ""      ""
+>                                                
+> rconfig   integer     io_form_input       namelist,namelist_04     1              2       h        "io_form_input"                 ""      ""
+> rconfig   integer     io_form_auxinput1   namelist,namelist_04     1              0       h        "io_form_auxinput1"                 ""      ""
+> rconfig   integer     io_form_auxinput2   namelist,namelist_04     1              0       h        "io_form_auxinput2"                 ""      ""
+> rconfig   integer     io_form_auxinput3   namelist,namelist_04     1              0       h        "io_form_auxinput3"                 ""      ""
+> rconfig   integer     io_form_auxinput4   namelist,namelist_04     1              0       h        "io_form_auxinput4"                 ""      ""
+> rconfig   integer     io_form_auxinput5   namelist,namelist_04     1              0       h        "io_form_auxinput5"                 ""      ""
+> rconfig   integer     io_form_history     namelist,namelist_04     1              2       h        "io_form_history"               ""      ""
+> rconfig   integer     io_form_auxhist1    namelist,namelist_04     1              0       h        "io_form_auxhist1"               ""      ""
+> rconfig   integer     io_form_auxhist2    namelist,namelist_04     1              0       h        "io_form_auxhist2"               ""      ""
+> rconfig   integer     io_form_auxhist3    namelist,namelist_04     1              0       h        "io_form_auxhist3"               ""      ""
+> rconfig   integer     io_form_auxhist4    namelist,namelist_04     1              0       h        "io_form_auxhist4"               ""      ""
+> rconfig   integer     io_form_auxhist5    namelist,namelist_04     1              0       h        "io_form_auxhist5"               ""      ""
+> rconfig   integer     io_form_restart     namelist,namelist_04     1              2       h        "io_form_restart"               ""      ""
+> rconfig   integer     io_form_boundary    namelist,namelist_04     1              2       h        "io_form_boundary"               ""      ""
+878a867,878
+>                                                 
+> # items that come in as metadata from the input file
+> # default values should be specified to prevent compiler from complaining about
+> # used before set of these variables (eg. in frame/module_configure.F)
+> rconfig   real    cen_lat                 derived                  max_domains    0       -        "cen_lat"              "center latitude"      "degrees, negative is south"
+> rconfig   real    cen_lon                 derived                  max_domains    0       -        "cen_lon"              "central longitude"      "degrees, negative is west"
+> rconfig   real    truelat1                derived                  max_domains    0       -        "true_lat1"             "first standard parallel"      "degrees, negative is south"
+> rconfig   real    truelat2                derived                  max_domains    0       -        "true_lat2"             "second standard parallel"      "degrees, negative is south"
+> rconfig   real    bdyfrq                  derived                  max_domains    0       -        "bdyfrq"               "lateral boundary input frequency"      "seconds"
+> rconfig   integer iswater                 derived                  max_domains    0       -        "iswater"              "land use index of water"      "index category"
+> rconfig   integer isice                   derived                  max_domains    0       -        "isice"                "land use index of ice"        "index category"
+> rconfig   integer map_proj                derived                  max_domains    0       -        "map_proj"             "domain map projection"      "0=none, 1=Lambert, 2=polar, 3=Mercator"

@@ -1,0 +1,10 @@
+
+odir=/ptmp/wx20py/consol/WRFV1/phys
+
+files=`ls *.F`
+for fl in $files
+do
+        echo "COMPARE $fl"
+        diff $fl $odir/$fl
+        echo "DONE $fl"
+done

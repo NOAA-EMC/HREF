@@ -1,0 +1,48 @@
+#! /bin/ksh
+
+outfile=oper_cent1023.grd
+
+# hrs="00 02 04 06 08 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40"
+hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+# hrs="00 03 06 09"
+# hrs="00 01 02 03 04 05 06 07 08 09"
+# hrs="00 03 06 09 12 15"
+
+
+workdir=/ptmp/wx20py/tb_cond/
+workdir=/gpfstmp/wx20py/wrfpost_nmmtest
+workdir=/gpfstmp/wx20py/
+
+# cp grdnav.tbl $workdir
+
+cd $workdir
+
+for hr in $hrs
+
+do
+
+nagrib << endgrib
+ GBFILE   = /ptmp/wx20py/2003102312/central08.t12z.awpreg${hr}.tm00_25mb
+ INDXFL   =
+ GDOUTF   = $outfile
+ PROJ     =
+ GRDAREA  =
+ KXKY     =
+ MAXGRD   = 4999
+ CPYFIL   = GDS
+ GAREA    = dset
+ OUTPUT   = T
+ GBTBLS   =
+ GBDIAG   =
+ PDSEXT   = NO
+
+r
+
+ex
+
+endgrib
+
+done
+
+gpend
+
