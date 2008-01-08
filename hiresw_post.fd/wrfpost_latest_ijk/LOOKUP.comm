@@ -1,0 +1,6 @@
+                             C O M M O N /LOOKUP/
+     & PL,THL,RDQ,RDTH,RDP,RDTHE
+     &,PLQ,RDPQ,RDTHEQ
+     &,QS0   (JTB),SQS   (JTB),THE0  (ITB),STHE  (ITB)
+     &,                        THE0Q(ITBQ),STHEQ(ITBQ)
+     &,PTBL  (ITB,JTB),TTBL  (JTB,ITB),TTBLQ(JTBQ,ITBQ)
