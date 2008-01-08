@@ -1,0 +1,365 @@
+3c3
+< MODULE MODULE_CU_BMJ
+---
+> MODULE MODULE_CU_BMJ_nmm
+5c5,6
+<       USE MODULE_MODEL_CONSTANTS
+---
+>       USE MODULE_MPP
+>       USE module_model_constants
+10c11
+<      &                  C0=2.E-3,DSPC=-3000.                            &
+---
+>      &                  DSPC=-3000.                                     &
+13,14c14,16
+<      &          ,EPSDN=1.05,EPSDT=0.,EPSNTP=0.005                &
+<      &          ,EPSP=1.E-7,EPSPR=5.E-8,EPSUP=0.95               &
+---
+> !mptest     &                 ,EPSDN=1.05,EPSDT=0.,EPSNTP=800.0                &
+>      &                 ,EPSDN=1.05,EPSDT=0.,EPSNTP=100.0                &
+>      &                 ,EPSP=1.E-7,EPSUP=0.95                           &
+16d17
+<      &                 ,FUP=0.07/3000.                                  &
+22c23
+<      &                 ,STABDF=0.80,STABDS=1.05                         &
+---
+>      &                 ,STABDF=0.90,STABDS=1.05                         &
+61,63c62,64
+<      &                 ,RAINCV,CUTOP,CUBOT,KPBL                         &
+<      &                 ,TH,T,QV,PINT,PMID,PI,RHO,DZ8W,W,SFCZ            &
+<      &                 ,CP,R,ELWV,ELIV,G,TFRZ,D608                      &
+---
+>      &                 ,RAINCV,LTOP,LBOT,LPBL                           &
+>      &                 ,TH,T,QV,PINT,PMID,PI,RHO,DZ8W                   &
+>      &                 ,CP,R,ELWV,G,TFRZ,D608                           &
+77c78,79
+<       INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: KPBL,LOWLYR
+---
+>       INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: LOWLYR,LPBL
+>       INTEGER,DIMENSION(IMS:IME,JMS:JME),INTENT(OUT) :: LBOT,LTOP
+79c81
+<       REAL,INTENT(IN) :: CP,DT,ELIV,ELWV,G,R,TFRZ,D608
+---
+>       REAL,INTENT(IN) :: CP,DT,ELWV,G,R,TFRZ,D608
+81c83
+<       REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: SFCZ,XLAND
+---
+>       REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: XLAND
+86c88
+<      &                                                     ,RHO,T,TH,W
+---
+>      &                                                     ,RHO,T,TH
+92,94c94
+< !
+<       REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(OUT) :: CUBOT,CUTOP
+< !
+---
+> 
+101,103c101
+<       INTEGER :: LBOT,LPBL,LTOP
+< !
+<       REAL :: DTCNVC,LANDMASK,PCPCOL,PSFC,PTOP
+---
+>       REAL :: CUBOT,CUTOP,DTCNVC,LANDMASK,PCPCOL,PSFC,PTOP
+106d103
+<       REAL,DIMENSION(KTS:KTE+1) :: WCOL,ZCOL
+147,148d143
+<           ZCOL(KTE+1)=SFCZ(I,J) ! ZCOL goes from top downward
+<           WCOL(KTE+1)=0.
+156c151
+< !***  COUNTS DOWNWARD FROM THE DOMAIN'S TOP.
+---
+> !***  COUNTS DOWNWARD FROM THE DOMAIN'S TOP
+158c153
+<           DO K=KTE,KTS,-1
+---
+>           DO K=KTS,KTE
+168,169d162
+<             ZCOL(K)=ZCOL(K+1)+DZ8W(I,KFLIP,J)
+<             WCOL(K)=W(I,KFLIP+1,J)
+175d167
+<           LPBL=KTE+1-KPBL(I,J)
+181,184c173,176
+<           CALL BMJ(ITIMESTEP,I,J,DTCNVC,LMH,LANDMASK,CLDEFI(I,J)        &
+<      &            ,DPCOL,PCOL,QCOL,TCOL,WCOL,ZCOL,PSFC,PTOP             &
+<      &            ,DQDT,DTDT,PCPCOL,LBOT,LTOP,LPBL                      &
+<      &            ,CP,R,ELWV,ELIV,G,TFRZ,D608                           &        
+---
+>           CALL BMJ(I,J,DTCNVC,LMH,LANDMASK,CLDEFI(I,J)                  &
+>      &            ,DPCOL,PCOL,QCOL,TCOL,PSFC,PTOP                       &
+>      &            ,DQDT,DTDT,PCPCOL,LBOT(I,J),LTOP(I,J),LPBL(I,J)       &
+>      &            ,CP,R,ELWV,G,TFRZ,D608                                &        
+187c179
+<      &            ,ITS,ITE,JTS,JTE,KTS,KTE)
+---
+>      &            ,ITS,ITE,JTS,JTE,KTS,KTE,ITIMESTEP)
+208,209c200,201
+<           CUTOP(I,J)=REAL(KTE+1-LTOP)
+<           CUBOT(I,J)=REAL(KTE+1-LBOT)
+---
+>           LTOP(I,J)=KTE+1-LTOP(I,J)
+>           LBOT(I,J)=KTE+1-LBOT(I,J)
+221,222c213,214
+<      & (ITIMESTEP,I,J,DTCNVC,LMH,SM,CLDEFI                              &
+<      & ,DPRS,PRSMID,Q,T,W,Z,PSFC,PT                                     &
+---
+>      & (I,J,DTCNVC,LMH,SM,CLDEFI                                        &
+>      & ,DPRS,PRSMID,Q,T,PSFC,PT                                         &
+224c216
+<      & ,CP,R,ELWV,ELIV,G,TFRZ,D608                                      &
+---
+>      & ,CP,R,ELWV,G,TFRZ,D608                                           &
+227c219
+<      & ,ITS,ITE,JTS,JTE,KTS,KTE)
+---
+>      & ,ITS,ITE,JTS,JTE,KTS,KTE,ITIMESTEP)
+234c226
+<                            ,I,J,ITIMESTEP
+---
+>                            ,I,J,itimestep
+240c232
+<       REAL,INTENT(IN) :: CP,D608,DTCNVC,ELIV,ELWV,G,PSFC,PT,R,SM,TFRZ
+---
+>       REAL,INTENT(IN) :: CP,D608,DTCNVC,ELWV,G,PSFC,PT,R,SM,TFRZ
+244,245d235
+<       REAL,DIMENSION(KTS:KTE+1),INTENT(IN) :: W,Z
+< !
+254c244
+<       REAL,DIMENSION(KTS:KTE) :: APEK,APESK,EL,FPK                      &
+---
+>       REAL,DIMENSION(KTS:KTE) :: APEK,APESK,FPK                         &
+256c246
+<                                 ,THERK,THES,THEVRF,THSK                 &
+---
+>                                 ,THERK,THEVRF,THSK                      &
+267,285c257,273
+<      &       ,AVRGT,AVRGTL,BQ,BQK,BQS00K,BQS10K                         &
+<      &       ,CAPA,CPSP,CUP,DEN,DENTPY,DEPMIN,DEPTH                     &
+<      &       ,DEPWL,DHDT,DIFQL,DIFTL,DPKL,DPLO,DPMIX,DPOT               &
+<      &       ,DPUP,DQREF,DRHDP,DRHEAT,DSP                               &
+<      &       ,DSP0,DSP0K,DSPB,DSPBK,DSPT,DSPTK                          &
+<      &       ,DSQ,DST,DSTQ,DTHEM,DTDP,DTRF,DW,EFI                       &
+<      &       ,FEFI,FFUP,FPTK,HCORR,OTSUM,P,P00K,P01K,P10K,P11K          &
+<      &       ,PART1,PART2,PART3,PBOT,PBOTFC,PBTK                        &
+<      &       ,PFLO,PFUP,PK0,PKB,PKL,PKT,PKXXXX,PKXXXY                   &
+<      &       ,PLMH,PLO,POTSUM,PP1,PPK,PRECK                             &
+<      &       ,PRESK,PSP,PSUM,PTHRS,PTOP,PTPK,PUP                        &
+<      &       ,QBT,QKL,QNEW,QOTSUM,QQ1,QQK,QRFKL,QRFTP,QSUM              &
+<      &       ,RDP0T,RDPF,RDPSUM,RDPUP,RDTCNVC                           &
+<      &       ,RHH,RHL,RHMAX,ROTSUM,RTBAR                                &
+<      &       ,SM1,SMIX,SQ,SQK,SQS00K,SQS10K,STABDL,SUMDE,SUMDP          &
+<      &       ,SUMDT,TAUK,TAUKSC,TCORR,THBT,THERKX,THERKY                &
+<      &       ,THESP,THSKL,THTPK,THVMKL,TKL,TNEW                         &
+<      &       ,TPSP,TQ,TQK,TREFKX,TRFKL,TRFPSP,TSKL                      &
+<      &       ,TTH,TTHBT,TTHES,TTHK,WPSP,ZPSP
+---
+>      &            ,AVRGT,AVRGTL,BQ,BQK,BQS00K,BQS10K                    &
+>      &            ,CAPA,CUP,DEN,DENTPY,DEPMIN,DEPTH                     &
+>      &            ,DEPWL,DHDT,DIFQL,DIFTL,DPKL,DPMIX,DPOT               &
+>      &            ,DQREF,DRHDP,DRHEAT,DSP                               &
+>      &            ,DSP0,DSP0K,DSPB,DSPBK,DSPT,DSPTK                     &
+>      &            ,DSQ,DST,DSTQ,DTHEM,DTDP,EFI                          &
+>      &            ,FEFI,FPTK,HCORR,OTSUM,P,P00K,P01K,P10K,P11K          &
+>      &            ,PART1,PART2,PART3,PBOT,PBOTFC,PBTK                   &
+>      &            ,PK0,PKB,PKL,PKT,PKXXXX,PKXXXY                        &
+>      &            ,PLMH,POTSUM,PP1,PPK,PRECK                            &
+>      &            ,PRESK,PSP,PSUM,PTHRS,PTOP,PTPK                       &
+>      &            ,QBT,QKL,QNEW,QOTSUM,QQ1,QQK,QRFKL,QRFTP,QSUM,RDP0T   &
+>      &            ,RDPSUM,RDTCNVC,RHH,RHL,RHMAX,ROTSUM,RTBAR            &
+>      &            ,SM1,SMIX,SQ,SQK,SQS00K,SQS10K,STABDL,SUMDE,SUMDP     &
+>      &            ,SUMDT,TAUK,TAUKSC,TCORR,THBT,THERKX,THERKY           &
+>      &            ,THESP,THSKL,THTPK,THVMKL,TKL,TNEW                    &
+>      &            ,TPSP,TQ,TQK,TREFKX,TRFKL,TSKL,TTH,TTHBT,TTHES,TTHK
+287,288c275
+<       INTEGER :: IQ,IQTB,IT,ITER,ITREFI,ITTB,ITTBK                      &
+<      &          ,KB,KBMAX,KNUMH,KNUML                                   &
+---
+>       INTEGER :: IQ,IQTB,IT,ITER,ITREFI,ITTB,ITTBK,KB,KNUMH,KNUML       &
+310c297
+< !-----------------------------------------------------------------------
+---
+> !-----00----------------------------------------------------------------
+357c344
+<       IF(KB.LE.LMH)THEN
+---
+>       IF(KB.LE.LMH.AND.PKL.GE.ELEVFC*PLMH)THEN
+407d393
+<         THES(KB)=TTHES
+409c395
+<         IF(PKL.GE.ELEVFC*PLMH.AND.TTHES.GT.THESP)THEN
+---
+>         IF(TTHES.GT.THESP)THEN
+413d398
+<           KBMAX=KB
+422,459c407,411
+<       DTRF=0.
+< !     PUP=PT+DPRS(KTS)
+< !
+< !     DO L=KTS+1,LMH
+< !       PLO=PUP+DPRS(L)
+< !
+< !       IF(PLO.GE.PSP.AND.PLO.GT.PQM)THEN
+< !         LBOT=L
+< !
+< !         IF(ITIMESTEP.GT.4)THEN
+< !           RDPF=(PSP-PUP)/DPRS(L)
+< !           ZPSP=(Z(L)-Z(L-1))*RDPF+Z(L-1)
+< !           WPSP=(W(L)-W(L-1))*RDPF+W(L-1)
+< !
+< !           IF(ZPSP.LE.2000.)THEN
+< !             CPSP=ZPSP*(C0*0.0005)
+< !           ELSE
+< !             CPSP=C0
+< !           ENDIF
+< !
+< !           DW=(WPSP-CPSP)*100.
+< !
+< !           IF(DW.GT.0.)THEN
+< !             DTRF=DW**.33333333
+< !           ELSE
+< !             DTRF=-(-DW)**.33333333
+< !           ENDIF
+< !
+< !         ENDIF
+< !
+< !         GO TO 240
+< !       ENDIF
+< !
+< !       PUP=PLO
+< !     ENDDO
+< ! 240 CONTINUE
+< !
+< !-----------------------------------------------------------------------
+---
+>       DO L=1,LMH-1
+>         P=PRSMID(L)
+>         IF(P.LT.PSP.AND.P.GE.PQM)LBOT=L+1
+>       ENDDO
+> !***
+462,463c414
+< !-----------------------------------------------------------------------
+< !
+---
+> !***
+475d425
+< !-----------------------------------------------------------------------
+477d426
+< !-----------------------------------------------------------------------
+481,499d429
+< !
+<       DO L=LMH,KBMAX,-1
+<         THES(L)=THESP
+<       ENDDO
+< !
+<       FEFI=(CLDEFI-EFIMN)*SLOPE+EFMNT
+<       FFUP=FUP/(FEFI*FEFI)
+<       DPUP=DPRS(KBMAX)
+< !
+<       DO L=KBMAX-1,1,-1
+<         DPLO=DPUP
+<         DPUP=DPRS(L)
+<         RDPUP=2./(DPLO+DPUP)
+< !
+<         PFUP=FFUP*DPUP*DPUP*RDPUP
+<         PFLO=1.-PFUP
+< !
+<         THES(L)=THES(L)*PFUP+THES(L+1)*PFLO
+<       ENDDO
+511c441
+<      &               ,STHE,THE0,THES(L),TTBL,TREF(L))
+---
+>      &               ,STHE,THE0,THESP,TTBL,TREF(L))
+514c444
+<      &               ,STHEQ,THE0Q,THES(L),TTBLQ,TREF(L))
+---
+>      &               ,STHEQ,THE0Q,THESP,TTBLQ,TREF(L))
+521,526c451,453
+<       LTOP=LBOT
+<       PLO=PRSMID(LBOT)
+<       PUP=PRSMID(LBOT-1)
+<       RDPF=(PSP-PUP)/(PLO-PUP)
+<       TPSP  =(T   (LBOT)-T   (LBOT-1))*RDPF+T   (LBOT-1)
+<       TRFPSP=(TREF(LBOT)-TREF(LBOT-1))*RDPF+TREF(LBOT-1)
+---
+>       DO L=LMH,1,-1
+>         IF(TREF(L).GT.T(L)-DTTOP)LTOP=L
+>       ENDDO
+528,533d454
+<       IF(DTRF+TRFPSP.GE.TPSP)THEN
+<         DO L=LMH,1,-1
+<           IF(TREF(L).GT.T(L)-DTTOP)LTOP=L
+<         ENDDO
+<       ENDIF
+< !
+624d544
+<         EL(L)=ELWV
+642d561
+<         EL(L)=ELIV
+734c653
+<           SUMDE=((TK(L)-TREFK(L))*CP+(QK(L)-QREFK(L))*EL(L))*DPRS(L)    &
+---
+>           SUMDE=((TK(L)-TREFK(L))*CP+(QK(L)-QREFK(L))*ELWV)*DPRS(L)     &
+744,745d662
+<         LQM=1
+< !
+788c705
+<         DSQ=DIFQL*EL(L)*DPOT+DSQ
+---
+>         DSQ=DIFQL*DPOT+DSQ
+796c713
+<       DSQ=DSQ+DSQ
+---
+>       DSQ=(DSQ+DSQ)*ELWV
+816c733,734
+<       IF(DENTPY.GE.EPSNTP.AND.PRECK.GT.EPSPR)THEN
+---
+> !zj      IF(DST.GT.0..AND.DENTPY.GE.EPSNTP.AND.PRECK.GT.0.)THEN
+>       IF(DENTPY.GE.EPSNTP.AND.PRECK.GT.0.)THEN
+820d737
+<         FEFI=(DENTPY-EPSNTP)*FEFI/DENTPY
+839,842c756,759
+< !       LTOP=LTOP+3
+< !       PTOP=PRSMID(LTOP)
+< !       DEPMIN=PSH*PSFC*RSFCP
+< !       DEPTH=PBOT-PTOP
+---
+> !zj        LTOP=LTOP+3
+> !zj        PTOP=PRSMID(LTOP)
+> !zj        DEPMIN=PSH*PSFC*RSFCP
+> !zj        DEPTH=PBOT-PTOP
+846,848c763,765
+< !       IF(DEPTH.GE.DEPMIN)THEN
+< !         GO TO 300
+< !       ENDIF
+---
+> !zj        IF(DEPTH.GE.DEPMIN)THEN
+> !zj          GO TO 300
+> !zj        ENDIF
+851,858d767
+<         IF(PRECK.LT.EPSPR)CLDEFI=1.
+< !
+<         IF(DENTPY.LT.EPSNTP)THEN
+<           LBOT=0
+<           LTOP=KTE
+<           PTOP=PBOT
+<           GO TO 600
+<         ENDIF
+976,981d884
+< !
+<         IF(TKL.GE.TFRZ)THEN
+<           EL(L)=ELWV
+<         ELSE
+<           EL(L)=ELIV
+<         ENDIF
+1104c1007
+<         DST   =(TREFK(L)-TK(L))*RTBAR*DPRS(L)/EL(L)+DST
+---
+>         DST   =(TREFK(L)-TK(L))*RTBAR*DPRS(L)+DST
+1112c1015
+<       DST   =DST*ROTSUM*CP
+---
+>       DST   =DST*ROTSUM*CP/ELWV
+1648c1551
+<       END MODULE MODULE_CU_BMJ
+---
+>       END MODULE MODULE_CU_BMJ_nmm

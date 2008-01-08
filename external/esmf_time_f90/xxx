@@ -1,0 +1,3 @@
+esmf_time : 
+	( cd ../external/esmf_time_f90 ; \
+          make FC="$(FC) $(FCDEBUG)" )

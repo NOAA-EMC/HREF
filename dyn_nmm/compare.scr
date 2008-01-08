@@ -1,0 +1,12 @@
+
+# odir=../dyn_nmm
+odir=/ptmp/wx20py/consol/WRFV1/dyn_nmm
+odir=/emc2/wx22tb/NMM_WRF/dyn_nmm
+
+files=`ls *.F`
+for fl in $files
+do
+        echo "COMPARE $fl"
+        diff $fl $odir/$fl
+        echo "DONE $fl"
+done

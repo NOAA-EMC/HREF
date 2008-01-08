@@ -1,0 +1,265 @@
+
+!--------------------------------------------------------------------
+SUBROUTINE radiation_driver(itimestep,dt,                           &
+                      RTHRATENLW,RTHRATENSW,RTHRATEN,               &
+                      GLW,GSW,XLAT,XLONG,ALBEDO,CLDFRA,EMISS,       &
+                      rho_phy,moist,n_moist,p8w,p_phy,Pb,pi_phy,    &
+                      dz8w,t_phy,t8w,GMT,JULDAY,config_flags,       &
+                      RADT,STEPRA,ICLOUD,                           &
+                      taucldi,taucldc,warm_rain,                    &
+! for eta radiation
+                      XLAND,TSK,HTOP,HBOT,CUPPT,VEGFRA,SNOW,        &
+                      julyr,                                        &
+                      ids,ide, jds,jde, kds,kde,                    &
+                      ims,ime, jms,jme, kms,kme,                    &
+                      its,ite, jts,jte, kts,kte                     )
+!--------------------------------------------------------------------
+   USE module_bc
+
+   TYPE(grid_config_rec_type),  INTENT(IN   )    :: config_flags
+!
+   INTEGER,      INTENT(IN   )    ::   ids,ide, jds,jde, kds,kde, &
+                                       ims,ime, jms,jme, kms,kme, &
+                                       its,ite, jts,jte, kts,kte, &
+                                       n_moist 
+   INTEGER,      INTENT(IN   )    ::   STEPRA,ICLOUD
+   LOGICAL,      INTENT(IN   )    ::   warm_rain
+!
+   REAL,      INTENT(IN   )       ::   RADT
+
+   REAL, DIMENSION( ims:ime, jms:jme ),                           &
+         INTENT(IN   )  ::                                 XLAND, &
+                                                             TSK, &
+                                                          VEGFRA, &
+                                                            SNOW
+
+   REAL, DIMENSION( ims:ime, jms:jme ),                           &
+         INTENT(IN   )  ::                                  HTOP, &
+                                                            HBOT, &
+                                                           CUPPT
+
+   INTEGER, INTENT(IN   )  ::   julyr                              
+
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                  &
+         INTENT(IN ) :: dz8w, p8w, p_phy, Pb, pi_phy, t_phy,      &
+                        t8w, rho_phy, CLDFRA
+!
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme, n_moist ) ,        &
+         INTENT(IN ) :: moist
+!
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                  &
+         INTENT(INOUT) :: RTHRATEN, RTHRATENLW, RTHRATENSW
+
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                  &
+         INTENT(INOUT) ::  taucldi,taucldc
+!
+   REAL, DIMENSION( ims:ime, jms:jme ),                           &
+         INTENT(IN   ) :: XLAT, XLONG, ALBEDO, EMISS
+!
+   REAL, DIMENSION( ims:ime, jms:jme ),                           &
+         INTENT(INOUT) :: GSW, GLW
+!
+   REAL, INTENT(IN    )  :: GMT,dt        
+!
+   INTEGER, INTENT(IN  ) :: JULDAY, itimestep
+!
+
+END SUBROUTINE radiation_driver
+
+!---------------------------------------------------------------
+SUBROUTINE pbl_driver(itimestep,dt,u_frame,v_frame,            &
+               UBLTEN,VBLTEN,THBLTEN,                          &
+               QVBLTEN,QCBLTEN,QIBLTEN,RAINCV,RAINNCV,RAINBL,  &
+               GLW,GSW,EMISS,TSK,TMN,XLAND,ZNT,HT,MAVAIL,      &
+               UST,HOL,MOL,PBLH,CAPG,THC,                      &
+               SNOWC,HFX,QFX,REGIME,                           &
+               SMSTAV,SMSTOT,SFCRUNOFF,UDRUNOFF,               &
+               IVGTYP,ISLTYP,VEGFRA,SFCEVP,GRDFLX,             &
+               SFCEXC,ACSNOW,ACSNOM,ALBEDO,XICE,               &
+               th2,t2,q2,SMOIS,SNOW,CANWAT,                    & 
+               u_phy,v_phy,th_phy,rho_phy,moist,               &
+               p_phy,pi_phy,p8w,t_phy,dz8w,z,                  &
+               TKE_MYJ,AKHS,AKMS,                              &
+               THZ0,QZ0,UZ0,VZ0,QSFC,LOWLYR,                   &
+               config_flags,                                   &
+               DX,n_moist,TSLB,ZS,DZS,                         & !TSLB (STEMP)
+               num_soil_layers,STEPBL,IFSNOW,ISFFLX,warm_rain, &
+               u10,v10,tshltr,th10,qshltr,q10,                 &
+               ids,ide, jds,jde, kds,kde,                      &
+               ims,ime, jms,jme, kms,kme,                      &
+               its,ite, jts,jte, kts,kte                       )
+!---------------------------------------------------------------
+   USE module_bc
+
+   TYPE(grid_config_rec_type),  INTENT(IN   )    :: config_flags
+!
+   INTEGER,    INTENT(IN   )    ::  ids,ide, jds,jde, kds,kde, &
+                                    ims,ime, jms,jme, kms,kme, &
+                                    its,ite, jts,jte, kts,kte, &
+                                    n_moist         
+   INTEGER,    INTENT(IN   )    ::  itimestep,STEPBL,IFSNOW,ISFFLX
+!
+   INTEGER,    INTENT(IN   )    ::  num_soil_layers
+   LOGICAL,      INTENT(IN   )    ::   warm_rain
+!
+   INTEGER,    DIMENSION( ims:ime , jms:jme ),                    &
+               INTENT(IN   )    ::                        IVGTYP, &
+                                                          ISLTYP
+   INTEGER,    DIMENSION( ims:ime , jms:jme ),                    &
+               INTENT(IN   ) :: LOWLYR
+!
+
+
+   REAL,       INTENT(IN   )    ::  DT,DX
+
+   REAL,       DIMENSION( ims:ime , 1:num_soil_layers, jms:jme ), &
+               INTENT(INOUT)    :: SMOIS,TSLB
+
+   REAL,       DIMENSION( 1:num_soil_layers ),                    &
+               INTENT(INOUT)    :: ZS,DZS
+!
+   REAL,       DIMENSION( ims:ime, kms:kme, jms:jme ),            &
+               INTENT(IN   )    :: p_phy, pi_phy, rho_phy,        &
+			           u_phy, v_phy, th_phy, p8w,     &
+                                   t_phy, dz8w,z
+!
+   REAL,       DIMENSION( ims:ime, kms:kme, jms:jme, n_moist ),   &
+               INTENT(IN ) :: moist
+!
+   REAL,       DIMENSION( ims:ime , jms:jme ),                    &
+               INTENT(IN   ) :: EMISS, TMN, GLW, GSW, THC,        &
+                                MAVAIL, XLAND, XICE, VEGFRA,      &
+                                RAINCV, RAINNCV, HT
+
+   REAL,       DIMENSION( ims:ime, jms:jme )                    , &
+               INTENT(INOUT) :: TSK, UST, HOL, MOL, PBLH, CAPG,   &
+                                HFX, QFX, REGIME, ZNT,SNOW,ALBEDO,&
+                                SNOWC, CANWAT, SMSTAV, SMSTOT,    &
+                                SFCRUNOFF, UDRUNOFF, SFCEVP,      &
+                                GRDFLX, ACSNOW, ACSNOM,           &
+                                Q2, TH2, T2, SFCEXC,              &
+                                QSFC,AKHS,AKMS,                   &
+                                THZ0,QZ0,UZ0,VZ0,RAINBL
+
+   REAL,       DIMENSION( ims:ime , jms:jme ),                    &
+               INTENT(OUT  ) :: U10,V10,TSHLTR,TH10,QSHLTR,Q10    
+!
+   REAL,       DIMENSION( ims:ime, kms:kme, jms:jme ),            &
+               INTENT(INOUT) :: UBLTEN, VBLTEN, THBLTEN, QVBLTEN, &
+                                QCBLTEN, QIBLTEN, TKE_MYJ
+
+   REAL ,                              INTENT(IN   ) ::  u_frame, &
+                                                         v_frame
+
+ 
+END SUBROUTINE pbl_driver
+
+!-----------------------------------------------------------------
+SUBROUTINE cumulus_driver(itimestep,dt,DX,n_moist,               &
+                     RTHCUTEN,RQVCUTEN,RQCCUTEN,RQRCUTEN,        &
+                     RQICUTEN,RQSCUTEN,RAINC,RAINCV,NCA,         &
+                     u_phy,v_phy,th_phy,t_phy,w,moist,           &
+                     dz8w,p8w,p_phy,pi_phy,config_flags,         &
+                     W0AVG,rho_phy,STEPCU,                       &
+                     CLDEFI,LOWLYR,XLAND,CU_ACT_FLAG,warm_rain,  &
+                     HTOP,HBOT,                                  &
+                     ids,ide, jds,jde, kds,kde,                  &
+                     ims,ime, jms,jme, kms,kme,                  &
+                     its,ite, jts,jte, kts,kte                   )
+!-----------------------------------------------------------------
+   USE module_bc
+
+   TYPE(grid_config_rec_type),  INTENT(IN   )    :: config_flags
+
+   INTEGER,      INTENT(IN   )    :: ids,ide, jds,jde, kds,kde
+   INTEGER,      INTENT(IN   )    :: ims,ime, jms,jme, kms,kme
+   INTEGER,      INTENT(IN   )    :: its,ite, jts,jte, kts,kte
+   INTEGER,      INTENT(IN   )    :: n_moist, itimestep
+   INTEGER,      INTENT(IN   )    :: STEPCU
+   LOGICAL,      INTENT(IN   )    ::   warm_rain
+
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                 &
+         INTENT(IN )    ::   dz8w, p8w, p_phy, pi_phy, u_phy,    &
+                             v_phy,th_phy,t_phy, rho_phy, w
+
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme, n_moist ),        &
+         INTENT(IN )    :: moist
+
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                 &
+         INTENT(INOUT)  ::   RTHCUTEN, RQVCUTEN, RQCCUTEN,       & 
+                             RQRCUTEN, RQICUTEN, RQSCUTEN, W0AVG
+
+   REAL, DIMENSION( ims:ime , jms:jme ),                         &
+         INTENT(IN) ::                                     XLAND
+
+   REAL, DIMENSION( ims:ime , jms:jme ),                         &
+          INTENT(INOUT) :: RAINC,RAINCV,NCA,HTOP,HBOT,CLDEFI
+   LOGICAL, DIMENSION( ims:ime , jms:jme ),                      &
+          INTENT(INOUT) :: CU_ACT_FLAG
+
+   INTEGER, DIMENSION( ims:ime , jms:jme ), INTENT(IN)    :: LOWLYR
+
+   REAL,  INTENT(IN   ) :: DT, DX
+
+!  REAL, INTENT(IN  )   :: G,R,CP,rvovrd
+
+END SUBROUTINE cumulus_driver
+
+!-----------------------------------------------------------------
+SUBROUTINE microphysics_driver(th_phy, moist_new, moist_old, w,  & 
+                               rho, pi_phy, p_phy,RAINNC,RAINNCV,&
+                               z, ht, dz8w, p8w, dt, dx, dy,     &
+                               config_flags,                     &
+                               n_moist, warm_rain,               &
+                               XLAND,T0ETA,Q0ETA,P0ETA,itimestep,&
+                               F_ICE_PHY,F_RAIN_PHY,F_RIMEF_PHY, &
+                               LOWLYR,                           &
+                               ids,ide, jds,jde, kds,kde,        & 
+                               ims,ime, jms,jme, kms,kme,        &
+                               its,ite, jts,jte, kts,kte         ) 
+!-----------------------------------------------------------------
+   USE module_bc
+
+   TYPE(grid_config_rec_type),  INTENT(IN   )    :: config_flags
+!
+   INTEGER,      INTENT(IN   )    ::   ids,ide, jds,jde, kds,kde
+   INTEGER,      INTENT(IN   )    ::   ims,ime, jms,jme, kms,kme
+   INTEGER,      INTENT(IN   )    ::   its,ite, jts,jte, kts,kte
+   INTEGER,      INTENT(IN   )    ::           n_moist,itimestep
+   LOGICAL,      INTENT(IN   )    ::   warm_rain
+!
+   REAL, DIMENSION( ims:ime , kms:kme , jms:jme ),                &
+         INTENT(INOUT) ::                                 th_phy, & 
+                                                           T0ETA, &
+                                                           Q0ETA, &
+                                                           P0ETA 
+!
+   REAL, DIMENSION( ims:ime , kms:kme , jms:jme, n_moist ),       &
+         INTENT(INOUT) ::                              moist_new
+
+   REAL, DIMENSION( ims:ime , kms:kme , jms:jme ),                &
+         INTENT(IN   ) ::                                      z, &
+                                                             rho, &
+                                                            dz8w, &
+                                                               w, &
+                                                             p8w, &
+                                                          pi_phy, &
+                                                           p_phy
+!
+   REAL, DIMENSION( ims:ime , kms:kme , jms:jme, n_moist ),       &
+         INTENT(INOUT) ::                              moist_old
+!
+   REAL, DIMENSION( ims:ime , jms:jme ),  INTENT(INOUT) ::RAINNC, &
+                                                         RAINNCV
+!
+   REAL, INTENT(INOUT),	 DIMENSION(ims:ime, kms:kme, jms:jme ) :: &
+                                F_ICE_PHY,F_RAIN_PHY,F_RIMEF_PHY
+
+   REAL , DIMENSION( ims:ime , jms:jme ) , INTENT(IN)   :: ht,XLAND
+
+   INTEGER,    DIMENSION( ims:ime,jms:jme ), INTENT(INOUT) :: LOWLYR
+
+   REAL, INTENT(IN   ) ::             dt,dx,dy
+!
+END SUBROUTINE microphysics_driver
+

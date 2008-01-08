@@ -1,0 +1,151 @@
+144d143
+< 
+164c163
+<                                               CICE_input, RIMEF_input
+---
+>                                               CICE_input, RIMEF_input 
+407a407,410
+> 	if (ght_gc(its,jts,10) .eq. 0. .and. ght_gc(its,jts,11) .eq. 0.) then
+> 	call wrf_error_fatal("zero geopotential height fields....bad news")
+> 	endif
+> 
+482a486,487
+> 
+> 	write(0,*) 'ht_gc(7,12) pre smooth: ', ht_gc(7,12)
+488a494,495
+> 	write(0,*) 'ht_gc(7,12) post smooth: ', ht_gc(7,12)
+> 
+708d714
+<         CLOUDFIELDS=.TRUE.
+709a716,717
+> 	CLOUDFIELDS=.TRUE.
+> 
+712,716c720,724
+<         ALLOCATE(RWMR_input(IMS:IME,JMS:JME,KMS:KME))
+<         ALLOCATE(CLWMR_input(IMS:IME,JMS:JME,KMS:KME))
+<         ALLOCATE(SNMR_input(IMS:IME,JMS:JME,KMS:KME))
+<         ALLOCATE(CICE_input(IMS:IME,JMS:JME,KMS:KME))
+<         ALLOCATE(RIMEF_input(IMS:IME,JMS:JME,KMS:KME))
+---
+> 	ALLOCATE(RWMR_input(IMS:IME,JMS:JME,KMS:KME))
+> 	ALLOCATE(CLWMR_input(IMS:IME,JMS:JME,KMS:KME))
+> 	ALLOCATE(SNMR_input(IMS:IME,JMS:JME,KMS:KME))
+> 	ALLOCATE(CICE_input(IMS:IME,JMS:JME,KMS:KME))
+> 	ALLOCATE(RIMEF_input(IMS:IME,JMS:JME,KMS:KME))
+718c726
+<         write(0,*) 'maxval(rwmr_gc): ', maxval(rwmr_gc)
+---
+> 	write(0,*) 'maxval(rwmr_gc): ', maxval(rwmr_gc)
+725c733,734
+<         write(0,*) 'maxval(rwmr_input): ', maxval(rwmr_input)
+---
+> 	write(0,*) 'maxval(rwmr_input): ', maxval(rwmr_input)
+> 
+739,740c748,749
+<         write(0,*) 'maxval(snmr_gc): ', maxval(snmr_gc)
+<         write(0,*) 'maxval(snmr_input): ', maxval(snmr_input)
+---
+> 	write(0,*) 'maxval(snmr_gc): ', maxval(snmr_gc)
+> 	write(0,*) 'maxval(snmr_input): ', maxval(snmr_input)
+748c757
+<         write(0,*) 'maxval(cice_gc): ', maxval(cice_gc)
+---
+> 	write(0,*) 'maxval(cice_gc): ', maxval(cice_gc)
+773,775c782,784
+<         if (CWM(I,J,K) .lt. 0 .or. CWM(I,J,K) .gt. 50.e-2) then
+<         write(0,*) 'strange CWM...I,J,K,CWM: ', I,J,K,CWM(I,J,K)
+<         endif
+---
+> 	if (CWM(I,J,K) .lt. 0 .or. CWM(I,J,K) .gt. 50.e-2) then
+> 	write(0,*) 'strange CWM...I,J,K,CWM: ', I,J,K,CWM(I,J,K)
+> 	endif
+808c817,818
+<         write(0,*) 'maxval(CWM) leaving definition loop: ', maxval(CWM)
+---
+> 	write(0,*) 'maxval(CWM) leaving definition loop: ', maxval(CWM)
+> 
+811d820
+<         ENDIF ! on clouds
+812a822
+> 	ENDIF ! on clouds
+813a824,825
+> 
+> 
+1043c1055
+<         DO J=JTE,JTS,-(((JTE-JTS)/25)+1)
+---
+>         DO J=JTE,JTS,-JTE/25
+1191a1204,1208
+> 
+> 	if (I .eq. 269 .and. J .eq. 46) then
+> 	write(0,*) 'I,J,K, landusef :: ', I,J,K,landusef(I,K,J) 
+> 	endif
+> 
+2254,2255c2271,2272
+< 	Ilook=25
+<         Jlook=25
+---
+> 	Ilook=7
+>         Jlook=12
+2272a2290,2296
+> 
+> 	if (I .eq. Ilook .and. J .eq. Jlook) then
+> 	write(0,*) 'I,J,PSFC_IN, TOPO_IN: ', I,J,PSFC_IN(I,J),TOPO_IN(I,J)
+> 	write(0,*) 'PRESS3D_IN(I,J,1): ', PRESS3D_IN(I,J,1)
+> 	write(0,*) 'Z3D_IN(I,J,1), Z3D_IN(I,J,2) : ', Z3D_IN(I,J,1), Z3D_IN(I,J,2)
+> 	endif
+> 	
+2348a2373,2376
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'PSFC_IN, TOPO_IN at (7,12):: ', BOT_INPUT_PRESS, BOT_INPUT_HGT
+> 	endif
+> 
+2364c2392,2393
+<        DO L=2,generic-1
+---
+> !	do L=2,generic
+>        DO L=generic,2,-1
+2372a2402,2405
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'PSFC_IN, TOPO_IN at (7,12) NOW :: ', BOT_INPUT_PRESS, BOT_INPUT_HGT
+> 	endif
+> 
+2486c2519
+<             CALL wrf_message(message)
+---
+>           CALL wrf_debug(50,message)
+2539a2573,2576
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'psfc at (7,12) (opt a) :: ', dum2d(I,J)
+> 	endif
+> 
+2561a2599,2601
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'psfc at (7,12) (opt c) :: ', dum2d(I,J)
+> 	endif
+2583a2624,2626
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'psfc at (7,12) (opt d) :: ', dum2d(I,J)
+> 	endif
+2600a2644,2646
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'psfc at (7,12) (opt e) :: ', dum2d(I,J)
+> 	endif
+2609a2656,2658
+> 	if (I .eq. 7 .and. J .eq. 12) then
+> 	write(0,*) 'psfc at (7,12) (opt f) :: ', dum2d(I,J)
+> 	endif
+2769a2819,2823
+> 	IF (I .eq. Ilook .AND. J .eq. Jlook) THEN
+> 	write(0,*) 'combining at I,J: ', I,J,dum2d(I,J),DUM2DB(I,J)
+>         ENDIF
+> 
+> 
+2771a2826,2828
+> 	IF (I .eq. Ilook .AND. J .eq. Jlook) THEN
+> 	write(0,*) 'just dum2d at I,J: ', I,J,dum2d(I,J)
+>         ENDIF
+2773a2831,2833
+> 	IF (I .eq. Ilook .AND. J .eq. Jlook) THEN
+> 	write(0,*) 'just dum2db at I,J: ', I,J,dum2db(I,J)
+>         ENDIF

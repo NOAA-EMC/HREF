@@ -1,0 +1,280 @@
+ 
+**** Compiling: WRF_NMM_CORE .
+ 
+	make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" ext
+--------------------------------------
+	( cd frame ; make -i -r externals )
+	( cd ../external/ioapi_share ;  make -i -r NATIVE_RWORDSIZE="4" RWORDSIZE="4" )
+Target "all" is up to date.
+	( cd ../external/io_grib_share ;  make CC="cc_r" CFLAGS="-DNOUNDERSCORE  -I../external/RSL_LITE -DDM_PARALLEL  -DMAXDOM_MAKE=21 -DMAXPROC_MAKE=1024 -DNCARIBM_NOC99" RM="rm -f" RANLIB="ranlib" CPP="/lib/cpp" FC="xlf90_r -qrealsize=4 -qintsize=4  -qsuffix=f=f90 -qarch=auto -qzerosize" archive)
+	ar cruv ./libio_grib_share.a io_grib_share.o  get_region_center.o  gridnav.o  open_file.o
+	( cd ../external/io_grib1 ;  make CC="cc_r" CFLAGS="-DNOUNDERSCORE  -I../external/RSL_LITE -DDM_PARALLEL  -DMAXDOM_MAKE=21 -DMAXPROC_MAKE=1024 -DNCARIBM_NOC99" RANLIB="ranlib" CPP="/lib/cpp" FC="xlf90_r -qrealsize=4 -qintsize=4  -qsuffix=f=f90 -qarch=auto -qzerosize" archive )
+        Doing make archive on library subdirectory MEL_grib1
+	ar ruv ../libio_grib1.a FTP_getfile.o  apply_bitmap.o  display_gribhdr.o  gbyte.o  grib_dec.o  grib_enc.o  grib_seek.o  gribgetbds.o  gribgetbms.o  gribgetgds.o  gribgetpds.o  gribhdr2file.o  gribputbds.o  gribputgds.o  gribputpds.o  hdr_print.o  init_dec_struct.o  init_enc_struct.o  init_gribhdr.o  init_struct.o  ld_dec_lookup.o  ld_enc_input.o  ld_enc_lookup.o  ld_grib_origctrs.o  make_default_grbfn.o  make_grib_log.o  map_lvl.o  map_parm.o  pack_spatial.o  prt_inp_struct.o  upd_child_errmsg.o  prt_badmsg.o  swap.o grib_uthin.o set_bytes.o
+        Doing make archive on library subdirectory grib1_util
+	ar ruv ../libio_grib1.a alloc_2d.o  read_grib.o  write_grib.o
+        Doing make archive on library subdirectory WGRIB
+Target "archive" is up to date.
+	ar cruv ./libio_grib1.a grib1_routines.o  gribmap.o  io_grib1.o  trim.o
+	( cd ../external/io_int ;  make CC="mpcc_r -DMPI2_SUPPORT -DFSEEKO64_OK " RANLIB="ranlib" CPP="/lib/cpp" SFC="xlf90_r -qrealsize=4 -qintsize=4  -w -qspill=20000  -qmaxmem=32767 " FC="xlf90_r -qrealsize=4 -qintsize=4  -qarch=auto -qzerosize" all )
+	cp ../../frame/module_internal_header_util.F module_internal_header_util.b
+	cp ../../inc/intio_tags.h intio_tags.h
+	/bin/rm -f module_internal_header_util.f
+	/lib/cpp   -I../ioapi_share module_internal_header_util.b > module_internal_header_util.f
+	xlf90_r -qrealsize=4 -qintsize=4  -qarch=auto -qzerosize  -I. -c module_internal_header_util.f
+** module_internal_header_util   === End of Compilation 1 ===
+1501-510  Compilation successful for file module_internal_header_util.f.
+	/bin/rm -f module_internal_header_util.b
+	/lib/cpp   -I../ioapi_share io_int.F90 | m4 -Uinclude -Uindex -Ulen - > io_int.f
+	xlf90_r -qrealsize=4 -qintsize=4  -qarch=auto -qzerosize  -I. -I../ioapi_share -c io_int.f
+** module_ext_internal   === End of Compilation 1 ===
+** ext_int_ioinit   === End of Compilation 2 ===
+** ext_int_open_for_write   === End of Compilation 3 ===
+** ext_int_open_for_write_begin   === End of Compilation 4 ===
+** ext_int_open_for_write_commit   === End of Compilation 5 ===
+** ext_int_open_for_read   === End of Compilation 6 ===
+** ext_int_inquire_opened   === End of Compilation 7 ===
+** ext_int_inquire_filename   === End of Compilation 8 ===
+** ext_int_iosync   === End of Compilation 9 ===
+** ext_int_ioclose   === End of Compilation 10 ===
+** ext_int_ioexit   === End of Compilation 11 ===
+** ext_int_get_next_time   === End of Compilation 12 ===
+** ext_int_set_time   === End of Compilation 13 ===
+** ext_int_get_var_info   === End of Compilation 14 ===
+** ext_int_get_next_var   === End of Compilation 15 ===
+** ext_int_get_dom_ti_real   === End of Compilation 16 ===
+** ext_int_put_dom_ti_real   === End of Compilation 17 ===
+** ext_int_get_dom_ti_double   === End of Compilation 18 ===
+** ext_int_put_dom_ti_double   === End of Compilation 19 ===
+** ext_int_get_dom_ti_integer   === End of Compilation 20 ===
+** ext_int_put_dom_ti_integer   === End of Compilation 21 ===
+** ext_int_get_dom_ti_logical   === End of Compilation 22 ===
+** ext_int_put_dom_ti_logical   === End of Compilation 23 ===
+** ext_int_get_dom_ti_char   === End of Compilation 24 ===
+** ext_int_put_dom_ti_char   === End of Compilation 25 ===
+** ext_int_get_dom_td_real   === End of Compilation 26 ===
+** ext_int_put_dom_td_real   === End of Compilation 27 ===
+** ext_int_get_dom_td_double   === End of Compilation 28 ===
+** ext_int_put_dom_td_double   === End of Compilation 29 ===
+** ext_int_get_dom_td_integer   === End of Compilation 30 ===
+** ext_int_put_dom_td_integer   === End of Compilation 31 ===
+** ext_int_get_dom_td_logical   === End of Compilation 32 ===
+** ext_int_put_dom_td_logical   === End of Compilation 33 ===
+** ext_int_get_dom_td_char   === End of Compilation 34 ===
+** ext_int_put_dom_td_char   === End of Compilation 35 ===
+** ext_int_get_var_ti_real   === End of Compilation 36 ===
+** ext_int_put_var_ti_real   === End of Compilation 37 ===
+** ext_int_get_var_ti_double   === End of Compilation 38 ===
+** ext_int_put_var_ti_double   === End of Compilation 39 ===
+** ext_int_get_var_ti_integer   === End of Compilation 40 ===
+** ext_int_put_var_ti_integer   === End of Compilation 41 ===
+** ext_int_get_var_ti_logical   === End of Compilation 42 ===
+** ext_int_put_var_ti_logical   === End of Compilation 43 ===
+** ext_int_get_var_ti_char   === End of Compilation 44 ===
+** ext_int_put_var_ti_char   === End of Compilation 45 ===
+** ext_int_get_var_td_real   === End of Compilation 46 ===
+** ext_int_put_var_td_real   === End of Compilation 47 ===
+** ext_int_get_var_td_double   === End of Compilation 48 ===
+** ext_int_put_var_td_double   === End of Compilation 49 ===
+** ext_int_get_var_td_integer   === End of Compilation 50 ===
+** ext_int_put_var_td_integer   === End of Compilation 51 ===
+** ext_int_get_var_td_logical   === End of Compilation 52 ===
+** ext_int_put_var_td_logical   === End of Compilation 53 ===
+** ext_int_get_var_td_char   === End of Compilation 54 ===
+** ext_int_put_var_td_char   === End of Compilation 55 ===
+** ext_int_read_field   === End of Compilation 56 ===
+** ext_int_write_field   === End of Compilation 57 ===
+** rfieldwrite   === End of Compilation 58 ===
+** ifieldwrite   === End of Compilation 59 ===
+** rfieldread   === End of Compilation 60 ===
+** ifieldread   === End of Compilation 61 ===
+1501-510  Compilation successful for file io_int.f.
+	/bin/rm -f module_internal_header_util.o
+	/bin/rm -f intio_tags.h
+	/bin/rm -f libwrfio_int.a
+	ar cr libwrfio_int.a io_int.o 
+	ranlib libwrfio_int.a
+	if [ -f ../../frame/pack_utils.o ] ; then  mv diffwrf.F diffwrf.F90    ;  /lib/cpp   -I../ioapi_share diffwrf.F90 > diffwrf.f  ;  xlf90_r -qrealsize=4 -qintsize=4  -w -qspill=20000  -qmaxmem=32767  -c  -I../ioapi_share diffwrf.f    ;  mv diffwrf.F90 diffwrf.F ;  xlf90_r -qrealsize=4 -qintsize=4  -w -qspill=20000  -qmaxmem=32767    -o diffwrf diffwrf.o io_int.o   ../../frame/pack_utils.o ../../frame/module_internal_header_util.o  ../../frame/module_driver_constants.o  ../../frame/module_machine.o ../../frame/wrf_debug.o ../../frame/module_wrf_error.o   ; fi
+** read_util_module   === End of Compilation 1 ===
+** readv3   === End of Compilation 2 ===
+** iveceq   === End of Compilation 3 ===
+** wrf_abort   === End of Compilation 4 ===
+** get_current_time_string   === End of Compilation 5 ===
+** get_current_grid_name   === End of Compilation 6 ===
+1501-510  Compilation successful for file diffwrf.f.
+Target "all" is up to date.
+	( /bin/cp ../tools/gen_comms_warning ../tools/gen_comms.c ; cat ../external/RSL_LITE/gen_comms.c >> ../tools/gen_comms.c )
+	( cd ../external/esmf_time_f90 ;  make FC="mpxlf90_r -qrealsize=4 -qintsize=4  -w -qspill=20000  -qmaxmem=32767 " RANLIB="ranlib" CPP="/lib/cpp -I../../inc -I. -DNONSTANDARD_SYSTEM -DCONFIG_BUF_LEN=16384 -DMAX_DOMAINS_F=21" )
+Target "default" is up to date.
+Target "externals" is up to date.
+	make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" toolsdir
+--------------------------------------
+	( cd tools ; make -i -r CC="cc" )
+	cc  -c -g  gen_comms.c
+	cc -o registry -g   registry.o my_strtok.o reg_parse.o data.o type.o misc.o  gen_defs.o gen_allocs.o gen_mod_state_descr.o gen_scalar_indices.o  gen_args.o gen_config.o sym.o symtab_gen.o gen_wrf_io.o  gen_model_data_ord.o gen_interp.o gen_comms.o gen_scalar_derefs.o
+	/bin/rm -f main/libwrflib.a
+	make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" framework
+--------------------------------------
+	( cd frame ; make -i -r framework;  cd ../external/io_netcdf ; make NETCDFPATH="" FC="xlf90_r -w -qspill=20000  -qmaxmem=32767 " RANLIB="ranlib" CPP="/lib/cpp" LDFLAGS="" ESMF_IO_LIB_EXT="-L../../external/esmf_time_f90 -lesmf_time" ESMF_MOD_DEPENDENCE="../../external/esmf_time_f90/module_utility.o" diffwrf;  cd ../io_int ; make -i -r SFC="xlf90_r -w -qspill=20000  -qmaxmem=32767 " FC="xlf90_r -w -qspill=20000  -qmaxmem=32767 " RANLIB="ranlib" CPP="/lib/cpp" ESMF_IO_LIB_EXT="-L../../external/esmf_time_f90 -lesmf_time" ESMF_MOD_DEPENDENCE="../../external/esmf_time_f90/module_utility.o" diffwrf ; cd ../../frame )
+	ar ru ../main/libwrflib.a module_driver_constants.o   module_domain.o             module_integrate.o          module_timing.o             module_configure.o          module_tiles.o              module_machine.o            module_nesting.o            module_wrf_error.o          module_state_description.o  module_sm.o                 module_io.o                 module_dm.o                 module_quilt_outbuf_ops.o   module_io_quilt.o wrf_num_bytes_between.o     wrf_shutdown.o              wrf_debug.o                 libmassv.o                  collect_on_comm.o
+ar: Creating an archive file ../main/libwrflib.a.
+	ranlib ../main/libwrflib.a
+	/lib/cpp -C -P  -I/include -I../ioapi_share diffwrf.F90 > diffwrf.f
+"diffwrf.F90", line 71.10: 1506-296 (S) #include file "netcdf.inc" not found.
+make: 1254-004 The error code from the last command is 1.
+make: 1254-005 Ignored error code 1 from last command.
+	xlf90_r -w -qspill=20000  -qmaxmem=32767  -c  -I/include -I../ioapi_share diffwrf.f
+** read_util_module   === End of Compilation 1 ===
+"diffwrf.f", line 54.7: 1514-219 (S) Unable to access module symbol file for module wrf_data. Check path and file permissions of file. Use association not done for this module.
+1501-511  Compilation failed for file diffwrf.f.
+make: 1254-004 The error code from the last command is 1.
+make: 1254-005 Ignored error code 1 from last command.
+diffwrf io_netcdf is being built now. 
+xlf90_r: 1501-228 input file diffwrf.o not found
+xlf90_r: 1501-228 input file wrf_io.o not found
+xlf90_r: 1501-228 input file field_routines.o not found
+xlf90_r: 1501-228 input file module_wrfsi_static.o not found
+make: 1254-004 The error code from the last command is 252.
+make: 1254-005 Ignored error code 252 from last command.
+	cp ../../frame/module_internal_header_util.F module_internal_header_util.b
+	cp ../../inc/intio_tags.h intio_tags.h
+	/bin/rm -f module_internal_header_util.f
+	/lib/cpp   -I../ioapi_share module_internal_header_util.b > module_internal_header_util.f
+	xlf90_r -w -qspill=20000  -qmaxmem=32767   -I. -c module_internal_header_util.f
+** module_internal_header_util   === End of Compilation 1 ===
+1501-510  Compilation successful for file module_internal_header_util.f.
+	/bin/rm -f module_internal_header_util.b
+	/lib/cpp   -I../ioapi_share io_int.F90 | m4 -Uinclude -Uindex -Ulen - > io_int.f
+	xlf90_r -w -qspill=20000  -qmaxmem=32767   -I. -I../ioapi_share -c io_int.f
+** module_ext_internal   === End of Compilation 1 ===
+** ext_int_ioinit   === End of Compilation 2 ===
+** ext_int_open_for_write   === End of Compilation 3 ===
+** ext_int_open_for_write_begin   === End of Compilation 4 ===
+** ext_int_open_for_write_commit   === End of Compilation 5 ===
+** ext_int_open_for_read   === End of Compilation 6 ===
+** ext_int_inquire_opened   === End of Compilation 7 ===
+** ext_int_inquire_filename   === End of Compilation 8 ===
+** ext_int_iosync   === End of Compilation 9 ===
+** ext_int_ioclose   === End of Compilation 10 ===
+** ext_int_ioexit   === End of Compilation 11 ===
+** ext_int_get_next_time   === End of Compilation 12 ===
+** ext_int_set_time   === End of Compilation 13 ===
+** ext_int_get_var_info   === End of Compilation 14 ===
+** ext_int_get_next_var   === End of Compilation 15 ===
+** ext_int_get_dom_ti_real   === End of Compilation 16 ===
+** ext_int_put_dom_ti_real   === End of Compilation 17 ===
+** ext_int_get_dom_ti_double   === End of Compilation 18 ===
+** ext_int_put_dom_ti_double   === End of Compilation 19 ===
+** ext_int_get_dom_ti_integer   === End of Compilation 20 ===
+** ext_int_put_dom_ti_integer   === End of Compilation 21 ===
+** ext_int_get_dom_ti_logical   === End of Compilation 22 ===
+** ext_int_put_dom_ti_logical   === End of Compilation 23 ===
+** ext_int_get_dom_ti_char   === End of Compilation 24 ===
+** ext_int_put_dom_ti_char   === End of Compilation 25 ===
+** ext_int_get_dom_td_real   === End of Compilation 26 ===
+** ext_int_put_dom_td_real   === End of Compilation 27 ===
+** ext_int_get_dom_td_double   === End of Compilation 28 ===
+** ext_int_put_dom_td_double   === End of Compilation 29 ===
+** ext_int_get_dom_td_integer   === End of Compilation 30 ===
+** ext_int_put_dom_td_integer   === End of Compilation 31 ===
+** ext_int_get_dom_td_logical   === End of Compilation 32 ===
+** ext_int_put_dom_td_logical   === End of Compilation 33 ===
+** ext_int_get_dom_td_char   === End of Compilation 34 ===
+** ext_int_put_dom_td_char   === End of Compilation 35 ===
+** ext_int_get_var_ti_real   === End of Compilation 36 ===
+** ext_int_put_var_ti_real   === End of Compilation 37 ===
+** ext_int_get_var_ti_double   === End of Compilation 38 ===
+** ext_int_put_var_ti_double   === End of Compilation 39 ===
+** ext_int_get_var_ti_integer   === End of Compilation 40 ===
+** ext_int_put_var_ti_integer   === End of Compilation 41 ===
+** ext_int_get_var_ti_logical   === End of Compilation 42 ===
+** ext_int_put_var_ti_logical   === End of Compilation 43 ===
+** ext_int_get_var_ti_char   === End of Compilation 44 ===
+** ext_int_put_var_ti_char   === End of Compilation 45 ===
+** ext_int_get_var_td_real   === End of Compilation 46 ===
+** ext_int_put_var_td_real   === End of Compilation 47 ===
+** ext_int_get_var_td_double   === End of Compilation 48 ===
+** ext_int_put_var_td_double   === End of Compilation 49 ===
+** ext_int_get_var_td_integer   === End of Compilation 50 ===
+** ext_int_put_var_td_integer   === End of Compilation 51 ===
+** ext_int_get_var_td_logical   === End of Compilation 52 ===
+** ext_int_put_var_td_logical   === End of Compilation 53 ===
+** ext_int_get_var_td_char   === End of Compilation 54 ===
+** ext_int_put_var_td_char   === End of Compilation 55 ===
+** ext_int_read_field   === End of Compilation 56 ===
+** ext_int_write_field   === End of Compilation 57 ===
+** rfieldwrite   === End of Compilation 58 ===
+** ifieldwrite   === End of Compilation 59 ===
+** rfieldread   === End of Compilation 60 ===
+** ifieldread   === End of Compilation 61 ===
+1501-510  Compilation successful for file io_int.f.
+	/bin/rm -f module_internal_header_util.o
+	/bin/rm -f intio_tags.h
+	/bin/rm -f libwrfio_int.a
+	ar cr libwrfio_int.a io_int.o 
+	ranlib libwrfio_int.a
+	if [ -f ../../frame/pack_utils.o ] ; then  mv diffwrf.F diffwrf.F90    ;  /lib/cpp   -I../ioapi_share diffwrf.F90 > diffwrf.f  ;  xlf90_r -w -qspill=20000  -qmaxmem=32767  -c  -I../ioapi_share diffwrf.f    ;  mv diffwrf.F90 diffwrf.F ;  xlf90_r -w -qspill=20000  -qmaxmem=32767    -o diffwrf diffwrf.o io_int.o   ../../frame/pack_utils.o ../../frame/module_internal_header_util.o  ../../frame/module_driver_constants.o  ../../frame/module_machine.o ../../frame/wrf_debug.o ../../frame/module_wrf_error.o  -L../../external/esmf_time_f90 -lesmf_time ; fi
+** read_util_module   === End of Compilation 1 ===
+** readv3   === End of Compilation 2 ===
+** iveceq   === End of Compilation 3 ===
+** wrf_abort   === End of Compilation 4 ===
+** get_current_time_string   === End of Compilation 5 ===
+** get_current_grid_name   === End of Compilation 6 ===
+1501-510  Compilation successful for file diffwrf.f.
+	make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" shared
+--------------------------------------
+	( cd share ; make -i -r )
+	rm -f init_modules.o
+	sed -f ../arch/standard.sed init_modules.F > init_modules.b 
+	/lib/cpp -I../inc -I. -C -P -DEM_CORE=0  -DNMM_CORE=1 -DNMM_MAX_DIM=2600  -DCOAMPS_CORE=0  -DEXP_CORE=0 -DRSL_LITE -DDM_PARALLEL -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4  -DLWORDSIZE=4    -DTRIEDNTRUE -DGRIB1  -DINTIO  -DLIMIT_ARGS -DNO_NAMELIST_PRINT -DNATIVE_MASSV -DNMM_NEST=0 -I../external/RSL_LITE `cat ../inc/dm_comm_cpp_flags` -DEM_CORE=0  -DNMM_CORE=1 -DNMM_MAX_DIM=2600  -DCOAMPS_CORE=0  -DEXP_CORE=0  -DNONSTANDARD_SYSTEM -DCONFIG_BUF_LEN=16384 -DMAX_DOMAINS_F=21 init_modules.b  > init_modules.f90
+	rm -f init_modules.b
+	mpxlf90_r -c -O2 -qarch=auto -w -qspill=20000  -qmaxmem=32767  -I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc -qrealsize=4 -qintsize=4 -qsuffix=f=f90 init_modules.f90
+** init_modules   === End of Compilation 1 ===
+1501-510  Compilation successful for file init_modules.f90.
+	if [ 1 -eq 1 ] ; then  make -i -r nmm_contrib                                      ;  ar ru ../main/libwrflib.a module_bc.o	         module_bc_time_utilities.o	 module_io_wrf.o	         module_date_time.o	 module_get_file_names.o	 module_io_domain.o	 module_model_constants.o  module_MPP.o  module_wrf_top.o  module_optional_si_input.o	 module_compute_geop.o            module_soil_pre.o mediation_integrate.o		 mediation_interp_domain.o	 mediation_force_domain.o	 mediation_feedback_domain.o	 mediation_nest_move.o            mediation_wrfmain.o		 solve_interface.o                start_domain.o                   init_modules.o                   set_timekeeping.o                interp_fcn.o sint.o              input_wrf.o                      output_wrf.o                     wrf_ext_write_field.o            wrf_ext_read_field.o             wrf_inputout.o        		 wrf_auxinput1out.o		 wrf_auxinput2out.o		 wrf_auxinput3out.o		 wrf_auxinput4out.o		 wrf_auxinput5out.o		 wrf_auxinput6out.o		 wrf_auxinput7out.o		 wrf_auxinput8out.o		 wrf_auxinput9out.o		 wrf_auxinput10out.o		 wrf_auxinput11out.o		 wrf_histout.o			 wrf_auxhist1out.o		 wrf_auxhist2out.o		 wrf_auxhist3out.o		 wrf_auxhist4out.o		 wrf_auxhist5out.o		 wrf_auxhist6out.o		 wrf_auxhist7out.o		 wrf_auxhist8out.o		 wrf_auxhist9out.o		 wrf_auxhist10out.o		 wrf_auxhist11out.o		 wrf_restartout.o		 wrf_bdyout.o			 wrf_inputin.o         	  	 wrf_auxhist1in.o                 wrf_auxhist2in.o                 wrf_auxhist3in.o                 wrf_auxhist4in.o                 wrf_auxhist5in.o                 wrf_auxhist6in.o                 wrf_auxhist7in.o                 wrf_auxhist8in.o                 wrf_auxhist9in.o                 wrf_auxhist10in.o                 wrf_auxhist11in.o                 wrf_auxinput1in.o                wrf_auxinput2in.o                wrf_auxinput3in.o                wrf_auxinput4in.o                wrf_auxinput5in.o                wrf_auxinput6in.o                wrf_auxinput7in.o                wrf_auxinput8in.o                wrf_auxinput9in.o                wrf_auxinput10in.o                wrf_auxinput11in.o                wrf_fddaobs_in.o		 wrf_bdyin.o             	 wrf_histin.o            	 wrf_restartin.o                  landread.o   ;  else                                                          ar ru ../main/libwrflib.a module_bc.o	         module_bc_time_utilities.o	 module_io_wrf.o	         module_date_time.o	 module_get_file_names.o	 module_io_domain.o	 module_model_constants.o  module_MPP.o  module_wrf_top.o  module_optional_si_input.o	 module_compute_geop.o            module_soil_pre.o mediation_integrate.o		 mediation_interp_domain.o	 mediation_force_domain.o	 mediation_feedback_domain.o	 mediation_nest_move.o            mediation_wrfmain.o		 solve_interface.o                start_domain.o                   init_modules.o                   set_timekeeping.o                interp_fcn.o sint.o              input_wrf.o                      output_wrf.o                     wrf_ext_write_field.o            wrf_ext_read_field.o             wrf_inputout.o        		 wrf_auxinput1out.o		 wrf_auxinput2out.o		 wrf_auxinput3out.o		 wrf_auxinput4out.o		 wrf_auxinput5out.o		 wrf_auxinput6out.o		 wrf_auxinput7out.o		 wrf_auxinput8out.o		 wrf_auxinput9out.o		 wrf_auxinput10out.o		 wrf_auxinput11out.o		 wrf_histout.o			 wrf_auxhist1out.o		 wrf_auxhist2out.o		 wrf_auxhist3out.o		 wrf_auxhist4out.o		 wrf_auxhist5out.o		 wrf_auxhist6out.o		 wrf_auxhist7out.o		 wrf_auxhist8out.o		 wrf_auxhist9out.o		 wrf_auxhist10out.o		 wrf_auxhist11out.o		 wrf_restartout.o		 wrf_bdyout.o			 wrf_inputin.o         	  	 wrf_auxhist1in.o                 wrf_auxhist2in.o                 wrf_auxhist3in.o                 wrf_auxhist4in.o                 wrf_auxhist5in.o                 wrf_auxhist6in.o                 wrf_auxhist7in.o                 wrf_auxhist8in.o                 wrf_auxhist9in.o                 wrf_auxhist10in.o                 wrf_auxhist11in.o                 wrf_auxinput1in.o                wrf_auxinput2in.o                wrf_auxinput3in.o                wrf_auxinput4in.o                wrf_auxinput5in.o                wrf_auxinput6in.o                wrf_auxinput7in.o                wrf_auxinput8in.o                wrf_auxinput9in.o                wrf_auxinput10in.o                wrf_auxinput11in.o                wrf_fddaobs_in.o		 wrf_bdyin.o             	 wrf_histin.o            	 wrf_restartin.o                  landread.o             ;  fi
+Target "nmm_contrib" is up to date.
+	make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" physics
+--------------------------------------
+	( cd phys ; make -i -r )
+	if [ 1 -eq 1 ] ; then  make -i -r nmm_contrib                                      ;  ar ru ../main/libwrflib.a module_bl_ysu.o  module_bl_mrf.o  module_bl_gfs.o  module_bl_myjpbl.o  module_cu_kf.o   module_cu_bmj.o  module_cu_kfeta.o  module_cu_gd.o  module_cu_sas.o  module_mp_kessler.o  module_mp_ncloud5.o  module_mp_lin.o   module_mp_ncloud3.o  module_mp_wsm3.o  module_mp_wsm5.o  module_mp_wsm6.o  module_mp_etanew.o  module_mp_thompson.o  module_ra_sw.o   module_ra_gsfcsw.o  module_ra_rrtm.o   module_ra_cam.o   module_ra_gfdleta.o  module_sf_sfclay.o  module_sf_gfs.o  module_sf_slab.o   module_sf_noahlsm.o   module_sf_urban.o   module_sf_lsm_nmm.o   module_sf_ruclsm.o  module_sf_sfcdiags.o  module_sf_myjsfc.o  module_physics_addtendc.o  module_physics_init.o  module_gfs_machine.o  module_gfs_funcphys.o  module_gfs_physcons.o  module_progtm.o  module_pbl_driver.o  module_cumulus_driver.o  module_microphysics_driver.o  module_microphysics_zero_out.o  module_mixactivate.o  module_radiation_driver.o  module_surface_driver.o  module_diagnostics.o  module_fdda_psufddagd.o  module_fddagd_driver.o   module_fddaobs_rtfdda.o  module_fddaobs_driver.o    ;  else                                                          make -i -r non_nmm                                          ;  ar ru ../main/libwrflib.a module_bl_ysu.o  module_bl_mrf.o  module_bl_gfs.o  module_bl_myjpbl.o  module_cu_kf.o   module_cu_bmj.o  module_cu_kfeta.o  module_cu_gd.o  module_cu_sas.o  module_mp_kessler.o  module_mp_ncloud5.o  module_mp_lin.o   module_mp_ncloud3.o  module_mp_wsm3.o  module_mp_wsm5.o  module_mp_wsm6.o  module_mp_etanew.o  module_mp_thompson.o  module_ra_sw.o   module_ra_gsfcsw.o  module_ra_rrtm.o   module_ra_cam.o   module_ra_gfdleta.o  module_sf_sfclay.o  module_sf_gfs.o  module_sf_slab.o   module_sf_noahlsm.o   module_sf_urban.o   module_sf_lsm_nmm.o   module_sf_ruclsm.o  module_sf_sfcdiags.o  module_sf_myjsfc.o  module_physics_addtendc.o  module_physics_init.o  module_gfs_machine.o  module_gfs_funcphys.o  module_gfs_physcons.o  module_progtm.o  module_pbl_driver.o  module_cumulus_driver.o  module_microphysics_driver.o  module_microphysics_zero_out.o  module_mixactivate.o  module_radiation_driver.o  module_surface_driver.o  module_diagnostics.o  module_fdda_psufddagd.o  module_fddagd_driver.o   module_fddaobs_rtfdda.o  module_fddaobs_driver.o              ;  fi
+Target "nmm_contrib" is up to date.
+	if [ 0  -eq 1 ]    ; then make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" chemics ; fi
+	if [ 0 -eq 1 ]    ; then make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" em_core ; fi
+	if [ 1 -eq 1 ]   ; then make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" nmm_core ; fi
+--------------------------------------
+	( cd dyn_nmm ; make -i -r )
+	rm -f module_initialize_real.o
+	sed -f ../arch/standard.sed module_initialize_real.F > module_initialize_real.b 
+	/lib/cpp -I../inc -I. -C -P -DEM_CORE=0  -DNMM_CORE=1 -DNMM_MAX_DIM=2600  -DCOAMPS_CORE=0  -DEXP_CORE=0 -DRSL_LITE -DDM_PARALLEL -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4  -DLWORDSIZE=4    -DTRIEDNTRUE -DGRIB1  -DINTIO  -DLIMIT_ARGS -DNO_NAMELIST_PRINT -DNATIVE_MASSV -DNMM_NEST=0 -I../external/RSL_LITE `cat ../inc/dm_comm_cpp_flags` -DEM_CORE=0  -DNMM_CORE=1 -DNMM_MAX_DIM=2600  -DCOAMPS_CORE=0  -DEXP_CORE=0  -DNONSTANDARD_SYSTEM -DCONFIG_BUF_LEN=16384 -DMAX_DOMAINS_F=21 module_initialize_real.b  > module_initialize_real.f90
+	rm -f module_initialize_real.b
+	mpxlf90_r -c -qrealsize=4 -qintsize=4 -w -qspill=20000  -qmaxmem=32767  -I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc -qsuffix=f=f90 -qnoopt module_initialize_real.f90
+** module_initialize   === End of Compilation 1 ===
+1501-510  Compilation successful for file module_initialize_real.f90.
+	ar ru ../main/libwrflib.a module_ADVECTION.o         	 module_BC_NMM.o         	 module_BNDRY_COND.o         	 module_NEST_UTIL.o               module_CTLBLK.o         	 module_DIFFUSION_NMM.o         	 module_EXCHANGE.o              	 module_IGWAVE_ADJUST.o         	 module_NONHY_DYNAM.o         	 module_PHYSICS_CALLS.o       	 module_MPPINIT.o        	 module_TIMERS.o                  module_si_io_nmm.o               module_initialize_real.o         module_PRECIP_ADJUST.o            init_modules_nmm.o  		 start_domain_nmm.o  		 solve_nmm.o         		 RDTEMP.o    			 BUCKETS.o 			 DSTRB.o                          CLTEND.o                         NMM_NEST_UTILS1.o
+	if [ 0 -eq 1 ]   ; then make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" exp_core ; fi
+	( cd main ; make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" SOLVER=em em_wrf )
+	ranlib libwrflib.a
+	mpxlf90_r -o wrf.exe  wrf.o libwrflib.a -L../external/RSL_LITE -lrsl_lite -lmass -lmassv  -L../external/io_int -lwrfio_int   -L../external/io_grib1 -lio_grib1   -L../external/io_grib_share -lio_grib_share  ../frame/module_internal_header_util.o ../frame/pack_utils.o -L../external/esmf_time_f90 -lesmf_time 
+	( cd run ; /bin/rm -f wrf.exe ; ln -s ../main/wrf.exe . )
+	if [ 0 -eq 1 ] ; then  ( cd main ; make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" SOLVER=em em_wrf_ESMFApp ) ;  fi
+--------------------------------------
+	( cd main ; make -i -r MODULE_DIRS="-I../dyn_em          -I../dyn_nmm                        -I../external/io_netcdf -I../external/io_pnetcdf  -I../external/io_int  -I../external/esmf_time_f90  -I../frame -I../share -I../phys -I../chem -I../inc" SOLVER=nmm IDEAL_CASE=real real_nmm )
+	( cd ../dyn_nmm ;  make -i -r module_initialize_real.o )
+Target "module_initialize_real.o" is up to date.
+	ranlib libwrflib.a
+	mpxlf90_r -o real_nmm.exe  real_nmm.o ../dyn_nmm/module_initialize_real.o ../share/module_optional_si_input.o ../share/input_wrf.o ../share/module_io_domain.o libwrflib.a -L../external/RSL_LITE -lrsl_lite -lmass -lmassv  -L../external/io_int -lwrfio_int   -L../external/io_grib1 -lio_grib1   -L../external/io_grib_share -lio_grib_share  ../frame/module_internal_header_util.o ../frame/pack_utils.o -L../external/esmf_time_f90 -lesmf_time 
+	( cd test/nmm_real ; /bin/rm -f wrf.exe ; ln -s ../../main/wrf.exe . )
+	( cd test/nmm_real ; /bin/rm -f real_nmm.exe ; ln -s ../../main/real_nmm.exe . )
+	( cd test/nmm_real ; /bin/rm -f README.namelist ; ln -s ../../run/README.namelist . )
+	( cd test/nmm_real ; /bin/rm -f ETAMPNEW_DATA RRTM_DATA ;     ln -sf ../../run/ETAMPNEW_DATA . ;                      ln -sf ../../run/RRTM_DATA . ;                          if [ 4 -eq 8 ] ; then                        ln -sf ../../run/ETAMPNEW_DATA_DBL ETAMPNEW_DATA ;   ln -sf ../../run/RRTM_DATA_DBL RRTM_DATA ;           fi )
+	( cd test/nmm_real ; /bin/rm -f GENPARM.TBL ; ln -s ../../run/GENPARM.TBL . )
+	( cd test/nmm_real ; /bin/rm -f LANDUSE.TBL ; ln -s ../../run/LANDUSE.TBL . )
+	( cd test/nmm_real ; /bin/rm -f SOILPARM.TBL ; ln -s ../../run/SOILPARM.TBL . )
+	( cd test/nmm_real ; /bin/rm -f VEGPARM.TBL ; ln -s ../../run/VEGPARM.TBL . )
+	( cd test/nmm_real ; /bin/rm -f tr49t67 ; ln -s ../../run/tr49t67 . )
+	( cd test/nmm_real ; /bin/rm -f tr49t85 ; ln -s ../../run/tr49t85 . )
+	( cd test/nmm_real ; /bin/rm -f tr67t85 ; ln -s ../../run/tr67t85 . )
+	( cd test/nmm_real ; /bin/rm -f gribmap.txt ; ln -s ../../run/gribmap.txt . )
+	( cd test/nmm_real ; /bin/rm -f grib2map.txt ; ln -s ../../run/grib2map.txt . )
+	( cd run ; /bin/rm -f real_nmm.exe ; ln -s ../main/real_nmm.exe . )
+	( cd run ; if test -f namelist.input ; then  /bin/cp -f namelist.input namelist.input.backup ; fi ;  /bin/rm -f namelist.input ; ln -s ../test/nmm_real/namelist.input . )

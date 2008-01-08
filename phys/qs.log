@@ -1,0 +1,1170 @@
+module_bl_lsm.F:                  th2,t2,q2,SNOWC,chs2,QSFC,CHKLOWQ,RAINBL,     &
+module_bl_lsm.F:						           QSFC,&     
+module_bl_lsm.F:                  th2,t2,q2,SNOWC,chs2(its,j),QSFC,CHKLOWQ(its,j),      &
+module_bl_lsm.F:                     th2,t2,q2,SNOWC,chs2,QSFC,CHKLOWQ,                 &
+module_bl_lsm.F:						                 QSFC,& !new
+module_bl_lsm.F:            PRCP,Q2K,DQSDTK,SATFLG,TBOTK,CHK,VGFRCK,T1K,              &
+module_bl_lsm.F:          DQSDTK=Q2SAT*A23M4/(SFCTMP-A4)**2                             
+module_bl_lsm.F:              PRCP,SFCTMP,SFCTH2,Q2K,Q2SAT,DQSDTK,TBOTK,CHK,CHFF,      &
+module_bl_lsm.F:!        QS(I,J)=Q1K                                                    
+module_bl_lsm.F:         QSFC(I,J)=Q1K                                                    
+module_bl_lsm.F:                       SMCWLT,SMCREF,RCMIN,RC,PC,NROOT,Q2SAT,DQSDT2,    &
+module_bl_lsm.F:            SFCTMP,P,SFCPRS,QS,Q2SAT,HS,Q2,GX,SMCWLT,SMCREF,TAIR4,    &
+module_bl_lsm.F:            ST1,SLVCP,RR,CH,DELTA,DQSDT2,PC
+module_bl_lsm.F:      QS=Q2SAT                                                          
+module_bl_lsm.F:      RCQ=1.0/(1.0+HS*(QS-Q2))                                          
+module_bl_lsm.F:      DELTA=SLVCP*DQSDT2                                                
+module_bl_lsm.F:         Q2SAT,ETP,RCH,EPSCA,RR,SNOWNG,FRZGRA,DQSDT2,FLX2)    
+module_bl_lsm.F:      REAL DQSDT2                                                       
+module_bl_lsm.F:      DELTA=ELCP*DQSDT2                                                 
+module_bl_lsm.F:       F,SOLDN,SFCPRS,PRCP,SFCTMP,TH2,Q2,Q2SAT,DQSDT2,TBOT,CH,CHKFF,    & 
+module_bl_lsm.F:!     &   F,SOLDN,SFCPRS,PRCP,SFCTMP,TH2,Q2,Q2SAT,DQSDT2,TBOT,CH,CHKFF, 
+module_bl_lsm.F:!       DQSDT2: SLOPE OF SAT SPECIFIC HUMIDITY CURVE AT T=T2 (KG KG-1 K-
+module_bl_lsm.F:            DQSDT2,SATFLG,SOLDN,RC,EDIR1,EC1,ETT1,HEAT,CHKFF,T14,H,   &
+module_bl_lsm.F:             RCH,EPSCA,RR,SNOWNG,FRZGRA,DQSDT2,FLX2)                              
+module_bl_lsm.F:             SMCREF,RCMIN,RC,PC,NROOT,Q2SAT,DQSDT2,TOPT,RSMAX,RGL,HS)   
+module_bl_lsm.F:            QSAT, ETP3, SEH, T14
+module_bl_lsm.F:        QSAT=(0.622*6.11E2)/(SFCPRS-0.378*6.11E2)                       
+module_bl_lsm.F:        ETP=RCH*(QSAT-Q2)/CP                                            
+module_bl_lsm_nmm.F:     &               TH2,Q2,SNOWC,CHS2,QSFC,TBOT,CHKLOWQ,RAINBL,        &
+module_bl_lsm_nmm.F:     &                                                             QSFC,&     
+module_bl_lsm_nmm.F:                    TH2,Q2,SNOWC,CHS2(ITS,J),QSFC,TBOT,CHKLOWQ,         &
+module_bl_lsm_nmm.F:                     TH2,Q2,SNOWC,CHS2,QSFC,TBOT,CHKLOWQ,              &
+module_bl_lsm_nmm.F:						                 QSFC,& !new
+module_bl_lsm_nmm.F:            SFCPRS,PRCP,Q2K,DQSDTK,SATFLG,TBOTK,CHK,VGFRCK,T1K,LWDN,  &
+module_bl_lsm_nmm.F:          DQSDTK=Q2SAT*A23M4/(SFCTMP-A4)**2                             
+module_bl_lsm_nmm.F:!              PRCP,SFCTMP,SFCTH2,Q2K,Q2SAT,DQSDTK,TBOTK,CHK,CHFF,      &
+module_bl_lsm_nmm.F:!     I    LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,SFCTH2,Q2K,SFCSPD,Q2SAT,DQSDTK,
+module_bl_lsm_nmm.F:          LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,SFCTH2,Q2K,DUM5,Q2SAT,DQSDTK,   &
+module_bl_lsm_nmm.F:!        QS(I,J)=Q1K                                                    
+module_bl_lsm_nmm.F:!!!      QSFC(I,J)=Q1K                                                    
+module_bl_lsm_nmm.F:       LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,TH2,Q2,SFCSPD,Q2SAT,DQSDT2,        &
+module_bl_lsm_nmm.F:!    I LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,TH2,Q2,Q2SAT,DQSDT2,
+module_bl_lsm_nmm.F:!       DQSDT2: SLOPE OF SAT SPECIFIC HUMIDITY CURVE AT T=SFCTMP (KG KG-1 K-1)
+module_bl_lsm_nmm.F:      REAL DQSDT2
+module_bl_lsm_nmm.F:                    Q2SAT,ETP,RCH,EPSCA,RR,SNOWNG,FRZGRA,DQSDT2,ii,jj)
+module_bl_lsm_nmm.F:                  SMCWLT,SMCREF,RCMIN,RC,PC,NROOT,Q2SAT,DQSDT2,      &
+module_bl_lsm_nmm.F:                        SMCWLT,SMCREF,RCMIN,RC,PC,NROOT,Q2SAT,DQSDT2, &
+module_bl_lsm_nmm.F:!                DQSDT2: SLOPE OF SATURATION HUMIDITY FUNCTION WRT TEMP
+module_bl_lsm_nmm.F:      REAL SMCWLT, SMCREF, RCMIN, RC, PC, Q2SAT, DQSDT2
+module_bl_lsm_nmm.F:      REAL P, QS, GX, TAIR4, ST1, SLVCP, RR, DELTA
+module_bl_lsm_nmm.F:      QS = Q2SAT
+module_bl_lsm_nmm.F:      RCQ = 1.0/(1.0+HS*(QS-Q2))
+module_bl_lsm_nmm.F:      DELTA = SLVCP*DQSDT2
+module_bl_lsm_nmm.F:                        Q2SAT,ETP,RCH,EPSCA,RR,SNOWNG,FRZGRA,DQSDT2,ii,jj)
+module_bl_lsm_nmm.F:      REAL DQSDT2
+module_bl_lsm_nmm.F:      DELTA = ELCP * DQSDT2
+module_bl_lsm_nmm.F:      REAL SNDENS, SNCOND, RSNOW, SNCOVER, QSAT, ETP3, SEH, T14
+module_bl_lsm_nmm.F:        QSAT = (0.622*6.11E2)/(SFCPRS-0.378*6.11E2)
+module_bl_lsm_nmm.F:        ETP = RCH*(QSAT-Q2)/CP
+module_bl_mrf.F:						      DTSFC,DQSFC
+module_bl_mrf.F:!     ZA(1982) EQS(2.60),(2.61).     
+module_bl_myjpbl.F:     &                 ,SQPR=0.84,SQSC=0.84,SQVISC=258.2,TVISC=2.1E-5   &
+module_bl_myjpbl.F:     &                 ,ZQRZT=SQSC/SQPR
+module_bl_myjpbl.F:                       ,TSK,QSFC,CHKLOWQ,THZ0,QZ0,UZ0,VZ0              &
+module_bl_myjpbl.F:      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: CT,QSFC,QZ0     &
+module_bl_myjpbl.F:              QSFC(I,J)=QLOW+ELFLX(I,J)/QFC1
+module_bl_myjpbl.F:            QSFC(I,J)=PQ0SEA/PSFC                                      &
+module_bl_myjpbl.F:          QZ0 (I,J)=(1.-SEAMASK)*QSFC(I,J)+SEAMASK*QZ0 (I,J)
+module_bl_myjpbl.F:      REAL :: ADEN,AKQS,BDEN,BESH,BESM,CDEN,CF,DTOZS,ELL,ELOQ2,ELOQ4   &
+module_bl_myjpbl.F:      AKQS=SQRT((Q2(LMH-1)+Q2(LMH))*0.5)*(EL(LMH-1)+ELZ0)*ESQHF        &
+module_bl_myjpbl.F:      Q2(LMH-1)=(DTOZS*AKQS*Q2(LMH)-RSQ2(LMH-2)*CF+Q2(LMH-1))          &
+module_bl_myjpbl.F:              /((AKQ(LMH-2)+AKQS)*DTOZS-CR(LMH-2)*CF+1.)
+module_bl_myjpbl.F:	write(6,*) 'DTOZS,AKQS,Q2(LMH) : ', DTOZS,AKQS,Q2(LMH)
+module_bl_myjpbl.F:      REAL :: AKHH,AKQS,CF,CMB,CMCB,CMQB,CMTB,CTHF,DTOZL,DTOZS         &
+module_bl_myjpbl.F:      AKQS=AKHS*CHKLOWQ
+module_bl_myjpbl.F:      CMQB=-CMB+(AKHH+AKQS)*DTOZS+1.
+module_bl_myjpbl.F:      Q(LMH)  =(DTOZS*AKQS*QZ0 +RSQB)/CMQB
+module_bl_myjpbl_nmm.F:     &                 ,SQPR=0.84,SQSC=0.84,SQVISC=258.2,TVISC=2.1E-5   &
+module_bl_myjpbl_nmm.F:     &                 ,ZQRZT=SQSC/SQPR
+module_bl_myjpbl_nmm.F:                       ,TSK,QSFC,CHKLOWQ,THZ0,QZ0,UZ0,VZ0              &
+module_bl_myjpbl_nmm.F:      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: QSFC,QZ0,THZ0   &
+module_bl_myjpbl_nmm.F:              QSFC(I,J)=QLOW+ELFLX(I,J)/QFC1
+module_bl_myjpbl_nmm.F:            QSFC(I,J)=PQ0SEA/PSFC                                      &
+module_bl_myjpbl_nmm.F:          QZ0 (I,J)=(1.-SEAMASK)*QSFC(I,J)+SEAMASK*QZ0 (I,J)
+module_bl_myjpbl_nmm.F:      REAL :: ADEN,AKQS,BDEN,BESH,BESM,CDEN,CF,DTOZS,ELL,ELOQ2,ELOQ4   &
+module_bl_myjpbl_nmm.F:      AKQS=SQRT((Q2(LMH-1)+Q2(LMH))*0.5)*(EL(LMH-1)+ELZ0)*ESQHF        &
+module_bl_myjpbl_nmm.F:      Q2(LMH-1)=(DTOZS*AKQS*Q2(LMH)-RSQ2(LMH-2)*CF+Q2(LMH-1))          &
+module_bl_myjpbl_nmm.F:              /((AKQ(LMH-2)+AKQS)*DTOZS-CR(LMH-2)*CF+1.)
+module_bl_myjpbl_nmm.F:      REAL :: AKHH,AKQS,CF,CMB,CMCB,CMQB,CMTB,CTHF,DTOZL,DTOZS         &
+module_bl_myjpbl_nmm.F:      AKQS=AKHS*CHKLOWQ
+module_bl_myjpbl_nmm.F:      CMQB=-CMB+(AKHH+AKQS)*DTOZS+1.
+module_bl_myjpbl_nmm.F:      Q(LMH)  =(DTOZS*AKQS*QZ0 +RSQB)/CMQB
+module_bl_myjsfc.F:                       ,SQPR=0.84,SQSC=0.84,SQVISC=258.2,TVISC=2.1E-5  &
+module_bl_myjsfc.F:                       ,ZQRZT=SQSC/SQPR
+module_bl_myjsfc.F:                       ,TSK,QSFC,THZ0,QZ0,UZ0,VZ0                      &
+module_bl_myjsfc.F:                       ,U10,V10,TH2,T2,Q2,TSHLTR,TH10,QSHLTR,Q10       &
+module_bl_myjsfc.F:                                                    ,Q10,QSHLTR,Q2     &
+module_bl_myjsfc.F:      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT) :: AKHS,AKMS,QSFC
+module_bl_myjsfc.F:          CALL SFCDIF(LMH,SEAMASK,THSK(I,J),TSK(I,J),QSFC(I,J)         &
+module_bl_myjsfc.F:                     ,QSHLTR(I,J),Q10(I,J)                             &
+module_bl_myjsfc.F:          Q2(I,J)=QSHLTR(I,J)/(1.-QSHLTR(I,J))
+module_bl_myjsfc.F:      SUBROUTINE SFCDIF(LMH,SEAMASK,THS,TSK,QS,UZ0,VZ0,THZ0,QZ0        &
+module_bl_myjsfc.F:      REAL,INTENT(INOUT) :: AKHS,AKMS,QZ0,THZ0,USTAR,UZ0,VZ0,Z0,QS
+module_bl_myjsfc.F:      REAL :: AKHS02,AKHS10,AKMS02,AKMS10,EKMS10,PSHLTR,QSAT10,QSAT2   &
+module_bl_myjsfc.F:!   FOR FIRST TIMESTEP QS=0.
+module_bl_myjsfc.F:      IF(QS.LT.1.E-10)QS=QLOW
+module_bl_myjsfc.F:!         QZ0=((WGHT*QLOW+QS)/(WGHT+1.)+QZ0)*0.5
+module_bl_myjsfc.F:          QZ0=(WGHT*QLOW+QS)/(WGHT+1.)
+module_bl_myjsfc.F:!         QZ0 =((WGHT*QLOW+QS)/(WGHT+1.)+QZ0)*0.5
+module_bl_myjsfc.F:          QZ0=(WGHT*QLOW+QS)/(WGHT+1.)
+module_bl_myjsfc.F:        QZ0=QS
+module_bl_myjsfc.F:!***  CONSTRAIN Q SO THAT IT CANNOT EXCEED QSAT AT 2M AND 10M
+module_bl_myjsfc.F:      QSAT2=PQ0/PSHLTR*EXP(A2S*(T02-A3S)/(T02-A4S))
+module_bl_myjsfc.F:      IF(Q02.GT.QSAT2)THEN
+module_bl_myjsfc.F:        Q02=QSAT2
+module_bl_myjsfc.F:      QSAT10=PQ0/PSHLTR*EXP(A2S*(T10-A3S)/(T10-A4S))
+module_bl_myjsfc.F:      IF(Q10.GT.QSAT10)THEN
+module_bl_myjsfc.F:        Q10=QSAT10
+module_bl_myjsfc_nmm.F:                       ,SQPR=0.84,SQSC=0.84,SQVISC=258.2,TVISC=2.1E-5  &
+module_bl_myjsfc_nmm.F:                       ,ZQRZT=SQSC/SQPR
+module_bl_myjsfc_nmm.F:                       ,TSK,QSFC,THZ0,QZ0,UZ0,VZ0                      &
+module_bl_myjsfc_nmm.F:                       ,U10,V10,TSHLTR,TH10,QSHLTR,Q10,PSHLTR          &
+module_bl_myjsfc_nmm.F:                                                    ,QFX,Q10,QSHLTR    &
+module_bl_myjsfc_nmm.F:                                                      ,PBLH,QSFC
+module_bl_myjsfc_nmm.F:             ,P02P,P10P,PLOW,PSFC,PTOP,QLOW,QOL2ST,QOL2UN,QS02,QS10    &
+module_bl_myjsfc_nmm.F:          CALL SFCDIF(NTSD,SEAMASK,THSK(I,J),QSFC(I,J),PSFC            &
+module_bl_myjsfc_nmm.F:                     ,QSHLTR(I,J),Q10(I,J),PSHLTR(I,J)                 &
+module_bl_myjsfc_nmm.F:          QS02=PQ0/P02P*EXP(A2*(T02P-A3)/(T02P-A4))
+module_bl_myjsfc_nmm.F:          QS10=PQ0/P10P*EXP(A2*(T10P-A3)/(T10P-A4))
+module_bl_myjsfc_nmm.F:          IF(QSHLTR(I,J).GT.QS02)QSHLTR(I,J)=QS02
+module_bl_myjsfc_nmm.F:          IF(Q10   (I,J).GT.QS10)Q10   (I,J)=QS10
+module_bl_myjsfc_nmm.F:      SUBROUTINE SFCDIF(NTSD,SEAMASK,THS,QS,PSFC                       &
+module_bl_myjsfc_nmm.F:      REAL,INTENT(INOUT) :: AKHS,AKMS,QZ0,THZ0,USTAR,UZ0,VZ0,Z0,QS
+module_bl_myjsfc_nmm.F:      REAL :: AKHS02,AKHS10,AKMS02,AKMS10,EKMS10,QSAT10,QSAT2          &
+module_bl_myjsfc_nmm.F:                QZ0=((WGHTQ*QLOW+QS)/(WGHTQ+1.)+QZ0)*0.5
+module_bl_myjsfc_nmm.F:                QZ0=(WGHTQ*QLOW+QS)/(WGHTQ+1.)
+module_bl_myjsfc_nmm.F:                QZ0=((WGHTQ*QLOW+QS)/(WGHTQ+1.)+QZ0)*0.5
+module_bl_myjsfc_nmm.F:                QZ0=(WGHTQ*QLOW+QS)/(WGHTQ+1.)
+module_bl_myjsfc_nmm.F:            QZ0=QS
+module_bl_myjsfc_nmm.F:        QZ0=QS
+module_bl_sfclay.F:!     ZA(1982) EQS(2.60),(2.61).                                                 
+module_bl_slab.F:                   PSFC,XLAND,TMN,HFX,QFX,TSK,QSFC,CHKLOWQ,     &
+module_bl_slab.F:                                                          QSFC
+module_bl_slab.F:	   QFX(ims,j),TSK(ims,j),QSFC(ims,j),CHKLOWQ(its,j),    &
+module_bl_slab.F:                   PSFCPA,XLAND,TMN,HFX,QFX,TSK,QSFC,CHKLOWQ,   &
+module_bl_slab.F:                                                           QSFC
+module_bl_slab.F:							    QS, &
+module_bl_slab.F:   REAL    :: THG,ESG,QSG,HFXT,QFXT,CS,CSW,LAMG(4),THCON,PL
+module_bl_slab.F:        QS(I)=HFX(I)+QFX(I)*XLV                                
+module_bl_slab.F:          DTHGDT(I)=(RNET(I)-QS(I))/CAPG(I)-HM(I)                              
+module_bl_slab.F:                QSG=EP2*ESG/(PS-ESG)                                             
+module_bl_slab.F:                QFXT=FLQC(I)*(QSG-QX(I))
+module_bl_slab.F:                QS(I)=HFXT+QFXT*XLV                                
+module_bl_slab.F:              FLUX(I,1)=RNET(I)-QS(I)                                            
+module_bl_slab.F:! QSFC and CHKLOWQ needed by Eta PBL
+module_bl_slab.F:        QSFC(I)=QX(I)+QFX(I)/FLQC(I)
+module_bl_ysu.F:						      dtsfc,dqsfc, &
+module_bl_ysu.F:!     za(1982) eqs(2.60),(2.61).
+module_cu_bmj.F:      REAL,DIMENSION(JTB),PRIVATE,SAVE :: QS0,SQS
+module_cu_bmj.F:                                ,PK,PSK,QK,QREFK,QSATK                  &
+module_cu_bmj.F:     &            ,AVRGT,AVRGTL,BQ,BQK,BQS00K,BQS10K                    &
+module_cu_bmj.F:     &            ,QBT,QKL,QNEW,QOTSUM,QQ1,QQK,QRFKL,QRFTP,QSUM,RDP0T   &
+module_cu_bmj.F:     &            ,SM1,SMIX,SQ,SQK,SQS00K,SQS10K,STABDL,SUMDE,SUMDP     &
+module_cu_bmj.F:        BQS00K=QS0(ITTBK)
+module_cu_bmj.F:        SQS00K=SQS(ITTBK)
+module_cu_bmj.F:        BQS10K=QS0(ITTBK+1)
+module_cu_bmj.F:        SQS10K=SQS(ITTBK+1)
+module_cu_bmj.F:        BQ=(BQS10K-BQS00K)*QQ1+BQS00K
+module_cu_bmj.F:        SQ=(SQS10K-SQS00K)*QQ1+SQS00K
+module_cu_bmj.F:          QSATK(L)=PQ0/PK(L)*EXP(A2*(TK(L)-A3)/(TK(L)-A4))
+module_cu_bmj.F:        RHH=QK(LTOP)/QSATK(LTOP)
+module_cu_bmj.F:          RHL=QK(L)/QSATK(L)
+module_cu_bmj.F:        QSATK(L) =PQ0/PK(L)*EXP(A2*(TK(L)-A3)/(TK(L)-A4))
+module_cu_bmj.F:      BQS00K=QS0(IT)
+module_cu_bmj.F:      SQS00K=SQS(IT)
+module_cu_bmj.F:      BQS10K=QS0(IT+1)
+module_cu_bmj.F:      SQS10K=SQS(IT+1)
+module_cu_bmj.F:      BQK=(BQS10K-BQS00K)*QQK+BQS00K
+module_cu_bmj.F:      SQK=(SQS10K-SQS00K)*QQK+SQS00K
+module_cu_bmj.F:      QSUM  =0.
+module_cu_bmj.F:        QSUM  =QK(L)*DPRS(L)+QSUM
+module_cu_bmj.F:      QSUM  =QSUM*RDPSUM
+module_cu_bmj.F:        DQREF=(QOTSUM-DSTQ-QSUM)/DEN
+module_cu_bmj.F:      QRFTP=QSUM-DQREF*PSUM
+module_cu_bmj.F:        QSATK(L)=PQ0/PK(L)*EXP(A2*(TNEW-A3)/(TNEW-A4))
+module_cu_bmj.F:        IF(QNEW.LT.QSATK(L)*RHLSC)THEN
+module_cu_bmj.F:      REAL, DIMENSION(JTB) :: APP,APT,AQP,AQT,PNEW,POLD,QSNEW,QSOLD     &
+module_cu_bmj.F:      REAL :: APE,DP,DQS,DTH,DTHE,P,QS,QS0K,SQSK,STHEK                  &
+module_cu_bmj.F:        QSOLD(KP)=PQ0/P*EXP(A2*(TH-A3*APE)/(TH-A4*APE))
+module_cu_bmj.F:      QS0K=QSOLD(1)
+module_cu_bmj.F:      SQSK=QSOLD(KPM)-QSOLD(1)
+module_cu_bmj.F:      QSOLD(1  )=0.
+module_cu_bmj.F:      QSOLD(KPM)=1.
+module_cu_bmj.F:        QSOLD(KP)=(QSOLD(KP)-QS0K)/SQSK
+module_cu_bmj.F:        IF((QSOLD(KP)-QSOLD(KP-1)).LT.EPS)QSOLD(KP)=QSOLD(KP-1)+EPS
+module_cu_bmj.F:      QS0(KTH)=QS0K
+module_cu_bmj.F:      SQS(KTH)=SQSK
+module_cu_bmj.F:      QSNEW(1  )=0.
+module_cu_bmj.F:      QSNEW(KPM)=1.
+module_cu_bmj.F:      DQS=1./REAL(KPM-1)
+module_cu_bmj.F:        QSNEW(KP)=QSNEW(KP-1)+DQS
+module_cu_bmj.F:      CALL SPLINE(JTB,KPM,QSOLD,POLD,Y2P,KPM,QSNEW,PNEW,APP,AQP)
+module_cu_bmj.F:        QS=PQ0/P*EXP(A2*(TH-A3*APE)/(TH-A4*APE))
+module_cu_bmj.F:        THEOLD(KTH)=TH*EXP(ELIWV*QS/(CP*TOLD(KTH)))
+module_cu_bmj.F:        QS=PQ0/P*EXP(A2*(TH-A3*APE)/(TH-A4*APE))
+module_cu_bmj.F:        THEOLDQ(KTH)=TH*EXP(ELIWV*QS/(CP*TOLDQ(KTH)))
+module_cu_gd.F:              P_QC,P_QI,P_QS,P_FIRST_SCALAR,STEPCU,             &
+module_cu_gd.F:                                  P_QC, P_QI, P_QS,             &
+module_cu_gd.F:!......     QSTEN STORES GRAUPEL TENDENCY IF IT EXISTS, OTHERISE SNOW (V2)     
+module_cu_kf.F:              RQICUTEN,RQSCUTEN,RAINCV,NCA,                  &
+module_cu_kf.F:              P_QR,P_QI,P_QS,P_FIRST_SCALAR,STEPCU,          &
+module_cu_kf.F:                                  P_QR,P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kf.F:                                                   RQSCUTEN, &
+module_cu_kf.F:                                                      DQSDT, &
+module_cu_kf.F:               DQSDT(k)=0.      
+module_cu_kf.F:                 DQDT,DQIDT,DQCDT,DQRDT,DQSDT,DTDT, &
+module_cu_kf.F:                 RAINCV,NCA,P_QI,P_QS,P_FIRST_SCALAR,&
+module_cu_kf.F:!......     QSTEN STORES GRAUPEL TENDENCY IF IT EXISTS, OTHERISE SNOW (V2)     
+module_cu_kf.F:            IF(P_QS .ge. P_FIRST_SCALAR)THEN                                          
+module_cu_kf.F:                 RQSCUTEN(I,K,J)=DQSDT(K)
+module_cu_kf.F:                      DQDT,DQIDT,DQCDT,DQRDT,DQSDT,DTDT,   &
+module_cu_kf.F:                      RAINCV,NCA,P_QI,P_QS,P_FIRST_SCALAR, &
+module_cu_kf.F:                                I,J,P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kf.F:                                                    DQSDT, &
+module_cu_kf.F:            QRFXIN,QRFXOUT,QSPA,QSFXIN,QSFXOUT,            &
+module_cu_kf.F:            QL0,QLG,QI0,QIG,QR0,QRG,QS0,QSG
+module_cu_kf.F:		 DTMLTD,QS,TADVEC,DPDD,FRC,DPT,RDD,A1,     &
+module_cu_kf.F:		 DSSDT,DTMP,T1RH,QSRH,PPTFLX,CPR,CNDTNF,   &
+module_cu_kf.F:         QS0(K)=0.                                             
+module_cu_kf.F:          QSG(NK)=0.                               
+module_cu_kf.F:        QS=EP2*ES/(P0(LFS)-ES)                                   
+module_cu_kf.F:        IF(QD(LFS).GE.QS)THEN                                           
+module_cu_kf.F:                      EXP((3374.6525/TZ(LFS)-2.5403)*QS*(1.+0.81*QS))  
+module_cu_kf.F:                 TPDD(P0(ND),THETED(LDT),T0(ND),QS,QD(ND),1.0,XLV0,XLV1, &
+module_cu_kf.F:          QS=EP2*ES/(P0(ND)-ES)                             
+module_cu_kf.F:          DTMP=RL*QS*(1.-RHBC)/(CP+RL*RHBC*QS*DSSDT)                        
+module_cu_kf.F:          QSRH=EP2*ES/(P0(ND)-ES)                                      
+module_cu_kf.F:          IF(QSRH.LT.QD(ND))THEN                                    
+module_cu_kf.F:            QSRH=QD(ND)                                            
+module_cu_kf.F:!          T1RH=T1+(QS-QSRH)*RL/CP                                
+module_cu_kf.F:          QS=QSRH                                             
+module_cu_kf.F:          TDER=TDER+(QS-QD(ND))*DDR(ND)                     
+module_cu_kf.F:          QD(ND)=QS                                                   
+module_cu_kf.F:        QS=EP2*ES/(PMIX-ES)                                              
+module_cu_kf.F:        IF(QMIX.GT.QS)THEN                                             
+module_cu_kf.F:          DSSDT=QS*(CLIQ-BLIQ*DLIQ)/((TMIX-DLIQ)*(TMIX-DLIQ))      
+module_cu_kf.F:          DQ=(QMIX-QS)/(1.+RL*DSSDT/CPM)                          
+module_cu_kf.F:          QSPA(NK)=QS0(NK)                                    
+module_cu_kf.F:            QSFXIN(NK)=0.                                  
+module_cu_kf.F:            QSFXOUT(NK)=0.                               
+module_cu_kf.F:              QSFXIN(NK)=-FXM(NK)*QSPA(NK-1)                     
+module_cu_kf.F:              QSFXOUT(NK-1)=QSFXOUT(NK-1)+QSFXIN(NK)         
+module_cu_kf.F:              QSFXOUT(NK)=FXM(NK)*QSPA(NK)             
+module_cu_kf.F:              QSFXIN(NK-1)=QSFXIN(NK-1)+QSFXOUT(NK)                    
+module_cu_kf.F:            QSPA(NK)=QSPA(NK)+(QSFXIN(NK)+QICOUT(NK)*UDR(NK)-QSFXOUT(NK) &  
+module_cu_kf.F:          QSG(NK)=QSPA(NK)                                          
+module_cu_kf.F:                  'DQ','QU','QD','QLG','QIG','QRG','QSG','RH0','RHG'    
+module_cu_kf.F:                          QIG(K)*1000.,QRG(K)*1000.,QSG(K)*1000.,RH0,RHG   
+module_cu_kf.F:          QFNL=QFNL+(QLG(NK)+QIG(NK)+QRG(NK)+QSG(NK))*EMS(NK)            
+module_cu_kf.F:!           TG(K)=TG(K)-(RLC*(QLG(K)+QRG(K))+RLS*(QIG(K)+QSG(K)))/CPM    
+module_cu_kf.F:!           QG(K)=QG(K)+(QLG(K)+QRG(K)+QIG(K)+QSG(K))                   
+module_cu_kf.F:!           DQSDT(K)=0.                                        
+module_cu_kf.F:              TG(K)=TG(K)-(QIG(K)+QSG(K))*RLF/CPM                     
+module_cu_kf.F:              DQRDT(K)=(QRG(K)+QSG(K)-QR0(K)-QS0(K))/TIMEC    
+module_cu_kf.F:              DQSDT(K)=0.                                    
+module_cu_kf.F:                TG(K)=TG(K)-(QIG(K)+QSG(K))*RLF/CPM                  
+module_cu_kf.F:              DQRDT(K)=(QRG(K)+QSG(K)-QR0(K)-QS0(K))/TIMEC           
+module_cu_kf.F:              DQSDT(K)=0.                                           
+module_cu_kf.F:              IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_cu_kf.F:                 DQSDT(K)=(QSG(K)-QS0(K))/TIMEC                    
+module_cu_kf.F:                 DQIDT(K)=DQIDT(K)+(QSG(K)-QS0(K))/TIMEC
+module_cu_kf.F:   REAL    ::    ES,QS,PI,THTGS,F0,T1,T0,C5,RV,ESLIQ,ESICE,F1,DT,QNEW, &
+module_cu_kf.F:        QS=EP2*ES/(P-ES)                                         
+module_cu_kf.F:        PI=(1.E5/P)**(0.2854*(1.-0.28*QS))                        
+module_cu_kf.F:        THTGS=TU*PI*EXP((3374.6525/TU-2.5403)*QS*(1.+0.81*QS))   
+module_cu_kf.F:        QS=EP2*ES/(P-ES)                                    
+module_cu_kf.F:        PI=(1.E5/P)**(0.2854*(1.-0.28*QS))                   
+module_cu_kf.F:        THTGS=TU*PI*EXP((3114.834/TU-0.278296)*QS*(1.+0.81*QS))          
+module_cu_kf.F:        QS=EP2*ES/(P-ES)                                          
+module_cu_kf.F:        PI=(1.E5/P)**(0.2854*(1.-0.28*QS))                         
+module_cu_kf.F:        THTGS=TU*PI*EXP(RL*QS*C5/TU*(1.+0.81*QS))                 
+module_cu_kf.F:        QS=EP2*ES/(P-ES)                                 
+module_cu_kf.F:        PI=(1.E5/P)**(0.2854*(1.-0.28*QS))                 
+module_cu_kf.F:        THTGS=T1*PI*EXP((3374.6525/T1-2.5403)*QS*(1.+0.81*QS))    
+module_cu_kf.F:        QS=EP2*ES/(P-ES)                                    
+module_cu_kf.F:        PI=(1.E5/P)**(0.2854*(1.-0.28*QS))                   
+module_cu_kf.F:        THTGS=T1*PI*EXP((3114.834/T1-0.278296)*QS*(1.+0.81*QS))     
+module_cu_kf.F:        QS=EP2*ES/(P-ES)                                     
+module_cu_kf.F:        PI=(1.E5/P)**(0.2854*(1.-0.28*QS))                    
+module_cu_kf.F:        THTGS=T1*PI*EXP(RL*QS*C5/T1*(1.+0.81*QS))            
+module_cu_kf.F:   50 IF(QS.LE.QU)THEN                                                
+module_cu_kf.F:        QNEW=QU-QS                                                   
+module_cu_kf.F:        QU=QS                                                       
+module_cu_kf.F:      DQ=QS-QU                                                      
+module_cu_kf.F:        QU=QS                                                
+module_cu_kf.F:                     RQICUTEN,RQSCUTEN,NCA,W0AVG,P_QI,P_QS,         &
+module_cu_kf.F:   INTEGER , INTENT(IN)           ::  P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kf.F:							  RQSCUTEN
+module_cu_kf.F:     IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_cu_kf.F:           RQSCUTEN(i,k,j)=0.
+module_cu_kfeta.F:      REAL, DIMENSION(KFNT,KFNP),PRIVATE, SAVE :: TTAB,QSTAB
+module_cu_kfeta.F:              RQICUTEN,RQSCUTEN,RAINCV,NCA,                  &
+module_cu_kfeta.F:              P_QR,P_QI,P_QS,P_FIRST_SCALAR,STEPCU,          &
+module_cu_kfeta.F:                                  P_QR,P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kfeta.F:                                                   RQSCUTEN, &
+module_cu_kfeta.F:                                                      DQSDT, &
+module_cu_kfeta.F:               DQSDT(k)=0.
+module_cu_kfeta.F:                 DQDT,DQIDT,DQCDT,DQRDT,DQSDT,DTDT, &
+module_cu_kfeta.F:                 P_QI,P_QS,P_FIRST_SCALAR,warm_rain,&
+module_cu_kfeta.F:!......     QSTEN STORES GRAUPEL TENDENCY IF IT EXISTS, OTHERISE SNOW (V2)
+module_cu_kfeta.F:            IF(P_QS .ge. P_FIRST_SCALAR)THEN
+module_cu_kfeta.F:                 RQSCUTEN(I,K,J)=DQSDT(K)
+module_cu_kfeta.F:                      DQDT,DQIDT,DQCDT,DQRDT,DQSDT,DTDT,   &
+module_cu_kfeta.F:                      P_QI,P_QS,P_FIRST_SCALAR,warm_rain,  &
+module_cu_kfeta.F:                                I,J,NTST,P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kfeta.F:                                                    DQSDT, &
+module_cu_kfeta.F:            QRFXIN,QRFXOUT,QSPA,QSFXIN,QSFXOUT,            &
+module_cu_kfeta.F:            QL0,QLG,QI0,QIG,QR0,QRG,QS0,QSG
+module_cu_kfeta.F:            CLDHGT,QSD,DILFRC,DDILFRC,TKE,TGU,QGU,THTEEG
+module_cu_kfeta.F:                 DTMLTD,QS,TADVEC,DPDD,FRC,DPT,RDD,A1,     &
+module_cu_kfeta.F:                 DSSDT,DTMP,T1RH,QSRH,PPTFLX,CPR,CNDTNF,   &
+module_cu_kfeta.F:                 QSS,PPTMLT,DTMELT,RHH,EVAC,BINC
+module_cu_kfeta.F:         QS0(K)=0.
+module_cu_kfeta.F:!           QSLCL=QES(K)+(QES(KLCL)-QES(K))*DLP
+module_cu_kfeta.F:!           RHLCL = QENV/QSLCL
+module_cu_kfeta.F:!           DQSSDT = QMIX*(CLIQ-BLIQ*DLIQ)/((TLCL-DLIQ)*(TLCL-DLIQ))
+module_cu_kfeta.F:!             DTRH = 0.25*(RHLCL-0.75)*QMIX/DQSSDT
+module_cu_kfeta.F:!             DTRH = (1./RHLCL-1.)*QMIX/DQSSDT
+module_cu_kfeta.F:        QSG(NK)=0.
+module_cu_kfeta.F:          call tpmix2dd(p0(lfs),theted(lfs),tz(lfs),qss)
+module_cu_kfeta.F:          THTAD(LFS)=TZ(LFS)*(P00/P0(LFS))**(0.2854*(1.-0.28*QSS))
+module_cu_kfeta.F:          TVD(LFS)=TZ(LFS)*(1.+0.608*QSS)
+module_cu_kfeta.F:          call tpmix2dd(p0(kstart),theted(kstart),tz(kstart),qss)
+module_cu_kfeta.F:          QSS=0.622*ES/(P0(KSTART)-ES)
+module_cu_kfeta.F:          THETED(KSTART)=TZ(KSTART)*(1.E5/P0(KSTART))**(0.2854*(1.-0.28*QSS))*    &
+module_cu_kfeta.F:                EXP((3374.6525/TZ(KSTART)-2.5403)*QSS*(1.+0.81*QSS))
+module_cu_kfeta.F:            call tpmix2dd(p0(nd),theted(nd),tz(nd),qss)
+module_cu_kfeta.F:            qsd(nd) = qss
+module_cu_kfeta.F:              DTMP=RL*QSS*(1.-RHH)/(CP+RL*RHH*QSS*DSSDT)
+module_cu_kfeta.F:              QSRH=0.622*ES/(P0(ND)-ES)
+module_cu_kfeta.F:              IF(QSRH.LT.QD(ND))THEN
+module_cu_kfeta.F:                QSRH=QD(ND)
+module_cu_kfeta.F:                T1RH=TZ(ND)+(QSS-QSRH)*RL/CP
+module_cu_kfeta.F:              QSS=QSRH
+module_cu_kfeta.F:              QSD(ND) = QSS
+module_cu_kfeta.F:            TVD(nd) = tz(nd)*(1.+0.608*qsd(nd))
+module_cu_kfeta.F:              TDER=TDER+(QSD(nd)-QD(ND))*DDR(ND)
+module_cu_kfeta.F:              QD(ND)=QSD(nd)
+module_cu_kfeta.F:          QSS=0.622*ES/(PMIX-ES)
+module_cu_kfeta.F:          IF(QMIX.GT.QSS)THEN
+module_cu_kfeta.F:            DSSDT=QSS*(CLIQ-BLIQ*DLIQ)/((TMIX-DLIQ)*(TMIX-DLIQ))
+module_cu_kfeta.F:            DQ=(QMIX-QSS)/(1.+RL*DSSDT/CPM)
+module_cu_kfeta.F:          QSPA(NK)=QS0(NK)
+module_cu_kfeta.F:            QSFXIN(NK)=0.
+module_cu_kfeta.F:            QSFXOUT(NK)=0.
+module_cu_kfeta.F:              QSFXIN(NK)=-FXM(NK)*QSPA(NK-1)
+module_cu_kfeta.F:              QSFXOUT(NK-1)=QSFXOUT(NK-1)+QSFXIN(NK)
+module_cu_kfeta.F:              QSFXOUT(NK)=FXM(NK)*QSPA(NK)
+module_cu_kfeta.F:              QSFXIN(NK-1)=QSFXIN(NK-1)+QSFXOUT(NK)
+module_cu_kfeta.F:            QSPA(NK)=QSPA(NK)+(QSFXIN(NK)-QSFXOUT(NK)+SNOWFB(NK))*DTIME*EMSD(NK)         !  PPT FB MODS
+module_cu_kfeta.F:          QSG(NK)=QSPA(NK)
+module_cu_kfeta.F:                  'DQ','QU','QD','QLG','QIG','QRG','QSG','RH0','RHG'
+module_cu_kfeta.F:             QSG(K)*1000.,RH0,RHG
+module_cu_kfeta.F:          QFNL=QFNL+(QLG(NK)+QIG(NK)+QRG(NK)+QSG(NK))*EMS(NK)
+module_cu_kfeta.F:!           TG(K)=TG(K)-(RLC*(QLG(K)+QRG(K))+RLS*(QIG(K)+QSG(K)))/CPM
+module_cu_kfeta.F:!           QG(K)=QG(K)+(QLG(K)+QRG(K)+QIG(K)+QSG(K))
+module_cu_kfeta.F:!           DQSDT(I,J,NK)=0.
+module_cu_kfeta.F:            TG(K)=TG(K)-(QIG(K)+QSG(K))*RLF/CPM
+module_cu_kfeta.F:            DQRDT(K)=(QRG(K)+QSG(K)-QR0(K)-QS0(K))/TIMEC
+module_cu_kfeta.F:            DQSDT(K)=0.
+module_cu_kfeta.F:              TG(K)=TG(K)-(QIG(K)+QSG(K))*RLF/CPM
+module_cu_kfeta.F:            DQRDT(K)=(QRG(K)+QSG(K)-QR0(K)-QS0(K))/TIMEC
+module_cu_kfeta.F:            DQSDT(K)=0.
+module_cu_kfeta.F:            IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_cu_kfeta.F:               DQSDT(K)=(QSG(K)-QS0(K))/TIMEC
+module_cu_kfeta.F:               DQIDT(K)=DQIDT(K)+(QSG(K)-QS0(K))/TIMEC
+module_cu_kfeta.F:!     REAL, SAVE, DIMENSION(1:KFNT,1:KFNP) :: TTAB,QSTAB
+module_cu_kfeta.F:                 TEMP,QS,QNEW,DQ,QTOT,RLL,CPP
+module_cu_kfeta.F:!      COMMON/KFLUT/ ttab(kfnt,kfnp),qstab(kfnt,kfnp),the0k(kfnp),
+module_cu_kfeta.F:      q00=qstab(ithtb  ,iptb  )
+module_cu_kfeta.F:      q10=qstab(ithtb+1,iptb  )
+module_cu_kfeta.F:      q01=qstab(ithtb  ,iptb+1)
+module_cu_kfeta.F:      q11=qstab(ithtb+1,iptb+1)
+module_cu_kfeta.F:      qs=(q00+(q10-q00)*pp+(q01-q00)*qq+(q00-q10-q01+q11)*pp*qq)
+module_cu_kfeta.F:      DQ=QS-QU
+module_cu_kfeta.F:        QNEW=QU-QS
+module_cu_kfeta.F:        QU=QS
+module_cu_kfeta.F:          QU=QS
+module_cu_kfeta.F:   REAL    ::    RLC,RLS,RLF,CPP,A,DTFRZ,ES,QS,DQEVAP,PII
+module_cu_kfeta.F:      QS = ES*0.622/(P-ES)
+module_cu_kfeta.F:      DQEVAP = QS-QU
+module_cu_kfeta.F:   SUBROUTINE TPMIX2DD(p,thes,ts,qs)
+module_cu_kfeta.F:!     REAL, SAVE, DIMENSION(1:KFNT,1:KFNP) :: TTAB,QSTAB
+module_cu_kfeta.F:   REAL,         INTENT(INOUT)   :: TS,QS
+module_cu_kfeta.F:!     COMMON/KFLUT/ ttab(kfnt,kfnp),qstab(kfnt,kfnp),the0k(kfnp),        &
+module_cu_kfeta.F:      q00=qstab(ithtb  ,iptb  )
+module_cu_kfeta.F:      q10=qstab(ithtb+1,iptb  )
+module_cu_kfeta.F:      q01=qstab(ithtb  ,iptb+1)
+module_cu_kfeta.F:      q11=qstab(ithtb+1,iptb+1)
+module_cu_kfeta.F:      qs=(q00+(q10-q00)*pp+(q01-q00)*qq+(q00-q10-q01+q11)*pp*qq)
+module_cu_kfeta.F:                     RQICUTEN,RQSCUTEN,NCA,W0AVG,P_QI,P_QS,         &
+module_cu_kfeta.F:   INTEGER , INTENT(IN)           ::  P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kfeta.F:                                                          RQSCUTEN
+module_cu_kfeta.F:      IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_cu_kfeta.F:            RQSCUTEN(i,k,j)=0.
+module_cu_kfeta.F:!     REAL, SAVE, DIMENSION(1:KFNT,1:KFNP) :: TTAB,QSTAB
+module_cu_kfeta.F:             TEMP,P,ES,QS,PI,THES,TGUES,THGUES,F0,T1,T0,THGS,F1,DT, &
+module_cu_kfeta.F:        qs=0.622*es/(p-es)
+module_cu_kfeta.F:        pi=(1.e5/p)**(0.2854*(1.-0.28*qs))
+module_cu_kfeta.F:        the0k(kp)=temp*pi*exp((3374.6525/temp-2.5403)*qs*        &
+module_cu_kfeta.F:               (1.+0.81*qs))
+module_cu_kfeta.F:          qs=0.622*es/(p-es)
+module_cu_kfeta.F:          pi=(1.e5/p)**(0.2854*(1.-0.28*qs))
+module_cu_kfeta.F:          thgues=tgues*pi*exp((3374.6525/tgues-2.5403)*qs*      &
+module_cu_kfeta.F:               (1.+0.81*qs))
+module_cu_kfeta.F:            qs=0.622*es/(p-es)
+module_cu_kfeta.F:            pi=(1.e5/p)**(0.2854*(1.-0.28*qs))
+module_cu_kfeta.F:            thtgs=t1*pi*exp((3374.6525/t1-2.5403)*qs*(1.+0.81*qs))
+module_cu_kfeta.F:          qstab(it,kp)=qs
+module_cu_kfeta_nmm.F:      REAL, DIMENSION(KFNT,KFNP),PRIVATE, SAVE :: TTAB,QSTAB
+module_cu_kfeta_nmm.F:              RQICUTEN,RQSCUTEN,RAINCV,NCA,                  &
+module_cu_kfeta_nmm.F:              P_QR,P_QI,P_QS,P_FIRST_SCALAR,STEPCU,          &
+module_cu_kfeta_nmm.F:                                  P_QR,P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kfeta_nmm.F:                                                   RQSCUTEN, &
+module_cu_kfeta_nmm.F:                                                      DQSDT, &
+module_cu_kfeta_nmm.F:               DQSDT(k)=0.
+module_cu_kfeta_nmm.F:                 DQDT,DQIDT,DQCDT,DQRDT,DQSDT,DTDT, &
+module_cu_kfeta_nmm.F:                 P_QI,P_QS,P_FIRST_SCALAR,warm_rain,&
+module_cu_kfeta_nmm.F:!......     QSTEN STORES GRAUPEL TENDENCY IF IT EXISTS, OTHERISE SNOW (V2)
+module_cu_kfeta_nmm.F:            IF(P_QS .ge. P_FIRST_SCALAR)THEN
+module_cu_kfeta_nmm.F:                 RQSCUTEN(I,K,J)=DQSDT(K)
+module_cu_kfeta_nmm.F:                      DQDT,DQIDT,DQCDT,DQRDT,DQSDT,DTDT,   &
+module_cu_kfeta_nmm.F:                      P_QI,P_QS,P_FIRST_SCALAR,warm_rain,  &
+module_cu_kfeta_nmm.F:                                I,J,NTST,P_QI,P_QS,P_FIRST_SCALAR,ktau
+module_cu_kfeta_nmm.F:                                                    DQSDT, &
+module_cu_kfeta_nmm.F:            QRFXIN,QRFXOUT,QSPA,QSFXIN,QSFXOUT,            &
+module_cu_kfeta_nmm.F:            QL0,QLG,QI0,QIG,QR0,QRG,QS0,QSG
+module_cu_kfeta_nmm.F:            CLDHGT,QSD,DILFRC,DDILFRC,TKE,TGU,QGU,THTEEG
+module_cu_kfeta_nmm.F:                 DTMLTD,QS,TADVEC,DPDD,FRC,DPT,RDD,A1,     &
+module_cu_kfeta_nmm.F:                 DSSDT,DTMP,T1RH,QSRH,PPTFLX,CPR,CNDTNF,   &
+module_cu_kfeta_nmm.F:                 QSS,PPTMLT,DTMELT,RHH,EVAC,BINC
+module_cu_kfeta_nmm.F:         QS0(K)=0.
+module_cu_kfeta_nmm.F:!           QSLCL=QES(K)+(QES(KLCL)-QES(K))*DLP
+module_cu_kfeta_nmm.F:!           RHLCL = QENV/QSLCL
+module_cu_kfeta_nmm.F:!           DQSSDT = QMIX*(CLIQ-BLIQ*DLIQ)/((TLCL-DLIQ)*(TLCL-DLIQ))
+module_cu_kfeta_nmm.F:!             DTRH = 0.25*(RHLCL-0.75)*QMIX/DQSSDT
+module_cu_kfeta_nmm.F:!             DTRH = (1./RHLCL-1.)*QMIX/DQSSDT
+module_cu_kfeta_nmm.F:        QSG(NK)=0.
+module_cu_kfeta_nmm.F:          call tpmix2dd(p0(lfs),theted(lfs),tz(lfs),qss)
+module_cu_kfeta_nmm.F:          THTAD(LFS)=TZ(LFS)*(P00/P0(LFS))**(0.2854*(1.-0.28*QSS))
+module_cu_kfeta_nmm.F:          TVD(LFS)=TZ(LFS)*(1.+0.608*QSS)
+module_cu_kfeta_nmm.F:          call tpmix2dd(p0(kstart),theted(kstart),tz(kstart),qss)
+module_cu_kfeta_nmm.F:          QSS=0.622*ES/(P0(KSTART)-ES)
+module_cu_kfeta_nmm.F:          THETED(KSTART)=TZ(KSTART)*(1.E5/P0(KSTART))**(0.2854*(1.-0.28*QSS))*    &
+module_cu_kfeta_nmm.F:                EXP((3374.6525/TZ(KSTART)-2.5403)*QSS*(1.+0.81*QSS))
+module_cu_kfeta_nmm.F:            call tpmix2dd(p0(nd),theted(nd),tz(nd),qss)
+module_cu_kfeta_nmm.F:            qsd(nd) = qss
+module_cu_kfeta_nmm.F:              DTMP=RL*QSS*(1.-RHH)/(CP+RL*RHH*QSS*DSSDT)
+module_cu_kfeta_nmm.F:              QSRH=0.622*ES/(P0(ND)-ES)
+module_cu_kfeta_nmm.F:              IF(QSRH.LT.QD(ND))THEN
+module_cu_kfeta_nmm.F:                QSRH=QD(ND)
+module_cu_kfeta_nmm.F:                T1RH=TZ(ND)+(QSS-QSRH)*RL/CP
+module_cu_kfeta_nmm.F:              QSS=QSRH
+module_cu_kfeta_nmm.F:              QSD(ND) = QSS
+module_cu_kfeta_nmm.F:            TVD(nd) = tz(nd)*(1.+0.608*qsd(nd))
+module_cu_kfeta_nmm.F:              TDER=TDER+(QSD(nd)-QD(ND))*DDR(ND)
+module_cu_kfeta_nmm.F:              QD(ND)=QSD(nd)
+module_cu_kfeta_nmm.F:          QSS=0.622*ES/(PMIX-ES)
+module_cu_kfeta_nmm.F:          IF(QMIX.GT.QSS)THEN
+module_cu_kfeta_nmm.F:            DSSDT=QSS*(CLIQ-BLIQ*DLIQ)/((TMIX-DLIQ)*(TMIX-DLIQ))
+module_cu_kfeta_nmm.F:            DQ=(QMIX-QSS)/(1.+RL*DSSDT/CPM)
+module_cu_kfeta_nmm.F:          QSPA(NK)=QS0(NK)
+module_cu_kfeta_nmm.F:            QSFXIN(NK)=0.
+module_cu_kfeta_nmm.F:            QSFXOUT(NK)=0.
+module_cu_kfeta_nmm.F:              QSFXIN(NK)=-FXM(NK)*QSPA(NK-1)
+module_cu_kfeta_nmm.F:              QSFXOUT(NK-1)=QSFXOUT(NK-1)+QSFXIN(NK)
+module_cu_kfeta_nmm.F:              QSFXOUT(NK)=FXM(NK)*QSPA(NK)
+module_cu_kfeta_nmm.F:              QSFXIN(NK-1)=QSFXIN(NK-1)+QSFXOUT(NK)
+module_cu_kfeta_nmm.F:            QSPA(NK)=QSPA(NK)+(QSFXIN(NK)-QSFXOUT(NK)+SNOWFB(NK))*DTIME*EMSD(NK)         !  PPT FB MODS
+module_cu_kfeta_nmm.F:          QSG(NK)=QSPA(NK)
+module_cu_kfeta_nmm.F:                  'DQ','QU','QD','QLG','QIG','QRG','QSG','RH0','RHG'
+module_cu_kfeta_nmm.F:             QSG(K)*1000.,RH0,RHG
+module_cu_kfeta_nmm.F:          QFNL=QFNL+(QLG(NK)+QIG(NK)+QRG(NK)+QSG(NK))*EMS(NK)
+module_cu_kfeta_nmm.F:!           TG(K)=TG(K)-(RLC*(QLG(K)+QRG(K))+RLS*(QIG(K)+QSG(K)))/CPM
+module_cu_kfeta_nmm.F:!           QG(K)=QG(K)+(QLG(K)+QRG(K)+QIG(K)+QSG(K))
+module_cu_kfeta_nmm.F:!           DQSDT(I,J,NK)=0.
+module_cu_kfeta_nmm.F:            TG(K)=TG(K)-(QIG(K)+QSG(K))*RLF/CPM
+module_cu_kfeta_nmm.F:            DQRDT(K)=(QRG(K)+QSG(K)-QR0(K)-QS0(K))/TIMEC
+module_cu_kfeta_nmm.F:            DQSDT(K)=0.
+module_cu_kfeta_nmm.F:              TG(K)=TG(K)-(QIG(K)+QSG(K))*RLF/CPM
+module_cu_kfeta_nmm.F:            DQRDT(K)=(QRG(K)+QSG(K)-QR0(K)-QS0(K))/TIMEC
+module_cu_kfeta_nmm.F:            DQSDT(K)=0.
+module_cu_kfeta_nmm.F:            IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_cu_kfeta_nmm.F:               DQSDT(K)=(QSG(K)-QS0(K))/TIMEC
+module_cu_kfeta_nmm.F:               DQIDT(K)=DQIDT(K)+(QSG(K)-QS0(K))/TIMEC
+module_cu_kfeta_nmm.F:!     REAL, SAVE, DIMENSION(1:KFNT,1:KFNP) :: TTAB,QSTAB
+module_cu_kfeta_nmm.F:                 TEMP,QS,QNEW,DQ,QTOT,RLL,CPP
+module_cu_kfeta_nmm.F:!      COMMON/KFLUT/ ttab(kfnt,kfnp),qstab(kfnt,kfnp),the0k(kfnp),
+module_cu_kfeta_nmm.F:      q00=qstab(ithtb  ,iptb  )
+module_cu_kfeta_nmm.F:      q10=qstab(ithtb+1,iptb  )
+module_cu_kfeta_nmm.F:      q01=qstab(ithtb  ,iptb+1)
+module_cu_kfeta_nmm.F:      q11=qstab(ithtb+1,iptb+1)
+module_cu_kfeta_nmm.F:      qs=(q00+(q10-q00)*pp+(q01-q00)*qq+(q00-q10-q01+q11)*pp*qq)
+module_cu_kfeta_nmm.F:      IF(QS.LE.QU)THEN
+module_cu_kfeta_nmm.F:        QNEW=QU-QS
+module_cu_kfeta_nmm.F:        QU=QS
+module_cu_kfeta_nmm.F:        DQ=QS-QU
+module_cu_kfeta_nmm.F:          QU=QS
+module_cu_kfeta_nmm.F:   REAL    ::    RLC,RLS,RLF,CPP,A,DTFRZ,ES,QS,DQEVAP,PII
+module_cu_kfeta_nmm.F:      QS = ES*0.622/(P-ES)
+module_cu_kfeta_nmm.F:      DQEVAP = QS-QU
+module_cu_kfeta_nmm.F:   SUBROUTINE TPMIX2DD(p,thes,ts,qs)
+module_cu_kfeta_nmm.F:!     REAL, SAVE, DIMENSION(1:KFNT,1:KFNP) :: TTAB,QSTAB
+module_cu_kfeta_nmm.F:   REAL,         INTENT(INOUT)   :: TS,QS
+module_cu_kfeta_nmm.F:!     COMMON/KFLUT/ ttab(kfnt,kfnp),qstab(kfnt,kfnp),the0k(kfnp),        &
+module_cu_kfeta_nmm.F:      q00=qstab(ithtb  ,iptb  )
+module_cu_kfeta_nmm.F:      q10=qstab(ithtb+1,iptb  )
+module_cu_kfeta_nmm.F:      q01=qstab(ithtb  ,iptb+1)
+module_cu_kfeta_nmm.F:      q11=qstab(ithtb+1,iptb+1)
+module_cu_kfeta_nmm.F:      qs=(q00+(q10-q00)*pp+(q01-q00)*qq+(q00-q10-q01+q11)*pp*qq)
+module_cu_kfeta_nmm.F:                     RQICUTEN,RQSCUTEN,NCA,W0AVG,P_QI,P_QS,         &
+module_cu_kfeta_nmm.F:   INTEGER , INTENT(IN)           ::  P_QI,P_QS,P_FIRST_SCALAR
+module_cu_kfeta_nmm.F:                                                          RQSCUTEN
+module_cu_kfeta_nmm.F:      IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_cu_kfeta_nmm.F:            RQSCUTEN(i,k,j)=0.
+module_cu_kfeta_nmm.F:!     REAL, SAVE, DIMENSION(1:KFNT,1:KFNP) :: TTAB,QSTAB
+module_cu_kfeta_nmm.F:             TEMP,P,ES,QS,PI,THES,TGUES,THGUES,F0,T1,T0,THGS,F1,DT, &
+module_cu_kfeta_nmm.F:        qs=0.622*es/(p-es)
+module_cu_kfeta_nmm.F:        pi=(1.e5/p)**(0.2854*(1.-0.28*qs))
+module_cu_kfeta_nmm.F:        the0k(kp)=temp*pi*exp((3374.6525/temp-2.5403)*qs*        &
+module_cu_kfeta_nmm.F:               (1.+0.81*qs))
+module_cu_kfeta_nmm.F:          qs=0.622*es/(p-es)
+module_cu_kfeta_nmm.F:          pi=(1.e5/p)**(0.2854*(1.-0.28*qs))
+module_cu_kfeta_nmm.F:          thgues=tgues*pi*exp((3374.6525/tgues-2.5403)*qs*      &
+module_cu_kfeta_nmm.F:               (1.+0.81*qs))
+module_cu_kfeta_nmm.F:            qs=0.622*es/(p-es)
+module_cu_kfeta_nmm.F:            pi=(1.e5/p)**(0.2854*(1.-0.28*qs))
+module_cu_kfeta_nmm.F:            thtgs=t1*pi*exp((3374.6525/t1-2.5403)*qs*(1.+0.81*qs))
+module_cu_kfeta_nmm.F:          qstab(it,kp)=qs
+module_cumulus_driver.F:                     RQICUTEN,RQSCUTEN,RAINC,RAINCV,NCA,              &
+module_cumulus_driver.F:! Qs         snow mixing ratio (kg/kg)
+module_cumulus_driver.F:!-- RQSCUTEN   	  Qs tendency due to 
+module_cumulus_driver.F:!-- P_QS          species index for snow
+module_cumulus_driver.F:                                                       RQSCUTEN, &
+module_cumulus_driver.F:               RQICUTEN,RQSCUTEN,RAINCV,NCA,                    &
+module_cumulus_driver.F:               P_QR,P_QI,P_QS,PARAM_FIRST_SCALAR,STEPCU,        &
+module_cumulus_driver.F:               RQICUTEN,RQSCUTEN,RAINCV,NCA,                    &
+module_cumulus_driver.F:               P_QR,P_QI,P_QS,PARAM_FIRST_SCALAR,STEPCU,        &
+module_cumulus_driver.F:               P_QC,P_QI,P_QS,PARAM_FIRST_SCALAR,STEPCU,        &
+module_microphysics_driver.F:! Qs         snow mixing ratio (kg/kg)
+module_microphysics_driver.F:!-- P_QS          species index for snow
+module_microphysics_driver.F:                     moist_new(ims,kms,jms,P_QS),        &
+module_microphysics_driver.F:                     moist_old(ims,kms,jms,P_QS),        &
+module_microphysics_driver.F:                     P_QI, P_QS, P_QG,                   &
+module_microphysics_driver.F:                     moist_new(ims,kms,jms,P_QS),        &
+module_mp_eta.F:!-----------THE EQS. FOR COND. HAS BEEN REORGANIZED TO REDUCE CPU------
+module_mp_etanew.F:              QI,QINEW,QLICE,QR,QRNEW,QSI,QSIGRD,QSINEW,QSW,QSW0,          &
+module_mp_etanew.F:              QSWGRD,QSWNEW,QT,QTICE,QTNEW,QTRAIN,QV,QW,QW0,QWNEW,         &
+module_mp_etanew.F:          QSW=EPS*ESW/(PP-ESW)             ! Saturation mixing ratio w/r/t water
+module_mp_etanew.F:          WS=QSW                           ! General saturation mixing ratio (water/ice)
+module_mp_etanew.F:            QSI=EPS*ESI/(PP-ESI)           ! Saturation mixing ratio w/r/t water
+module_mp_etanew.F:            WS=QSI                         ! General saturation mixing ratio (water/ice)
+module_mp_etanew.F:          QSWgrd=RHgrd*QSW
+module_mp_etanew.F:          QSIgrd=RHgrd*QSI
+module_mp_etanew.F:          XLV2=XLV*XLV*QSW*TK2/RV    ! Lv**2*Qsw/(Rv*TK**2)
+module_mp_etanew.F:            IF (TC.GE.0. .OR. WVQW.LT.QSIgrd) THEN
+module_mp_etanew.F:            ENDIF            ! End IF (TC.GE.0. .OR. WVQW.LT.QSIgrd)
+module_mp_etanew.F:          IF (TC.LT.T_ICE .AND. (WV.GT.QSIgrd .OR. QW.GT.CLIMIT)) THEN
+module_mp_etanew.F:            DENOMI=1.+XLS2*QSI*TK2
+module_mp_etanew.F:            DWVi=MIN(WVQW,QSW)-QSI
+module_mp_etanew.F:              ABI=1./(RHO*XLS3*QSI*TK2/THERM_COND+1./DIFFUS)
+module_mp_etanew.F:            ELSE IF (WVQW.GT.QSI .AND. TC.LE.T_ICE_init) THEN
+module_mp_etanew.F:              DUM1=QSW/QSI-1.      
+module_mp_etanew.F:          ENDIF         ! End IF (TC.LT.T_ICE .AND. (WV.GT.QSIgrd .OR. QW.GT.CLIMIT))
+module_mp_etanew.F:          IF (TC.GE.T_ICE .AND. (QW.GT.CLIMIT .OR. WV.GT.QSWgrd)) THEN
+module_mp_etanew.F:              DUM=XLV*QSWgrd*RCPRV*TK2
+module_mp_etanew.F:              PCOND=(WV-QSWgrd-DENOMWI*DUM-DENOMF*PIACWI)/DENOMW
+module_mp_etanew.F:          ENDIF            ! End IF (TC.GE.T_ICE .AND. (QW.GT.CLIMIT .OR. WV.GT.QSWgrd))
+module_mp_etanew.F:            QSW0=EPS*ESW0/(PP-ESW0)
+module_mp_etanew.F:            DWV0=MIN(WV,QSW)-QSW0
+module_mp_etanew.F:            IF (WV.LT.QSW .AND. DUM.LE.CLIMIT) THEN
+module_mp_etanew.F:            ENDIF            ! End IF (WV.LT.QSW .AND. DUM.LE.CLIMIT)
+module_mp_etanew.F:              DWVr=WV-PCOND-QSW
+module_mp_etanew.F:!          DUM=(RHgrd+.001)*QSInew
+module_mp_etanew.F:            QSWnew=EPS*ESW/(PP-ESW)
+module_mp_etanew.F:              QSInew=EPS*ESI/(PP-ESI)
+module_mp_etanew.F:              QSI=QSW
+module_mp_etanew.F:              QSInew=QSWnew
+module_mp_etanew.F:            WSnew=QSInew
+module_mp_etanew.F:       '{} RHWold=',WV/QSW,'RHWnew=',WVnew/QSWnew,'RHIold=',WV/QSI,        &
+module_mp_etanew.F:         'RHInew=',WVnew/QSInew,                                           &
+module_mp_etanew.F:       '{} QSWold=',QSW,'QSWnew=',QSWnew,'QSIold=',QSI,'QSInew=',QSInew,   &
+module_mp_etanew.F:       '{} AIEVP=',AIEVP,'DIEVP=',DIEVP,'QSW0=',QSW0,'DWV0=',DWV0       
+module_mp_etanew.F:!    See derivation for MASSI(INDEXS), note equal to RHO*QSNOW/NSNOW
+module_mp_etanew_nmm.F:              QI,QINEW,QLICE,QR,QRNEW,QSI,QSIGRD,QSINEW,QSW,QSW0,          &
+module_mp_etanew_nmm.F:              QSWGRD,QSWNEW,QT,QTICE,QTNEW,QTRAIN,QV,QW,QW0,QWNEW,         &
+module_mp_etanew_nmm.F:          QSW=EPS*ESW/(PP-ESW)             ! Saturation mixing ratio w/r/t water
+module_mp_etanew_nmm.F:          WS=QSW                           ! General saturation mixing ratio (water/ice)
+module_mp_etanew_nmm.F:            QSI=EPS*ESI/(PP-ESI)           ! Saturation mixing ratio w/r/t water
+module_mp_etanew_nmm.F:            WS=QSI                         ! General saturation mixing ratio (water/ice)
+module_mp_etanew_nmm.F:          QSWgrd=RHgrd*QSW
+module_mp_etanew_nmm.F:          QSIgrd=RHgrd*QSI
+module_mp_etanew_nmm.F:          XLV2=XLV*XLV*QSW*TK2/RV    ! Lv**2*Qsw/(Rv*TK**2)
+module_mp_etanew_nmm.F:            IF (TC.GE.0. .OR. WVQW.LT.QSIgrd) THEN
+module_mp_etanew_nmm.F:            ENDIF            ! End IF (TC.GE.0. .OR. WVQW.LT.QSIgrd)
+module_mp_etanew_nmm.F:          IF (TC.LT.T_ICE .AND. (WV.GT.QSIgrd .OR. QW.GT.CLIMIT)) THEN
+module_mp_etanew_nmm.F:            DENOMI=1.+XLS2*QSI*TK2
+module_mp_etanew_nmm.F:            DWVi=MIN(WVQW,QSW)-QSI
+module_mp_etanew_nmm.F:              ABI=1./(RHO*XLS3*QSI*TK2/THERM_COND+1./DIFFUS)
+module_mp_etanew_nmm.F:            ELSE IF (WVQW.GT.QSI .AND. TC.LE.T_ICE_init) THEN
+module_mp_etanew_nmm.F:              DUM1=QSW/QSI-1.      
+module_mp_etanew_nmm.F:          ENDIF         ! End IF (TC.LT.T_ICE .AND. (WV.GT.QSIgrd .OR. QW.GT.CLIMIT))
+module_mp_etanew_nmm.F:          IF (TC.GE.T_ICE .AND. (QW.GT.CLIMIT .OR. WV.GT.QSWgrd)) THEN
+module_mp_etanew_nmm.F:              DUM=XLV*QSWgrd*RCPRV*TK2
+module_mp_etanew_nmm.F:              PCOND=(WV-QSWgrd-DENOMWI*DUM-DENOMF*PIACWI)/DENOMW
+module_mp_etanew_nmm.F:          ENDIF            ! End IF (TC.GE.T_ICE .AND. (QW.GT.CLIMIT .OR. WV.GT.QSWgrd))
+module_mp_etanew_nmm.F:            QSW0=EPS*ESW0/(PP-ESW0)
+module_mp_etanew_nmm.F:            DWV0=MIN(WV,QSW)-QSW0
+module_mp_etanew_nmm.F:            IF (WV.LT.QSW .AND. DUM.LE.CLIMIT) THEN
+module_mp_etanew_nmm.F:            ENDIF            ! End IF (WV.LT.QSW .AND. DUM.LE.CLIMIT)
+module_mp_etanew_nmm.F:              DWVr=WV-PCOND-QSW
+module_mp_etanew_nmm.F:!          DUM=(RHgrd+.001)*QSInew
+module_mp_etanew_nmm.F:            QSWnew=EPS*ESW/(PP-ESW)
+module_mp_etanew_nmm.F:              QSInew=EPS*ESI/(PP-ESI)
+module_mp_etanew_nmm.F:              QSI=QSW
+module_mp_etanew_nmm.F:              QSInew=QSWnew
+module_mp_etanew_nmm.F:            WSnew=QSInew
+module_mp_etanew_nmm.F:       '{} RHWold=',WV/QSW,'RHWnew=',WVnew/QSWnew,'RHIold=',WV/QSI,        &
+module_mp_etanew_nmm.F:         'RHInew=',WVnew/QSInew,                                           &
+module_mp_etanew_nmm.F:       '{} QSWold=',QSW,'QSWnew=',QSWnew,'QSIold=',QSI,'QSInew=',QSInew,   &
+module_mp_etanew_nmm.F:       '{} AIEVP=',AIEVP,'DIEVP=',DIEVP,'QSW0=',QSW0,'DWV0=',DWV0       
+module_mp_etanew_nmm.F:!    See derivation for MASSI(INDEXS), note equal to RHO*QSNOW/NSNOW
+module_mp_lin.F:             qi0 = 1.0e-3, ql0 = 7.0e-4, qs0 = 6.0E-4,		&
+module_mp_lin.F:  SUBROUTINE lin_et_al(th, qv, ql, qr, qi, qs, qg,                 &
+module_mp_lin.F:                       qrold, qsold, qgold,                        &
+module_mp_lin.F:                       P_QI,P_QS,P_QG,                             &
+module_mp_lin.F:				      P_QI,P_QS,P_QG,             &
+module_mp_lin.F:                                                              qs, &
+module_mp_lin.F:                                                           qsold, &
+module_mp_lin.F:                                                   qiz, qsz, qgz, &
+module_mp_lin.F:                                                  qrzold, qszold, &
+module_mp_lin.F:   IF (P_QI .lt. P_FIRST_SCALAR .or. P_QS .lt. P_FIRST_SCALAR) THEN
+module_mp_lin.F:   IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_mp_lin.F:         qsz(k)=qs(i,k,j)
+module_mp_lin.F:         qszold(k)=qsold(i,k,j)
+module_mp_lin.F:         qsz(k)=0.
+module_mp_lin.F:         qszold(k)=0.
+module_mp_lin.F:   CALL clphy1d(    dt, qvz, qlz, qrz, qiz, qsz, qgz,         &
+module_mp_lin.F:                    qrzold, qszold, qgzold,   		      &
+module_mp_lin.F:   IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_mp_lin.F:         qs(i,k,j)=qsz(k)
+module_mp_lin.F:   SUBROUTINE clphy1d(dt, qvz, qlz, qrz, qiz, qsz, qgz,      	       &
+module_mp_lin.F:                      qrzold, qszold, qgzold,   		       &
+module_mp_lin.F:           INTENT(INOUT)               :: qvz, qlz, qrz, qiz, qsz,    &
+module_mp_lin.F:					  prez, zz, qrzold, qszold,   &
+module_mp_lin.F:  REAL, DIMENSION( kts:kte )    ::  oprez, tem, temcc, theiz, qswz,    &
+module_mp_lin.F:				    qsiz, qvoqswz, qvoqsiz, qvzodt,    &
+module_mp_lin.F:			  	    qlzodt, qizodt, qszodt, qrzodt,    &
+module_mp_lin.F:                                   qschg, qgchg
+module_mp_lin.F:!     qsw         saturated mixing ratio on water surface
+module_mp_lin.F:!     qsi         saturated mixing ratio on ice surface
+module_mp_lin.F:!     qvoqsw      qv/qsw
+module_mp_lin.F:!     qvoqsi      qv/qsi
+module_mp_lin.F:!     qszodt      qs/dt
+module_mp_lin.F:         qsz(k)=amax1( 0.0,qsz(k) )
+module_mp_lin.F:!        qswz(k)=episp0k*oprez(k)* &
+module_mp_lin.F:         qswz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:!           qsiz(k)=episp0k*oprez(k)* &
+module_mp_lin.F:            qsiz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:            if (temcc(k) .lt. -40.0) qswz(k)=qsiz(k)
+module_mp_lin.F:            qsiz(k)=qswz(k)
+module_mp_lin.F:         qvoqswz(k)=qvz(k)/qswz(k)
+module_mp_lin.F:         qvoqsiz(k)=qvz(k)/qsiz(k)
+module_mp_lin.F:         qszodt(k)=amax1( 0.0,odtb*qsz(k) )
+module_mp_lin.F:! qs0: mixing ratio threshold for snow aggregation
+module_mp_lin.F:         qschg(k)=0.
+module_mp_lin.F:!        if (qszold(k) .gt. 1.0e-12) then
+module_mp_lin.F:!!       if (qszold(k) .gt. 1.0e-8) then
+module_mp_lin.F:         if (qsz(k) .gt. 1.0e-8) then
+module_mp_lin.F:!!          tmp1=sqrt(pi*rhosnow*xnos/rho(k)/qszold(k))
+module_mp_lin.F:            tmp1=sqrt(pi*rhosnow*xnos/rho(k)/qsz(k))
+module_mp_lin.F:! use small delta t to calculate the qszold flux
+module_mp_lin.F:! termi is the qszold flux pass in the grid box through the upper boundary
+module_mp_lin.F:! termo is the qszold flux pass out the grid box through the lower boundary
+module_mp_lin.F:!!          fluxout=rho(k)*vtsold(k)*qszold(k)
+module_mp_lin.F:            fluxout=rho(k)*vtsold(k)*qsz(k)
+module_mp_lin.F:            qsz(k)=qsz(k)+del_tv*flux
+module_mp_lin.F:            qsz(k)=amax1(0.,qsz(k))
+module_mp_lin.F:            qsz(min_q-1)=qsz(min_q-1)+del_tv*  &
+module_mp_lin.F:!*****   diagnose mixing ratios (qrz,qsz), terminal                *****
+module_mp_lin.F:        tmp=qiz(k)+qlz(k)+qsz(k)+qrz(k)+qgz(k)*gindex
+module_mp_lin.F:        if( qvz(k)+qlz(k)+qiz(k) .lt. qsiz(k)  &
+module_mp_lin.F:!       if (qszold(k) .gt. 1.0e-12) then
+module_mp_lin.F:!!      if (qszold(k) .gt. 1.0e-8) then
+module_mp_lin.F:        if (qsz(k) .gt. 1.0e-8) then
+module_mp_lin.F:!!          tmp1=sqrt(pi*rhosnow*xnos*orho(k)/qszold(k))
+module_mp_lin.F:            tmp1=sqrt(pi*rhosnow*xnos*orho(k)/qsz(k))
+module_mp_lin.F:!       if (qsz(k) .gt. 1.0e-12) then
+module_mp_lin.F:        if (qsz(k) .gt. 1.0e-8) then
+module_mp_lin.F:            tmp1=sqrt(pi*rhosnow*xnos*orho(k)/qsz(k))
+module_mp_lin.F:          if(qsz(k) .le. 0.0) go to 1200
+module_mp_lin.F:! Compute the following processes only when qsz > 0.0
+module_mp_lin.F:          tmpb=xls*xls*rho(k)*qsiz(k)*diffwv(k)
+module_mp_lin.F:          tmpc=tmpa*qsiz(k)*diffwv(k)
+module_mp_lin.F:          abi=2.0*pi*(qvoqsiz(k)-1.0)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:          tmp3=odtb*( qvz(k)-qsiz(k) )
+module_mp_lin.F:            pssub(k)=amax1( tmp2,-qszodt(k) )
+module_mp_lin.F:!0915     pssub(k)=amax1( pssub(k),-qszodt(k) )
+module_mp_lin.F:! Compute processes (9) and (10) only when qsz > 0.0 and qrz > 0.0
+module_mp_lin.F:          pracs(k)=amin1( tmp3,qszodt(k) )
+module_mp_lin.F:         if (qsz(k) .le. 0.0) go to 1400
+module_mp_lin.F:            psmlt(k)=amax1( tmp4,-qszodt(k) )
+module_mp_lin.F:            tmpb=xlv*xlv*rho(k)*qswz(k)*diffwv(k)
+module_mp_lin.F:            tmpc=tmpa*qswz(k)*diffwv(k)
+module_mp_lin.F:            tmpd=amin1( 0.0,(qvoqswz(k)-0.90)*qswz(k)*odtb )
+module_mp_lin.F:!      abr=2.0*pi*(qvoqswz(k)-1.0)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:            abr=2.0*pi*(qvoqswz(k)-0.90)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:!**** the qsw value is a little bit larger. This will avoid
+module_mp_lin.F:            psmltevp(k)=amax1( tmp3,-qszodt(k) )
+module_mp_lin.F:!c     Sw=qvoqsw : saturation ratio
+module_mp_lin.F:         tmpb=xlv*xlv*rho(k)*qswz(k)*diffwv(k)
+module_mp_lin.F:         tmpc=tmpa*qswz(k)*diffwv(k)
+module_mp_lin.F:         tmpd=amin1(0.0,(qvoqswz(k)-0.90)*qswz(k)*odtb)
+module_mp_lin.F:!      abr=2.0*pi*(qvoqswz(k)-1.0)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:         abr=2.0*pi*(qvoqswz(k)-0.90)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:!      if(iout .gt. 0) write(20,*)'tem,qsz,qvz=',tem(k),qsz(k),qvz(k)
+module_mp_lin.F:!c     pgaut=alpha2*(qsz-qs0)
+module_mp_lin.F:!c     qs0=6.0E-4
+module_mp_lin.F:!           tmp1=alpha2*(qsz(k)-qs0)
+module_mp_lin.F:!           pgaut(k)=amin1( tmp1,qszodt(k) )
+module_mp_lin.F:            tmp1=odtb*(qsz(k)-qs0)*(1.0-exp(-alpha2*dtb))
+module_mp_lin.F:!c       Compute processes (6) only when qsz > 0.0 and qgz > 0.0
+module_mp_lin.F:         Pgacs(k)=amin1( tmp3,qszodt(k) )
+module_mp_lin.F:!c       Compute processes (6) only when qsz > 0.0 and qgz > 0.0
+module_mp_lin.F:         Pgacsp(k)=amin1( tmp3,qszodt(k) )
+module_mp_lin.F:             Pgwet(k)=amax1(tmp3,qlzodt(k)+qszodt(k)+qizodt(k) )
+module_mp_lin.F:            tmpb=xls*xls*rho(k)*qsiz(k)*diffwv(k)
+module_mp_lin.F:            tmpc=tmpa*qsiz(k)*diffwv(k)
+module_mp_lin.F:            abg=2.0*pi*(qvoqsiz(k)-1.0)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:!c     abg=2.0*pi*(qvoqsiz(k)-1.0)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:            tmpb=xlv*xlv*rho(k)*qswz(k)*diffwv(k)
+module_mp_lin.F:            tmpc=tmpa*qswz(k)*diffwv(k)
+module_mp_lin.F:            tmpd=amin1( 0.0,(qvoqswz(k)-0.90)*qswz(k)*odtb )
+module_mp_lin.F:            abg=2.0*pi*(qvoqswz(k)-0.90)*tmpc/(tmpa+tmpb)
+module_mp_lin.F:!c     Compute processes (3) only when qsz > 0.0 and qgz > 0.0
+module_mp_lin.F:           Pgacs(k)=amin1( tmp3,qszodt(k) )
+module_mp_lin.F:!c     if qrz < 1.0E-4 and qsz < 1.0E-4  then delta2=1.
+module_mp_lin.F:!c     if qrz >= 1.0E-4 or qsz >= 1.0E-4 then delta2=0.
+module_mp_lin.F:          if (qrz(k) .lt. 1.0E-4 .and. qsz(k) .lt. 1.0E-4) then
+module_mp_lin.F:!c  if qrz(k) < 1.0e-4 then delta3=1. means praci(k) -->  qs
+module_mp_lin.F:!c                                          piacr(k) -->  qs
+module_mp_lin.F:          if ( tmp_s .gt. qszodt(k) ) then
+module_mp_lin.F:             factor=qszodt(k)/tmp_s
+module_mp_lin.F:         qsz(k)=amax1( 0.0,qsz(k)+dtb*psnow(k) )
+module_mp_lin.F:         qschg(k)=qschg(k)+psnow(k)
+module_mp_lin.F:         qschg(k)=psnow(k)
+module_mp_lin.F:         tmp=ocp/tothz(k)*xLf*(qschg(k)+qgchg(k))
+module_mp_lin.F:         if( temcc(k) .lt. -40.0 ) qswz(k)=qsiz(k)
+module_mp_lin.F:            qvsbar(k)=qsiz(k)
+module_mp_lin.F:            qvsbar(k)=( qiz(k)*qsiz(k)+qlz(k)*qswz(k) )/qlpqi
+module_mp_lin.F:          if (tmp_s .gt. qszodt(k) ) then
+module_mp_lin.F:             factor=qszodt(k)/tmp_s
+module_mp_lin.F:          qsz(k)=amax1( 0.0,qsz(k)+dtb*psnow(k) )
+module_mp_lin.F:!         qschg(k)=qschg(k)+psnow(k)
+module_mp_lin.F:          qschg(k)=psnow(k)
+module_mp_lin.F:          tmp=ocp/tothz(k)*xLf*(qschg(k)+qgchg(k))
+module_mp_lin.F:!         qswz(k)=episp0k*oprez(k)*  &
+module_mp_lin.F:          qswz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:          qsiz(k)=qswz(k)
+module_mp_lin.F:          qvsbar(k)=qswz(k)
+module_mp_lin.F:!         qswz(k)=episp0k*oprez(k)*  &
+module_mp_lin.F:          qswz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:!            qsiz(k)=episp0k*oprez(k)* &
+module_mp_lin.F:             qsiz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:             if (temcc(k) .lt. -40.0) qswz(k)=qsiz(k)
+module_mp_lin.F:             qsiz(k)=qswz(k)
+module_mp_lin.F:             qvsbar(k)=qsiz(k)
+module_mp_lin.F:             qvsbar(k)=( qiz(k)*qsiz(k)+qlz(k)*qswz(k) )/qlpqi
+module_mp_lin.F:!       qswz(k)=episp0k*oprez(k)* &
+module_mp_lin.F:        qswz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:!          qsiz(k)=episp0k*oprez(k)* &
+module_mp_lin.F:           qsiz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:           if (temcc(k) .lt. -40.0) qswz(k)=qsiz(k)
+module_mp_lin.F:           qsiz(k)=qswz(k)
+module_mp_lin.F:           qvsbar(k)=qsiz(k)
+module_mp_lin.F:           qvsbar(k)=( qiz(k)*qsiz(k)+qlz(k)*qswz(k) )/qlpqi
+module_mp_lin.F:!      write(24,*)'qsz'
+module_mp_lin.F:!      write(24,9030) (qsz(k),k=kts+1,kte)
+module_mp_lin.F:!      write(24,*)'qvoqsw'
+module_mp_lin.F:!      write(24,9030) (qvoqswz(k),k=kts+1,kte)
+module_mp_lin.F:!      write(24,*)'qvoqsi'
+module_mp_lin.F:!      write(24,9030) (qvoqsiz(k),k=kts+1,kte)
+module_mp_lin.F:!      saturation values over liquid water (qsw), and ice (qsi)
+module_mp_lin.F:  REAL, DIMENSION( kts:kte )         :: thz, tem, temcc, qsiz,       &
+module_mp_lin.F:		 			qswz, qvsbar
+module_mp_lin.F:  REAL ::   qsat, qlpqi, ratql, t0, t1, tmp1, ratqi, tsat, absft,    &
+module_mp_lin.F:!        qsat=episp0k/prez(k)*  &
+module_mp_lin.F:         qsat=ep2*es/(prez(k)-es)
+module_mp_lin.F:        qsat=episp0k/prez(k)*  &
+module_mp_lin.F:      if (qpz .lt. qsat) then
+module_mp_lin.F:!        qswz(k)=episp0k/prez(k)*  &
+module_mp_lin.F:         qswz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:!           qsiz(k)=episp0k/prez(k)*  &
+module_mp_lin.F:            qsiz(k)=ep2*es/(prez(k)-es)
+module_mp_lin.F:            if (tem(k) .lt. 233.15) qswz(k)=qsiz(k)
+module_mp_lin.F:            qsiz(k)=qswz(k)
+module_mp_lin.F:         qvsbar(k)=ratql*qswz(k)+ratqi*qsiz(k)
+module_mp_lin.F:         dqvsbar=ratql*qswz(k)*svp2*243.5*denom1*denom1+  &
+module_mp_lin.F:                 ratqi*qsiz(k)*21.8745584*265.5*denom2*denom2
+module_mp_ncloud3.F:        rh, qs, denfac, slope, slope2, slopeb,                    &
+module_mp_ncloud3.F:          qs(i,k) = fpvs(t(i,k),1,rd,rv,cpv,cliq,cice,xlv0,xls,psat,t0c)
+module_mp_ncloud3.F:          qs(i,k) = ep2 * qs(i,k) / (p(i,k) - qs(i,k))
+module_mp_ncloud3.F:          qs(i,k) = max(qs(i,k),qmin)
+module_mp_ncloud3.F:          rh(i,k) = max(q(i,k) / qs(i,k),qmin)
+module_mp_ncloud3.F:            work1(i,k) = diffac(xl(i,k),p(i,k),t(i,k),den(i,k),qs(i,k))
+module_mp_ncloud3.F:            work1(i,k) = diffac(xls,p(i,k),t(i,k),den(i,k),qs(i,k))
+module_mp_ncloud3.F:          supsat = max(q(i,k),qmin)-qs(i,k)
+module_mp_ncloud3.F:          qs(i,k) = fpvs(t(i,k),0,rd,rv,cpv,cliq,cice,xlv0,xls,psat,t0c)
+module_mp_ncloud3.F:          qs(i,k) = ep2 * qs(i,k) / (p(i,k) - qs(i,k))
+module_mp_ncloud3.F:          qs(i,k) = max(qs(i,k),qmin)
+module_mp_ncloud3.F:          work1(i,k) = conden(t(i,k),q(i,k),qs(i,k),xl(i,k),cpm(i,k))
+module_mp_ncloud5.F:  SUBROUTINE ncloud5(th, q, qc, qr, qi, qs,                        &
+module_mp_ncloud5.F:                                                              qs
+module_mp_ncloud5.F:            qrs(i,k,2) = qs(i,k,j)
+module_mp_ncloud5.F:            qs(i,k,j) = qrs(i,k,2)
+module_mp_ncloud5.F:        rh, qs, slope, slope2, slopeb,                            &
+module_mp_ncloud5.F:          qs(i,k,1) = fpvs(t(i,k),0,rd,rv,cpv,cliq,cice,xlv0,xls,psat,t0c)
+module_mp_ncloud5.F:          qs(i,k,1) = ep2 * qs(i,k,1) / (p(i,k) - qs(i,k,1))
+module_mp_ncloud5.F:          qs(i,k,1) = max(qs(i,k,1),qmin)
+module_mp_ncloud5.F:          rh(i,k,1) = max(q(i,k) / qs(i,k,1),qmin)
+module_mp_ncloud5.F:          qs(i,k,2) = fpvs(t(i,k),1,rd,rv,cpv,cliq,cice,xlv0,xls,psat,t0c)
+module_mp_ncloud5.F:          qs(i,k,2) = ep2 * qs(i,k,2) / (p(i,k) - qs(i,k,2))
+module_mp_ncloud5.F:          qs(i,k,2) = max(qs(i,k,2),qmin)
+module_mp_ncloud5.F:          rh(i,k,2) = max(q(i,k) / qs(i,k,2),qmin)
+module_mp_ncloud5.F:          work1(i,k,1) = diffac(xl(i,k),p(i,k),t(i,k),den(i,k),qs(i,k,1))
+module_mp_ncloud5.F:          work1(i,k,2) = diffac(xls,p(i,k),t(i,k),den(i,k),qs(i,k,2))
+module_mp_ncloud5.F:          supsat = max(q(i,k),qmin)-qs(i,k,1)
+module_mp_ncloud5.F:          supsat = max(q(i,k),qmin)-qs(i,k,2)
+module_mp_ncloud5.F:          qs(i,k,1) = fpvs(t(i,k),0,rd,rv,cpv,cliq,cice,xlv0,xls,psat,t0c)
+module_mp_ncloud5.F:          qs(i,k,1) = ep2 * qs(i,k,1) / (p(i,k) - qs(i,k,1))
+module_mp_ncloud5.F:          qs(i,k,1) = max(qs(i,k,1),qmin)
+module_mp_ncloud5.F:          qs(i,k,2) = fpvs(t(i,k),1,rd,rv,cpv,cliq,cice,xlv0,xls,psat,t0c)
+module_mp_ncloud5.F:          qs(i,k,2) = ep2 * qs(i,k,2) / (p(i,k) - qs(i,k,2))
+module_mp_ncloud5.F:          qs(i,k,2) = max(qs(i,k,2),qmin)
+module_mp_ncloud5.F:          work1(i,k,1) = conden(t(i,k),q(i,k),qs(i,k,1),xl(i,k),cpm(i,k))
+module_mp_ncloud5.F:!           '   qc','   qr','   qi','   qs')
+module_mp_ncloud5.F:!            '   vtr','   vts','   qri','   qsi','   qrf','   qsf',' mstep')
+module_pbl_driver.F:                  THZ0,QZ0,UZ0,VZ0,QSFC,                          &
+module_pbl_driver.F:! Qs         snow mixing ratio (kg/kg)
+module_pbl_driver.F:!-- qsfc          specific humidity at lower boundary (kg/kg)
+module_pbl_driver.F:!-- P_QS          species index for snow
+module_pbl_driver.F:                                                            QSFC, &
+module_pbl_driver.F:               TSK,QSFC,CHKLOWQ,THZ0,QZ0,UZ0,VZ0,                   &
+module_physics_addtendc.F:                      RQVCUTEN,RQCCUTEN,RQRCUTEN,RQICUTEN,RQSCUTEN,&
+module_physics_addtendc.F:                                                       RQSCUTEN
+module_physics_addtendc.F:                      RQICUTEN,RQSCUTEN,moist_tendf,           &
+module_physics_addtendc.F:                      RQICUTEN,RQSCUTEN,moist_tendf,		 &
+module_physics_addtendc.F:                                                       RQSCUTEN
+module_physics_addtendc.F:        if (P_QS .ge. PARAM_FIRST_SCALAR)                                         &
+module_physics_addtendc.F:        CALL add_a2a(moist_tendf(ims,kms,jms,P_QS),RQSCUTEN,     &
+module_physics_addtendc.F:        if (P_QS .ge. PARAM_FIRST_SCALAR)                                         &
+module_physics_addtendc.F:        CALL add_a2a(moist_tendf(ims,kms,jms,P_QS),RQSCUTEN,     &
+module_physics_addtendc.F:                     RQICUTEN,RQSCUTEN,RAINC,RAINCV,NCA,              &
+module_physics_addtendc.F:                                                       RQSCUTEN
+module_physics_addtendc.F:                    if (P_QS .ge. PARAM_FIRST_SCALAR) RQSCUTEN(i,k,j)=0.
+module_physics_addtendc.F:                    if (P_QS .ge. PARAM_FIRST_SCALAR) RQSCUTEN(i,k,j)=0.
+module_physics_init.F:                         RQCCUTEN, RQSCUTEN, RQICUTEN,           &
+module_physics_init.F:             RTHCUTEN, RQVCUTEN, RQRCUTEN, RQCCUTEN, RQSCUTEN,   &
+module_physics_init.F:                RQCCUTEN,RQSCUTEN,RQICUTEN,NCA,RAINC,           &
+module_physics_init.F:                      RQCCUTEN,RQSCUTEN,RQICUTEN,NCA,RAINC,       &
+module_physics_init.F:            RQSCUTEN
+module_physics_init.F:                      RQICUTEN,RQSCUTEN,NCA,W0AVG,P_QI,P_QS,      &
+module_physics_init.F:                      RQICUTEN,RQSCUTEN,NCA,W0AVG,P_QI,P_QS,      &
+module_ra_gfdleta.F:      REAL    :: CL1,CL2,CR1,DPCL,QSUM,PRS1,PRS2,DELP,TCLD,DD,EE,AA,FF
+module_ra_gfdleta.F:      REAL    :: TAUC,THICK,CONVPRATE,CLFR,ESAT,QSAT,RHUM,QCLD,RHGRID
+module_ra_gfdleta.F:          QSAT=EPS*ESAT/(PMID(I,LL)-ESAT)     !--- Saturation mixing ratio
+module_ra_gfdleta.F:          RHUM=WV/QSAT                        !--- Relative humidity
+module_ra_gfdleta.F:            DENOM=(RHGRID*QSAT-WV)**GAMMA
+module_ra_gfdleta.F:        QSUM=0.0
+module_ra_gfdleta.F:            QSUM=QSUM+QMID(I,LL)*DELP*(PRS1+PRS2)                       &     
+module_ra_gfdleta.F:        IF(QSUM.GE.EPSQ1)THEN
+module_ra_gfdleta.F:            PROD=ABCFF(NBAND)*QSUM
+module_ra_gfdleta.F:                (QS,PP,PPI,QQH2O,TT,O3QO3,TSFC,SLMSK,ALBEDO,XLAT &
+module_ra_gfdleta.F:!*   QS(IX):		THE SURFACE PRESSURE (PA)
+module_ra_gfdleta.F:      REAL,    INTENT(IN), DIMENSION(its:ite):: QS,TSFC,SLMSK,ALBEDO,XLAT
+module_ra_gfdleta.F:        PRESS(I,LP1)=QS(IR)*10.0
+module_ra_gfdleta_nmm.F:      REAL    :: CL1,CL2,CR1,DPCL,QSUM,PRS1,PRS2,DELP,TCLD,DD,EE,AA,FF
+module_ra_gfdleta_nmm.F:      REAL    :: TAUC,THICK,CONVPRATE,CLFR,ESAT,QSAT,RHUM,QCLD,RHGRID
+module_ra_gfdleta_nmm.F:          QSAT=EPS*ESAT/(PMID(I,LL)-ESAT)     !--- Saturation mixing ratio
+module_ra_gfdleta_nmm.F:          RHUM=WV/QSAT                        !--- Relative humidity
+module_ra_gfdleta_nmm.F:            DENOM=(RHGRID*QSAT-WV)**GAMMA
+module_ra_gfdleta_nmm.F:        QSUM=0.0
+module_ra_gfdleta_nmm.F:            QSUM=QSUM+QMID(I,LL)*DELP*(PRS1+PRS2)                       &     
+module_ra_gfdleta_nmm.F:        IF(QSUM.GE.EPSQ1)THEN
+module_ra_gfdleta_nmm.F:            PROD=ABCFF(NBAND)*QSUM
+module_ra_gfdleta_nmm.F:                (QS,PP,PPI,QQH2O,TT,O3QO3,TSFC,SLMSK,ALBEDO,XLAT &
+module_ra_gfdleta_nmm.F:!*   QS(IX):		THE SURFACE PRESSURE (PA)
+module_ra_gfdleta_nmm.F:      REAL,    INTENT(IN), DIMENSION(its:ite):: QS,TSFC,SLMSK,ALBEDO,XLAT
+module_ra_gfdleta_nmm.F:        PRESS(I,LP1)=QS(IR)*10.0
+module_ra_gsfcsw.F:                    QI3D,QS3D,QG3D,P3D,P8W3D,pi3D,CLDFRA3D,       &
+module_ra_gsfcsw.F: 		    P_QV,P_QC,P_QR,P_QI,P_QS,P_QG,                &
+module_ra_gsfcsw.F:				       P_QV,P_QC,P_QR,P_QI,P_QS,P_QG
+module_ra_gsfcsw.F:					        	    QS3D, &
+module_ra_gsfcsw.F:!  K & H eqs(27-29)
+module_ra_gsfcsw.F:!  alf1 and alf2 are alpha1 and alpha2 from eqs (23) & (24) of K & H
+module_ra_gsfcsw.F:!     tta and rsa are computed from eqs. (4b) and (3b) of Chou
+module_ra_gsfcsw.F:!     rra and rxa are computed from eqs. (4a) and (3a) of Chou
+module_ra_rrtm.F:                        QI3D,QS3D,QG3D,p8w,P3D,pi3D,              &
+module_ra_rrtm.F:                        P_QV,P_QC,P_QR,P_QI,P_QS,P_QG,            &
+module_ra_rrtm.F:   INTEGER, INTENT(IN )      ::        P_QV,P_QC,P_QR,P_QI,P_QS,P_QG
+module_ra_rrtm.F: 		       			   	            QS3D, &
+module_ra_rrtm.F:         					            QS1D, &
+module_ra_rrtm.F:            QS1D(K)=0.
+module_ra_rrtm.F:               QS1D(K)=QR1D(K)
+module_ra_rrtm.F:            IF (P_QS .ge. P_FIRST_SCALAR ) THEN
+module_ra_rrtm.F:               QS1D(K)=QS3D(I,NK,J)
+module_ra_rrtm.F:               QS1D(K)=max(0.,QS1D(K))
+module_ra_rrtm.F:                   QR1D,QI1D,QS1D,QG1D,P1D,Pw1D,DZ1D,              &
+module_ra_rrtm.F:                   QR,QI,QS,QG,P,Pw,DZ,                              &
+module_ra_rrtm.F:                                                                 QS, &
+module_ra_rrtm.F:         CALL MM5ATM(CLDFRA,O3PROF,T,Tw,TSFC,QV,QC,QR,QI,QS,QG,    &
+module_ra_rrtm.F:   SUBROUTINE MM5ATM(CLDFRA,O3PROF,T,Tw,TSFC,QV,QC,QR,QI,QS,QG,    &
+module_ra_rrtm.F:                                                      QS, &
+module_ra_rrtm.F:! QS=0 if no ice phase
+module_ra_rrtm.F:            PIWP(K)=(RO*QS(K))**0.75*DZ*1000.                                   
+module_ra_sw.F:                    QI3D,QS3D,QG3D,P3D,pi3D,dz8w,GMT,             &
+module_ra_sw.F: 		    P_QV,P_QC,P_QR,P_QI,P_QS,P_QG,                &
+module_ra_sw.F:                                       P_QI,P_QS,P_QG,            &
+module_ra_sw.F:					        	    QS3D, &
+module_ra_sw.F:        						    QS1D, &
+module_ra_sw.F:            QS1D(K)=0.
+module_ra_sw.F:                  QS1D(K)=QR1D(K)
+module_ra_sw.F:         IF (P_QS .ge. P_FIRST_SCALAR) THEN
+module_ra_sw.F:               QS1D(K)=QS3D(I,NK,J)
+module_ra_sw.F:               QS1D(K)=max(0.,QS1D(K))
+module_ra_sw.F:                     T1D,QV1D,QC1D,QR1D,QI1D,QS1D,QG1D,P1D,      &
+module_ra_sw.F:                     T,QV,QC,QR,QI,QS,QG,P,            		  &
+module_ra_sw.F:					        	      QS, &
+module_ra_sw.F:                    QR(K)+0.02*QS(K)+0.05*QG(K))
+module_radiation_driver.F:! Qs         snow mixing ratio (kg/kg)
+module_radiation_driver.F:!-- P_QS          species index for snow
+module_radiation_driver.F:       	             moist(ims,kms,jms,P_QS),	             	   &
+module_radiation_driver.F:                     P_QV,P_QC,P_QR,P_QI,P_QS,P_QG,                &
+module_radiation_driver.F:       	             moist(ims,kms,jms,P_QS),		           &
+module_radiation_driver.F:                     P_QV,P_QC,P_QR,P_QI,P_QS,P_QG,                &
+module_radiation_driver.F:                     moist(ims,kms,jms,P_QS),                      &
+module_radiation_driver.F:                     P_QV,P_QC,P_QR,P_QI,P_QS,P_QG,                &
+module_sf_lsm_nmm.F:     &               TH2,Q2,SNOWC,CHS2,QSFC,TBOT,CHKLOWQ,RAINBL,        &
+module_sf_lsm_nmm.F:     &                                                             QSFC,&     
+module_sf_lsm_nmm.F:                    TH2,Q2,SNOWC,CHS2(IMS,J),QSFC,TBOT,CHKLOWQ,         &
+module_sf_lsm_nmm.F:                     TH2,Q2,SNOWC,CHS2,QSFC,TBOT,CHKLOWQ,              &
+module_sf_lsm_nmm.F:						                 QSFC,& !new
+module_sf_lsm_nmm.F:            SFCPRS,PRCP,Q2K,DQSDTK,SATFLG,TBOTK,CHK,VGFRCK,T1K,LWDN,  &
+module_sf_lsm_nmm.F:          DQSDTK=Q2SAT*A23M4/(SFCTMP-A4)**2                             
+module_sf_lsm_nmm.F:!              PRCP,SFCTMP,SFCTH2,Q2K,Q2SAT,DQSDTK,TBOTK,CHK,CHFF,      &
+module_sf_lsm_nmm.F:!     I    LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,SFCTH2,Q2K,SFCSPD,Q2SAT,DQSDTK,
+module_sf_lsm_nmm.F:          LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,SFCTH2,Q2K,DUM5,Q2SAT,DQSDTK,   &
+module_sf_lsm_nmm.F:!        QS(I,J)=Q1K                                                    
+module_sf_lsm_nmm.F:!!!      QSFC(I,J)=Q1K                                                    
+module_sf_lsm_nmm.F:       LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,TH2,Q2,SFCSPD,Q2SAT,DQSDT2,        &
+module_sf_lsm_nmm.F:!    I LWDN,SOLDN,SFCPRS,PRCP,SFCTMP,TH2,Q2,Q2SAT,DQSDT2,
+module_sf_lsm_nmm.F:!       DQSDT2: SLOPE OF SAT SPECIFIC HUMIDITY CURVE AT T=SFCTMP (KG KG-1 K-1)
+module_sf_lsm_nmm.F:      REAL DQSDT2
+module_sf_lsm_nmm.F:                    Q2SAT,ETP,RCH,EPSCA,RR,SNOWNG,FRZGRA,DQSDT2)
+module_sf_lsm_nmm.F:                  SMCWLT,SMCREF,RCMIN,RC,PC,NROOT,Q2SAT,DQSDT2,      &
+module_sf_lsm_nmm.F:                        SMCWLT,SMCREF,RCMIN,RC,PC,NROOT,Q2SAT,DQSDT2, &
+module_sf_lsm_nmm.F:!                DQSDT2: SLOPE OF SATURATION HUMIDITY FUNCTION WRT TEMP
+module_sf_lsm_nmm.F:      REAL SMCWLT, SMCREF, RCMIN, RC, PC, Q2SAT, DQSDT2
+module_sf_lsm_nmm.F:      REAL P, QS, GX, TAIR4, ST1, SLVCP, RR, DELTA
+module_sf_lsm_nmm.F:      QS = Q2SAT
+module_sf_lsm_nmm.F:      RCQ = 1.0/(1.0+HS*(QS-Q2))
+module_sf_lsm_nmm.F:      DELTA = SLVCP*DQSDT2
+module_sf_lsm_nmm.F:                        Q2SAT,ETP,RCH,EPSCA,RR,SNOWNG,FRZGRA,DQSDT2)
+module_sf_lsm_nmm.F:      REAL DQSDT2
+module_sf_lsm_nmm.F:      DELTA = ELCP * DQSDT2
+module_sf_lsm_nmm.F:      REAL SNDENS, SNCOND, RSNOW, SNCOVER, QSAT, ETP3, SEH, T14
+module_sf_lsm_nmm.F:        QSAT = (0.622*6.11E2)/(SFCPRS-0.378*6.11E2)
+module_sf_lsm_nmm.F:        ETP = RCH*(QSAT-Q2)/CP
+module_sf_myjsfc.F:                       ,SQPR=0.84,SQSC=0.84,SQVISC=258.2,TVISC=2.1E-5  &
+module_sf_myjsfc.F:                       ,ZQRZT=SQSC/SQPR
+module_sf_myjsfc.F:                       ,TSK,QSFC,THZ0,QZ0,UZ0,VZ0                      &
+module_sf_myjsfc.F:                       ,U10,V10,TSHLTR,TH10,QSHLTR,Q10,PSHLTR          &
+module_sf_myjsfc.F:                                                    ,QFX,Q10,QSHLTR    &
+module_sf_myjsfc.F:                                                      ,PBLH,QSFC
+module_sf_myjsfc.F:             ,P02P,P10P,PLOW,PSFC,PTOP,QLOW,QOL2ST,QOL2UN,QS02,QS10    &
+module_sf_myjsfc.F:	if ( abs(QSFC(I,J)) .gt. 50) then
+module_sf_myjsfc.F:	write(6,*) 'BIG QSFC:: ', I,J,QSFC(I,J)
+module_sf_myjsfc.F:          CALL SFCDIF(NTSD,SEAMASK,THSK(I,J),QSFC(I,J),PSFC            &
+module_sf_myjsfc.F:                     ,QSHLTR(I,J),Q10(I,J),PSHLTR(I,J)                 &
+module_sf_myjsfc.F:          QS02=PQ0/P02P*EXP(A2*(T02P-A3)/(T02P-A4))
+module_sf_myjsfc.F:          QS10=PQ0/P10P*EXP(A2*(T10P-A3)/(T10P-A4))
+module_sf_myjsfc.F:          IF(QSHLTR(I,J).GT.QS02)QSHLTR(I,J)=QS02
+module_sf_myjsfc.F:          IF(Q10   (I,J).GT.QS10)Q10   (I,J)=QS10
+module_sf_myjsfc.F:      SUBROUTINE SFCDIF(NTSD,SEAMASK,THS,QS,PSFC                       &
+module_sf_myjsfc.F:      REAL,INTENT(INOUT) :: AKHS,AKMS,QZ0,THZ0,USTAR,UZ0,VZ0,Z0,QS
+module_sf_myjsfc.F:      REAL :: AKHS02,AKHS10,AKMS02,AKMS10,EKMS10,QSAT10,QSAT2          &
+module_sf_myjsfc.F:                QS=QLOW
+module_sf_myjsfc.F:                QZ0=((WGHTQ*QLOW+QS)/(WGHTQ+1.)+QZ0)*0.5
+module_sf_myjsfc.F:                QZ0=(WGHTQ*QLOW+QS)/(WGHTQ+1.)
+module_sf_myjsfc.F:                QZ0=((WGHTQ*QLOW+QS)/(WGHTQ+1.)+QZ0)*0.5
+module_sf_myjsfc.F:                QZ0=(WGHTQ*QLOW+QS)/(WGHTQ+1.)
+module_sf_myjsfc.F:            QZ0=QS
+module_sf_myjsfc.F:        QZ0=QS
+module_sf_myjsfc.F:! QS IS QSFC (USED IN DIAGNOSTICS)
+module_sf_myjsfc.F:      QS=QLOW+QFX/(RLOW*AKHS)
+module_sf_myjsfc.F:!tst      QS=QS/(1.-QS)
+module_sf_myjsfc.F:	if (QS .gt. 50./1000.) then
+module_sf_myjsfc.F:	write(6,*) 'reduced QS from value: ', QS, ' QLOW: ', QLOW
+module_sf_myjsfc.F:		QS=45./1000.
+module_sf_myjsfc.F:!	if (abs(QS) .gt. 10) then
+module_sf_myjsfc.F:!	write(6,*) 'big QS end of SFCDIF' , QS
+module_sf_myjsfc.F:!	elseif (abs(QS) .gt. .5E-2 .and. abs(QS) .lt. .51E-2) then
+module_sf_myjsfc.F:!	write(6,*) 'SMALLER QS end of SFCDIF' , QS
+module_sf_myjsfc.F:	if (QS .lt. 0.) then
+module_sf_myjsfc.F:!	write(6,*) 'negative QS...set to EPSQ: ', QS
+module_sf_myjsfc.F:	write(6,*) 'replacing negative QS: ', QS, 'with: ', QLOW
+module_sf_myjsfc.F:	QS=QLOW
+module_sf_noahlsm.F:                  SNOWC,QSFC,RAINBL,                            &
+module_sf_noahlsm.F:						           QSFC,&     
+module_sf_noahlsm.F:      REAL  :: SHMIN,SHMAX,DQSDT2,LWDN,PRCP,PRCPRAIN,           &
+module_sf_noahlsm.F:          DQSDT2=Q2SAT*A23M4/(SFCTMP-A4)**2                             
+module_sf_noahlsm.F:         'TH2',TH2,'Q2SAT',Q2SAT,'DQSDT2',DQSDT2,'VEGTYP', VEGTYP,&
+module_sf_noahlsm.F:                 TH2,Q2SAT,DQSDT2,                                &    !I
+module_sf_noahlsm.F:         'TH2',TH2,'Q2SAT',Q2SAT,'DQSDT2',DQSDT2,'VEGTYP', VEGTYP,&
+module_sf_noahlsm.F:          QSFC(I,J)=Q1
+module_sf_noahlsm.F:                       TH2,Q2SAT,DQSDT2,                                &    !I  
+module_sf_noahlsm.F:!   DQSDT2     SLOPE OF SAT SPECIFIC HUMIDITY CURVE AT T=SFCTMP                  
+module_sf_noahlsm.F:      REAL, INTENT(IN)   :: SHDMIN,SHDMAX,DT,DQSDT2,LWDN,PRCP,PRCPRAIN,     & 
+module_sf_noahlsm.F:        'DQSDT2',DQSDT2,'FLX2',FLX2,'SNOWH',SNOWH,'SNEQV',SNEQV,         &      
+module_sf_noahlsm.F:                         DQSDT2,FLX2)                                            
+module_sf_noahlsm.F:                          SMCWLT,SMCREF,RSMIN,RC,PC,NROOT,Q2SAT,DQSDT2,  &
+module_sf_noahlsm.F:                         SMCWLT,SMCREF,RSMIN,RC,PC,NROOT,Q2SAT,DQSDT2,    &     
+module_sf_noahlsm.F:!   DQSDT2  SLOPE OF SATURATION HUMIDITY FUNCTION WRT TEMP                       
+module_sf_noahlsm.F:      REAL,    INTENT(IN) :: CH,DQSDT2,HS,Q2,Q2SAT,RSMIN,RGL,RSMAX, &
+module_sf_noahlsm.F:      DELTA = (SLV / CP)* DQSDT2                                                 
+module_sf_noahlsm.F:     &                   DQSDT2,FLX2)                                            
+module_sf_noahlsm.F:      REAL, INTENT(IN)        :: CH, DQSDT2,FDOWN,PRCP,                 &
+module_sf_noahlsm.F:      DELTA = ELCP * DQSDT2                                                      
+module_sf_noahlsm.F:                               FRCSNO,FRCSOI, PRCP1, QSAT,RSNOW, SEH,   &
+module_sf_noahlsm.F:! CALCULATE QSAT VALID AT FREEZING POINT.  NOTE THAT ESAT (SATURATION            
+module_sf_noahlsm.F:!ek        QSAT = (0.622*6.11E2)/(SFCPRS-0.378*6.11E2)                           
+module_sf_noahlsm.F:!ek        ETP = RCH*(QSAT-Q2)/CP                                                
+module_sf_ruclsm.F:                   QSFC,QSG,QVG,QCG,SOILT1,TSNAV,                &
+module_sf_ruclsm.F:                                                           QSFC, &
+module_sf_ruclsm.F:                                                            QSG, &
+module_sf_ruclsm.F:           QSG  (i,j) = QSN(SOILT(i,j),TBQ)/PATM
+module_sf_ruclsm.F:           qvg  (i,j) = QSG(i,j)*mavail(i,j)
+module_sf_ruclsm.F:           qsfc(i,j) = qvg(i,j)/(1.+qvg(i,j))
+module_sf_ruclsm.F:           qvg  (i,j) = QSN(SOILT(i,j),TBQ)/PATM
+module_sf_ruclsm.F:           qsfc(i,j) = qvg(i,j)/(1.+qvg(i,j))
+module_sf_ruclsm.F:                qvg(I,J),qsg(I,J),qcg(I,J),SMELT(I,J),           &
+module_sf_ruclsm.F:        QSFC(I,J) = QVG(I,J)/(1.+QVG(I,J))
+module_sf_ruclsm.F:                tsnav,dew,qvg,qsg,qcg,                           &
+module_sf_ruclsm.F:                                                            QSG, &
+module_sf_ruclsm.F:            dew,soilt,soilt1,tsnav,qvg,qsg,qcg,                 &
+module_sf_ruclsm.F:            dew,soilt,qvg,qsg,qcg,edir1,ec1,                    &
+module_sf_ruclsm.F:       FUNCTION QSN(TN,T)
+module_sf_ruclsm.F:      REAL    QSN, R,R1,R2
+module_sf_ruclsm.F:       QSN=(T(I+1)-R1)*R2 + R1
+module_sf_ruclsm.F:!       print *,' in QSN, I,R,R1,R2,T(I+1),TN, QSN', I,R,r1,r2,t(i+1),tn,QSN
+module_sf_ruclsm.F:  END FUNCTION QSN
+module_sf_ruclsm.F:            dew,soilt,qvg,qsg,qcg,                           &
+module_sf_ruclsm.F:!     QSG,QVG,QCG - saturated mixing ratio, mixing ratio of
+module_sf_ruclsm.F:                                                            QSG, &
+module_sf_ruclsm.F:        IF(QVATM.GE.QSG)THEN
+module_sf_ruclsm.F:          DEW=FQ*(QVATM-QSG)
+module_sf_ruclsm.F:            DELT*(PRCPMS+RAS*FQ*(QVATM-QSG)                        &
+module_sf_ruclsm.F:             tso,soilt,qvg,qsg,qcg)
+module_sf_ruclsm.F:!--- CALCULATION OF DEW USING NEW VALUE OF QSG OR TRANSP IF NO DEW
+module_sf_ruclsm.F:        IF(QVATM.GE.QSG)THEN
+module_sf_ruclsm.F:          DEW=QKMS*(QVATM-QSG)
+module_sf_ruclsm.F:                    (QVATM-QSG)*                              &
+module_sf_ruclsm.F:               QSG,QVG,QCG,QCATM,QVATM,-PRCPMS,                &
+module_sf_ruclsm.F:          Q1=-QKMS*RAS*(QVATM - QSG)
+module_sf_ruclsm.F:             qvg,qsg,qcg,SMELT,SNOH,SNFLX,SNOM,                &
+module_sf_ruclsm.F:!     QSG,QVG,QCG - saturated mixing ratio, mixing ratio of
+module_sf_ruclsm.F:                                                            QSG, &
+module_sf_ruclsm.F:        EPOT = -FQ*(QVATM-QSG) 
+module_sf_ruclsm.F:             tso,soilt,soilt1,tsnav,qvg,qsg,qcg,              &
+module_sf_ruclsm.F:!--- RECALCULATION OF DEW USING NEW VALUE OF QSG OR TRANSP IF NO DEW
+module_sf_ruclsm.F:         QSG= QSN(SOILT,TBQ)/PP
+module_sf_ruclsm.F:         EPOT = -FQ*(QVATM-QSG)
+module_sf_ruclsm.F:            TRANSP(K)=vegfrac*RAS*FQ*(QVATM-QSG)              &
+module_sf_ruclsm.F:               QSG,QVG,QCG,QCATM,QVATM,-PRCPMS,                    &
+module_sf_ruclsm.F:        Q1 = - FQ*RAS* (QVATM - QSG)
+module_sf_ruclsm.F:         DEW=FQ*(QVATM-QSG)
+module_sf_ruclsm.F:           TSO,SOILT,QVG,QSG,QCG)
+module_sf_ruclsm.F:!     QSG,QVG,QCG - saturated mixing ratio, mixing ratio of
+module_sf_ruclsm.F:                                                            QSG, &
+module_sf_ruclsm.F:               PI,H,FKQ,R210,AA,BB,PP,Q1,QS1,TS1,TQ2,TX2       , &
+module_sf_ruclsm.F:        CALL VILKA(TN,AA1,BB,PP,QS1,TS1,TBQ,KTAU,i,j,iland,isoil)
+module_sf_ruclsm.F:        Q1=TX2+H*QS1
+module_sf_ruclsm.F:        IF(Q1.LT.QS1) GOTO 100
+module_sf_ruclsm.F:   90   QVG=QS1
+module_sf_ruclsm.F:        QSG=QS1
+module_sf_ruclsm.F:        QCG=Q1-QS1
+module_sf_ruclsm.F:        CALL VILKA(TN,AA,BB,PP,QS1,TS1,TBQ,KTAU,i,j,iland,isoil)
+module_sf_ruclsm.F:        Q1=TX2+H*QS1
+module_sf_ruclsm.F:        IF(Q1.GT.QS1) GOTO 90
+module_sf_ruclsm.F:        QSG=QS1
+module_sf_ruclsm.F:           TSO,SOILT,SOILT1,TSNAV,QVG,QSG,QCG,                     &
+module_sf_ruclsm.F:!     QSG,QVG,QCG - saturated mixing ratio, mixing ratio of
+module_sf_ruclsm.F:                                                            QSG, &
+module_sf_ruclsm.F:               PI,H,FKQ,R210,AA,BB,PP,Q1,QS1,TS1,TQ2,TX2,        &
+module_sf_ruclsm.F:        EPOT=-QKMS*(QVATM-QSG)
+module_sf_ruclsm.F:        CALL VILKA(TN,AA1,BB,PP,QS1,TS1,TBQ,KTAU,i,j,iland,isoil)
+module_sf_ruclsm.F:        Q1=TX2+H*QS1
+module_sf_ruclsm.F:   90   QVG=QS1
+module_sf_ruclsm.F:        QSG=QS1
+module_sf_ruclsm.F:        QCG=Q1-QS1
+module_sf_ruclsm.F:        print *,' TS1,QS1: ', ts1,qs1
+module_sf_ruclsm.F:         QSG= QSN(273.15,TBQ)/PP
+module_sf_ruclsm.F:         QVG=QSG
+module_sf_ruclsm.F:         EPOT = -QKMS*(QVATM-QSG)
+module_sf_ruclsm.F:            XLVM*R210*(QSG-QGOLD)
+module_sf_ruclsm.F:              QSG,QVG,QCG,QCATM,QVATM,PRCP,                     &
+module_sf_ruclsm.F:!     QSG,QVG,QCG - saturated mixing ratio, mixing ratio of
+module_sf_ruclsm.F:   REAL,     INTENT(IN   )   ::    QSG,QVG,QCG,QCATM,QVATM     , &
+module_sf_ruclsm.F:          R10=QTOT-QSG
+module_sf_ruclsm.F:       SUBROUTINE VILKA(TN,D1,D2,PP,QS,TS,TT,NSTEP,ii,j,iland,isoil)
+module_sf_ruclsm.F:!--- using table T,QS computed from Clausius-Klapeiron
+module_sf_ruclsm.F:   REAL,     INTENT(OUT  )  ::  QS, TS
+module_sf_ruclsm.F:       QS=(TT(I)+(TT(I)-TT(I+1))*RN)/PP
+module_sf_sfcdiags.F:   SUBROUTINE SFCDIAGS(HFX,QFX,TSK,QSFC,CHS2,T2,TH2,Q2,            &
+module_sf_sfcdiags.F:                                                             QSFC
+module_sf_sfcdiags.F:          Q2(I,J) = QSFC(I,J) - QFX(I,J)/(RHO*CHS2(I,J))
+module_sf_sfclay.F:		     XLAND,HFX,QFX,LH,TSK,FLHC,FLQC,QGH,QSFC,      &
+module_sf_sfclay.F:                                                             QSFC
+module_sf_sfclay.F:                QSFC(ims,j),LH(ims,j),                             &
+module_sf_sfclay.F:                     QSFC,LH,GZ1OZ0,WSPD,BR,ISFFLX,                &
+module_sf_sfclay.F:                                                TH2,T2,Q2,QSFC,LH
+module_sf_sfclay.F:        QSFC(I)=EP2*E1/(PSFC(I)-E1)                                                 
+module_sf_sfclay.F:        TSKV=THGB(I)*(1.+EP1*QSFC(I)*MAVAIL(I))                     
+module_sf_sfclay.F:!     ZA(1982) EQS(2.60),(2.61).                                                 
+module_sf_sfclay.F:        Q2(I)=QSFC(I)+(QX(I)-QSFC(I))*PSIQ2/PSIQ                   
+module_sf_sfclay.F:        QFX(I)=FLQC(I)*(QSFC(I)-QX(I))                                     
+module_sf_slab.F:                   PSFC,XLAND,TMN,HFX,QFX,TSK,QSFC,CHKLOWQ,     &
+module_sf_slab.F:                                                          QSFC, &
+module_sf_slab.F:	   QFX(ims,j),TSK(ims,j),QSFC(ims,j),CHKLOWQ(ims,j),    &
+module_sf_slab.F:                   PSFCPA,XLAND,TMN,HFX,QFX,TSK,QSFC,CHKLOWQ,   &
+module_sf_slab.F:                                                          QSFC, &
+module_sf_slab.F:							    QS, &
+module_sf_slab.F:   REAL    :: THG,ESG,QSG,HFXT,QFXT,CS,CSW,LAMG(4),THCON,PL
+module_sf_slab.F:        QS(I)=HFX(I)+QFX(I)*XLV                                
+module_sf_slab.F:          DTHGDT(I)=(RNET(I)-QS(I))/CAPG(I)-HM(I)                              
+module_sf_slab.F:                QSG=EP2*ESG/(PS-ESG)                                             
+module_sf_slab.F:                QFXT=FLQC(I)*(QSG-QX(I))
+module_sf_slab.F:                QS(I)=HFXT+QFXT*XLV                                
+module_sf_slab.F:              FLUX(I,1)=RNET(I)-QS(I)                                            
+module_sf_slab.F:! QSFC and CHKLOWQ needed by Eta PBL
+module_sf_slab.F:        QSFC(I)=QX(I)+QFX(I)/FLQC(I)
+module_surface_driver.F:     &          ,PSIM,P_PHY,Q10,Q2,QFX,QSFC,QSHLTR,QZ0,RAINBL         &
+module_surface_driver.F:     &          ,FLQC,FLHC,QSG,QVG,QCG,SOILT1,TSNAV                   & ! RUC LSM only
+module_surface_driver.F:! Qs         snow mixing ratio (kg/kg)
+module_surface_driver.F:!-- qsfc          specific humidity at lower boundary (kg/kg)
+module_surface_driver.F:!-- qshltr        diagnostic 2-m specific humidity from MYJ
+module_surface_driver.F:!-- P_QS          species index for snow
+module_surface_driver.F:   REAL, DIMENSION( ims:ime, jms:jme ) , INTENT(INOUT)::   QSFC
+module_surface_driver.F:   REAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT)::   QSHLTR
+module_surface_driver.F:   REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)::   QSG
+module_surface_driver.F:               XLAND,HFX,QFX,LH,TSK,FLHC,FLQC,QGH,QSFC,            &
+module_surface_driver.F:              TSK,QSFC,THZ0,QZ0,UZ0,VZ0,                           &
+module_surface_driver.F:              U10,V10,TSHLTR,TH10,QSHLTR,Q10,PSHLTR,               &
+module_surface_driver.F:             PSFC,XLAND,TMN,HFX,QFX,TSK,QSFC,CHKLOWQ,             &
+module_surface_driver.F:          CALL SFCDIAGS(HFX,QFX,TSK,QSFC,CHS2,T2,TH2,Q2,              &
+module_surface_driver.F:                th2,q2,SNOWC,CHS2,QSFC,SOILTB,CHKLOWQ,RAINBL,   &
+module_surface_driver.F:                SNOWC,QSFC,RAINBL,                              & !CHKLOWQ is gone
+module_surface_driver.F:         CALL SFCDIAGS(HFX,QFX,TSK,QSFC,CHS2,T2,TH2,Q2,              &
+module_surface_driver.F:                QSFC,QSG,QVG,QCG,SOILT1,TSNAV,                  &
+module_surface_driver.F:         CALL SFCDIAGS(HFX,QFX,TSK,QSFC,CHS2,T2,TH2,Q2,     &
