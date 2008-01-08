@@ -1,0 +1,3 @@
+#! /bin/ksh
+
+cat Registry | sed s:i01:i: > Registry_no_i01

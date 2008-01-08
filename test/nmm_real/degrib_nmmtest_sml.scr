@@ -1,0 +1,60 @@
+#! /bin/ksh
+
+# @ output = /emc2/wx20py/test.out
+# @ error = /emc2/wx20py/test.out
+# @ notification = never
+# @ arguments = west_bcsml_myexp.grd
+# @ wall_clock_limit = 00:39:00
+# @ group=devonprod
+# @ job_type = serial
+# @ class = dev
+# @ queue
+
+
+. ~/.profile
+
+outfile=$1
+
+hrs="00 06 12 18 24 30 36 42 48"
+
+cd /emc2/wx20py/wrf_nmm/WRFV1/test/nmm_real/
+
+# workdir=/gpfstmp/wx20py/wrfpost_nmmtest_sw_sml
+workdir=/gpfstmp/wx20py/wrfpost_nmmtest_bc_sml
+
+cp grdnav.tbl_sml $workdir/grdnav.tbl
+
+cd $workdir
+
+rm $outfile
+
+for hr in $hrs
+
+do
+
+nagrib << endgrib
+ GBFILE   = WRFPRS${hr}.tm00
+ INDXFL   =
+ GDOUTF   = $outfile
+ PROJ     =
+ GRDAREA  =
+ KXKY     =
+ MAXGRD   = 4999
+ CPYFIL   = #255
+ GAREA    = dset
+ OUTPUT   = T
+ GBTBLS   =
+ GBDIAG   =
+ PDSEXT   = NO
+
+r
+
+ex
+
+endgrib
+
+done
+
+gpend
+
+mv $1 /ptmp/wx20py/
