@@ -2,7 +2,7 @@
 C$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C MAIN PROGRAM: ETA_PRDGEN
-C   PRGMMR: MANIKIN          ORG: NP22        DATE: 2000-05-08
+C   PRGMMR: MANIKIN          ORG: NP22        DATE: 2002-07-02
 C
 C ABSTRACT: PRDGEN PRODUCES FILES THAT HAVE BEEN INTERPOLATED (USING
 C   IPLIB) TO VARIOUS OUTPUT GRIDS WITH OPTIONAL WMO HEADERS.  PRDGEN
@@ -26,6 +26,11 @@ C   98-08-24  BALDWIN - USE TYPE 201/203 DIRECTLY,
 C                        NO FILL OF STAGGERED E-GRID
 C   99-03-25  BALDWIN - ADD TILING OPTION
 C   00-04-29  MANIKIN - CONVERTED TILING OPTION CODE TO SP
+C   03-03-18  MANIKIN - ADDED IN NEAREST NEIGHBOR OPTION AS WELL AS
+C                         ABILITY TO DISCERN FIELDS IN DIFFERENT
+C                         PARAMETER TABLES
+C   03-06-24  JOVIC,  - FIXED PROBLEM WITH NEAREST NEIGHBOR OPTION
+C             MANIKIN     FOR VECTOR FIELDS
 C
 C USAGE:  MAIN PROGRAM
 C
@@ -101,18 +106,20 @@ C    IN MEMORY AND ARE DIMENSIONED (IMAXOT*JJMAXOT)
 C      SO, IF YOU ARE NOT MAKING OUTPUT FILES ON BIG GRIDS, SET THESE
 C      TO LOWER VALUES AND THE EXECUTABLE WILL BE SMALLER
 C    
-C    
-      PARAMETER(IMAXIN=725,JJMAXIN=1301,JMAXIN=IMAXIN*JJMAXIN)
-!      PARAMETER(IMAXOT=550,JJMAXOT=550,JMAXOT=IMAXOT*JJMAXOT)
-      PARAMETER(IMAXOT=1050,JJMAXOT=850,JMAXOT=IMAXOT*JJMAXOT)
-      PARAMETER(MAXTILE=36,MAXF=2000,MAXG=5,IBUFSIZE=650000000)
+C For very large NMMB grids:
+      PARAMETER(IMAXIN=1500,JJMAXIN=1500,JMAXIN=IMAXIN*JJMAXIN)
+C For Geoff M's smartinit bundle
+C     PARAMETER(IMAXOT=1500,JJMAXOT=1050,JMAXOT=IMAXOT*JJMAXOT)
+      PARAMETER(IMAXOT=2200,JJMAXOT=1500,JMAXOT=IMAXOT*JJMAXOT)
+      PARAMETER(MAXTILE=54,MAXF=2000,MAXG=10,IBUFSIZE=2000000000)
 
       INTEGER KGRIDA(MAXG,MAXF),KGRID(MAXG)
       INTEGER JPDS5(MAXF),JPDS6(MAXF),
-     &        JPDS7(MAXF),JPDS16(MAXF)
-      INTEGER K5PDS(5,MAXF)
+     &        JPDS7(MAXF),JPDS16(MAXF),JPDS19(MAXF)
+      INTEGER K5PDS(7,MAXF),NEARN(MAXF)
       INTEGER NGRDS(MAXF),NFILS(MAXF),MDLID(MAXG,MAXF)
       INTEGER KPDSIN(25),KGDSIN(22),KPDSU(25),KPDSV(25)
+      INTEGER DUMGDS(200)
       INTEGER RCBYTE(MAXF),ISTART(MAXF),NBITL(MAXF)
       INTEGER KPDSOUT(25),KGDSOUT(22),IOUTUN(MAXG,MAXF)
       INTEGER N11(JMAXOT),N21(JMAXOT),KSMPO(MAXG,MAXF),
@@ -127,8 +134,12 @@ C
 
       REAL(4) rtemp(JMAXOT)
       REAL RLAT(JMAXOT),RLON(JMAXOT)
+      REAL RLAI(JMAXIN),RLOI(JMAXIN) 
+      REAL CROI(JMAXIN),SROI(JMAXIN)
+      REAL XPTI(JMAXIN),YPTI(JMAXIN)
       REAL FIN(JMAXIN),FOUT(JMAXOT),SCAL(MAXG,MAXF)
-      REAL VIN(JMAXIN),VOUT(JMAXOT)
+      REAL VIN(JMAXIN),VOUT(JMAXOT),SFCHGT(JMAXIN)
+      REAL FIELD(JMAXOT)
       REAL UIN(JMAXIN),UOUT(JMAXOT)
       REAL CROT(JMAXOT),SROT(JMAXOT)
       REAL W11(JMAXOT),W21(JMAXOT),
@@ -139,16 +150,24 @@ C
      &     S12(JMAXOT),S22(JMAXOT)
       REAL WV11(JMAXOT),WV21(JMAXOT),
      &     WV12(JMAXOT),WV22(JMAXOT)
+      REAL WW11(JMAXOT),WW21(JMAXOT),
+     &     WW12(JMAXOT),WW22(JMAXOT)
+      REAL CC11(JMAXOT),CC21(JMAXOT),
+     &     CC12(JMAXOT),CC22(JMAXOT)
+      REAL SS11(JMAXOT),SS21(JMAXOT),
+     &     SS12(JMAXOT),SS22(JMAXOT)
+      REAL CM11,CM12,CM21,CM22
+      REAL SM11,SM12,SM21,SM22
+      PARAMETER(FILL=-9999.)
 
       CHARACTER NAMES(MAXG,MAXF)*16
       CHARACTER TYPE(MAXG,MAXF)*4
       CHARACTER IBUF(IBUFSIZE)*1
-      CHARACTER NFILE*80
+      CHARACTER NFILE*90
 
 C
-      print *, 'into prdgen '
-      print *, 'JMAXOT = ', JMAXOT
-      CALL W3TAGB('ETA_PRDGEN',2000,0129,0061,'NP22')
+c     print *, 'into prdgen '
+      CALL W3TAGB('ETA_PRDGEN',2002,0183,0060,'NP22')
 
 !DIR$ INLINEALWAYS FILTER_SC,FILTER_UV
        LCNTRL=10
@@ -158,14 +177,15 @@ C
 C     READ INPUT GRIB FILE NAME
 C
       READ(5,80) NFILE
- 80   FORMAT(A80)
+ 80   FORMAT(A90)
 C
 C     READ AND SORT OUT CNTRL FILE.
 C    
       CALL READ_SORT_CTL (LCNTRL,MAXG,MAXF,K5PDS,MDLID,KGRIDA,
-     &  TYPE,SCAL,NAMES,KGRID,IG1,KSMPR,KSMPO,ITILS,JTILS,NFILS,
-     &  NGRDS,NFLDS,JPDS5,JPDS6,JPDS7,JPDS16,IOUTUN,IRET0)
-      
+     &  TYPE,SCAL,NAMES,KGRID,IG1,KSMPR,KSMPO,ITILS,JTILS, 
+     &  NEARN,NFILS,NGRDS,NFLDS,JPDS5,JPDS6,JPDS7,JPDS16,
+     &  JPDS19,IOUTUN,IRET0)
+
       IF (IRET0.NE.0) THEN
         WRITE(6,*) ' READ_SORT_CTL RETURN CODE = ',IRET0
         CALL W3TAGE('ETA_PRDGEN')
@@ -176,7 +196,8 @@ C
 C     READ AND SORT OUT ENTIRE GRIB FILE.
 C
       CALL READ_SORT_GRIB (NFILE,MAXF,IBUFSIZE,LUGBIN,NFLDS,
-     &  JPDS5,JPDS6,JPDS7,JPDS16,IBUF,IHAVE,NBITL,RCBYTE,ISTART,IRET)
+     &  JPDS5,JPDS6,JPDS7,JPDS16,JPDS19,IBUF,IHAVE,NBITL,RCBYTE,
+     &  ISTART,IRET)
 
       IF (IRET.NE.0) THEN
         WRITE(6,*) ' READ_SORT_GRI RETURN CODE = ',IRET
@@ -188,7 +209,6 @@ C
 C  BIG OUTER LOOP OVER NUMBER OF OUTPUT GRIDS
 C
        DO 100 M=1,IG1
-       print *,'m,ig1 = ',m,ig1
 C
 C  READ INTERPOLATION WEIGHTS
 C
@@ -273,17 +293,18 @@ c        READ(LUNWGT) (CROT(I),I=1,NOUT)
          READ(LUNWGT) (rtemp(I),I=1,NOUT)
          CROT(1:NOUT)=rtemp(1:NOUT)
          READ(LUNWGT) ((NPP(I,J),I=1,NOUT),J=1,25)
-         print *,'done reading weights for ',KGRIDOT,NOUT
          IFIRST=.TRUE.
+
+c        print *, 'weight checks'
+c        print *, W12(888), W21(888), W11(888), W22(888)
+c        print *, C12(888), C21(888), C11(888), C22(888) 
 
 C
 C   BEGIN LOOP OVER NUMBER OF FIELDS
 C
+
+       print *, 'NUMBER OF FIELDS REQUESTED IS ', NFLDS
        DO 30 N=1,NFLDS 
-       print *, 'inside loop 30 ', N
-       IF (KGRID(M).EQ.221) THEN
-        print *, 'JPDS5 ', JPDS5(N)
-       ENDIF
 C
 C    IF THIS FIELD IS V, WE'VE ALREADY TAKEN CARE OF IT
 C
@@ -295,9 +316,6 @@ C
 
 C      INEED=.T. MEANS WE STILL NEED TO UNPACK THIS FIELD
 
-       IF (KGRID(M).EQ.221) THEN
-         print *, 'before MM loop'
-       ENDIF
        DO MM=1,NFILS2
          IF (KGRID(M).EQ.KGRIDA(MM,N)) THEN
           IF (INEED) THEN
@@ -319,7 +337,9 @@ C
              IF(JPDS5(JK).EQ.JPDS5(N)+1 .AND.
      &          JPDS6(JK).EQ.JPDS6(N) .AND.
      &          JPDS7(JK).EQ.JPDS7(N) .AND.
-     &          JPDS16(JK).EQ.JPDS16(N)) NN=JK
+     &          JPDS16(JK).EQ.JPDS16(N) .AND.
+     &          NEARN(JK).EQ.NEARN(N) .AND.
+     &          JPDS19(JK).EQ.JPDS19(N)) NN=JK
             ENDDO
             MBYTES = RCBYTE(NN)
             KSTART = ISTART(NN)
@@ -343,9 +363,134 @@ C
        NOUT=KGDSOUT(2)*KGDSOUT(3)
 
           ENDIF
-          IF (KGRID(M).EQ.221) THEN
-             print *, 'past big IF test'
-          ENDIF
+ 
+CGSM  new loop for nearest neighbor option
+          IF (NEARN(N) .EQ. 2) THEN
+c           print *, 'inside NN loop' 
+cGSM   at each point, find the largest weight of the 4 surrounding pts
+c        first do the vector option
+            IF (JPDS5(N).EQ.33.OR.JPDS5(N).EQ.196) THEN
+             DO K = 1, NOUT
+               WLARGE=AMAX1(WV11(K),WV12(K),WV21(K),WV22(K))
+               IF(WLARGE.eq.0.) THEN
+                  CC11(K)=0.0
+                  SS11(K)=0.0
+                  CC21(K)=0.0
+                  SS21(K)=0.0
+                  CC12(K)=0.0
+                  SS12(K)=0.0
+                  CC22(K)=0.0
+                  SS22(K)=0.0
+               ELSE
+                  IF(WLARGE.eq.WV11(K)) THEN
+                    WV11(K)=1.0
+                    WV21(K)=0.0
+                    WV12(K)=0.0
+                    WV22(K)=0.0
+                    CC11(K)=C11(K)
+                    SS11(K)=S11(K)
+                    CC21(K)=0.0
+                    SS21(K)=0.0
+                    CC12(K)=0.0
+                    SS12(K)=0.0
+                    CC22(K)=0.0
+                    SS22(K)=0.0
+                  ENDIF
+                IF(WLARGE.eq.WV21(K)) THEN
+                    WV11(K)=0.0
+                    WV21(K)=1.0
+                    WV12(K)=0.0
+                    WV22(K)=0.0
+                    CC21(K)=C21(K)
+                    SS21(K)=S21(K)
+                    CC11(K)=0.0
+                    SS11(K)=0.0
+                    CC12(K)=0.0
+                    SS12(K)=0.0
+                    CC22(K)=0.0
+                    SS22(K)=0.0
+                  ENDIF
+                  IF(WLARGE.eq.WV12(K)) THEN
+                    WV11(K)=0.0
+                    WV21(K)=0.0
+                    WV12(K)=1.0
+                    WV22(K)=0.0
+                    CC12(K)=C12(K)
+                    SS12(K)=S12(K)
+                    CC11(K)=0.0
+                    SS11(K)=0.0
+                    CC21(K)=0.0
+                    SS21(K)=0.0
+                    CC22(K)=0.0
+                    SS22(K)=0.0
+                  ENDIF
+                  IF(WLARGE.eq.WV22(K)) THEN
+                    WV11(K)=0.0
+                    WV21(K)=0.0
+                    WV12(K)=0.0
+                    WV22(K)=1.0
+                    CC22(K)=C22(K)
+                    SS22(K)=S22(K)
+                    CC11(K)=0.0
+                    SS11(K)=0.0
+                    CC21(K)=0.0
+                    SS21(K)=0.0
+                    CC12(K)=0.0
+                    SS12(K)=0.0
+                  ENDIF
+               ENDIF
+            ENDDO
+           ELSE
+c     else perform the scalar option
+            DO K = 1, NOUT 
+             WLARGE=AMAX1(W11(K),W12(K),W21(K),W22(K))
+             IF(WLARGE.eq.W11(K)) THEN
+               WW11(K)=1.0
+               WW21(K)=0.0
+               WW12(K)=0.0
+               WW22(K)=0.0
+             ENDIF
+             IF(WLARGE.eq.W21(K)) THEN
+               WW11(K)=0.0
+               WW21(K)=1.0
+               WW12(K)=0.0
+               WW22(K)=0.0
+             ENDIF
+             IF(WLARGE.eq.W12(K)) THEN
+               WW11(K)=0.0
+               WW21(K)=0.0
+               WW12(K)=1.0
+               WW22(K)=0.0
+             ENDIF
+             IF(WLARGE.eq.W22(K)) THEN
+               WW11(K)=0.0
+               WW21(K)=0.0
+               WW12(K)=0.0
+               WW22(K)=1.0
+             ENDIF
+           ENDDO
+           ENDIF
+          ELSE
+              DO K = 1, NOUT
+                WW11(K)=W11(K)
+                WW21(K)=W21(K)
+                WW12(K)=W12(K)
+                WW22(K)=W22(K)
+                CC22(K)=C22(K)
+                SS22(K)=S22(K)
+                CC11(K)=C11(K)
+                SS11(K)=S11(K)
+                CC21(K)=C21(K)
+                SS21(K)=S21(K)
+                CC12(K)=C12(K)
+                SS12(K)=S12(K)
+              ENDDO
+c             print *, 'end of NN loop'
+CGSM  end of loop for nearest neighbor option
+        ENDIF 
+c       print *, 'end check ', CC12(888), CC21(888), CC11(888),
+c    &         CC22(888)
+C
 
 C
            IF (JPDS5(N).EQ.33.OR.JPDS5(N).EQ.196) THEN
@@ -363,37 +508,50 @@ C  INTERPOLATE WITH OR WITHOUT BITMAPS
            CALL INTERP_UV (JMAXIN,UIN,VIN,LIN,IBIN,
      &                     JMAXOT,UOUT,VOUT,LOUT,IBOUT,NOUT,KGDSOUT,
      &                     NV11,NV12,NV21,NV22,WV11,WV12,WV21,WV22,
-     &                     C11,C12,C21,C22,S11,S12,S21,S22,
+     &                     CC11,CC12,CC21,CC22,SS11,SS12,SS21,SS22,
      &                     CROT,SROT,IRET)
 
 
            ELSE
 
 C   PRE-INTERPOLATION FILTER OF SCALARS ON E-GRID
-            IF (KGRID(M).EQ.221) THEN
-              print *, 'before FILTER SC 1'
-            ENDIF
             CALL FILTER_SC (IMAXIN,JJMAXIN,JMAXIN,KSMPR(MM,N),KGDSIN,
-     &                      FIN,LIN,IRET)
+     &                      JPDS5(N),FIN,LIN,IRET)
 
 C  PRECIP FIELDS USE BUDGET INTERP 
+c    UNLESS NEAREST NEIGHBOR OPTION IS SELECTED 
+C    Rogers 10/26/04: Added option for new Land Surface Precipitation
+C                     Accumulation (pds(5)=154, pds(19)=130)
 C
-        IF (KPDSIN(5).LE.66.AND.KPDSIN(5).GE.61) THEN
+        IF (KPDSIN(5).LE.66.AND.KPDSIN(5).GE.61.AND.
+     &           K5PDS(7,N).NE.2) THEN
 
            CALL INTERP_PPT (JMAXIN,FIN,LIN,IBIN,
      &                      JMAXOT,FOUT,LOUT,IBOUT,NOUT,KGDSOUT,
      &                      NPP,IRET)
 
+        ELSE IF (KPDSIN(5).EQ.154.AND.K5PDS(7,N).NE.2) THEN 
+                                                                                                                                     
+           CALL INTERP_PPT (JMAXIN,FIN,LIN,IBIN,
+     &                      JMAXOT,FOUT,LOUT,IBOUT,NOUT,KGDSOUT,
+     &                      NPP,IRET)
+
         ELSE
-           IF (KGRID(M).EQ.221) THEN
-             print *, 'before INTERP_SC'
+           IF (N .EQ. 10) THEN
+             DO P=1,JMAXIN
+                SFCHGT(P)=FIN(P)
+             ENDDO
            ENDIF
+c          IF (N .EQ. 504) THEN
+c            DO P=1,JMAXIN
+c                IF (SFCHGT(P).GT.FIN(P) .AND. FIN(P).GT.0.) THEN
+c                  print *, 'check ',P, SFCHGT(P), FIN(P)
+c                ENDIF
+c            ENDDO
+c          ENDIF 
            CALL INTERP_SC (JMAXIN,FIN,LIN,IBIN,
      &                     JMAXOT,FOUT,LOUT,IBOUT,NOUT,KGDSOUT,
-     &                     N11,N12,N21,N22,W11,W12,W21,W22,IRET)
-            IF (KGRID(M).EQ.221) THEN
-             print *, 'after INTERP_SC'
-           ENDIF 
+     &                     N11,N12,N21,N22,WW11,WW12,WW21,WW22,IRET)
         ENDIF
 
           ENDIF
@@ -453,7 +611,6 @@ C
      &      IBOUT,NOUT,LOUT,VOUT,IRET)
 
          IF (ITILS(MM,N).GT.0.AND.JTILS(MM,N).GT.0) THEN
-            print *, 'about to tile ', ITILS(MM,N), JTILS(MM,N)
          CALL TILE_OUT (MAXTILE,JMAXOT,ITILS(MM,N),JTILS(MM,N),
      &      IFIRST,SCAL(MM,N),KPDSU,KGDSOUT,IOUTIL,DOTILE,RLAT,RLON,
      &      TYPE(MM,N),MDLID(MM,N),
@@ -468,14 +625,8 @@ C
 
             ELSE
 
-        IF (KGRID(M).EQ.221) THEN
-          print *, 'before FILTER_SC'
-        ENDIF       
         CALL FILTER_SC (IMAXOT,JJMAXOT,JMAXOT,KSMPO(MM,N),KGDSOUT,
-     &                      FOUT,LOUT,IRET)
-        IF (KGRID(M).EQ.221) THEN
-          print *, 'after FILTER_SC'
-        ENDIF
+     &                      JPDS5(N),FOUT,LOUT,IRET)
 C
 C   COMPUTE MAX AND MIN FOR FINDING NUMBER OF BITS
 C
@@ -503,18 +654,11 @@ C
 C
 C  PACK INTO GRIB WRITE STUFF OUT
 C
-         IF (KGRID(M).EQ.221) THEN
-          print *, 'before GRIB_OUT'
-         ENDIF
          CALL GRIB_OUT (JMAXOT,FMIN,FMAX,SCAL(MM,N),KPDSIN,KGDSOUT,
      &      TYPE(MM,N),IOUTUN(MM,N),MDLID(MM,N),KGRID(M),
      &      IBOUT,NOUT,LOUT,FOUT,IRET)
-         IF (KGRID(M).EQ.221) THEN
-          print *, 'after GRIB_OUT'
-         ENDIF
          
          IF (ITILS(MM,N).GT.0.AND.JTILS(MM,N).GT.0) THEN
-            print *, 'about to tile ', ITILS(MM,N), JTILS(MM,N)
          CALL TILE_OUT (MAXTILE,JMAXOT,ITILS(MM,N),JTILS(MM,N),
      &      IFIRST,SCAL(MM,N),KPDSIN,KGDSOUT,IOUTIL,DOTILE,RLAT,RLON,
      &      TYPE(MM,N),MDLID(MM,N),
