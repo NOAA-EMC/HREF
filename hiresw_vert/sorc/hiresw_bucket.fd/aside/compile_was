@@ -1,0 +1,21 @@
+set -x
+
+cp parmeta.full4km parmeta
+ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
+-L/nwprod/lib/ -lw3_4 -lbacio_4
+cp WRFBUCKET.x hiresw_pcpbucket_full4km
+
+cp parmeta.full5km parmeta
+ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
+-L/nwprod/lib/ -lw3_4 -lbacio_4
+cp WRFBUCKET.x hiresw_pcpbucket_full5km
+
+cp parmeta.ak5km parmeta
+ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
+-L/nwprod/lib/ -lw3_4 -lbacio_4
+cp WRFBUCKET.x hiresw_pcpbucket_ak5km
+
+cp parmeta.hipr5km parmeta
+ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
+-L/nwprod/lib/ -lw3_4 -lbacio_4
+cp WRFBUCKET.x hiresw_pcpbucket_hipr5km

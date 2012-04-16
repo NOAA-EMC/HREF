@@ -1,0 +1,15 @@
+set -x
+
+
+make clean
+cp parmeta.big parmeta
+make
+mv hiresw_post hiresw_post_big
+
+make clean
+cp parmeta.tiny parmeta
+make
+mv hiresw_post hiresw_post_tiny
+
+make clean
+

@@ -1,0 +1,65 @@
+# @ step_name = run_wps_met
+# @ output = /meso/save/wx20py/WPS+WRFV2/WPS/met.log
+# @ error = /meso/save/wx20py/WPS+WRFV2/WPS/met.log
+# @ notification = never
+# @ wall_clock_limit = 00:08:00
+# @ job_type = parallel
+# @ total_tasks = 12
+# @ blocking=UNLIMITED
+# @ arguments = NMM
+# @ class=dev
+# @ group=devonprod
+# @ resources=ConsumableCPUS(1)ConsumableMemory(1 GB)
+# @ node_usage=shared
+# @ account_no=HRW-T2O
+# @ network.MPI = csss,shared,us
+# @ queue
+
+cd /meso/save/wx20py/WPS+WRFV2/WPS/metgrid
+
+ln -sf METGRID.TBL.${1} METGRID.TBL
+cd ../
+
+CYC=${2}
+
+### modify namelist file
+ystart=`cat /meso/scrub/wx20py/date/t${CYC}z | cut -c7-10`
+mstart=`cat /meso/scrub/wx20py/date/t${CYC}z | cut -c11-12`
+dstart=`cat /meso/scrub/wx20py/date/t${CYC}z | cut -c13-14`
+hstart=$CYC
+
+start=$ystart$mstart$dstart${CYC}
+
+end=`/nwprod/util/exec/ndate +18 $start`
+
+echo $start
+echo $end
+
+yend=`echo $end | cut -c1-4`
+mend=`echo $end | cut -c5-6`
+dend=`echo $end | cut -c7-8`
+hend=`echo $end | cut -c9-10`
+
+cat namelist.wps_4km_spc_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+ | sed s:DSTART:$dstart: | sed s:HSTART:$CYC: | sed s:YEND:$yend: \
+ | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend: > namelist.wps.1
+
+
+mkdir -p /meso/scrub/wx20py/run_metgrid_1
+
+rm /meso/scrub/wx20py/run_metgrid_1/*
+
+cp ./metgrid/METGRID.TBL metgrid.exe namelist.wps.1 geo_nmm.d01* geo_em.d01*  /meso/scrub/wx20py/run_metgrid_1/
+
+
+cd /meso/scrub/wx20py/run_metgrid_1
+
+mv namelist.wps.1 namelist.wps
+
+cp /meso/scrub/wx20py/run_ungrib/FILE* .
+
+date
+./metgrid.exe
+date
+
+mv met*.int ../run_metgrid/
