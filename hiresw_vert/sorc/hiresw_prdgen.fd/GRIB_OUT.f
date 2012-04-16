@@ -75,6 +75,7 @@ C
           print *, 'before PUT_GB'
         ENDIF
 
+	write(0,*) 'call PUT_GB with KPDSOUT(1:25): ', KPDSOUT(1:25)
         CALL PUT_GB(KGRID,NOUT,NBITSOUT,KPDSOUT,KGDSOUT,
      &              LOUT,FOUT,LGRIB,GRIB,IRET6)
         print *, 'past PUT_GB'
