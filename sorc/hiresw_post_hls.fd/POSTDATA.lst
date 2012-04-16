@@ -1,0 +1,796 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/POSTDATA.f 12/22/08 15:46:00
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      BLOCK DATA POSTDATA
+          2 |
+          3 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+          4 |      INCLUDE "parmout"
+  2       1 |C     MAXIMUM DIMENSIONS FOR OUTPUT GRID, FIELDS, AND LEVELS.
+  2       2 |C
+  2       3 |      PARAMETER(IMX=IM,JMX=JM,MXFLD=250,MXLVL=LM)
+          5 |      INCLUDE "OPTIONS.comm"
+  3       1 |C
+  3       2 |      COMMON /OPTIONS/ SPVAL,IBESSL,KSB,IOFFS,IFLAG,SATDEL
+          6 |      INCLUDE "IOUNIT.comm"
+  4       1 |C
+  4       2 |      INTEGER STDOUT
+  4       3 |C
+  4       4 |      COMMON /IOUNIT/
+  4       5 |     & STDOUT, LCNTRL, LUNCO, LUNLL, LUNOUT
+  4       6 |C
+          7 |      INCLUDE "RQSTFLD.comm"
+  5       1 |C
+  5       2 |      CHARACTER*20 AVBL(MXFLD),FIELD(MXFLD)
+  5       3 |      CHARACTER*6 DATSET
+  5       4 |C
+  5       5 |      LOGICAL RITEHD,RITE2
+  5       6 |C
+  5       7 |      COMMON /RQSTFLD/
+  5       8 |     & KGTYPE,IOUTYP,SVALUE,NFLD,IGET(MXFLD),DEC(MXFLD)
+  5       9 |     &,IQ(MXFLD),IS(MXFLD),ISMSTG(MXFLD),ISMFUL(MXFLD)
+  5      10 |     &,ISMOUT(MXFLD),LVLS(MXLVL,MXFLD),IDENT(MXFLD)
+  5      11 |     &,IFILV(MXFLD),ID(25)
+  5      12 |     &,RITEHD,RITE2,DATSET,FIELD,AVBL
+          8 |C
+          9 |C
+         10 |C     COMMON BLOCK OPTIONS CONTAINS USER OPTIONS
+         11 |C        SPVAL :  FLAG FOR MISSING DATA ON OUTPUT GRID.  THIS
+         12 |C	          CAN ARISE IF OUTPUT GRID EXTENDS BEYOND THE
+         13 |C	          FILLED E-GRID.
+         14 |C        IBESSL:  SWITCH FOR TYPE OF HORIZONTAL INTERPOLATION
+         15 |C	          FROM FILLED E-GRID TO OUTPUT GRID.
+         16 |C	           -1 = 4-POINT LINEAR INTERPOLATION SCHEME
+         17 |C 	                 WITH GRADIENT CORRECTION.  THIS OPTION
+         18 |C	                 IS NOT AVAILABLE
+         19 |C	            0 = 4-POINT LINEAR INTERPOLATION SCHEME
+         20 |C	            1 = 16-POINT BESSEL INTERPOLATION SCHEME
+         21 |C                       THIS OPTION IS NOT AVAILABLE.
+         22 |C	 KSB   :  SQUARE ROOT OF THE NUMBER OF SUB-BOXES WHICH
+         23 |C	          SUBROUTINE CETLIH USES.  SUBROUTINE CETLIH
+         24 |C	          INTERPOLATES A H-POINT ETA GRID FIELD TO AN
+         25 |C	          OUTPUT GRID CONSERVING THE AREA INTEGRAL OF
+         26 |C	          THE E-GRID FIELD.  WHEN INTERPOLATING PRECIP
+         27 |C                 AMOUNT TO A COARSER RESOLUTION GRID, KSB=3
+         28 |C                 IS A GOOD CHOICE.  IF INTERPOLATING TO A
+         29 |C                 FINER RESOLUTION GRID, KSB=8 IS A GOOD CHOICE.
+         30 |C	 IOFFS :  PLUS/MINUS NUMBER OF POINTS ABOUT SOUTHWEST
+         31 |C                 CORNER OUTPUT GRID POINT OVER WHICH CETLIH4.F
+         32 |C	          SEARCHES THE CLOSEST OUTPUT GRID POINT TO
+         33 |C	          EACH SUB-BOX.  WHEN INTERPOLATING TO A COARSER
+         34 |C                 RESOLUTION GRID, IOFFS=2 OR 3 IS A GOOD CHOICE.
+         35 |C                 IF INTERPOLATING TO A FINER RESOLUTION GRID,
+         36 |C                 IOFFS=5 OR 6 IS A GOOD CHOICE.
+         37 |C	 IFLAG :  CONTROLS OUTPUT FROM FILLV
+         38 |C	            IFLAG=0 -> TAKE WHAT INTERPOLATION GIVES
+         39 |C	            IFLAG=1 -> TRUNCATE OUTPUT AT ZERO
+         40 |C	            IFLAG=2 -> TRUNCATE AT A VERY SMALL
+         41 |C 	                       POSITIVE NUMBER (EPS)
+         42 |C	 SATDEL:  FRACTIONAL VARIATION OF SATURATION.  SUBROUTINE
+         43 |C                 NLYLI (N-LAYER LIFTED INDEX) LIFTS A MODIFIED
+         44 |C                 PARCEL.  PARCEL SPECIFIC HUMIDITY IS MODIFIED
+         45 |C	          ACCORDING TO THE FORMULA QMOD = (1+SATDEL)*QGIVEN.
+         46 |C                 THE NGM USES SATDEL=0.05
+         47 |C
+         48 |
+         49 |      DATA SPVAL  / 999999./
+         50 |      DATA IBESSL /   0    /
+         51 |      DATA KSB    /   3    /
+         52 |      DATA IOFFS  /   2    /
+         53 |      DATA IFLAG  /   0    /
+         54 |      DATA SATDEL / 0.05   /
+         55 |C
+         56 |      DATA RITEHD,RITE2 / .TRUE., .TRUE. /
+         57 |C
+         58 |      DATA STDOUT,LCNTRL /  6, 14 /
+         59 |      DATA LUNCO, LUNLL  / 19, 29 /
+         60 |      DATA LUNOUT        / 60     /
+         61 |C
+         62 |C
+         63 |C     THIS FILE CONTAINS ALL THE UNIQUE FIELDS THE
+         64 |C     ETA POST PROCESSOR CAN CURRENTLY GENERATE.
+         65 |C
+         66 |C	IFILV IS SWITCH FOR FILLING MASS OR VELOCITY POINT E-GRID
+         67 |C	   =0 DATA IS VELOCITY POINT AND MUST FILL MASS POINTS
+         68 |C	   =1 DATA IS MASS POINT AND MUST FILL VELOCITY POINTS
+         69 |C	AVBL IS CHARACTER STRING IDENTIFYING THE FIELD.
+         70 |C	IQ  IS THE GRIB PDS OCTET 9 - PARAMETER (TABLE 2)
+         71 |C	IS  IS THE GRIB PDS OCTET 10 - LEVEL TYPE (TABLE 3 & 3a)
+         72 |C
+         73 |C     WANT MORE/DIFFERENT FIELDS?
+         74 |C	(1) ADD CODE TO CALCULATE FIELD(S) IN APPROPRIATE ROUTINE(S),
+         75 |C       (2) ADD FIELD(S) TO THIS LIST WITH A UNIQUE ITAG TAG,
+         76 |C       (3) EDIT INPUT (CONTROL) FILE ACCORDINGLY,
+         77 |C       (3) INCREASE PARAMETER MXFLD IN INCLUDE FILE "PARMOUT".
+         78 |C
+         79 |C     CURRENT NUMBER OF FIELDS LISTED:  180
+         80 |C
+         81 |C0       1         2         3         4         5         6         7
+         82 |C234567890123456789012345678901234567890123456789012345678901234567890
+         83 |      DATA IFILV(001),AVBL(001),IQ(001),IS(001)
+         84 |     &                      /1,'PRESS ON HYB SFCS   ',001,109/
+         85 |      DATA IFILV(077),AVBL(077),IQ(077),IS(077)
+         86 |     &                      /1,'HEIGHT ON HYB SFCS  ',007,109/
+         87 |      DATA IFILV(002),AVBL(002),IQ(002),IS(002)
+         88 |     &                      /1,'TEMP ON HYB SFCS    ',011,109/
+         89 |      DATA IFILV(003),AVBL(003),IQ(003),IS(003)
+         90 |     &                      /1,'POT TEMP ON HYB SFCS',013,109/
+         91 |      DATA IFILV(004),AVBL(004),IQ(004),IS(004)
+         92 |     &                      /1,'DWPT TEMP ON HYB SFC',017,109/
+         93 |      DATA IFILV(005),AVBL(005),IQ(005),IS(005)
+         94 |     &                      /1,'SPEC HUM ON HYB SFCS',051,109/
+         95 |      DATA IFILV(006),AVBL(006),IQ(006),IS(006)
+         96 |     &                      /1,'REL HUM ON HYB SFCS ',052,109/
+         97 |      DATA IFILV(083),AVBL(083),IQ(083),IS(083)
+         98 |     &                      /1,'MST CNVG ON HYB SFCS',135,109/
+         99 |      DATA IFILV(007),AVBL(007),IQ(007),IS(007)
+        100 |     &                      /0,'U WIND ON HYB SFCS  ',033,109/
+        101 |      DATA IFILV(008),AVBL(008),IQ(008),IS(008)
+        102 |     &                      /0,'V WIND ON HYB SFCS  ',034,109/
+        103 |      DATA IFILV(009),AVBL(009),IQ(009),IS(009)
+        104 |     &                      /1,'OMEGA ON HYB SFCS   ',039,109/
+        105 |      DATA IFILV(010),AVBL(010),IQ(010),IS(010)
+        106 |     &                      /1,'ABS VORT ON HYB SFCS',041,109/
+        107 |      DATA IFILV(084),AVBL(084),IQ(084),IS(084)
+        108 |     &                      /1,'STRMFUNC ON HYB SFCS',035,109/
+        109 |      DATA IFILV(011),AVBL(011),IQ(011),IS(011)
+        110 |     &                      /1,'TRBLNT KE ON HYB SFC',158,109/
+        111 |      DATA IFILV(111),AVBL(111),IQ(111),IS(111)
+        112 |     &                      /1,'RCHDSN NO ON HYB SFC',254,109/
+        113 |      DATA IFILV(146),AVBL(146),IQ(146),IS(146)
+        114 |     &                      /1,'MASTER LENGTH SCALE ',226,109/
+        115 |      DATA IFILV(147),AVBL(147),IQ(147),IS(147)
+        116 |     &                      /1,'ASYMPT MSTR LEN SCL ',227,109/
+        117 |      DATA IFILV(012),AVBL(012),IQ(012),IS(012)
+        118 |     &                      /1,'HEIGHT OF PRESS SFCS',007,100/
+        119 |      DATA IFILV(013),AVBL(013),IQ(013),IS(013)
+        120 |     &                      /1,'TEMP ON PRESS SFCS  ',011,100/
+        121 |      DATA IFILV(014),AVBL(014),IQ(014),IS(014)
+        122 |     &                      /1,'POT TEMP ON P SFCS  ',013,100/
+        123 |      DATA IFILV(015),AVBL(015),IQ(015),IS(015)
+        124 |     &                      /1,'DWPT TEMP ON P SFCS ',017,100/
+        125 |      DATA IFILV(016),AVBL(016),IQ(016),IS(016)
+        126 |     &                      /1,'SPEC HUM ON P SFCS  ',051,100/
+        127 |      DATA IFILV(017),AVBL(017),IQ(017),IS(017)
+        128 |     &                      /1,'REL HUMID ON P SFCS ',052,100/
+        129 |      DATA IFILV(085),AVBL(085),IQ(085),IS(085)
+        130 |     &                      /1,'MST CNVG ON P SFCS  ',135,100/
+        131 |      DATA IFILV(018),AVBL(018),IQ(018),IS(018)
+        132 |     &                      /0,'U WIND ON PRESS SFCS',033,100/
+        133 |      DATA IFILV(019),AVBL(019),IQ(019),IS(019)
+        134 |     &                      /0,'V WIND ON PRESS SFCS',034,100/
+        135 |      DATA IFILV(020),AVBL(020),IQ(020),IS(020)
+        136 |     &                      /1,'OMEGA ON PRESS SFCS ',039,100/
+        137 |      DATA IFILV(021),AVBL(021),IQ(021),IS(021)
+        138 |     &                      /1,'ABS VORT ON P SFCS  ',041,100/
+        139 |      DATA IFILV(086),AVBL(086),IQ(086),IS(086)
+        140 |     &                      /1,'STRMFUNC ON P SFCS  ',035,100/
+        141 |      DATA IFILV(022),AVBL(022),IQ(022),IS(022)
+        142 |     &                      /1,'TRBLNT KE ON P SFCS ',158,100/
+        143 |      DATA IFILV(153),AVBL(153),IQ(153),IS(153)
+        144 |     &                      /1,'CLOUD WATR ON P SFCS',153,100/
+        145 |      DATA IFILV(166),AVBL(166),IQ(166),IS(166)
+        146 |     &                      /1,'CLOUD ICE ON P SFCS ',058,100/
+        147 |      DATA IFILV(023),AVBL(023),IQ(023),IS(023)
+        148 |     &                      /1,'MESINGER MEAN SLP   ',130,102/
+        149 |      DATA IFILV(105),AVBL(105),IQ(105),IS(105)
+        150 |     &                      /1,'SHUELL MEAN SLP     ',002,102/
+        151 |      DATA IFILV(138),AVBL(138),IQ(138),IS(138)
+        152 |     &                      /1,'SHELTER PRESSURE    ',001,105/
+        153 |      DATA IFILV(106),AVBL(106),IQ(106),IS(106)
+        154 |     &                      /1,'SHELTER TEMPERATURE ',011,105/
+        155 |      DATA IFILV(112),AVBL(112),IQ(112),IS(112)
+        156 |     &                      /1,'SHELTER SPEC HUMID  ',051,105/
+        157 |      DATA IFILV(113),AVBL(113),IQ(113),IS(113)
+        158 |     &                      /1,'SHELTER DEWPOINT    ',017,105/
+        159 |      DATA IFILV(114),AVBL(114),IQ(114),IS(114)
+        160 |     &                      /1,'SHELTER REL HUMID   ',052,105/
+        161 |      DATA IFILV(064),AVBL(064),IQ(064),IS(064)
+        162 |     &                      /0,'U WIND AT ANEMOM HT ',033,105/
+        163 |      DATA IFILV(065),AVBL(065),IQ(065),IS(065)
+        164 |     &                      /0,'V WIND AT ANEMOM HT ',034,105/
+        165 |      DATA IFILV(158),AVBL(158),IQ(158),IS(158)
+        166 |     &                      /1,'POT TEMP AT 10 M    ',013,105/
+        167 |      DATA IFILV(159),AVBL(159),IQ(159),IS(159)
+        168 |     &                      /1,'SPEC HUM AT 10 M    ',051,105/
+        169 |      DATA IFILV(024),AVBL(024),IQ(024),IS(024)
+        170 |     &                      /1,'SURFACE PRESSURE    ',001,001/
+        171 |      DATA IFILV(025),AVBL(025),IQ(025),IS(025)
+        172 |     &                      /1,'SURFACE HEIGHT      ',007,001/
+        173 |      DATA IFILV(027),AVBL(027),IQ(027),IS(027)
+        174 |     &                      /1,'SURFACE POT TEMP    ',013,001/
+        175 |      DATA IFILV(028),AVBL(028),IQ(028),IS(028)
+        176 |     &                      /1,'SURFACE SPEC HUMID  ',051,001/
+        177 |      DATA IFILV(029),AVBL(029),IQ(029),IS(029)
+        178 |     &                      /1,'SURFACE DEWPOINT    ',017,001/
+        179 |      DATA IFILV(076),AVBL(076),IQ(076),IS(076)
+        180 |     &                      /1,'SURFACE REL HUMID   ',052,001/
+        181 |      DATA IFILV(026),AVBL(026),IQ(026),IS(026)
+        182 |     &                      /1,'SFC (SKIN) TEMPRATUR',011,001/
+        183 |      DATA IFILV(115),AVBL(115),IQ(115),IS(115)
+        184 |     &                      /1,'BOTTOM SOIL TEMP    ',085,111/
+        185 |      DATA IFILV(116),AVBL(116),IQ(116),IS(116)
+        186 |     &                      /1,'SOIL TEMPERATURE    ',085,112/
+        187 |      DATA IFILV(117),AVBL(117),IQ(117),IS(117)
+        188 |     &                      /1,'SOIL MOISTURE       ',144,112/
+        189 |      DATA IFILV(036),AVBL(036),IQ(036),IS(036)
+        190 |     &                      /1,'TOTAL SOIL MOISTURE ',086,112/
+        191 |      DATA IFILV(118),AVBL(118),IQ(118),IS(118)
+        192 |     &                      /1,'PLANT CANOPY SFC WTR',223,001/
+        193 |      DATA IFILV(119),AVBL(119),IQ(119),IS(119)
+        194 |     &                      /1,'SNOW WATER EQUIVALNT',065,001/
+        195 |      DATA IFILV(120),AVBL(120),IQ(120),IS(120)
+        196 |     &                      /1,'PERCENT SNOW COVER  ',238,001/
+        197 |      DATA IFILV(169),AVBL(169),IQ(169),IS(169)
+        198 |     &                      /1,'SFC EXCHANGE COEF   ',208,001/
+        199 |      DATA IFILV(170),AVBL(170),IQ(170),IS(170)
+        200 |     &                      /1,'GREEN VEG COVER     ',087,001/
+        201 |      DATA IFILV(171),AVBL(171),IQ(171),IS(171)
+        202 |     &                      /1,'SOIL MOISTURE AVAIL ',207,112/
+        203 |      DATA IFILV(152),AVBL(152),IQ(152),IS(152)
+        204 |     &                      /1,'INST GROUND HEAT FLX',155,001/
+        205 |      DATA IFILV(030),AVBL(030),IQ(030),IS(030)
+        206 |     &                      /1,'LIFTED INDEX--SURFCE',131,101/
+        207 |      DATA IFILV(031),AVBL(031),IQ(031),IS(031)
+        208 |     &                      /1,'LIFTED INDEX--BEST  ',132,116/
+        209 |      DATA IFILV(075),AVBL(075),IQ(075),IS(075)
+        210 |     &                      /1,'LIFTED INDEX--BNDLYR',024,116/
+        211 |      DATA IFILV(032),AVBL(032),IQ(032),IS(032)
+        212 |     &                      /1,'CNVCT AVBL POT ENRGY',157,001/
+        213 |      DATA IFILV(107),AVBL(107),IQ(107),IS(107)
+        214 |     &                      /1,'CNVCT INHIBITION    ',156,001/
+        215 |      DATA IFILV(080),AVBL(080),IQ(080),IS(080)
+        216 |     &                      /1,'PRECIPITABLE WATER  ',054,200/
+        217 |      DATA IFILV(162),AVBL(162),IQ(162),IS(162)
+        218 |     &                      /0,'STORM REL HELICITY  ',190,106/
+        219 |      DATA IFILV(163),AVBL(163),IQ(163),IS(163)
+        220 |     &                      /0,'U COMP STORM MOTION ',196,106/
+        221 |      DATA IFILV(164),AVBL(164),IQ(164),IS(164)
+        222 |     &                      /0,'V COMP STORM MOTION ',197,106/
+        223 |      DATA IFILV(087),AVBL(087),IQ(087),IS(087)
+        224 |     &                      /1,'ACM TOTAL PRECIP    ',061,001/
+        225 |      DATA IFILV(033),AVBL(033),IQ(033),IS(033)
+        226 |     &                      /1,'ACM CONVCTIVE PRECIP',063,001/
+        227 |      DATA IFILV(034),AVBL(034),IQ(034),IS(034)
+        228 |     &                      /1,'ACM GRD SCALE PRECIP',062,001/
+        229 |      DATA IFILV(035),AVBL(035),IQ(035),IS(035)
+        230 |     &                      /1,'ACM SNOWFALL        ',065,001/
+        231 |      DATA IFILV(121),AVBL(121),IQ(121),IS(121)
+        232 |     &                      /1,'ACM SNOW TOTAL/MELT ',099,001/
+        233 |      DATA IFILV(122),AVBL(122),IQ(122),IS(122)
+        234 |     &                      /1,'ACM STORM SFC RNOFF ',235,001/
+        235 |      DATA IFILV(123),AVBL(123),IQ(123),IS(123)
+        236 |     &                      /1,'ACM BSFL-GDWR RNOFF ',234,001/
+        237 |      DATA IFILV(160),AVBL(160),IQ(160),IS(160)
+        238 |     &                      /1,'INSTANT PRECIP TYPE ',140,001/
+        239 |      DATA IFILV(167),AVBL(167),IQ(167),IS(167)
+        240 |     &                      /1,'INSTANT PRECIP RATE ',059,001/
+        241 |      DATA IFILV(172),AVBL(172),IQ(172),IS(172)
+        242 |     &                      /1,'FROZEN FRAC CLD SCHM',194,001/
+        243 |      DATA IFILV(124),AVBL(124),IQ(124),IS(124)
+        244 |     &                      /1,'CLD WTR ON HYB SFCS ',153,109/
+        245 |      DATA IFILV(125),AVBL(125),IQ(125),IS(125)
+        246 |     &                      /1,'CLD ICE ON HYB SFCS ',058,109/
+        247 |      DATA IFILV(145),AVBL(145),IQ(145),IS(145)
+        248 |     &                      /1,'CLD FRAC ON HYB SFCS',071,109/
+        249 |      DATA IFILV(037),AVBL(037),IQ(037),IS(037)
+        250 |     &                      /1,'LOW CLOUD FRACTION  ',073,214/
+        251 |      DATA IFILV(038),AVBL(038),IQ(038),IS(038)
+        252 |     &                      /1,'MID CLOUD FRACTION  ',074,224/
+        253 |      DATA IFILV(039),AVBL(039),IQ(039),IS(039)
+        254 |     &                      /1,'HIGH CLOUD FRACTION ',075,234/
+        255 |      DATA IFILV(161),AVBL(161),IQ(161),IS(161)
+        256 |     &                      /1,'TOTAL CLD FRACTION  ',071,200/
+        257 |      DATA IFILV(144),AVBL(144),IQ(144),IS(144)
+        258 |     &                      /1,'AVG TOTAL CLD FRAC  ',071,200/
+        259 |      DATA IFILV(139),AVBL(139),IQ(139),IS(139)
+        260 |     &                      /1,'AVG STRAT CLD FRAC  ',213,200/
+        261 |      DATA IFILV(143),AVBL(143),IQ(143),IS(143)
+        262 |     &                      /1,'AVG CNVCT CLD FRAC  ',072,200/
+        263 |      DATA IFILV(148),AVBL(148),IQ(148),IS(148)
+        264 |     &                      /1,'CLOUD BOT PRESSURE  ',001,002/
+        265 |      DATA IFILV(149),AVBL(149),IQ(149),IS(149)
+        266 |     &                      /1,'CLOUD TOP PRESSURE  ',001,003/
+        267 |      DATA IFILV(109),AVBL(109),IQ(109),IS(109)
+        268 |     &                      /1,'LCL AGL HEIGHT      ',007,005/
+        269 |      DATA IFILV(110),AVBL(110),IQ(110),IS(110)
+        270 |     &                      /1,'LCL PRESSURE        ',001,005/
+        271 |      DATA IFILV(078),AVBL(078),IQ(078),IS(078)
+        272 |     &                      /1,'AVE GRDSCL RN TMPTDY',241,109/
+        273 |      DATA IFILV(079),AVBL(079),IQ(079),IS(079)
+        274 |     &                      /1,'AVE CNVCT RN TMPTDY ',242,109/
+        275 |      DATA IFILV(168),AVBL(168),IQ(168),IS(168)
+        276 |     &                      /1,'CLOUD TOP TEMPS     ',011,003/
+        277 |      DATA IFILV(140),AVBL(140),IQ(140),IS(140)
+        278 |     &                      /1,'RADFLX CNVG TMP TNDY',216,109/
+        279 |      DATA IFILV(040),AVBL(040),IQ(040),IS(040)
+        280 |     &                      /1,'SW RAD TEMP TNDY    ',250,109/
+        281 |      DATA IFILV(041),AVBL(041),IQ(041),IS(041)
+        282 |     &                      /1,'LW RAD TEMP TNDY    ',251,109/
+        283 |      DATA IFILV(141),AVBL(141),IQ(141),IS(141)
+        284 |     &                      /1,'INSTN OUT SFC SW RAD',211,001/
+        285 |      DATA IFILV(142),AVBL(142),IQ(142),IS(142)
+        286 |     &                      /1,'INSTN OUT SFC LW RAD',212,001/
+        287 |      DATA IFILV(126),AVBL(126),IQ(126),IS(126)
+        288 |     &                      /1,'AVE INCMG SFC SW RAD',204,001/
+        289 |      DATA IFILV(127),AVBL(127),IQ(127),IS(127)
+        290 |     &                      /1,'AVE INCMG SFC LW RAD',205,001/
+        291 |      DATA IFILV(128),AVBL(128),IQ(128),IS(128)
+        292 |     &                      /1,'AVE OUTGO SFC SW RAD',211,001/
+        293 |      DATA IFILV(129),AVBL(129),IQ(129),IS(129)
+        294 |     &                      /1,'AVE OUTGO SFC LW RAD',212,001/
+        295 |      DATA IFILV(130),AVBL(130),IQ(130),IS(130)
+        296 |     &                      /1,'AVE OUTGO TOA SW RAD',211,008/
+        297 |      DATA IFILV(131),AVBL(131),IQ(131),IS(131)
+        298 |     &                      /1,'AVE OUTGO TOA LW RAD',212,008/
+        299 |      DATA IFILV(156),AVBL(156),IQ(156),IS(156)
+        300 |     &                      /1,'INSTN INC SFC SW RAD',204,001/
+        301 |      DATA IFILV(157),AVBL(157),IQ(157),IS(157)
+        302 |     &                      /1,'INSTN INC SFC LW RAD',205,001/
+        303 |      DATA IFILV(044),AVBL(044),IQ(044),IS(044)
+        304 |     &                      /1,'ROUGHNESS LENGTH    ',083,001/
+        305 |      DATA IFILV(045),AVBL(045),IQ(045),IS(045)
+        306 |     &                      /1,'FRICTION VELOCITY   ',253,001/
+        307 |      DATA IFILV(132),AVBL(132),IQ(132),IS(132)
+        308 |     &                      /1,'SFC DRAG COEFFICIENT',252,001/
+        309 |      DATA IFILV(133),AVBL(133),IQ(133),IS(133)
+        310 |     &                      /0,'SFC U WIND STRESS   ',124,001/
+        311 |      DATA IFILV(134),AVBL(134),IQ(134),IS(134)
+        312 |     &                      /0,'SFC V WIND STRESS   ',125,001/
+        313 |      DATA IFILV(043),AVBL(043),IQ(043),IS(043)
+        314 |     &                      /1,'AVE SFC SENHEAT FX  ',122,001/
+        315 |      DATA IFILV(135),AVBL(135),IQ(135),IS(135)
+        316 |     &                      /1,'AVE GROUND HEAT FX  ',155,001/
+        317 |      DATA IFILV(136),AVBL(136),IQ(136),IS(136)
+        318 |     &                      /1,'AVE SNO PHSCNG HT FX',229,001/
+        319 |      DATA IFILV(042),AVBL(042),IQ(042),IS(042)
+        320 |     &                      /1,'AVE SFC LATHEAT FX  ',121,001/
+        321 |      DATA IFILV(046),AVBL(046),IQ(046),IS(046)
+        322 |     &                      /1,'AVE SFC MOMENTUM FX ',172,001/
+        323 |      DATA IFILV(047),AVBL(047),IQ(047),IS(047)
+        324 |     &                      /1,'ACC SFC EVAPORATION ',057,001/
+        325 |      DATA IFILV(137),AVBL(137),IQ(137),IS(137)
+        326 |     &                      /1,'ACC POT EVAPORATION ',228,001/
+        327 |      DATA IFILV(154),AVBL(154),IQ(154),IS(154)
+        328 |     &                      /1,'INST SFC SENHEAT FX ',122,001/
+        329 |      DATA IFILV(155),AVBL(155),IQ(155),IS(155)
+        330 |     &                      /1,'INST SFC LATHEAT FX ',121,001/
+        331 |      DATA IFILV(048),AVBL(048),IQ(048),IS(048)
+        332 |     &                      /1,'LATITUDE            ',176,001/
+        333 |      DATA IFILV(049),AVBL(049),IQ(049),IS(049)
+        334 |     &                      /1,'LONGITUDE           ',177,001/
+        335 |      DATA IFILV(050),AVBL(050),IQ(050),IS(050)
+        336 |     &                      /1,'LAND/SEA MASK       ',081,001/
+        337 |      DATA IFILV(051),AVBL(051),IQ(051),IS(051)
+        338 |     &                      /1,'SEA ICE MASK        ',091,001/
+        339 |      DATA IFILV(052),AVBL(052),IQ(052),IS(052)
+        340 |     &                      /1,'MASS POINT ETA SFC  ',173,001/
+        341 |      DATA IFILV(053),AVBL(053),IQ(053),IS(053)
+        342 |     &                      /1,'VEL POINT ETA SFC   ',174,001/
+        343 |      DATA IFILV(150),AVBL(150),IQ(150),IS(150)
+        344 |     &                      /1,'SFC MIDDAY ALBEDO   ',084,001/
+        345 |      DATA IFILV(151),AVBL(151),IQ(151),IS(151)
+        346 |     &                      /1,'SEA SFC TEMPERATURE ',080,001/
+        347 |      DATA IFILV(054),AVBL(054),IQ(054),IS(054)
+        348 |     &                      /1,'PRESS AT TROPOPAUSE ',001,007/
+        349 |      DATA IFILV(055),AVBL(055),IQ(055),IS(055)
+        350 |     &                      /1,'TEMP AT TROPOPAUSE  ',011,007/
+        351 |      DATA IFILV(108),AVBL(108),IQ(108),IS(108)
+        352 |     &                      /1,'POTENTL TEMP AT TROP',013,007/
+        353 |      DATA IFILV(056),AVBL(056),IQ(056),IS(056)
+        354 |     &                      /0,'U WIND AT TROPOPAUSE',033,007/
+        355 |      DATA IFILV(057),AVBL(057),IQ(057),IS(057)
+        356 |     &                      /0,'V WIND AT TROPOPAUSE',034,007/
+        357 |      DATA IFILV(058),AVBL(058),IQ(058),IS(058)
+        358 |     &                      /1,'SHEAR AT TROPOPAUSE ',136,007/
+        359 |      DATA IFILV(059),AVBL(059),IQ(059),IS(059)
+        360 |     &                      /1,'TEMP AT FD HEIGHTS  ',011,103/
+        361 |      DATA IFILV(060),AVBL(060),IQ(060),IS(060)
+        362 |     &                      /0,'U WIND AT FD HEIGHTS',033,103/
+        363 |      DATA IFILV(061),AVBL(061),IQ(061),IS(061)
+        364 |     &                      /0,'V WIND AT FD HEIGHTS',034,103/
+        365 |      DATA IFILV(062),AVBL(062),IQ(062),IS(062)
+        366 |     &                      /1,'HEIGHT OF FRZ LVL   ',007,004/
+        367 |      DATA IFILV(063),AVBL(063),IQ(063),IS(063)
+        368 |     &                      /1,'REL HUMID AT FRZ LVL',052,004/
+        369 |      DATA IFILV(165),AVBL(165),IQ(165),IS(165)
+        370 |     &                      /1,'HIGHEST FREEZE LVL  ',007,204/
+        371 |      DATA IFILV(067),AVBL(067),IQ(067),IS(067)
+        372 |     &                      /1,'PRESS IN BNDRY LYR  ',001,116/
+        373 |      DATA IFILV(068),AVBL(068),IQ(068),IS(068)
+        374 |     &                      /1,'TEMP IN BNDRY LYR   ',011,116/
+        375 |      DATA IFILV(069),AVBL(069),IQ(069),IS(069)
+        376 |     &                      /1,'POT TMP IN BNDRY LYR',013,116/
+        377 |      DATA IFILV(070),AVBL(070),IQ(070),IS(070)
+        378 |     &                      /1,'DWPT IN BNDRY LYR   ',017,116/
+        379 |      DATA IFILV(071),AVBL(071),IQ(071),IS(071)
+        380 |     &                      /1,'SPC HUM IN BNDRY LYR',051,116/
+        381 |      DATA IFILV(072),AVBL(072),IQ(072),IS(072)
+        382 |     &                      /1,'REL HUM IN BNDRY LYR',052,116/
+        383 |      DATA IFILV(088),AVBL(088),IQ(088),IS(088)
+        384 |     &                      /1,'MST CNV IN BNDRY LYR',135,116/
+        385 |      DATA IFILV(089),AVBL(089),IQ(089),IS(089)
+        386 |     &                      /1,'P WATER IN BNDRY LYR',054,116/
+        387 |      DATA IFILV(073),AVBL(073),IQ(073),IS(073)
+        388 |     &                      /0,'U WIND IN BNDRY LYR ',033,116/
+        389 |      DATA IFILV(074),AVBL(074),IQ(074),IS(074)
+        390 |     &                      /0,'V WIND IN BNDRY LYR ',034,116/
+        391 |      DATA IFILV(090),AVBL(090),IQ(090),IS(090)
+        392 |     &                      /1,'OMEGA IN BNDRY LYR  ',039,116/
+        393 |      DATA IFILV(066),AVBL(066),IQ(066),IS(066)
+        394 |     &                      /1,'LFM 0.33-1.00 RELHUM',052,108/
+        395 |      DATA IFILV(081),AVBL(081),IQ(081),IS(081)
+        396 |     &                      /1,'LFM 0.66-1.00 RELHUM',052,108/
+        397 |      DATA IFILV(082),AVBL(082),IQ(082),IS(082)
+        398 |     &                      /1,'LFM 0.33-0.66 RELHUM',052,108/
+        399 |      DATA IFILV(104),AVBL(104),IQ(104),IS(104)
+        400 |     &                      /1,'LFM 0.33-1.00 PWAT  ',054,108/
+        401 |      DATA IFILV(091),AVBL(091),IQ(091),IS(091)
+        402 |     &                      /1,'NGM 0.98230 PRESSURE',001,107/
+        403 |      DATA IFILV(092),AVBL(092),IQ(092),IS(092)
+        404 |     &                      /1,'NGM 0.98230 TMPRATUR',011,107/
+        405 |      DATA IFILV(093),AVBL(093),IQ(093),IS(093)
+        406 |     &                      /1,'NGM 0.98230 SPC HUM ',051,107/
+        407 |      DATA IFILV(094),AVBL(094),IQ(094),IS(094)
+        408 |     &                      /1,'NGM 0.98230 REL HUM ',052,107/
+        409 |      DATA IFILV(095),AVBL(095),IQ(095),IS(095)
+        410 |     &                      /0,'NGM 0.98230 U WIND  ',033,107/
+        411 |      DATA IFILV(096),AVBL(096),IQ(096),IS(096)
+        412 |     &                      /0,'NGM 0.98230 V WIND  ',034,107/
+        413 |      DATA IFILV(097),AVBL(097),IQ(097),IS(097)
+        414 |     &                      /1,'NGM 0.89671 TMPRATUR',011,107/
+        415 |      DATA IFILV(098),AVBL(098),IQ(098),IS(098)
+        416 |     &                      /1,'NGM 0.78483 TMPRATUR',011,107/
+        417 |      DATA IFILV(099),AVBL(099),IQ(099),IS(099)
+        418 |     &                      /1,'NGM 0.47-1.00 RELHUM',052,108/
+        419 |      DATA IFILV(100),AVBL(100),IQ(100),IS(100)
+        420 |     &                      /1,'NGM 0.47-0.96 RELHUM',052,108/
+        421 |      DATA IFILV(101),AVBL(101),IQ(101),IS(101)
+        422 |     &                      /1,'NGM 0.18-0.47 RELHUM',052,108/
+        423 |      DATA IFILV(102),AVBL(102),IQ(102),IS(102)
+        424 |     &                      /1,'NGM 0.84-0.98 RELHUM',052,108/
+        425 |      DATA IFILV(103),AVBL(103),IQ(103),IS(103)
+        426 |     &                      /1,'NGM 0.85-1.00 QCONVG',135,108/
+        427 |      DATA IFILV(173),AVBL(173),IQ(173),IS(173)
+        428 |     &                      /1,'MAX WIND PRESS LEVEL',001,006/
+        429 |      DATA IFILV(174),AVBL(174),IQ(174),IS(174)
+        430 |     &                      /1,'MAX WIND HGHT LEVEL ',007,006/
+        431 |      DATA IFILV(175),AVBL(175),IQ(175),IS(175)
+        432 |     &                      /0,'U COMP MAX WIND     ',033,006/
+        433 |      DATA IFILV(176),AVBL(176),IQ(176),IS(176)
+        434 |     &                      /0,'V COMP MAX WIND     ',034,006/
+        435 |      DATA IFILV(177),AVBL(177),IQ(177),IS(177)
+        436 |     &                      /1,'HEIGHT AT TROPOPAUSE',007,007/
+        437 |      DATA IFILV(178),AVBL(178),IQ(178),IS(178)
+        438 |     &                      /1,'CLOUD BOTTOM HEIGHT ',007,002/
+        439 |      DATA IFILV(179),AVBL(179),IQ(179),IS(179)
+        440 |     &                      /1,'CLOUD TOP HEIGHT    ',007,003/
+        441 |      DATA IFILV(180),AVBL(180),IQ(180),IS(180)
+        442 |     &                      /1,'VISIBILITY          ',020,001/
+        443 |C
+        444 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+avbl                             Common member, Character(20) (1:250), Offset: 74130, Alignment: half word
+                                 5-2.20$  5-12.34$  0-83.23*  0-85.23*  0-87.23*  0-89.23*  0-91.23*  0-93.23*  0-95.23*  0-97.23*
+                                 0-99.23*  0-101.23*  0-103.23*  0-105.23*  0-107.23*  0-109.23*  0-111.23*  0-113.23*  0-115.23*
+                                 0-117.23*  0-119.23*  0-121.23*  0-123.23*  0-125.23*  0-127.23*  0-129.23*  0-131.23*  0-133.23*
+                                 0-135.23*  0-137.23*  0-139.23*  0-141.23*  0-143.23*  0-145.23*  0-147.23*  0-149.23*  0-151.23*
+                                 0-153.23*  0-155.23*  0-157.23*  0-159.23*  0-161.23*  0-163.23*  0-165.23*  0-167.23*  0-169.23*
+                                 0-171.23*  0-173.23*  0-175.23*  0-177.23*  0-179.23*  0-181.23*  0-183.23*  0-185.23*  0-187.23*
+                                 0-189.23*  0-191.23*  0-193.23*  0-195.23*  0-197.23*  0-199.23*  0-201.23*  0-203.23*  0-205.23*
+                                 0-207.23*  0-209.23*  0-211.23*  0-213.23*  0-215.23*  0-217.23*  0-219.23*  0-221.23*  0-223.23*
+                                 0-225.23*  0-227.23*  0-229.23*  0-231.23*  0-233.23*  0-235.23*  0-237.23*  0-239.23*  0-241.23*
+                                 0-243.23*  0-245.23*  0-247.23*  0-249.23*  0-251.23*  0-253.23*  0-255.23*  0-257.23*  0-259.23*
+                                 0-261.23*  0-263.23*  0-265.23*  0-267.23*  0-269.23*  0-271.23*  0-273.23*  0-275.23*  0-277.23*
+                                 0-279.23*  0-281.23*  0-283.23*  0-285.23*  0-287.23*  0-289.23*  0-291.23*  0-293.23*  0-295.23*
+                                 0-297.23*  0-299.23*  0-301.23*  0-303.23*  0-305.23*  0-307.23*  0-309.23*  0-311.23*  0-313.23*
+                                 0-315.23*  0-317.23*  0-319.23*  0-321.23*  0-323.23*  0-325.23*  0-327.23*  0-329.23*  0-331.23*
+                                 0-333.23*  0-335.23*  0-337.23*  0-339.23*  0-341.23*  0-343.23*  0-345.23*  0-347.23*  0-349.23*
+                                 0-351.23*  0-353.23*  0-355.23*  0-357.23*  0-359.23*  0-361.23*  0-363.23*  0-365.23*  0-367.23*
+                                 0-369.23*  0-371.23*  0-373.23*  0-375.23*  0-377.23*  0-379.23*  0-381.23*  0-383.23*  0-385.23*
+                                 0-387.23*  0-389.23*  0-391.23*  0-393.23*  0-395.23*  0-397.23*  0-399.23*  0-401.23*  0-403.23*
+                                 0-405.23*  0-407.23*  0-409.23*  0-411.23*  0-413.23*  0-415.23*  0-417.23*  0-419.23*  0-421.23*
+                                 0-423.23*  0-425.23*  0-427.23*  0-429.23*  0-431.23*  0-433.23*  0-435.23*  0-437.23*  0-439.23*
+                                 0-441.23*
+ 
+datset                           Common member, Character(6), Offset: 69124, Alignment: full word
+                                 5-3.19$  5-12.21$
+ 
+dec                              Common member, Real(4) (1:250), Offset: 1016, Alignment: double word
+                                 5-8.46$
+ 
+field                            Common member, Character(20) (1:250), Offset: 69130, Alignment: half word
+                                 5-2.32$  5-12.28$
+ 
+ibessl                           Common member, Integer(4), Offset: 4, Alignment: full word
+                                 3-2.30$  0-50.12*
+ 
+id                               Common member, Integer(4) (1:25), Offset: 69016, Alignment: double word
+                                 5-11.21$
+ 
+ident                            Common member, Integer(4) (1:250), Offset: 67016, Alignment: double word
+                                 5-10.40$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+ifilv                            Common member, Integer(4) (1:250), Offset: 68016, Alignment: quadruple word
+                                 5-11.8$  0-83.12*  0-85.12*  0-87.12*  0-89.12*  0-91.12*  0-93.12*  0-95.12*  0-97.12*  0-99.12*
+                                 0-101.12*  0-103.12*  0-105.12*  0-107.12*  0-109.12*  0-111.12*  0-113.12*  0-115.12*  0-117.12*
+                                 0-119.12*  0-121.12*  0-123.12*  0-125.12*  0-127.12*  0-129.12*  0-131.12*  0-133.12*  0-135.12*
+                                 0-137.12*  0-139.12*  0-141.12*  0-143.12*  0-145.12*  0-147.12*  0-149.12*  0-151.12*  0-153.12*
+                                 0-155.12*  0-157.12*  0-159.12*  0-161.12*  0-163.12*  0-165.12*  0-167.12*  0-169.12*  0-171.12*
+                                 0-173.12*  0-175.12*  0-177.12*  0-179.12*  0-181.12*  0-183.12*  0-185.12*  0-187.12*  0-189.12*
+                                 0-191.12*  0-193.12*  0-195.12*  0-197.12*  0-199.12*  0-201.12*  0-203.12*  0-205.12*  0-207.12*
+                                 0-209.12*  0-211.12*  0-213.12*  0-215.12*  0-217.12*  0-219.12*  0-221.12*  0-223.12*  0-225.12*
+                                 0-227.12*  0-229.12*  0-231.12*  0-233.12*  0-235.12*  0-237.12*  0-239.12*  0-241.12*  0-243.12*
+                                 0-245.12*  0-247.12*  0-249.12*  0-251.12*  0-253.12*  0-255.12*  0-257.12*  0-259.12*  0-261.12*
+                                 0-263.12*  0-265.12*  0-267.12*  0-269.12*  0-271.12*  0-273.12*  0-275.12*  0-277.12*  0-279.12*
+                                 0-281.12*  0-283.12*  0-285.12*  0-287.12*  0-289.12*  0-291.12*  0-293.12*  0-295.12*  0-297.12*
+                                 0-299.12*  0-301.12*  0-303.12*  0-305.12*  0-307.12*  0-309.12*  0-311.12*  0-313.12*  0-315.12*
+                                 0-317.12*  0-319.12*  0-321.12*  0-323.12*  0-325.12*  0-327.12*  0-329.12*  0-331.12*  0-333.12*
+                                 0-335.12*  0-337.12*  0-339.12*  0-341.12*  0-343.12*  0-345.12*  0-347.12*  0-349.12*  0-351.12*
+                                 0-353.12*  0-355.12*  0-357.12*  0-359.12*  0-361.12*  0-363.12*  0-365.12*  0-367.12*  0-369.12*
+                                 0-371.12*  0-373.12*  0-375.12*  0-377.12*  0-379.12*  0-381.12*  0-383.12*  0-385.12*  0-387.12*
+                                 0-389.12*  0-391.12*  0-393.12*  0-395.12*  0-397.12*  0-399.12*  0-401.12*  0-403.12*  0-405.12*
+                                 0-407.12*  0-409.12*  0-411.12*  0-413.12*  0-415.12*  0-417.12*  0-419.12*  0-421.12*  0-423.12*
+                                 0-425.12*  0-427.12*  0-429.12*  0-431.12*  0-433.12*  0-435.12*  0-437.12*  0-439.12*  0-441.12*
+ 
+iflag                            Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 3-2.47$  0-53.12*
+ 
+iget                             Common member, Integer(4) (1:250), Offset: 16, Alignment: quadruple word
+                                 5-8.34$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  1-11.23  1-11.34  1-14.35  2-3.21
+ 
+imx                              Parameter, Integer(4)
+                                 2-3.17$
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+ioffs                            Common member, Integer(4), Offset: 12, Alignment: full word
+                                 3-2.41$  0-52.12*
+ 
+iounit                           Common Block, Alignment: double word
+                                 4-4.15$
+ 
+ioutyp                           Common member, Integer(4), Offset: 4, Alignment: full word
+                                 5-8.15$
+ 
+iq                               Common member, Integer(4) (1:250), Offset: 2016, Alignment: quadruple word
+                                 5-9.8$  0-83.33*  0-85.33*  0-87.33*  0-89.33*  0-91.33*  0-93.33*  0-95.33*  0-97.33*  0-99.33*
+                                 0-101.33*  0-103.33*  0-105.33*  0-107.33*  0-109.33*  0-111.33*  0-113.33*  0-115.33*  0-117.33*
+                                 0-119.33*  0-121.33*  0-123.33*  0-125.33*  0-127.33*  0-129.33*  0-131.33*  0-133.33*  0-135.33*
+                                 0-137.33*  0-139.33*  0-141.33*  0-143.33*  0-145.33*  0-147.33*  0-149.33*  0-151.33*  0-153.33*
+                                 0-155.33*  0-157.33*  0-159.33*  0-161.33*  0-163.33*  0-165.33*  0-167.33*  0-169.33*  0-171.33*
+                                 0-173.33*  0-175.33*  0-177.33*  0-179.33*  0-181.33*  0-183.33*  0-185.33*  0-187.33*  0-189.33*
+                                 0-191.33*  0-193.33*  0-195.33*  0-197.33*  0-199.33*  0-201.33*  0-203.33*  0-205.33*  0-207.33*
+                                 0-209.33*  0-211.33*  0-213.33*  0-215.33*  0-217.33*  0-219.33*  0-221.33*  0-223.33*  0-225.33*
+                                 0-227.33*  0-229.33*  0-231.33*  0-233.33*  0-235.33*  0-237.33*  0-239.33*  0-241.33*  0-243.33*
+                                 0-245.33*  0-247.33*  0-249.33*  0-251.33*  0-253.33*  0-255.33*  0-257.33*  0-259.33*  0-261.33*
+                                 0-263.33*  0-265.33*  0-267.33*  0-269.33*  0-271.33*  0-273.33*  0-275.33*  0-277.33*  0-279.33*
+                                 0-281.33*  0-283.33*  0-285.33*  0-287.33*  0-289.33*  0-291.33*  0-293.33*  0-295.33*  0-297.33*
+                                 0-299.33*  0-301.33*  0-303.33*  0-305.33*  0-307.33*  0-309.33*  0-311.33*  0-313.33*  0-315.33*
+                                 0-317.33*  0-319.33*  0-321.33*  0-323.33*  0-325.33*  0-327.33*  0-329.33*  0-331.33*  0-333.33*
+                                 0-335.33*  0-337.33*  0-339.33*  0-341.33*  0-343.33*  0-345.33*  0-347.33*  0-349.33*  0-351.33*
+                                 0-353.33*  0-355.33*  0-357.33*  0-359.33*  0-361.33*  0-363.33*  0-365.33*  0-367.33*  0-369.33*
+                                 0-371.33*  0-373.33*  0-375.33*  0-377.33*  0-379.33*  0-381.33*  0-383.33*  0-385.33*  0-387.33*
+                                 0-389.33*  0-391.33*  0-393.33*  0-395.33*  0-397.33*  0-399.33*  0-401.33*  0-403.33*  0-405.33*
+                                 0-407.33*  0-409.33*  0-411.33*  0-413.33*  0-415.33*  0-417.33*  0-419.33*  0-421.33*  0-423.33*
+                                 0-425.33*  0-427.33*  0-429.33*  0-431.33*  0-433.33*  0-435.33*  0-437.33*  0-439.33*  0-441.33*
+ 
+is                               Common member, Integer(4) (1:250), Offset: 3016, Alignment: double word
+                                 5-9.18$  0-83.41*  0-85.41*  0-87.41*  0-89.41*  0-91.41*  0-93.41*  0-95.41*  0-97.41*  0-99.41*
+                                 0-101.41*  0-103.41*  0-105.41*  0-107.41*  0-109.41*  0-111.41*  0-113.41*  0-115.41*  0-117.41*
+                                 0-119.41*  0-121.41*  0-123.41*  0-125.41*  0-127.41*  0-129.41*  0-131.41*  0-133.41*  0-135.41*
+                                 0-137.41*  0-139.41*  0-141.41*  0-143.41*  0-145.41*  0-147.41*  0-149.41*  0-151.41*  0-153.41*
+                                 0-155.41*  0-157.41*  0-159.41*  0-161.41*  0-163.41*  0-165.41*  0-167.41*  0-169.41*  0-171.41*
+                                 0-173.41*  0-175.41*  0-177.41*  0-179.41*  0-181.41*  0-183.41*  0-185.41*  0-187.41*  0-189.41*
+                                 0-191.41*  0-193.41*  0-195.41*  0-197.41*  0-199.41*  0-201.41*  0-203.41*  0-205.41*  0-207.41*
+                                 0-209.41*  0-211.41*  0-213.41*  0-215.41*  0-217.41*  0-219.41*  0-221.41*  0-223.41*  0-225.41*
+                                 0-227.41*  0-229.41*  0-231.41*  0-233.41*  0-235.41*  0-237.41*  0-239.41*  0-241.41*  0-243.41*
+                                 0-245.41*  0-247.41*  0-249.41*  0-251.41*  0-253.41*  0-255.41*  0-257.41*  0-259.41*  0-261.41*
+                                 0-263.41*  0-265.41*  0-267.41*  0-269.41*  0-271.41*  0-273.41*  0-275.41*  0-277.41*  0-279.41*
+                                 0-281.41*  0-283.41*  0-285.41*  0-287.41*  0-289.41*  0-291.41*  0-293.41*  0-295.41*  0-297.41*
+                                 0-299.41*  0-301.41*  0-303.41*  0-305.41*  0-307.41*  0-309.41*  0-311.41*  0-313.41*  0-315.41*
+                                 0-317.41*  0-319.41*  0-321.41*  0-323.41*  0-325.41*  0-327.41*  0-329.41*  0-331.41*  0-333.41*
+                                 0-335.41*  0-337.41*  0-339.41*  0-341.41*  0-343.41*  0-345.41*  0-347.41*  0-349.41*  0-351.41*
+                                 0-353.41*  0-355.41*  0-357.41*  0-359.41*  0-361.41*  0-363.41*  0-365.41*  0-367.41*  0-369.41*
+                                 0-371.41*  0-373.41*  0-375.41*  0-377.41*  0-379.41*  0-381.41*  0-383.41*  0-385.41*  0-387.41*
+                                 0-389.41*  0-391.41*  0-393.41*  0-395.41*  0-397.41*  0-399.41*  0-401.41*  0-403.41*  0-405.41*
+                                 0-407.41*  0-409.41*  0-411.41*  0-413.41*  0-415.41*  0-417.41*  0-419.41*  0-421.41*  0-423.41*
+                                 0-425.41*  0-427.41*  0-429.41*  0-431.41*  0-433.41*  0-435.41*  0-437.41*  0-439.41*  0-441.41*
+ 
+ismful                           Common member, Integer(4) (1:250), Offset: 5016, Alignment: double word
+                                 5-9.42$
+ 
+ismout                           Common member, Integer(4) (1:250), Offset: 6016, Alignment: quadruple word
+                                 5-10.8$
+ 
+ismstg                           Common member, Integer(4) (1:250), Offset: 4016, Alignment: quadruple word
+                                 5-9.28$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  1-12.23  1-12.34  1-15.35  2-3.28
+ 
+jmx                              Parameter, Integer(4)
+                                 2-3.24$
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+kgtype                           Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 5-8.8$
+ 
+ksb                              Common member, Integer(4), Offset: 8, Alignment: double word
+                                 3-2.37$  0-51.12*
+ 
+lcntrl                           Common member, Integer(4), Offset: 4, Alignment: full word
+                                 4-5.16$  0-58.19*
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  2-3.47
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+lunco                            Common member, Integer(4), Offset: 8, Alignment: double word
+                                 4-5.24$  0-59.12*
+ 
+lunll                            Common member, Integer(4), Offset: 12, Alignment: full word
+                                 4-5.31$  0-59.19*
+ 
+lunout                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 4-5.38$  0-60.12*
+ 
+lvls                             Common member, Integer(4) (1:60, 1:250), Offset: 7016, Alignment: double word
+                                 5-10.22$
+ 
+mxfld                            Parameter, Integer(4)
+                                 2-3.31$  5-2.25  5-2.38  5-8.39  5-8.50  5-9.11  5-9.21  5-9.35  5-9.49  5-10.15  5-10.33  5-10.46
+                                 5-11.14
+ 
+mxlvl                            Parameter, Integer(4)
+                                 2-3.41$  5-10.27
+ 
+nfld                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 5-8.29$
+ 
+options                          Common Block, Alignment: double word
+                                 3-2.15$
+ 
+postdata                         Block Data
+                                 0-1.18$
+ 
+rite2                            Common member, Logical(4), Offset: 69120, Alignment: quadruple word
+                                 5-5.22$  5-12.15$  0-56.19*
+ 
+ritehd                           Common member, Logical(4), Offset: 69116, Alignment: full word
+                                 5-5.15$  5-12.8$  0-56.12*
+ 
+rqstfld                          Common Block, Alignment: double word
+                                 5-7.15$
+ 
+satdel                           Common member, Real(4), Offset: 20, Alignment: full word
+                                 3-2.53$  0-54.12*
+ 
+spval                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 3-2.24$  0-49.12*
+ 
+stdout                           Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 4-2.15$  4-5.8$  0-58.12*
+ 
+svalue                           Common member, Real(4), Offset: 8, Alignment: double word
+                                 5-8.22$
+ 
+** postdata   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    POSTDATA.f                  12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0       3
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmout
+                                      12/18/08   11:40:52      0       4
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/OPTIONS.comm
+                                      12/18/08   11:40:51      0       5
+     4    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/IOUNIT.comm
+                                      12/18/08   11:40:51      0       6
+     5    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/RQSTFLD.comm
+                                      12/18/08   11:40:51      0       7
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     484
+1501-510  Compilation successful for file POSTDATA.f.
+1501-543  Object file created.

@@ -1,0 +1,261 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/FILTER.f 12/22/08 15:45:50
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE FILTER (IMX,JMX,ZI,IPASS)
+          2 |C
+          3 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          4 |C                .      .    .                                       .
+          5 |C SUBPROGRAM:    FILTER      FILTERS THE ARRAY ZI
+          6 |C   PRGMMR: DIMEGO           ORG: W/NP22     DATE: 86-07-18
+          7 |C
+          8 |C ABSTRACT: FILTERS AN ARRAY USING A 25PT BLECK FILTER IN THE
+          9 |C   INTERIOR OF THE DOMAIN
+         10 |C
+         11 |C PROGRAM HISTORY LOG:
+         12 |C   86-07-18  G DIMEGO
+         13 |C   88-09-23  B SCHMIDT ADDED THE DOCBLOCK
+         14 |C   90-11-27  G DIMEGO LEFT Z AS INTERNAL WORK ARRAY ON CRAY
+         15 |C   93-06-21  R TREADON STREAMLINED CODE
+         16 |C
+         17 |C USAGE:    CALL FILTER (IMX, JMX, ZI, IPASS)
+         18 |C   INPUT ARGUMENT LIST:
+         19 |C     ZI       - ARRAY CONTAINING THE ARRAY TO BE FILTERED
+         20 |C     IMX      - I DIMENSION OF ARRAYS ZI AND Z
+         21 |C     JMX      - J DIMENSION OF ARRAYS ZI AND Z
+         22 |C     IPASS    - NUMBER OF PASSES THROUGH THE FILTER
+         23 |C
+         24 |C   OUTPUT ARGUMENT LIST:
+         25 |C     ZI       - ARRAY CONTAINING THE FILTERED FIELD
+         26 |C
+         27 |C ATTRIBUTES:
+         28 |C   LANGUAGE: STANDARD FORTRAN
+         29 |C   MACHINE:
+         30 |C
+         31 |C$$$
+         32 |      DIMENSION ZI(IMX,JMX),Z(IMX,JMX)
+         33 |      LOGICAL BND,FST,SMTH
+         34 |C
+         35 |      LI=IMX
+         36 |      LJ=JMX
+         37 |      I1 = 1
+         38 |      J1 = 1
+         39 |      I2 = I1 + 1
+         40 |      J2 = J1 + 1
+         41 |      I3 = I2 + 1
+         42 |      LI1 = LI - 1
+         43 |      LJ1 = LJ - 1
+         44 |      LI2 = LI - 2
+         45 |      LJ3 = LJ - 3
+         46 |      LI4 = LI - 4
+         47 |      LJ4 = LJ - 4
+         48 |      LI5 = LI - 5
+         49 |      IPC = IPASS
+         50 |C
+         51 |      DO 105 IP = 1,IPC
+         52 |C **  FILTER REST OF INTERIOR POINTS   25-PT BLECK FILTER
+         53 |!$omp  parallel do
+         54 |!$omp& private(i,ii,im1,im2,ip1,ip2,j,jm1,jm2,jp1,jp2)
+         55 |         DO 102 JJ = J1,LJ4
+         56 |            JM2=JJ
+         57 |            JM1=JJ+1
+         58 |            J  =JJ+2
+         59 |            JP1=JJ+3
+         60 |            JP2=JJ+4
+         61 |            DO 101 II = I1,LI4
+         62 |               IM2=II
+         63 |               IM1=II+1
+         64 |               I  =II+2
+         65 |               IP1=II+3
+         66 |               IP2=II+4
+         67 |               Z(I,J) = 0.279372 * ZI(I,J)
+         68 |     +   +0.171943*((ZI(IM1,J  )+ZI(I  ,JM1))+(ZI(IP1,J  )+ZI(I  ,JP1)))
+         69 |     +   -0.006918*((ZI(IM2,J  )+ZI(I  ,JM2))+(ZI(IP2,J  )+ZI(I  ,JP2)))
+         70 |     +   +0.077458*((ZI(IM1,JM1)+ZI(IP1,JP1))+(ZI(IP1,JM1)+ZI(IM1,JP1)))
+         71 |     +   -0.024693*((ZI(IM1,JM2)+ZI(IP1,JM2))+(ZI(IM2,JM1)+ZI(IP2,JM1))
+         72 |     +             +(ZI(IM2,JP1)+ZI(IP2,JP1))+(ZI(IM1,JP2)+ZI(IP1,JP2)))
+         73 |     +   -0.01294 *((ZI(IM2,JM2)+ZI(IP2,JM2))+(ZI(IM2,JP2)+ZI(IP2,JP2)))
+         74 |  101       CONTINUE
+         75 |  102    CONTINUE
+         76 |C
+         77 |!$omp  parallel do
+         78 |!$omp& private(i,j)
+         79 |         DO 104 JJ= J1,LJ4
+         80 |            J = JJ + 2
+         81 |            DO 103 II= I1,LI4
+         82 |               I = II + 2
+         83 |               ZI(I,J) = Z(I,J)
+         84 | 103        CONTINUE
+         85 | 104     CONTINUE
+         86 |C
+         87 | 105  CONTINUE
+         88 |      RETURN
+         89 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+bnd                              Static, Logical(4), Offset: 0, Alignment: full word
+                                 0-33.15$
+ 
+filter                           Subroutine
+                                 0-1.18$
+ 
+fst                              Static, Logical(4), Offset: 0, Alignment: full word
+                                 0-33.19$
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-64.16@  0-67.18  0-67.39  0-68.37  0-68.63  0-69.37  0-69.63  0-82.16@  0-83.19  0-83.28
+ 
+i1                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-37.7@  0-39.12  0-61.25  0-81.24
+ 
+i2                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-39.7@  0-41.12
+ 
+i3                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-41.7@
+ 
+ii                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-61.20@  0-62.20  0-63.20  0-64.20  0-65.20  0-66.20  0-81.20@  0-82.20
+ 
+im1                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-63.16@  0-68.25  0-70.25  0-70.63  0-71.25  0-72.51
+ 
+im2                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-62.16@  0-69.25  0-71.51  0-72.25  0-73.25  0-73.51
+ 
+imx                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.26  0-32.20  0-32.20  0-32.31  0-32.31  0-35.10
+ 
+ip                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-51.14@
+ 
+ip1                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-65.16@  0-68.51  0-70.37  0-70.51  0-71.37  0-72.63
+ 
+ip2                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-66.16@  0-69.51  0-71.63  0-72.37  0-73.37  0-73.63
+ 
+ipass                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.37  0-49.13
+ 
+ipc                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-49.7@  0-51.21
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-58.13@  0-67.20  0-67.41  0-68.29  0-68.55  0-69.29  0-69.55  0-80.13@  0-83.21  0-83.30
+ 
+j1                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-38.7@  0-40.12  0-55.22  0-79.21
+ 
+j2                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-40.7@
+ 
+jj                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-55.17@  0-56.17  0-57.17  0-58.17  0-59.17  0-60.17  0-79.17@  0-80.17
+ 
+jm1                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-57.13@  0-68.41  0-70.29  0-70.55  0-71.55  0-71.67
+ 
+jm2                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-56.13@  0-69.41  0-71.29  0-71.41  0-73.29  0-73.41
+ 
+jmx                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.30  0-32.24  0-32.24  0-32.35  0-32.35  0-36.10
+ 
+jp1                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-59.13@  0-68.67  0-70.41  0-70.67  0-72.29  0-72.41
+ 
+jp2                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-60.13@  0-69.67  0-72.55  0-72.67  0-73.55  0-73.67
+ 
+li                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-35.7@  0-42.13  0-44.13  0-46.13  0-48.13
+ 
+li1                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-42.7@
+ 
+li2                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-44.7@
+ 
+li4                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-46.7@  0-61.28  0-81.27
+ 
+li5                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-48.7@
+ 
+lj                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-36.7@  0-43.13  0-45.13  0-47.13
+ 
+lj1                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-43.7@
+ 
+lj3                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-45.7@
+ 
+lj4                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-47.7@  0-55.25  0-79.24
+ 
+smth                             Static, Logical(4), Offset: 0, Alignment: full word
+                                 0-33.23$
+ 
+z                                Controlled Automatic, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-32.29$  0-67.16@  0-83.26
+ 
+zi                               Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-32.17$  0-1.34  0-67.36  0-68.22  0-68.34  0-68.48  0-68.60  0-69.22  0-69.34  0-69.48  0-69.60
+                                 0-70.22  0-70.34  0-70.48  0-70.60  0-71.22  0-71.34  0-71.48  0-71.60  0-72.22  0-72.34  0-72.48
+                                 0-72.60  0-73.22  0-73.34  0-73.48  0-73.60  0-83.16@
+ 
+** filter   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    FILTER.f                    12/18/08   11:40:51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................      89
+1501-510  Compilation successful for file FILTER.f.
+1501-543  Object file created.

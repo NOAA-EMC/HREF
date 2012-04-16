@@ -1,0 +1,382 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/GET_BITS.f 12/22/08 15:45:52
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE GET_BITS(IBM,SGDS,LEN,MG,G,ISCALE,GROUND,
+          2 |     &                    GMIN,GMAX,NBIT)
+          3 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          4 |C
+          5 |C SUBPROGRAM:    GET_BITS      COMPUTE NUMBER OF BITS AND ROUND FIELD.
+          6 |C   PRGMMR: IREDELL          ORG: W/NP23     DATE: 92-10-31
+          7 |C
+          8 |C ABSTRACT: THE NUMBER OF BITS REQUIRED TO PACK A GIVEN FIELD
+          9 |C   AT A PARTICULAR DECIMAL SCALING IS COMPUTED USING THE FIELD RANGE.
+         10 |C   THE FIELD IS ROUNDED OFF TO THE DECIMAL SCALING FOR PACKING.
+         11 |C   THE MINIMUM AND MAXIMUM ROUNDED FIELD VALUES ARE ALSO RETURNED.
+         12 |C   GRIB BITMAP MASKING FOR VALID DATA IS OPTIONALLY USED.
+         13 |C
+         14 |C PROGRAM HISTORY LOG:
+         15 |C   92-10-31  IREDELL
+         16 |C   95-04-14  BALDWIN - MODIFY FOLLOWING KEITH BRILL'S CODE
+         17 |C                       TO USE SIG DIGITS TO COMPUTE DEC SCALE
+         18 |C
+         19 |C USAGE:   CALL GET_BITS(IBM,ISGDS,LEN,MG,G,ISCALE,GROUND,GMIN,GMAX,NBIT)
+         20 |C   INPUT ARGUMENT LIST:
+         21 |C     IBM      - INTEGER BITMAP FLAG (=0 FOR NO BITMAP)
+         22 |C     SGDS     - MAXIMUM SIGNIFICANT DIGITS TO KEEP
+         23 |C                (E.G. SGDS=3.0 KEEPS 3 SIGNIFICANT DIGITS)
+         24 |C                OR BINARY PRECISION IF <0
+         25 |C                (E.G. SGDS=-2.0 KEEPS FIELD TO NEAREST 1/4
+         26 |C                           -3.0 "                    " 1/8
+         27 |C                         2**SGDS PRECISION)
+         28 |C     LEN      - INTEGER LENGTH OF THE FIELD AND BITMAP
+         29 |C     MG       - INTEGER (LEN) BITMAP IF IBM=1 (0 TO SKIP, 1 TO KEEP)
+         30 |C     G        - REAL (LEN) FIELD
+         31 |C
+         32 |C   OUTPUT ARGUMENT LIST:
+         33 |C     ISCALE   - INTEGER DECIMAL SCALING
+         34 |C     GROUND   - REAL (LEN) FIELD ROUNDED TO DECIMAL SCALING
+         35 |C     GMIN     - REAL MINIMUM VALID ROUNDED FIELD VALUE
+         36 |C     GMAX     - REAL MAXIMUM VALID ROUNDED FIELD VALUE
+         37 |C     NBIT     - INTEGER NUMBER OF BITS TO PACK
+         38 |C
+         39 |C SUBPROGRAMS CALLED:
+         40 |C   ISRCHNE  - FIND FIRST VALUE IN AN ARRAY NOT EQUAL TO TARGET VALUE
+         41 |C
+         42 |C ATTRIBUTES:
+         43 |C   LANGUAGE: FORTRAN
+         44 |C
+         45 |C$$$
+         46 |      DIMENSION MG(LEN),G(LEN),GROUND(LEN)
+         47 |C - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         48 |C  DETERMINE EXTREMES WHERE BITMAP IS ON
+         49 |C
+         50 |      IF(IBM.EQ.0) THEN
+         51 |        GMAX=G(1)
+         52 |        GMIN=G(1)
+         53 |        DO I=2,LEN
+         54 |          GMAX=MAX(GMAX,G(I))
+         55 |          GMIN=MIN(GMIN,G(I))
+         56 |        ENDDO
+         57 |      ELSE
+         58 |        I1=0
+         59 |        DO I=1,LEN
+         60 |          IF(MG(I).NE.0.AND.I1.EQ.0) I1=I
+         61 |        ENDDO
+         62 |        IF(I1.GT.0.AND.I1.LE.LEN) THEN
+         63 |          GMAX=G(I1)
+         64 |          GMIN=G(I1)
+         65 |          DO I=I1+1,LEN
+         66 |            IF(MG(I).NE.0) THEN
+         67 |              GMAX=MAX(GMAX,G(I))
+         68 |              GMIN=MIN(GMIN,G(I))
+         69 |            ENDIF
+         70 |          ENDDO
+         71 |        ELSE
+         72 |          GMAX=0.
+         73 |          GMIN=0.
+         74 |        ENDIF
+         75 |      ENDIF
+         76 |C
+         77 |C
+         78 |C
+         79 |      CALL FNDBIT  ( GMIN, GMAX, SGDS, NBIT, ISCALE, IRETT)
+         80 |C - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         81 |      RETURN
+         82 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+fndbit                           External Subroutine
+                                 0-79.12
+ 
+g                                Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-46.25$  0-1.43  0-51.14  0-52.14  0-54.25  0-55.25  0-63.16  0-64.16  0-67.29  0-68.29
+ 
+get_bits                         Subroutine
+                                 0-1.18$
+ 
+gmax                             Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.32  0-51.9@  0-54.11@  0-54.20  0-63.11@  0-67.15@  0-67.24  0-72.11@  0-79.28
+ 
+gmin                             Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.27  0-52.9@  0-55.11@  0-55.20  0-64.11@  0-68.15@  0-68.24  0-73.11@  0-79.22
+ 
+ground                           Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-46.32$  0-1.52
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-53.12@  0-54.27  0-55.27  0-59.12@  0-60.17  0-60.41  0-65.14@  0-66.19  0-67.31  0-68.31
+ 
+i1                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-58.9@  0-60.29  0-60.38@  0-62.12  0-62.24  0-63.18  0-64.18  0-65.16
+ 
+ibm                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.27  0-50.10
+ 
+irett                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-79.54
+ 
+iscale                           Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.45  0-79.46
+ 
+len                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.36  0-46.20  0-46.20  0-46.27  0-46.27  0-46.39  0-46.39  0-53.16  0-59.16  0-62.30  0-65.21
+ 
+max                              Pure Intrinsic
+                                 0-54.16  0-67.20
+ 
+mg                               Reference argument, Integer(4) (1:?), Offset: 0, Alignment: full word
+                                 0-46.17$  0-1.40  0-60.14  0-66.16
+ 
+min                              Pure Intrinsic
+                                 0-55.16  0-68.20
+ 
+nbit                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-2.37  0-79.40
+ 
+sgds                             Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-1.31  0-79.34
+ 
+** get_bits   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+         83 |	SUBROUTINE FNDBIT  ( rmin, rmax, rdb, nmbts, iscale, iret )
+         84 |C************************************************************************
+         85 |C* FNDBIT								*
+         86 |C*									*
+         87 |C* This subroutine computes the number of packing bits given the	*
+         88 |C* maximum number of significant digits to preserve or the binary	*
+         89 |C* precision to store the data.  The binary precision is given as a	*
+         90 |C* negative integer, ISCALE will always be zero in this case.		*
+         91 |C*									*
+         92 |C* The binary precision translates as follows:				*
+         93 |C*     -1  =>  store data to nearest 1/2				*
+         94 |C*     -2  =>  store data to nearest 1/4				*
+         95 |C*     -3  =>  store data to nearest 1/8				*
+         96 |C*									*
+         97 |C* Note that a fractional number of significant digits is allowed.	*
+         98 |C*									*
+         99 |C* FNDBIT ( AMIN, AMAX, RDB, NBITS, ISCALE, IRET )			*
+        100 |C*									*
+        101 |C* Input parameters:							*
+        102 |C*	AMIN 		REAL		Minimum value			*
+        103 |C*	AMAX		REAL		Maximum value			*
+        104 |C*	RDB		REAL		Maximum # of significant digits	*
+        105 |C*					  OR binary precision if < 0	*
+        106 |C*									*
+        107 |C* Output parameters:							*
+        108 |C*	NBITS		INTEGER		Number of bits for packing	*
+        109 |C*	ISCALE		INTEGER		Power of 10 scaling to use	*
+        110 |C*	IRET		INTEGER		Return code			*
+        111 |C*					  0 = normal return		*
+        112 |C**									*
+        113 |C* Log:									*
+        114 |C* K. Brill/NMC		06/92						*
+        115 |C* K. Brill/EMC		12/95	Added binary precision			*
+        116 |C* M. Baldwin           10/96   Added fix for negative nmbts
+        117 |C************************************************************************
+        118 |C*
+        119 |	DATA		rln2/0.69314718/
+        120 |C-----------------------------------------------------------------------
+        121 |	iret = 0
+        122 |	icnt = 0
+        123 |	iscale = 0
+        124 |	range = rmax - rmin
+        125 |	IF ( range .le. 0.00 ) THEN
+        126 |	    nmbts = 8
+        127 |	    RETURN
+        128 |	END IF
+        129 |C*
+        130 |	IF ( rdb .eq. 0.0 ) THEN
+        131 |	    nmbts = 8
+        132 |	    RETURN
+        133 |	ELSE IF ( rdb .gt. 0.0 ) THEN
+        134 |	    ipo = INT (ALOG10 ( range ))
+        135 |	    IF ( range .lt. 1.00 ) ipo = ipo - 1
+        136 |	    po = float(ipo) - rdb + 1.
+        137 |	    iscale = - INT ( po )
+        138 |	    rr = range * 10. ** ( -po )
+        139 |	    nmbts = INT ( ALOG ( rr ) / rln2 ) + 1
+        140 |	ELSE
+        141 |	    ibin = NINT ( -rdb )
+        142 |	    rng2 = range * 2. ** ibin
+        143 |	    nmbts = INT ( ALOG ( rng2 ) / rln2 ) + 1
+        144 |	END IF
+        145 |C*
+        146 |        IF(NMBTS.LE.0) THEN
+        147 |          NMBTS=0
+        148 |          IF(ABS(RMIN).GE.1.) THEN
+        149 |            ISCALE=-INT(ALOG10(ABS(RMIN)))
+        150 |          ELSE IF (ABS(RMIN).LT.1.0.AND.ABS(RMIN).GT.0.0) THEN
+        151 |            ISCALE=-INT(ALOG10(ABS(RMIN)))+1
+        152 |          ELSE
+        153 |            ISCALE=0
+        154 |          ENDIF
+        155 |        ENDIF
+        156 |	RETURN
+        157 |	END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+abs                              Pure Intrinsic
+                                 0-148.14  0-149.32  0-150.20  0-150.41  0-151.32
+ 
+alog                             Pure Intrinsic Real(4)
+                                 0-139.20  0-143.20
+ 
+alog10                           Pure Intrinsic Real(4)
+                                 0-134.17  0-149.25  0-151.25
+ 
+float                            Pure Intrinsic
+                                 0-136.11
+ 
+fndbit                           Subroutine
+                                 0-83.13$
+ 
+ibin                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-141.6@  0-142.27
+ 
+icnt                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-122.2@
+ 
+int                              Pure Intrinsic
+                                 0-134.12  0-137.17  0-139.14  0-143.14  0-149.21  0-151.21
+ 
+ipo                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-134.6@  0-135.29@  0-135.35  0-136.17
+ 
+iret                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-83.55  0-121.2@
+ 
+iscale                           Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-83.47  0-123.2@  0-137.6@  0-149.13@  0-151.13@  0-153.13@
+ 
+nint                             Pure Intrinsic
+                                 0-141.13
+ 
+nmbts                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-83.40  0-126.6@  0-131.6@  0-139.6@  0-143.6@  0-146.12  0-147.11@
+ 
+po                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-136.6@  0-137.23  0-138.29
+ 
+range                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-124.2@  0-125.7  0-134.26  0-135.11  0-138.11  0-142.13
+ 
+rdb                              Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-83.35  0-130.7  0-133.12  0-136.24  0-141.21
+ 
+rln2                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-119.8*  0-139.34  0-143.36
+ 
+rmax                             Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-83.29  0-124.10
+ 
+rmin                             Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-83.23  0-124.17  0-148.18  0-149.36  0-150.24  0-150.45  0-151.36
+ 
+rng2                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-142.6@  0-143.27
+ 
+rr                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-138.6@  0-139.27
+ 
+** fndbit   === End of Compilation 2 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    GET_BITS.f                  12/18/08   11:40:51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     157
+1501-510  Compilation successful for file GET_BITS.f.
+1501-543  Object file created.

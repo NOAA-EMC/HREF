@@ -1,0 +1,1470 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/SETUP_SERVERS.f 12/22/08 15:46:07
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE SETUP_SERVERS(MYPE,
+          2 |     *                         NPES,
+          3 |     *                         INUMQ,
+          4 |     *                         MPI_COMM_COMP,
+          5 |     *                         MPI_COMM_INTER)
+          6 |C
+          7 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          8 |C                .      .    .
+          9 |C   SUBROUTINE:  SETUP_SERVERS   SETUP I/O SERVERS
+         10 |C   PRGRMMR: TUCCILLO        ORG:  IBM       DATE: 00-03-20
+         11 |C
+         12 |C ABSTRACT:  SETUP I/O SERVERS
+         13 |C
+         14 |C PROGRAM HISTORY LOG:
+         15 |C   00-03-11  TUCCILLO - ORIGINATOR
+         16 |C
+         17 |C USAGE:  CALL SETUP_SERVERS(MYPE,
+         18 |C    *                       NPES,
+         19 |C    *                       INUMQ,
+         20 |C    *                       MPI_COMM_COMP,
+         21 |C    *                       MPI_COMM_INTER)
+         22 |C
+         23 |C   INPUT ARGUMENT LIST:
+         24 |C     NONE
+         25 |C
+         26 |C   OUTPUT ARGUMENT LIST:
+         27 |C     MYPE - MY RANK
+         28 |C     INUMQ - ARRAY THAT HOLDS THE NUMBER OF SERVERS IN EACH GROUP
+         29 |C     NPES - NUMBER OF MPI TASKS FOR POSTING
+         30 |C     MPI_COMM_COMP - THE NEW INTRACOMMUNICATOR FOR ALL TASKS
+         31 |C     MPI_COMM_INTER - THE INTERCOMMUNICATOR FOR THE I/O SERVERS
+         32 |C
+         33 |C   INPUT FILES:  NONE
+         34 |C
+         35 |C   OUTPUT FILES:
+         36 |C
+         37 |C   SUBPROGRAMS CALLED:
+         38 |C     UNIQUE:
+         39 |C            PARA_RANGE
+         40 |C            MPI_INIT
+         41 |C            MPI_COMM_RANK
+         42 |C            MPI_COMM_SIZE
+         43 |C            MPI_COMM_DUP
+         44 |C            MPI_COMM_SPLIT
+         45 |C            MPI_COMM_GROUP
+         46 |C            MPI_GROUP_EXCL
+         47 |C            MPI_COMM_CREATE
+         48 |C            MPI_GROUP_FREE
+         49 |C            MPI_INTERCOMM_CREATE
+         50 |C            MPI_BARRIER
+         51 |C
+         52 |C   EXIT STATES:
+         53 |C     COND =   0 - NORMAL EXIT
+         54 |C
+         55 |C ATTRIBUTES:
+         56 |C   LANGUAGE: FORTRAN 90
+         57 |C   MACHINE : IBM SP
+         58 |C
+         59 |C$$$
+         60 |
+         61 |      include 'mpif.h'
+  1       1 |! IBM_PROLOG_BEGIN_TAG
+  1       2 |! This is an automatically generated prolog.
+  1       3 |!
+  1       4 |!
+  1       5 |!
+  1       6 |! Licensed Materials - Property of IBM
+  1       7 |!
+  1       8 |! (C) COPYRIGHT International Business Machines Corp. 1999,2007
+  1       9 |! All Rights Reserved
+  1      10 |!
+  1      11 |! US Government Users Restricted Rights - Use, duplication or
+  1      12 |! disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+  1      13 |!
+  1      14 |! IBM_PROLOG_END_TAG
+  1      15 |!  ***************************************************************************
+  1      16 |!  @(#) 1.16 src/ppe/poe/include/thread64/mpif.h, ppe.poe.mpi, ppe_rcha, rcha0810a 08/03/12 15:21:38
+  1      17 |!
+  1      18 |!  Name: thread/mpif.h
+  1      19 |!
+  1      20 |!  Description:
+  1      21 |!
+  1      22 |!  ***************************************************************************
+  1      23 |!
+  1      24 |!
+  1      25 |!     NOTE:  This file contains information necessary for compiling
+  1      26 |!            Fortran applications to be used with the threads based
+  1      27 |!            MPI library.
+  1      28 |!            (The threads based MPI library does not support MPL and
+  1      29 |!             does contain an initial subset of MPI-2.)
+  1      30 |!  *************************************************************************
+  1      31 |
+  1      32 |      integer*4 MPI_VERSION,MPI_SUBVERSION
+  1      33 |      parameter (MPI_VERSION=1,MPI_SUBVERSION=2)
+  1      34 |
+  1      35 |      integer*4 MPI_SUCCESS,MPI_ERR_BUFFER,MPI_ERR_COUNT,MPI_ERR_TYPE
+  1      36 |      integer*4 MPI_ERR_TAG,MPI_ERR_COMM,MPI_ERR_RANK,MPI_ERR_REQUEST
+  1      37 |      integer*4 MPI_ERR_ROOT,MPI_ERR_GROUP,MPI_ERR_OP,MPI_ERR_TOPOLOGY
+  1      38 |      integer*4 MPI_ERR_DIMS,MPI_ERR_ARG,MPI_ERR_UNKNOWN
+  1      39 |      integer*4 MPI_ERR_TRUNCATE
+  1      40 |      integer*4 MPI_ERR_OTHER,MPI_ERR_INTERN,MPI_ERR_IN_STATUS
+  1      41 |      integer*4 MPI_PENDING,MPI_ERR_PENDING,MPI_ERR_INFO_KEY
+  1      42 |      integer*4 MPI_ERR_INFO_VALUE,MPI_ERR_INFO_NOKEY,MPI_ERR_INFO
+  1      43 |      integer*4 MPI_ERR_FILE,MPI_ERR_NOT_SAME,MPI_ERR_AMODE
+  1      44 |      integer*4 MPI_ERR_UNSUPPORTED_DATAREP
+  1      45 |      integer*4 MPI_ERR_UNSUPPORTED_OPERATION
+  1      46 |      integer*4 MPI_ERR_NO_SUCH_FILE,MPI_ERR_FILE_EXISTS
+  1      47 |      integer*4 MPI_ERR_BAD_FILE
+  1      48 |      integer*4 MPI_ERR_ACCESS,MPI_ERR_NO_SPACE,MPI_ERR_QUOTA
+  1      49 |      integer*4 MPI_ERR_READ_ONLY,MPI_ERR_FILE_IN_USE
+  1      50 |      integer*4 MPI_ERR_DUP_DATAREP
+  1      51 |      integer*4 MPI_ERR_CONVERSION,MPI_ERR_IO
+  1      52 |      integer*4 MPI_ERR_WIN,MPI_ERR_BASE,MPI_ERR_SIZE,MPI_ERR_DISP
+  1      53 |      integer*4 MPI_ERR_LOCKTYPE,MPI_ERR_ASSERT,MPI_ERR_RMA_CONFLICT
+  1      54 |      integer*4 MPI_ERR_RMA_SYNC,MPI_ERR_NO_MEM
+  1      55 |      integer*4 MPI_ERR_KEYVAL
+  1      56 |      integer*4 MPI_ERR_LASTCODE
+  1      57 |      parameter (MPI_SUCCESS=0,MPI_ERR_BUFFER=50,MPI_ERR_COUNT=51)
+  1      58 |      parameter (MPI_ERR_TYPE=52,MPI_ERR_TAG=53,MPI_ERR_COMM=54)
+  1      59 |      parameter (MPI_ERR_RANK=55,MPI_ERR_REQUEST=56,MPI_ERR_ROOT=57)
+  1      60 |      parameter (MPI_ERR_GROUP=58,MPI_ERR_OP=59,MPI_ERR_TOPOLOGY=60)
+  1      61 |      parameter (MPI_ERR_DIMS=61,MPI_ERR_ARG=62,MPI_ERR_UNKNOWN=63)
+  1      62 |      parameter (MPI_ERR_TRUNCATE=64,MPI_ERR_OTHER=65,MPI_ERR_INTERN=66)
+  1      63 |      parameter (MPI_ERR_IN_STATUS=67,MPI_PENDING=68,MPI_ERR_PENDING=68)
+  1      64 |      parameter (MPI_ERR_INFO_KEY=69,MPI_ERR_INFO_VALUE=70)
+  1      65 |      parameter (MPI_ERR_INFO_NOKEY=71)
+  1      66 |      parameter (MPI_ERR_INFO=72,MPI_ERR_FILE=73,MPI_ERR_NOT_SAME=74)
+  1      67 |      parameter (MPI_ERR_AMODE=75,MPI_ERR_UNSUPPORTED_DATAREP=76)
+  1      68 |      parameter (MPI_ERR_UNSUPPORTED_OPERATION=77)
+  1      69 |      parameter (MPI_ERR_NO_SUCH_FILE=78)
+  1      70 |      parameter (MPI_ERR_FILE_EXISTS=79,MPI_ERR_BAD_FILE=80)
+  1      71 |      parameter (MPI_ERR_ACCESS=81)
+  1      72 |      parameter (MPI_ERR_NO_SPACE=82,MPI_ERR_QUOTA=83)
+  1      73 |      parameter (MPI_ERR_READ_ONLY=84)
+  1      74 |      parameter (MPI_ERR_FILE_IN_USE=85,MPI_ERR_DUP_DATAREP=86)
+  1      75 |      parameter (MPI_ERR_CONVERSION=87,MPI_ERR_IO=88)
+  1      76 |      parameter (MPI_ERR_WIN=89,MPI_ERR_BASE=90,MPI_ERR_SIZE=91)
+  1      77 |      parameter (MPI_ERR_DISP=92,MPI_ERR_LOCKTYPE=93,MPI_ERR_ASSERT=94)
+  1      78 |      parameter (MPI_ERR_RMA_CONFLICT=95,MPI_ERR_RMA_SYNC=96)
+  1      79 |      parameter (MPI_ERR_NO_MEM=97)
+  1      80 |      parameter (MPI_ERR_KEYVAL=98)
+  1      81 |      parameter (MPI_ERR_LASTCODE=500)
+  1      82 |
+  1      83 |      integer*4 MPI_PROC_NULL,MPI_ANY_SOURCE
+  1      84 |      integer*4 MPI_ANY_TAG,MPI_UNDEFINED,MPI_ROOT
+  1      85 |      parameter (MPI_PROC_NULL=-3,MPI_ANY_SOURCE=-1)
+  1      86 |      parameter (MPI_ANY_TAG=-1,MPI_UNDEFINED=-1,MPI_ROOT=-99)
+  1      87 |
+  1      88 |      integer*4 MPI_STATUS_SIZE,MPI_SOURCE,MPI_TAG,MPI_ERROR
+  1      89 |      parameter (MPI_STATUS_SIZE=10,MPI_SOURCE=1,MPI_TAG=2,MPI_ERROR=3)
+  1      90 |
+  1      91 |      integer*4 MPI_ERRORS_ARE_FATAL,MPI_ERRORS_RETURN,MPE_ERRORS_WARN
+  1      92 |      parameter (MPI_ERRORS_ARE_FATAL=0,MPI_ERRORS_RETURN=1)
+  1      93 |      parameter (MPE_ERRORS_WARN=2)
+  1      94 |
+  1      95 |      integer*4 MPI_THREAD_SINGLE,MPI_THREAD_FUNNELED
+  1      96 |      integer*4 MPI_THREAD_SERIALIZED,MPI_THREAD_MULTIPLE
+  1      97 |      parameter (MPI_THREAD_SINGLE=0,MPI_THREAD_FUNNELED=1)
+  1      98 |      parameter (MPI_THREAD_SERIALIZED=2,MPI_THREAD_MULTIPLE=3)
+  1      99 |
+  1     100 |      integer*4 MPI_MAX_PROCESSOR_NAME,MPI_MAX_ERROR_STRING
+  1     101 |      parameter (MPI_MAX_PROCESSOR_NAME=256,MPI_MAX_ERROR_STRING=128)
+  1     102 |
+  1     103 |      integer*4 MPI_MAX_FILE_NAME,MPI_MAX_DATAREP_STRING
+  1     104 |      integer*4 MPI_MAX_INFO_KEY,MPI_MAX_INFO_VAL
+  1     105 |      parameter (MPI_MAX_FILE_NAME=1023,MPI_MAX_DATAREP_STRING=255)
+  1     106 |      parameter (MPI_MAX_INFO_KEY=127,MPI_MAX_INFO_VAL=1023)
+  1     107 |
+  1     108 |      integer*4 MPI_MAX_OBJECT_NAME
+  1     109 |      parameter (MPI_MAX_OBJECT_NAME=256)
+  1     110 |
+  1     111 |      integer*4 MPI_BSEND_OVERHEAD
+  1     112 |      parameter (MPI_BSEND_OVERHEAD=39)
+  1     113 |
+  1     114 |      integer*4 MPI_LB,MPI_UB,MPI_BYTE,MPI_PACKED
+  1     115 |      parameter (MPI_LB=0,MPI_UB=1,MPI_BYTE=2,MPI_PACKED=3)
+  1     116 |
+  1     117 |      integer*4 MPI_CHAR,MPI_UNSIGNED_CHAR,MPI_SIGNED_CHAR,MPI_SHORT
+  1     118 |      integer*4 MPI_INT,MPI_LONG,MPI_UNSIGNED_SHORT,MPI_UNSIGNED
+  1     119 |      integer*4 MPI_UNSIGNED_LONG,MPI_FLOAT,MPI_DOUBLE,MPI_LONG_DOUBLE
+  1     120 |      integer*4 MPI_LONG_LONG_INT,MPI_LONG_LONG,MPI_UNSIGNED_LONG_LONG
+  1     121 |      integer*4 MPI_WCHAR
+  1     122 |      parameter (MPI_CHAR=4,MPI_UNSIGNED_CHAR=5,MPI_SIGNED_CHAR=6)
+  1     123 |      parameter (MPI_SHORT=7,MPI_INT=8,MPI_LONG=9)
+  1     124 |      parameter (MPI_UNSIGNED_SHORT=10,MPI_UNSIGNED=11)
+  1     125 |      parameter (MPI_UNSIGNED_LONG=12,MPI_FLOAT=13,MPI_DOUBLE=14)
+  1     126 |      parameter (MPI_LONG_DOUBLE=15,MPI_LONG_LONG_INT=39)
+  1     127 |      parameter (MPI_LONG_LONG=44,MPI_UNSIGNED_LONG_LONG=40)
+  1     128 |      parameter (MPI_WCHAR=41)
+  1     129 |
+  1     130 |
+  1     131 |      integer*4 MPI_INTEGER1,MPI_INTEGER2,MPI_INTEGER4,MPI_INTEGER
+  1     132 |      integer*4 MPI_REAL4,MPI_REAL,MPI_REAL8,MPI_DOUBLE_PRECISION
+  1     133 |      integer*4 MPI_REAL16,MPI_COMPLEX8,MPI_COMPLEX,MPI_COMPLEX16
+  1     134 |      integer*4 MPI_DOUBLE_COMPLEX,MPI_COMPLEX32,MPI_LOGICAL1
+  1     135 |      integer*4 MPI_LOGICAL2,MPI_LOGICAL4,MPI_LOGICAL,MPI_CHARACTER
+  1     136 |      parameter (MPI_INTEGER1=16,MPI_INTEGER2=17,MPI_INTEGER4=18)
+  1     137 |      parameter (MPI_INTEGER=45,MPI_REAL4=19,MPI_REAL=46,MPI_REAL8=20)
+  1     138 |      parameter (MPI_DOUBLE_PRECISION=47,MPI_REAL16=21,MPI_COMPLEX8=22)
+  1     139 |      parameter (MPI_COMPLEX=48,MPI_COMPLEX16=23,MPI_DOUBLE_COMPLEX=49)
+  1     140 |      parameter (MPI_COMPLEX32=24,MPI_LOGICAL1=25,MPI_LOGICAL2=26)
+  1     141 |      parameter (MPI_LOGICAL4=27,MPI_LOGICAL=50,MPI_CHARACTER=28)
+  1     142 |
+  1     143 |      integer*4 MPI_2REAL,MPI_2DOUBLE_PRECISION,MPI_2INTEGER
+  1     144 |      integer*4 MPI_2COMPLEX
+  1     145 |      parameter (MPI_2REAL=35,MPI_2DOUBLE_PRECISION=36,MPI_2INTEGER=37)
+  1     146 |      parameter (MPI_2COMPLEX=38)
+  1     147 |
+  1     148 |      integer*4 MPI_INTEGER8,MPI_LOGICAL8
+  1     149 |      parameter (MPI_INTEGER8=42,MPI_LOGICAL8=43)
+  1     150 |
+  1     151 |      integer*4 MPI_COMM_WORLD,MPI_COMM_SELF
+  1     152 |      parameter (MPI_COMM_WORLD=0,MPI_COMM_SELF=1)
+  1     153 |
+  1     154 |      integer*4 MPI_IDENT,MPI_CONGRUENT,MPI_SIMILAR,MPI_UNEQUAL
+  1     155 |      parameter (MPI_IDENT=0,MPI_CONGRUENT=1,MPI_SIMILAR=2)
+  1     156 |      parameter (MPI_UNEQUAL=3)
+  1     157 |
+  1     158 |      integer*4 MPI_TAG_UB,MPI_IO,MPI_HOST,MPI_WTIME_IS_GLOBAL
+  1     159 |      integer*4 MPI_WIN_BASE,MPI_WIN_SIZE,MPI_WIN_DISP_UNIT
+  1     160 |      integer*4 MPI_LASTUSEDCODE
+  1     161 |      parameter (MPI_TAG_UB=0,MPI_IO=1,MPI_HOST=2,MPI_WTIME_IS_GLOBAL=3)
+  1     162 |      parameter (MPI_WIN_BASE=4,MPI_WIN_SIZE=5,MPI_WIN_DISP_UNIT=6)
+  1     163 |      parameter (MPI_LASTUSEDCODE=7)
+  1     164 |
+  1     165 |      integer*4 MPI_MAX,MPI_MIN,MPI_SUM,MPI_PROD,MPI_MAXLOC,MPI_MINLOC
+  1     166 |      integer*4 MPI_BAND,MPI_BOR,MPI_BXOR,MPI_LAND,MPI_LOR,MPI_LXOR
+  1     167 |      integer*4 MPI_REPLACE,MAX_OP
+  1     168 |      parameter (MPI_MAX=0,MPI_MIN=1,MPI_SUM=2,MPI_PROD=3,MPI_MAXLOC=4)
+  1     169 |      parameter (MPI_MINLOC=5,MPI_BAND=6,MPI_BOR=7,MPI_BXOR=8)
+  1     170 |      parameter (MPI_LAND=9,MPI_LOR=10,MPI_LXOR=11,MPI_REPLACE=12)
+  1     171 |      parameter (MAX_OP=13)
+  1     172 |
+  1     173 |      integer*4 MPI_GROUP_NULL,MPI_COMM_NULL,MPI_DATATYPE_NULL
+  1     174 |      integer*4 MPI_REQUEST_NULL,MPI_OP_NULL,MPI_ERRHANDLER_NULL
+  1     175 |      parameter(MPI_GROUP_NULL=-1,MPI_COMM_NULL=-1,MPI_DATATYPE_NULL=-1)
+  1     176 |      parameter (MPI_REQUEST_NULL=-1,MPI_OP_NULL=-1)
+  1     177 |      parameter (MPI_ERRHANDLER_NULL=-1)
+  1     178 |
+  1     179 |      integer*4 MPI_INFO_NULL,MPI_FILE_NULL,MPI_WIN_NULL
+  1     180 |      parameter (MPI_INFO_NULL=-1,MPI_FILE_NULL=-1,MPI_WIN_NULL=-1)
+  1     181 |
+  1     182 |      integer*4 MPI_GROUP_EMPTY
+  1     183 |      parameter (MPI_GROUP_EMPTY=0)
+  1     184 |
+  1     185 |      integer*4 MPI_ADDRESS_KIND
+  1     186 |      parameter (MPI_ADDRESS_KIND=8)
+  1     187 |
+  1     188 |      integer*4 MPI_OFFSET_KIND
+  1     189 |      parameter (MPI_OFFSET_KIND=8)
+  1     190 |
+  1     191 |      integer*4 MPI_NON_ATOMIC,MPI_ATOMIC
+  1     192 |      parameter (MPI_NON_ATOMIC=0,MPI_ATOMIC=1)
+  1     193 |
+  1     194 |      integer(KIND=MPI_OFFSET_KIND) MPI_DISPLACEMENT_CURRENT
+  1     195 |      parameter (MPI_DISPLACEMENT_CURRENT=-1_8)
+  1     196 |
+  1     197 |      integer*4 MPI_DISTRIBUTE_NONE,MPI_DISTRIBUTE_BLOCK
+  1     198 |      integer*4 MPI_DISTRIBUTE_CYCLIC,MPI_DISTRIBUTE_DFLT_DARG
+  1     199 |      parameter (MPI_DISTRIBUTE_NONE=0,MPI_DISTRIBUTE_BLOCK=1)
+  1     200 |      parameter (MPI_DISTRIBUTE_CYCLIC=2,MPI_DISTRIBUTE_DFLT_DARG=0)
+  1     201 |
+  1     202 |      integer*4 MPI_ORDER_C,MPI_ORDER_FORTRAN
+  1     203 |      parameter (MPI_ORDER_C=1,MPI_ORDER_FORTRAN=2)
+  1     204 |
+  1     205 |      integer*4 MPI_SEEK_SET,MPI_SEEK_CUR,MPI_SEEK_END
+  1     206 |      parameter (MPI_SEEK_SET=0,MPI_SEEK_CUR=1,MPI_SEEK_END=2)
+  1     207 |
+  1     208 |      integer*4 MPI_MODE_RDONLY,MPI_MODE_WRONLY,MPI_MODE_RDWR
+  1     209 |      integer*4 MPI_MODE_APPEND
+  1     210 |      integer*4 MPI_MODE_CREATE,MPI_MODE_EXCL,MPI_MODE_DELETE_ON_CLOSE
+  1     211 |      integer*4 MPI_MODE_UNIQUE_OPEN,MPI_MODE_SEQUENTIAL
+  1     212 |!     parameter (MPI_MODE_RDONLY=X'000001', MPI_MODE_WRONLY=X'000002')
+  1     213 |      parameter (MPI_MODE_RDONLY=       1 , MPI_MODE_WRONLY=       2 )
+  1     214 |!     parameter (MPI_MODE_RDWR=X'000004',MPI_MODE_CREATE=X'000008')
+  1     215 |      parameter (MPI_MODE_RDWR=       4 ,MPI_MODE_CREATE=       8 )
+  1     216 |!     parameter (MPI_MODE_APPEND=X'000010',MPI_MODE_EXCL=X'000020')
+  1     217 |      parameter (MPI_MODE_APPEND=      16 ,MPI_MODE_EXCL=      32 )
+  1     218 |!     parameter (MPI_MODE_DELETE_ON_CLOSE=X'000040')
+  1     219 |      parameter (MPI_MODE_DELETE_ON_CLOSE=      64 )
+  1     220 |!     parameter (MPI_MODE_UNIQUE_OPEN=X'000080')
+  1     221 |      parameter (MPI_MODE_UNIQUE_OPEN=     128 )
+  1     222 |!     parameter (MPI_MODE_SEQUENTIAL=X'000100')
+  1     223 |      parameter (MPI_MODE_SEQUENTIAL=     256 )
+  1     224 |
+  1     225 |      integer*4 MPI_LOCK_EXCLUSIVE,MPI_LOCK_SHARED
+  1     226 |      parameter (MPI_LOCK_EXCLUSIVE=0,MPI_LOCK_SHARED=1)
+  1     227 |
+  1     228 |      integer*4 MPI_MODE_NOCHECK,MPI_MODE_NOSTORE,MPI_MODE_NOPUT
+  1     229 |      integer*4 MPI_MODE_NOPRECEDE,MPI_MODE_NOSUCCEED
+  1     230 |!     parameter (MPI_MODE_NOCHECK=X'000200',MPI_MODE_NOSTORE=X'000400')
+  1     231 |      parameter (MPI_MODE_NOCHECK=     512 ,MPI_MODE_NOSTORE=    1024 )
+  1     232 |!     parameter (MPI_MODE_NOPUT=X'000800',MPI_MODE_NOPRECEDE=X'001000')
+  1     233 |      parameter (MPI_MODE_NOPUT=    2048 ,MPI_MODE_NOPRECEDE=    4096 )
+  1     234 |!     parameter (MPI_MODE_NOSUCCEED=X'002000')
+  1     235 |      parameter (MPI_MODE_NOSUCCEED=    8192 )
+  1     236 |
+  1     237 |      integer*4  MPI_GRAPH,MPI_CART
+  1     238 |      parameter (MPI_GRAPH=0,MPI_CART=1)
+  1     239 |
+  1     240 |      integer*4 MPI_KEYVAL_INVALID
+  1     241 |      parameter (MPI_KEYVAL_INVALID=-1)
+  1     242 |
+  1     243 |      real*8 MPI_WTICK,MPI_WTIME,PMPI_WTICK,PMPI_WTIME
+  1     244 |      external MPI_WTICK,MPI_WTIME,PMPI_WTICK,PMPI_WTIME
+  1     245 |
+  1     246 |      external MPI_CONVERSION_FN_NULL
+  1     247 |      external MPI_NULL_COPY_FN,MPI_DUP_FN,MPI_NULL_DELETE_FN
+  1     248 |      external MPI_COMM_NULL_COPY_FN,MPI_COMM_DUP_FN
+  1     249 |      external MPI_COMM_NULL_DELETE_FN
+  1     250 |      external MPI_TYPE_NULL_COPY_FN,MPI_TYPE_DUP_FN
+  1     251 |      external MPI_TYPE_NULL_DELETE_FN
+  1     252 |      external MPI_WIN_NULL_COPY_FN,MPI_WIN_DUP_FN
+  1     253 |      external MPI_WIN_NULL_DELETE_FN
+  1     254 |      external MPI_BOTTOM,MPI_IN_PLACE
+  1     255 |      external MPI_STATUS_IGNORE,MPI_STATUSES_IGNORE
+  1     256 |
+  1     257 |      integer*4 MPI_COMBINER_NAMED,MPI_COMBINER_DUP
+  1     258 |      integer*4 MPI_COMBINER_CONTIGUOUS
+  1     259 |      integer*4 MPI_COMBINER_VECTOR,MPI_COMBINER_HVECTOR_INTEGER
+  1     260 |      integer*4 MPI_COMBINER_HVECTOR,MPI_COMBINER_INDEXED
+  1     261 |      integer*4 MPI_COMBINER_HINDEXED_INTEGER,MPI_COMBINER_HINDEXED
+  1     262 |      integer*4 MPI_COMBINER_INDEXED_BLOCK,MPI_COMBINER_STRUCT_INTEGER
+  1     263 |      integer*4 MPI_COMBINER_STRUCT,MPI_COMBINER_SUBARRAY
+  1     264 |      integer*4 MPI_COMBINER_DARRAY
+  1     265 |      integer*4 MPI_COMBINER_F90_REAL,MPI_COMBINER_F90_COMPLEX
+  1     266 |      integer*4 MPI_COMBINER_F90_INTEGER,MPI_COMBINER_RESIZED
+  1     267 |      parameter (MPI_COMBINER_NAMED=0,MPI_COMBINER_DUP=1)
+  1     268 |      parameter (MPI_COMBINER_CONTIGUOUS=2,MPI_COMBINER_VECTOR=3)
+  1     269 |      parameter (MPI_COMBINER_HVECTOR_INTEGER=4,MPI_COMBINER_HVECTOR=5)
+  1     270 |      parameter (MPI_COMBINER_INDEXED=6,MPI_COMBINER_HINDEXED_INTEGER=7)
+  1     271 |      parameter (MPI_COMBINER_HINDEXED=8,MPI_COMBINER_INDEXED_BLOCK=9)
+  1     272 |      parameter (MPI_COMBINER_STRUCT_INTEGER=10,MPI_COMBINER_STRUCT=11)
+  1     273 |      parameter (MPI_COMBINER_SUBARRAY=12,MPI_COMBINER_DARRAY=13)
+  1     274 |      parameter (MPI_COMBINER_F90_REAL=14,MPI_COMBINER_F90_COMPLEX=15)
+  1     275 |      parameter (MPI_COMBINER_F90_INTEGER=16,MPI_COMBINER_RESIZED=17)
+  1     276 |
+  1     277 |      integer*4 MPI_TYPECLASS_REAL,MPI_TYPECLASS_INTEGER
+  1     278 |      integer*4 MPI_TYPECLASS_COMPLEX
+  1     279 |      parameter(MPI_TYPECLASS_REAL=1,MPI_TYPECLASS_INTEGER=2)
+  1     280 |      parameter(MPI_TYPECLASS_COMPLEX=3)
+  1     281 |
+  1     282 |      integer*4 MP_BW_MPI, MP_BW_LAPI
+  1     283 |      parameter(MP_BW_MPI=2,MP_BW_LAPI=1)
+         62 |      integer comdup
+         63 |      integer, allocatable :: irank ( : )
+         64 |      integer  INUMQ(*)
+         65 |      logical yes
+         66 |      character*4 get
+         67 |C-----------------------------------------------------------------------
+         68 |C
+         69 |C     INITIALIZE MPI
+         70 |C     RETRIEVE THE NUMBER OF TOTAL MPI TASKS AND MY RANK
+         71 |C
+         72 |      call mpi_init(ierr)
+         73 |      call mpi_comm_rank(MPI_COMM_WORLD,mype,ierr)
+         74 |      call mpi_comm_size(MPI_COMM_WORLD,npes,ierr)
+         75 |C
+         76 |C     SPECIFY ONE I/O SERVER AS LONG AS THERE ARE MORE THAN 1 MPI TASK
+         77 |C
+         78 |      if ( npes .gt. 1 ) then
+         79 |         npes_mod = npes - 1
+         80 |      else
+         81 |         npes_mod = 1
+         82 |      end if
+         83 |C
+         84 |C     AT THIS POINT NPES IS THE TOTAL NUMBER OF MPI TASKS. WE WILL
+         85 |C     RESET THIS AT THE END OF THE SUBROUTINE TO THE NUMBER OF MPI
+         86 |C     TASKS THAT ARE WORKING ON THE POSTING
+         87 |C
+         88 |C     FIRST, HOWEVER, WE NEED TO MAKE SURE THAT A SUFFICIENT NUMBER
+         89 |C     OF MPI TASKS HAVE BEEN INITIATED. IF NOT, WE WILL STOP.
+         90 |C
+         91 |      IF ( NPES .LT. NPES_MOD ) THEN
+         92 |         PRINT *, ' ***********************************************'
+         93 |         PRINT *, ' ***********************************************'
+         94 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+         95 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+         96 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+         97 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+         98 |         PRINT *
+         99 |         PRINT *, ' THERE ARE INSUFFICIENT MPI TASKS TO CONTINUE'
+        100 |         PRINT *, ' YOU MUST SPECIFY AT LEAST ',NPES_MOD,' TASKS'
+        101 |         PRINT *, ' STOPPING NOW'
+        102 |         PRINT *, ' HASTA LA VISTA BABY'
+        103 |         PRINT *
+        104 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+        105 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+        106 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+        107 |         PRINT *, ' *************MAJOR PROBLEM*********************'
+        108 |         PRINT *, ' ***********************************************'
+        109 |         PRINT *, ' ***********************************************'
+        110 |         CALL MPI_ABORT(MPI_COMM_WORLD,1,IERR)
+        111 |      END IF
+        112 |C
+        113 |C     OK, WE HAVE A SUFFICIENT NUMBER OF MPI TASKS TO CONTINUE
+        114 |C
+        115 |C     HOW MANY GROUPS OF SERVERS ? THE DEFAULT IS 1 GROUP
+        116 |C     THE ENVIRONMENT VARIABLE, SERVER_GROUPS, CAN BE USED TO
+        117 |C     SPECIFY MORE SERVER GROUPS
+        118 |C
+        119 |      get = '1'
+        120 |cwas  call getenv('SERVER_GROUPS',get)
+        121 |      read(get,fmt='(i4)') iquilt_group
+        122 |      iquilt_group = max(iquilt_group,1)
+        123 |C
+        124 |C     ERROR CHECK NUMBER OF GROUPS - THE MAXIMUM IS 100 - THIS IS A LOT
+        125 |C
+        126 |      if ( iquilt_group .gt. 100 ) then
+        127 |         print *, ' ***** IQUILT_GROUP IS GREATER THAN 100'
+        128 |         print *, ' ***** DO YOU REALLY WANT THIS ?'
+        129 |         print *, ' ***** IF SO THEN INCREASE SIZE IN mpp.h'
+        130 |         print *, ' ***** ALSO, CHANGE IF CHECK IN SETUP_SERVERS'
+        131 |         print *, ' ***** RESETTING THE NUMBER OF SERVER GROUPS TO 100'
+        132 |         print *, ' ***** WE ARE CONTINUING ....   '
+        133 |         iquilt_group = 100
+        134 |      end if
+        135 |      if ( mype .eq. 0 ) then
+        136 |      print *, ' we will try to run with ',iquilt_group,' server groups'
+        137 |      end if
+        138 |C
+        139 |C     COMPUTE THE NUMBER OF SERVERS PER GROUP
+        140 |C     ALL MPI TASKS BEYOND NPES_MOD WILL BE SERVERS
+        141 |C     IF THE NUMBER OF SERVERS IS NOT EQUALLY DIVISIBLE BY
+        142 |C     THE NUMBER OF GROUPS OF SERVERS THEN SOME GROUPS MAY HAVE
+        143 |C     MORE SERVERS THEN OTHERS - THIS IS FINE
+        144 |C     NOTE THAT WE REQUIRE AT LEAST ONE SERVER PER GROUP
+        145 |C     WE MAY NEED TO REDUCE THE NUMBER OF SERVER GROUPS IF
+        146 |C     IT EXCEEDS THE NUMBER OF SERVERS
+        147 |C
+        148 |      iqserver = NPES - NPES_MOD
+        149 |      if ( iqserver .eq. 0 ) then
+        150 |         if ( mype .eq. 0 ) then
+        151 |           print *, ' *** you specified 0 I/O servers '
+        152 |           print *, ' CHKOUT will write a file'
+        153 |         end if
+        154 |         iquilt_group = 0
+        155 |      end if
+        156 |      if ( iquilt_group .gt. iqserver )  then
+        157 |          iquilt_group = iqserver
+        158 |          print *, ' ***** NOT ENOUGH SERVERS'
+        159 |          print *, ' ***** WE NEED TO REDUCE THE NUMB OF SERVER GROUPS'
+        160 |          print *, ' ***** NUMB OF SERVER GROUPS IS ', iquilt_group
+        161 |      end if
+        162 |      do i = 0, iquilt_group - 1
+        163 |         call para_range(1,iqserver,iquilt_group,i,istaq,iendq)
+        164 |         inumq(i+1) = iendq-istaq+1
+        165 |      if ( mype .eq. 0 ) print *, ' i, inumq = ',i+1,inumq(i+1)
+        166 |      end do
+        167 |C
+        168 |C     SETUP THE "COLOR" FOR MPI_COMM_SPLIT
+        169 |C     THOSE TASKS WHICH WILL DO MODEL INTEGRATION WILL BE COLOR 0
+        170 |C     THE SERVER TASKS WILL HAVE THE COLOR OF THE GROUP NUMBER THAT
+        171 |C     THEY WILL BELONG
+        172 |C
+        173 |      if ( mype .lt. NPES_MOD ) then
+        174 |         icolor = 0
+        175 |      else
+        176 |         istaxx = NPES_MOD
+        177 |         do i = 1, iquilt_group
+        178 |            iendxx = istaxx + inumq(i) - 1
+        179 |            if ( mype .ge. istaxx .and. mype .le. iendxx ) then
+        180 |               icolor = i
+        181 |            end if
+        182 |            istaxx = iendxx + 1
+        183 |         end do
+        184 |      end if
+        185 |C
+        186 |C     SPLIT THE COMMUNICATOR - THE NEW INTRACOMMUNICATOR FOR ALL TASKS
+        187 |C     IS MPI_COMM_COMP. MPI_COMM_WORLD IS STILL AVAILABLE BUT IT DOES
+        188 |C     REFER TO ALL THE MPI TASKS ( MODEL INTEGRATION AND I/O SERVING )
+        189 |C
+        190 |      call mpi_comm_dup(MPI_COMM_WORLD,comdup,ierr)
+        191 |      call mpi_comm_split(comdup,icolor,mype,mpi_comm_comp,ierr)
+        192 |C
+        193 |C     AT THIS POINT WE HAVE A NEW COMMUNICATOR, MPI_COMM_COMP,
+        194 |C     THAT CAN BE USED BY THE FORECASTS TASKS AND THE I/O SERVER TASKS
+        195 |C     FOR THEIR INTERNAL COMMUNICATIONS. ONTO THE INTERCOMMUNICATORS ...
+        196 |C
+        197 |C     NOW WE MUST CREATE THE INTERCOMMUNICATORS FOR USE BETWEEN THE MPI
+        198 |C     TASKS DOING THE MODEL INTEGRATION AND THE MPI TASKS FOR EACH
+        199 |C     SERVER GROUP. THE FIRST STEP IS TO EXCLUDE THE TASKS THAT DONT
+        200 |C     BELONG. WE WILL DO THIS FOR EACH SERVER GROUP BY EXCLUDING THE TASKS
+        201 |C     FROM ALL OF THE OTHER SERVER GROUPS.
+        202 |C
+        203 |      allocate ( irank ( iqserver ) )
+        204 |      ixx = NPES_MOD
+        205 |      do i = 1, iquilt_group
+        206 |         yes = .true.
+        207 |         if ( mype .lt. NPES_MOD ) then
+        208 |            irlr = ixx
+        209 |         else
+        210 |            irlr = 0
+        211 |         end if
+        212 |      icc = 0
+        213 |      iss = NPES_MOD
+        214 |C     THIS IS THE FIRST POSSIBLE TASK ID THAT COULD BE EXCLUDED
+        215 |      do jj = 1, iquilt_group
+        216 |         if ( jj .ne. i ) then
+        217 |            issl = iss
+        218 |            do kk = 1, inumq(jj)
+        219 |               icc = icc + 1
+        220 |               irank(icc)= issl
+        221 |               if ( mype .eq. issl ) yes = .false.
+        222 |               issl = issl + 1
+        223 |            end do
+        224 |         end if
+        225 |         iss = iss + inumq(jj)
+        226 |      end do
+        227 |C
+        228 |C     AT THIS POINT WE HAVE AN ARRAY, IRANK, WITH TASK IDS TO EXCLUDE
+        229 |C     THERE ARE ICC OF THEM.
+        230 |C     CREATE A NEW GROUP WITH THE TASKS FROM THE OTHER SERVER GROUPS
+        231 |C     EXCLUDED AND THEN CREATE A NEW COMMUNICATOR ( IWORLD_MINUS ) THAT
+        232 |C     CONTAINS ONLY THE MPI TASKS DOING THE MODEL INTEGRATION AND THE
+        233 |C     TASKS THAT BLONG TO THE SERVER GROUP WE ARE CONSIDERING.
+        234 |C
+        235 |      iworld = MPI_COMM_WORLD
+        236 |      call mpi_comm_group(iworld,igroup,ierr)
+        237 |      call mpi_group_excl(igroup,icc,irank,igroup_x,ierr)
+        238 |      call mpi_comm_create(iworld,igroup_x,iworld_minus,ierr)
+        239 |      call mpi_group_free(igroup,ierr)
+        240 |      call mpi_group_free(igroup_x,ierr)
+        241 |C
+        242 |C     AT THIS POINT WE HAVE A COMMUNICATOR THAT EXCLUDES THE TASKS WE DONT WANT.
+        243 |C     CREATE AN INTERCOMMUNICATOR FOR USE BETWEEN THE MPI TASKS DOING THE MODEL
+        244 |C     INTEGRATION AND THE I/O SERVER GROUP WE ARE CONSIDERING. THIS PROCESS IS
+        245 |C     A COLLECTIVE ROUTINE SO IT CAN ONLY BE DONE BY THE TASKS THAT HAVE NOT
+        246 |C     BEEN EXCLUDED. SAVE THIS NEW COMMUNICATOR IN MPI_COMM_INTER FOR USE BY
+        247 |C     THE TASKS THAT BELONG TO THE SERVER GROUP THAT WE ARE CONSIDERING. THE
+        248 |C     TASKS THAT ARE PERFORMING THE MODEL INTEGRATION WILL REFERENCE
+        249 |C     MPI_COMM_INTER_ARRAY() SINCE WE WILL NEED TO SELECT WHICH SERVER
+        250 |C     GROUP WE WISH TO COMMUNICATE WITH.
+        251 |c
+        252 |      if ( yes ) then
+        253 |      call mpi_intercomm_create(mpi_comm_comp,0,iworld_minus,irlr,0,
+        254 |     *   mpi_comm_inter,ierr)
+        255 |      end if
+        256 |C
+        257 |      call mpi_barrier(MPI_COMM_WORLD,ierr)
+        258 |C
+        259 |      end do     ! end do for loop over the number of server groups
+        260 |C
+        261 |C***
+        262 |C***  NPES IS REALLY THE NUMBER OF TASKS WORKING ON THE MODEL INTEGRATION
+        263 |C***
+        264 |      NPES = NPES  - IQSERVER
+        265 |C
+        266 |      IF(MYPE.EQ.0) THEN
+        267 |         print *, ' The Posting is using ',npes,' MPI task'
+        268 |         print *, ' There are ',iqserver,' I/O servers'
+        269 |      END IF
+        270 |C***
+        271 |      deallocate ( irank )
+        272 |C
+        273 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+comdup                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-62.15$  0-190.40  0-191.27
+ 
+get                              Static, Character(4), Offset: 0, Alignment: full word
+                                 0-66.19$  0-119.7@  0-121.12
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-162.10@  0-163.50  0-164.16  0-165.50  0-165.60  0-177.13@  0-178.37  0-180.25  0-205.10@
+                                 0-216.23
+ 
+icc                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-212.7@  0-219.16@  0-219.22  0-220.22  0-237.34
+ 
+icolor                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-174.10@  0-180.16@  0-191.34
+ 
+iendq                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-163.58  0-164.23
+ 
+iendxx                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-178.13@  0-179.51  0-182.22
+ 
+ierr                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-72.21  0-73.46  0-74.46  0-110.42  0-190.47  0-191.60  0-236.41  0-237.53  0-238.57  0-239.34
+                                 0-240.36  0-254.25  0-257.39
+ 
+igroup                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-236.34  0-237.27  0-239.27
+ 
+igroup_x                         Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-237.44  0-238.35  0-240.27
+ 
+inumq                            Reference argument, Integer(4) (1:*), Offset: 0, Alignment: full word
+                                 0-64.16$  0-3.32  0-164.10@  0-165.54  0-178.31  0-218.24  0-225.22
+ 
+iqserver                         Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-148.7@  0-149.12  0-156.30  0-157.26  0-163.28  0-203.26  0-264.22  0-268.33
+ 
+iquilt_group                     Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-121.28@  0-122.7@  0-122.26  0-126.12  0-133.10@  0-136.44  0-154.10@  0-156.12  0-157.11@
+                                 0-160.56  0-162.17  0-163.37  0-177.20  0-205.17  0-215.18
+ 
+irank                            Allocatable, Controlled, Integer(4) (:), Offset: 0, Alignment: full word
+                                 0-63.31$  0-203.18  0-220.16@  0-237.38  0-271.20
+ 
+irlr                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-208.13@  0-210.13@  0-253.62
+ 
+iss                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-213.7@  0-217.20  0-225.10@  0-225.16
+ 
+issl                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-217.13@  0-220.28  0-221.31  0-222.16@  0-222.23
+ 
+istaq                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-163.52  0-164.29
+ 
+istaxx                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-176.10@  0-178.22  0-179.28  0-182.13@
+ 
+iworld                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-235.7@  0-236.27  0-238.28
+ 
+iworld_minus                     Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-238.44  0-253.49
+ 
+ixx                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-204.7@  0-208.20
+ 
+jj                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-215.10@  0-216.15  0-218.30  0-225.28
+ 
+kk                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-218.16@
+ 
+max                              Pure Intrinsic
+                                 0-122.22
+ 
+max_op                           Parameter, Integer(4)
+                                 1-167.29$  1-171.18$
+ 
+mp_bw_lapi                       Parameter, Integer(4)
+                                 1-282.28$  1-283.29$
+ 
+mp_bw_mpi                        Parameter, Integer(4)
+                                 1-282.17$  1-283.17$
+ 
+mpe_errors_warn                  Parameter, Integer(4)
+                                 1-91.56$  1-93.18$
+ 
+mpi_2complex                     Parameter, Integer(4)
+                                 1-144.17$  1-146.18$
+ 
+mpi_2double_precision            Parameter, Integer(4)
+                                 1-143.27$  1-145.31$
+ 
+mpi_2integer                     Parameter, Integer(4)
+                                 1-143.49$  1-145.56$
+ 
+mpi_2real                        Parameter, Integer(4)
+                                 1-143.17$  1-145.18$
+ 
+mpi_abort                        External Subroutine
+                                 0-110.15
+ 
+mpi_address_kind                 Parameter, Integer(4)
+                                 1-185.17$  1-186.18$
+ 
+mpi_any_source                   Parameter, Integer(4)
+                                 1-83.31$  1-85.35$
+ 
+mpi_any_tag                      Parameter, Integer(4)
+                                 1-84.17$  1-86.18$
+ 
+mpi_atomic                       Parameter, Integer(4)
+                                 1-191.32$  1-192.35$
+ 
+mpi_band                         Parameter, Integer(4)
+                                 1-166.17$  1-169.31$
+ 
+mpi_barrier                      External Subroutine
+                                 0-257.12
+ 
+mpi_bor                          Parameter, Integer(4)
+                                 1-166.26$  1-169.42$
+ 
+mpi_bottom                       Unknown type
+                                 1-254.16$
+ 
+mpi_bsend_overhead               Parameter, Integer(4)
+                                 1-111.17$  1-112.18$
+ 
+mpi_bxor                         Parameter, Integer(4)
+                                 1-166.34$  1-169.52$
+ 
+mpi_byte                         Parameter, Integer(4)
+                                 1-114.31$  1-115.36$
+ 
+mpi_cart                         Parameter, Integer(4)
+                                 1-237.28$  1-238.30$
+ 
+mpi_char                         Parameter, Integer(4)
+                                 1-117.17$  1-122.18$
+ 
+mpi_character                    Parameter, Integer(4)
+                                 1-135.55$  1-141.49$
+ 
+mpi_combiner_contiguous          Parameter, Integer(4)
+                                 1-258.17$  1-268.18$
+ 
+mpi_combiner_darray              Parameter, Integer(4)
+                                 1-264.17$  1-273.43$
+ 
+mpi_combiner_dup                 Parameter, Integer(4)
+                                 1-257.36$  1-267.39$
+ 
+mpi_combiner_f90_complex         Parameter, Integer(4)
+                                 1-265.39$  1-274.43$
+ 
+mpi_combiner_f90_integer         Parameter, Integer(4)
+                                 1-266.17$  1-275.18$
+ 
+mpi_combiner_f90_real            Parameter, Integer(4)
+                                 1-265.17$  1-274.18$
+ 
+mpi_combiner_hindexed            Parameter, Integer(4)
+                                 1-261.47$  1-271.18$
+ 
+mpi_combiner_hindexed_integer    Parameter, Integer(4)
+                                 1-261.17$  1-270.41$
+ 
+mpi_combiner_hvector             Parameter, Integer(4)
+                                 1-260.17$  1-269.49$
+ 
+mpi_combiner_hvector_integer     Parameter, Integer(4)
+                                 1-259.37$  1-269.18$
+ 
+mpi_combiner_indexed             Parameter, Integer(4)
+                                 1-260.38$  1-270.18$
+ 
+mpi_combiner_indexed_block       Parameter, Integer(4)
+                                 1-262.17$  1-271.42$
+ 
+mpi_combiner_named               Parameter, Integer(4)
+                                 1-257.17$  1-267.18$
+ 
+mpi_combiner_resized             Parameter, Integer(4)
+                                 1-266.42$  1-275.46$
+ 
+mpi_combiner_struct              Parameter, Integer(4)
+                                 1-263.17$  1-272.49$
+ 
+mpi_combiner_struct_integer      Parameter, Integer(4)
+                                 1-262.44$  1-272.18$
+ 
+mpi_combiner_subarray            Parameter, Integer(4)
+                                 1-263.37$  1-273.18$
+ 
+mpi_combiner_vector              Parameter, Integer(4)
+                                 1-259.17$  1-268.44$
+ 
+mpi_comm_comp                    Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-4.32  0-191.46  0-253.33
+ 
+mpi_comm_create                  External Subroutine
+                                 0-238.12
+ 
+mpi_comm_dup                     External Subroutine
+                                 0-190.12
+ 
+mpi_comm_dup_fn                  Unknown type
+                                 1-248.38$
+ 
+mpi_comm_group                   External Subroutine
+                                 0-236.12
+ 
+mpi_comm_inter                   Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-5.32  0-254.10
+ 
+mpi_comm_null                    Parameter, Integer(4)
+                                 1-173.32$  1-175.35$
+ 
+mpi_comm_null_copy_fn            Unknown type
+                                 1-248.16$
+ 
+mpi_comm_null_delete_fn          Unknown type
+                                 1-249.16$
+ 
+mpi_comm_rank                    External Subroutine
+                                 0-73.12
+ 
+mpi_comm_self                    Parameter, Integer(4)
+                                 1-151.32$  1-152.35$
+ 
+mpi_comm_size                    External Subroutine
+                                 0-74.12
+ 
+mpi_comm_split                   External Subroutine
+                                 0-191.12
+ 
+mpi_comm_world                   Parameter, Integer(4)
+                                 1-151.17$  1-152.18$  0-73.26  0-74.26  0-110.25  0-190.25  0-235.16  0-257.24
+ 
+mpi_complex                      Parameter, Integer(4)
+                                 1-133.41$  1-139.18$
+ 
+mpi_complex16                    Parameter, Integer(4)
+                                 1-133.53$  1-139.33$
+ 
+mpi_complex32                    Parameter, Integer(4)
+                                 1-134.36$  1-140.18$
+ 
+mpi_complex8                     Parameter, Integer(4)
+                                 1-133.28$  1-138.56$
+ 
+mpi_congruent                    Parameter, Integer(4)
+                                 1-154.27$  1-155.30$
+ 
+mpi_conversion_fn_null           Unknown type
+                                 1-246.16$
+ 
+mpi_datatype_null                Parameter, Integer(4)
+                                 1-173.46$  1-175.52$
+ 
+mpi_displacement_current         Parameter, Integer(8)
+                                 1-194.37$  1-195.18$
+ 
+mpi_distribute_block             Parameter, Integer(4)
+                                 1-197.37$  1-199.40$
+ 
+mpi_distribute_cyclic            Parameter, Integer(4)
+                                 1-198.17$  1-200.18$
+ 
+mpi_distribute_dflt_darg         Parameter, Integer(4)
+                                 1-198.39$  1-200.42$
+ 
+mpi_distribute_none              Parameter, Integer(4)
+                                 1-197.17$  1-199.18$
+ 
+mpi_double                       Parameter, Integer(4)
+                                 1-119.45$  1-125.52$
+ 
+mpi_double_complex               Parameter, Integer(4)
+                                 1-134.17$  1-139.50$
+ 
+mpi_double_precision             Parameter, Integer(4)
+                                 1-132.46$  1-138.18$
+ 
+mpi_dup_fn                       Unknown type
+                                 1-247.33$
+ 
+mpi_err_access                   Parameter, Integer(4)
+                                 1-48.17$  1-71.18$
+ 
+mpi_err_amode                    Parameter, Integer(4)
+                                 1-43.47$  1-67.18$
+ 
+mpi_err_arg                      Parameter, Integer(4)
+                                 1-38.30$  1-61.34$
+ 
+mpi_err_assert                   Parameter, Integer(4)
+                                 1-53.34$  1-77.54$
+ 
+mpi_err_bad_file                 Parameter, Integer(4)
+                                 1-47.17$  1-70.41$
+ 
+mpi_err_base                     Parameter, Integer(4)
+                                 1-52.29$  1-76.33$
+ 
+mpi_err_buffer                   Parameter, Integer(4)
+                                 1-35.29$  1-57.32$
+ 
+mpi_err_comm                     Parameter, Integer(4)
+                                 1-36.29$  1-58.49$
+ 
+mpi_err_conversion               Parameter, Integer(4)
+                                 1-51.17$  1-75.18$
+ 
+mpi_err_count                    Parameter, Integer(4)
+                                 1-35.44$  1-57.50$
+ 
+mpi_err_dims                     Parameter, Integer(4)
+                                 1-38.17$  1-61.18$
+ 
+mpi_err_disp                     Parameter, Integer(4)
+                                 1-52.55$  1-77.18$
+ 
+mpi_err_dup_datarep              Parameter, Integer(4)
+                                 1-50.17$  1-74.41$
+ 
+mpi_err_file                     Parameter, Integer(4)
+                                 1-43.17$  1-66.34$
+ 
+mpi_err_file_exists              Parameter, Integer(4)
+                                 1-46.38$  1-70.18$
+ 
+mpi_err_file_in_use              Parameter, Integer(4)
+                                 1-49.35$  1-74.18$
+ 
+mpi_err_group                    Parameter, Integer(4)
+                                 1-37.30$  1-60.18$
+ 
+mpi_err_in_status                Parameter, Integer(4)
+                                 1-40.46$  1-63.18$
+ 
+mpi_err_info                     Parameter, Integer(4)
+                                 1-42.55$  1-66.18$
+ 
+mpi_err_info_key                 Parameter, Integer(4)
+                                 1-41.45$  1-64.18$
+ 
+mpi_err_info_nokey               Parameter, Integer(4)
+                                 1-42.36$  1-65.18$
+ 
+mpi_err_info_value               Parameter, Integer(4)
+                                 1-42.17$  1-64.38$
+ 
+mpi_err_intern                   Parameter, Integer(4)
+                                 1-40.31$  1-62.55$
+ 
+mpi_err_io                       Parameter, Integer(4)
+                                 1-51.36$  1-75.40$
+ 
+mpi_err_keyval                   Parameter, Integer(4)
+                                 1-55.17$  1-80.18$
+ 
+mpi_err_lastcode                 Parameter, Integer(4)
+                                 1-56.17$  1-81.18$
+ 
+mpi_err_locktype                 Parameter, Integer(4)
+                                 1-53.17$  1-77.34$
+ 
+mpi_err_no_mem                   Parameter, Integer(4)
+                                 1-54.34$  1-79.18$
+ 
+mpi_err_no_space                 Parameter, Integer(4)
+                                 1-48.32$  1-72.18$
+ 
+mpi_err_no_such_file             Parameter, Integer(4)
+                                 1-46.17$  1-69.18$
+ 
+mpi_err_not_same                 Parameter, Integer(4)
+                                 1-43.30$  1-66.50$
+ 
+mpi_err_op                       Parameter, Integer(4)
+                                 1-37.44$  1-60.35$
+ 
+mpi_err_other                    Parameter, Integer(4)
+                                 1-40.17$  1-62.38$
+ 
+mpi_err_pending                  Parameter, Integer(4)
+                                 1-41.29$  1-63.54$
+ 
+mpi_err_quota                    Parameter, Integer(4)
+                                 1-48.49$  1-72.38$
+ 
+mpi_err_rank                     Parameter, Integer(4)
+                                 1-36.42$  1-59.18$
+ 
+mpi_err_read_only                Parameter, Integer(4)
+                                 1-49.17$  1-73.18$
+ 
+mpi_err_request                  Parameter, Integer(4)
+                                 1-36.55$  1-59.34$
+ 
+mpi_err_rma_conflict             Parameter, Integer(4)
+                                 1-53.49$  1-78.18$
+ 
+mpi_err_rma_sync                 Parameter, Integer(4)
+                                 1-54.17$  1-78.42$
+ 
+mpi_err_root                     Parameter, Integer(4)
+                                 1-37.17$  1-59.53$
+ 
+mpi_err_size                     Parameter, Integer(4)
+                                 1-52.42$  1-76.49$
+ 
+mpi_err_tag                      Parameter, Integer(4)
+                                 1-36.17$  1-58.34$
+ 
+mpi_err_topology                 Parameter, Integer(4)
+                                 1-37.55$  1-60.49$
+ 
+mpi_err_truncate                 Parameter, Integer(4)
+                                 1-39.17$  1-62.18$
+ 
+mpi_err_type                     Parameter, Integer(4)
+                                 1-35.58$  1-58.18$
+ 
+mpi_err_unknown                  Parameter, Integer(4)
+                                 1-38.42$  1-61.49$
+ 
+mpi_err_unsupported_datarep      Parameter, Integer(4)
+                                 1-44.17$  1-67.35$
+ 
+mpi_err_unsupported_operation    Parameter, Integer(4)
+                                 1-45.17$  1-68.18$
+ 
+mpi_err_win                      Parameter, Integer(4)
+                                 1-52.17$  1-76.18$
+ 
+mpi_errhandler_null              Parameter, Integer(4)
+                                 1-174.46$  1-177.18$
+ 
+mpi_error                        Parameter, Integer(4)
+                                 1-88.52$  1-89.60$
+ 
+mpi_errors_are_fatal             Parameter, Integer(4)
+                                 1-91.17$  1-92.18$
+ 
+mpi_errors_return                Parameter, Integer(4)
+                                 1-91.38$  1-92.41$
+ 
+mpi_file_null                    Parameter, Integer(4)
+                                 1-179.31$  1-180.35$
+ 
+mpi_float                        Parameter, Integer(4)
+                                 1-119.35$  1-125.39$
+ 
+mpi_graph                        Parameter, Integer(4)
+                                 1-237.18$  1-238.18$
+ 
+mpi_group_empty                  Parameter, Integer(4)
+                                 1-182.17$  1-183.18$
+ 
+mpi_group_excl                   External Subroutine
+                                 0-237.12
+ 
+mpi_group_free                   External Subroutine
+                                 0-239.12  0-240.12
+ 
+mpi_group_null                   Parameter, Integer(4)
+                                 1-173.17$  1-175.17$
+ 
+mpi_host                         Parameter, Integer(4)
+                                 1-158.35$  1-161.40$
+ 
+mpi_ident                        Parameter, Integer(4)
+                                 1-154.17$  1-155.18$
+ 
+mpi_in_place                     Unknown type
+                                 1-254.27$
+ 
+mpi_info_null                    Parameter, Integer(4)
+                                 1-179.17$  1-180.18$
+ 
+mpi_init                         External Subroutine
+                                 0-72.12
+ 
+mpi_int                          Parameter, Integer(4)
+                                 1-118.17$  1-123.30$
+ 
+mpi_integer                      Parameter, Integer(4)
+                                 1-131.56$  1-137.18$
+ 
+mpi_integer1                     Parameter, Integer(4)
+                                 1-131.17$  1-136.18$
+ 
+mpi_integer2                     Parameter, Integer(4)
+                                 1-131.30$  1-136.34$
+ 
+mpi_integer4                     Parameter, Integer(4)
+                                 1-131.43$  1-136.50$
+ 
+mpi_integer8                     Parameter, Integer(4)
+                                 1-148.17$  1-149.18$
+ 
+mpi_intercomm_create             External Subroutine
+                                 0-253.12
+ 
+mpi_io                           Parameter, Integer(4)
+                                 1-158.28$  1-161.31$
+ 
+mpi_keyval_invalid               Parameter, Integer(4)
+                                 1-240.17$  1-241.18$
+ 
+mpi_land                         Parameter, Integer(4)
+                                 1-166.43$  1-170.18$
+ 
+mpi_lastusedcode                 Parameter, Integer(4)
+                                 1-160.17$  1-163.18$
+ 
+mpi_lb                           Parameter, Integer(4)
+                                 1-114.17$  1-115.18$
+ 
+mpi_lock_exclusive               Parameter, Integer(4)
+                                 1-225.17$  1-226.18$
+ 
+mpi_lock_shared                  Parameter, Integer(4)
+                                 1-225.36$  1-226.39$
+ 
+mpi_logical                      Parameter, Integer(4)
+                                 1-135.43$  1-141.34$
+ 
+mpi_logical1                     Parameter, Integer(4)
+                                 1-134.50$  1-140.35$
+ 
+mpi_logical2                     Parameter, Integer(4)
+                                 1-135.17$  1-140.51$
+ 
+mpi_logical4                     Parameter, Integer(4)
+                                 1-135.30$  1-141.18$
+ 
+mpi_logical8                     Parameter, Integer(4)
+                                 1-148.30$  1-149.34$
+ 
+mpi_long                         Parameter, Integer(4)
+                                 1-118.25$  1-123.40$
+ 
+mpi_long_double                  Parameter, Integer(4)
+                                 1-119.56$  1-126.18$
+ 
+mpi_long_long                    Parameter, Integer(4)
+                                 1-120.35$  1-127.18$
+ 
+mpi_long_long_int                Parameter, Integer(4)
+                                 1-120.17$  1-126.37$
+ 
+mpi_lor                          Parameter, Integer(4)
+                                 1-166.52$  1-170.29$
+ 
+mpi_lxor                         Parameter, Integer(4)
+                                 1-166.60$  1-170.40$
+ 
+mpi_max                          Parameter, Integer(4)
+                                 1-165.17$  1-168.18$
+ 
+mpi_max_datarep_string           Parameter, Integer(4)
+                                 1-103.35$  1-105.41$
+ 
+mpi_max_error_string             Parameter, Integer(4)
+                                 1-100.40$  1-101.45$
+ 
+mpi_max_file_name                Parameter, Integer(4)
+                                 1-103.17$  1-105.18$
+ 
+mpi_max_info_key                 Parameter, Integer(4)
+                                 1-104.17$  1-106.18$
+ 
+mpi_max_info_val                 Parameter, Integer(4)
+                                 1-104.34$  1-106.39$
+ 
+mpi_max_object_name              Parameter, Integer(4)
+                                 1-108.17$  1-109.18$
+ 
+mpi_max_processor_name           Parameter, Integer(4)
+                                 1-100.17$  1-101.18$
+ 
+mpi_maxloc                       Parameter, Integer(4)
+                                 1-165.50$  1-168.59$
+ 
+mpi_min                          Parameter, Integer(4)
+                                 1-165.25$  1-168.28$
+ 
+mpi_minloc                       Parameter, Integer(4)
+                                 1-165.61$  1-169.18$
+ 
+mpi_mode_append                  Parameter, Integer(4)
+                                 1-209.17$  1-217.18$
+ 
+mpi_mode_create                  Parameter, Integer(4)
+                                 1-210.17$  1-215.42$
+ 
+mpi_mode_delete_on_close         Parameter, Integer(4)
+                                 1-210.47$  1-219.18$
+ 
+mpi_mode_excl                    Parameter, Integer(4)
+                                 1-210.33$  1-217.44$
+ 
+mpi_mode_nocheck                 Parameter, Integer(4)
+                                 1-228.17$  1-231.18$
+ 
+mpi_mode_noprecede               Parameter, Integer(4)
+                                 1-229.17$  1-233.43$
+ 
+mpi_mode_noput                   Parameter, Integer(4)
+                                 1-228.51$  1-233.18$
+ 
+mpi_mode_nostore                 Parameter, Integer(4)
+                                 1-228.34$  1-231.45$
+ 
+mpi_mode_nosucceed               Parameter, Integer(4)
+                                 1-229.36$  1-235.18$
+ 
+mpi_mode_rdonly                  Parameter, Integer(4)
+                                 1-208.17$  1-213.18$
+ 
+mpi_mode_rdwr                    Parameter, Integer(4)
+                                 1-208.49$  1-215.18$
+ 
+mpi_mode_sequential              Parameter, Integer(4)
+                                 1-211.38$  1-223.18$
+ 
+mpi_mode_unique_open             Parameter, Integer(4)
+                                 1-211.17$  1-221.18$
+ 
+mpi_mode_wronly                  Parameter, Integer(4)
+                                 1-208.33$  1-213.45$
+ 
+mpi_non_atomic                   Parameter, Integer(4)
+                                 1-191.17$  1-192.18$
+ 
+mpi_null_copy_fn                 Unknown type
+                                 1-247.16$
+ 
+mpi_null_delete_fn               Unknown type
+                                 1-247.44$
+ 
+mpi_offset_kind                  Parameter, Integer(4)
+                                 1-188.17$  1-189.18$  1-194.20
+ 
+mpi_op_null                      Parameter, Integer(4)
+                                 1-174.34$  1-176.38$
+ 
+mpi_order_c                      Parameter, Integer(4)
+                                 1-202.17$  1-203.18$
+ 
+mpi_order_fortran                Parameter, Integer(4)
+                                 1-202.29$  1-203.32$
+ 
+mpi_packed                       Parameter, Integer(4)
+                                 1-114.40$  1-115.47$
+ 
+mpi_pending                      Parameter, Integer(4)
+                                 1-41.17$  1-63.39$
+ 
+mpi_proc_null                    Parameter, Integer(4)
+                                 1-83.17$  1-85.18$
+ 
+mpi_prod                         Parameter, Integer(4)
+                                 1-165.41$  1-168.48$
+ 
+mpi_real                         Parameter, Integer(4)
+                                 1-132.27$  1-137.46$
+ 
+mpi_real16                       Parameter, Integer(4)
+                                 1-133.17$  1-138.42$
+ 
+mpi_real4                        Parameter, Integer(4)
+                                 1-132.17$  1-137.33$
+ 
+mpi_real8                        Parameter, Integer(4)
+                                 1-132.36$  1-137.58$
+ 
+mpi_replace                      Parameter, Integer(4)
+                                 1-167.17$  1-170.52$
+ 
+mpi_request_null                 Parameter, Integer(4)
+                                 1-174.17$  1-176.18$
+ 
+mpi_root                         Parameter, Integer(4)
+                                 1-84.43$  1-86.50$
+ 
+mpi_seek_cur                     Parameter, Integer(4)
+                                 1-205.30$  1-206.33$
+ 
+mpi_seek_end                     Parameter, Integer(4)
+                                 1-205.43$  1-206.48$
+ 
+mpi_seek_set                     Parameter, Integer(4)
+                                 1-205.17$  1-206.18$
+ 
+mpi_short                        Parameter, Integer(4)
+                                 1-117.60$  1-123.18$
+ 
+mpi_signed_char                  Parameter, Integer(4)
+                                 1-117.44$  1-122.49$
+ 
+mpi_similar                      Parameter, Integer(4)
+                                 1-154.41$  1-155.46$
+ 
+mpi_source                       Parameter, Integer(4)
+                                 1-88.33$  1-89.37$
+ 
+mpi_status_ignore                Unknown type
+                                 1-255.16$
+ 
+mpi_status_size                  Parameter, Integer(4)
+                                 1-88.17$  1-89.18$
+ 
+mpi_statuses_ignore              Unknown type
+                                 1-255.34$
+ 
+mpi_subversion                   Parameter, Integer(4)
+                                 1-32.29$  1-33.32$
+ 
+mpi_success                      Parameter, Integer(4)
+                                 1-35.17$  1-57.18$
+ 
+mpi_sum                          Parameter, Integer(4)
+                                 1-165.33$  1-168.38$
+ 
+mpi_tag                          Parameter, Integer(4)
+                                 1-88.44$  1-89.50$
+ 
+mpi_tag_ub                       Parameter, Integer(4)
+                                 1-158.17$  1-161.18$
+ 
+mpi_thread_funneled              Parameter, Integer(4)
+                                 1-95.35$  1-97.38$
+ 
+mpi_thread_multiple              Parameter, Integer(4)
+                                 1-96.39$  1-98.42$
+ 
+mpi_thread_serialized            Parameter, Integer(4)
+                                 1-96.17$  1-98.18$
+ 
+mpi_thread_single                Parameter, Integer(4)
+                                 1-95.17$  1-97.18$
+ 
+mpi_type_dup_fn                  Unknown type
+                                 1-250.38$
+ 
+mpi_type_null_copy_fn            Unknown type
+                                 1-250.16$
+ 
+mpi_type_null_delete_fn          Unknown type
+                                 1-251.16$
+ 
+mpi_typeclass_complex            Parameter, Integer(4)
+                                 1-278.17$  1-280.17$
+ 
+mpi_typeclass_integer            Parameter, Integer(4)
+                                 1-277.36$  1-279.38$
+ 
+mpi_typeclass_real               Parameter, Integer(4)
+                                 1-277.17$  1-279.17$
+ 
+mpi_ub                           Parameter, Integer(4)
+                                 1-114.24$  1-115.27$
+ 
+mpi_undefined                    Parameter, Integer(4)
+                                 1-84.29$  1-86.33$
+ 
+mpi_unequal                      Parameter, Integer(4)
+                                 1-154.53$  1-156.18$
+ 
+mpi_unsigned                     Parameter, Integer(4)
+                                 1-118.53$  1-124.40$
+ 
+mpi_unsigned_char                Parameter, Integer(4)
+                                 1-117.26$  1-122.29$
+ 
+mpi_unsigned_long                Parameter, Integer(4)
+                                 1-119.17$  1-125.18$
+ 
+mpi_unsigned_long_long           Parameter, Integer(4)
+                                 1-120.49$  1-127.35$
+ 
+mpi_unsigned_short               Parameter, Integer(4)
+                                 1-118.34$  1-124.18$
+ 
+mpi_version                      Parameter, Integer(4)
+                                 1-32.17$  1-33.18$
+ 
+mpi_wchar                        Parameter, Integer(4)
+                                 1-121.17$  1-128.18$
+ 
+mpi_win_base                     Parameter, Integer(4)
+                                 1-159.17$  1-162.18$
+ 
+mpi_win_disp_unit                Parameter, Integer(4)
+                                 1-159.43$  1-162.48$
+ 
+mpi_win_dup_fn                   Unknown type
+                                 1-252.37$
+ 
+mpi_win_null                     Parameter, Integer(4)
+                                 1-179.45$  1-180.52$
+ 
+mpi_win_null_copy_fn             Unknown type
+                                 1-252.16$
+ 
+mpi_win_null_delete_fn           Unknown type
+                                 1-253.16$
+ 
+mpi_win_size                     Parameter, Integer(4)
+                                 1-159.30$  1-162.33$
+ 
+mpi_wtick                        Real(8)
+                                 1-243.14$  1-244.16$
+ 
+mpi_wtime                        Real(8)
+                                 1-243.24$  1-244.26$
+ 
+mpi_wtime_is_global              Parameter, Integer(4)
+                                 1-158.44$  1-161.51$
+ 
+mype                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.32  0-73.41  0-135.12  0-150.15  0-165.12  0-173.12  0-179.18  0-179.41  0-191.41  0-207.15
+                                 0-221.21  0-266.10
+ 
+npes                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-2.32  0-74.41  0-78.12  0-79.21  0-91.12  0-148.18  0-264.7@  0-264.14  0-267.44
+ 
+npes_mod                         Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-79.10@  0-81.10@  0-91.22  0-100.49  0-148.25  0-173.22  0-176.19  0-204.13  0-207.25  0-213.13
+ 
+para_range                       External Subroutine
+                                 0-163.15
+ 
+pmpi_wtick                       Real(8)
+                                 1-243.34$  1-244.36$
+ 
+pmpi_wtime                       Real(8)
+                                 1-243.45$  1-244.47$
+ 
+setup_servers                    Subroutine
+                                 0-1.18$
+ 
+yes                              Static, Logical(4), Offset: 0, Alignment: full word
+                                 0-65.15$  0-206.10@  0-221.38@  0-252.12
+ 
+** setup_servers   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    SETUP_SERVERS.f             12/18/08   11:40:51
+     1    /usr/lpp/ppe.poe/include/thread64/mpif.h
+                                      03/12/08   15:25:11      0      61
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     556
+1501-510  Compilation successful for file SETUP_SERVERS.f.
+1501-543  Object file created.

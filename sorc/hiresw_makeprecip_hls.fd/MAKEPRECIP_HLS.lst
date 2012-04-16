@@ -1,0 +1,661 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_makeprecip_hls.fd/MAKEPRECIP_HLS.f 12/22/08 15:32:52
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             DDIM            ESCAPE
+         FULLPATH        I4              INLGLUE         NOLIBESSL
+         NOLIBPOSIX      OBJECT          SOURCE          STRICT
+         SWAPOMP         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(548)        STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR()                AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         NOSAVE()              TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |       PROGRAM MAKEPRECIP150
+          2 |C                .      .    .                                       .
+          3 |C SUBPROGRAM:    MAKEPRECIP150
+          4 |C   PRGMMR: MANIKIN        ORG: W/NP22     DATE:  01-10-00
+          5 |C
+          6 |C ABSTRACT: PRODUCES 3-HOUR TOTAL AND CONVECTIVE PRECIPITATION BUCKETS
+          7 |C             ON THE ETA 150 OUTPUT GRID FOR AWIPS
+          8 |C
+          9 |C PROGRAM HISTORY LOG:
+         10 |C   01-10-00  GEOFF MANIKIN
+         11 |C   05-07-28  ROGERS ADDED ACCUMULATED EVAPORATION
+         12 |C
+         13 |C REMARKS:
+         14 |
+         15 |C ATTRIBUTES:
+         16 |C   LANGUAGE: FORTRAN-90
+         17 |C   MACHINE:  CRAY C-90
+         18 |C$$$
+         19 |      INCLUDE "parmg"
+  1       1 |      PARAMETER(ILIM=331,JLIM=368,MAXLEV=39)
+         20 |      PARAMETER(ITOT=ILIM*JLIM)
+         21 |      DIMENSION GRID(ITOT),DIFF(5)
+         22 |      DIMENSION INCDAT(8),JNCDAT(8)
+         23 |      INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
+         24 |      INTEGER LEVS(MAXLEV),IVAR(5)
+         25 |      INTEGER NBITSS(5), NBITSS2(5), IBSS(5)
+         26 |      LOGICAL*1 MASK(ITOT), MASK2(ITOT)
+         27 |C
+         28 |      PARAMETER(MBUF=2000000,JF=1000000)
+         29 |      CHARACTER CBUF(MBUF)
+         30 |      CHARACTER CBUF2(MBUF)
+         31 |      CHARACTER*11 ENVVAR
+         32 |      CHARACTER*80 FNAME
+         33 |      LOGICAL*1 LB(JF)
+         34 |      REAL F(JF)
+         35 |      PARAMETER(MSK1=32000,MSK2=4000)
+         36 |      DIMENSION APCP(ITOT), APCP2(ITOT),APCP3HR(ITOT),
+         37 |     &     CAPCP(ITOT),CAPCP2(ITOT),CAPCP3HR(ITOT)
+         38 |C
+         39 |      READ (5,*) FHR2, FHR1
+         40 |C      READ (12,*) ILIM, JLIM, MXLEV
+         41 |      NUMLEV=MAXLEV
+         42 |C
+         43 |      LUGB=13
+         44 |      LUGI=14
+         45 |      LUGB2=15
+         46 |      LUGI2=16
+         47 |      LUGB3=50
+         48 |      LUGB4=51
+         49 |      LUGB5=52
+         50 |      LUGB6=53
+         51 |      LUGB7=54
+         52 |C
+         53 |      JJ1 = 1
+         54 |      JJINC = 1
+         55 |C
+         56 |      ISTAT = 0
+         57 |C
+         58 |C  READ INDEX FILE TO GET GRID SPECS
+         59 |C
+         60 |      IRGI = 1
+         61 |      IRGS = 1
+         62 |      KMAX = 0
+         63 |      JR=0
+         64 |      KSKIP = 0
+         65 |      ENVVAR='XLFUNIT_   '
+         66 |      WRITE(ENVVAR(9:10),FMT='(I2)') LUGB
+         67 |      CALL GETENV(ENVVAR,FNAME)
+         68 |      CALL BAOPEN(LUGB,FNAME,IRETGB)
+         69 |      ENVVAR='XLFUNIT_   '
+         70 |      WRITE(ENVVAR(9:10),FMT='(I2)') LUGI
+         71 |      CALL GETENV(ENVVAR,FNAME)
+         72 |      CALL BAOPEN(LUGI,FNAME,IRETGI)
+         73 |      CALL GETGI(LUGI,KSKIP,MBUF,CBUF,NLEN,NNUM,IRGI)
+         74 |      write(6,*)' IRET FROM GETGI ',IRGI
+         75 |      IF(IRGI .NE. 0) THEN
+         76 |        WRITE(6,*)' PROBLEMS READING GRIB INDEX FILE SO ABORT'
+         77 |        ISTAT = IRGI
+         78 |        RETURN
+         79 |      ENDIF
+         80 |c      REWIND LUGI
+         81 |
+         82 |C
+         83 |      DO K = 1, NNUM
+         84 |        JR = K - 1
+         85 |        JPDS = -1
+         86 |        JGDS = -1
+         87 |        CALL GETGB1S(CBUF,NLEN,NNUM,JR,JPDS,JGDS,JENS,
+         88 |     &               KR,KPDS,KGDS,KENS,LSKIP,LGRIB,IRGS)
+         89 |        write(6,*)' IRET FROM GETGB1S ',IRGS
+         90 |        IF(IRGI .NE. 0) THEN
+         91 |          WRITE(6,*)' PROBLEMS ON 1ST READ OF GRIB FILE SO ABORT'
+         92 |          ISTAT = IRGS
+         93 |          RETURN
+         94 |        ENDIF
+         95 |C
+         96 |      ENDDO
+         97 |
+         98 |C    GET GRID NUMBER FROM PDS
+         99 |C
+        100 |      IGDNUM = KPDS(3)
+        101 |C
+        102 |C   PROCESS THE GRIB FILE
+        103 |C
+        104 |      IMAX = KGDS(2)
+        105 |      JMAX = KGDS(3)
+        106 |      NUMVAL = IMAX*JMAX
+        107 |      KMAX = MAXLEV
+        108 |      WRITE(6,280) IMAX,JMAX,NUMLEV,KMAX
+        109 |  280 FORMAT(' IMAX,JMAX,NUMLEV,KMAX ',5I4)
+        110 |  285 FORMAT(' IV, IVAR, L, IRET:  ',4I5)
+        111 |
+        112 |C -== GET SURFACE FIELDS ==-
+        113 |      L = 0
+        114 |      IV= 0
+        115 |
+        116 |C   PRECIP
+        117 |
+        118 |c   to start each new file with its index, set J=-1 for sfc pressure
+        119 |C
+        120 |      J = 0
+        121 |      JPDS = -1
+        122 |      JPDS(3) = IGDNUM
+        123 |      JPDS(5) = 061
+        124 |      JPDS(6) = 001
+        125 |      JPDS(13) = 1
+        126 |      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+        127 |     X           KPDS,KGDS,MASK,GRID,NBITSS(1),IBSS(1),IRET)
+        128 |      IF(IRET.EQ.0) THEN
+        129 |        II = 1
+        130 |        JJ = JJ1
+        131 |        DO KK = 1, ITOT
+        132 |          APCP(KK) = GRID(KK)
+        133 |c          if (APCP(KK) .GT. 0.1) THEN
+        134 |c            print *, 'PRECIP ', KK, APCP(KK)
+        135 |c          endif
+        136 |        ENDDO
+        137 |      ELSE
+        138 |        WRITE(6,285)IV,JPDS(5),L,IRET
+        139 |        WRITE(6,*)' COULD NOT UNPACK GRID 150 FILE '
+        140 |         ISTAT = IRET
+        141 |        RETURN
+        142 |      ENDIF
+        143 |
+        144 |C   PRECIP
+        145 |
+        146 |c   to start each new file with its index, set J=-1 for sfc pressure
+        147 |C
+        148 |C  CONVECTIVE PRECIP
+        149 |      J = 0
+        150 |      JPDS = -1
+        151 |      JPDS(3) = IGDNUM
+        152 |      JPDS(5) = 063
+        153 |      JPDS(6) = 001
+        154 |      JPDS(13) = 1
+        155 |      CALL GETGB(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF,K,
+        156 |     X           KPDS,KGDS,MASK,GRID,NBITSS(2),IBSS(2),IRET)
+        157 |      IF(IRET.EQ.0) THEN
+        158 |        II = 1
+        159 |        JJ = JJ1
+        160 |        DO KK = 1, ITOT
+        161 |          CAPCP(KK) = GRID(KK)
+        162 |        ENDDO
+        163 |      ELSE
+        164 |        WRITE(6,285)IV,JPDS(5),L,IRET
+        165 |        WRITE(6,*)' COULD NOT UNPACK GRID 150 FILE '
+        166 |         ISTAT = IRET
+        167 |        RETURN
+        168 |      ENDIF
+        169 |
+        170 |C  PRINT VALUES AT POINT IN MIDDLE OF GRID
+        171 |      write(6,1234)apcp(5500),capcp(5500)
+        172 |1234  format(2(1x,e12.5))
+        173 |      write(6,1235)nbitss(1),nbitss(2)
+        174 |      write(6,1235)ibss(1),ibss(2)
+        175 |1235  format(2i4)
+        176 |
+        177 |C BEGIN WORK ON 2ND FILE
+        178 |      JJ1 = 1
+        179 |      JJINC = 1
+        180 |
+        181 |C  READ INDEX FILE TO GET GRID SPECS
+        182 |C
+        183 |      IRGI = 1
+        184 |      IRGS = 1
+        185 |      KMAX = 0
+        186 |      JR=0
+        187 |      KSKIP = 0
+        188 |      WRITE(ENVVAR(9:10),FMT='(I2)') LUGB2
+        189 |      CALL GETENV(ENVVAR,FNAME)
+        190 |      CALL BAOPEN(LUGB2,FNAME,IRETGB2)
+        191 |      WRITE(ENVVAR(9:10),FMT='(I2)') LUGI2
+        192 |      CALL GETENV(ENVVAR,FNAME)
+        193 |      CALL BAOPEN(LUGI2,FNAME,IRETGI2)
+        194 |      CALL GETGI(LUGI2,KSKIP,MBUF,CBUF2,NLEN,NNUM,IRGI)
+        195 |      IF(IRGI .NE. 0) THEN
+        196 |        WRITE(6,*)' PROBLEMS READING GRIB INDEX FILE SO ABORT'
+        197 |        ISTAT = IRGI
+        198 |        RETURN
+        199 |      ENDIF
+        200 |c      REWIND LUGI2
+        201 |
+        202 |      DO K = 1, NNUM
+        203 |        JR = K - 1
+        204 |        JPDS = -1
+        205 |        JGDS = -1
+        206 |        CALL GETGB1S(CBUF2,NLEN,NNUM,JR,JPDS,JGDS,JENS,
+        207 |     &               KR,KPDS,KGDS,KENS,LSKIP,LGRIB,IRGS)
+        208 |        write(6,*)' IRET FROM GETGB1S ',IRGS
+        209 |        IF(IRGI .NE. 0) THEN
+        210 |          WRITE(6,*)' PROBLEMS ON 1ST READ OF GRIB FILE SO ABORT'
+        211 |          ISTAT = IRGS
+        212 |          RETURN
+        213 |        ENDIF
+        214 |C
+        215 |      ENDDO
+        216 |
+        217 |C    GET GRID NUMBER FROM PDS
+        218 |C
+        219 |      IGDNUM = KPDS(3)
+        220 |C
+        221 |C   PROCESS THE GRIB FILE
+        222 |C
+        223 |      IMAX = KGDS(2)
+        224 |      JMAX = KGDS(3)
+        225 |      NUMVAL = IMAX*JMAX
+        226 |      KMAX = MAXLEV
+        227 |      WRITE(6,280) IMAX,JMAX,NUMLEV,KMAX
+        228 |
+        229 |C -== GET SURFACE FIELDS ==-
+        230 |      L = 0
+        231 |      IV= 0
+        232 |C   ACCUMULATED PRECIP
+        233 |
+        234 |c   to start each new file with its index, set J=-1 for sfc pressure
+        235 |C
+        236 |      J = -1
+        237 |      JPDS = -1
+        238 |      JPDS(3) = IGDNUM
+        239 |      JPDS(5) = 061
+        240 |      JPDS(6) = 001
+        241 |      JPDS(13) = 1
+        242 |      CALL GETGB(LUGB2,LUGI2,NUMVAL,J,JPDS,JGDS,KF,K,
+        243 |     X           KPDS,KGDS,MASK2,GRID,NBITSS2(1),IBSS(1),IRET)
+        244 |      IF(IRET.EQ.0) THEN
+        245 |        II = 1
+        246 |        JJ = JJ1
+        247 |        DO KK = 1, ITOT
+        248 |          APCP2(KK) = GRID(KK)
+        249 |        ENDDO
+        250 |      ELSE
+        251 |        WRITE(6,285)IV,JPDS(5),L,IRET
+        252 |        WRITE(6,*)' COULD NOT UNPACK 2ND GRID 150 FILE '
+        253 |         ISTAT = IRET
+        254 |        RETURN
+        255 |      ENDIF
+        256 |
+        257 |C   ACCUMULATED CONVECTIVE PRECIP
+        258 |
+        259 |c   to start each new file with its index, set J=-1 for sfc pressure
+        260 |C
+        261 |      J = -1
+        262 |      JPDS = -1
+        263 |      JPDS(3) = IGDNUM
+        264 |      JPDS(5) = 063
+        265 |      JPDS(6) = 001
+        266 |      JPDS(13) = 1
+        267 |      CALL GETGB(LUGB2,LUGI2,NUMVAL,J,JPDS,JGDS,KF,K,
+        268 |     X           KPDS,KGDS,MASK2,GRID,NBITSS2(2),IBSS(2),IRET)
+        269 |      IF(IRET.EQ.0) THEN
+        270 |        II = 1
+        271 |        JJ = JJ1
+        272 |        DO KK = 1, ITOT
+        273 |          CAPCP2(KK) = GRID(KK)
+        274 |        ENDDO
+        275 |      ELSE
+        276 |        WRITE(6,285)IV,JPDS(5),L,IRET
+        277 |        WRITE(6,*)' COULD NOT UNPACK 2ND GRID 150 FILE '
+        278 |         ISTAT = IRET
+        279 |        RETURN
+        280 |      ENDIF
+        281 |
+        282 |C  PRINT VALUES AT POINT IN MIDDLE OF GRID
+        283 |      write(6,1234)apcp2(5500),capcp2(5500)
+        284 |      write(6,1235)nbitss2(1),nbitss2(2)
+        285 |      write(6,1235)ibss(1),ibss(2)
+        286 |
+        287 |       DO K = 1, ITOT
+        288 |          APCP3HR(K)=APCP2(K)-APCP(K)
+        289 |          CAPCP3HR(K)=CAPCP2(K)-CAPCP(K)
+        290 |       ENDDO
+        291 |
+        292 |      KPDS(5)=61
+        293 |      KPDS(14)=FHR1
+        294 |      KPDS(15)=FHR2
+        295 |      IBS=IBSS(1)
+        296 |      ENVVAR='XLFUNIT_   '
+        297 |      WRITE(ENVVAR(9:10),FMT='(I2)') LUGB3
+        298 |      CALL GETENV(ENVVAR,FNAME)
+        299 |      CALL BAOPEN(LUGB3,FNAME,IRET)
+        300 |      print *,'IRET from BAOPEN on LUGB3 = ', IRET
+        301 |      CALL PUTGBN(LUGB3,ITOT,KPDS,KGDS,IBS,NBITSS(1),MASK2,
+        302 |     &   APCP3HR,IRET)
+        303 |      print *,'IRET from PUTGB on LUGB3 = ', IRET
+        304 |      CALL BACLOSE(LUGB3,IRET)
+        305 |
+        306 |      KPDS(5)=63
+        307 |      KPDS(14)=FHR1
+        308 |      KPDS(15)=FHR2
+        309 |      IBS=IBSS(2)
+        310 |      ENVVAR='XLFUNIT_   '
+        311 |      WRITE(ENVVAR(9:10),FMT='(I2)') LUGB4
+        312 |      CALL GETENV(ENVVAR,FNAME)
+        313 |      CALL BAOPEN(LUGB4,FNAME,IRET)
+        314 |      print *,'IRET from BAOPEN on LUGB4 = ', IRET
+        315 |      CALL PUTGBN(LUGB4,ITOT,KPDS,KGDS,IBS,NBITSS(2),MASK2,
+        316 |     &   CAPCP3HR,IRET)
+        317 |      print *,'IRET from PUTGB on LUGB4 = ', IRET
+        318 |      CALL BACLOSE(LUGB4,IRET)
+        319 |
+        320 |      STOP
+        321 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+apcp                             Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-36.17$  0-132.11@  0-171.20  0-288.31
+ 
+apcp2                            Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-36.29$  0-248.11@  0-283.20  0-288.22
+ 
+apcp3hr                          Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-36.41$  0-288.11@  0-302.10
+ 
+baclose                          External Subroutine
+                                 0-304.12  0-318.12
+ 
+baopen                           External Subroutine
+                                 0-68.12  0-72.12  0-190.12  0-193.12  0-299.12  0-313.12
+ 
+capcp                            Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-37.12$  0-161.11@  0-171.31  0-289.33
+ 
+capcp2                           Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-37.24$  0-273.11@  0-283.32  0-289.23
+ 
+capcp3hr                         Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-37.37$  0-289.11@  0-316.10
+ 
+cbuf                             Automatic, Character(1) (1:2000000), Offset: 0, Alignment: full word
+                                 0-29.17$  0-73.34  0-87.22
+ 
+cbuf2                            Automatic, Character(1) (1:2000000), Offset: 0, Alignment: full word
+                                 0-30.17$  0-194.35  0-206.22
+ 
+diff                             Automatic, Real(4) (1:5), Offset: 0, Alignment: full word
+                                 0-21.28$
+ 
+envvar                           Automatic, Character(11), Offset: 0, Alignment: full word
+                                 0-31.20$  0-65.7@  0-66.13  0-67.19  0-69.7@  0-70.13  0-71.19  0-188.13  0-189.19  0-191.13
+                                 0-192.19  0-296.7@  0-297.13  0-298.19  0-310.7@  0-311.13  0-312.19
+ 
+f                                Automatic, Real(4) (1:1000000), Offset: 0, Alignment: full word
+                                 0-34.12$
+ 
+fhr1                             Automatic, Real(4), Offset: 0, Alignment: full word
+                                 0-39.24@  0-293.16  0-307.16
+ 
+fhr2                             Automatic, Real(4), Offset: 0, Alignment: full word
+                                 0-39.18@  0-294.16  0-308.16
+ 
+fname                            Automatic, Character(80), Offset: 0, Alignment: full word
+                                 0-32.20$  0-67.26  0-68.24  0-71.26  0-72.24  0-189.26  0-190.25  0-192.26  0-193.25  0-298.26
+                                 0-299.25  0-312.26  0-313.25
+ 
+getenv                           Intrinsic
+                                 0-67.12  0-71.12  0-189.12  0-192.12  0-298.12  0-312.12
+ 
+getgb                            External Subroutine
+                                 0-126.12  0-155.12  0-242.12  0-267.12
+ 
+getgb1s                          External Subroutine
+                                 0-87.14  0-206.14
+ 
+getgi                            External Subroutine
+                                 0-73.12  0-194.12
+ 
+grid                             Automatic, Real(4) (1:121808), Offset: 0, Alignment: full word
+                                 0-21.17$  0-127.33  0-132.22  0-156.33  0-161.23  0-243.34  0-248.23  0-268.34  0-273.24
+ 
+ibs                              Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-295.7@  0-301.40  0-309.7@  0-315.40
+ 
+ibss                             Automatic, Integer(4) (1:5), Offset: 0, Alignment: full word
+                                 0-25.38$  0-127.48  0-156.48  0-174.20  0-174.28  0-243.50  0-268.50  0-285.20  0-285.28  0-295.11
+                                 0-309.11
+ 
+igdnum                           Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-100.7@  0-122.17  0-151.17  0-219.7@  0-238.17  0-263.17
+ 
+ii                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-129.9@  0-158.9@  0-245.9@  0-270.9@
+ 
+ilim                             Parameter, Integer(4)
+                                 1-1.17$  0-20.22
+ 
+imax                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-104.7@  0-106.16  0-108.20  0-223.7@  0-225.16  0-227.20
+ 
+incdat                           Automatic, Integer(4) (1:8), Offset: 0, Alignment: full word
+                                 0-22.17$
+ 
+iret                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-127.56  0-128.10  0-138.34  0-140.18  0-156.56  0-157.10  0-164.34  0-166.18  0-243.58  0-244.10
+                                 0-251.34  0-253.18  0-268.58  0-269.10  0-276.34  0-278.18  0-299.31  0-300.47  0-302.18  0-303.46
+                                 0-304.26  0-313.31  0-314.47  0-316.19  0-317.46  0-318.26
+ 
+iretgb                           Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-68.30
+ 
+iretgb2                          Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-190.31
+ 
+iretgi                           Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-72.30
+ 
+iretgi2                          Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-193.31
+ 
+irgi                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-60.7@  0-73.49  0-74.37  0-75.10  0-77.17  0-90.12  0-183.7@  0-194.51  0-195.10  0-197.17
+                                 0-209.12
+ 
+irgs                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-61.7@  0-88.52  0-89.41  0-92.19  0-184.7@  0-207.52  0-208.41  0-211.19
+ 
+istat                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-56.7@  0-77.9@  0-92.11@  0-140.10@  0-166.10@  0-197.9@  0-211.11@  0-253.10@  0-278.10@
+ 
+itot                             Parameter, Integer(4)
+                                 0-20.17$  0-21.22  0-26.22  0-26.35  0-36.22  0-36.35  0-36.49  0-37.18  0-37.31  0-37.46  0-131.20
+                                 0-160.20  0-247.20  0-272.20  0-287.18  0-301.25  0-315.25
+ 
+iv                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-114.7@  0-138.21  0-164.21  0-231.7@  0-251.21  0-276.21
+ 
+ivar                             Automatic, Integer(4) (1:5), Offset: 0, Alignment: full word
+                                 0-24.28$
+ 
+j                                Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-120.7@  0-126.35  0-149.7@  0-155.35  0-236.7@  0-242.37  0-261.7@  0-267.37
+ 
+jens                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-87.50  0-206.51
+ 
+jf                               Parameter, Integer(4)
+                                 0-28.30$  0-33.20  0-34.14
+ 
+jgds                             Automatic, Integer(4) (1:200), Offset: 0, Alignment: full word
+                                 0-23.25$  0-86.9@  0-87.45  0-126.42  0-155.42  0-205.9@  0-206.46  0-242.44  0-267.44
+ 
+jj                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-130.9@  0-159.9@  0-246.9@  0-271.9@
+ 
+jj1                              Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-53.7@  0-130.14  0-159.14  0-178.7@  0-246.14  0-271.14
+ 
+jjinc                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-54.7@  0-179.7@
+ 
+jlim                             Parameter, Integer(4)
+                                 1-1.26$  0-20.27
+ 
+jmax                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-105.7@  0-106.21  0-108.25  0-224.7@  0-225.21  0-227.25
+ 
+jncdat                           Automatic, Integer(4) (1:8), Offset: 0, Alignment: full word
+                                 0-22.27$
+ 
+jpds                             Automatic, Integer(4) (1:200), Offset: 0, Alignment: full word
+                                 0-23.15$  0-85.9@  0-87.40  0-121.7@  0-122.7@  0-123.7@  0-124.7@  0-125.7@  0-126.37  0-138.24
+                                 0-150.7@  0-151.7@  0-152.7@  0-153.7@  0-154.7@  0-155.37  0-164.24  0-204.9@  0-206.41  0-237.7@
+                                 0-238.7@  0-239.7@  0-240.7@  0-241.7@  0-242.39  0-251.24  0-262.7@  0-263.7@  0-264.7@  0-265.7@
+                                 0-266.7@  0-267.39  0-276.24
+ 
+jr                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-63.7@  0-84.9@  0-87.37  0-186.7@  0-203.9@  0-206.38
+ 
+k                                Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-83.10@  0-84.14  0-126.50  0-155.50  0-202.10@  0-203.14  0-242.52  0-267.52  0-287.11@  0-288.19
+                                 0-288.28  0-288.36  0-289.20  0-289.30  0-289.39
+ 
+kens                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-88.35  0-207.35
+ 
+kf                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-126.47  0-155.47  0-242.49  0-267.49
+ 
+kgds                             Automatic, Integer(4) (1:200), Offset: 0, Alignment: full word
+                                 0-23.45$  0-88.30  0-104.14  0-105.14  0-127.23  0-156.23  0-207.30  0-223.14  0-224.14  0-243.23
+                                 0-268.23  0-301.35  0-315.35
+ 
+kk                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-131.12@  0-132.16  0-132.27  0-160.12@  0-161.17  0-161.28  0-247.12@  0-248.17  0-248.28
+                                 0-272.12@  0-273.18  0-273.29
+ 
+kmax                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-62.7@  0-107.7@  0-108.37  0-185.7@  0-226.7@  0-227.37
+ 
+kpds                             Automatic, Integer(4) (1:200), Offset: 0, Alignment: full word
+                                 0-23.35$  0-88.25  0-100.16  0-127.18  0-156.18  0-207.25  0-219.16  0-243.18  0-268.18  0-292.7@
+                                 0-293.7@  0-294.7@  0-301.30  0-306.7@  0-307.7@  0-308.7@  0-315.30
+ 
+kr                               Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-88.22  0-207.22
+ 
+kskip                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-64.7@  0-73.23  0-187.7@  0-194.24
+ 
+l                                Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-113.7@  0-138.32  0-164.32  0-230.7@  0-251.32  0-276.32
+ 
+lb                               Automatic, Logical(1) (1:1000000), Offset: 0, Alignment: byte
+                                 0-33.17$
+ 
+levs                             Automatic, Integer(4) (1:39), Offset: 0, Alignment: full word
+                                 0-24.15$
+ 
+lgrib                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-88.46  0-207.46
+ 
+lskip                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-88.40  0-207.40
+ 
+lugb                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-43.7@  0-66.38  0-68.19  0-126.18  0-155.18
+ 
+lugb2                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-45.7@  0-188.38  0-190.19  0-242.18  0-267.18
+ 
+lugb3                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-47.7@  0-297.38  0-299.19  0-301.19  0-304.20
+ 
+lugb4                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-48.7@  0-311.38  0-313.19  0-315.19  0-318.20
+ 
+lugb5                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-49.7@
+ 
+lugb6                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-50.7@
+ 
+lugb7                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-51.7@
+ 
+lugi                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-44.7@  0-70.38  0-72.19  0-73.18  0-126.23  0-155.23
+ 
+lugi2                            Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-46.7@  0-191.38  0-193.19  0-194.18  0-242.24  0-267.24
+ 
+makeprecip150                    Program
+                                 0-1.16$
+ 
+mask                             Automatic, Logical(1) (1:121808), Offset: 0, Alignment: byte
+                                 0-26.17$  0-127.28  0-156.28
+ 
+mask2                            Automatic, Logical(1) (1:121808), Offset: 0, Alignment: byte
+                                 0-26.29$  0-243.28  0-268.28  0-301.54  0-315.54
+ 
+maxlev                           Parameter, Integer(4)
+                                 1-1.35$  0-24.20  0-41.14  0-107.14  0-226.14
+ 
+mbuf                             Parameter, Integer(4)
+                                 0-28.17$  0-29.22  0-30.23  0-73.29  0-194.30
+ 
+msk1                             Parameter, Integer(4)
+                                 0-35.17$
+ 
+msk2                             Parameter, Integer(4)
+                                 0-35.28$
+ 
+nbitss                           Automatic, Integer(4) (1:5), Offset: 0, Alignment: full word
+                                 0-25.15$  0-127.38  0-156.38  0-173.20  0-173.30  0-301.44  0-315.44
+ 
+nbitss2                          Automatic, Integer(4) (1:5), Offset: 0, Alignment: full word
+                                 0-25.26$  0-243.39  0-268.39  0-284.20  0-284.31
+ 
+nlen                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-73.39  0-87.27  0-194.41  0-206.28
+ 
+nnum                             Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-73.44  0-83.17  0-87.32  0-194.46  0-202.17  0-206.33
+ 
+numlev                           Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-41.7@  0-108.30  0-227.30
+ 
+numval                           Automatic, Integer(4), Offset: 0, Alignment: full word
+                                 0-106.7@  0-126.28  0-155.28  0-225.7@  0-242.30  0-267.30
+ 
+putgbn                           External Subroutine
+                                 0-301.12  0-315.12
+ 
+** makeprecip150   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    MAKEPRECIP_HLS.f            12/18/08   11:53:43
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_makeprecip_hls.fd/parmg
+                                      12/18/08   11:53:43      0      19
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     322
+1501-510  Compilation successful for file MAKEPRECIP_HLS.f.
+1501-543  Object file created.

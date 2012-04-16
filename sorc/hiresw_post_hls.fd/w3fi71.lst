@@ -1,0 +1,2233 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/w3fi71.f 12/22/08 15:46:03
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE W3FI71 (IGRID, IGDS, IERR)
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .                                       .
+          4 |C SUBPROGRAM:    W3FI71      MAKE ARRAY USED BY GRIB PACKER FOR GDS
+          5 |C   PRGMMR: R.E.JONES        ORG: W/NMC42    DATE: 93-03-26
+          6 |C
+          7 |C ABSTRACT: W3FI71 MAKES A 18, 37, 55, 64, OR 91 WORD INTEGER ARRAY
+          8 |C     USED BY W3FI72 GRIB PACKER TO MAKE THE GRID DESCRIPTION SECTION
+          9 |C     (GDS) - SECTION 2.
+         10 |C
+         11 |C PROGRAM HISTORY LOG:
+         12 |C   92-02-21  R.E.JONES
+         13 |C   92-07-01  M. FARLEY    ADDED REMARKS FOR 'IGDS' ARRAY ELEMENTS.
+         14 |C                          ADDED LAMBERT CONFORMAL GRIDS AND ENLARGED
+         15 |C                          IDGS ARRAY FROM 14 TO 18 WORDS.
+         16 |C   92-10-03  R.E.JONES    ADDED CORRECTIONS TO AWIPS GRIB TABLES
+         17 |C   92-10-16  R.E.JONES    ADD GAUSSIAN GRID 126 TO TABLES
+         18 |C   92-10-18  R.E.JONES    CORRECTIONS TO LAMBERT CONFORMAL TABLES
+         19 |C                          AND OTHER TABLES
+         20 |C   92-10-19  R.E.JONES    ADD GAUSSIAN GRID  98 TO TABLES
+         21 |C   93-01-25  R.E.JONES    ADD ON84 GRIDS 87, 106, 107 TO TABLES
+         22 |C   93-03-10  R.E.JONES    ADD ON84 GRIDS 1, 55, 56 TO TABLES
+         23 |C   93-03-26  R.E.JONES    ADD GRIB GRIDS 2, 3 TO TABLES
+         24 |C   93-03-29  R.E.JONES    ADD SAVE STATEMENT
+         25 |C   93-06-15  R.E.JONES    ADD GRIB GRIDS 37 TO 44 TO TABLES
+         26 |C   93-09-29  R.E.JONES    GAUSSIAN GRID DOCUMENT NOT CORRECT,
+         27 |C                          W3FI74 WILL BE CHANGED TO AGREE WITH
+         28 |C                          IT. GAUSSIAN GRID 98 TABLE HAS WRONG
+         29 |C                          VALUE.
+         30 |C   93-10-12  R.E.JONES    CHANGES FOR ON388 REV. OCT 8,1993 FOR
+         31 |C                          GRID 204, 208.
+         32 |C   93-10-13  R.E.JONES    CORRECTION FOR GRIDS 37-44, BYTES 7-8,
+         33 |C                          24-25 SET TO ALL BITS 1 FOR MISSING.
+         34 |C   93-11-23  R.E.JONES    ADD GRIDS 90-93 FOR ETA MODEL
+         35 |C                          ADD GRID 4 FOR 720*361 .5 DEG. GRID
+         36 |C   94-04-12  R.E.JONES    CORRECTION FOR GRID 28
+         37 |C   94-06-01  R.E.JONES    ADD GRID 45, 288*145 1.25 DEG. GRID
+         38 |C   94-06-22  R.E.JONES    ADD GRIDS 94, 95 FOR ETA MODEL
+         39 |C   95-04-11  R.E.JONES    ADD GRIDS 96, 97 FOR ETA MODEL
+         40 |C   95-05-19  R.E.JONES    ADD FROM 20 KM ETA MODEL AWIPS GRID 215
+         41 |C   95-10-19  R.E.JONES    ADD FROM 20 KM ETA MODEL ALASKA GRID 216
+         42 |C   95-10-31  IREDELL      REMOVED SAVES AND PRINTS
+         43 |C   96-05-08  IREDELL      CORRECT FIRST LATITUDE FOR GRIDS 27 AND 28
+         44 |C   96-07-02  R.E.JONES    ADD FROM 10 KM ETA MODEL OLYMPIC GRID 218
+         45 |C   96-07-02  R.E.JONES    ADD 196 FOR ETA MODEL
+         46 |C   96-08-15  R.E.JONES    ADD O.N. 84 GRID 8 AND 53 AS GRIB GRID 8
+         47 |C                          AND 53
+         48 |C   96-11-29  R.E.JONES    CORRECTION TO TABLES FOR GRID 21-26, 61-64
+         49 |C   97-01-31  IREDELL      CORRECT FIRST LATITUDE FOR GRID 30
+         50 |C   97-10-20  IREDELL      CORRECT LAST LONGITUDE FOR GRID 98
+         51 |C   98-07-07  Gilbert      Add grids 217 and 219 through 235
+         52 |C   98-09-21  BALDWIN      ADD GRIDS 190, 192 FOR ETA MODEL
+         53 |C   99-01-20  BALDWIN      ADD GRIDS 236, 237
+         54 |C   99-08-18  IREDELL      ADD GRID 170
+         55 |C   01-03-08  ROGERS       CHANGED ETA GRIDS 90-97, ADDED ETA GRIDS
+         56 |C                          194, 198. ADDED AWIPS GRIDS 241,242,243,
+         57 |C                          245, 246, 247, 248, AND 250
+         58 |C   01-03-19  VUONG        ADDED AWIPS GRIDS 238,239,240, AND 244.
+         59 |C   01-04-02  VUONG        CORRECT LAST LONGITUDE FOR GRID R225
+         60 |C   01-05-03  ROGERS       ADDED GRID 249
+         61 |C   01-10-10  ROGERS       REDEFINED 218 FOR 12-KM ETA
+         62 |C                          REDEFINED GRID 192 FOR NEW 32-KM ETA GRID
+         63 |C   02-01-14  ROGERS       CHANGED GRIDS 90-92, 97, AND 194 FROM 10 KM ETA
+         64 |C                          TO 8 KM MESO; CHANGED GRID 93 FROM 12 KM ETA
+         65 |C                          TO 10 KM MESO; CHANGED GRIDS 101-126 FOR
+         66 |C                          4 KM MESO; ADDED GRIDS 151-176 FOR 4 KM MESO
+         67 |C                          OUTPUT GRIDS ; CHANGES GRIDS 245, 246, 247,
+         68 |C                          248, 249, AND 250 FOR 8KM/10KM MESO
+         69 |C
+         70 |C USAGE:    CALL W3FI71 (IGRID, IGDS, IERR)
+         71 |C   INPUT ARGUMENT LIST:
+         72 |C     IGRID       - GRIB GRID NUMBER, OR OFFICE NOTE 84 GRID NUMBER
+         73 |C
+         74 |C   OUTPUT ARGUMENT LIST:
+         75 |C     IGDS      - 18, 37, 55, 64, OR 91 WORD INTEGER ARRAY WITH
+         76 |C                 INFORMATION TO MAKE A GRIB GRID DESCRIPTION SECTION.
+         77 |C     IERR       - 0  CORRECT EXIT
+         78 |C                  1  GRID TYPE IN IGRID IS NOT IN TABLE
+         79 |C
+         80 |C REMARKS:
+         81 |C    1) OFFICE NOTE GRID TYPE 26 IS 6 IN GRIB, 26 IS AN
+         82 |C       INTERNATIONAL EXCHANGE GRID.
+         83 |C
+         84 |C    2) VALUES RETURNED IN 18, 37, 55, 64, OR 91 WORD INTEGER ARRAY
+         85 |C        IGDS VARY DEPENDING ON GRID REPRESENTATION TYPE.
+         86 |C
+         87 |C       LAT/LON GRID:
+         88 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+         89 |C           IGDS( 2) = PV, PL OR 255
+         90 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6)
+         91 |C           IGDS( 4) = NO. OF POINTS ALONG A LATITUDE
+         92 |C           IGDS( 5) = NO. OF POINTS ALONG A LONGITUDE MERIDIAN
+         93 |C           IGDS( 6) = LATITUDE OF ORIGIN (SOUTH - IVE)
+         94 |C           IGDS( 7) = LONGITUDE OF ORIGIN (WEST -IVE)
+         95 |C           IGDS( 8) = RESOLUTION FLAG (CODE TABLE 7)
+         96 |C           IGDS( 9) = LATITUDE OF EXTREME POINT (SOUTH - IVE)
+         97 |C           IGDS(10) = LONGITUDE OF EXTREME POINT (WEST - IVE)
+         98 |C           IGDS(11) = LATITUDE INCREMENT
+         99 |C           IGDS(12) = LONGITUDE INCREMENT
+        100 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        101 |C           IGDS(14) = ... THROUGH ...
+        102 |C           IGDS(18) =   ... NOT USED FOR THIS GRID
+        103 |C           IGDS(19) - IGDS(91) FOR GRIDS 37-44, NUMBER OF POINTS
+        104 |C                      IN EACH OF 73 ROWS.
+        105 |C
+        106 |C       GAUSSIAN GRID:
+        107 |C           IGDS( 1) = ... THROUGH ...
+        108 |C           IGDS(10) =   ... SAME AS LAT/LON GRID
+        109 |C           IGDS(11) = NUMBER OF LATITUDE LINES BETWEEN A POLE
+        110 |C                      AND THE EQUATOR
+        111 |C           IGDS(12) = LONGITUDE INCREMENT
+        112 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        113 |C           IGDS(14) = ... THROUGH ...
+        114 |C           IGDS(18) =   ... NOT USED FOR THIS GRID
+        115 |C
+        116 |C       SPHERICAL HARMONICS:
+        117 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+        118 |C           IGDS( 2) = PV, PL OR 255
+        119 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6)
+        120 |C           IGDS( 4) = J - PENTAGONAL RESOLUTION PARAMETER
+        121 |C           IGDS( 5) = K - PENTAGONAL RESOLUTION PARAMETER
+        122 |C           IGDS( 6) = M - PENTAGONAL RESOLUTION PARAMETER
+        123 |C           IGDS( 7) = REPRESENTATION TYPE (CODE TABLE 9)
+        124 |C           IGDS( 8) = REPRESENTATION MODE (CODE TABLE 10)
+        125 |C           IGDS( 9) = ... THROUGH ...
+        126 |C           IGDS(18) =   ... NOT USED FOR THIS GRID
+        127 |C
+        128 |C       POLAR STEREOGRAPHIC:
+        129 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+        130 |C           IGDS( 2) = PV, PL OR 255
+        131 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6)
+        132 |C           IGDS( 4) = NO. OF POINTS ALONG X-AXIS
+        133 |C           IGDS( 5) = NO. OF POINTS ALONG Y-AXIS
+        134 |C           IGDS( 6) = LATITUDE OF ORIGIN (SOUTH -IVE)
+        135 |C           IGDS( 7) = LONGITUTE OF ORIGIN (WEST -IVE)
+        136 |C           IGDS( 8) = RESOLUTION FLAG (CODE TABLE 7)
+        137 |C           IGDS( 9) = LONGITUDE OF MERIDIAN PARALLEL TO Y-AXIS
+        138 |C           IGDS(10) = X-DIRECTION GRID LENGTH (INCREMENT)
+        139 |C           IGDS(11) = Y-DIRECTION GRID LENGTH (INCREMENT)
+        140 |C           IGDS(12) = PROJECTION CENTER FLAG (0=NORTH POLE ON PLANE,
+        141 |C                                              1=SOUTH POLE ON PLANE,
+        142 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        143 |C           IGDS(14) = ... THROUGH ...
+        144 |C           IGDS(18) =   .. NOT USED FOR THIS GRID
+        145 |C
+        146 |C       MERCATOR:
+        147 |C           IGDS( 1) = ... THROUGH ...
+        148 |C           IGDS(12) =   ... SAME AS LAT/LON GRID
+        149 |C           IGDS(13) = LATITUDE AT WHICH PROJECTION CYLINDER
+        150 |C                        INTERSECTS EARTH
+        151 |C           IGDS(14) = SCANNING MODE FLAGS
+        152 |C           IGDS(15) = ... THROUGH ...
+        153 |C           IGDS(18) =   .. NOT USED FOR THIS GRID
+        154 |C
+        155 |C       LAMBERT CONFORMAL:
+        156 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+        157 |C           IGDS( 2) = PV, PL OR 255
+        158 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6)
+        159 |C           IGDS( 4) = NO. OF POINTS ALONG X-AXIS
+        160 |C           IGDS( 5) = NO. OF POINTS ALONG Y-AXIS
+        161 |C           IGDS( 6) = LATITUDE OF ORIGIN (SOUTH -IVE)
+        162 |C           IGDS( 7) = LONGITUTE OF ORIGIN (WEST -IVE)
+        163 |C           IGDS( 8) = RESOLUTION FLAG (CODE TABLE 7)
+        164 |C           IGDS( 9) = LONGITUDE OF MERIDIAN PARALLEL TO Y-AXIS
+        165 |C           IGDS(10) = X-DIRECTION GRID LENGTH (INCREMENT)
+        166 |C           IGDS(11) = Y-DIRECTION GRID LENGTH (INCREMENT)
+        167 |C           IGDS(12) = PROJECTION CENTER FLAG (0=NORTH POLE ON PLANE,
+        168 |C                                              1=SOUTH POLE ON PLANE,
+        169 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        170 |C           IGDS(14) = NOT USED
+        171 |C           IGDS(15) = FIRST LATITUDE FROM THE POLE AT WHICH THE
+        172 |C                      SECANT CONE CUTS THE SPERICAL EARTH
+        173 |C           IGDS(16) = SECOND LATITUDE ...
+        174 |C           IGDS(17) = LATITUDE OF SOUTH POLE (MILLIDEGREES)
+        175 |C           IGDS(18) = LONGITUDE OF SOUTH POLE (MILLIDEGREES)
+        176 |C
+        177 |C       ARAKAWA SEMI-STAGGERED E-GRID ON ROTATED LAT/LON GRID
+        178 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+        179 |C           IGDS( 2) = PV, PL OR 255
+        180 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6) [201]
+        181 |C           IGDS( 4) = NI  - TOTAL NUMBER OF ACTUAL DATA POINTS
+        182 |C                            INCLUDED ON GRID
+        183 |C           IGDS( 5) = NJ  - DUMMY SECOND DIMENSION; SET=1
+        184 |C           IGDS( 6) = LA1 - LATITUDE  OF FIRST GRID POINT
+        185 |C           IGDS( 7) = LO1 - LONGITUDE OF FIRST GRID POINT
+        186 |C           IGDS( 8) = RESOLUTION AND COMPONENT FLAG (CODE TABLE 7)
+        187 |C           IGDS( 9) = LA2 - NUMBER OF MASS POINTS ALONG
+        188 |C                            SOUTHERNMOST ROW OF GRID
+        189 |C           IGDS(10) = LO2 - NUMBER OF ROWS IN EACH COLUMN
+        190 |C           IGDS(11) = DI  - LONGITUDINAL DIRECTION INCREMENT
+        191 |C           IGDS(12) = DJ  - LATITUDINAL  DIRECTION INCREMENT
+        192 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        193 |C           IGDS(14) = ... THROUGH ...
+        194 |C           IGDS(18) = ... NOT USED FOR THIS GRID (SET TO ZERO)
+        195 |C
+        196 |C       ARAKAWA FILLED E-GRID ON ROTATED LAT/LON GRID
+        197 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+        198 |C           IGDS( 2) = PV, PL OR 255
+        199 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6) [202]
+        200 |C           IGDS( 4) = NI  - TOTAL NUMBER OF ACTUAL DATA POINTS
+        201 |C                            INCLUDED ON GRID
+        202 |C           IGDS( 5) = NJ  - DUMMY SECOND DIMENTION; SET=1
+        203 |C           IGDS( 6) = LA1 - LATITUDE LATITUDE OF FIRST GRID POINT
+        204 |C           IGDS( 7) = LO1 - LONGITUDE OF FIRST GRID POINT
+        205 |C           IGDS( 8) = RESOLUTION AND COMPONENT FLAG (CODE TABLE 7)
+        206 |C           IGDS( 9) = LA2 - NUMBER OF (ZONAL) POINTS IN EACH ROW
+        207 |C           IGDS(10) = LO2 - NUMBER OF (MERIDIONAL) POINTS IN EACH
+        208 |C                            COLUMN
+        209 |C           IGDS(11) = DI  - LONGITUDINAL DIRECTION INCREMENT
+        210 |C           IGDS(12) = DJ  - LATITUDINAL  DIRECTION INCREMENT
+        211 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        212 |C           IGDS(14) = ... THROUGH ...
+        213 |C           IGDS(18) = ... NOT USED FOR THIS GRID
+        214 |C
+        215 |C       ARAKAWA STAGGERED E-GRID ON ROTATED LAT/LON GRID
+        216 |C           IGDS( 1) = NUMBER OF VERTICAL COORDINATES
+        217 |C           IGDS( 2) = PV, PL OR 255
+        218 |C           IGDS( 3) = DATA REPRESENTATION TYPE (CODE TABLE 6) [203]
+        219 |C           IGDS( 4) = NI  - NUMBER OF DATA POINTS IN EACH ROW
+        220 |C           IGDS( 5) = NJ  - NUMBER OF ROWS
+        221 |C           IGDS( 6) = LA1 - LATITUDE OF FIRST GRID POINT
+        222 |C           IGDS( 7) = LO1 - LONGITUDE OF FIRST GRID POINT
+        223 |C           IGDS( 8) = RESOLUTION AND COMPONENT FLAG (CODE TABLE 7)
+        224 |C           IGDS( 9) = LA2 - CENTRAL LATITUDE
+        225 |C           IGDS(10) = LO2 - CENTRAL LONGTITUDE
+        226 |C           IGDS(11) = DI  - LONGITUDINAL DIRECTION INCREMENT
+        227 |C           IGDS(12) = DJ  - LATITUDINAL  DIRECTION INCREMENT
+        228 |C           IGDS(13) = SCANNING MODE FLAGS (CODE TABLE 8)
+        229 |C           IGDS(14) = ... THROUGH ...
+        230 |C           IGDS(18) = ... NOT USED FOR THIS GRID
+        231 |C
+        232 |C   SUBPROGRAM CAN BE CALLED FROM A MULTIPROCESSING ENVIRONMENT.
+        233 |C
+        234 |C ATTRIBUTES:
+        235 |C   LANGUAGE: FORTRAN 90
+        236 |C   MACHINE:  IBM SP
+        237 |C
+        238 |C$$$
+        239 |C
+        240 |      INTEGER       IGRID
+        241 |      INTEGER       IGDS  (*)
+        242 |      INTEGER       GRD1  (18)
+        243 |      INTEGER       GRD2  (18)
+        244 |      INTEGER       GRD3  (18)
+        245 |      INTEGER       GRD4  (18)
+        246 |      INTEGER       GRD5  (18)
+        247 |      INTEGER       GRD6  (18)
+        248 |      INTEGER       GRD8  (18)
+        249 |      INTEGER       GRD21 (55)
+        250 |      INTEGER       GRD22 (55)
+        251 |      INTEGER       GRD23 (55)
+        252 |      INTEGER       GRD24 (55)
+        253 |      INTEGER       GRD25 (37)
+        254 |      INTEGER       GRD26 (37)
+        255 |      INTEGER       GRD27 (18)
+        256 |      INTEGER       GRD28 (18)
+        257 |      INTEGER       GRD29 (18)
+        258 |      INTEGER       GRD30 (18)
+        259 |      INTEGER       GRD33 (18)
+        260 |      INTEGER       GRD34 (18)
+        261 |      INTEGER       GRD37 (91)
+        262 |      INTEGER       GRD38 (91)
+        263 |      INTEGER       GRD39 (91)
+        264 |      INTEGER       GRD40 (91)
+        265 |      INTEGER       GRD41 (91)
+        266 |      INTEGER       GRD42 (91)
+        267 |      INTEGER       GRD43 (91)
+        268 |      INTEGER       GRD44 (91)
+        269 |      INTEGER       GRD45 (18)
+        270 |      INTEGER       GRD53 (18)
+        271 |      INTEGER       GRD55 (18)
+        272 |      INTEGER       GRD56 (18)
+        273 |      INTEGER       GRD61 (64)
+        274 |      INTEGER       GRD62 (64)
+        275 |      INTEGER       GRD63 (64)
+        276 |      INTEGER       GRD64 (64)
+        277 |      INTEGER       GRD85 (18)
+        278 |      INTEGER       GRD86 (18)
+        279 |      INTEGER       GRD87 (18)
+        280 |      INTEGER       GRD90 (18)
+        281 |      INTEGER       GRD91 (18)
+        282 |      INTEGER       GRD92 (18)
+        283 |      INTEGER       GRD93 (18)
+        284 |      INTEGER       GRD94 (18)
+        285 |      INTEGER       GRD95 (18)
+        286 |      INTEGER       GRD96 (18)
+        287 |      INTEGER       GRD97 (18)
+        288 |      INTEGER       GRD98 (18)
+        289 |      INTEGER       GRD100(18)
+        290 |c4kmhys
+        291 |      INTEGER       GRD101(18)
+        292 |      INTEGER       GRD102(18)
+        293 |      INTEGER       GRD103(18)
+        294 |      INTEGER       GRD104(18)
+        295 |      INTEGER       GRD105(18)
+        296 |      INTEGER       GRD106(18)
+        297 |      INTEGER       GRD107(18)
+        298 |      INTEGER       GRD108(18)
+        299 |      INTEGER       GRD109(18)
+        300 |      INTEGER       GRD110(18)
+        301 |      INTEGER       GRD111(18)
+        302 |      INTEGER       GRD112(18)
+        303 |      INTEGER       GRD113(18)
+        304 |      INTEGER       GRD114(18)
+        305 |      INTEGER       GRD115(18)
+        306 |      INTEGER       GRD116(18)
+        307 |      INTEGER       GRD117(18)
+        308 |      INTEGER       GRD118(18)
+        309 |      INTEGER       GRD119(18)
+        310 |      INTEGER       GRD120(18)
+        311 |      INTEGER       GRD121(18)
+        312 |      INTEGER       GRD122(18)
+        313 |      INTEGER       GRD123(18)
+        314 |      INTEGER       GRD124(18)
+        315 |      INTEGER       GRD125(18)
+        316 |      INTEGER       GRD126(18)
+        317 |C
+        318 |      INTEGER       GRD151(18)
+        319 |      INTEGER       GRD152(18)
+        320 |      INTEGER       GRD153(18)
+        321 |      INTEGER       GRD154(18)
+        322 |      INTEGER       GRD155(18)
+        323 |      INTEGER       GRD156(18)
+        324 |      INTEGER       GRD157(18)
+        325 |      INTEGER       GRD158(18)
+        326 |      INTEGER       GRD159(18)
+        327 |      INTEGER       GRD160(18)
+        328 |      INTEGER       GRD161(18)
+        329 |      INTEGER       GRD162(18)
+        330 |      INTEGER       GRD163(18)
+        331 |      INTEGER       GRD164(18)
+        332 |      INTEGER       GRD165(18)
+        333 |      INTEGER       GRD166(18)
+        334 |      INTEGER       GRD167(18)
+        335 |      INTEGER       GRD168(18)
+        336 |      INTEGER       GRD169(18)
+        337 |      INTEGER       GRD170(18)
+        338 |      INTEGER       GRD171(18)
+        339 |      INTEGER       GRD172(18)
+        340 |      INTEGER       GRD173(18)
+        341 |      INTEGER       GRD174(18)
+        342 |      INTEGER       GRD175(18)
+        343 |      INTEGER       GRD176(18)
+        344 |c4kmhys
+        345 |      INTEGER       GRD190(18)
+        346 |      INTEGER       GRD192(18)
+        347 |      INTEGER       GRD194(18)
+        348 |      INTEGER       GRD196(18)
+        349 |      INTEGER       GRD198(18)
+        350 |      INTEGER       GRD201(18)
+        351 |      INTEGER       GRD202(18)
+        352 |      INTEGER       GRD203(18)
+        353 |      INTEGER       GRD204(18)
+        354 |      INTEGER       GRD205(18)
+        355 |      INTEGER       GRD206(18)
+        356 |      INTEGER       GRD207(18)
+        357 |      INTEGER       GRD208(18)
+        358 |      INTEGER       GRD209(18)
+        359 |      INTEGER       GRD210(18)
+        360 |      INTEGER       GRD211(18)
+        361 |      INTEGER       GRD212(18)
+        362 |      INTEGER       GRD213(18)
+        363 |      INTEGER       GRD214(18)
+        364 |      INTEGER       GRD215(18)
+        365 |      INTEGER       GRD216(18)
+        366 |      INTEGER       GRD217(18)
+        367 |      INTEGER       GRD218(18)
+        368 |      INTEGER       GRD219(18)
+        369 |      INTEGER       GRD220(18)
+        370 |      INTEGER       GRD221(18)
+        371 |      INTEGER       GRD222(18)
+        372 |      INTEGER       GRD223(18)
+        373 |      INTEGER       GRD224(18)
+        374 |      INTEGER       GRD225(18)
+        375 |      INTEGER       GRD226(18)
+        376 |      INTEGER       GRD227(18)
+        377 |      INTEGER       GRD228(18)
+        378 |      INTEGER       GRD229(18)
+        379 |      INTEGER       GRD230(18)
+        380 |      INTEGER       GRD231(18)
+        381 |      INTEGER       GRD232(18)
+        382 |      INTEGER       GRD233(18)
+        383 |      INTEGER       GRD234(18)
+        384 |      INTEGER       GRD235(18)
+        385 |      INTEGER       GRD236(18)
+        386 |      INTEGER       GRD237(18)
+        387 |      INTEGER       GRD238(18)
+        388 |      INTEGER       GRD239(18)
+        389 |      INTEGER       GRD240(18)
+        390 |      INTEGER       GRD241(18)
+        391 |      INTEGER       GRD242(18)
+        392 |      INTEGER       GRD243(18)
+        393 |      INTEGER       GRD244(18)
+        394 |      INTEGER       GRD245(18)
+        395 |      INTEGER       GRD246(18)
+        396 |      INTEGER       GRD247(18)
+        397 |      INTEGER       GRD248(18)
+        398 |      INTEGER       GRD249(18)
+        399 |      INTEGER       GRD250(18)
+        400 |C
+        401 |      DATA  GRD1  / 0, 255, 1,  73, 23, -48090,       0, 128,   48090,
+        402 |     &       0, 513669,513669, 22500, 64, 0, 0, 0, 0/
+        403 |      DATA  GRD2  / 0, 255, 0, 144, 73,  90000,       0, 128,  -90000,
+        404 |     &   -2500,   2500, 2500,  0, 0, 0, 0, 0, 0/
+        405 |      DATA  GRD3  / 0, 255, 0, 360,181,  90000,       0, 128,  -90000,
+        406 |     &   -1000,   1000, 1000,  0, 0, 0, 0, 0, 0/
+        407 |      DATA  GRD4  / 0, 255, 0, 720,361,  90000,       0, 128,  -90000,
+        408 |     &    -500,    500,  500,  0, 0, 0, 0, 0, 0/
+        409 |      DATA  GRD5  / 0, 255, 5,  53, 57,   7647, -133443,   8, -105000,
+        410 |     &  190500, 190500, 0, 64, 0, 0, 0, 0, 0/
+        411 |      DATA  GRD6  / 0, 255, 5,  53, 45,   7647, -133443,   8, -105000,
+        412 |     &  190500, 190500, 0, 64, 0, 0, 0, 0, 0/
+        413 |      DATA  GRD8  / 0, 255, 1, 116, 44, -48670,    3104, 128,   61050,
+        414 |     &       0, 318830, 318830, 22500, 64, 0, 0, 0, 0/
+        415 |      DATA  GRD21 / 0,  33, 0,65535,37,      0,       0, 128,   90000,
+        416 |     &  180000,   2500, 5000, 64, 0, 0, 0, 0, 0,
+        417 |     & 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        418 |     & 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        419 |     & 37, 37, 37, 37, 37, 37,  1/
+        420 |      DATA  GRD22 / 0,  33, 0,65535,37,      0, -180000, 128,   90000,
+        421 |     &       0,   2500, 5000, 64, 0, 0, 0, 0, 0,
+        422 |     & 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        423 |     & 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        424 |     & 37, 37, 37, 37, 37, 37,  1/
+        425 |      DATA  GRD23 / 0,  33, 0,65535, 37, -90000,       0, 128,       0,
+        426 |     &  180000,   2500, 5000, 64, 0, 0, 0, 0, 0,
+        427 |     &  1, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        428 |     & 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        429 |     & 37, 37, 37, 37, 37, 37, 37/
+        430 |      DATA  GRD24 / 0,  33, 0,65535, 37, -90000, -180000, 128,       0,
+        431 |     &       0,   2500, 5000, 64, 0, 0, 0, 0, 0,
+        432 |     &  1, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        433 |     & 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 37,
+        434 |     & 37, 37, 37, 37, 37, 37, 37/
+        435 |      DATA  GRD25 / 0,  33, 0,65535, 19,      0,       0, 128,   90000,
+        436 |     &  355000,   5000, 5000, 64, 0, 0, 0, 0, 0,
+        437 |     & 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72,
+        438 |     & 72, 72, 72,  1/
+        439 |      DATA  GRD26 / 0,  33, 0,65535, 19, -90000,       0, 128,       0,
+        440 |     &  355000,   5000, 5000, 64, 0, 0, 0, 0, 0,
+        441 |     &  1, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72,
+        442 |     & 72, 72, 72, 72/
+        443 |      DATA  GRD27 / 0, 255, 5,  65, 65, -20826, -125000,   8,  -80000,
+        444 |     &  381000, 381000, 0, 64, 0, 0, 0, 0, 0/
+        445 |      DATA  GRD28 / 0, 255, 5,  65, 65,  20826,  145000,   8,  100000,
+        446 |     &  381000, 381000,128, 64, 0, 0, 0, 0, 0/
+        447 |      DATA  GRD29 / 0, 255, 0, 145, 37,      0,       0, 128,   90000,
+        448 |     &  360000,   2500, 2500, 64, 0, 0, 0, 0, 0/
+        449 |      DATA  GRD30 / 0, 255, 0, 145, 37,  -90000,      0, 128,       0,
+        450 |     &  360000,   2500, 2500, 64, 0, 0, 0, 0, 0/
+        451 |      DATA  GRD33 / 0, 255, 0, 181, 46,      0,       0, 128,   90000,
+        452 |     &  360000,   2000, 2000, 64, 0, 0, 0, 0, 0/
+        453 |      DATA  GRD34 / 0, 255, 0, 181, 46, -90000,       0, 128,       0,
+        454 |     &  360000,   2000, 2000, 64, 0, 0, 0, 0, 0/
+        455 |      DATA  GRD37 / 0,  33, 0,65535,73,      0,  -30000, 128,   90000,
+        456 |     &   60000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        457 |     & 73, 73, 73, 73, 73, 73, 73, 73, 72, 72, 72, 71, 71, 71, 70,
+        458 |     & 70, 69, 69, 68, 67, 67, 66, 65, 65, 64, 63, 62, 61, 60, 60,
+        459 |     & 59, 58, 57, 56, 55, 54, 52, 51, 50, 49, 48, 47, 45, 44, 43,
+        460 |     & 42, 40, 39, 38, 36, 35, 33, 32, 30, 29, 28, 26, 25, 23, 22,
+        461 |     & 20, 19, 17, 16, 14, 12, 11,  9,  8,  6,  5,  3,  2/
+        462 |      DATA  GRD38 / 0,  33, 0,65535,73,      0,   60000, 128,   90000,
+        463 |     &  150000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        464 |     & 73, 73, 73, 73, 73, 73, 73, 73, 72, 72, 72, 71, 71, 71, 70,
+        465 |     & 70, 69, 69, 68, 67, 67, 66, 65, 65, 64, 63, 62, 61, 60, 60,
+        466 |     & 59, 58, 57, 56, 55, 54, 52, 51, 50, 49, 48, 47, 45, 44, 43,
+        467 |     & 42, 40, 39, 38, 36, 35, 33, 32, 30, 29, 28, 26, 25, 23, 22,
+        468 |     & 20, 19, 17, 16, 14, 12, 11,  9,  8,  6,  5,  3,  2/
+        469 |      DATA  GRD39 / 0,  33, 0,65535,73,      0,  150000, 128,   90000,
+        470 |     & -120000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        471 |     & 73, 73, 73, 73, 73, 73, 73, 73, 72, 72, 72, 71, 71, 71, 70,
+        472 |     & 70, 69, 69, 68, 67, 67, 66, 65, 65, 64, 63, 62, 61, 60, 60,
+        473 |     & 59, 58, 57, 56, 55, 54, 52, 51, 50, 49, 48, 47, 45, 44, 43,
+        474 |     & 42, 40, 39, 38, 36, 35, 33, 32, 30, 29, 28, 26, 25, 23, 22,
+        475 |     & 20, 19, 17, 16, 14, 12, 11,  9,  8,  6,  5,  3,  2/
+        476 |      DATA  GRD40 / 0,  33, 0,65535,73,       0, -120000, 128,   90000,
+        477 |     &  -30000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        478 |     & 73, 73, 73, 73, 73, 73, 73, 73, 72, 72, 72, 71, 71, 71, 70,
+        479 |     & 70, 69, 69, 68, 67, 67, 66, 65, 65, 64, 63, 62, 61, 60, 60,
+        480 |     & 59, 58, 57, 56, 55, 54, 52, 51, 50, 49, 48, 47, 45, 44, 43,
+        481 |     & 42, 40, 39, 38, 36, 35, 33, 32, 30, 29, 28, 26, 25, 23, 22,
+        482 |     & 20, 19, 17, 16, 14, 12, 11,  9,  8,  6,  5,  3,  2/
+        483 |      DATA  GRD41 / 0,  33, 0,65535,73, -90000,  -30000, 128,       0,
+        484 |     &   60000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        485 |     &  2,  3,  5,  6,  8,  9, 11, 12, 14, 16, 17, 19, 20, 22, 23,
+        486 |     & 25, 26, 28, 29, 30, 32, 33, 35, 36, 38, 39, 40, 42, 43, 44,
+        487 |     & 45, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 60,
+        488 |     & 61, 62, 63, 64, 65, 65, 66, 67, 67, 68, 69, 69, 70, 70, 71,
+        489 |     & 71, 71, 72, 72, 72, 73, 73, 73, 73, 73, 73, 73, 73/
+        490 |      DATA  GRD42 / 0,  33, 0,65535,73, -90000,   60000, 128,       0,
+        491 |     &  150000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        492 |     &  2,  3,  5,  6,  8,  9, 11, 12, 14, 16, 17, 19, 20, 22, 23,
+        493 |     & 25, 26, 28, 29, 30, 32, 33, 35, 36, 38, 39, 40, 42, 43, 44,
+        494 |     & 45, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 60,
+        495 |     & 61, 62, 63, 64, 65, 65, 66, 67, 67, 68, 69, 69, 70, 70, 71,
+        496 |     & 71, 71, 72, 72, 72, 73, 73, 73, 73, 73, 73, 73, 73/
+        497 |      DATA  GRD43 / 0,  33, 0,65535,73, -90000,  150000, 128,       0,
+        498 |     & -120000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        499 |     &  2,  3,  5,  6,  8,  9, 11, 12, 14, 16, 17, 19, 20, 22, 23,
+        500 |     & 25, 26, 28, 29, 30, 32, 33, 35, 36, 38, 39, 40, 42, 43, 44,
+        501 |     & 45, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 60,
+        502 |     & 61, 62, 63, 64, 65, 65, 66, 67, 67, 68, 69, 69, 70, 70, 71,
+        503 |     & 71, 71, 72, 72, 72, 73, 73, 73, 73, 73, 73, 73, 73/
+        504 |      DATA  GRD44 / 0,  33, 0,65535,73, -90000, -120000, 128,       0,
+        505 |     &  -30000,  1250,65535, 64, 0, 0, 0, 0, 0,
+        506 |     &  2,  3,  5,  6,  8,  9, 11, 12, 14, 16, 17, 19, 20, 22, 23,
+        507 |     & 25, 26, 28, 29, 30, 32, 33, 35, 36, 38, 39, 40, 42, 43, 44,
+        508 |     & 45, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60, 60,
+        509 |     & 61, 62, 63, 64, 65, 65, 66, 67, 67, 68, 69, 69, 70, 70, 71,
+        510 |     & 71, 71, 72, 72, 72, 73, 73, 73, 73, 73, 73, 73, 73/
+        511 |      DATA  GRD45 / 0, 255, 0, 288,145,  90000,       0, 128,  -90000,
+        512 |     &   -1250,   1250, 1250,  0, 0, 0, 0, 0, 0/
+        513 |      DATA  GRD53 / 0, 255, 1, 117, 51, -61050,       0, 128,   61050,
+        514 |     &       0,  318830, 318830, 22500, 64, 0, 0, 0, 0/
+        515 |      DATA  GRD55 / 0, 255, 5,  87, 71, -10947, -154289,   8, -105000,
+        516 |     &  254000, 254000, 0, 64, 0, 0, 0, 0, 0/
+        517 |      DATA  GRD56 / 0, 255, 5,  87, 71,   7647, -133443,   8, -105000,
+        518 |     &  127000, 127000, 0, 64, 0, 0, 0, 0, 0/
+        519 |      DATA  GRD61 / 0,  33, 0,65535, 46,      0,       0, 128,   90000,
+        520 |     &  180000,   2000, 2000, 64, 0, 0, 0, 0, 0,
+        521 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        522 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        523 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        524 |     &  1/
+        525 |      DATA  GRD62 / 0,  33, 0,65535, 46,      0, -180000, 128,   90000,
+        526 |     &       0,   2000, 2000, 64, 0, 0, 0, 0, 0,
+        527 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        528 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        529 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        530 |     &  1/
+        531 |      DATA  GRD63 / 0,  33, 0,65535, 46,      0,  -90000, 128,       0,
+        532 |     &  180000,   2000, 2000, 64, 0, 0, 0, 0, 0,
+        533 |     &  1, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        534 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        535 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        536 |     & 91/
+        537 |      DATA  GRD64 / 0,  33, 0,65535, 46, -90000, -180000, 128,       0,
+        538 |     &       0,   2000, 2000, 64, 0, 0, 0, 0, 0,
+        539 |     &  1, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        540 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        541 |     & 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91, 91,
+        542 |     & 91/
+        543 |      DATA  GRD85 / 0, 255, 0, 360, 90,    500,     500, 128,   89500,
+        544 |     &  359500,   1000, 1000, 64, 0, 0, 0, 0, 0/
+        545 |      DATA  GRD86 / 0, 255, 0, 360, 90, -89500,     500, 128,    -500,
+        546 |     &  359500,   1000, 1000, 64, 0, 0, 0, 0, 0/
+        547 |      DATA  GRD87 / 0, 255, 5,  81, 62,  22876, -120491,   8, -105000,
+        548 |     &   68153,  68153, 0, 64, 0, 0, 0, 0, 0/
+        549 |      DATA  GRD90 / 0, 255,203,223,501,  23060,  -92569, 136,   37000,
+        550 |     & -80000,     53,53,64, 0, 0, 0, 0, 0/
+        551 |      DATA  GRD91 / 0, 255,203,223,501,  23060, -110569, 136,   37000,
+        552 |     & -98000,     53,53,64, 0, 0, 0, 0, 0/
+        553 |      DATA  GRD92 / 0, 255,203,223,501,  25986, -127871, 136,   40000,
+        554 |     & -115000,    53,53,64, 0, 0, 0, 0, 0/
+        555 |      DATA  GRD93 / 0, 255,203,223,501,  44232, -169996, 136,   63000,
+        556 |     & -150000,    67,66,64, 0, 0, 0, 0, 0/
+        557 |      DATA  GRD94 / 0, 255,203,345,569,  -3441, -148799, 136,   50000,
+        558 |     & -111000,    154,141,64, 0, 0, 0, 0, 0/
+        559 |      DATA  GRD95 / 0, 255,203,146,247,  35222, -131741, 136,   44000,
+        560 |     & -240000,     67, 66,64, 0, 0, 0, 0, 0/
+        561 |      DATA  GRD96 / 0, 255,203,606,1067, -3441, -148799, 136,   50000,
+        562 |     & -111000,     88,75,64, 0, 0, 0, 0, 0/
+        563 |      DATA  GRD97 / 0, 255,203, 89,143,  14451,  -71347, 136,   18250,
+        564 |     &  -66500,     53, 53,64, 0, 0, 0, 0, 0/
+        565 |      DATA  GRD98 / 0, 255, 4, 192, 94,  88542,       0, 128,  -88542,
+        566 |     &    -1875, 47,1875, 0, 0, 0, 0, 0, 0/
+        567 |C4kmhys
+        568 |      DATA  GRD101/ 0, 255,203,223,501, 26732, -127602, 136,   33500,
+        569 |     & -121000,     26,27,64, 0, 0, 0, 0, 0/
+        570 |      DATA  GRD102/ 0, 255,203,223,501, 25242, -120519, 136,   32000,
+        571 |     & -114000,     26,27,64, 0, 0, 0, 0, 0/
+        572 |      DATA  GRD103/ 0, 255,203,223,501, 24249, -113467, 136,   31000,
+        573 |     & -107000,     26,27,64, 0, 0, 0, 0, 0/
+        574 |      DATA  GRD104/ 0, 255,203,223,501, 23255, -106417, 136,   30000,
+        575 |     & -100000,     26,27,64, 0, 0, 0, 0, 0/
+        576 |      DATA  GRD105/ 0, 255,203,223,501, 23255,  -99417, 136,   30000,
+        577 |     &  -93000,     26,27,64, 0, 0, 0, 0, 0/
+        578 |      DATA  GRD106/ 0, 255,203,223,501, 23255,  -92417, 136,   30000,
+        579 |     &  -86000,     26,27,64, 0, 0, 0, 0, 0/
+        580 |      DATA  GRD107/ 0, 255,203,223,501, 22261,  -85371, 136,   29000,
+        581 |     &  -79000,     26,27,64, 0, 0, 0, 0, 0/
+        582 |      DATA  GRD108/ 0, 255,203,223,501, 32690, -132008, 136,   39500,
+        583 |     & -125000,     26,27,64, 0, 0, 0, 0, 0/
+        584 |      DATA  GRD109/ 0, 255,203,223,501, 32690, -123508, 136,   39500,
+        585 |     & -116500,     26,27,64, 0, 0, 0, 0, 0/
+        586 |      DATA  GRD110/ 0, 255,203,223,501, 32194, -114970, 136,   39000,
+        587 |     & -108000,     26,27,64, 0, 0, 0, 0, 0/
+        588 |      DATA  GRD111/ 0, 255,203,223,501, 30750, -106359, 136,   37500,
+        589 |     &  -99500,     26,27,64, 0, 0, 0, 0, 0/
+        590 |      DATA  GRD112/ 0, 255,203,223,501, 30750,  -97859, 136,   37500,
+        591 |     &  -91000,     26,27,64, 0, 0, 0, 0, 0/
+        592 |      DATA  GRD113/ 0, 255,203,223,501, 29712,  -89790, 136,   36500,
+        593 |     &  -83000,     26,27,64, 0, 0, 0, 0, 0/
+        594 |      DATA  GRD114/ 0, 255,203,223,501, 29216,  -81757, 136,   36000,
+        595 |     &  -75000,     26,27,64, 0, 0, 0, 0, 0/
+        596 |      DATA  GRD115/ 0, 255,203,223,501, 39138, -131608, 136,   46000,
+        597 |     & -124000,     26,27,64, 0, 0, 0, 0, 0/
+        598 |      DATA  GRD116/ 0, 255,203,223,501, 38642, -122555, 136,   45500,
+        599 |     & -115000,     26,27,64, 0, 0, 0, 0, 0/
+        600 |      DATA  GRD117/ 0, 255,203,223,501, 38146, -113503, 136,   45000,
+        601 |     & -106000,     26,27,64, 0, 0, 0, 0, 0/
+        602 |      DATA  GRD118/ 0, 255,203,223,501, 37651, -104452, 136,   44500,
+        603 |     &  -97000,     26,27,64, 0, 0, 0, 0, 0/
+        604 |      DATA  GRD119/ 0, 255,203,223,501, 37155,  -95403, 136,   44000,
+        605 |     &  -88000,     26,27,64, 0, 0, 0, 0, 0/
+        606 |      DATA  GRD120/ 0, 255,203,223,501, 36659,  -86354, 136,   43500,
+        607 |     &  -79000,     26,27,64, 0, 0, 0, 0, 0/
+        608 |      DATA  GRD121/ 0, 255,203,223,501, 36163,  -77307, 136,   43000,
+        609 |     &  -70000,     26,27,64, 0, 0, 0, 0, 0/
+        610 |      DATA  GRD122/ 0, 255,203,223,501, 14805, -163097, 136,   21500,
+        611 |     & -157000,     26,27,64, 0, 0, 0, 0, 0/
+        612 |      DATA  GRD123/ 0, 255,203,223,501, 53965, -160053, 136,   61000,
+        613 |     & -150000,     26,27,64, 0, 0, 0, 0, 0/
+        614 |      DATA  GRD124/ 0, 255,203,223,501, 57897, -158641, 136,   65000,
+        615 |     & -147500,     26,27,64, 0, 0, 0, 0, 0/
+        616 |      DATA  GRD125/ 0, 255,203,223,501, 51501, -143995, 136,   58500,
+        617 |     & -134500,     26,27,64, 0, 0, 0, 0, 0/
+        618 |      DATA  GRD126/ 0, 255,203,223,501, 11822,  -73372, 136,   18500,
+        619 |     &  -67350,     26,27,64, 0, 0, 0, 0, 0/
+        620 |C
+        621 |      DATA  GRD151/ 0, 255, 3, 331,368,  26732, -127602,   8, -121000,
+        622 |     &   4000,  4000, 0, 64, 0, 33500, 33500, 0, 0/
+        623 |      DATA  GRD152/ 0, 255, 3, 331,368,  25252, -120519,   8, -114000,
+        624 |     &   4000,  4000, 0, 64, 0, 32000, 32000, 0, 0/
+        625 |      DATA  GRD153/ 0, 255, 3, 331,368,  24249, -113467,   8, -107000,
+        626 |     &   4000,  4000, 0, 64, 0, 31000, 31000, 0, 0/
+        627 |      DATA  GRD154/ 0, 255, 3, 331,368,  23255, -106417,   8, -100000,
+        628 |     &   4000,  4000, 0, 64, 0, 30000, 30000, 0, 0/
+        629 |      DATA  GRD155/ 0, 255, 3, 331,368,  23255,  -99417,   8,  -93000,
+        630 |     &   4000,  4000, 0, 64, 0, 30000, 30000, 0, 0/
+        631 |      DATA  GRD156/ 0, 255, 3, 331,368,  23255,  -92417,   8,  -86000,
+        632 |     &   4000,  4000, 0, 64, 0, 30000, 30000, 0, 0/
+        633 |      DATA  GRD157/ 0, 255, 3, 331,368,  22261,  -85371,   8,  -79000,
+        634 |     &   4000,  4000, 0, 64, 0, 29000, 29000, 0, 0/
+        635 |      DATA  GRD158/ 0, 255, 3, 331,368,  32690, -132008,   8, -125000,
+        636 |     &   4000,  4000, 0, 64, 0, 39500, 39500, 0, 0/
+        637 |      DATA  GRD159/ 0, 255, 3, 331,368,  32690, -123508,   8, -116500,
+        638 |     &   4000,  4000, 0, 64, 0, 39500, 39500, 0, 0/
+        639 |      DATA  GRD160/ 0, 255, 3, 331,368,  32194, -114970,   8, -108000,
+        640 |     &   4000,  4000, 0, 64, 0, 39000, 39000, 0, 0/
+        641 |      DATA  GRD161/ 0, 255, 3, 331,368,  30705, -106359,   8,  -99500,
+        642 |     &   4000,  4000, 0, 64, 0, 37500, 37500, 0, 0/
+        643 |      DATA  GRD162/ 0, 255, 3, 331,368,  30705,  -97859,   8,  -91000,
+        644 |     &   4000,  4000, 0, 64, 0, 37500, 37500, 0, 0/
+        645 |      DATA  GRD163/ 0, 255, 3, 331,368,  29712,  -89790,   8,  -83000,
+        646 |     &   4000,  4000, 0, 64, 0, 36500, 36500, 0, 0/
+        647 |      DATA  GRD164/ 0, 255, 3, 331,368,  29216,  -81757,   8,  -75000,
+        648 |     &   4000,  4000, 0, 64, 0, 36000, 36000, 0, 0/
+        649 |      DATA  GRD165/ 0, 255, 3, 331,368,  39138, -131608,   8, -124000,
+        650 |     &   4000,  4000, 0, 64, 0, 46000, 46000, 0, 0/
+        651 |      DATA  GRD166/ 0, 255, 3, 331,368,  38642, -122555,   8, -115000,
+        652 |     &   4000,  4000, 0, 64, 0, 45500, 45500, 0, 0/
+        653 |      DATA  GRD167/ 0, 255, 3, 331,368,  38146, -113503,   8, -106000,
+        654 |     &   4000,  4000, 0, 64, 0, 45000, 45000, 0, 0/
+        655 |      DATA  GRD168/ 0, 255, 3, 331,368,  37651, -104452,   8,  -97000,
+        656 |     &   4000,  4000, 0, 64, 0, 44500, 44500, 0, 0/
+        657 |      DATA  GRD169/ 0, 255, 3, 331,368,  37155,  -95403,   8,  -88000,
+        658 |     &   4000,  4000, 0, 64, 0, 44000, 44000, 0, 0/
+        659 |      DATA  GRD170/ 0, 255, 3, 331,368,  36659,  -86354,   8,  -79000,
+        660 |     &   4000,  4000, 0, 64, 0, 43500, 43500, 0, 0/
+        661 |      DATA  GRD171/ 0, 255, 3, 331,368,  36163,  -77307,   8,  -70000,
+        662 |     &   4000,  4000, 0, 64, 0, 43000, 43000, 0, 0/
+        663 |      DATA  GRD172/ 0, 255, 3, 331,368,  14805, -163097,   8, -157000,
+        664 |     &   4000,  4000, 0, 64, 0, 21500, 21500, 0, 0/
+        665 |      DATA  GRD173/ 0, 255, 5, 330,368,  53965, -160053,   8, -150000,
+        666 |     &   3982,  3982, 0, 64, 0, 0, 0, 0, 0/
+        667 |      DATA  GRD174/ 0, 255, 5, 330,368,  57897, -158641,   8, -147500,
+        668 |     &   3915,  3915, 0, 64, 0, 0, 0, 0, 0/
+        669 |      DATA  GRD175/ 0, 255, 5, 330,368,  51501, -143995,   8, -134500,
+        670 |     &   4029,  4029, 0, 64, 0, 0, 0, 0, 0/
+        671 |      DATA  GRD176/ 0, 255, 3, 331,368,  11822,  -73372,   8,  -67350,
+        672 |     &   4000,  4000, 0, 64, 0, 18500, 18500, 0, 0/
+        673 |c4kmhyb
+        674 |      DATA  GRD190 / 0, 255,203, 92,141,   182, -149887, 136,   52000,
+        675 |     & -111000,    577,538,64, 0, 0, 0, 0, 0/
+        676 |      DATA  GRD192 / 0, 255,203,237,387, -3441, -148799, 136,   50000,
+        677 |     & -111000,    225,207,64, 0, 0, 0, 0, 0/
+        678 |      DATA  GRD194 / 0, 255,203, 89,143, 16444, -162244, 136,   20250,
+        679 |     & -157350,     53, 53,64, 0, 0, 0, 0, 0/
+        680 |      DATA  GRD196/ 0, 255,201,45903,1,  23476,  -96745, 136,     151,
+        681 |     &     305,     67, 66, 64, 0, 0, 0, 0, 0/
+        682 |      DATA  GRD198/ 0, 255,203,160,261,  -3441, -148799, 136,   50000,
+        683 |     & -111000,    333,308,64, 0, 0, 0, 0, 0/
+        684 |      DATA  GRD201/ 0, 255, 5,  65, 65, -20826, -150000,   8, -105000,
+        685 |     &  381000, 381000, 0, 64, 0, 0, 0, 0, 0/
+        686 |      DATA  GRD202/ 0, 255, 5,  65, 43,   7838, -141028,   8, -105000,
+        687 |     &  190500, 190500, 0, 64, 0, 0, 0, 0, 0/
+        688 |      DATA  GRD203/ 0, 255, 5,  45, 39,  19132, -185837,   8, -150000,
+        689 |     &  190500, 190500, 0, 64, 0, 0, 0, 0, 0/
+        690 |      DATA  GRD204/ 0, 255, 1,  93, 68, -25000,  110000, 128,   60644,
+        691 |     & -109129, 160000, 160000, 20000, 64, 0, 0, 0, 0/
+        692 |      DATA  GRD205/ 0, 255, 5,  45, 39,    616,  -84904,   8,  -60000,
+        693 |     &  190500, 190500, 0, 64, 0, 0, 0, 0, 0/
+        694 |      DATA  GRD206/ 0, 255, 3,  51, 41,  22289, -117991,   8, - 95000,
+        695 |     &   81271,  81271, 0, 64, 0, 25000, 25000, 0, 0/
+        696 |      DATA  GRD207/ 0, 255, 5,  49, 35,  42085, -175641,   8, -150000,
+        697 |     &   95250,  95250, 0, 64, 0, 0, 0, 0, 0/
+        698 |      DATA  GRD208/ 0, 255, 1,  29, 27,   9343, -167315, 128,   28092,
+        699 |     & -145878, 80000, 80000, 20000, 64, 0, 0, 0, 0/
+        700 |      DATA  GRD209/ 0, 255, 3, 275,223,  -4850, -151100,   8, -111000,
+        701 |     &   44000,  44000, 0, 64, 0, 45000, 45000, 0, 0/
+        702 |      DATA  GRD210/ 0, 255, 1,  25, 25,   9000,  -77000, 128,   26422,
+        703 |     &  -58625, 80000, 80000, 20000, 64, 0, 0, 0, 0/
+        704 |      DATA  GRD211/ 0, 255, 3,  93, 65,  12190, -133459,   8,  -95000,
+        705 |     &   81271,  81271, 0, 64, 0, 25000, 25000, 0, 0/
+        706 |      DATA  GRD212/ 0, 255, 3, 185,129,  12190, -133459,   8,  -95000,
+        707 |     &   40635,  40635, 0, 64, 0, 25000, 25000, 0, 0/
+        708 |      DATA  GRD213/ 0, 255, 5, 129, 85,   7838, -141028,   8, -105000,
+        709 |     &   95250,  95250, 0, 64, 0, 0, 0, 0, 0/
+        710 |      DATA  GRD214/ 0, 255, 5,  97, 69,  42085, -175641,   8, -150000,
+        711 |     &   47625,  47625, 0, 64, 0, 0, 0, 0, 0/
+        712 |      DATA  GRD215/ 0, 255, 3, 369,257,  12190, -133459,   8,  -95000,
+        713 |     &   20318,  20318, 0, 64, 0, 25000, 25000, 0, 0/
+        714 |      DATA  GRD216/ 0, 255, 5, 139,107,  30000, -173000,   8, -135000,
+        715 |     &   45000,  45000, 0, 64, 0, 0, 0, 0, 0/
+        716 |      DATA  GRD217/ 0, 255, 5, 277,213,  30000, -173000,   8, -135000,
+        717 |     &   22500,  22500, 0, 64, 0, 0, 0, 0, 0/
+        718 |      DATA  GRD218/ 0, 255, 3, 614,428,  12190, -133459,   8,  -95000,
+        719 |     &   12191,  12191, 0, 64, 0, 25000, 25000, 0, 0/
+        720 |      DATA  GRD219/ 0, 255, 5, 385,465,  25008, -119559,  72,  -80000,
+        721 |     &   25400,  25400, 0, 64, 0, 0, 0, 0, 0/
+        722 |      DATA  GRD220/ 0, 255, 5, 345,355, -36889, -220194,  72, -260000,
+        723 |     &   25400,  25400, 1, 64, 0, 0, 0, 0, 0/
+        724 |      DATA  GRD221/ 0, 255, 3, 349,277,   1000, -145500,   8, -107000,
+        725 |     &   32463,  32463, 0, 64, 0, 50000, 50000, 0, 0/
+        726 |      DATA  GRD222/ 0, 255, 3, 138,112,  -4850, -151100,   8, -111000,
+        727 |     &   88000,  88000, 0, 64, 0, 45000, 45000, 0, 0/
+        728 |      DATA  GRD223/ 0, 255, 5, 129,129, -20826, -150000,   8, -105000,
+        729 |     &  190500, 190500, 0, 64, 0, 0, 0, 0, 0/
+        730 |      DATA  GRD224/ 0, 255, 5,  65, 65,  20826,  120000,   8, -105000,
+        731 |     &  381000, 381000, 0, 64, 0, 0, 0, 0, 0/
+        732 |      DATA  GRD225/ 0, 255, 1, 185,135, -25000, -250000, 128,   60640,
+        733 |     & -109129, 80000, 80000, 20000, 64, 0, 0, 0, 0/
+        734 |      DATA  GRD226/ 0, 255, 3, 737,513,  12190, -133459,   8,  -95000,
+        735 |     &   10159,  10159, 0, 64, 0, 25000, 25000, 0, 0/
+        736 |      DATA  GRD227/ 0, 255, 3,1473,1025,  12190, -133459,   8, -95000,
+        737 |     &    5079,   5079, 0, 64, 0, 25000, 25000, 0, 0/
+        738 |      DATA  GRD228/ 0, 255, 0, 144, 73,  90000,       0, 128,  -90000,
+        739 |     &   -2500,   2500, 2500, 64, 0, 0, 0, 0, 0/
+        740 |      DATA  GRD229/ 0, 255, 0, 360,181,  90000,       0, 128,  -90000,
+        741 |     &   -1000,   1000, 1000, 64, 0, 0, 0, 0, 0/
+        742 |      DATA  GRD230/ 0, 255, 0, 720,361,  90000,       0, 128,  -90000,
+        743 |     &    -500,    500,  500, 64, 0, 0, 0, 0, 0/
+        744 |      DATA  GRD231/ 0, 255, 0, 720,181,      0,       0, 128,   90000,
+        745 |     &    -500,    500,  500, 64, 0, 0, 0, 0, 0/
+        746 |      DATA  GRD232/ 0, 255, 0, 360, 91,      0,       0, 128,   90000,
+        747 |     &   -1000,   1000, 1000, 64, 0, 0, 0, 0, 0/
+        748 |      DATA  GRD233/ 0, 255, 0, 288,157,  78000,       0, 128,  -78000,
+        749 |     &   -1250,   1250, 1000, 64, 0, 0, 0, 0, 0/
+        750 |      DATA  GRD234/ 0, 255, 0, 133,121,  15000,  -98000, 128,  -45000,
+        751 |     &  -65000,    250,  250, 64, 0, 0, 0, 0, 0/
+        752 |      DATA  GRD235/ 0, 255, 0, 720,360,  89750,     250,  72,  -89750,
+        753 |     &    -250,    250, 1000, 64, 0, 0, 0, 0, 0/
+        754 |      DATA  GRD236/ 0, 255, 3, 151,113,  16281,  233862,   8,  -95000,
+        755 |     &   40635,  40635, 0, 64, 0, 25000, 25000, 0, 0/
+        756 |      DATA  GRD237/ 0, 255, 3,  54, 47,  16201,  285720,   8, -107000,
+        757 |     &   32463,  32463, 0, 64, 0, 50000, 50000, 0, 0/
+        758 |      DATA  GRD238/ 0, 255, 0, 275, 203,  50750, 261750,  72,    -205,
+        759 |     &   -29750, 0,  0, 64, 0, 0, 0, 0, 0/
+        760 |      DATA  GRD239/ 0, 255, 0, 155, 123, 75750,  159500,  72,   44750,
+        761 |     &  -123500,  0, 0, 64, 0, 0, 0, 0, 0/
+        762 |      DATA  GRD240/ 0, 255, 5, 1121, 881, 23098, -119036,  8, -105000,
+        763 |     &   47625,  47625, 0, 64, 0, 0, 0, 0, 0/
+        764 |      DATA  GRD241/ 0, 255, 3, 549,445,  -4850, -151100,   8, -111000,
+        765 |     &   22000,  22000, 0, 64, 0, 45000, 45000, 0, 0/
+        766 |      DATA  GRD242/ 0, 255, 5, 553,425,  30000, -173000,   8, -135000,
+        767 |     &   11250,  11250, 0, 64, 0, 0, 0, 0, 0/
+        768 |      DATA  GRD243/ 0, 255, 0, 126,101,  10000, -170000, 128,   50000,
+        769 |     &  -120000, 400, 400, 64, 0, 0, 0, 0, 0/
+        770 |      DATA  GRD244/ 0, 255, 0, 275, 203,  50750, 261750,  72,    -205,
+        771 |     &   -29750, 0,  0, 64, 0, 0, 0, 0, 0/
+        772 |      DATA  GRD245/ 0, 255, 3, 336,372,  22980, -92840,   8,   -80000,
+        773 |     &   8000,  8000, 0, 64, 0, 35000, 35000, 0, 0/
+        774 |      DATA  GRD246/ 0, 255, 3, 332,371,  25970, -127973,  8,  -115000,
+        775 |     &   8000,  8000, 0, 64, 0, 40000, 40000, 0, 0/
+        776 |      DATA  GRD247/ 0, 255, 3, 336,372,  22980, -110840,   8,  -98000,
+        777 |     &   8000,  8000, 0, 64, 0, 35000, 35000, 0, 0/
+        778 |      DATA  GRD248/ 0, 255, 0, 135,101,  14500,  -71500, 128,   22000,
+        779 |     &  -61450,    75,  75, 64, 0, 0, 0, 0, 0/
+        780 |      DATA  GRD249/ 0, 255, 5, 367,343,  45400, -171600,   8, -150000,
+        781 |     &   9868,  9868, 0, 64, 0, 0, 0, 0, 0/
+        782 |      DATA  GRD250/ 0, 255, 0, 135,101,  16500, -162000, 128,   24000,
+        783 |     & -151950,    75,  75, 64, 0, 0, 0, 0, 0/
+        784 |C
+        785 |      IERR = 0
+        786 |C
+        787 |        DO 1 I = 1,18
+        788 |          IGDS(I) = 0
+        789 | 1      CONTINUE
+        790 |C
+        791 |      IF (IGRID.GE.37.AND.IGRID.LE.44) THEN
+        792 |        DO 2 I = 19,91
+        793 |          IGDS(I) = 0
+        794 | 2      CONTINUE
+        795 |      END IF
+        796 |C
+        797 |      IF (IGRID.GE.21.AND.IGRID.LE.24) THEN
+        798 |        DO I = 19,55
+        799 |          IGDS(I) = 0
+        800 |        END DO
+        801 |      END IF
+        802 |C
+        803 |      IF (IGRID.GE.25.AND.IGRID.LE.26) THEN
+        804 |        DO I = 19,37
+        805 |          IGDS(I) = 0
+        806 |        END DO
+        807 |      END IF
+        808 |C
+        809 |      IF (IGRID.GE.61.AND.IGRID.LE.64) THEN
+        810 |        DO I = 19,64
+        811 |          IGDS(I) = 0
+        812 |        END DO
+        813 |      END IF
+        814 |C
+        815 |      IF (IGRID.EQ.1) THEN
+        816 |        DO 3 I = 1,18
+        817 |          IGDS(I) = GRD1(I)
+        818 |  3     CONTINUE
+        819 |C
+        820 |      ELSE IF (IGRID.EQ.2) THEN
+        821 |        DO 4 I = 1,18
+        822 |          IGDS(I) = GRD2(I)
+        823 |  4     CONTINUE
+        824 |C
+        825 |      ELSE IF (IGRID.EQ.3) THEN
+        826 |        DO 5 I = 1,18
+        827 |          IGDS(I) = GRD3(I)
+        828 |  5     CONTINUE
+        829 |C
+        830 |      ELSE IF (IGRID.EQ.4) THEN
+        831 |        DO 6 I = 1,18
+        832 |          IGDS(I) = GRD4(I)
+        833 |  6     CONTINUE
+        834 |C
+        835 |      ELSE IF (IGRID.EQ.5) THEN
+        836 |        DO 10 I = 1,18
+        837 |          IGDS(I) = GRD5(I)
+        838 | 10     CONTINUE
+        839 |C
+        840 |      ELSE IF (IGRID.EQ.6) THEN
+        841 |        DO 20 I = 1,18
+        842 |          IGDS(I) = GRD6(I)
+        843 | 20     CONTINUE
+        844 |C
+        845 |      ELSE IF (IGRID.EQ.8) THEN
+        846 |        DO I = 1,18
+        847 |          IGDS(I) = GRD8(I)
+        848 |        END DO
+        849 |C
+        850 |      ELSE IF (IGRID.EQ.21) THEN
+        851 |        DO 30 I = 1,55
+        852 |          IGDS(I) = GRD21(I)
+        853 | 30     CONTINUE
+        854 |C
+        855 |      ELSE IF (IGRID.EQ.22) THEN
+        856 |        DO 40 I = 1,55
+        857 |          IGDS(I) = GRD22(I)
+        858 | 40     CONTINUE
+        859 |C
+        860 |      ELSE IF (IGRID.EQ.23) THEN
+        861 |        DO 50 I = 1,55
+        862 |          IGDS(I) = GRD23(I)
+        863 | 50     CONTINUE
+        864 |C
+        865 |      ELSE IF (IGRID.EQ.24) THEN
+        866 |        DO 60 I = 1,55
+        867 |          IGDS(I) = GRD24(I)
+        868 | 60     CONTINUE
+        869 |C
+        870 |      ELSE IF (IGRID.EQ.25) THEN
+        871 |        DO 70 I = 1,37
+        872 |          IGDS(I) = GRD25(I)
+        873 | 70     CONTINUE
+        874 |C
+        875 |      ELSE IF (IGRID.EQ.26) THEN
+        876 |        DO 80 I = 1,37
+        877 |          IGDS(I) = GRD26(I)
+        878 | 80     CONTINUE
+        879 |C
+        880 |      ELSE IF (IGRID.EQ.27) THEN
+        881 |        DO 90 I = 1,18
+        882 |          IGDS(I) = GRD27(I)
+        883 | 90     CONTINUE
+        884 |C
+        885 |      ELSE IF (IGRID.EQ.28) THEN
+        886 |        DO 100 I = 1,18
+        887 |          IGDS(I) = GRD28(I)
+        888 | 100    CONTINUE
+        889 |C
+        890 |      ELSE IF (IGRID.EQ.29) THEN
+        891 |        DO 110 I = 1,18
+        892 |          IGDS(I) = GRD29(I)
+        893 | 110    CONTINUE
+        894 |C
+        895 |      ELSE IF (IGRID.EQ.30) THEN
+        896 |        DO 120 I = 1,18
+        897 |          IGDS(I) = GRD30(I)
+        898 | 120    CONTINUE
+        899 |C
+        900 |      ELSE IF (IGRID.EQ.33) THEN
+        901 |        DO 130 I = 1,18
+        902 |          IGDS(I) = GRD33(I)
+        903 | 130     CONTINUE
+        904 |C
+        905 |      ELSE IF (IGRID.EQ.34) THEN
+        906 |        DO 140 I = 1,18
+        907 |          IGDS(I) = GRD34(I)
+        908 | 140    CONTINUE
+        909 |C
+        910 |      ELSE IF (IGRID.EQ.37) THEN
+        911 |        DO 141 I = 1,91
+        912 |          IGDS(I) = GRD37(I)
+        913 | 141    CONTINUE
+        914 |C
+        915 |      ELSE IF (IGRID.EQ.38) THEN
+        916 |        DO 142 I = 1,91
+        917 |          IGDS(I) = GRD38(I)
+        918 | 142    CONTINUE
+        919 |C
+        920 |      ELSE IF (IGRID.EQ.39) THEN
+        921 |        DO 143 I = 1,91
+        922 |          IGDS(I) = GRD39(I)
+        923 | 143    CONTINUE
+        924 |C
+        925 |      ELSE IF (IGRID.EQ.40) THEN
+        926 |        DO 144 I = 1,91
+        927 |          IGDS(I) = GRD40(I)
+        928 | 144    CONTINUE
+        929 |C
+        930 |      ELSE IF (IGRID.EQ.41) THEN
+        931 |        DO 145 I = 1,91
+        932 |          IGDS(I) = GRD41(I)
+        933 | 145    CONTINUE
+        934 |C
+        935 |      ELSE IF (IGRID.EQ.42) THEN
+        936 |        DO 146 I = 1,91
+        937 |          IGDS(I) = GRD42(I)
+        938 | 146    CONTINUE
+        939 |C
+        940 |      ELSE IF (IGRID.EQ.43) THEN
+        941 |        DO 147 I = 1,91
+        942 |          IGDS(I) = GRD43(I)
+        943 | 147    CONTINUE
+        944 |C
+        945 |      ELSE IF (IGRID.EQ.44) THEN
+        946 |        DO 148 I = 1,91
+        947 |          IGDS(I) = GRD44(I)
+        948 | 148    CONTINUE
+        949 |C
+        950 |      ELSE IF (IGRID.EQ.45) THEN
+        951 |        DO 149 I = 1,18
+        952 |          IGDS(I) = GRD45(I)
+        953 | 149    CONTINUE
+        954 |C
+        955 |      ELSE IF (IGRID.EQ.53) THEN
+        956 |        DO I = 1,18
+        957 |          IGDS(I) = GRD53(I)
+        958 |        END DO
+        959 |C
+        960 |      ELSE IF (IGRID.EQ.55) THEN
+        961 |        DO 152 I = 1,18
+        962 |          IGDS(I) = GRD55(I)
+        963 | 152    CONTINUE
+        964 |C
+        965 |      ELSE IF (IGRID.EQ.56) THEN
+        966 |        DO 154 I = 1,18
+        967 |          IGDS(I) = GRD56(I)
+        968 | 154    CONTINUE
+        969 |C
+        970 |      ELSE IF (IGRID.EQ.61) THEN
+        971 |        DO 160 I = 1,64
+        972 |          IGDS(I) = GRD61(I)
+        973 | 160    CONTINUE
+        974 |C
+        975 |      ELSE IF (IGRID.EQ.62) THEN
+        976 |        DO 170 I = 1,64
+        977 |          IGDS(I) = GRD62(I)
+        978 | 170    CONTINUE
+        979 |C
+        980 |      ELSE IF (IGRID.EQ.63) THEN
+        981 |        DO 180 I = 1,64
+        982 |          IGDS(I) = GRD63(I)
+        983 | 180    CONTINUE
+        984 |C
+        985 |      ELSE IF (IGRID.EQ.64) THEN
+        986 |        DO 190 I = 1,64
+        987 |          IGDS(I) = GRD64(I)
+        988 | 190    CONTINUE
+        989 |C
+        990 |      ELSE IF (IGRID.EQ.85) THEN
+        991 |        DO 192 I = 1,18
+        992 |          IGDS(I) = GRD85(I)
+        993 | 192    CONTINUE
+        994 |C
+        995 |      ELSE IF (IGRID.EQ.86) THEN
+        996 |        DO 194 I = 1,18
+        997 |          IGDS(I) = GRD86(I)
+        998 | 194    CONTINUE
+        999 |C
+       1000 |      ELSE IF (IGRID.EQ.87) THEN
+       1001 |        DO 195 I = 1,18
+       1002 |          IGDS(I) = GRD87(I)
+       1003 | 195    CONTINUE
+       1004 |C
+       1005 |      ELSE IF (IGRID.EQ.90) THEN
+       1006 |        DO 196 I = 1,18
+       1007 |          IGDS(I) = GRD90(I)
+       1008 | 196    CONTINUE
+       1009 |C
+       1010 |      ELSE IF (IGRID.EQ.91) THEN
+       1011 |        DO 197 I = 1,18
+       1012 |          IGDS(I) = GRD91(I)
+       1013 | 197    CONTINUE
+       1014 |C
+       1015 |      ELSE IF (IGRID.EQ.92) THEN
+       1016 |        DO 198 I = 1,18
+       1017 |          IGDS(I) = GRD92(I)
+       1018 | 198    CONTINUE
+       1019 |C
+       1020 |      ELSE IF (IGRID.EQ.93) THEN
+       1021 |        DO 199 I = 1,18
+       1022 |          IGDS(I) = GRD93(I)
+       1023 | 199    CONTINUE
+       1024 |C
+       1025 |      ELSE IF (IGRID.EQ.94) THEN
+       1026 |        DO 200 I = 1,18
+       1027 |          IGDS(I) = GRD94(I)
+       1028 | 200    CONTINUE
+       1029 |C
+       1030 |      ELSE IF (IGRID.EQ.95) THEN
+       1031 |        DO 201 I = 1,18
+       1032 |          IGDS(I) = GRD95(I)
+       1033 | 201    CONTINUE
+       1034 |C
+       1035 |      ELSE IF (IGRID.EQ.96) THEN
+       1036 |        DO 202 I = 1,18
+       1037 |          IGDS(I) = GRD96(I)
+       1038 | 202    CONTINUE
+       1039 |C
+       1040 |      ELSE IF (IGRID.EQ.97) THEN
+       1041 |        DO 203 I = 1,18
+       1042 |          IGDS(I) = GRD97(I)
+       1043 | 203    CONTINUE
+       1044 |C
+       1045 |      ELSE IF (IGRID.EQ.98) THEN
+       1046 |        DO 204 I = 1,18
+       1047 |          IGDS(I) = GRD98(I)
+       1048 | 204    CONTINUE
+       1049 |C
+       1050 |      ELSE IF (IGRID.EQ.100) THEN
+       1051 |        DO 205 I = 1,18
+       1052 |          IGDS(I) = GRD100(I)
+       1053 | 205    CONTINUE
+       1054 |C
+       1055 |C4kmhys
+       1056 |C
+       1057 |      ELSE IF (IGRID.EQ.101) THEN
+       1058 |        DO 210 I = 1,18
+       1059 |          IGDS(I) = GRD101(I)
+       1060 | 210    CONTINUE
+       1061 |C
+       1062 |      ELSE IF (IGRID.EQ.102) THEN
+       1063 |        DO 211 I = 1,18
+       1064 |          IGDS(I) = GRD102(I)
+       1065 | 211    CONTINUE
+       1066 |C
+       1067 |      ELSE IF (IGRID.EQ.103) THEN
+       1068 |        DO 220 I = 1,18
+       1069 |          IGDS(I) = GRD103(I)
+       1070 | 220   CONTINUE
+       1071 |C
+       1072 |      ELSE IF (IGRID.EQ.104) THEN
+       1073 |        DO 230 I = 1,18
+       1074 |          IGDS(I) = GRD104(I)
+       1075 | 230    CONTINUE
+       1076 |C
+       1077 |      ELSE IF (IGRID.EQ.105) THEN
+       1078 |        DO 240 I = 1,18
+       1079 |          IGDS(I) = GRD105(I)
+       1080 | 240    CONTINUE
+       1081 |C
+       1082 |      ELSE IF (IGRID.EQ.106) THEN
+       1083 |        DO 242 I = 1,18
+       1084 |          IGDS(I) = GRD106(I)
+       1085 | 242    CONTINUE
+       1086 |C
+       1087 |      ELSE IF (IGRID.EQ.107) THEN
+       1088 |        DO 244 I = 1,18
+       1089 |          IGDS(I) = GRD107(I)
+       1090 | 244    CONTINUE
+       1091 |C
+       1092 |      ELSE IF (IGRID.EQ.108) THEN
+       1093 |        DO 2441 I = 1,18
+       1094 |          IGDS(I) = GRD108(I)
+       1095 | 2441   CONTINUE
+       1096 |C
+       1097 |      ELSE IF (IGRID.EQ.109) THEN
+       1098 |        DO 2442 I = 1,18
+       1099 |          IGDS(I) = GRD109(I)
+       1100 | 2442   CONTINUE
+       1101 |C
+       1102 |      ELSE IF (IGRID.EQ.110) THEN
+       1103 |        DO 2443 I = 1,18
+       1104 |          IGDS(I) = GRD110(I)
+       1105 | 2443   CONTINUE
+       1106 |C
+       1107 |      ELSE IF (IGRID.EQ.111) THEN
+       1108 |        DO 2444 I = 1,18
+       1109 |          IGDS(I) = GRD111(I)
+       1110 | 2444   CONTINUE
+       1111 |C
+       1112 |      ELSE IF (IGRID.EQ.112) THEN
+       1113 |        DO 2445 I = 1,18
+       1114 |          IGDS(I) = GRD112(I)
+       1115 | 2445   CONTINUE
+       1116 |C
+       1117 |      ELSE IF (IGRID.EQ.113) THEN
+       1118 |        DO 2446 I = 1,18
+       1119 |          IGDS(I) = GRD113(I)
+       1120 | 2446   CONTINUE
+       1121 |C
+       1122 |      ELSE IF (IGRID.EQ.114) THEN
+       1123 |        DO 2447 I = 1,18
+       1124 |          IGDS(I) = GRD114(I)
+       1125 | 2447   CONTINUE
+       1126 |C
+       1127 |      ELSE IF (IGRID.EQ.115) THEN
+       1128 |        DO 2448 I = 1,18
+       1129 |          IGDS(I) = GRD115(I)
+       1130 | 2448   CONTINUE
+       1131 |C
+       1132 |      ELSE IF (IGRID.EQ.116) THEN
+       1133 |        DO 2449 I = 1,18
+       1134 |          IGDS(I) = GRD116(I)
+       1135 | 2449   CONTINUE
+       1136 |C
+       1137 |      ELSE IF (IGRID.EQ.117) THEN
+       1138 |        DO 2450 I = 1,18
+       1139 |          IGDS(I) = GRD117(I)
+       1140 | 2450   CONTINUE
+       1141 |C
+       1142 |      ELSE IF (IGRID.EQ.118) THEN
+       1143 |        DO 2451 I = 1,18
+       1144 |          IGDS(I) = GRD118(I)
+       1145 | 2451   CONTINUE
+       1146 |C
+       1147 |      ELSE IF (IGRID.EQ.119) THEN
+       1148 |        DO 2452 I = 1,18
+       1149 |          IGDS(I) = GRD119(I)
+       1150 | 2452   CONTINUE
+       1151 |C
+       1152 |      ELSE IF (IGRID.EQ.120) THEN
+       1153 |        DO 2453 I = 1,18
+       1154 |          IGDS(I) = GRD120(I)
+       1155 | 2453   CONTINUE
+       1156 |C
+       1157 |      ELSE IF (IGRID.EQ.121) THEN
+       1158 |        DO 2454 I = 1,18
+       1159 |          IGDS(I) = GRD121(I)
+       1160 | 2454   CONTINUE
+       1161 |C
+       1162 |      ELSE IF (IGRID.EQ.122) THEN
+       1163 |        DO 2455 I = 1,18
+       1164 |          IGDS(I) = GRD122(I)
+       1165 | 2455   CONTINUE
+       1166 |C
+       1167 |      ELSE IF (IGRID.EQ.123) THEN
+       1168 |        DO 2456 I = 1,18
+       1169 |          IGDS(I) = GRD123(I)
+       1170 | 2456   CONTINUE
+       1171 |C
+       1172 |      ELSE IF (IGRID.EQ.124) THEN
+       1173 |        DO 2457 I = 1,18
+       1174 |          IGDS(I) = GRD124(I)
+       1175 | 2457   CONTINUE
+       1176 |C
+       1177 |      ELSE IF (IGRID.EQ.125) THEN
+       1178 |        DO 2458 I = 1,18
+       1179 |          IGDS(I) = GRD125(I)
+       1180 | 2458   CONTINUE
+       1181 |C
+       1182 |      ELSE IF (IGRID.EQ.126) THEN
+       1183 |        DO 2459 I = 1,18
+       1184 |          IGDS(I) = GRD126(I)
+       1185 | 2459   CONTINUE
+       1186 |C
+       1187 |C
+       1188 |C
+       1189 |      ELSE IF (IGRID.EQ.151) THEN
+       1190 |        DO 1210 I = 1,18
+       1191 |          IGDS(I) = GRD151(I)
+       1192 |1210    CONTINUE
+       1193 |C
+       1194 |      ELSE IF (IGRID.EQ.152) THEN
+       1195 |        DO 1211 I = 1,18
+       1196 |          IGDS(I) = GRD152(I)
+       1197 |1211    CONTINUE
+       1198 |C
+       1199 |      ELSE IF (IGRID.EQ.153) THEN
+       1200 |        DO 1220 I = 1,18
+       1201 |          IGDS(I) = GRD153(I)
+       1202 |1220   CONTINUE
+       1203 |C
+       1204 |      ELSE IF (IGRID.EQ.154) THEN
+       1205 |        DO 1230 I = 1,18
+       1206 |          IGDS(I) = GRD154(I)
+       1207 |1230    CONTINUE
+       1208 |C
+       1209 |      ELSE IF (IGRID.EQ.155) THEN
+       1210 |        DO 1240 I = 1,18
+       1211 |          IGDS(I) = GRD155(I)
+       1212 |1240    CONTINUE
+       1213 |C
+       1214 |      ELSE IF (IGRID.EQ.156) THEN
+       1215 |        DO 1242 I = 1,18
+       1216 |          IGDS(I) = GRD156(I)
+       1217 |1242    CONTINUE
+       1218 |C
+       1219 |      ELSE IF (IGRID.EQ.157) THEN
+       1220 |        DO 1244 I = 1,18
+       1221 |          IGDS(I) = GRD157(I)
+       1222 |1244    CONTINUE
+       1223 |C
+       1224 |      ELSE IF (IGRID.EQ.158) THEN
+       1225 |        DO 12441 I = 1,18
+       1226 |          IGDS(I) = GRD158(I)
+       1227 |12441   CONTINUE
+       1228 |C
+       1229 |      ELSE IF (IGRID.EQ.159) THEN
+       1230 |        DO 12442 I = 1,18
+       1231 |          IGDS(I) = GRD159(I)
+       1232 |12442   CONTINUE
+       1233 |C
+       1234 |      ELSE IF (IGRID.EQ.160) THEN
+       1235 |        DO 12443 I = 1,18
+       1236 |          IGDS(I) = GRD160(I)
+       1237 |12443   CONTINUE
+       1238 |C
+       1239 |      ELSE IF (IGRID.EQ.161) THEN
+       1240 |        DO 12444 I = 1,18
+       1241 |          IGDS(I) = GRD161(I)
+       1242 |12444   CONTINUE
+       1243 |C
+       1244 |      ELSE IF (IGRID.EQ.162) THEN
+       1245 |        DO 12445 I = 1,18
+       1246 |          IGDS(I) = GRD162(I)
+       1247 |12445   CONTINUE
+       1248 |C
+       1249 |      ELSE IF (IGRID.EQ.163) THEN
+       1250 |        DO 12446 I = 1,18
+       1251 |          IGDS(I) = GRD163(I)
+       1252 |12446   CONTINUE
+       1253 |C
+       1254 |      ELSE IF (IGRID.EQ.164) THEN
+       1255 |        DO 12447 I = 1,18
+       1256 |          IGDS(I) = GRD164(I)
+       1257 |12447   CONTINUE
+       1258 |C
+       1259 |      ELSE IF (IGRID.EQ.165) THEN
+       1260 |        DO 12448 I = 1,18
+       1261 |          IGDS(I) = GRD165(I)
+       1262 |12448   CONTINUE
+       1263 |C
+       1264 |      ELSE IF (IGRID.EQ.166) THEN
+       1265 |        DO 12449 I = 1,18
+       1266 |          IGDS(I) = GRD166(I)
+       1267 |12449   CONTINUE
+       1268 |C
+       1269 |      ELSE IF (IGRID.EQ.167) THEN
+       1270 |        DO 12450 I = 1,18
+       1271 |          IGDS(I) = GRD167(I)
+       1272 |12450   CONTINUE
+       1273 |C
+       1274 |      ELSE IF (IGRID.EQ.168) THEN
+       1275 |        DO 12451 I = 1,18
+       1276 |          IGDS(I) = GRD168(I)
+       1277 |12451   CONTINUE
+       1278 |C
+       1279 |      ELSE IF (IGRID.EQ.169) THEN
+       1280 |        DO 12452 I = 1,18
+       1281 |          IGDS(I) = GRD169(I)
+       1282 |12452   CONTINUE
+       1283 |C
+       1284 |      ELSE IF (IGRID.EQ.170) THEN
+       1285 |        DO 12453 I = 1,18
+       1286 |          IGDS(I) = GRD170(I)
+       1287 |12453   CONTINUE
+       1288 |C
+       1289 |      ELSE IF (IGRID.EQ.171) THEN
+       1290 |        DO 12454 I = 1,18
+       1291 |          IGDS(I) = GRD171(I)
+       1292 |12454   CONTINUE
+       1293 |C
+       1294 |      ELSE IF (IGRID.EQ.172) THEN
+       1295 |        DO 12455 I = 1,18
+       1296 |          IGDS(I) = GRD172(I)
+       1297 |12455   CONTINUE
+       1298 |C
+       1299 |      ELSE IF (IGRID.EQ.173) THEN
+       1300 |        DO 12456 I = 1,18
+       1301 |          IGDS(I) = GRD173(I)
+       1302 |12456   CONTINUE
+       1303 |C
+       1304 |      ELSE IF (IGRID.EQ.174) THEN
+       1305 |        DO 12457 I = 1,18
+       1306 |          IGDS(I) = GRD174(I)
+       1307 |12457   CONTINUE
+       1308 |C
+       1309 |      ELSE IF (IGRID.EQ.175) THEN
+       1310 |        DO 12458 I = 1,18
+       1311 |          IGDS(I) = GRD175(I)
+       1312 |12458   CONTINUE
+       1313 |C
+       1314 |      ELSE IF (IGRID.EQ.176) THEN
+       1315 |        DO 12459 I = 1,18
+       1316 |          IGDS(I) = GRD176(I)
+       1317 |12459   CONTINUE
+       1318 |C
+       1319 |C4kmhys
+       1320 |C
+       1321 |      ELSE IF (IGRID.EQ.190) THEN
+       1322 |        DO 2190 I = 1,18
+       1323 |          IGDS(I) = GRD190(I)
+       1324 | 2190   CONTINUE
+       1325 |C
+       1326 |      ELSE IF (IGRID.EQ.192) THEN
+       1327 |        DO 2191 I = 1,18
+       1328 |          IGDS(I) = GRD192(I)
+       1329 | 2191   CONTINUE
+       1330 |C
+       1331 |      ELSE IF (IGRID.EQ.194) THEN
+       1332 |        DO 2192 I = 1,18
+       1333 |          IGDS(I) = GRD194(I)
+       1334 | 2192   CONTINUE
+       1335 |C
+       1336 |      ELSE IF (IGRID.EQ.196) THEN
+       1337 |        DO 249 I = 1,18
+       1338 |          IGDS(I) = GRD196(I)
+       1339 | 249    CONTINUE
+       1340 |C
+       1341 |      ELSE IF (IGRID.EQ.198) THEN
+       1342 |        DO 2490 I = 1,18
+       1343 |          IGDS(I) = GRD198(I)
+       1344 | 2490   CONTINUE
+       1345 |C
+       1346 |      ELSE IF (IGRID.EQ.201) THEN
+       1347 |        DO 250 I = 1,18
+       1348 |          IGDS(I) = GRD201(I)
+       1349 | 250    CONTINUE
+       1350 |C
+       1351 |      ELSE IF (IGRID.EQ.202) THEN
+       1352 |        DO 260 I = 1,18
+       1353 |          IGDS(I) = GRD202(I)
+       1354 | 260    CONTINUE
+       1355 |C
+       1356 |      ELSE IF (IGRID.EQ.203) THEN
+       1357 |        DO 270 I = 1,18
+       1358 |          IGDS(I) = GRD203(I)
+       1359 | 270    CONTINUE
+       1360 |C
+       1361 |      ELSE IF (IGRID.EQ.204) THEN
+       1362 |        DO 280 I = 1,18
+       1363 |          IGDS(I) = GRD204(I)
+       1364 | 280    CONTINUE
+       1365 |C
+       1366 |      ELSE IF (IGRID.EQ.205) THEN
+       1367 |        DO 290 I = 1,18
+       1368 |          IGDS(I) = GRD205(I)
+       1369 | 290    CONTINUE
+       1370 |C
+       1371 |      ELSE IF (IGRID.EQ.206) THEN
+       1372 |        DO 300 I = 1,18
+       1373 |          IGDS(I) = GRD206(I)
+       1374 | 300    CONTINUE
+       1375 |C
+       1376 |      ELSE IF (IGRID.EQ.207) THEN
+       1377 |        DO 310 I = 1,18
+       1378 |          IGDS(I) = GRD207(I)
+       1379 | 310    CONTINUE
+       1380 |C
+       1381 |      ELSE IF (IGRID.EQ.208) THEN
+       1382 |        DO 320 I = 1,18
+       1383 |          IGDS(I) = GRD208(I)
+       1384 | 320    CONTINUE
+       1385 |C
+       1386 |      ELSE IF (IGRID.EQ.209) THEN
+       1387 |        DO 330 I = 1,18
+       1388 |          IGDS(I) = GRD209(I)
+       1389 | 330    CONTINUE
+       1390 |C
+       1391 |      ELSE IF (IGRID.EQ.210) THEN
+       1392 |        DO 340 I = 1,18
+       1393 |          IGDS(I) = GRD210(I)
+       1394 | 340    CONTINUE
+       1395 |C
+       1396 |      ELSE IF (IGRID.EQ.211) THEN
+       1397 |        DO 350 I = 1,18
+       1398 |          IGDS(I) = GRD211(I)
+       1399 | 350    CONTINUE
+       1400 |C
+       1401 |      ELSE IF (IGRID.EQ.212) THEN
+       1402 |        DO 360 I = 1,18
+       1403 |          IGDS(I) = GRD212(I)
+       1404 | 360    CONTINUE
+       1405 |C
+       1406 |      ELSE IF (IGRID.EQ.213) THEN
+       1407 |        DO 370 I = 1,18
+       1408 |          IGDS(I) = GRD213(I)
+       1409 | 370    CONTINUE
+       1410 |C
+       1411 |      ELSE IF (IGRID.EQ.214) THEN
+       1412 |        DO 380 I = 1,18
+       1413 |          IGDS(I) = GRD214(I)
+       1414 | 380    CONTINUE
+       1415 |C
+       1416 |      ELSE IF (IGRID.EQ.215) THEN
+       1417 |        DO 390 I = 1,18
+       1418 |          IGDS(I) = GRD215(I)
+       1419 | 390    CONTINUE
+       1420 |C
+       1421 |      ELSE IF (IGRID.EQ.216) THEN
+       1422 |        DO 400 I = 1,18
+       1423 |          IGDS(I) = GRD216(I)
+       1424 | 400    CONTINUE
+       1425 |C
+       1426 |      ELSE IF (IGRID.EQ.217) THEN
+       1427 |        DO 401 I = 1,18
+       1428 |          IGDS(I) = GRD217(I)
+       1429 | 401    CONTINUE
+       1430 |C
+       1431 |      ELSE IF (IGRID.EQ.218) THEN
+       1432 |        DO 410 I = 1,18
+       1433 |          IGDS(I) = GRD218(I)
+       1434 | 410    CONTINUE
+       1435 |C
+       1436 |      ELSE IF (IGRID.EQ.219) THEN
+       1437 |        DO 411 I = 1,18
+       1438 |          IGDS(I) = GRD219(I)
+       1439 | 411    CONTINUE
+       1440 |C
+       1441 |      ELSE IF (IGRID.EQ.220) THEN
+       1442 |        DO 412 I = 1,18
+       1443 |          IGDS(I) = GRD220(I)
+       1444 | 412    CONTINUE
+       1445 |C
+       1446 |      ELSE IF (IGRID.EQ.221) THEN
+       1447 |        DO 413 I = 1,18
+       1448 |          IGDS(I) = GRD221(I)
+       1449 | 413    CONTINUE
+       1450 |C
+       1451 |      ELSE IF (IGRID.EQ.222) THEN
+       1452 |        DO 414 I = 1,18
+       1453 |          IGDS(I) = GRD222(I)
+       1454 | 414    CONTINUE
+       1455 |C
+       1456 |      ELSE IF (IGRID.EQ.223) THEN
+       1457 |        DO 415 I = 1,18
+       1458 |          IGDS(I) = GRD223(I)
+       1459 | 415    CONTINUE
+       1460 |C
+       1461 |      ELSE IF (IGRID.EQ.224) THEN
+       1462 |        DO 416 I = 1,18
+       1463 |          IGDS(I) = GRD224(I)
+       1464 | 416    CONTINUE
+       1465 |C
+       1466 |      ELSE IF (IGRID.EQ.225) THEN
+       1467 |        DO 417 I = 1,18
+       1468 |          IGDS(I) = GRD225(I)
+       1469 | 417    CONTINUE
+       1470 |C
+       1471 |      ELSE IF (IGRID.EQ.226) THEN
+       1472 |        DO 418 I = 1,18
+       1473 |          IGDS(I) = GRD226(I)
+       1474 | 418    CONTINUE
+       1475 |C
+       1476 |      ELSE IF (IGRID.EQ.227) THEN
+       1477 |        DO 419 I = 1,18
+       1478 |          IGDS(I) = GRD227(I)
+       1479 | 419    CONTINUE
+       1480 |C
+       1481 |      ELSE IF (IGRID.EQ.228) THEN
+       1482 |        DO 420 I = 1,18
+       1483 |          IGDS(I) = GRD228(I)
+       1484 | 420    CONTINUE
+       1485 |C
+       1486 |      ELSE IF (IGRID.EQ.229) THEN
+       1487 |        DO 421 I = 1,18
+       1488 |          IGDS(I) = GRD229(I)
+       1489 | 421    CONTINUE
+       1490 |C
+       1491 |      ELSE IF (IGRID.EQ.230) THEN
+       1492 |        DO 422 I = 1,18
+       1493 |          IGDS(I) = GRD230(I)
+       1494 | 422    CONTINUE
+       1495 |C
+       1496 |      ELSE IF (IGRID.EQ.231) THEN
+       1497 |        DO 423 I = 1,18
+       1498 |          IGDS(I) = GRD231(I)
+       1499 | 423    CONTINUE
+       1500 |C
+       1501 |      ELSE IF (IGRID.EQ.232) THEN
+       1502 |        DO 424 I = 1,18
+       1503 |          IGDS(I) = GRD232(I)
+       1504 | 424    CONTINUE
+       1505 |C
+       1506 |      ELSE IF (IGRID.EQ.233) THEN
+       1507 |        DO 425 I = 1,18
+       1508 |          IGDS(I) = GRD233(I)
+       1509 | 425    CONTINUE
+       1510 |C
+       1511 |      ELSE IF (IGRID.EQ.234) THEN
+       1512 |        DO 426 I = 1,18
+       1513 |          IGDS(I) = GRD234(I)
+       1514 | 426    CONTINUE
+       1515 |C
+       1516 |      ELSE IF (IGRID.EQ.235) THEN
+       1517 |        DO 427 I = 1,18
+       1518 |          IGDS(I) = GRD235(I)
+       1519 | 427    CONTINUE
+       1520 |C
+       1521 |      ELSE IF (IGRID.EQ.236) THEN
+       1522 |        DO 428 I = 1,18
+       1523 |          IGDS(I) = GRD236(I)
+       1524 | 428    CONTINUE
+       1525 |C
+       1526 |      ELSE IF (IGRID.EQ.237) THEN
+       1527 |        DO 429 I = 1,18
+       1528 |          IGDS(I) = GRD237(I)
+       1529 | 429    CONTINUE
+       1530 |C
+       1531 |      ELSE IF (IGRID.EQ.238) THEN
+       1532 |        DO I = 1,18
+       1533 |          IGDS(I) = GRD238(I)
+       1534 |        END DO
+       1535 |C
+       1536 |      ELSE IF (IGRID.EQ.239) THEN
+       1537 |        DO I = 1,18
+       1538 |          IGDS(I) = GRD239(I)
+       1539 |        END DO
+       1540 |C
+       1541 |      ELSE IF (IGRID.EQ.240) THEN
+       1542 |        DO I = 1,18
+       1543 |          IGDS(I) = GRD240(I)
+       1544 |        END DO
+       1545 |C
+       1546 |      ELSE IF (IGRID.EQ.241) THEN
+       1547 |        DO 430 I = 1,18
+       1548 |          IGDS(I) = GRD241(I)
+       1549 | 430    CONTINUE
+       1550 |C
+       1551 |      ELSE IF (IGRID.EQ.242) THEN
+       1552 |        DO 431 I = 1,18
+       1553 |          IGDS(I) = GRD242(I)
+       1554 | 431    CONTINUE
+       1555 |C
+       1556 |      ELSE IF (IGRID.EQ.243) THEN
+       1557 |        DO 432 I = 1,18
+       1558 |          IGDS(I) = GRD243(I)
+       1559 | 432    CONTINUE
+       1560 |C
+       1561 |      ELSE IF (IGRID.EQ.244) THEN
+       1562 |        DO I = 1,18
+       1563 |          IGDS(I) = GRD244(I)
+       1564 |        END DO
+       1565 |C
+       1566 |      ELSE IF (IGRID.EQ.245) THEN
+       1567 |        DO 433 I = 1,18
+       1568 |          IGDS(I) = GRD245(I)
+       1569 | 433    CONTINUE
+       1570 |C
+       1571 |      ELSE IF (IGRID.EQ.246) THEN
+       1572 |        DO 434 I = 1,18
+       1573 |          IGDS(I) = GRD246(I)
+       1574 | 434    CONTINUE
+       1575 |C
+       1576 |      ELSE IF (IGRID.EQ.247) THEN
+       1577 |        DO 435 I = 1,18
+       1578 |          IGDS(I) = GRD247(I)
+       1579 | 435    CONTINUE
+       1580 |C
+       1581 |      ELSE IF (IGRID.EQ.248) THEN
+       1582 |        DO 436 I = 1,18
+       1583 |          IGDS(I) = GRD248(I)
+       1584 | 436    CONTINUE
+       1585 |C
+       1586 |      ELSE IF (IGRID.EQ.249) THEN
+       1587 |        DO 437 I = 1,18
+       1588 |          IGDS(I) = GRD249(I)
+       1589 | 437    CONTINUE
+       1590 |C
+       1591 |      ELSE IF (IGRID.EQ.250) THEN
+       1592 |        DO 438 I = 1,18
+       1593 |          IGDS(I) = GRD250(I)
+       1594 | 438    CONTINUE
+       1595 |C
+       1596 |      ELSE
+       1597 |        IERR = 1
+       1598 |      ENDIF
+       1599 |C
+       1600 |      RETURN
+       1601 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+grd1                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-242.21$  0-401.13*  0-817.21
+ 
+grd100                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-289.21$  0-1052.21
+ 
+grd101                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-291.21$  0-568.13*  0-1059.21
+ 
+grd102                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-292.21$  0-570.13*  0-1064.21
+ 
+grd103                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-293.21$  0-572.13*  0-1069.21
+ 
+grd104                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-294.21$  0-574.13*  0-1074.21
+ 
+grd105                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-295.21$  0-576.13*  0-1079.21
+ 
+grd106                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-296.21$  0-578.13*  0-1084.21
+ 
+grd107                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-297.21$  0-580.13*  0-1089.21
+ 
+grd108                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-298.21$  0-582.13*  0-1094.21
+ 
+grd109                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-299.21$  0-584.13*  0-1099.21
+ 
+grd110                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-300.21$  0-586.13*  0-1104.21
+ 
+grd111                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-301.21$  0-588.13*  0-1109.21
+ 
+grd112                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-302.21$  0-590.13*  0-1114.21
+ 
+grd113                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-303.21$  0-592.13*  0-1119.21
+ 
+grd114                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-304.21$  0-594.13*  0-1124.21
+ 
+grd115                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-305.21$  0-596.13*  0-1129.21
+ 
+grd116                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-306.21$  0-598.13*  0-1134.21
+ 
+grd117                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-307.21$  0-600.13*  0-1139.21
+ 
+grd118                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-308.21$  0-602.13*  0-1144.21
+ 
+grd119                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-309.21$  0-604.13*  0-1149.21
+ 
+grd120                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-310.21$  0-606.13*  0-1154.21
+ 
+grd121                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-311.21$  0-608.13*  0-1159.21
+ 
+grd122                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-312.21$  0-610.13*  0-1164.21
+ 
+grd123                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-313.21$  0-612.13*  0-1169.21
+ 
+grd124                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-314.21$  0-614.13*  0-1174.21
+ 
+grd125                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-315.21$  0-616.13*  0-1179.21
+ 
+grd126                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-316.21$  0-618.13*  0-1184.21
+ 
+grd151                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-318.21$  0-621.13*  0-1191.21
+ 
+grd152                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-319.21$  0-623.13*  0-1196.21
+ 
+grd153                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-320.21$  0-625.13*  0-1201.21
+ 
+grd154                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-321.21$  0-627.13*  0-1206.21
+ 
+grd155                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-322.21$  0-629.13*  0-1211.21
+ 
+grd156                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-323.21$  0-631.13*  0-1216.21
+ 
+grd157                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-324.21$  0-633.13*  0-1221.21
+ 
+grd158                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-325.21$  0-635.13*  0-1226.21
+ 
+grd159                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-326.21$  0-637.13*  0-1231.21
+ 
+grd160                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-327.21$  0-639.13*  0-1236.21
+ 
+grd161                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-328.21$  0-641.13*  0-1241.21
+ 
+grd162                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-329.21$  0-643.13*  0-1246.21
+ 
+grd163                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-330.21$  0-645.13*  0-1251.21
+ 
+grd164                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-331.21$  0-647.13*  0-1256.21
+ 
+grd165                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-332.21$  0-649.13*  0-1261.21
+ 
+grd166                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-333.21$  0-651.13*  0-1266.21
+ 
+grd167                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-334.21$  0-653.13*  0-1271.21
+ 
+grd168                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-335.21$  0-655.13*  0-1276.21
+ 
+grd169                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-336.21$  0-657.13*  0-1281.21
+ 
+grd170                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-337.21$  0-659.13*  0-1286.21
+ 
+grd171                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-338.21$  0-661.13*  0-1291.21
+ 
+grd172                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-339.21$  0-663.13*  0-1296.21
+ 
+grd173                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-340.21$  0-665.13*  0-1301.21
+ 
+grd174                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-341.21$  0-667.13*  0-1306.21
+ 
+grd175                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-342.21$  0-669.13*  0-1311.21
+ 
+grd176                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-343.21$  0-671.13*  0-1316.21
+ 
+grd190                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-345.21$  0-674.13*  0-1323.21
+ 
+grd192                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-346.21$  0-676.13*  0-1328.21
+ 
+grd194                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-347.21$  0-678.13*  0-1333.21
+ 
+grd196                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-348.21$  0-680.13*  0-1338.21
+ 
+grd198                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-349.21$  0-682.13*  0-1343.21
+ 
+grd2                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-243.21$  0-403.13*  0-822.21
+ 
+grd201                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-350.21$  0-684.13*  0-1348.21
+ 
+grd202                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-351.21$  0-686.13*  0-1353.21
+ 
+grd203                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-352.21$  0-688.13*  0-1358.21
+ 
+grd204                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-353.21$  0-690.13*  0-1363.21
+ 
+grd205                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-354.21$  0-692.13*  0-1368.21
+ 
+grd206                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-355.21$  0-694.13*  0-1373.21
+ 
+grd207                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-356.21$  0-696.13*  0-1378.21
+ 
+grd208                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-357.21$  0-698.13*  0-1383.21
+ 
+grd209                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-358.21$  0-700.13*  0-1388.21
+ 
+grd21                            Static, Integer(4) (1:55), Offset: 0, Alignment: full word
+                                 0-249.21$  0-415.13*  0-852.21
+ 
+grd210                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-359.21$  0-702.13*  0-1393.21
+ 
+grd211                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-360.21$  0-704.13*  0-1398.21
+ 
+grd212                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-361.21$  0-706.13*  0-1403.21
+ 
+grd213                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-362.21$  0-708.13*  0-1408.21
+ 
+grd214                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-363.21$  0-710.13*  0-1413.21
+ 
+grd215                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-364.21$  0-712.13*  0-1418.21
+ 
+grd216                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-365.21$  0-714.13*  0-1423.21
+ 
+grd217                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-366.21$  0-716.13*  0-1428.21
+ 
+grd218                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-367.21$  0-718.13*  0-1433.21
+ 
+grd219                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-368.21$  0-720.13*  0-1438.21
+ 
+grd22                            Static, Integer(4) (1:55), Offset: 0, Alignment: full word
+                                 0-250.21$  0-420.13*  0-857.21
+ 
+grd220                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-369.21$  0-722.13*  0-1443.21
+ 
+grd221                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-370.21$  0-724.13*  0-1448.21
+ 
+grd222                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-371.21$  0-726.13*  0-1453.21
+ 
+grd223                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-372.21$  0-728.13*  0-1458.21
+ 
+grd224                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-373.21$  0-730.13*  0-1463.21
+ 
+grd225                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-374.21$  0-732.13*  0-1468.21
+ 
+grd226                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-375.21$  0-734.13*  0-1473.21
+ 
+grd227                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-376.21$  0-736.13*  0-1478.21
+ 
+grd228                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-377.21$  0-738.13*  0-1483.21
+ 
+grd229                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-378.21$  0-740.13*  0-1488.21
+ 
+grd23                            Static, Integer(4) (1:55), Offset: 0, Alignment: full word
+                                 0-251.21$  0-425.13*  0-862.21
+ 
+grd230                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-379.21$  0-742.13*  0-1493.21
+ 
+grd231                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-380.21$  0-744.13*  0-1498.21
+ 
+grd232                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-381.21$  0-746.13*  0-1503.21
+ 
+grd233                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-382.21$  0-748.13*  0-1508.21
+ 
+grd234                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-383.21$  0-750.13*  0-1513.21
+ 
+grd235                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-384.21$  0-752.13*  0-1518.21
+ 
+grd236                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-385.21$  0-754.13*  0-1523.21
+ 
+grd237                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-386.21$  0-756.13*  0-1528.21
+ 
+grd238                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-387.21$  0-758.13*  0-1533.21
+ 
+grd239                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-388.21$  0-760.13*  0-1538.21
+ 
+grd24                            Static, Integer(4) (1:55), Offset: 0, Alignment: full word
+                                 0-252.21$  0-430.13*  0-867.21
+ 
+grd240                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-389.21$  0-762.13*  0-1543.21
+ 
+grd241                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-390.21$  0-764.13*  0-1548.21
+ 
+grd242                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-391.21$  0-766.13*  0-1553.21
+ 
+grd243                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-392.21$  0-768.13*  0-1558.21
+ 
+grd244                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-393.21$  0-770.13*  0-1563.21
+ 
+grd245                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-394.21$  0-772.13*  0-1568.21
+ 
+grd246                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-395.21$  0-774.13*  0-1573.21
+ 
+grd247                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-396.21$  0-776.13*  0-1578.21
+ 
+grd248                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-397.21$  0-778.13*  0-1583.21
+ 
+grd249                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-398.21$  0-780.13*  0-1588.21
+ 
+grd25                            Static, Integer(4) (1:37), Offset: 0, Alignment: full word
+                                 0-253.21$  0-435.13*  0-872.21
+ 
+grd250                           Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-399.21$  0-782.13*  0-1593.21
+ 
+grd26                            Static, Integer(4) (1:37), Offset: 0, Alignment: full word
+                                 0-254.21$  0-439.13*  0-877.21
+ 
+grd27                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-255.21$  0-443.13*  0-882.21
+ 
+grd28                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-256.21$  0-445.13*  0-887.21
+ 
+grd29                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-257.21$  0-447.13*  0-892.21
+ 
+grd3                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-244.21$  0-405.13*  0-827.21
+ 
+grd30                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-258.21$  0-449.13*  0-897.21
+ 
+grd33                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-259.21$  0-451.13*  0-902.21
+ 
+grd34                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-260.21$  0-453.13*  0-907.21
+ 
+grd37                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-261.21$  0-455.13*  0-912.21
+ 
+grd38                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-262.21$  0-462.13*  0-917.21
+ 
+grd39                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-263.21$  0-469.13*  0-922.21
+ 
+grd4                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-245.21$  0-407.13*  0-832.21
+ 
+grd40                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-264.21$  0-476.13*  0-927.21
+ 
+grd41                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-265.21$  0-483.13*  0-932.21
+ 
+grd42                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-266.21$  0-490.13*  0-937.21
+ 
+grd43                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-267.21$  0-497.13*  0-942.21
+ 
+grd44                            Static, Integer(4) (1:91), Offset: 0, Alignment: full word
+                                 0-268.21$  0-504.13*  0-947.21
+ 
+grd45                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-269.21$  0-511.13*  0-952.21
+ 
+grd5                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-246.21$  0-409.13*  0-837.21
+ 
+grd53                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-270.21$  0-513.13*  0-957.21
+ 
+grd55                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-271.21$  0-515.13*  0-962.21
+ 
+grd56                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-272.21$  0-517.13*  0-967.21
+ 
+grd6                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-247.21$  0-411.13*  0-842.21
+ 
+grd61                            Static, Integer(4) (1:64), Offset: 0, Alignment: full word
+                                 0-273.21$  0-519.13*  0-972.21
+ 
+grd62                            Static, Integer(4) (1:64), Offset: 0, Alignment: full word
+                                 0-274.21$  0-525.13*  0-977.21
+ 
+grd63                            Static, Integer(4) (1:64), Offset: 0, Alignment: full word
+                                 0-275.21$  0-531.13*  0-982.21
+ 
+grd64                            Static, Integer(4) (1:64), Offset: 0, Alignment: full word
+                                 0-276.21$  0-537.13*  0-987.21
+ 
+grd8                             Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-248.21$  0-413.13*  0-847.21
+ 
+grd85                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-277.21$  0-543.13*  0-992.21
+ 
+grd86                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-278.21$  0-545.13*  0-997.21
+ 
+grd87                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-279.21$  0-547.13*  0-1002.21
+ 
+grd90                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-280.21$  0-549.13*  0-1007.21
+ 
+grd91                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-281.21$  0-551.13*  0-1012.21
+ 
+grd92                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-282.21$  0-553.13*  0-1017.21
+ 
+grd93                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-283.21$  0-555.13*  0-1022.21
+ 
+grd94                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-284.21$  0-557.13*  0-1027.21
+ 
+grd95                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-285.21$  0-559.13*  0-1032.21
+ 
+grd96                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-286.21$  0-561.13*  0-1037.21
+ 
+grd97                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-287.21$  0-563.13*  0-1042.21
+ 
+grd98                            Static, Integer(4) (1:18), Offset: 0, Alignment: full word
+                                 0-288.21$  0-565.13*  0-1047.21
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-787.14@  0-788.16  0-792.14@  0-793.16  0-798.12@  0-799.16  0-804.12@  0-805.16  0-810.12@
+                                 0-811.16  0-816.14@  0-817.16  0-817.26  0-821.14@  0-822.16  0-822.26  0-826.14@  0-827.16
+                                 0-827.26  0-831.14@  0-832.16  0-832.26  0-836.15@  0-837.16  0-837.26  0-841.15@  0-842.16
+                                 0-842.26  0-846.12@  0-847.16  0-847.26  0-851.15@  0-852.16  0-852.27  0-856.15@  0-857.16
+                                 0-857.27  0-861.15@  0-862.16  0-862.27  0-866.15@  0-867.16  0-867.27  0-871.15@  0-872.16
+                                 0-872.27  0-876.15@  0-877.16  0-877.27  0-881.15@  0-882.16  0-882.27  0-886.16@  0-887.16
+                                 0-887.27  0-891.16@  0-892.16  0-892.27  0-896.16@  0-897.16  0-897.27  0-901.16@  0-902.16
+                                 0-902.27  0-906.16@  0-907.16  0-907.27  0-911.16@  0-912.16  0-912.27  0-916.16@  0-917.16
+                                 0-917.27  0-921.16@  0-922.16  0-922.27  0-926.16@  0-927.16  0-927.27  0-931.16@  0-932.16
+                                 0-932.27  0-936.16@  0-937.16  0-937.27  0-941.16@  0-942.16  0-942.27  0-946.16@  0-947.16
+                                 0-947.27  0-951.16@  0-952.16  0-952.27  0-956.12@  0-957.16  0-957.27  0-961.16@  0-962.16
+                                 0-962.27  0-966.16@  0-967.16  0-967.27  0-971.16@  0-972.16  0-972.27  0-976.16@  0-977.16
+                                 0-977.27  0-981.16@  0-982.16  0-982.27  0-986.16@  0-987.16  0-987.27  0-991.16@  0-992.16
+                                 0-992.27  0-996.16@  0-997.16  0-997.27  0-1001.16@  0-1002.16  0-1002.27  0-1006.16@  0-1007.16
+                                 0-1007.27  0-1011.16@  0-1012.16  0-1012.27  0-1016.16@  0-1017.16  0-1017.27  0-1021.16@
+                                 0-1022.16  0-1022.27  0-1026.16@  0-1027.16  0-1027.27  0-1031.16@  0-1032.16  0-1032.27
+                                 0-1036.16@  0-1037.16  0-1037.27  0-1041.16@  0-1042.16  0-1042.27  0-1046.16@  0-1047.16
+                                 0-1047.27  0-1051.16@  0-1052.16  0-1052.28  0-1058.16@  0-1059.16  0-1059.28  0-1063.16@
+                                 0-1064.16  0-1064.28  0-1068.16@  0-1069.16  0-1069.28  0-1073.16@  0-1074.16  0-1074.28
+                                 0-1078.16@  0-1079.16  0-1079.28  0-1083.16@  0-1084.16  0-1084.28  0-1088.16@  0-1089.16
+                                 0-1089.28  0-1093.17@  0-1094.16  0-1094.28  0-1098.17@  0-1099.16  0-1099.28  0-1103.17@
+                                 0-1104.16  0-1104.28  0-1108.17@  0-1109.16  0-1109.28  0-1113.17@  0-1114.16  0-1114.28
+                                 0-1118.17@  0-1119.16  0-1119.28  0-1123.17@  0-1124.16  0-1124.28  0-1128.17@  0-1129.16
+                                 0-1129.28  0-1133.17@  0-1134.16  0-1134.28  0-1138.17@  0-1139.16  0-1139.28  0-1143.17@
+                                 0-1144.16  0-1144.28  0-1148.17@  0-1149.16  0-1149.28  0-1153.17@  0-1154.16  0-1154.28
+                                 0-1158.17@  0-1159.16  0-1159.28  0-1163.17@  0-1164.16  0-1164.28  0-1168.17@  0-1169.16
+                                 0-1169.28  0-1173.17@  0-1174.16  0-1174.28  0-1178.17@  0-1179.16  0-1179.28  0-1183.17@
+                                 0-1184.16  0-1184.28  0-1190.17@  0-1191.16  0-1191.28  0-1195.17@  0-1196.16  0-1196.28
+                                 0-1200.17@  0-1201.16  0-1201.28  0-1205.17@  0-1206.16  0-1206.28  0-1210.17@  0-1211.16
+                                 0-1211.28  0-1215.17@  0-1216.16  0-1216.28  0-1220.17@  0-1221.16  0-1221.28  0-1225.18@
+                                 0-1226.16  0-1226.28  0-1230.18@  0-1231.16  0-1231.28  0-1235.18@  0-1236.16  0-1236.28
+                                 0-1240.18@  0-1241.16  0-1241.28  0-1245.18@  0-1246.16  0-1246.28  0-1250.18@  0-1251.16
+                                 0-1251.28  0-1255.18@  0-1256.16  0-1256.28  0-1260.18@  0-1261.16  0-1261.28  0-1265.18@
+                                 0-1266.16  0-1266.28  0-1270.18@  0-1271.16  0-1271.28  0-1275.18@  0-1276.16  0-1276.28
+                                 0-1280.18@  0-1281.16  0-1281.28  0-1285.18@  0-1286.16  0-1286.28  0-1290.18@  0-1291.16
+                                 0-1291.28  0-1295.18@  0-1296.16  0-1296.28  0-1300.18@  0-1301.16  0-1301.28  0-1305.18@
+                                 0-1306.16  0-1306.28  0-1310.18@  0-1311.16  0-1311.28  0-1315.18@  0-1316.16  0-1316.28
+                                 0-1322.17@  0-1323.16  0-1323.28  0-1327.17@  0-1328.16  0-1328.28  0-1332.17@  0-1333.16
+                                 0-1333.28  0-1337.16@  0-1338.16  0-1338.28  0-1342.17@  0-1343.16  0-1343.28  0-1347.16@
+                                 0-1348.16  0-1348.28  0-1352.16@  0-1353.16  0-1353.28  0-1357.16@  0-1358.16  0-1358.28
+                                 0-1362.16@  0-1363.16  0-1363.28  0-1367.16@  0-1368.16  0-1368.28  0-1372.16@  0-1373.16
+                                 0-1373.28  0-1377.16@  0-1378.16  0-1378.28  0-1382.16@  0-1383.16  0-1383.28  0-1387.16@
+                                 0-1388.16  0-1388.28  0-1392.16@  0-1393.16  0-1393.28  0-1397.16@  0-1398.16  0-1398.28
+                                 0-1402.16@  0-1403.16  0-1403.28  0-1407.16@  0-1408.16  0-1408.28  0-1412.16@  0-1413.16
+                                 0-1413.28  0-1417.16@  0-1418.16  0-1418.28  0-1422.16@  0-1423.16  0-1423.28  0-1427.16@
+                                 0-1428.16  0-1428.28  0-1432.16@  0-1433.16  0-1433.28  0-1437.16@  0-1438.16  0-1438.28
+                                 0-1442.16@  0-1443.16  0-1443.28  0-1447.16@  0-1448.16  0-1448.28  0-1452.16@  0-1453.16
+                                 0-1453.28  0-1457.16@  0-1458.16  0-1458.28  0-1462.16@  0-1463.16  0-1463.28  0-1467.16@
+                                 0-1468.16  0-1468.28  0-1472.16@  0-1473.16  0-1473.28  0-1477.16@  0-1478.16  0-1478.28
+                                 0-1482.16@  0-1483.16  0-1483.28  0-1487.16@  0-1488.16  0-1488.28  0-1492.16@  0-1493.16
+                                 0-1493.28  0-1497.16@  0-1498.16  0-1498.28  0-1502.16@  0-1503.16  0-1503.28  0-1507.16@
+                                 0-1508.16  0-1508.28  0-1512.16@  0-1513.16  0-1513.28  0-1517.16@  0-1518.16  0-1518.28
+                                 0-1522.16@  0-1523.16  0-1523.28  0-1527.16@  0-1528.16  0-1528.28  0-1532.12@  0-1533.16
+                                 0-1533.28  0-1537.12@  0-1538.16  0-1538.28  0-1542.12@  0-1543.16  0-1543.28  0-1547.16@
+                                 0-1548.16  0-1548.28  0-1552.16@  0-1553.16  0-1553.28  0-1557.16@  0-1558.16  0-1558.28
+                                 0-1562.12@  0-1563.16  0-1563.28  0-1567.16@  0-1568.16  0-1568.28  0-1572.16@  0-1573.16
+                                 0-1573.28  0-1577.16@  0-1578.16  0-1578.28  0-1582.16@  0-1583.16  0-1583.28  0-1587.16@
+                                 0-1588.16  0-1588.28  0-1592.16@  0-1593.16  0-1593.28
+ 
+ierr                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.39  0-785.7@  0-1597.9@
+ 
+igds                             Reference argument, Integer(4) (1:*), Offset: 0, Alignment: full word
+                                 0-241.21$  0-1.33  0-788.11@  0-793.11@  0-799.11@  0-805.11@  0-811.11@  0-817.11@  0-822.11@
+                                 0-827.11@  0-832.11@  0-837.11@  0-842.11@  0-847.11@  0-852.11@  0-857.11@  0-862.11@  0-867.11@
+                                 0-872.11@  0-877.11@  0-882.11@  0-887.11@  0-892.11@  0-897.11@  0-902.11@  0-907.11@  0-912.11@
+                                 0-917.11@  0-922.11@  0-927.11@  0-932.11@  0-937.11@  0-942.11@  0-947.11@  0-952.11@  0-957.11@
+                                 0-962.11@  0-967.11@  0-972.11@  0-977.11@  0-982.11@  0-987.11@  0-992.11@  0-997.11@  0-1002.11@
+                                 0-1007.11@  0-1012.11@  0-1017.11@  0-1022.11@  0-1027.11@  0-1032.11@  0-1037.11@  0-1042.11@
+                                 0-1047.11@  0-1052.11@  0-1059.11@  0-1064.11@  0-1069.11@  0-1074.11@  0-1079.11@  0-1084.11@
+                                 0-1089.11@  0-1094.11@  0-1099.11@  0-1104.11@  0-1109.11@  0-1114.11@  0-1119.11@  0-1124.11@
+                                 0-1129.11@  0-1134.11@  0-1139.11@  0-1144.11@  0-1149.11@  0-1154.11@  0-1159.11@  0-1164.11@
+                                 0-1169.11@  0-1174.11@  0-1179.11@  0-1184.11@  0-1191.11@  0-1196.11@  0-1201.11@  0-1206.11@
+                                 0-1211.11@  0-1216.11@  0-1221.11@  0-1226.11@  0-1231.11@  0-1236.11@  0-1241.11@  0-1246.11@
+                                 0-1251.11@  0-1256.11@  0-1261.11@  0-1266.11@  0-1271.11@  0-1276.11@  0-1281.11@  0-1286.11@
+                                 0-1291.11@  0-1296.11@  0-1301.11@  0-1306.11@  0-1311.11@  0-1316.11@  0-1323.11@  0-1328.11@
+                                 0-1333.11@  0-1338.11@  0-1343.11@  0-1348.11@  0-1353.11@  0-1358.11@  0-1363.11@  0-1368.11@
+                                 0-1373.11@  0-1378.11@  0-1383.11@  0-1388.11@  0-1393.11@  0-1398.11@  0-1403.11@  0-1408.11@
+                                 0-1413.11@  0-1418.11@  0-1423.11@  0-1428.11@  0-1433.11@  0-1438.11@  0-1443.11@  0-1448.11@
+                                 0-1453.11@  0-1458.11@  0-1463.11@  0-1468.11@  0-1473.11@  0-1478.11@  0-1483.11@  0-1488.11@
+                                 0-1493.11@  0-1498.11@  0-1503.11@  0-1508.11@  0-1513.11@  0-1518.11@  0-1523.11@  0-1528.11@
+                                 0-1533.11@  0-1538.11@  0-1543.11@  0-1548.11@  0-1553.11@  0-1558.11@  0-1563.11@  0-1568.11@
+                                 0-1573.11@  0-1578.11@  0-1583.11@  0-1588.11@  0-1593.11@
+ 
+igrid                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-240.21$  0-1.26  0-791.11  0-791.27  0-797.11  0-797.27  0-803.11  0-803.27  0-809.11  0-809.27
+                                 0-815.11  0-820.16  0-825.16  0-830.16  0-835.16  0-840.16  0-845.16  0-850.16  0-855.16  0-860.16
+                                 0-865.16  0-870.16  0-875.16  0-880.16  0-885.16  0-890.16  0-895.16  0-900.16  0-905.16  0-910.16
+                                 0-915.16  0-920.16  0-925.16  0-930.16  0-935.16  0-940.16  0-945.16  0-950.16  0-955.16  0-960.16
+                                 0-965.16  0-970.16  0-975.16  0-980.16  0-985.16  0-990.16  0-995.16  0-1000.16  0-1005.16
+                                 0-1010.16  0-1015.16  0-1020.16  0-1025.16  0-1030.16  0-1035.16  0-1040.16  0-1045.16  0-1050.16
+                                 0-1057.16  0-1062.16  0-1067.16  0-1072.16  0-1077.16  0-1082.16  0-1087.16  0-1092.16  0-1097.16
+                                 0-1102.16  0-1107.16  0-1112.16  0-1117.16  0-1122.16  0-1127.16  0-1132.16  0-1137.16  0-1142.16
+                                 0-1147.16  0-1152.16  0-1157.16  0-1162.16  0-1167.16  0-1172.16  0-1177.16  0-1182.16  0-1189.16
+                                 0-1194.16  0-1199.16  0-1204.16  0-1209.16  0-1214.16  0-1219.16  0-1224.16  0-1229.16  0-1234.16
+                                 0-1239.16  0-1244.16  0-1249.16  0-1254.16  0-1259.16  0-1264.16  0-1269.16  0-1274.16  0-1279.16
+                                 0-1284.16  0-1289.16  0-1294.16  0-1299.16  0-1304.16  0-1309.16  0-1314.16  0-1321.16  0-1326.16
+                                 0-1331.16  0-1336.16  0-1341.16  0-1346.16  0-1351.16  0-1356.16  0-1361.16  0-1366.16  0-1371.16
+                                 0-1376.16  0-1381.16  0-1386.16  0-1391.16  0-1396.16  0-1401.16  0-1406.16  0-1411.16  0-1416.16
+                                 0-1421.16  0-1426.16  0-1431.16  0-1436.16  0-1441.16  0-1446.16  0-1451.16  0-1456.16  0-1461.16
+                                 0-1466.16  0-1471.16  0-1476.16  0-1481.16  0-1486.16  0-1491.16  0-1496.16  0-1501.16  0-1506.16
+                                 0-1511.16  0-1516.16  0-1521.16  0-1526.16  0-1531.16  0-1536.16  0-1541.16  0-1546.16  0-1551.16
+                                 0-1556.16  0-1561.16  0-1566.16  0-1571.16  0-1576.16  0-1581.16  0-1586.16  0-1591.16
+ 
+w3fi71                           Subroutine
+                                 0-1.18$
+ 
+** w3fi71   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    w3fi71.f                    12/18/08   11:40:52
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................    1601
+1501-510  Compilation successful for file w3fi71.f.
+1501-543  Object file created.

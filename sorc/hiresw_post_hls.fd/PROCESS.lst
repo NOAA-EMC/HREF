@@ -1,0 +1,511 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/PROCESS.f 12/22/08 15:46:00
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE PROCESS
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .
+          4 |C SUBPROGRAM:    PROCESS     DRIVER FOR MAJOR POST ROUTINES.
+          5 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-21
+          6 |C
+          7 |C ABSTRACT:
+          8 |C     THIS ROUTINE CALLS THE MAJOR POST PROCESSOR ROUTINES.
+          9 |C     THESE ROUTINES ARE
+         10 |C        ETAFLD2 - CALCULATE NMC SLP, SET BELOW SURFACE FIELDS,
+         11 |C                  AND POSTS DATA ON ETA SURFACES.
+         12 |C        ETA2P   - POSTS DATA ON ISOBARIC SURFACES.
+         13 |C        SURFCE2 - POSTS SOUNDING DATA, SURFACE BASED FIELDS,
+         14 |C                  AND STATIC OR FIXED FIELDS.
+         15 |C        CLDRAD  - POST SOUNDING/CLOUD/RADIATION FIELDS.
+         16 |C        MISCLN  - POST MISCELLANEOUS (SPECIAL) FIELDS.
+         17 |C        FIXED   - POST FIXED FIELDS.
+         18 |C   .
+         19 |C
+         20 |C PROGRAM HISTORY LOG:
+         21 |C   92-12-21  RUSS TREADON
+         22 |C   98-06-01  T BLACK - CONVERSION OF POST FROM 1-D TO 2-D
+         23 |C   00-01-05  JIM TUCCILLO - MPI VERSION
+         24 |C   01-10-25  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
+         25 |C
+         26 |C USAGE:    CALL PROCESS
+         27 |C   INPUT ARGUMENT LIST:
+         28 |C     NONE
+         29 |C
+         30 |C   OUTPUT ARGUMENT LIST:
+         31 |C     NONE
+         32 |C
+         33 |C   OUTPUT FILES:
+         34 |C     NONE
+         35 |C
+         36 |C   SUBPROGRAMS CALLED:
+         37 |C     UTILITIES:
+         38 |C       ETAFLD2  - POST DATA ETA SURFACES.
+         39 |C       ETA2P    - POST DATA ON PRESSURE SURFACES.
+         40 |C       SURFCE2  - POST SURFACE BASED FIELDS.
+         41 |C       CLDRAD   - POST SOUNDING/CLOUD/RADIATION FIELDS.
+         42 |C       MISCLN   - POST MISCELLANEOUS FIELDS.
+         43 |C       FIXED    - POST FIXED FIELDS.
+         44 |C     LIBRARY:
+         45 |C       COMMON   - OUTGRD
+         46 |C
+         47 |C   ATTRIBUTES:
+         48 |C     LANGUAGE: FORTRAN
+         49 |C     MACHINE : CRAY C-90
+         50 |C$$$
+         51 |C
+         52 |C
+         53 |C     INCLUDE PARAMETERS.
+         54 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         55 |      INCLUDE "parmout"
+  2       1 |C     MAXIMUM DIMENSIONS FOR OUTPUT GRID, FIELDS, AND LEVELS.
+  2       2 |C
+  2       3 |      PARAMETER(IMX=IM,JMX=JM,MXFLD=250,MXLVL=LM)
+         56 |C
+         57 |C     DECLARE VARIABLES.
+         58 |C
+         59 |      CHARACTER*6  DATSET,PROJ
+         60 |      LOGICAL NORTH,SIGMA
+         61 |C
+         62 |C     INCLUDE I/O COMMON BLOCK.
+         63 |      INCLUDE "OUTGRD.comm"
+  3       1 |C
+  3       2 |      COMMON /OUTGRD/ ALATVT,ALONVT,POLEI,POLEJ,XMESHL,
+  3       3 |     X	   IGOUT,JGOUT,IMDLTY,RE,GI2,NORTH,PROJ
+         64 |      INCLUDE "CTLBLK.comm"
+  4       1 |C-----------------------------------------------------------------------
+  4       2 |      COMMON /CTLBLK/
+  4       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  4       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  4       5 |     &,NPHS,NRADS,NRADL
+  4       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  4       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  4       8 |     &        JSTA_2L, JEND_2U
+  4       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  4      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  4      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  4      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  4      13 |     &                 MPI_COMM_COMP
+  4      14 |C-----------------------------------------------------------------------
+         65 |c
+         66 |      common/tim_info/ETAFLD2_tim,ETA2P_tim,SURFCE2_tim, CLDRAD_tim,
+         67 |     *                MISCLN_tim,FIXED_tim
+         68 |C
+         69 |C****************************************************************************
+         70 |C     START SUBROUTINE PROCESS.
+         71 |C
+         72 |C
+         73 |C     COMPUTE/POST FIELDS ON ETA SURFACES.
+         74 |C
+         75 |      btim = timef()
+         76 |c      CALL ETAFLD2(IGOUT,JGOUT)
+         77 |      IF(SIGMA)THEN
+         78 |       CALL HYBFLD2(IGOUT,JGOUT)
+         79 |      ELSE
+         80 |       CALL ETAFLD2(IGOUT,JGOUT)
+         81 |      END IF
+         82 |      ETAFLD2_tim = ETAFLD2_tim +(timef() - btim)
+         83 |C
+         84 |C     COMPUTE/POST FIELDS ON PRESSURE SURFACES.
+         85 |      btim = timef()
+         86 |      IF(SIGMA)THEN
+         87 |c       IF(SPLINE)THEN
+         88 |c        print*,'calling sig2pspline'
+         89 |c        CALL SIG2PSPLINE(IGOUT,JGOUT)
+         90 |c       ELSE
+         91 |C        print*,'calling sig2p'
+         92 |C        CALL SIG2P(IGOUT,JGOUT)
+         93 |        print*,'calling HYB2P'
+         94 |        CALL HYB2P(IGOUT,JGOUT)
+         95 |c       END IF
+         96 |      ELSE
+         97 |       CALL ETA2P(IGOUT,JGOUT)
+         98 |      END IF
+         99 |      ETA2P_tim = ETA2P_tim +(timef() - btim)
+        100 |C
+        101 |C     COMPUTE/POST SURFACE RELATED FIELDS.
+        102 |      btim = timef()
+        103 |      CALL SURFCE2(IGOUT,JGOUT)
+        104 |      SURFCE2_tim = SURFCE2_tim +(timef() - btim)
+        105 |C
+        106 |C     COMPUTE/POST SOUNDING AND CLOUD RELATED FIELDS.
+        107 |      btim = timef()
+        108 |      CALL CLDRAD(IGOUT,JGOUT)
+        109 |      CLDRAD_tim = CLDRAD_tim +(timef() - btim)
+        110 |C
+        111 |C     COMPUTE/POST TROPOPAUSE DATA, FD LEVEL FIELDS,
+        112 |C     FREEZING LEVEL HEIGHT AND RH, BOUNDARY LAYER FIELDS,
+        113 |C     AND LFM-NGM LOOK-ALIKE FIELDS.
+        114 |      btim = timef()
+        115 |      CALL MISCLN(IGOUT,JGOUT)
+        116 |      MISCLN_tim = MISCLN_tim +(timef() - btim)
+        117 |C
+        118 |C     POST FIXED FIELDS.
+        119 |      btim = timef()
+        120 |      CALL FIXED(IGOUT,JGOUT)
+        121 |      FIXED_tim =  FIXED_tim +(timef() - btim)
+        122 |C
+        123 |C     END OF ROUTINE.
+        124 |C
+        125 |      RETURN
+        126 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+alatvt                           Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 3-2.23$
+ 
+alonvt                           Common member, Real(4), Offset: 4, Alignment: full word
+                                 3-2.30$
+ 
+btim                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-75.7@  0-82.45  0-85.7@  0-99.41  0-102.7@  0-104.45  0-107.7@  0-109.43  0-114.7@  0-116.43
+                                 0-119.7@  0-121.42
+ 
+cldrad                           External Subroutine
+                                 0-108.12
+ 
+cldrad_tim                       Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-66.58$  0-109.7@  0-109.20
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 4-2.15$
+ 
+datset                           Static, Character(6), Offset: 0, Alignment: full word
+                                 0-59.20$
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 4-4.8$
+ 
+eta2p                            External Subroutine
+                                 0-97.13
+ 
+eta2p_tim                        Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-66.35$  0-99.7@  0-99.19
+ 
+etafld2                          External Subroutine
+                                 0-80.13
+ 
+etafld2_tim                      Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 0-66.23$  0-82.7@  0-82.21
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 4-3.32$
+ 
+fixed                            External Subroutine
+                                 0-120.12
+ 
+fixed_tim                        Common member, Real(4), Offset: 20, Alignment: full word
+                                 0-67.34$  0-121.7@  0-121.20
+ 
+gi2                              Common member, Real(4), Offset: 36, Alignment: full word
+                                 3-3.33$
+ 
+hyb2p                            External Subroutine
+                                 0-94.14
+ 
+hybfld2                          External Subroutine
+                                 0-78.13
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 4-7.59$  4-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 4-3.18$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 4-7.54$  4-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 4-7.65$  4-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 4-4.35$
+ 
+igout                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 3-3.11$  0-78.21  0-80.21  0-94.20  0-97.19  0-103.20  0-108.19  0-115.19  0-120.18
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 4-3.26$
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  1-11.23  1-11.34  1-14.35  2-3.21
+ 
+imdlty                           Common member, Integer(4), Offset: 28, Alignment: full word
+                                 3-3.23$
+ 
+imx                              Parameter, Integer(4)
+                                 2-3.17$
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 4-3.60$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 4-7.49$  4-10.42$
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 4-6.36$  4-9.45$
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 4-8.24$  4-12.33$
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 4-7.32$  4-9.59$
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 4-7.40$  4-10.33$
+ 
+jgout                            Common member, Integer(4), Offset: 24, Alignment: double word
+                                 3-3.17$  0-78.27  0-80.27  0-94.26  0-97.25  0-103.26  0-108.25  0-115.25  0-120.24
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  1-12.23  1-12.34  1-15.35  2-3.28
+ 
+jmx                              Parameter, Integer(4)
+                                 2-3.24$
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 4-6.30$  4-9.39$
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 4-8.15$  4-12.24$
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 4-7.15$  4-9.51$
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 4-7.23$  4-10.24$
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 4-3.55$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  2-3.47
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 4-6.26$  4-9.35$
+ 
+miscln                           External Subroutine
+                                 0-115.12
+ 
+miscln_tim                       Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 0-67.23$  0-116.7@  0-116.20
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 4-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 4-12.55$
+ 
+mxfld                            Parameter, Integer(4)
+                                 2-3.31$
+ 
+mxlvl                            Parameter, Integer(4)
+                                 2-3.41$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 4-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 4-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 4-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 4-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 4-3.45$
+ 
+north                            Common member, Logical(4), Offset: 40, Alignment: double word
+                                 0-60.15$  3-3.37$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 4-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 4-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 4-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 4-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 4-4.47$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 4-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 4-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 4-6.15$  4-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 4-12.42$
+ 
+outgrd                           Common Block, Alignment: double word
+                                 3-2.15$
+ 
+parallel                         Common Block, Alignment: double word
+                                 4-9.15$
+ 
+polei                            Common member, Real(4), Offset: 8, Alignment: double word
+                                 3-2.37$
+ 
+polej                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 3-2.43$
+ 
+process                          Subroutine
+                                 0-1.18$
+ 
+proj                             Common member, Character(6), Offset: 44, Alignment: full word
+                                 0-59.27$  3-3.43$
+ 
+re                               Common member, Real(4), Offset: 32, Alignment: quadruple word
+                                 3-3.30$
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 4-3.38$
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 4-3.14$
+ 
+sigma                            Common member, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-60.21$  4-3.8$  0-77.10  0-86.10
+ 
+surfce2                          External Subroutine
+                                 0-103.12
+ 
+surfce2_tim                      Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-66.45$  0-104.7@  0-104.21
+ 
+tim_info                         Common Block, Alignment: double word
+                                 0-66.14$
+ 
+timef                            External Function Real(4)
+                                 0-75.14  0-82.35  0-85.14  0-99.31  0-102.14  0-104.35  0-107.14  0-109.33  0-114.14  0-116.33
+                                 0-119.14  0-121.32
+ 
+xmeshl                           Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 3-2.49$
+ 
+** process   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    PROCESS.f                   12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      54
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmout
+                                      12/18/08   11:40:52      0      55
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/OUTGRD.comm
+                                      12/18/08   11:40:51      0      63
+     4    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      64
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     163
+1501-510  Compilation successful for file PROCESS.f.
+1501-543  Object file created.

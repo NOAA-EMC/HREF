@@ -1,0 +1,175 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/EXTRA_mod.f 12/22/08 15:45:40
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      module extra
+          2 |      real, allocatable :: PINT(:,:,:),ALPINT(:,:,:),ZINT(:,:,:)
+          3 |     &,KMNTM(:),KMNT(:,:),SLP(:,:)
+          4 |     &,T500(:,:),PDSL(:,:),PDVP1(:,:),PSLP(:,:)
+          5 |     &,PTSL(:,:),PFSL(:,:)
+          6 |     &,TSL(:,:),TTV(:,:),FSL(:,:)
+          7 |     &,QSL(:,:),Z1000(:,:)
+          8 |
+          9 |      logical OLDRD,STDRD
+         10 |      end module extra
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+alpint                           Allocatable, Public, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-2.40$
+ 
+extra                            Nonintrinsic Module
+                                 0-1.14$
+ 
+fsl                              Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-6.26$
+ 
+kmnt                             Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-3.17$
+ 
+kmntm                            Allocatable, Public, Controlled, Real(4) (:), Offset: 0, Alignment: full word
+                                 0-3.8$
+ 
+oldrd                            Public, Static, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-9.15$
+ 
+pdsl                             Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-4.18$
+ 
+pdvp1                            Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-4.28$
+ 
+pfsl                             Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-5.18$
+ 
+pint                             Allocatable, Public, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-2.28$
+ 
+pslp                             Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-4.39$
+ 
+ptsl                             Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-5.8$
+ 
+qsl                              Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-7.8$
+ 
+slp                              Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-3.27$
+ 
+stdrd                            Public, Static, Logical(4), Offset: 4, Alignment: full word
+                                 0-9.21$
+ 
+t500                             Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-4.8$
+ 
+tsl                              Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-6.8$
+ 
+ttv                              Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-6.17$
+ 
+z1000                            Allocatable, Public, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-7.17$
+ 
+zint                             Allocatable, Public, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-2.54$
+ 
+** extra   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+         11 |C
+         12 |c     PARAMETER (IMJM=IM*JM-JM/2)
+         13 |c     COMMON /EXTRA/
+         14 |c    & PINT(IM,JM,LP1),ALPINT(IM,JM,LP1),ZINT(IM,JM,LP1)
+         15 |c    &,KMNTM(LM),KMNT(IMJM,LM),SLP(IM,JM)
+         16 |c    &,T500(IM,JM),PDSL(IM,JM),PDVP1(IM,JM),PSLP(IM,JM)
+         17 |c    &,PTSL(IM,JM),PFSL(IM,JM)
+         18 |c    &,TSL(IM,JM),TTV(IM,JM),FSL(IM,JM)
+         19 |c    &,QSL(IM,JM),Z1000(IM,JM)
+         20 |c    &,OLDRD,STDRD
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    EXTRA_mod.f                 12/18/08   11:40:51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................      20
+1501-510  Compilation successful for file EXTRA_mod.f.
+1501-543  Object file created.

@@ -1,0 +1,3026 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/SIG2PSPLINE.f 12/22/08 15:46:05
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE SIG2PSPLINE(IMOUT,JMOUT)
+          2 |C     ******************************************************************
+          3 |C     *                                                                *
+          4 |C     *  THIS IS THE PROGRAM FOR CONVERSION FROM SIGMA TO P SYSTEM     *
+          5 |C     *  USING SPLINE FITTING                                          *
+          6 |C     *  02-1981 TO 03- 1998 Z. JANJIC, D. JOVIC, S. NICKOVIC          *
+          7 |C     *  09-2000  H CHUANG MODIFIED THE PROGRAM TO BE INCLUDED IN      *
+          8 |C     *  10-2001  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT   *
+          9 |C     *              OPERATIONAL POST                                  *
+         10 |C     *  NOTE: CURRENT POST ONLY PROCESS UP TO 1000 MB PRESSURE LEVEL  *
+         11 |C     *        2 ADDITIONAL LEVELS (1025 1050) ARE ADDED DURING SPLINE *
+         12 |C     *        FITTING COMPUTATION BUT THE FIELDS ON THESE TWO LEVELS  *
+         13 |C     *        ARE NOT OUTPUT TO GRID FILES                            *
+         14 |C     ******************************************************************
+         15 |!-----------------------------------------------------------------------
+         16 |      use vrbls
+         17 |      use omgaot
+         18 |      use extra
+         19 |      use cldwtr
+         20 |      use pvrbls
+         21 |      use masks
+         22 |c
+         23 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         24 |      INCLUDE "parmout"
+  2       1 |C     MAXIMUM DIMENSIONS FOR OUTPUT GRID, FIELDS, AND LEVELS.
+  2       2 |C
+  2       3 |      PARAMETER(IMX=IM,JMX=JM,MXFLD=250,MXLVL=LM)
+         25 |      INCLUDE "params"
+  3       1 |C
+  3       2 |C     ARRAY DIMENSIONS.
+  3       3 |      PARAMETER	
+  3       4 |     & (IMT=2*IM-1,JMT=JM/2+1)
+  3       5 |      PARAMETER
+  3       6 |     & (IM1=IM-1,JM2=JM-2,JAM=6+2*(JM-10)
+  3       7 |     &, NINC=2*IM-1
+  3       8 |     &, LM1=LM-1,LP1=LM+1
+  3       9 |     &, LB=2*IM+JM-3)
+  3      10 |C
+  3      11 |C     SMOOTHING PARAMETERS.
+  3      12 |      PARAMETER
+  3      13 |     & (KSMUD=4,KSLPD=1,KSSLP=2,KSFI=2,KST=2
+  3      14 |     &, KSUV=2,KSRH=2,KSAV=2,KSLI=2,KSLP=2
+  3      15 |     &, SMTHA=-1.8E-4,SMTHB=16.,NSUMD=1)
+  3      16 |C
+  3      17 |C     DIMENSIONS FOR PROFILE OUPUT ARRAYS.
+  3      18 |      PARAMETER
+  3      19 |     & (NSTAT=100,NWORD=6+6*LM+9,NWORD3=NWORD-3,NWORD6=NWORD-6)
+  3      20 |C
+  3      21 |C     CONSTANTS.
+  3      22 |      PARAMETER
+  3      23 |     & (CM1=2937.4,CM2=4.9283,CM3=23.5518)
+  3      24 |      PARAMETER
+  3      25 |     & (D00=0.0,D1=0.1,D01=0.01,D001=0.001,D50=0.50,H999=999.
+  3      26 |     &, H1=1.0,H2=2.0,H4=4.0,H99999=99999.,H1M12=1.E-12
+  3      27 |     &, H1000=1000.,H1M5=1.E-5,D125=.125,D25=0.25,H100=100.
+  3      28 |     &, H10000=10000.,H10E5=1.E5,CAPA=0.28589641E0
+  3      29 |     &, D115=0.115,D608=0.608,D05=0.05,D0065=0.0065
+  3      30 |     &, H1E2=100.,H1E4=1.E4,H1M2=1.E-2)
+  3      31 |      PARAMETER
+  3      32 |     & (G=9.8,RD=287.04,ROG=RD/G,GI=1./G
+  3      33 |     &, OVERRC=1.75,AD05=OVERRC*D05,CFT0=OVERRC-H1
+  3      34 |     &, DTR=1.745329E-2,RTD=1./DTR,ERAD=6.376E6,CP=1004.6
+  3      35 |     &, RCAPA=1./CAPA,P1000=1000.E2,DP10M=110
+  3      36 |     &, ELWV=2.50E6,CPDR=CP/RD,RG=1./GI,ELDR=ELWV/RD
+  3      37 |     &, BETA=.00367,BTG=BETA*9.8)
+  3      38 |      PARAMETER
+  3      39 |     & (FMW=18.015,FMD=28.964,EPS=FMW/FMD,ONEPS=1.-EPS,TFRZ=273.16
+  3      40 |     &, RDOCP=RD/CP,LHEAT=2.5E6,LHTOCP=LHEAT/CP,EPSQ2=0.2
+  3      41 |     &, PQ0=379.90516,A2=17.2693882,A3=273.16,A4=35.86)
+         26 |!-----------------------------------------------------------------------
+         27 |      parameter(nsmud=100,lp2=lm+2,LSMP2=LSM+2)
+         28 |      parameter(zero=1.e-5)
+         29 |      parameter(iii=2,jjj=2)
+         30 |c-----------------------------------------------------------------------
+         31 |      LOGICAL IOOMG,IOALL
+         32 |                             d i m e n s i o n
+         33 |     &ihw(jm),ihe(jm),ivw(jm),ive(jm)
+         34 |c
+         35 |     &,ztt   (lm+1)
+         36 |     &,tcol  (lm+1),ocol  (lm+1),qcol  (lm+1),cwcl  (lm+1)
+         37 |     &,zth   (lm+2)
+         38 |     &,hcol  (lm+2),q2cl  (lm+2)
+         39 |     &,ztu   (lm+1),ztv   (lm+1)
+         40 |     &,ucol  (lm+1),vcol  (lm+1)
+         41 |c
+         42 |     &,y2    (lm+2),phld  (lm+2),qhld  (lm+2)
+         43 |c
+         44 |     &,ztsl  (lsmp2),ovrlx (lsmp2)
+         45 |     &,tcolsl(lsmp2),ocolsl(lsmp2),qcolsl(lsmp2),cwclsl(lsmp2)
+         46 |     &,hcolsl(lsmp2),q2clsl(lsmp2)
+         47 |     &,ucolsl(lsmp2),vcolsl(lsmp2)
+         48 |C
+         49 |     &,hcol3(3),pcol3(3),y23(3)
+         50 |c
+         51 |     &,tmask (im,jm),hs    (im,jm)
+         52 |c
+         53 |     &,tsll  (im,jm),osll  (im,jm),qsll  (im,jm),qcll  (im,jm)
+         54 |     &,fsll  (im,jm),q2ll  (im,jm)
+         55 |c
+         56 |     &,zet   (im,jm,lm+1)
+         57 |c
+         58 |     &,tprs(im,jm,lsmp2) ,oprs(im,jm,lsmp2),qprs(im,jm,lsmp2)
+         59 |     &,fprs(im,jm,lsmp2) ,qcprs(im,jm,lsmp2),q2prs(im,jm,lsmp2)
+         60 |     &,uprs(im,jm,lsmp2) ,vprs(im,jm,lsmp2)
+         61 |c
+         62 |      real IWU,IWL,icecl(lm+1),icelsl(lsmp2),icell(im,jm)
+         63 |     &,iceprs(im,jm,lsmp2)
+         64 |      REAL,ALLOCATABLE :: IW(:,:,:)
+         65 |      REAL EGRID1(IM,JM),EGRID2(IM,JM)
+         66 |      REAL GRID1(IMOUT,JMOUT),GRID2(IMOUT,JMOUT)
+         67 |cc      REAL,ALLOCATABLE,DIMENSION(:,:,:)::tprs,oprs,qprs,fprs
+         68 |cc     +,qcprs,q2prs,uprs,vprs
+         69 |!-----------------------------------------------------------------------
+         70 |c      equivalence
+         71 |c     & (t(1),tsl(1))
+         72 |c     &,(q(1),qsl(1))
+         73 |c     &,(cwm(1),qcsl(1))
+         74 |c     &,(q2(1),q2sl(1))
+         75 |c     &,(omgalf(1),osl(1))
+         76 |c     &,(div(1),dsl(1))
+         77 |c     &,(u(1),usl(1))
+         78 |c     &,(v(1),vsl(1))
+         79 |c     &,(dwdt(1),dwsl(1))
+         80 |c     &,(w(1),wsl(1))
+         81 |!-----------------------------------------------------------------------
+         82 |C     INCLUDE COMMON BLOCKS.
+         83 |      INCLUDE "CTLBLK.comm"
+  4       1 |C-----------------------------------------------------------------------
+  4       2 |      COMMON /CTLBLK/
+  4       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  4       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  4       5 |     &,NPHS,NRADS,NRADL
+  4       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  4       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  4       8 |     &        JSTA_2L, JEND_2U
+  4       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  4      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  4      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  4      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  4      13 |     &                 MPI_COMM_COMP
+  4      14 |C-----------------------------------------------------------------------
+         84 |cwas      INCLUDE "OMGAOT.comm"
+         85 |      INCLUDE "LOOPS.comm"
+  5       1 |C-----------------------------------------------------------------------
+  5       2 |                             C O M M O N /LOOPS/
+  5       3 |     & IHLA  (JAM),IHHA  (JAM),IVLA  (JAM),IVHA  (JAM),JRA   (JAM)
+  5       4 |C
+  5       5 |     &,LMH   (IM,JM),LMV   (IM,JM)
+  5       6 |C-----------------------------------------------------------------------
+         86 |cwas      INCLUDE "MASKS.comm"
+         87 |      INCLUDE "MAPOT.comm"
+  6       1 |C-----------------------------------------------------------------------
+  6       2 |                             C O M M O N /MAPOT/
+  6       3 |     & LSL,IXM,IYM
+  6       4 |     &,ISHDE(99)
+  6       5 |     &,R,PT,TSPH
+  6       6 |     &,WBD,SBD,TLM0D,TPH0D,DLMD,DPHD,CMLD,DP30,X1P,Y1P
+  6       7 |     &,DISLP,Z0SLP,SPL(LSM),ALSL(LSM)
+  6       8 |     &,DETA(LM),AETA(LM),ETA(LP1),TSHDE(99)
+  6       9 |     &,ERLAM0,CPHI0,SPHI0
+  6      10 |     &,KUNIT,LUNIT,MUNIT,IUNIT,NUNIT
+  6      11 |     &,DSG1(LM),SGML1(LM),SG1(LP1),PDTOP
+  6      12 |     &,DSG2(LM),SGML2(LM),SG2(LP1)
+  6      13 |C-----------------------------------------------------------------------
+         88 |cwas      INCLUDE "VRBLS.comm"
+         89 |cwas      INCLUDE "PVRBLS.comm"
+         90 |      INCLUDE "RQSTFLD.comm"
+  7       1 |C
+  7       2 |      CHARACTER*20 AVBL(MXFLD),FIELD(MXFLD)
+  7       3 |      CHARACTER*6 DATSET
+  7       4 |C
+  7       5 |      LOGICAL RITEHD,RITE2
+  7       6 |C
+  7       7 |      COMMON /RQSTFLD/
+  7       8 |     & KGTYPE,IOUTYP,SVALUE,NFLD,IGET(MXFLD),DEC(MXFLD)
+  7       9 |     &,IQ(MXFLD),IS(MXFLD),ISMSTG(MXFLD),ISMFUL(MXFLD)
+  7      10 |     &,ISMOUT(MXFLD),LVLS(MXLVL,MXFLD),IDENT(MXFLD)
+  7      11 |     &,IFILV(MXFLD),ID(25)
+  7      12 |     &,RITEHD,RITE2,DATSET,FIELD,AVBL
+         91 |cwas      INCLUDE "EXTRA.comm"
+         92 |cwas      INCLUDE "CLDWTR.comm"
+         93 |      INCLUDE "E2PFLG.comm"
+  8       1 |C-----------------------------------------------------------------------
+  8       2 |      COMMON /E2PFL/
+  8       3 |     & IOOMG,IOALL
+  8       4 |C-----------------------------------------------------------------------
+         94 |      INCLUDE "DYNAMD.comm"
+  9       1 |C-----------------------------------------------------------------------
+  9       2 |                             C O M M O N /DYNAM/
+  9       3 |     & DY,CPGFV,EN,ENT,RDYN,PTDYN,F4D,F4Q,EF4T
+  9       4 |     &,DETAD(LM),RDETA(LM),AETAD(LM),F4Q2(LM),ETAD(LP1),DFL(LP1)
+  9       5 |C
+  9       6 |     &,EM    (JAM),EMT   (JAM)
+  9       7 |C
+  9       8 |     &,DX   (IM,JM),WPDAR(IM,JM),CPGFU(IM,JM),CURV (IM,JM),FCP  (IM,JM)
+  9       9 |     &,FDIV (IM,JM),FAD  (IM,JM),F    (IM,JM),DDMPU(IM,JM),DDMPV(IM,JM)
+  9      10 |C-----------------------------------------------------------------------
+         95 |!-----------------------------------------------------------------------
+         96 |                              d a t a
+         97 |     & y2/lp2*0./
+         98 |!-----------------------------------------------------------------------
+         99 |                              d a t a
+        100 |     & ovrlx/lsmp2*0.175/
+        101 |!-----------------------------------------------------------------------
+        102 |C     VERTICAL INTERPOLATION.  EXECUTE ONLY
+        103 |C     IF THERE'S SOMETHING WE WANT.
+        104 |      ALLOCATE ( IW(IM,JSTA_2L:JEND_2U,LM) )
+        105 |C
+        106 |      IF((IGET(012).GT.0).OR.(IGET(013).GT.0).OR.
+        107 |     X   (IGET(014).GT.0).OR.(IGET(015).GT.0).OR.
+        108 |     X   (IGET(016).GT.0).OR.(IGET(017).GT.0).OR.
+        109 |     X   (IGET(018).GT.0).OR.(IGET(019).GT.0).OR.
+        110 |     X   (IGET(020).GT.0).OR.(IGET(030).GT.0).OR.
+        111 |     X   (IGET(021).GT.0).OR.(IGET(022).GT.0).OR.
+        112 |     X   (IGET(153).GT.0).OR.(IGET(166).GT.0).OR.
+        113 |     X   (IGET(23).GT.0)) THEN
+        114 |C
+        115 |C  SET UP UTIM FOR THIS TIME STEP
+        116 |C
+        117 |       UTIM=1.
+        118 |       CLIMIT=1.E-20
+        119 |c
+        120 |       DO 75 L=1,LM
+        121 |        IF(L.EQ.1)THEN
+        122 |         DO J=JSTA,JEND
+        123 |          DO I=1,IM
+        124 |           IW(I,J,L)=0.
+        125 |          ENDDO
+        126 |         ENDDO
+        127 |         GO TO 75
+        128 |        ENDIF
+        129 |        DO 70 J=JSTA,JEND
+        130 |         DO 70 I=1,IM
+        131 |          LML=LM-LMH(I,J)
+        132 |          HH=HTM(I,J,L)*HBM2(I,J)
+        133 |          TKL=T(I,J,L)
+        134 |          QKL=Q(I,J,L)
+        135 |          CWMKL=CWM(I,J,L)
+        136 |          TMT0=(TKL-273.16)*HH
+        137 |          TMT15=AMIN1(TMT0,-15.)*HH
+        138 |          PP=PDTOP*SGML1(L)+PDSL(I,J)*SGML2(L)+PT
+        139 |          QW=HH*PQ0/PP*EXP(HH*A2*(TKL-A3)/(TKL-A4))
+        140 |          QI=QW*(1.+0.01*AMIN1(TMT0,0.))
+        141 |          U00KL=U00(I,J)+UL(L+LML)*(0.95-U00(I,J))*UTIM
+        142 |C
+        143 |          IF(TMT0.LT.-15.0)THEN
+        144 |           FIQ=QKL-U00KL*QI
+        145 |           IF(FIQ.GT.0..OR.CWMKL.GT.CLIMIT) THEN
+        146 |            IW(I,J,L)=1.
+        147 |           ELSE
+        148 |            IW(I,J,L)=0.
+        149 |           ENDIF
+        150 |          ENDIF
+        151 |C
+        152 |          IF(TMT0.GE.0.0)IW(I,J,L)=0.
+        153 |          IF(TMT0.LT.0.0.AND.TMT0.GE.-15.0)THEN
+        154 |           IW(I,J,L)=0.
+        155 |           IF(IW(I,J,L-1).EQ.1..AND.CWMKL.GT.1.E-20)IW(I,J,L)=1.
+        156 |          ENDIF
+        157 |C
+        158 |   70   CONTINUE
+        159 |   75  CONTINUE
+        160 |c       	
+        161 |       do 100 l=1,lsm
+        162 |        ztsl(l)=alog(spl(l))**2
+        163 | 100   continue
+        164 |       ztsl(lsm+1)=alog(102500.)**2
+        165 |       ztsl(lsmp2)=alog(105000.)**2	
+        166 |c
+        167 |       ztbot=ztsl(lsmp2)
+        168 |c
+        169 |       do 110 j=jsta,jend
+        170 |        ihw(j)=  -mod(j,2)
+        171 |        ihe(j)= 1-mod(j,2)
+        172 |        ivw(j)=-1+mod(j,2)
+        173 |        ive(j)=   mod(j,2)
+        174 | 110   continue
+        175 |c
+        176 |cc       allocate(tprs(im,jm,lsmp2))
+        177 |cc       allocate(oprs(im,jm,lsmp2))
+        178 |cc       allocate(qprs(im,jm,lsmp2))
+        179 |cc       allocate(fprs(im,jm,lsmp2))
+        180 |cc       allocate(qcprs(im,jm,lsmp2))
+        181 |cc       allocate(q2prs(im,jm,lsmp2))
+        182 |cc       allocate(uprs(im,jm,lsmp2))
+        183 |cc       allocate(vprs(im,jm,lsmp2))
+        184 |c--------------mass point variables at pressure levels------------------
+        185 |       do 200 j=jsta,jend
+        186 |        ihl=1
+        187 |        ihh=im-1+mod(j,2)
+        188 |        do 201 i=ihl,ihh
+        189 |	 if(abs(pdsl(i,j)-pd(i,j)).gt. 1)print*,'inconsistent pd',i,j
+        190 |     +,  pd(i,j),pdsl(i,j) 	
+        191 |         pdp=pdsl(i,j)
+        192 |c
+        193 |         hsp=fis(i,j)/g
+        194 |         hcol(lm+1)=hsp
+        195 |         hs(i,j)=hsp
+        196 |c
+        197 |c         alp1l=alog(pint(i,j,lm+1))   ! for nonhydrostatic version
+        198 |         alp1l=alog(pt+pdp)
+        199 |         alp2l=(alog(pdp+pt))**2
+        200 |         zth(lm+1)=alp2l
+        201 |c
+        202 |c         pcol(1)=pt
+        203 |         q2cl(1)=0.
+        204 |c--------------loading values at mid-layers and interfaces--------------
+        205 |         do 220 ivi=1,lm
+        206 |          l=lm+1-ivi
+        207 |c
+        208 |c          alp1u=alog(pint(i,j,l))   ! for nonhydrostatic version
+        209 |          alp1u=alog(PDTOP*SG1(L)+SG2(l)*pdp+pt)
+        210 |          alp2u=(alog(SG1(L)*PDTOP+SG2(l)*pdp+pt))**2
+        211 |c
+        212 |          dpd=(sg2(l+1)-sg2(l))*pdp+(sg1(l+1)-sg1(l))*pdtop
+        213 |c
+        214 |c         dh=(q(i,j,l)*0.608+1.)*(alp1l-alp1u)*t(i,j,l)*RD/g
+        215 |c     2   *dpd/(pint(i,j,l+1)-pint(i,j,l))
+        216 |          dh=(q(i,j,l)*0.608+1.)*(alp1l-alp1u)*t(i,j,l)*RD/g
+        217 |c
+        218 |          alpcp=dh*g/(dpd*cp)
+        219 |c
+        220 |          zth(l)=alp2u
+        221 |czj!!      ztt(l)=(alp2l+alp2u)*0.5
+        222 |          ztt(l)=alog(sgml1(l)*pdtop+sgml2(l)*pdp+pt)**2
+        223 |c	  if(i.eq.120.and.j.eq.279)print*,'l,eta(l),eta(l+1),ztt='
+        224 |c     +,   l,eta(l),eta(l+1),ztt(l),pdp,pt	
+        225 |c
+        226 |          tcol(l)=t(i,j,l)
+        227 |          ocol(l)=omga(i,j,l)/alpcp
+        228 |          qcol(l)=q(i,j,l)
+        229 |          cwcl(l)=cwm(i,j,l)*(1-iw(i,j,l))
+        230 |	  icecl(l)=cwm(i,j,l)*iw(i,j,l)
+        231 |c
+        232 |c          pcol(l+1)=pint(i,j,l+1)
+        233 |          q2cl(l+1)=q2(i,j,l+1)
+        234 |          hcol(l  )=hcol(l+1)+dh
+        235 |c
+        236 |          alp1l=alp1u
+        237 |          alp2l=alp2u
+        238 | 220     continue
+        239 |c-------------extrapolation underground for mid-layer variables---------
+        240 |         if((ztt(lm)-ztbot) .ge. 0.0)then
+        241 |          lmd=lm
+        242 |         else
+        243 |          lmd=lm+1
+        244 |c
+        245 |          ztt(lm+1)=ztbot
+        246 |c
+        247 |          dum=(tcol(lm)-tcol(lm-4))/(ztt(lm)-ztt(lm-4))
+        248 |          x=ztbot-ztt(lm)
+        249 |c
+        250 |          tcol(lm+1)=dum*x+tcol(lm)
+        251 |          ocol(lm+1)=0.
+        252 |          qcol(lm+1)=0.
+        253 |          cwcl(lm+1)=0.
+        254 |	  icecl(lm+1)=0.
+        255 |         endif
+        256 |         if(i.eq.iii.and.j.eq.jjj)then
+        257 |	  print*,'on sigma at ',iii,jjj
+        258 |	  print*,'terrain= ',fis(i,j)/g
+        259 |	  do l=1,lmd
+        260 |	   print*,'l,P,T= ',l,exp(ztt(l)**0.5),tcol(l) 	
+        261 |          end do
+        262 |	 end if
+        263 |c         if(i.eq.120.and.j.eq.279)then
+        264 |c	  print*,'lmd, ztbot= ',lmd,ztbot
+        265 |c	  print*,'ztt=',ztt
+        266 |c	 end if
+        267 |c-------------interpolation of mid-layer variables to pressure levels---
+        268 |         y2(lmd)=0.
+        269 |c	
+        270 |         call splinef(lmd,ztt,tcol,y2,lsmp2,ztsl,tcolsl,phld,qhld)
+        271 |         call splinef(lmd,ztt,ocol,y2,lsmp2,ztsl,ocolsl,phld,qhld)
+        272 |         call splinef(lmd,ztt,qcol,y2,lsmp2,ztsl,qcolsl,phld,qhld)
+        273 |         call splinef(lmd,ztt,cwcl,y2,lsmp2,ztsl,cwclsl,phld,qhld)
+        274 |	 call splinef(lmd,ztt,icecl,y2,lsmp2,ztsl,icelsl,phld,qhld)
+        275 |c
+        276 |         do 230 l=1,lsmp2
+        277 |          tprs (i,j,l)=tcolsl(l)
+        278 |	  oprs (i,j,l)=ocolsl(l)
+        279 |          qprs (i,j,l)=qcolsl(l)
+        280 |          qcprs(i,j,l)=cwclsl(l)
+        281 |	  iceprs(i,j,l)=icelsl(l)
+        282 | 230     continue
+        283 |c-------------extrapolation underground for interface variables---------
+        284 |         if(zth(lm+1).ge.ztbot)    then
+        285 |          lmd=lm+1
+        286 |         else
+        287 |          lmd=lm+2
+        288 |c
+        289 |          zth(lm+2)=ztbot
+        290 |          x=ztbot-zth(lm+1)
+        291 |c          if(abs(x/ztbot).lt.zero)x=0.
+        292 |c
+        293 |          dum=(hcol(lm+1)-hcol(lm-5))/(zth(lm+1)-zth(lm-5))
+        294 |          d2=0.
+        295 |c
+        296 |c          if(x.lt.0.0000001)print*,'i,j,zth(lm+1),ztbot,x= ',i,j
+        297 |c     +	  ,zth(lm+1),ztbot,x
+        298 |          hcol(lm+2)=d2*x*x+dum*x+hcol(lm+1)
+        299 |c          pcol(lm+2)=spl(lsmp2)
+        300 |          q2cl(lm+2)=0.
+        301 |         endif
+        302 |c-------------interpolation of interface variables to pressure levels---
+        303 |         if(i.eq.iii.and.j.eq.jjj)then
+        304 |	  print*,'on sigma at ',iii,jjj
+        305 |	  do l=1,lmd
+        306 |	   print*,'l,H,P= ',l,hcol(l),exp(zth(l)**0.5) 	
+        307 |          end do
+        308 |	 end if
+        309 |c
+        310 |         y2(lmd)=0.
+        311 |c
+        312 |         call splinef(lmd,zth,hcol,y2,lsmp2,ztsl,hcolsl,phld,qhld)
+        313 |c         call splinef(lmd,zth,pcol,y2,lsmp2,ztsl,pcolsl,phld,qhld)
+        314 |         call splinef(lmd,zth,q2cl,y2,lsmp2,ztsl,q2clsl,phld,qhld)
+        315 |c
+        316 |         if(i.eq.iii.and.j.eq.jjj)then
+        317 |	  print*,'on pressure before relaxation at ',iii,jjj
+        318 |	  do l=1,lsmp2
+        319 |	   print*,'l,H,P,T= ',l,hcolsl(l),exp(ztsl(l)**0.5)
+        320 |     +	   ,tcolsl(l) 	
+        321 |          end do
+        322 |	 end if
+        323 |c	
+        324 |         do 240 l=1,lsmp2
+        325 |          fprs (i,j,l)=hcolsl(l)
+        326 |c          psl (i,j,l)=pcolsl(l)
+        327 |          q2prs(i,j,l)=max(q2clsl(l),0.)
+        328 | 240     continue
+        329 |c
+        330 |         do 250 l=1,lm+1
+        331 |          zet(i,j,l)=zth(l)
+        332 | 250     continue
+        333 | 201    continue
+        334 | 200   continue
+        335 |c--------------filling boundaries--------------------------------------
+        336 |       do 260 l=1,lm+1
+        337 |        do 261 j=jsta,jend
+        338 |         zet(im,j,l)=zet(im-1,j,l)
+        339 | 261    continue
+        340 | 260   continue
+        341 |c--------------end of mass point interpolations------------------------
+        342 |c
+        343 |c
+        344 |       print*,'in sig2pspline before relaxation of mass points'
+        345 |       do 300 l=1,lsmp2
+        346 |c--------------filling remaining undefined mass point boundaries-------
+        347 |        if(mod(jsta,2) .lt. 1)then   !even jsta
+        348 |         do 351 j=jsta,jend,2
+        349 |          tprs(im,j,l)=tprs(im-1,j,l)
+        350 |          oprs(im,j,l)=oprs(im-1,j,l)
+        351 |          qprs(im,j,l)=qprs(im-1,j,l)
+        352 |          qcprs(im,j,l)=qcprs(im-1,j,l)
+        353 |	  iceprs(im,j,l)=iceprs(im-1,j,l)
+        354 |          fprs(im,j,l)=fprs(im-1,j,l)
+        355 |          q2prs(im,j,l)=q2prs(im-1,j,l)
+        356 | 351     continue
+        357 |        else
+        358 |	 do 352 j=jsta+1,jend,2
+        359 |          tprs(im,j,l)=tprs(im-1,j,l)
+        360 |          oprs(im,j,l)=oprs(im-1,j,l)
+        361 |          qprs(im,j,l)=qprs(im-1,j,l)
+        362 |          qcprs(im,j,l)=qcprs(im-1,j,l)
+        363 |	  iceprs(im,j,l)=iceprs(im-1,j,l)
+        364 |          fprs(im,j,l)=fprs(im-1,j,l)
+        365 |          q2prs(im,j,l)=q2prs(im-1,j,l)
+        366 | 352     continue
+        367 |        end if
+        368 |c	if(l.eq.lsm)then
+        369 |c	 print*,'1000 mb enormal height'
+        370 |c         do i=1,im
+        371 |c	  do j=jsta,jend
+        372 |c	   if(fprs(i,j,l).gt.200.)print*,i,j,fprs(i,j,l)
+        373 |c          end do
+        374 |c         end do
+        375 |c	end if
+        376 |c--------------smoothing pressure levels ruptured by topography--------
+        377 |        rlx=ovrlx(l)
+        378 |        yes=0.
+        379 |c
+        380 |        avt=0.
+        381 |        avh=0.
+        382 |        kt=0
+        383 |        kh=0
+        384 |        do 310 j=jsta,jend
+        385 |         ihl=1
+        386 |         ihh=im-1+mod(j,2)
+        387 |         do 311 i=ihl,ihh
+        388 |          href=hs(i,j)
+        389 |          if(href.gt.300.) then
+        390 |           href=href+1500.
+        391 |          endif
+        392 |          if(href.ge.fprs(i,j,l))then
+        393 |           yes=1.
+        394 |           tmask(i,j)=rlx
+        395 |          else
+        396 |           tmask(i,j)=0.
+        397 |c
+        398 |c      avt=tprs(i,j,l)+avt
+        399 |c      avh=fprs(i,j,l)+avh
+        400 |c      kt=kt+1
+        401 |c      kh=kh+1
+        402 |c
+        403 |          endif
+        404 |c          if(href.ge.fprs(i,j,l).and.l.lt.lsm)then
+        405 |c	   tprs(i,j,l)=(((fprs(i,j,l-1)-fprs(i,j,l)))
+        406 |c     &           /((alog(spl(l))-alog(spl(l-1))))
+        407 |c     &           +((fprs(i,j,l)-fprs(i,j,l+1)))
+        408 |c     &           /((alog(spl(l+1))-alog(spl(l)))))*0.5*g/rd
+        409 |c          end if
+        410 |          if(href.ge.fprs(i,j,l))then
+        411 |           if(l.lt.lsmp2)then
+        412 |            tprs(i,j,l)=(((fprs(i,j,l-1)-fprs(i,j,l)))
+        413 |     &	         /(ztsl(l)**0.5-ztsl(l-1)**0.5)
+        414 |     &           +((fprs(i,j,l)-fprs(i,j,l+1)))
+        415 |     &           /(ztsl(l+1)**0.5-ztsl(l)**0.5))*0.5*g/rd
+        416 |           else
+        417 |            tprs(i,j,l)=tprs(i,j,l-1)+(tprs(i,j,l-1)-tprs(i,j,l-2))
+        418 |     &       *(ztsl(l)-ztsl(l-1))/(ztsl(l-1)-ztsl(l-2))
+        419 |           end if
+        420 |          end if
+        421 | 311     continue
+        422 | 310    continue
+        423 |c
+        424 |c??        if(yes.gt.0.)then
+        425 |c
+        426 |c              if(kt*kh.ne.0)    then
+        427 |c          avt=avt/kt
+        428 |c          avh=avh/kh
+        429 |c              endif
+        430 |c
+        431 |         do 312 j=jsta,jend
+        432 |          ihl=1
+        433 |          ihh=im-1+mod(j,2)
+        434 |          do 313 i=ihl,ihh
+        435 |           if(hs(i,j).ge.fprs(i,j,l))then
+        436 |            oprs(i,j,l)=0.
+        437 |            qprs(i,j,l)=0.
+        438 |            qcprs(i,j,l)=0.
+        439 |	    iceprs(i,j,l)=0.
+        440 |            q2prs(i,j,l)=0.
+        441 |           endif
+        442 | 313      continue
+        443 | 312     continue
+        444 |         do 320 n=1,nsmud
+        445 |	  call exch(tprs(1,1,l))
+        446 |	  call exch(oprs(1,1,l))
+        447 |	  call exch(qprs(1,1,l))
+        448 |	  call exch(qcprs(1,1,l))
+        449 |	  call exch(iceprs(1,1,l))
+        450 |	  call exch(fprs(1,1,l))
+        451 |	  call exch(q2prs(1,1,l))
+        452 |          do 330 j=jsta_m,jend_m
+        453 |           ihl=1+mod(j,2)
+        454 |           ihh=im-1
+        455 |           do 331 i=ihl,ihh
+        456 |            if(tmask(i,j).gt.0.05) then
+        457 |             tsll(i,j)=tprs(i+ihw(j),j-1,l)+tprs(i+ihe(j),j-1,l)
+        458 |     2         +tprs(i+ihw(j),j+1,l)+tprs(i+ihe(j),j+1,l)-tprs(i,j,l)*4.
+        459 |             osll(i,j)=oprs(i+ihw(j),j-1,l)+oprs(i+ihe(j),j-1,l)
+        460 |     2         +oprs(i+ihw(j),j+1,l)+oprs(i+ihe(j),j+1,l)-oprs(i,j,l)*4.
+        461 |             qsll(i,j)=qprs(i+ihw(j),j-1,l)+qprs(i+ihe(j),j-1,l)
+        462 |     2         +qprs(i+ihw(j),j+1,l)+qprs(i+ihe(j),j+1,l)-qprs(i,j,l)*4.
+        463 |             qcll(i,j)=qcprs(i+ihw(j),j-1,l)+qcprs(i+ihe(j),j-1,l)
+        464 |     2       +qcprs(i+ihw(j),j+1,l)+qcprs(i+ihe(j),j+1,l)-qcprs(i,j,l)*4.
+        465 |             icell(i,j)=iceprs(i+ihw(j),j-1,l)+iceprs(i+ihe(j),j-1,l)
+        466 |     2       +iceprs(i+ihw(j),j+1,l)+iceprs(i+ihe(j),j+1,l)
+        467 |     3       -iceprs(i,j,l)*4.
+        468 |             fsll(i,j)=fprs(i+ihw(j),j-1,l)+fprs(i+ihe(j),j-1,l)
+        469 |     2         +fprs(i+ihw(j),j+1,l)+fprs(i+ihe(j),j+1,l)-fprs(i,j,l)*4.
+        470 |             q2ll(i,j)=q2prs(i+ihw(j),j-1,l)+q2prs(i+ihe(j),j-1,l)
+        471 |     2       +q2prs(i+ihw(j),j+1,l)+q2prs(i+ihe(j),j+1,l)-q2prs(i,j,l)*4.
+        472 |            endif
+        473 | 331       continue
+        474 | 330      continue
+        475 |          do 340 j=jsta_m,jend_m
+        476 |           ihl=1+mod(j,2)
+        477 |           ihh=im-1
+        478 |           do 341 i=ihl,ihh
+        479 |            if(tmask(i,j).gt.0.05) then
+        480 |             tprs (i,j,l)=tsll(i,j)*tmask(i,j)+tprs (i,j,l)
+        481 |             oprs (i,j,l)=osll(i,j)*tmask(i,j)+oprs (i,j,l)
+        482 |             qprs (i,j,l)=qsll(i,j)*tmask(i,j)+qprs (i,j,l)
+        483 |             qcprs(i,j,l)=qcll(i,j)*tmask(i,j)+qcprs(i,j,l)
+        484 |	     iceprs(i,j,l)=icell(i,j)*tmask(i,j)+iceprs(i,j,l)
+        485 |             fprs (i,j,l)=fsll(i,j)*tmask(i,j)+fprs (i,j,l)
+        486 |             q2prs(i,j,l)=max(q2ll(i,j)*tmask(i,j)+q2prs(i,j,l),0.)
+        487 |            endif
+        488 | 341       continue
+        489 | 340      continue
+        490 | 320     continue
+        491 |c??        endif
+        492 | 300   continue
+        493 |       print*,'in sig2pspline after relaxation of mass points'
+        494 |ccc Recalculate QC so that RHs underground are the same as that at lowest
+        495 |ccc level above ground
+        496 |       do 346 j=jsta,jend
+        497 |        ihl=1
+        498 |        ihh=im-1+mod(j,2)
+        499 |        do 346 i=ihl,ihh
+        500 |         do 347 l=1,lsmp2
+        501 |	  gar1=sgml1(lm)*pdtop+sgml2(lm)*pdsl(i,j)+pt
+        502 |	  gar2=exp(ztsl(l)**0.5)
+        503 |	  if(gar2.gt.gar1)then
+        504 |	   qw=PQ0/exp(ztsl(l-1)**0.5)*EXP(A2*(tprs(i,j,l-1)-A3)
+        505 |     +	   /(tprs(i,j,l-1)-A4))
+        506 |	   rhl=qprs(i,j,l-1)/qw
+        507 |	   if(rhl.gt.1)then
+        508 |cc	    print*,'enormal rh',i,j,rhl
+        509 |	    rhl=1.
+        510 |	   end if
+        511 |	   if(i.eq.iii.and.j.eq.jjj)print*,'sample rh',rhl
+        512 |	   do ll=l,lsmp2
+        513 |	    qw=PQ0/exp(ztsl(ll-1)**0.5)*EXP(A2*(tprs(i,j,ll-1)-A3)
+        514 |     +  	    /(tprs(i,j,ll-1)-A4))
+        515 |	    qprs(i,j,ll)=rhl*qw
+        516 |	   end do
+        517 |	   go to 348
+        518 |          end if
+        519 | 347	 continue
+        520 | 348	 continue
+        521 | 346   continue
+        522 |c
+        523 |c--------------velocity point variables at pressure levels--------------
+        524 |       do l=1,lm+1
+        525 |        call exch(zet(1,1,l))
+        526 |       end do
+        527 |       print*,'in sig2pspline after relaxation of zet'
+        528 |       do 400 j=jsta_m,jend_m
+        529 |        ivl=2-mod(j,2)
+        530 |        ivh=im-1
+        531 |        do 401 i=ivl,ivh
+        532 |         zup=(zet(i,j-1,1)+zet(i+ivw(j),j,1)
+        533 |     2    +zet(i+ive(j),j,1)+zet(i,j+1,1))
+        534 |         zupu=(zet(i+ivw(j),j,1)+zet(i+ive(j),j,1)+zup)/12.
+        535 |         zupv=(zet(i,j-1,1)+zet(i,j+1,1)+zup)/12.
+        536 |c--------------loading variables into vertical columns------------------
+        537 |         do 410 l=1,lm
+        538 |          zlo=(zet(i,j-1,l+1)+zet(i+ivw(j),j,l+1)
+        539 |     2    +zet(i+ive(j),j,l+1)+zet(i,j+1,l+1))
+        540 |          zlou=(zet(i+ivw(j),j,l+1)+zet(i+ive(j),j,l+1)+zup)/12.
+        541 |          zlov=(zet(i,j-1,l+1)+zet(i,j+1,l+1)+zup)/12.
+        542 |c
+        543 |          ztu(l)=zlou+zupu
+        544 |          ztv(l)=zlov+zupv
+        545 |c
+        546 |          ucol(l)=u(i,j,l)
+        547 |          vcol(l)=v(i,j,l)
+        548 |cc	  if(ucol(l).gt.100.)print*,'large I u ',i,j,l,ucol(l)
+        549 |cc	  if(vcol(l).gt.100.)print*,'large I v ',i,j,l,vcol(l)
+        550 |c
+        551 |          zup=zlo
+        552 |          zupu=zlou
+        553 |          zupv=zlov
+        554 | 410     continue
+        555 |c
+        556 |cc         if(amin1(ztu(lm),ztv(lm)).ge.ztbot)then
+        557 |cc          lmd=lm
+        558 |cc         else
+        559 |cc          lmd=lm+1
+        560 |cc          ztu(lm+1)=ztbot
+        561 |cc          ztv(lm+1)=ztbot
+        562 |cc          ucol(lm+1)=ucol(lm)
+        563 |cc          vcol(lm+1)=vcol(lm)
+        564 |cc         endif
+        565 |c
+        566 |         if(ztu(lm).ge.ztbot)then
+        567 |          lmd=lm
+        568 |         else
+        569 |          lmd=lm+1
+        570 |          ztu(lm+1)=ztbot
+        571 |          ucol(lm+1)=ucol(lm)
+        572 |         endif
+        573 |c	
+        574 |         y2(lmd)=0.
+        575 |c	
+        576 |         if(i.eq.iii.and.j.eq.jjj)then
+        577 |	  print*,'large input wind input at',i,j
+        578 |	  do l=1,lmd
+        579 |	   print*,l,ztu(l),ztv(l),ucol(l),vcol(l)
+        580 |	  end do
+        581 |	 end if
+        582 |c	
+        583 |         call splinef(lmd,ztu,ucol,y2,lsmp2,ztsl,ucolsl,phld,qhld)
+        584 |c	
+        585 |         if(ztv(lm).ge.ztbot)then
+        586 |          lmd=lm
+        587 |         else
+        588 |          lmd=lm+1
+        589 |          ztv(lm+1)=ztbot
+        590 |          vcol(lm+1)=vcol(lm)
+        591 |         endif
+        592 |	 y2(lmd)=0.
+        593 |         call splinef(lmd,ztv,vcol,y2,lsmp2,ztsl,vcolsl,phld,qhld)
+        594 |c
+        595 |         do 420 l=1,lsmp2
+        596 |cc	  if(ucolsl(l).gt.100.)print*,'large O u ',i,j,l,ucolSL(l)
+        597 |cc	  if(vcolSL(l).gt.100.)print*,'large O v ',i,j,l,vcolSL(l)
+        598 |          uprs(i,j,l)=ucolsl(l)
+        599 |          vprs(i,j,l)=vcolsl(l)
+        600 | 420     continue
+        601 |         if(i.eq.iii.and.j.eq.jjj)then
+        602 |	  print*,'output wind before geostrophic adjus',i,j
+        603 |	  do l=1,lsmp2
+        604 |	   print*,l,ztsl(l),uprs(i,j,l),vprs(i,j,l)
+        605 |	  end do
+        606 |	 end if
+        607 |cc         if(hs(i,j).gt.300.) then
+        608 |cc          href=hs(i,j)+1500.
+        609 |cc         endif
+        610 |	 do l=1,lsmp2
+        611 |          if(ztsl(l).ge.amin1(ztu(lm),ztv(lm)))then
+        612 |	   do ll=l,lsmp2
+        613 |            uprs(i,j,ll)=uprs(i,j,l-1)
+        614 |	    vprs(i,j,ll)=vprs(i,j,l-1)
+        615 |cc	    ihve=i+mod(j,2)
+        616 |cc	    ihvw=ihve-1
+        617 |cc	    TPHI=(J-JMT)*DPHD*DTR
+        618 |cc	    favg=0.25*(F(I+IHVE,J)+F(I+IHVW,J)
+        619 |cc     1           +F(I,J+1)+F(I,J-1))*2./dt
+        620 |cc     2           +uprs(i,j,l-1)*tan(tphi)/erad
+        621 |cc            if(i.eq.iii.and.j.eq.jjj)print*,'sample F',favg
+        622 |cc	    uprs(i,j,ll)=-g/favg*(fprs(i,j+1,ll)-fprs(i,j-1,ll))
+        623 |cc     1          	    /dy/2.
+        624 |cc	    vprs(i,j,ll)=g/favg*(fprs(i+ihve,j,ll)-fprs(i+ihvw,j,ll))
+        625 |cc     1          	    /dx(i,j)/2.
+        626 |	   end do
+        627 |	   go to 403
+        628 |	  end if
+        629 |	 end do
+        630 | 403     continue
+        631 |c
+        632 |         do l=1,lsmp2
+        633 |         if(uprs(i,j,l).gt.100.)print*,'large O u ',i,j,l,uprs(i,j,l)
+        634 |	 if(vprs(i,j,l).gt.100.)print*,'large O v ',i,j,l,vprs(i,j,l)
+        635 |         end do
+        636 |         if(i.eq.iii.and.j.eq.jjj)then
+        637 |	  print*,'output wind after geostrophic adjus',i,j
+        638 |	  do l=1,lsmp2
+        639 |	   print*,l,ztsl(l),uprs(i,j,l),vprs(i,j,l)
+        640 |	  end do
+        641 |	 end if
+        642 | 401    continue
+        643 | 400   continue
+        644 |c--------------end of wind point interpolations------------------------
+        645 |       do l=1,lsmp2
+        646 |c--------------filling remaining undefined wind point boundaries-------
+        647 |        do j=jsta_m,jend_m
+        648 |         uprs(1,j,l)=uprs(2,j,l)
+        649 |         uprs(im,j,l)=uprs(im-1,j,l)
+        650 |         vprs(1,j,l)=vprs(2,j,l)
+        651 |         vprs(im,j,l)=vprs(im-1,j,l)
+        652 |        enddo
+        653 |	if(me.eq.0)then
+        654 |	 do i=1,im	
+        655 |          uprs(i,1,l)=uprs(i,3,l)
+        656 |          vprs(i,1,l)=vprs(i,3,l)
+        657 |         enddo
+        658 |	end if
+        659 |	if(me.eq.(NUM_PROCS-1))then
+        660 |         do i=1,im	
+        661 |          uprs(i,jm,l)=uprs(i,jm-2,l)
+        662 |          vprs(i,jm,l)=vprs(i,jm-2,l)
+        663 |         enddo
+        664 |	end if
+        665 |c-----------------------------------------------------------------------
+        666 |       enddo
+        667 |c--------------sea level pressure---------------------------------------
+        668 |CCC COMMENT OUT SEA LEVEL PRESSURE REDUCTION BECAUSE IT'S DONE IN QUILT NOW
+        669 |cc       do 600 j=jsta,jend
+        670 |cc        ihl=1
+        671 |cc        ihh=im-1+mod(j,2)
+        672 |cc        do 601 i=ihl,ihh
+        673 |cc         if(fis(i,j).gt.-1..and.fis(i,j).lt.1.) then
+        674 |c          pslp(i,j)=pint(i,j,lm+1)
+        675 |cc          pslp(i,j)=pt+pd(i,j)
+        676 |cc         else
+        677 |cc	  if(fprs(i,j,lsmp2).gt.0)then
+        678 |cc	   gar=exp(ztsl(lsmp2)**0.5)+5000.
+        679 |cc	   hcol3(1)=fprs(i,j,lsmp2)+(fprs(i,j,lsmp2)-fprs(i,j,lsmp2-5))
+        680 |cc     +     *(alog(gar)**2.-ztsl(lsmp2))/(ztsl(lsmp2)-ztsl(lsmp2-5))
+        681 |cc           hcol3(2)=fprs(i,j,lsmp2)
+        682 |cc	   hcol3(3)=fprs(i,j,lsmp2-1)
+        683 |cc	   pcol3(1)=gar
+        684 |cc           pcol3(2)=exp(ztsl(lsmp2)**0.5)
+        685 |cc           pcol3(3)=exp(ztsl(lsmp2-1)**0.5)	
+        686 |cc	  else
+        687 |cc	   do l=lsmp2,2,-1
+        688 |cc	    if(fprs(i,j,l).le.0. .and. fprs(i,j,l-1).gt.0.)then
+        689 |cc	     lll=l
+        690 |cc	     go to 603
+        691 |cc	    end if
+        692 |cc	   end do
+        693 |cc 603       hcol3(1)=fprs(i,j,lll)
+        694 |cc           hcol3(2)=fprs(i,j,lll-1)
+        695 |cc           hcol3(3)=fprs(i,j,lll-2)
+        696 |cc           pcol3(1)=exp(ztsl(lll)**0.5)
+        697 |cc           pcol3(2)=exp(ztsl(lll-1)**0.5)
+        698 |cc           pcol3(3)=exp(ztsl(lll-2)**0.5)
+        699 |cc          end if
+        700 |cc          do l=1,3
+        701 |cc           y23(l)=0.0
+        702 |cc          end do
+        703 |cc          call splinef(3,hcol3,pcol3,y23,1,0.0,slp1,phld,qhld)
+        704 |cc          pslp(i,j)=slp1
+        705 |cc         endif
+        706 |cc         if(pslp(i,j).lt.65000.OR.PSLP(I,J).GT.105000.) print*,
+        707 |cc     +    'alert, pslp lt 650 or gt 1050 at ',i,j,pslp(i,j)
+        708 |c     +,  hcol3(2),hcol3(3),pcol3(1),pcol3(2),pcol3(3)
+        709 |cc         if(i.eq.iii.and.j.eq.jjj)then
+        710 |cc	  print*,'on P after relaxation at ',iii,jjj
+        711 |cc	  do l=1,lsmp2
+        712 |cc	   print*,'l,H,P,T,U,V= ',l,fprs(i,j,l),exp(ztsl(l)**0.5)
+        713 |cc     +,    tprs(i,j,l),uprs(i,j,l),vprs(i,j,l) 	
+        714 |cc          end do
+        715 |cc	  print*,'pslp = ',pslp(i,j)
+        716 |cc	 end if
+        717 |cc 601    continue
+        718 |cc 600   continue
+        719 |C
+        720 |C*********  END OF VERTICAL INTERPOLATION
+        721 |C
+        722 |C        INTERPOLATE HORIZONTALLY/OUTPUT SELECTED FIELDS.
+        723 |C
+        724 |C---------------------------------------------------------------------
+        725 |C
+        726 |C***  SPECIFIC HUMIDITY.
+        727 |C
+        728 |       DO 650 LP=1,LSM
+        729 |c        print*,'horizontal interp at L=',lp
+        730 |        IF(IGET(016).GT.0)THEN
+        731 |          IF(LVLS(LP,IGET(016)).GT.0)THEN
+        732 |            CALL E2OUT(016,000,QPRS(1,1,LP),EGRID2,GRID1,GRID2
+        733 |     +	            ,IMOUT,JMOUT)
+        734 |            CALL BOUND(GRID1,H1M12,H99999,IMOUT,JMOUT)
+        735 |            ID(1:25)=0
+        736 |            print*,'calling output humidity from sig2pspline'
+        737 |            CALL OUTPUT(IOUTYP,IGET(016),LP,GRID1,IMOUT,JMOUT)
+        738 |            if(lp.eq.1)print*,'sample SH IOUTYP',IOUTYP,IGET(016)
+        739 |          ENDIF
+        740 |        ENDIF
+        741 |C
+        742 |C***  OMEGA
+        743 |C
+        744 |        IF(IGET(020).GT.0)THEN
+        745 |          IF(LVLS(LP,IGET(020)).GT.0)THEN
+        746 |            CALL E2OUT(020,000,OPRS(1,1,LP),EGRID2,GRID1,GRID2
+        747 |     +        	    ,IMOUT,JMOUT)
+        748 |            ID(1:25)=0
+        749 |            print*,'calling output omeg from sig2pspline'
+        750 |            CALL OUTPUT(IOUTYP,IGET(020),LP,GRID1,IMOUT,JMOUT)
+        751 |          ENDIF
+        752 |        ENDIF
+        753 |C
+        754 |C***  MOISTURE CONVERGENCE
+        755 |C
+        756 |        IF(IGET(085).GT.0)THEN
+        757 |          IF(LVLS(LP,IGET(085)).GT.0)THEN
+        758 |            CALL CALMCVG(QPRS(1,1,LP),UPRS(1,1,LP),VPRS(1,1,LP)
+        759 |     1   	    ,-1,EGRID1)
+        760 |            CALL E2OUT(085,000,EGRID1,EGRID2,
+        761 |     1                 GRID1,GRID2,IMOUT,JMOUT)
+        762 |C
+        763 |C     CONVERT TO DIVERGENCE FOR GRIB UNITS
+        764 |C
+        765 |            CALL SCLFLD(GRID1,-1.0,IMOUT,JMOUT)
+        766 |            ID(1:25)=0
+        767 |            print*,'calling output moisture from sig2p'
+        768 |            CALL OUTPUT(IOUTYP,IGET(085),LP,GRID1,IMOUT,JMOUT)
+        769 |          ENDIF
+        770 |        ENDIF
+        771 |C
+        772 |C***  U AND/OR V WIND
+        773 |C
+        774 |        IF(IGET(018).GT.0.OR.IGET(019).GT.0)THEN
+        775 |          IF(LVLS(LP,IGET(018)).GT.0.OR.LVLS(LP,IGET(019)).GT.0)THEN
+        776 |            CALL E2OUT(018,019,UPRS(1,1,LP),VPRS(1,1,LP),GRID1,GRID2
+        777 |     1	            ,IMOUT,JMOUT)
+        778 |            ID(1:25)=0
+        779 |            IF(IGET(018).GT.0)THEN
+        780 |              CALL OUTPUT(IOUTYP,IGET(018),LP,GRID1,IMOUT,JMOUT)
+        781 |            ENDIF
+        782 |            ID(1:25)=0
+        783 |            IF(IGET(019).GT.0)
+        784 |     1       CALL OUTPUT(IOUTYP,IGET(019),LP,GRID2,IMOUT,JMOUT)
+        785 |          ENDIF
+        786 |        ENDIF
+        787 |C
+        788 |C***  ABSOLUTE VORTICITY
+        789 |C
+        790 |         IF (IGET(021).GT.0) THEN
+        791 |          IF (LVLS(LP,IGET(021)).GT.0) THEN
+        792 |            CALL CALVOR(UPRS(1,1,LP),VPRS(1,1,LP),EGRID1)
+        793 |            CALL E2OUT(021,000,EGRID1,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        794 |            ID(1:25)=0
+        795 |            CALL OUTPUT(IOUTYP,IGET(021),LP,GRID1,IMOUT,JMOUT)
+        796 |          ENDIF
+        797 |         ENDIF
+        798 |C
+        799 |C        GEOSTROPHIC STREAMFUNCTION.
+        800 |         IF (IGET(086).GT.0) THEN
+        801 |          IF (LVLS(LP,IGET(086)).GT.0) THEN
+        802 |!$omp  parallel do
+        803 |            DO J=JSTA,JEND
+        804 |            DO I=1,IM
+        805 |              EGRID2(I,J)=FPRS(I,J,LP)*GI
+        806 |            ENDDO
+        807 |            ENDDO
+        808 |            CALL CALSTRM(EGRID2,EGRID1)
+        809 |            CALL E2OUT(086,000,EGRID1,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        810 |            ID(1:25)=0
+        811 |            CALL OUTPUT(IOUTYP,IGET(086),LP,GRID1,IMOUT,JMOUT)
+        812 |          ENDIF
+        813 |         ENDIF
+        814 |C
+        815 |C***  TURBULENT KINETIC ENERGY
+        816 |C
+        817 |         IF (IGET(022).GT.0) THEN
+        818 |          IF (LVLS(LP,IGET(022)).GT.0) THEN
+        819 |            CALL E2OUT(022,000,Q2PRS(1,1,LP),EGRID2,GRID1,GRID2
+        820 |     +  	    ,IMOUT,JMOUT)
+        821 |            ID(1:25)=0
+        822 |            CALL OUTPUT(IOUTYP,IGET(022),LP,GRID1,IMOUT,JMOUT)
+        823 |          ENDIF
+        824 |         ENDIF
+        825 |C
+        826 |C***  TOTAL CLOUD WATER
+        827 |C
+        828 |         IF (IGET(153).GT.0) THEN
+        829 |          IF (LVLS(LP,IGET(153)).GT.0) THEN
+        830 |            CALL E2OUT(153,000,QCPRS(1,1,LP),EGRID2,GRID1,GRID2
+        831 |     +  	    ,IMOUT,JMOUT)
+        832 |            CALL BOUND(GRID1,H1M12,H99999,IMOUT,JMOUT)
+        833 |            ID(1:25)=0
+        834 |            CALL OUTPUT(IOUTYP,IGET(153),LP,GRID1,IMOUT,JMOUT)
+        835 |          ENDIF
+        836 |         ENDIF
+        837 |C
+        838 |C***  TOTAL CLOUD ICE
+        839 |C
+        840 |         IF (IGET(166).GT.0) THEN
+        841 |          IF (LVLS(LP,IGET(166)).GT.0) THEN
+        842 |            CALL E2OUT(166,000,ICEPRS(1,1,LP),EGRID2,GRID1,GRID2
+        843 |     +  	    ,IMOUT,JMOUT)
+        844 |            CALL BOUND(GRID1,H1M12,H99999,IMOUT,JMOUT)
+        845 |            ID(1:25)=0
+        846 |            CALL OUTPUT(IOUTYP,IGET(166),LP,GRID1,IMOUT,JMOUT)
+        847 |          ENDIF
+        848 |         ENDIF
+        849 |C
+        850 | 650   continue
+        851 |C***  OUTPUT SEA LEVEL PRESSURE IF REQUESTED.
+        852 |C***  REMOVE THE FOLLOWING LINES BECAUSE PSLP and SLP WERE REALDY OUTPUT IN ETAFLD2.f
+        853 |cc        IF(IGET(023).GT.0)THEN
+        854 |cc          CALL E2OUT(023,000,PSLP,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        855 |cc          ID(1:25)=0
+        856 |cc          CALL OUTPUT(IOUTYP,IGET(023),LVLS(1,IGET(023)),
+        857 |cc     1                GRID1,IMOUT,JMOUT)
+        858 |cc        ENDIF
+        859 |C
+        860 |C***  SECOND, STANDARD NGM SEA LEVEL PRESSURE.
+        861 |C
+        862 |cc        IF(IGET(105).GT.0)THEN
+        863 |cc          CALL NGMSLP2
+        864 |cc          CALL E2OUT(105,000,SLP,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        865 |cc          ID(1:25)=0
+        866 |cc          CALL OUTPUT(IOUTYP,IGET(105),LVLS(1,IGET(105)),
+        867 |cc     1        GRID1,IMOUT,JMOUT)
+        868 |cc        ENDIF
+        869 |C
+        870 |C---------------------------------------------------------------------
+        871 |C***  OUTPUT THE TEMPERATURES AND QUANTITIES DERIVED FROM IT
+        872 |C---------------------------------------------------------------------
+        873 |C
+        874 |C
+        875 |       DO 680 LP=1,LSM
+        876 |C***  TEMPERATURE
+        877 |C
+        878 |        IF(IGET(013).GT.0) THEN
+        879 |          IF(LVLS(LP,IGET(013)).GT.0)THEN
+        880 |             CALL E2OUT(013,000,TPRS(1,1,LP),EGRID2,GRID1,GRID2
+        881 |     1,                 IMOUT,JMOUT)
+        882 |             ID(1:25)=0
+        883 |             CALL OUTPUT(IOUTYP,IGET(013),LP,GRID1,IMOUT,JMOUT)
+        884 |             if(lp.eq.1)print*,'sample T IOUTYP',IOUTYP,IGET(013)
+        885 |          ENDIF
+        886 |        ENDIF
+        887 |C
+        888 |C***  POTENTIAL TEMPERATURE.
+        889 |C
+        890 |        IF(IGET(014).GT.0)THEN
+        891 |          IF(LVLS(LP,IGET(014)).GT.0)THEN
+        892 |!$omp  parallel do
+        893 |            DO J=JSTA,JEND
+        894 |            DO I=1,IM
+        895 |              EGRID2(I,J)=SPL(LP)
+        896 |            ENDDO
+        897 |            ENDDO
+        898 |C
+        899 |            CALL CALPOT2(EGRID2,TPRS(1,1,LP),EGRID1,IM,JM)
+        900 |            CALL E2OUT(014,000,EGRID1,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        901 |            ID(1:25)=0
+        902 |            CALL OUTPUT(IOUTYP,IGET(014),LP,GRID1,IMOUT,JMOUT)
+        903 |          ENDIF
+        904 |        ENDIF
+        905 |C
+        906 |C***  RELATIVE HUMIDITY.
+        907 |C
+        908 |        IF(IGET(017).GT.0)THEN
+        909 |          IF(LVLS(LP,IGET(017)).GT.0)THEN
+        910 |!$omp  parallel do
+        911 |            DO J=JSTA,JEND
+        912 |            DO I=1,IM
+        913 |              EGRID2(I,J)=SPL(LP)
+        914 |            ENDDO
+        915 |            ENDDO
+        916 |C
+        917 |            CALL CALRH2(EGRID2,TPRS(1,1,LP),QPRS(1,1,LP),ICEPRS(1,1,LP)
+        918 |     1,                EGRID1,IM,JM)
+        919 |            CALL E2OUT(017,000,EGRID1,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        920 |            CALL SCLFLD(GRID1,H100,IMOUT,JMOUT)
+        921 |            CALL BOUND(GRID1,H1,H100,IMOUT,JMOUT)
+        922 |            ID(1:25)=0
+        923 |            CALL OUTPUT(IOUTYP,IGET(017),LP,GRID1,IMOUT,JMOUT)
+        924 |          ENDIF
+        925 |        ENDIF
+        926 |C
+        927 |C***  DEWPOINT TEMPERATURE.
+        928 |C
+        929 |        IF(IGET(015).GT.0)THEN
+        930 |          IF(LVLS(LP,IGET(015)).GT.0)THEN
+        931 |!$omp  parallel do
+        932 |            DO J=JSTA,JEND
+        933 |            DO I=1,IM
+        934 |              EGRID2(I,J)=SPL(LP)
+        935 |            ENDDO
+        936 |            ENDDO
+        937 |C
+        938 |            CALL CALDWP2(EGRID2,QPRS(1,1,LP),EGRID1,TPRS(1,1,LP))
+        939 |            CALL E2OUT(015,000,EGRID1,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        940 |            ID(1:25)=0
+        941 |            CALL OUTPUT(IOUTYP,IGET(015),LP,GRID1,IMOUT,JMOUT)
+        942 |          ENDIF
+        943 |        ENDIF
+        944 |C
+        945 |C---------------------------------------------------------------------
+        946 |C***  CALCULATE 1000MB GEOPOTENTIALS CONSISTENT WITH SLP OBTAINED
+        947 |C***  FROM THE MESINGER OR NWS SHUELL SLP REDUCTION.
+        948 |C---------------------------------------------------------------------
+        949 |C
+        950 |C***  FROM MESINGER SLP
+        951 |C
+        952 |cc        IF(IGET(023).GT.0.AND.ABS(SPL(LP)-1.E5).LE.0.1)THEN
+        953 |cc          ALPTH=ALOG(1.E5)
+        954 |cc!$omp  parallel do private(i,j)
+        955 |cc          DO J=JSTA,JEND
+        956 |cc         DO I=1,IM
+        957 |cc            PSLPIJ=PSLP(I,J)
+        958 |cc            ALPSL=ALOG(PSLPIJ)
+        959 |cc            PSFC=PD(I,J)+PT
+        960 |cc            IEND=IM-MOD(J+1,2)
+        961 |cc            IF(ABS(PSLPIJ-PSFC).LT.5.E2.OR.
+        962 |cc     1        ((I.EQ.1.OR.I.LE.IEND.OR.J.LE.2.OR.J.GE.JM-1)
+        963 |cc     2         .AND.SM(I,J).GT.0.5))THEN
+        964 |cc              FPRS(I,J,LP)=R*TPRS(I,J,LSL)*(ALPSL-ALPTH)
+        965 |cc            ELSE
+        966 |cc              FPRS(I,J,LP)=FIS(I,J)/(ALPSL-ALOG(PD(I,J)+PT))*
+        967 |cc     1                              (ALPSL-ALPTH)
+        968 |cc            ENDIF
+        969 |cc            Z1000(I,J)=FPRS(I,J,LP)*GI
+        970 |cc          ENDDO
+        971 |cc          ENDDO
+        972 |C
+        973 |C***  FROM NWS SHUELL SLP. NGMSLP2 COMPUTES 1000MB GEOPOTENTIAL.
+        974 |C
+        975 |cc        ELSEIF(IGET(023).LE.0.AND.ABS(SPL(LP)-1.E5).LE.0.1)THEN
+        976 |cc!$omp  parallel do private(i,j)
+        977 |cc          DO J=JSTA,JEND
+        978 |cc          DO I=1,IM
+        979 |cc            FPRS(I,J,LP)=Z1000(I,J)*G
+        980 |cc          ENDDO
+        981 |cc          ENDDO
+        982 |cc        ENDIF
+        983 |C
+        984 |C***  OUTPUT GEOPOTENTIAL (SCALE BY GI)
+        985 |C
+        986 |        IF(IGET(012).GT.0)THEN
+        987 |          IF(LVLS(LP,IGET(012)).GT.0)THEN
+        988 |!$omp  parallel do
+        989 |            DO J=JSTA,JEND
+        990 |            DO I=1,IM
+        991 |              EGRID1(I,J)=FPRS(I,J,LP)
+        992 |            ENDDO
+        993 |            ENDDO
+        994 |C
+        995 |            if(me.eq.0)print*,'H at (3,3,lp)= ',lp,fprs(3,3,lp)
+        996 |            CALL E2OUT(012,000,EGRID1,EGRID2,GRID1,GRID2,IMOUT,JMOUT)
+        997 |            ID(1:25)=0
+        998 |            CALL OUTPUT(IOUTYP,IGET(012),LP,GRID1,IMOUT,JMOUT)
+        999 |          ENDIF
+       1000 |        ENDIF
+       1001 |C
+       1002 |  680  CONTINUE
+       1003 |C
+       1004 |        IOALL=.TRUE.
+       1005 |C
+       1006 |C***  ENDIF FOR IF TEST SEEING IF WE WANT ANY OTHER VARIABLES
+       1007 |C
+       1008 |      ENDIF
+       1009 |C
+       1010 |C     END OF ROUTINE.
+       1011 |C
+       1012 |cc      deallocate(tprs)
+       1013 |cc      deallocate(oprs)
+       1014 |cc      deallocate(qprs)
+       1015 |cc      deallocate(fprs)
+       1016 |cc      deallocate(qcprs)
+       1017 |cc      deallocate(q2prs)
+       1018 |cc      deallocate(uprs)
+       1019 |cc      deallocate(vprs)
+       1020 |      DEALLOCATE(IW)
+       1021 |      RETURN
+       1022 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+a2                               Parameter, Real(4)
+                                 3-41.23$  0-139.31  0-504.36  0-513.38
+ 
+a3                               Parameter, Real(4)
+                                 3-41.37$  0-139.39  0-504.54  0-513.57
+ 
+a4                               Parameter, Real(4)
+                                 3-41.47$  0-139.48  0-505.27  0-514.31
+ 
+abs                              Pure Intrinsic
+                                 0-189.6
+ 
+accliq                           Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+acprec                           Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+ad05                             Parameter, Real(4)
+                                 3-33.21$
+ 
+aeta                             Common member, Real(4) (1:60), Offset: 1020, Alignment: full word
+                                 6-8.17$
+ 
+aetad                            Common member, Real(4) (1:60), Offset: 516, Alignment: full word
+                                 9-4.28$
+ 
+akhs                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+akms                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+alog                             Pure Intrinsic Real(4)
+                                 0-162.17  0-164.20  0-165.20  0-198.16  0-199.17  0-209.17  0-210.18  0-222.18
+ 
+alp1l                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-198.10@  0-216.35  0-236.11@
+ 
+alp1u                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-209.11@  0-216.41  0-236.17
+ 
+alp2l                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-199.10@  0-200.20  0-237.11@
+ 
+alp2u                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-210.11@  0-220.18  0-237.17
+ 
+alpcp                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-218.11@  0-227.31
+ 
+alpint                           Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+alsl                             Common member, Real(4) (1:39), Offset: 624, Alignment: quadruple word
+                                 6-7.29$
+ 
+amin1                            Pure Intrinsic Real(4)
+                                 0-137.17  0-140.26  0-611.25
+ 
+avbl                             Common member, Character(20) (1:250), Offset: 74130, Alignment: half word
+                                 7-2.20$  7-12.34$
+ 
+avh                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-381.9@
+ 
+avt                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-380.9@
+ 
+beta                             Parameter, Real(4)
+                                 3-37.9$  3-37.25
+ 
+bound                            External Subroutine
+                                 0-734.18  0-832.18  0-844.18  0-921.18
+ 
+btg                              Parameter, Real(4)
+                                 3-37.21$
+ 
+caldwp2                          External Subroutine
+                                 0-938.18
+ 
+calmcvg                          External Subroutine
+                                 0-758.18
+ 
+calpot2                          External Subroutine
+                                 0-899.18
+ 
+calrh2                           External Subroutine
+                                 0-917.18
+ 
+calstrm                          External Subroutine
+                                 0-808.18
+ 
+calvor                           External Subroutine
+                                 0-792.18
+ 
+capa                             Parameter, Real(4)
+                                 3-28.34$  3-35.18
+ 
+cft0                             Parameter, Real(4)
+                                 3-33.37$
+ 
+cldefi                           Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+cldwtr                           Use associated, Nonintrinsic Module
+                                 0-19.11$  0-19.11
+ 
+climit                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-118.8@  0-145.37
+ 
+cm1                              Parameter, Real(4)
+                                 3-23.9$
+ 
+cm2                              Parameter, Real(4)
+                                 3-23.20$
+ 
+cm3                              Parameter, Real(4)
+                                 3-23.31$
+ 
+cmld                             Common member, Real(4), Offset: 444, Alignment: full word
+                                 6-6.38$
+ 
+cp                               Parameter, Real(4)
+                                 3-34.49$  0-218.27  3-36.26  3-40.18  3-40.46
+ 
+cpdr                             Parameter, Real(4)
+                                 3-36.21$
+ 
+cpgfu                            Common member, Real(4) (1:89, 1:143), Offset: 105476, Alignment: full word
+                                 9-8.34$
+ 
+cpgfv                            Common member, Real(4), Offset: 4, Alignment: full word
+                                 9-3.11$
+ 
+cphi0                            Common member, Real(4), Offset: 1904, Alignment: quadruple word
+                                 6-9.15$
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 4-2.15$
+ 
+cuprec                           Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+curv                             Common member, Real(4) (1:89, 1:143), Offset: 156384, Alignment: quadruple word
+                                 9-8.47$
+ 
+cwcl                             Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-36.47$  0-229.11@  0-253.11@  0-273.31
+ 
+cwclsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-45.50$  0-273.50  0-280.24
+ 
+cwm                              Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-19.11$  0-135.17  0-229.19  0-230.13
+ 
+cwmkl                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-135.11@  0-145.28  0-155.37
+ 
+d00                              Parameter, Real(4)
+                                 3-25.9$
+ 
+d001                             Parameter, Real(4)
+                                 3-25.33$
+ 
+d0065                            Parameter, Real(4)
+                                 3-29.40$
+ 
+d01                              Parameter, Real(4)
+                                 3-25.24$
+ 
+d05                              Parameter, Real(4)
+                                 3-29.31$  3-33.33
+ 
+d1                               Parameter, Real(4)
+                                 3-25.17$
+ 
+d115                             Parameter, Real(4)
+                                 3-29.9$
+ 
+d125                             Parameter, Real(4)
+                                 3-27.32$
+ 
+d2                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-294.11@  0-298.22
+ 
+d25                              Parameter, Real(4)
+                                 3-27.42$
+ 
+d50                              Parameter, Real(4)
+                                 3-25.44$
+ 
+d608                             Parameter, Real(4)
+                                 3-29.20$
+ 
+datset                           Common member, Character(6), Offset: 69124, Alignment: full word
+                                 7-3.19$  7-12.21$
+ 
+ddmpu                            Common member, Real(4) (1:89, 1:143), Offset: 410924, Alignment: full word
+                                 9-9.47$
+ 
+ddmpv                            Common member, Real(4) (1:89, 1:143), Offset: 461832, Alignment: double word
+                                 9-9.60$
+ 
+dec                              Common member, Real(4) (1:250), Offset: 1016, Alignment: double word
+                                 7-8.46$
+ 
+deta                             Common member, Real(4) (1:60), Offset: 780, Alignment: full word
+                                 6-8.8$
+ 
+detad                            Common member, Real(4) (1:60), Offset: 36, Alignment: full word
+                                 9-4.8$
+ 
+dfl                              Common member, Real(4) (1:61), Offset: 1240, Alignment: double word
+                                 9-4.57$
+ 
+dh                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-216.11@  0-218.17  0-234.31
+ 
+dislp                            Common member, Real(4), Offset: 460, Alignment: full word
+                                 6-7.8$
+ 
+dlmd                             Common member, Real(4), Offset: 436, Alignment: full word
+                                 6-6.28$
+ 
+dp10m                            Parameter, Real(4)
+                                 3-35.37$
+ 
+dp30                             Common member, Real(4), Offset: 448, Alignment: quadruple word
+                                 6-6.43$
+ 
+dpd                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-212.11@  0-218.23
+ 
+dphd                             Common member, Real(4), Offset: 440, Alignment: double word
+                                 6-6.33$
+ 
+dsg1                             Common member, Real(4) (1:60), Offset: 1932, Alignment: full word
+                                 6-11.8$
+ 
+dsg2                             Common member, Real(4) (1:60), Offset: 2660, Alignment: full word
+                                 6-12.8$
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 4-4.8$
+ 
+dtr                              Parameter, Real(4)
+                                 3-34.9$  3-34.32
+ 
+dum                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-247.11@  0-250.22  0-293.11@  0-298.29
+ 
+dwdt                             Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-16.11$
+ 
+dx                               Common member, Real(4) (1:89, 1:143), Offset: 3660, Alignment: full word
+                                 9-8.8$
+ 
+dy                               Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 9-3.8$
+ 
+dynam                            Common Block, Alignment: double word
+                                 9-2.43$
+ 
+e2out                            External Subroutine
+                                 0-732.18  0-746.18  0-760.18  0-776.18  0-793.18  0-809.18  0-819.18  0-830.18  0-842.18  0-880.19
+                                 0-900.18  0-919.18  0-939.18  0-996.18
+ 
+e2pfl                            Common Block, Alignment: double word
+                                 8-2.15$
+ 
+ef4t                             Common member, Real(4), Offset: 32, Alignment: quadruple word
+                                 9-3.43$
+ 
+egrid1                           Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-65.12$  0-759.19  0-760.32  0-792.51  0-793.32  0-808.33  0-809.32  0-899.46  0-900.32  0-918.24
+                                 0-919.32  0-938.46  0-939.32  0-991.15@  0-996.32
+ 
+egrid2                           Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-65.26$  0-732.45  0-746.45  0-760.39  0-793.39  0-805.15@  0-808.26  0-809.39  0-819.46  0-830.46
+                                 0-842.47  0-880.46  0-895.15@  0-899.26  0-900.39  0-913.15@  0-917.25  0-919.39  0-934.15@
+                                 0-938.26  0-939.39  0-996.39
+ 
+eldr                             Parameter, Real(4)
+                                 3-36.41$
+ 
+elwv                             Parameter, Real(4)
+                                 3-36.9$  3-36.46
+ 
+em                               Common member, Real(4) (1:272), Offset: 1484, Alignment: full word
+                                 9-6.8$
+ 
+emt                              Common member, Real(4) (1:272), Offset: 2572, Alignment: full word
+                                 9-6.20$
+ 
+en                               Common member, Real(4), Offset: 8, Alignment: double word
+                                 9-3.17$
+ 
+ent                              Common member, Real(4), Offset: 12, Alignment: full word
+                                 9-3.20$
+ 
+eps                              Parameter, Real(4)
+                                 3-39.31$  3-39.52
+ 
+epsq2                            Parameter, Real(4)
+                                 3-40.49$
+ 
+erad                             Parameter, Real(4)
+                                 3-34.36$
+ 
+erlam0                           Common member, Real(4), Offset: 1900, Alignment: full word
+                                 6-9.8$
+ 
+eta                              Common member, Real(4) (1:61), Offset: 1260, Alignment: full word
+                                 6-8.26$
+ 
+etad                             Common member, Real(4) (1:61), Offset: 996, Alignment: full word
+                                 9-4.47$
+ 
+exch                             External Subroutine
+                                 0-445.9  0-446.9  0-447.9  0-448.9  0-449.9  0-450.9  0-451.9  0-525.14
+ 
+exp                              Pure Intrinsic
+                                 0-139.24  0-260.24  0-306.32  0-319.36  0-502.9  0-504.12  0-504.32  0-513.13  0-513.34
+ 
+extra                            Use associated, Nonintrinsic Module
+                                 0-18.11$  0-18.11
+ 
+f                                Common member, Real(4) (1:89, 1:143), Offset: 360016, Alignment: quadruple word
+                                 9-9.34$
+ 
+f4d                              Common member, Real(4), Offset: 24, Alignment: double word
+                                 9-3.35$
+ 
+f4q                              Common member, Real(4), Offset: 28, Alignment: full word
+                                 9-3.39$
+ 
+f4q2                             Common member, Real(4) (1:60), Offset: 756, Alignment: full word
+                                 9-4.38$
+ 
+fad                              Common member, Real(4) (1:89, 1:143), Offset: 309108, Alignment: full word
+                                 9-9.21$
+ 
+fcp                              Common member, Real(4) (1:89, 1:143), Offset: 207292, Alignment: full word
+                                 9-8.60$
+ 
+fdiv                             Common member, Real(4) (1:89, 1:143), Offset: 258200, Alignment: double word
+                                 9-9.8$
+ 
+field                            Common member, Character(20) (1:250), Offset: 69130, Alignment: half word
+                                 7-2.32$  7-12.28$
+ 
+fiq                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-144.12@  0-145.15
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 4-3.32$
+ 
+fis                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-16.11$  0-193.14  0-258.23
+ 
+fmd                              Parameter, Real(4)
+                                 3-39.20$  3-39.39
+ 
+fmw                              Parameter, Real(4)
+                                 3-39.9$  3-39.35
+ 
+fprs                             Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-59.8$  0-325.11@  0-354.11@  0-354.24  0-364.11@  0-364.24  0-392.22  0-410.22  0-412.28
+                                 0-412.42  0-414.21  0-414.33  0-435.26  0-450.14  0-468.24  0-468.45  0-469.17  0-469.38  0-469.59
+                                 0-485.14@  0-485.48  0-805.27  0-991.27  0-995.52
+ 
+fsl                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+fsll                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.8$  0-468.14@  0-485.27
+ 
+g                                Parameter, Real(4)
+                                 3-32.9$  0-193.23  0-216.60  0-218.20  0-258.32  0-415.54  3-32.32  3-32.40
+ 
+gar1                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-501.4@  0-503.15
+ 
+gar2                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-502.4@  0-503.7
+ 
+gi                               Parameter, Real(4)
+                                 3-32.34$  0-805.40  3-36.38
+ 
+grid1                            Controlled Automatic, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-66.12$  0-732.52  0-734.24  0-737.45  0-746.52  0-750.45  0-761.24  0-765.25  0-768.45  0-776.58
+                                 0-780.47  0-793.46  0-795.45  0-809.46  0-811.45  0-819.53  0-822.45  0-830.53  0-832.24  0-834.45
+                                 0-842.54  0-844.24  0-846.45  0-880.53  0-883.46  0-900.46  0-902.45  0-919.46  0-920.25  0-921.24
+                                 0-923.45  0-939.46  0-941.45  0-996.46  0-998.45
+ 
+grid2                            Controlled Automatic, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-66.31$  0-732.58  0-746.58  0-761.30  0-776.64  0-784.46  0-793.52  0-809.52  0-819.59  0-830.59
+                                 0-842.60  0-880.59  0-900.52  0-919.52  0-939.52  0-996.52
+ 
+h1                               Parameter, Real(4)
+                                 3-26.9$  0-921.30  3-33.49
+ 
+h100                             Parameter, Real(4)
+                                 3-27.51$  0-920.31  0-921.33
+ 
+h1000                            Parameter, Real(4)
+                                 3-27.9$
+ 
+h10000                           Parameter, Real(4)
+                                 3-28.9$
+ 
+h10e5                            Parameter, Real(4)
+                                 3-28.23$
+ 
+h1e2                             Parameter, Real(4)
+                                 3-30.9$
+ 
+h1e4                             Parameter, Real(4)
+                                 3-30.19$
+ 
+h1m12                            Parameter, Real(4)
+                                 3-26.44$  0-734.30  0-832.30  0-844.30
+ 
+h1m2                             Parameter, Real(4)
+                                 3-30.29$
+ 
+h1m5                             Parameter, Real(4)
+                                 3-27.21$
+ 
+h2                               Parameter, Real(4)
+                                 3-26.16$
+ 
+h4                               Parameter, Real(4)
+                                 3-26.23$
+ 
+h999                             Parameter, Real(4)
+                                 3-25.53$
+ 
+h99999                           Parameter, Real(4)
+                                 3-26.30$  0-734.36  0-832.36  0-844.36
+ 
+hbm2                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-21.11$  0-132.25
+ 
+hcol                             Static, Real(4) (1:62), Offset: 0, Alignment: full word
+                                 0-38.8$  0-194.10@  0-234.11@  0-234.21  0-293.16  0-293.27  0-298.11@  0-298.35  0-306.24
+                                 0-312.31
+ 
+hcol3                            Static, Real(4) (1:3), Offset: 0, Alignment: full word
+                                 0-49.8$
+ 
+hcolsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-46.8$  0-312.50  0-319.26  0-325.24
+ 
+hh                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-132.11@  0-136.29  0-137.34  0-139.14  0-139.28
+ 
+href                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-388.11@  0-389.14  0-390.12@  0-390.17  0-392.14  0-410.14
+ 
+hs                               Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-51.22$  0-195.10@  0-388.16  0-435.15
+ 
+hsp                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-193.10@  0-194.21  0-195.18
+ 
+htm                              Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-21.11$  0-132.14
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-123.14@  0-124.15  0-130.16@  0-131.22  0-132.18  0-132.30  0-133.17  0-134.17  0-135.21
+                                 0-138.34  0-141.21  0-141.46  0-146.16  0-148.16  0-152.29  0-154.15  0-155.18  0-155.56  0-188.16@
+                                 0-189.15  0-189.23  0-189.60  0-190.13  0-190.23  0-191.19  0-193.18  0-195.13  0-216.17  0-216.50
+                                 0-226.21  0-227.24  0-228.21  0-229.23  0-229.36  0-230.17  0-230.27  0-233.24  0-256.13  0-258.27
+                                 0-277.17  0-278.10  0-279.17  0-280.17  0-281.11  0-303.13  0-316.13  0-325.17  0-327.17  0-331.15
+                                 0-387.17@  0-388.19  0-392.27  0-394.18  0-396.18  0-410.27  0-412.18  0-412.33  0-412.47  0-414.26
+                                 0-414.38  0-417.18  0-417.30  0-417.45  0-417.59  0-434.18@  0-435.18  0-435.31  0-436.18  0-437.18
+                                 0-438.19  0-439.13  0-440.19  0-455.19@  0-456.22  0-457.19  0-457.29  0-457.50  0-458.22  0-458.43
+                                 0-458.64  0-459.19  0-459.29  0-459.50  0-460.22  0-460.43  0-460.64  0-461.19  0-461.29  0-461.50
+                                 0-462.22  0-462.43  0-462.64  0-463.19  0-463.30  0-463.52  0-464.21  0-464.43  0-464.65  0-465.20
+                                 0-465.32  0-465.55  0-466.22  0-466.45  0-467.22  0-468.19  0-468.29  0-468.50  0-469.22  0-469.43
+                                 0-469.64  0-470.19  0-470.30  0-470.52  0-471.21  0-471.43  0-471.65  0-478.19@  0-479.22  0-480.20
+                                 0-480.32  0-480.43  0-480.54  0-481.20  0-481.32  0-481.43  0-481.54  0-482.20  0-482.32  0-482.43
+                                 0-482.54  0-483.20  0-483.32  0-483.43  0-483.54  0-484.14  0-484.27  0-484.38  0-484.50  0-485.20
+                                 0-485.32  0-485.43  0-485.54  0-486.20  0-486.36  0-486.47  0-486.58  0-499.16@  0-501.40  0-504.45
+                                 0-505.18  0-506.14  0-511.8  0-513.47  0-514.21  0-515.11  0-531.16@  0-532.19  0-532.32  0-533.16
+                                 0-533.34  0-534.20  0-534.38  0-535.20  0-535.33  0-538.20  0-538.35  0-539.16  0-539.36  0-540.21
+                                 0-540.41  0-541.21  0-541.36  0-546.21  0-547.21  0-576.13  0-577.39  0-598.16  0-599.16  0-601.13
+                                 0-602.50  0-604.27  0-604.39  0-613.18  0-613.31  0-614.11  0-614.24  0-633.18  0-633.53  0-633.64
+                                 0-634.11  0-634.46  0-634.57  0-636.13  0-637.49  0-639.27  0-639.39  0-654.6@  0-655.16  0-655.28
+                                 0-656.16  0-656.28  0-660.13@  0-661.16  0-661.29  0-662.16  0-662.29  0-804.16@  0-805.22
+                                 0-805.32  0-894.16@  0-895.22  0-912.16@  0-913.22  0-933.16@  0-934.22  0-990.16@  0-991.22
+                                 0-991.32
+ 
+icecl                            Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-62.20$  0-230.4@  0-254.4@  0-274.24
+ 
+icell                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-62.46$  0-465.14@  0-484.21
+ 
+icelsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-62.32$  0-274.44  0-281.18
+ 
+iceprs                           Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-63.8$  0-281.4@  0-353.4@  0-353.19  0-363.4@  0-363.19  0-439.6@  0-449.14  0-465.25  0-465.48
+                                 0-466.15  0-466.38  0-467.15  0-484.7@  0-484.43  0-842.32  0-917.58
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 4-7.59$  4-11.24$
+ 
+id                               Common member, Integer(4) (1:25), Offset: 69016, Alignment: double word
+                                 7-11.21$  0-735.13@  0-748.13@  0-766.13@  0-778.13@  0-782.13@  0-794.13@  0-810.13@  0-821.13@
+                                 0-833.13@  0-845.13@  0-882.14@  0-901.13@  0-922.13@  0-940.13@  0-997.13@
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 4-3.18$
+ 
+ident                            Common member, Integer(4) (1:250), Offset: 67016, Alignment: double word
+                                 7-10.40$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 4-7.54$  4-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 4-7.65$  4-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 4-4.35$
+ 
+ifilv                            Common member, Integer(4) (1:250), Offset: 68016, Alignment: quadruple word
+                                 7-11.8$
+ 
+iget                             Common member, Integer(4) (1:250), Offset: 16, Alignment: quadruple word
+                                 7-8.34$  0-106.11  0-106.31  0-107.11  0-107.31  0-108.11  0-108.31  0-109.11  0-109.31  0-110.11
+                                 0-110.31  0-111.11  0-111.31  0-112.11  0-112.31  0-113.11  0-730.12  0-731.22  0-737.32  0-738.57
+                                 0-744.12  0-745.22  0-750.32  0-756.12  0-757.22  0-768.32  0-774.12  0-774.30  0-775.22  0-775.49
+                                 0-779.16  0-780.34  0-783.16  0-784.33  0-790.14  0-791.23  0-795.32  0-800.14  0-801.23  0-811.32
+                                 0-817.14  0-818.23  0-822.32  0-828.14  0-829.23  0-834.32  0-840.14  0-841.23  0-846.32  0-878.12
+                                 0-879.22  0-883.33  0-884.57  0-890.12  0-891.22  0-902.32  0-908.12  0-909.22  0-923.32  0-929.12
+                                 0-930.22  0-941.32  0-986.12  0-987.22  0-998.32
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihe                              Static, Integer(4) (1:143), Offset: 0, Alignment: full word
+                                 0-33.15$  0-171.9@  0-457.52  0-458.45  0-459.52  0-460.45  0-461.52  0-462.45  0-463.54  0-464.45
+                                 0-465.57  0-466.47  0-468.52  0-469.45  0-470.54  0-471.45
+ 
+ihh                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-187.9@  0-188.22  0-386.10@  0-387.23  0-433.11@  0-434.24  0-454.12@  0-455.25  0-477.12@
+                                 0-478.25  0-498.9@  0-499.22
+ 
+ihha                             Common member, Integer(4) (1:272), Offset: 1088, Alignment: quadruple word
+                                 5-3.20$
+ 
+ihl                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-186.9@  0-188.18  0-385.10@  0-387.19  0-432.11@  0-434.20  0-453.12@  0-455.21  0-476.12@
+                                 0-478.21  0-497.9@  0-499.18
+ 
+ihla                             Common member, Integer(4) (1:272), Offset: 0, Alignment: quadruple word
+                                 5-3.8$
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 4-3.26$
+ 
+ihw                              Static, Integer(4) (1:143), Offset: 0, Alignment: full word
+                                 0-33.7$  0-170.9@  0-457.31  0-458.24  0-459.31  0-460.24  0-461.31  0-462.24  0-463.32  0-464.23
+                                 0-465.34  0-466.24  0-468.31  0-469.24  0-470.32  0-471.23
+ 
+iii                              Parameter, Integer(4)
+                                 0-29.17$  0-256.18  0-257.26  0-303.18  0-304.26  0-316.18  0-317.47  0-511.13  0-576.18  0-601.18
+                                 0-636.18
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-51.15  0-51.29  0-53.15  0-53.29  0-53.43  0-53.57  0-54.15  0-54.29  0-56.15  0-58.13
+                                 0-58.32  0-58.50  0-59.13  0-59.33  0-59.52  0-60.13  0-60.32  0-62.52  0-63.15  0-65.19  0-65.33
+                                 0-104.21  0-123.18  0-130.20  0-187.13  0-338.14  0-338.26  0-349.16  0-349.29  0-350.16  0-350.29
+                                 0-351.16  0-351.29  0-352.17  0-352.31  0-353.11  0-353.26  0-354.16  0-354.29  0-355.17  0-355.31
+                                 0-359.16  0-359.29  0-360.16  0-360.29  0-361.16  0-361.29  0-362.17  0-362.31  0-363.11  0-363.26
+                                 0-364.16  0-364.29  0-365.17  0-365.31  0-386.14  0-433.15  0-454.16  0-477.16  0-498.13  0-530.13
+                                 0-649.15  0-649.28  0-651.15  0-651.28  0-654.10  0-660.17  0-804.20  0-894.20  0-899.53  0-912.20
+                                 0-918.31  0-933.20  0-990.20  1-11.23  1-11.34  1-14.35  2-3.21  3-4.15  3-6.13  3-7.16  3-9.14
+                                 5-5.15  5-5.29  9-8.14  9-8.27  9-8.40  9-8.53  9-8.66  9-9.14  9-9.27  9-9.40  9-9.53  9-9.66
+ 
+im1                              Parameter, Integer(4)
+                                 3-6.9$
+ 
+imout                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.30  0-66.18  0-66.18  0-66.37  0-66.37  0-733.21  0-734.43  0-737.51  0-747.21  0-750.51
+                                 0-761.36  0-765.36  0-768.51  0-777.21  0-780.53  0-784.52  0-793.58  0-795.51  0-809.58  0-811.51
+                                 0-820.15  0-822.51  0-831.15  0-832.43  0-834.51  0-843.15  0-844.43  0-846.51  0-881.25  0-883.52
+                                 0-900.58  0-902.51  0-919.58  0-920.36  0-921.38  0-923.51  0-939.58  0-941.51  0-996.58  0-998.51
+ 
+imt                              Parameter, Integer(4)
+                                 3-4.9$
+ 
+imx                              Parameter, Integer(4)
+                                 2-3.17$
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+ioall                            Common member, Logical(4), Offset: 4, Alignment: full word
+                                 0-31.21$  8-3.14$  0-1004.9@
+ 
+ioomg                            Common member, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-31.15$  8-3.8$
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 4-3.60$
+ 
+ioutyp                           Common member, Integer(4), Offset: 4, Alignment: full word
+                                 7-8.15$  0-737.25  0-738.50  0-750.25  0-768.25  0-780.27  0-784.26  0-795.25  0-811.25  0-822.25
+                                 0-834.25  0-846.25  0-883.26  0-884.50  0-902.25  0-923.25  0-941.25  0-998.25
+ 
+iq                               Common member, Integer(4) (1:250), Offset: 2016, Alignment: quadruple word
+                                 7-9.8$
+ 
+is                               Common member, Integer(4) (1:250), Offset: 3016, Alignment: double word
+                                 7-9.18$
+ 
+ishde                            Common member, Integer(4) (1:99), Offset: 12, Alignment: full word
+                                 6-4.8$
+ 
+ismful                           Common member, Integer(4) (1:250), Offset: 5016, Alignment: double word
+                                 7-9.42$
+ 
+ismout                           Common member, Integer(4) (1:250), Offset: 6016, Alignment: quadruple word
+                                 7-10.8$
+ 
+ismstg                           Common member, Integer(4) (1:250), Offset: 4016, Alignment: quadruple word
+                                 7-9.28$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+iunit                            Common member, Integer(4), Offset: 1924, Alignment: full word
+                                 6-10.26$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 4-7.49$  4-10.42$
+ 
+ive                              Static, Integer(4) (1:143), Offset: 0, Alignment: full word
+                                 0-33.31$  0-173.9@  0-533.18  0-534.40  0-539.18  0-540.43
+ 
+ivh                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-530.9@  0-531.22
+ 
+ivha                             Common member, Integer(4) (1:272), Offset: 3264, Alignment: quadruple word
+                                 5-3.44$
+ 
+ivi                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-205.17@  0-206.18
+ 
+ivl                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-529.9@  0-531.18
+ 
+ivla                             Common member, Integer(4) (1:272), Offset: 2176, Alignment: quadruple word
+                                 5-3.32$
+ 
+ivw                              Static, Integer(4) (1:143), Offset: 0, Alignment: full word
+                                 0-33.23$  0-172.9@  0-532.34  0-534.22  0-538.37  0-540.23
+ 
+iw                               Allocatable, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-64.27$  0-104.18  0-124.12@  0-146.13@  0-148.13@  0-152.26@  0-154.12@  0-155.15  0-155.53@
+                                 0-229.33  0-230.24  0-1020.18
+ 
+iwl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-62.16$
+ 
+iwu                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-62.12$
+ 
+ixm                              Common member, Integer(4), Offset: 4, Alignment: full word
+                                 6-3.12$
+ 
+iym                              Common member, Integer(4), Offset: 8, Alignment: double word
+                                 6-3.16$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-122.13@  0-124.17  0-129.15@  0-131.24  0-132.20  0-132.32  0-133.19  0-134.19  0-135.23
+                                 0-138.36  0-141.23  0-141.48  0-146.18  0-148.18  0-152.31  0-154.17  0-155.20  0-155.58  0-169.15@
+                                 0-170.13  0-170.23  0-171.13  0-171.23  0-172.13  0-172.23  0-173.13  0-173.23  0-185.15@  0-187.22
+                                 0-189.17  0-189.25  0-189.62  0-190.15  0-190.25  0-191.21  0-193.20  0-195.15  0-216.19  0-216.52
+                                 0-226.23  0-227.26  0-228.23  0-229.25  0-229.38  0-230.19  0-230.29  0-233.26  0-256.26  0-258.29
+                                 0-277.19  0-278.12  0-279.19  0-280.19  0-281.13  0-303.26  0-316.26  0-325.19  0-327.19  0-331.17
+                                 0-337.16@  0-338.17  0-338.31  0-348.17@  0-349.19  0-349.34  0-350.19  0-350.34  0-351.19
+                                 0-351.34  0-352.20  0-352.36  0-353.14  0-353.31  0-354.19  0-354.34  0-355.20  0-355.36  0-358.10@
+                                 0-359.19  0-359.34  0-360.19  0-360.34  0-361.19  0-361.34  0-362.20  0-362.36  0-363.14  0-363.31
+                                 0-364.19  0-364.34  0-365.20  0-365.36  0-384.16@  0-386.23  0-388.21  0-392.29  0-394.20  0-396.20
+                                 0-410.29  0-412.20  0-412.35  0-412.49  0-414.28  0-414.40  0-417.20  0-417.32  0-417.47  0-417.61
+                                 0-431.17@  0-433.24  0-435.20  0-435.33  0-436.20  0-437.20  0-438.21  0-439.15  0-440.21
+                                 0-452.18@  0-453.22  0-456.24  0-457.21  0-457.35  0-457.38  0-457.56  0-457.59  0-458.28  0-458.31
+                                 0-458.49  0-458.52  0-458.66  0-459.21  0-459.35  0-459.38  0-459.56  0-459.59  0-460.28  0-460.31
+                                 0-460.49  0-460.52  0-460.66  0-461.21  0-461.35  0-461.38  0-461.56  0-461.59  0-462.28  0-462.31
+                                 0-462.49  0-462.52  0-462.66  0-463.21  0-463.36  0-463.39  0-463.58  0-463.61  0-464.27  0-464.30
+                                 0-464.49  0-464.52  0-464.67  0-465.22  0-465.38  0-465.41  0-465.61  0-465.64  0-466.28  0-466.31
+                                 0-466.51  0-466.54  0-467.24  0-468.21  0-468.35  0-468.38  0-468.56  0-468.59  0-469.28  0-469.31
+                                 0-469.49  0-469.52  0-469.66  0-470.21  0-470.36  0-470.39  0-470.58  0-470.61  0-471.27  0-471.30
+                                 0-471.49  0-471.52  0-471.67  0-475.18@  0-476.22  0-479.24  0-480.22  0-480.34  0-480.45  0-480.56
+                                 0-481.22  0-481.34  0-481.45  0-481.56  0-482.22  0-482.34  0-482.45  0-482.56  0-483.22  0-483.34
+                                 0-483.45  0-483.56  0-484.16  0-484.29  0-484.40  0-484.52  0-485.22  0-485.34  0-485.45  0-485.56
+                                 0-486.22  0-486.38  0-486.49  0-486.60  0-496.15@  0-498.22  0-501.42  0-504.47  0-505.20  0-506.16
+                                 0-511.21  0-513.49  0-514.23  0-515.13  0-528.15@  0-529.19  0-532.21  0-532.38  0-532.41  0-533.22
+                                 0-533.25  0-533.36  0-534.26  0-534.29  0-534.44  0-534.47  0-535.22  0-535.35  0-538.22  0-538.41
+                                 0-538.44  0-539.22  0-539.25  0-539.38  0-540.27  0-540.30  0-540.47  0-540.50  0-541.23  0-541.38
+                                 0-546.23  0-547.23  0-576.26  0-577.41  0-598.18  0-599.18  0-601.26  0-602.52  0-604.29  0-604.41
+                                 0-613.20  0-613.33  0-614.13  0-614.26  0-633.20  0-633.55  0-633.66  0-634.13  0-634.48  0-634.59
+                                 0-636.26  0-637.51  0-639.29  0-639.41  0-647.12@  0-648.17  0-648.29  0-649.18  0-649.33  0-650.17
+                                 0-650.29  0-651.18  0-651.33  0-803.16@  0-805.24  0-805.34  0-893.16@  0-895.24  0-911.16@
+                                 0-913.24  0-932.16@  0-934.24  0-989.16@  0-991.24  0-991.34
+ 
+jam                              Parameter, Integer(4)
+                                 3-6.27$  5-3.15  5-3.27  5-3.39  5-3.51  5-3.63  9-6.15  9-6.27
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 4-6.36$  4-9.45$  0-122.20  0-129.22  0-169.22  0-185.22  0-337.23  0-348.24  0-358.19  0-384.23
+                                 0-431.24  0-496.22  0-803.23  0-893.23  0-911.23  0-932.23  0-989.23
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 4-8.24$  4-12.33$  0-104.32
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 4-7.32$  4-9.59$  0-452.27  0-475.27  0-528.24  0-647.21
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 4-7.40$  4-10.33$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jjj                              Parameter, Integer(4)
+                                 0-29.23$  0-256.31  0-257.30  0-303.31  0-304.30  0-316.31  0-317.51  0-511.26  0-576.31  0-601.31
+                                 0-636.31
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-33.11  0-33.19  0-33.27  0-33.35  0-51.18  0-51.32  0-53.18  0-53.32  0-53.46  0-53.60
+                                 0-54.18  0-54.32  0-56.18  0-58.16  0-58.35  0-58.53  0-59.16  0-59.36  0-59.55  0-60.16  0-60.35
+                                 0-62.55  0-63.18  0-65.22  0-65.36  0-661.18  0-661.31  0-662.18  0-662.31  0-899.56  0-918.34
+                                 1-12.23  1-12.34  1-15.35  2-3.28  3-4.24  3-6.22  3-6.36  3-9.17  5-5.18  5-5.32  9-8.17  9-8.30
+                                 9-8.43  9-8.56  9-8.69  9-9.17  9-9.30  9-9.43  9-9.56  9-9.69
+ 
+jm2                              Parameter, Integer(4)
+                                 3-6.18$
+ 
+jmout                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.36  0-66.24  0-66.24  0-66.43  0-66.43  0-733.27  0-734.49  0-737.57  0-747.27  0-750.57
+                                 0-761.42  0-765.42  0-768.57  0-777.27  0-780.59  0-784.58  0-793.64  0-795.57  0-809.64  0-811.57
+                                 0-820.21  0-822.57  0-831.21  0-832.49  0-834.57  0-843.21  0-844.49  0-846.57  0-881.31  0-883.58
+                                 0-900.64  0-902.57  0-919.64  0-920.42  0-921.44  0-923.57  0-939.64  0-941.57  0-996.64  0-998.57
+ 
+jmt                              Parameter, Integer(4)
+                                 3-4.20$
+ 
+jmx                              Parameter, Integer(4)
+                                 2-3.24$
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jra                              Common member, Integer(4) (1:272), Offset: 4352, Alignment: quadruple word
+                                 5-3.56$
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 4-6.30$  4-9.39$  0-122.15  0-129.17  0-169.17  0-185.17  0-337.18  0-347.16  0-348.19  0-358.12
+                                 0-384.18  0-431.19  0-496.17  0-803.18  0-893.18  0-911.18  0-932.18  0-989.18
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 4-8.15$  4-12.24$  0-104.24
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 4-7.15$  4-9.51$  0-452.20  0-475.20  0-528.17  0-647.14
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 4-7.23$  4-10.24$
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+kgtype                           Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 7-8.8$
+ 
+kh                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-383.9@
+ 
+kmnt                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+kmntm                            Allocatable, Use associated, Controlled, Real(4) (:), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+ksav                             Parameter, Integer(4)
+                                 3-14.23$
+ 
+ksfi                             Parameter, Integer(4)
+                                 3-13.33$
+ 
+ksli                             Parameter, Integer(4)
+                                 3-14.30$
+ 
+kslp                             Parameter, Integer(4)
+                                 3-14.37$
+ 
+kslpd                            Parameter, Integer(4)
+                                 3-13.17$
+ 
+ksmud                            Parameter, Integer(4)
+                                 3-13.9$
+ 
+ksrh                             Parameter, Integer(4)
+                                 3-14.16$
+ 
+ksslp                            Parameter, Integer(4)
+                                 3-13.25$
+ 
+kst                              Parameter, Integer(4)
+                                 3-13.40$
+ 
+ksuv                             Parameter, Integer(4)
+                                 3-14.9$
+ 
+kt                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-382.9@
+ 
+kunit                            Common member, Integer(4), Offset: 1912, Alignment: double word
+                                 6-10.8$
+ 
+l                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-120.14@  0-121.12  0-124.19  0-132.22  0-133.21  0-134.21  0-135.25  0-138.26  0-138.45  0-141.29
+                                 0-146.20  0-148.20  0-152.33  0-154.19  0-155.22  0-155.60  0-161.15@  0-162.14  0-162.26
+                                 0-206.11@  0-209.32  0-209.39  0-210.27  0-210.40  0-212.20  0-212.29  0-212.42  0-212.51  0-216.21
+                                 0-216.54  0-220.15  0-222.15  0-222.29  0-222.44  0-226.16  0-226.25  0-227.16  0-227.28  0-228.16
+                                 0-228.25  0-229.16  0-229.27  0-229.40  0-230.10  0-230.21  0-230.31  0-233.16  0-233.28  0-234.16
+                                 0-234.26  0-259.7@  0-260.22  0-260.32  0-260.46  0-276.17@  0-277.21  0-277.31  0-278.14  0-278.24
+                                 0-279.21  0-279.31  0-280.21  0-280.31  0-281.15  0-281.25  0-305.7@  0-306.22  0-306.29  0-306.40
+                                 0-318.7@  0-319.24  0-319.33  0-319.45  0-320.19  0-324.17@  0-325.21  0-325.31  0-327.21  0-327.35
+                                 0-330.17@  0-331.19  0-331.26  0-336.15@  0-338.19  0-338.33  0-345.15@  0-349.21  0-349.36
+                                 0-350.21  0-350.36  0-351.21  0-351.36  0-352.22  0-352.38  0-353.16  0-353.33  0-354.21  0-354.36
+                                 0-355.22  0-355.38  0-359.21  0-359.36  0-360.21  0-360.36  0-361.21  0-361.36  0-362.22  0-362.38
+                                 0-363.16  0-363.33  0-364.21  0-364.36  0-365.22  0-365.38  0-377.19  0-392.31  0-410.31  0-411.15
+                                 0-412.22  0-412.37  0-412.51  0-413.24  0-413.37  0-414.30  0-414.42  0-415.25  0-415.40  0-417.22
+                                 0-417.34  0-417.49  0-417.63  0-418.21  0-418.29  0-418.41  0-418.51  0-435.35  0-436.22  0-437.22
+                                 0-438.23  0-439.17  0-440.23  0-445.23  0-446.23  0-447.23  0-448.24  0-449.25  0-450.23  0-451.24
+                                 0-457.42  0-457.63  0-458.35  0-458.56  0-458.68  0-459.42  0-459.63  0-460.35  0-460.56  0-460.68
+                                 0-461.42  0-461.63  0-462.35  0-462.56  0-462.68  0-463.43  0-463.65  0-464.34  0-464.56  0-464.69
+                                 0-465.45  0-465.68  0-466.35  0-466.58  0-467.26  0-468.42  0-468.63  0-469.35  0-469.56  0-469.68
+                                 0-470.43  0-470.65  0-471.34  0-471.56  0-471.69  0-480.24  0-480.58  0-481.24  0-481.58  0-482.24
+                                 0-482.58  0-483.24  0-483.58  0-484.18  0-484.54  0-485.24  0-485.58  0-486.24  0-486.62  0-500.17@
+                                 0-502.18  0-504.21  0-504.49  0-505.22  0-506.18  0-512.11  0-524.11@  0-525.27  0-537.17@
+                                 0-538.26  0-538.46  0-539.27  0-539.42  0-540.32  0-540.52  0-541.27  0-541.42  0-543.15  0-544.15
+                                 0-546.16  0-546.25  0-547.16  0-547.25  0-578.7@  0-579.12  0-579.18  0-579.25  0-579.33  0-579.41
+                                 0-595.17@  0-598.20  0-598.30  0-599.20  0-599.30  0-603.7@  0-604.12  0-604.19  0-604.31  0-604.43
+                                 0-610.6@  0-611.19  0-612.11  0-613.35  0-614.28  0-632.13@  0-633.22  0-633.57  0-633.68  0-634.15
+                                 0-634.50  0-634.61  0-638.7@  0-639.12  0-639.19  0-639.31  0-639.43  0-645.11@  0-648.19  0-648.31
+                                 0-649.20  0-649.35  0-650.19  0-650.31  0-651.20  0-651.35  0-655.20  0-655.32  0-656.20  0-656.32
+                                 0-661.21  0-661.36  0-662.21  0-662.36
+ 
+lb                               Parameter, Integer(4)
+                                 3-9.9$
+ 
+lc                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-19.11$
+ 
+lheat                            Parameter, Integer(4)
+                                 3-40.21$  3-40.40
+ 
+lhtocp                           Parameter, Integer(4)
+                                 3-40.33$
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 4-3.55$
+ 
+ll                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-512.8@  0-513.22  0-513.51  0-514.25  0-515.15  0-612.8@  0-613.22  0-614.15
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  0-27.31  0-35.15  0-36.15  0-36.28  0-36.41  0-36.54  0-37.15  0-38.15  0-38.28  0-39.15
+                                 0-39.28  0-40.15  0-40.28  0-42.15  0-42.28  0-42.41  0-56.21  0-62.26  0-104.40  0-120.18
+                                 0-131.15  0-194.15  0-200.14  0-205.23  0-206.13  0-240.18  0-241.15  0-243.15  0-245.15  0-247.21
+                                 0-247.30  0-247.42  0-247.50  0-248.23  0-250.16  0-250.33  0-251.16  0-252.16  0-253.16  0-254.10
+                                 0-284.17  0-285.15  0-287.15  0-289.15  0-290.23  0-293.21  0-293.32  0-293.44  0-293.54  0-298.16
+                                 0-298.40  0-300.16  0-330.21  0-336.19  0-501.15  0-501.31  0-524.15  0-537.21  0-566.17  0-567.15
+                                 0-569.15  0-570.15  0-571.16  0-571.27  0-585.17  0-586.15  0-588.15  0-589.15  0-590.16  0-590.27
+                                 0-611.35  0-611.43  2-3.47  3-8.13  3-8.22  3-19.29  6-8.13  6-8.22  6-11.13  6-11.23  6-12.13
+                                 6-12.23  9-4.14  9-4.24  9-4.34  9-4.43
+ 
+lm1                              Parameter, Integer(4)
+                                 3-8.9$
+ 
+lmd                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-241.11@  0-243.11@  0-259.11  0-268.13  0-270.23  0-271.23  0-272.23  0-273.23  0-274.16
+                                 0-285.11@  0-287.11@  0-305.11  0-310.13  0-312.23  0-314.23  0-567.11@  0-569.11@  0-574.13
+                                 0-578.11  0-583.23  0-586.11@  0-588.11@  0-592.6  0-593.23
+ 
+lmh                              Common member, Integer(4) (1:89, 1:143), Offset: 5440, Alignment: quadruple word
+                                 5-5.8$  0-131.18
+ 
+lml                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-131.11@  0-141.31
+ 
+lmv                              Common member, Integer(4) (1:89, 1:143), Offset: 56348, Alignment: full word
+                                 5-5.22$
+ 
+loops                            Common Block, Alignment: double word
+                                 5-2.43$
+ 
+lp                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-728.15@  0-731.19  0-732.41  0-737.42  0-738.16  0-745.19  0-746.41  0-750.42  0-757.19  0-758.35
+                                 0-758.48  0-758.61  0-768.42  0-775.19  0-775.46  0-776.41  0-776.54  0-780.44  0-784.43  0-791.20
+                                 0-792.34  0-792.47  0-795.42  0-801.20  0-805.36  0-811.42  0-818.20  0-819.42  0-822.42  0-829.20
+                                 0-830.42  0-834.42  0-841.20  0-842.43  0-846.42  0-875.15@  0-879.19  0-880.42  0-883.43  0-884.17
+                                 0-891.19  0-895.31  0-899.42  0-902.42  0-909.19  0-913.31  0-917.41  0-917.54  0-917.69  0-923.42
+                                 0-930.19  0-934.31  0-938.42  0-938.62  0-941.42  0-987.19  0-991.36  0-995.49  0-995.61  0-998.42
+ 
+lp1                              Parameter, Integer(4)
+                                 3-8.18$  6-8.30  6-11.31  6-12.31  9-4.52  9-4.61
+ 
+lp2                              Parameter, Integer(4)
+                                 0-27.27$  0-97.11
+ 
+lsl                              Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 6-3.8$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$  0-27.42  0-161.19  0-164.13  0-728.20  0-875.20  6-7.24  6-7.34
+ 
+lsmp2                            Parameter, Integer(4)
+                                 0-27.36$  0-44.15  0-44.29  0-45.15  0-45.29  0-45.43  0-45.57  0-46.15  0-46.29  0-47.15  0-47.29
+                                 0-58.19  0-58.38  0-58.56  0-59.19  0-59.39  0-59.58  0-60.19  0-60.38  0-62.39  0-63.21  0-100.14
+                                 0-165.13  0-167.19  0-270.39  0-271.39  0-272.39  0-273.39  0-274.33  0-276.21  0-312.39  0-314.39
+                                 0-318.11  0-324.21  0-345.19  0-411.20  0-500.21  0-512.13  0-583.39  0-593.39  0-595.21  0-603.11
+                                 0-610.10  0-612.13  0-632.17  0-638.11  0-645.15
+ 
+lunit                            Common member, Integer(4), Offset: 1916, Alignment: full word
+                                 6-10.14$
+ 
+lvls                             Common member, Integer(4) (1:60, 1:250), Offset: 7016, Alignment: double word
+                                 7-10.22$  0-731.14  0-745.14  0-757.14  0-775.14  0-775.41  0-791.15  0-801.15  0-818.15  0-829.15
+                                 0-841.15  0-879.14  0-891.14  0-909.14  0-930.14  0-987.14
+ 
+mapot                            Common Block, Alignment: double word
+                                 6-2.43$
+ 
+masks                            Use associated, Nonintrinsic Module
+                                 0-21.11$  0-21.11
+ 
+max                              Pure Intrinsic
+                                 0-327.24  0-486.27
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 4-6.26$  4-9.35$  0-653.5  0-659.5  0-995.16
+ 
+mod                              Pure Intrinsic
+                                 0-170.19  0-171.19  0-172.19  0-173.19  0-187.18  0-347.12  0-386.19  0-433.20  0-453.18  0-476.18
+                                 0-498.18  0-529.15
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 4-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 4-12.55$
+ 
+munit                            Common member, Integer(4), Offset: 1920, Alignment: quadruple word
+                                 6-10.20$
+ 
+mxfld                            Parameter, Integer(4)
+                                 2-3.31$  7-2.25  7-2.38  7-8.39  7-8.50  7-9.11  7-9.21  7-9.35  7-9.49  7-10.15  7-10.33  7-10.46
+                                 7-11.14
+ 
+mxlvl                            Parameter, Integer(4)
+                                 2-3.41$  7-10.27
+ 
+n                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-444.17@
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 4-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 4-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 4-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 4-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 4-3.45$
+ 
+nfld                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 7-8.29$
+ 
+ninc                             Parameter, Integer(4)
+                                 3-7.9$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 4-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 4-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 4-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 4-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 4-4.47$
+ 
+nsmud                            Parameter, Integer(4)
+                                 0-27.17$  0-444.21
+ 
+nstat                            Parameter, Integer(4)
+                                 3-19.9$
+ 
+nsumd                            Parameter, Integer(4)
+                                 3-15.33$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 4-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 4-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 4-6.15$  4-9.24$  0-659.12
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 4-12.42$
+ 
+nunit                            Common member, Integer(4), Offset: 1928, Alignment: double word
+                                 6-10.32$
+ 
+nword                            Parameter, Integer(4)
+                                 3-19.19$  3-19.41  3-19.56
+ 
+nword3                           Parameter, Integer(4)
+                                 3-19.34$
+ 
+nword6                           Parameter, Integer(4)
+                                 3-19.49$
+ 
+ocol                             Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-36.21$  0-227.11@  0-251.11@  0-271.31
+ 
+ocolsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-45.22$  0-271.50  0-278.17
+ 
+oldrd                            Use associated, Static, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-18.11$
+ 
+omga                             Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-17.11$  0-227.19
+ 
+omgaot                           Use associated, Nonintrinsic Module
+                                 0-17.11$  0-17.11
+ 
+oneps                            Parameter, Real(4)
+                                 3-39.43$
+ 
+oprs                             Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-58.27$  0-278.4@  0-350.11@  0-350.24  0-360.11@  0-360.24  0-436.13@  0-446.14  0-459.24
+                                 0-459.45  0-460.17  0-460.38  0-460.59  0-481.14@  0-481.48  0-746.32
+ 
+osll                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.22$  0-459.14@  0-481.27
+ 
+output                           External Subroutine
+                                 0-737.18  0-750.18  0-768.18  0-780.20  0-784.19  0-795.18  0-811.18  0-822.18  0-834.18  0-846.18
+                                 0-883.19  0-902.18  0-923.18  0-941.18  0-998.18
+ 
+overrc                           Parameter, Real(4)
+                                 3-33.9$  3-33.26  3-33.42
+ 
+ovrlx                            Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-44.22$  0-100.8*  0-377.13
+ 
+p1000                            Parameter, Real(4)
+                                 3-35.23$
+ 
+parallel                         Common Block, Alignment: double word
+                                 4-9.15$
+ 
+pcol3                            Static, Real(4) (1:3), Offset: 0, Alignment: full word
+                                 0-49.17$
+ 
+pd                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-16.11$  0-189.20  0-190.10
+ 
+pdp                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-191.10@  0-198.24  0-199.22  0-209.42  0-210.43  0-212.33  0-222.47
+ 
+pdsl                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$  0-138.29  0-189.10  0-190.18  0-191.14  0-501.35
+ 
+pdtop                            Common member, Real(4), Offset: 2656, Alignment: quadruple word
+                                 6-11.36$  0-138.14  0-209.22  0-210.30  0-212.55  0-222.32  0-501.19
+ 
+pdvp1                            Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+pfsl                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+phld                             Static, Real(4) (1:62), Offset: 0, Alignment: full word
+                                 0-42.21$  0-270.57  0-271.57  0-272.57  0-273.57  0-274.51  0-312.57  0-314.57  0-583.57  0-593.57
+ 
+pint                             Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+pp                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-138.11@  0-139.21
+ 
+pq0                              Parameter, Real(4)
+                                 3-41.9$  0-139.17  0-504.8  0-513.9
+ 
+prec                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+pslp                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+pt                               Common member, Real(4), Offset: 412, Alignment: full word
+                                 6-5.10$  0-138.48  0-198.21  0-199.26  0-209.46  0-210.47  0-222.51  0-501.45
+ 
+ptdyn                            Common member, Real(4), Offset: 20, Alignment: full word
+                                 9-3.29$
+ 
+ptsl                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+pvrbls                           Use associated, Nonintrinsic Module
+                                 0-20.11$  0-20.11
+ 
+q                                Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-16.11$  0-134.15  0-216.15  0-228.19
+ 
+q2                               Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-20.11$  0-233.21
+ 
+q2cl                             Static, Real(4) (1:62), Offset: 0, Alignment: full word
+                                 0-38.21$  0-203.10@  0-233.11@  0-300.11@  0-314.31
+ 
+q2clsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-46.22$  0-314.50  0-327.28
+ 
+q2ll                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.22$  0-470.14@  0-486.31
+ 
+q2prs                            Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-59.46$  0-327.11@  0-355.11@  0-355.25  0-365.11@  0-365.25  0-440.13@  0-451.14  0-470.24
+                                 0-470.46  0-471.15  0-471.37  0-471.59  0-486.14@  0-486.52  0-819.32
+ 
+qcll                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.50$  0-463.14@  0-483.27
+ 
+qcol                             Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-36.34$  0-228.11@  0-252.11@  0-272.31
+ 
+qcolsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-45.36$  0-272.50  0-279.24
+ 
+qcprs                            Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-59.27$  0-280.11@  0-352.11@  0-352.25  0-362.11@  0-362.25  0-438.13@  0-448.14  0-463.24
+                                 0-463.46  0-464.15  0-464.37  0-464.59  0-483.14@  0-483.48  0-830.32
+ 
+qhld                             Static, Real(4) (1:62), Offset: 0, Alignment: full word
+                                 0-42.34$  0-270.62  0-271.62  0-272.62  0-273.62  0-274.56  0-312.62  0-314.62  0-583.62  0-593.62
+ 
+qi                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-140.11@  0-144.26
+ 
+qkl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-134.11@  0-144.16
+ 
+qprs                             Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-58.45$  0-279.11@  0-351.11@  0-351.24  0-361.11@  0-361.24  0-437.13@  0-447.14  0-461.24
+                                 0-461.45  0-462.17  0-462.38  0-462.59  0-482.14@  0-482.48  0-506.9  0-515.6@  0-732.32  0-758.26
+                                 0-917.45  0-938.33
+ 
+qs                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+qsl                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+qsll                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.36$  0-461.14@  0-482.27
+ 
+qw                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-139.11@  0-140.14  0-504.5@  0-506.23  0-513.6@  0-515.23
+ 
+qwbs                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+qz0                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+r                                Common member, Real(4), Offset: 408, Alignment: double word
+                                 6-5.8$
+ 
+rcapa                            Parameter, Real(4)
+                                 3-35.9$
+ 
+rd                               Parameter, Real(4)
+                                 3-32.15$  0-216.57  0-415.56  3-32.29  3-36.29  3-36.51  3-40.15
+ 
+rdeta                            Common member, Real(4) (1:60), Offset: 276, Alignment: full word
+                                 9-4.18$
+ 
+rdocp                            Parameter, Real(4)
+                                 3-40.9$
+ 
+rdyn                             Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 9-3.24$
+ 
+res                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-16.11$
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 4-3.38$
+ 
+rf                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+rg                               Parameter, Real(4)
+                                 3-36.32$
+ 
+rhl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-506.5@  0-507.8  0-509.6@  0-511.49  0-515.19
+ 
+rite2                            Common member, Logical(4), Offset: 69120, Alignment: quadruple word
+                                 7-5.22$  7-12.15$
+ 
+ritehd                           Common member, Logical(4), Offset: 69116, Alignment: full word
+                                 7-5.15$  7-12.8$
+ 
+rlx                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-377.9@  0-394.23
+ 
+rog                              Parameter, Real(4)
+                                 3-32.25$
+ 
+rqstfld                          Common Block, Alignment: double word
+                                 7-7.15$
+ 
+rtd                              Parameter, Real(4)
+                                 3-34.25$
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 4-3.14$
+ 
+sbd                              Common member, Real(4), Offset: 424, Alignment: double word
+                                 6-6.12$
+ 
+sclfld                           External Subroutine
+                                 0-765.18  0-920.18
+ 
+sg1                              Common member, Real(4) (1:61), Offset: 2412, Alignment: full word
+                                 6-11.27$  0-209.28  0-210.23  0-212.38  0-212.47
+ 
+sg2                              Common member, Real(4) (1:61), Offset: 3140, Alignment: full word
+                                 6-12.27$  0-209.35  0-210.36  0-212.16  0-212.25
+ 
+sgml1                            Common member, Real(4) (1:60), Offset: 2172, Alignment: full word
+                                 6-11.17$  0-138.20  0-222.23  0-501.9
+ 
+sgml2                            Common member, Real(4) (1:60), Offset: 2900, Alignment: full word
+                                 6-12.17$  0-138.39  0-222.38  0-501.25
+ 
+si                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+sice                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-21.11$
+ 
+sig2pspline                      Subroutine
+                                 0-1.18$
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 4-3.8$
+ 
+slp                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+sm                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-21.11$
+ 
+smtha                            Parameter, Real(4)
+                                 3-15.9$
+ 
+smthb                            Parameter, Real(4)
+                                 3-15.23$
+ 
+sno                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+sphi0                            Common member, Real(4), Offset: 1908, Alignment: full word
+                                 6-9.21$
+ 
+spl                              Common member, Real(4) (1:39), Offset: 468, Alignment: full word
+                                 6-7.20$  0-162.22  0-895.27  0-913.27  0-934.27
+ 
+splinef                          External Subroutine
+                                 0-270.15  0-271.15  0-272.15  0-273.15  0-274.8  0-312.15  0-314.15  0-583.15  0-593.15
+ 
+sr                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-19.11$
+ 
+stdrd                            Use associated, Static, Logical(4), Offset: 4, Alignment: full word
+                                 0-18.11$
+ 
+svalue                           Common member, Real(4), Offset: 8, Alignment: double word
+                                 7-8.22$
+ 
+t                                Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-16.11$  0-133.15  0-216.48  0-226.19
+ 
+t500                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+tcol                             Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-36.8$  0-226.11@  0-247.16  0-247.25  0-250.11@  0-250.28  0-260.41  0-270.31
+ 
+tcolsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-45.8$  0-270.50  0-277.24  0-320.12
+ 
+tfrz                             Parameter, Real(4)
+                                 3-39.56$
+ 
+ths                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+thz0                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+tkl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-133.11@  0-136.17  0-139.35  0-139.44
+ 
+tlm0d                            Common member, Real(4), Offset: 428, Alignment: full word
+                                 6-6.16$
+ 
+tmask                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-51.8$  0-394.12@  0-396.12@  0-456.16  0-479.16  0-480.37  0-481.37  0-482.37  0-483.37  0-484.32
+                                 0-485.37  0-486.41
+ 
+tmt0                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-136.11@  0-137.23  0-140.32  0-143.14  0-152.14  0-153.14  0-153.30
+ 
+tmt15                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-137.11@
+ 
+tph0d                            Common member, Real(4), Offset: 432, Alignment: quadruple word
+                                 6-6.22$
+ 
+tprs                             Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-58.8$  0-277.11@  0-349.11@  0-349.24  0-359.11@  0-359.24  0-412.13@  0-417.13@  0-417.25
+                                 0-417.40  0-417.54  0-445.14  0-457.24  0-457.45  0-458.17  0-458.38  0-458.59  0-480.14@  0-480.48
+                                 0-504.40  0-505.13  0-513.42  0-514.16  0-880.33  0-899.33  0-917.32  0-938.53
+ 
+tshde                            Common member, Real(4) (1:99), Offset: 1504, Alignment: quadruple word
+                                 6-8.35$
+ 
+tsl                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+tsll                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.8$  0-457.14@  0-480.27
+ 
+tsph                             Common member, Real(4), Offset: 416, Alignment: quadruple word
+                                 6-5.13$
+ 
+ttv                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+twbs                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+u                                Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-16.11$  0-546.19
+ 
+u00                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-19.11$  0-141.17  0-141.42
+ 
+u00kl                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-141.11@  0-144.20
+ 
+ucol                             Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-40.8$  0-546.11@  0-571.11@  0-571.22  0-579.28  0-583.31
+ 
+ucolsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-47.8$  0-583.50  0-598.23
+ 
+ul                               Allocatable, Use associated, Controlled, Real(4) (:), Offset: 0, Alignment: full word
+                                 0-19.11$  0-141.26
+ 
+uprs                             Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-60.8$  0-598.11@  0-604.22  0-613.13@  0-613.26  0-633.13  0-633.59  0-639.22  0-648.10@
+                                 0-648.22  0-649.10@  0-649.23  0-655.11@  0-655.23  0-661.11@  0-661.24  0-758.39  0-776.32
+                                 0-792.25
+ 
+utim                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-117.8@  0-141.52
+ 
+uz0                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+v                                Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-16.11$  0-547.19
+ 
+vbm2                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-21.11$
+ 
+vbm3                             Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-21.11$
+ 
+vcol                             Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-40.21$  0-547.11@  0-579.36  0-590.11@  0-590.22  0-593.31
+ 
+vcolsl                           Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-47.22$  0-593.50  0-599.23
+ 
+vprs                             Static, Real(4) (1:89, 1:143, 1:41), Offset: 0, Alignment: full word
+                                 0-60.27$  0-599.11@  0-604.34  0-614.6@  0-614.19  0-634.6  0-634.52  0-639.34  0-650.10@  0-650.22
+                                 0-651.10@  0-651.23  0-656.11@  0-656.23  0-662.11@  0-662.24  0-758.52  0-776.45  0-792.38
+ 
+vrbls                            Use associated, Nonintrinsic Module
+                                 0-16.11$  0-16.11
+ 
+vtm                              Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-21.11$
+ 
+vz0                              Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+w                                Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-16.11$
+ 
+wbd                              Common member, Real(4), Offset: 420, Alignment: full word
+                                 6-6.8$
+ 
+wpdar                            Common member, Real(4) (1:89, 1:143), Offset: 54568, Alignment: double word
+                                 9-8.21$
+ 
+x                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-248.11@  0-250.26  0-290.11@  0-298.25  0-298.27  0-298.33
+ 
+x1p                              Common member, Real(4), Offset: 452, Alignment: full word
+                                 6-6.48$
+ 
+y1p                              Common member, Real(4), Offset: 456, Alignment: double word
+                                 6-6.52$
+ 
+y2                               Static, Real(4) (1:62), Offset: 0, Alignment: full word
+                                 0-42.8$  0-97.8*  0-268.10@  0-270.36  0-271.36  0-272.36  0-273.36  0-274.30  0-310.10@  0-312.36
+                                 0-314.36  0-574.10@  0-583.36  0-592.3@  0-593.36
+ 
+y23                              Static, Real(4) (1:3), Offset: 0, Alignment: full word
+                                 0-49.26$
+ 
+yes                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-378.9@  0-393.12@
+ 
+z0                               Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-20.11$
+ 
+z0slp                            Common member, Real(4), Offset: 464, Alignment: quadruple word
+                                 6-7.14$
+ 
+z1000                            Allocatable, Use associated, Controlled, Real(4) (:, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+zero                             Parameter, Real(4)
+                                 0-28.17$
+ 
+zet                              Static, Real(4) (1:89, 1:143, 1:61), Offset: 0, Alignment: full word
+                                 0-56.8$  0-331.11@  0-338.10@  0-338.22  0-525.19  0-532.15  0-532.28  0-533.12  0-533.30  0-534.16
+                                 0-534.34  0-535.16  0-535.29  0-538.16  0-538.31  0-539.12  0-539.32  0-540.17  0-540.37  0-541.17
+                                 0-541.32
+ 
+zint                             Allocatable, Use associated, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-18.11$
+ 
+zlo                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-538.11@  0-551.15
+ 
+zlou                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-540.11@  0-543.18  0-552.16
+ 
+zlov                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-541.11@  0-544.18  0-553.16
+ 
+ztbot                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-167.8@  0-240.22  0-245.21  0-248.13  0-284.26  0-289.21  0-290.13  0-566.24  0-570.21  0-585.24
+                                 0-589.21
+ 
+zth                              Static, Real(4) (1:62), Offset: 0, Alignment: full word
+                                 0-37.8$  0-200.10@  0-220.11@  0-284.13  0-289.11@  0-290.19  0-293.40  0-293.50  0-306.36
+                                 0-312.27  0-314.27  0-331.22
+ 
+ztsl                             Static, Real(4) (1:41), Offset: 0, Alignment: full word
+                                 0-44.8$  0-162.9@  0-164.8@  0-165.8@  0-167.14  0-270.45  0-271.45  0-272.45  0-273.45  0-274.39
+                                 0-312.45  0-314.45  0-319.40  0-413.19  0-413.32  0-415.20  0-415.35  0-418.16  0-418.24  0-418.36
+                                 0-418.46  0-502.13  0-504.16  0-513.17  0-583.45  0-593.45  0-604.14  0-611.14  0-639.14
+ 
+ztt                              Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-35.8$  0-222.11@  0-240.14  0-245.11@  0-247.38  0-247.46  0-248.19  0-260.28  0-270.27  0-271.27
+                                 0-272.27  0-273.27  0-274.20
+ 
+ztu                              Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-39.8$  0-543.11@  0-566.13  0-570.11@  0-579.14  0-583.27  0-611.31
+ 
+ztv                              Static, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-39.21$  0-544.11@  0-579.21  0-585.13  0-589.11@  0-593.27  0-611.39
+ 
+zup                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-532.10@  0-534.52  0-535.42  0-540.57  0-541.47  0-551.11@
+ 
+zupu                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-534.10@  0-543.23  0-552.11@
+ 
+zupv                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-535.10@  0-544.23  0-553.11@
+ 
+** sig2pspline   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+       1023 |C
+       1024 |C
+       1025 |C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+       1026 |      SUBROUTINE SPLINEF(NOLD,XOLD,YOLD,Y2,NNEW,XNEW,YNEW,P,Q)
+       1027 |C
+       1028 |C     ******************************************************************
+       1029 |C     *                                                                *
+       1030 |C     *  THIS IS A ONE-DIMENSIONAL CUBIC SPLINE FITTING ROUTINE        *
+       1031 |C     *  PROGRAMED FOR A SMALL SCALAR MACHINE.                         *
+       1032 |C     *                                                                *
+       1033 |C     *  PROGRAMER[ Z. JANJIC, YUGOSLAV FED. HYDROMET. INST., BEOGRAD  *
+       1034 |C     *                                                                *
+       1035 |C     *                                                                *
+       1036 |C     *                                                                *
+       1037 |C     *  NOLD - NUMBER OF GIVEN VALUES OF THE FUNCTION.  MUST BE GE 3. *
+       1038 |C     *  XOLD - LOCATIONS OF THE POINTS AT WHICH THE VALUES OF THE     *
+       1039 |C     *         FUNCTION ARE GIVEN.  MUST BE IN ASCENDING ORDER.       *
+       1040 |C     *  YOLD - THE GIVEN VALUES OF THE FUNCTION AT THE POINTS XOLD.   *
+       1041 |C     *  Y2   - THE SECOND DERIVATIVES AT THE POINTS XOLD.  IF NATURAL *
+       1042 |C     *         SPLINE IS FITTED Y2(1)=0. AND Y2(NOLD)=0. MUST BE      *
+       1043 |C     *         SPECIFIED.                                             *
+       1044 |C     *  NNEW - NUMBER OF VALUES OF THE FUNCTION TO BE CALCULATED.     *
+       1045 |C     *  XNEW - LOCATIONS OF THE POINTS AT WHICH THE VALUES OF THE     *
+       1046 |C     *         FUNCTION ARE CALCULATED.  XNEW(K) MUST BE GE XOLD(1)   *
+       1047 |C     *         AND LE XOLD(NOLD).                                     *
+       1048 |C     *  YNEW - THE VALUES OF THE FUNCTION TO BE CALCULATED.           *
+       1049 |C     *  P, Q - AUXILIARY VECTORS OF THE LENGTH NOLD-2.                *
+       1050 |C     *                                                                *
+       1051 |C     ******************************************************************
+       1052 |C
+       1053 |                             D I M E N S I O N
+       1054 |     2 XOLD(NOLD),YOLD(NOLD),Y2(NOLD),P(NOLD),Q(NOLD)
+       1055 |     3,XNEW(NNEW),YNEW(NNEW)
+       1056 |C-----------------------------------------------------------------------
+       1057 |      NOLDM1=NOLD-1
+       1058 |C
+       1059 |      DXL=XOLD(2)-XOLD(1)
+       1060 |      DXR=XOLD(3)-XOLD(2)
+       1061 |      DYDXL=(YOLD(2)-YOLD(1))/DXL
+       1062 |      DYDXR=(YOLD(3)-YOLD(2))/DXR
+       1063 |      RTDXC=.5/(DXL+DXR)
+       1064 |C
+       1065 |      P(1)= RTDXC*(6.*(DYDXR-DYDXL)-DXL*Y2(1))
+       1066 |      Q(1)=-RTDXC*DXR
+       1067 |C
+       1068 |      IF(NOLD.EQ.3) GO TO 700
+       1069 |C-----------------------------------------------------------------------
+       1070 |      K=3
+       1071 |C
+       1072 | 100  DXL=DXR
+       1073 |      DYDXL=DYDXR
+       1074 |      DXR=XOLD(K+1)-XOLD(K)
+       1075 |c      if(i.eq.120.and.j.eq.279)then
+       1076 |c       print*,'in spline',k,XOLD(K),XOLD(K+1),dxr
+       1077 |c      end if
+       1078 |      DYDXR=(YOLD(K+1)-YOLD(K))/DXR
+       1079 |      DXC=DXL+DXR
+       1080 |      DEN=1./(DXL*Q(K-2)+DXC+DXC)
+       1081 |C
+       1082 |      P(K-1)= DEN*(6.*(DYDXR-DYDXL)-DXL*P(K-2))
+       1083 |      Q(K-1)=-DEN*DXR
+       1084 |C
+       1085 |      K=K+1
+       1086 |      IF(K.LT.NOLD) GO TO 100
+       1087 |C-----------------------------------------------------------------------
+       1088 | 700  K=NOLDM1
+       1089 |C
+       1090 | 200  Y2(K)=P(K-1)+Q(K-1)*Y2(K+1)
+       1091 |C
+       1092 |      K=K-1
+       1093 |      IF(K.GT.1) GO TO 200
+       1094 |C-----------------------------------------------------------------------
+       1095 |      K1=1
+       1096 |C
+       1097 | 300  XK=XNEW(K1)
+       1098 |C
+       1099 |      DO 400 K2=2,NOLD
+       1100 |      IF(XOLD(K2).LE.XK) GO TO 400
+       1101 |      KOLD=K2-1
+       1102 |      GO TO 450
+       1103 | 400  CONTINUE
+       1104 |      YNEW(K1)=YOLD(NOLD)
+       1105 |      GO TO 600
+       1106 |C
+       1107 | 450  IF(K1.EQ.1)   GO TO 500
+       1108 |      IF(K.EQ.KOLD) GO TO 550
+       1109 |C
+       1110 | 500  K=KOLD
+       1111 |C
+       1112 |      Y2K=Y2(K)
+       1113 |      Y2KP1=Y2(K+1)
+       1114 |      DX=XOLD(K+1)-XOLD(K)
+       1115 |      RDX=1./DX
+       1116 |C
+       1117 |      AK=.1666667*RDX*(Y2KP1-Y2K)
+       1118 |      BK=.5*Y2K
+       1119 |      CK=RDX*(YOLD(K+1)-YOLD(K))-.1666667*DX*(Y2KP1+Y2K+Y2K)
+       1120 |C
+       1121 | 550  X=XK-XOLD(K)
+       1122 |      XSQ=X*X
+       1123 |C
+       1124 |      YNEW(K1)=AK*XSQ*X+BK*XSQ+CK*X+YOLD(K)
+       1125 |C
+       1126 | 600  K1=K1+1
+       1127 |      IF(K1.LE.NNEW) GO TO 300
+       1128 |C-----------------------------------------------------------------------
+       1129 |      RETURN
+       1130 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+ak                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1117.7@  0-1124.16
+ 
+bk                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1118.7@  0-1124.25
+ 
+ck                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1119.7@  0-1124.32
+ 
+den                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1080.7@  0-1082.15  0-1083.15
+ 
+dx                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1114.7@  0-1115.14  0-1119.43
+ 
+dxc                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1079.7@  0-1080.26  0-1080.30
+ 
+dxl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1059.7@  0-1061.31  0-1063.17  0-1065.37  0-1072.7@  0-1079.11  0-1080.15  0-1082.37
+ 
+dxr                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1060.7@  0-1062.31  0-1063.21  0-1066.19  0-1072.11  0-1074.7@  0-1078.33  0-1079.15  0-1083.19
+ 
+dydxl                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1061.7@  0-1065.30  0-1073.7@  0-1082.30
+ 
+dydxr                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1062.7@  0-1065.24  0-1073.13  0-1078.7@  0-1082.24
+ 
+k                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-1070.7@  0-1074.16  0-1074.26  0-1078.19  0-1078.29  0-1080.21  0-1082.9  0-1082.43  0-1083.9
+                                 0-1085.7@  0-1085.9  0-1086.10  0-1088.7@  0-1090.10  0-1090.15  0-1090.22  0-1090.30  0-1092.7@
+                                 0-1092.9  0-1093.10  0-1108.10  0-1110.7@  0-1112.14  0-1113.16  0-1114.15  0-1114.25  0-1119.20
+                                 0-1119.30  0-1121.17  0-1124.42
+ 
+k1                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-1095.7@  0-1097.15  0-1104.12  0-1107.10  0-1124.12  0-1126.7@  0-1126.10  0-1127.10
+ 
+k2                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-1099.14@  0-1100.15  0-1101.12
+ 
+kold                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-1101.7@  0-1108.15  0-1110.9
+ 
+nnew                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1026.44  0-1055.13  0-1055.13  0-1055.24  0-1055.24  0-1127.16
+ 
+nold                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1026.26  0-1054.13  0-1054.13  0-1054.24  0-1054.24  0-1054.33  0-1054.33  0-1054.41  0-1054.41
+                                 0-1054.49  0-1054.49  0-1057.14  0-1068.10  0-1086.15  0-1099.19  0-1104.21
+ 
+noldm1                           Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-1057.7@  0-1088.9
+ 
+p                                Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1054.39$  0-1026.59  0-1065.7@  0-1082.7@  0-1082.41  0-1090.13
+ 
+q                                Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1054.47$  0-1026.61  0-1066.7@  0-1080.19  0-1083.7@  0-1090.20
+ 
+rdx                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1115.7@  0-1117.19  0-1119.10
+ 
+rtdxc                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1063.7@  0-1065.13  0-1066.13
+ 
+splinef                          Subroutine
+                                 0-1026.18$
+ 
+x                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1121.7@  0-1122.11  0-1122.13  0-1124.23  0-1124.35
+ 
+xk                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1097.7@  0-1100.22  0-1121.9
+ 
+xnew                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1055.8$  0-1026.49  0-1097.10
+ 
+xold                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1054.8$  0-1026.31  0-1059.11  0-1059.19  0-1060.11  0-1060.19  0-1074.11  0-1074.21  0-1100.10
+                                 0-1114.10  0-1114.20  0-1121.12
+ 
+xsq                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1122.7@  0-1124.19  0-1124.28
+ 
+y2                               Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1054.30$  0-1026.41  0-1065.41  0-1090.7@  0-1090.27  0-1112.11  0-1113.13
+ 
+y2k                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1112.7@  0-1117.30  0-1118.13  0-1119.53  0-1119.57
+ 
+y2kp1                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-1113.7@  0-1117.24  0-1119.47
+ 
+ynew                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1055.19$  0-1026.54  0-1104.7@  0-1124.7@
+ 
+yold                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-1054.19$  0-1026.36  0-1061.14  0-1061.22  0-1062.14  0-1062.22  0-1078.14  0-1078.24  0-1104.16
+                                 0-1119.15  0-1119.25  0-1124.37
+ 
+** splinef   === End of Compilation 2 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    SIG2PSPLINE.f               12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      23
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmout
+                                      12/18/08   11:40:52      0      24
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/params
+                                      12/18/08   11:40:52      0      25
+     4    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      83
+     5    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/LOOPS.comm
+                                      12/18/08   11:40:51      0      85
+     6    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/MAPOT.comm
+                                      12/18/08   11:40:51      0      87
+     7    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/RQSTFLD.comm
+                                      12/18/08   11:40:51      0      90
+     8    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/E2PFLG.comm
+                                      12/18/08   11:40:50      0      93
+     9    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/DYNAMD.comm
+                                      12/18/08   11:40:50      0      94
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................    1250
+1501-510  Compilation successful for file SIG2PSPLINE.f.
+1501-543  Object file created.

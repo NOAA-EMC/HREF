@@ -1,0 +1,400 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/GD2TLL.f 12/22/08 15:45:51
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE GD2TLL(GDLAT,GDLON,GDTLAT,GDTLON,IMOUT,JMOUT)
+          2 |C
+          3 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          4 |C                .      .    .
+          5 |C SUBPROGRAM:    GD2TLL      COMPUTE TRANSFORMED (LAT,LON)
+          6 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-23
+          7 |C
+          8 |C ABSTRACT:
+          9 |C     THIS ROUTINE COMPUTES THE TRANSFORMED LATITUDE OF (LAT,
+         10 |C     LON) OF OUTPUT GRID POINTS.  THE TRANSFORMED (LAT,LON)
+         11 |C     ARE WITH RESPECT TO THE INPUT E-GRID.
+         12 |C   .
+         13 |C
+         14 |C PROGRAM HISTORY LOG:
+         15 |C   ??-??-??  DAVID PLUMMER - SUBROUTINE CGTLL IN ETAPACKC
+         16 |C   92-12-23  RUSS TREADON - GENERALIZED TO HANDLE VARIABLE
+         17 |C                               OUTPUT GRIDS.
+         18 |C
+         19 |C USAGE:    CALL GD2TLL(GDLAT,GDLON,GDTLAT,GDTLON,IMOUT,JMOUT)
+         20 |C   INPUT ARGUMENT LIST:
+         21 |C     GDLAT    - GEODETIC LATITUDE OF OUTPUT GRID POINTS.
+         22 |C     GDLON    - GEODETIC LONGTUDE OF OUTPUT GRID POINTS.
+         23 |C     IMOUT    - FIRST DIMENSION OF OUTPUT GRID.
+         24 |C     JMOUT    - SECOND DIMENSION OF OUTPUT GRID.
+         25 |C
+         26 |C   OUTPUT ARGUMENT LIST:
+         27 |C     GDTLAT   - TRANSFORMED LATITUDE OF OUTPUT GRID POINTS.
+         28 |C     GDTLON   - TRANSFORMED LONGITUDE OF OUTPUT GRID POINTS.
+         29 |C
+         30 |C   OUTPUT FILES:
+         31 |C     NONE
+         32 |C
+         33 |C   SUBPROGRAMS CALLED:
+         34 |C     UTILITIES:
+         35 |C       NONE
+         36 |C     LIBRARY:
+         37 |C       COMMON   - EGRID
+         38 |C
+         39 |C   ATTRIBUTES:
+         40 |C     LANGUAGE: FORTRAN
+         41 |C     MACHINE : CRAY C-90
+         42 |C$$$
+         43 |C
+         44 |C
+         45 |C     INCLUDE ETA GRID DIMENSIONS
+         46 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         47 |      INCLUDE "parmout"
+  2       1 |C     MAXIMUM DIMENSIONS FOR OUTPUT GRID, FIELDS, AND LEVELS.
+  2       2 |C
+  2       3 |      PARAMETER(IMX=IM,JMX=JM,MXFLD=250,MXLVL=LM)
+         48 |      PARAMETER (LP1=LM+1)
+         49 |C
+         50 |C     SET CONVERSION CONSTANTS.
+         51 |      PARAMETER (R2D=57.29578,D2R=1./R2D)
+         52 |C
+         53 |C     DECLARE VARIABLES AND COMMONS.
+         54 |
+         55 |      LOGICAL  NORTH
+         56 |      REAL GDLAT(IMX,JMX), GDLON(IMX,JMX)
+         57 |      REAL GDTLAT(IMX,JMX), GDTLON(IMX,JMX)
+         58 |C
+         59 |C     INCLUDE ETA GRID SPECIFICATIONS IN COMMON MAPOT.
+         60 |      INCLUDE "EGRID.comm"
+  3       1 |
+  3       2 |      COMMON /EGRID/NORTH,ALONVT,POLEI,POLEJ,
+  3       3 |     X     XMESHL,IDIM,JDIM,PHI0,LAM0,COSPH0,
+  3       4 |     X     SINPH0,TANPH0
+         61 |C
+         62 |C     DECLARE EQUIVALENCES.
+         63 |      EQUIVALENCE (YLATC,ALONVT), (DPHI, POLEI)
+         64 |      EQUIVALENCE (WLONC, POLEJ), (DLAM,XMESHL)
+         65 |C
+         66 |C*******************************************************************
+         67 |C     START GD2TLL HERE.
+         68 |C
+         69 |C     SET CONSTANTS.
+         70 |C
+         71 |      ELAM0=WLONC+360.
+         72 |      EPHI0=YLATC
+         73 |      SPHI0=SINPH0
+         74 |      CPHI0=COSPH0
+         75 |C
+         76 |C     LOOP TO COMPUTE TRANSFORMED (LAT,LON).
+         77 |C
+         78 |      DO 20 J = 1,JMOUT
+         79 |         DO 10 I = 1,IMOUT
+         80 |            WLON  = GDLON(I,J)
+         81 |            YLAT  = GDLAT(I,J)
+         82 |            RELM  = (WLON-ELAM0)*D2R
+         83 |            SRLM  = SIN(RELM)
+         84 |            CRLM  = COS(RELM)
+         85 |            APH   = YLAT*D2R
+         86 |            SPH   = SIN(APH)
+         87 |            CPH   = COS(APH)
+         88 |            CC    = CPH*CRLM
+         89 |            ANUM  = -CPH*SRLM
+         90 |            DENOM = CPHI0*CC+SPHI0*SPH
+         91 |            TLM   = ATAN2(ANUM,DENOM)/D2R
+         92 |            TPH   = ASIN(CPHI0*SPH-SPHI0*CC)/D2R
+         93 |            GDTLAT(I,J) = TPH
+         94 |            GDTLON(I,J) = TLM
+         95 | 10      CONTINUE
+         96 | 20   CONTINUE
+         97 |C
+         98 |C     END OF ROUTINE.
+         99 |C
+        100 |      RETURN
+        101 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+alonvt                           Common member, Real(4), Offset: 4, Alignment: full word
+                                 3-2.27$  0-63.26
+ 
+anum                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-89.13@  0-91.27
+ 
+aph                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-85.13@  0-86.25  0-87.25
+ 
+asin                             Pure Intrinsic
+                                 0-92.21
+ 
+atan2                            Pure Intrinsic
+                                 0-91.21
+ 
+cc                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-88.13@  0-90.27  0-92.42
+ 
+cos                              Pure Intrinsic
+                                 0-84.21  0-87.21
+ 
+cosph0                           Common member, Real(4), Offset: 36, Alignment: full word
+                                 3-3.39$  0-74.13
+ 
+cph                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-87.13@  0-88.21  0-89.22
+ 
+cphi0                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-74.7@  0-90.21  0-92.26
+ 
+crlm                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-84.13@  0-88.25
+ 
+d2r                              Parameter, Real(4)
+                                 0-51.31$  0-82.34  0-85.26  0-91.39  0-92.46
+ 
+denom                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-90.13@  0-91.32
+ 
+dlam                             Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 0-64.36
+ 
+dphi                             Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-63.36
+ 
+egrid                            Common Block, Alignment: double word
+                                 3-2.15$
+ 
+elam0                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-71.7@  0-82.27
+ 
+ephi0                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-72.7@
+ 
+gd2tll                           Subroutine
+                                 0-1.18$
+ 
+gdlat                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-56.12$  0-1.25  0-81.21
+ 
+gdlon                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-56.28$  0-1.31  0-80.21
+ 
+gdtlat                           Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-57.12$  0-1.37  0-93.13@
+ 
+gdtlon                           Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-57.29$  0-1.44  0-94.13@
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-79.16@  0-80.27  0-81.27  0-93.20  0-94.20
+ 
+idim                             Common member, Integer(4), Offset: 20, Alignment: full word
+                                 3-3.19$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  1-11.23  1-11.34  1-14.35  2-3.21
+ 
+imout                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.51  0-79.22
+ 
+imx                              Parameter, Integer(4)
+                                 2-3.17$  0-56.18  0-56.34  0-57.19  0-57.36
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-78.13@  0-80.29  0-81.29  0-93.22  0-94.22
+ 
+jdim                             Common member, Integer(4), Offset: 24, Alignment: double word
+                                 3-3.24$
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  1-12.23  1-12.34  1-15.35  2-3.28
+ 
+jmout                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.57  0-78.19
+ 
+jmx                              Parameter, Integer(4)
+                                 2-3.24$  0-56.22  0-56.38  0-57.23  0-57.40
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+lam0                             Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 3-3.34$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  0-48.22  2-3.47
+ 
+lp1                              Parameter, Integer(4)
+                                 0-48.18$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+mxfld                            Parameter, Integer(4)
+                                 2-3.31$
+ 
+mxlvl                            Parameter, Integer(4)
+                                 2-3.41$
+ 
+north                            Common member, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-55.16$  3-2.21$
+ 
+phi0                             Common member, Real(4), Offset: 28, Alignment: full word
+                                 3-3.29$
+ 
+polei                            Common member, Real(4), Offset: 8, Alignment: double word
+                                 3-2.34$  0-63.42
+ 
+polej                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 3-2.40$  0-64.27
+ 
+r2d                              Parameter, Real(4)
+                                 0-51.18$  0-51.38
+ 
+relm                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-82.13@  0-83.25  0-84.25
+ 
+sin                              Pure Intrinsic
+                                 0-83.21  0-86.21
+ 
+sinph0                           Common member, Real(4), Offset: 40, Alignment: double word
+                                 3-4.12$  0-73.13
+ 
+sph                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-86.13@  0-90.36  0-92.32
+ 
+sphi0                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-73.7@  0-90.30  0-92.36
+ 
+srlm                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-83.13@  0-89.26
+ 
+tanph0                           Common member, Real(4), Offset: 44, Alignment: full word
+                                 3-4.19$
+ 
+tlm                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-91.13@  0-94.27
+ 
+tph                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-92.13@  0-93.27
+ 
+wlon                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-80.13@  0-82.22
+ 
+wlonc                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-64.20  0-71.13
+ 
+xmeshl                           Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 3-3.12$  0-64.41
+ 
+ylat                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-81.13@  0-85.21
+ 
+ylatc                            Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-63.20  0-72.13
+ 
+** gd2tll   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    GD2TLL.f                    12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      46
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmout
+                                      12/18/08   11:40:52      0      47
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/EGRID.comm
+                                      12/18/08   11:40:50      0      60
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     125
+1501-510  Compilation successful for file GD2TLL.f.
+1501-543  Object file created.

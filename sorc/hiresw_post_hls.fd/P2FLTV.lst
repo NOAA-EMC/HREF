@@ -1,0 +1,476 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/P2FLTV.f 12/22/08 15:46:00
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE P2FLTV(MKOUNT,VBM2,FIELD)
+          2 |CFPP$ NOCONCUR R
+          3 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          4 |C                .      .    .
+          5 |C SUBPROGRAM:    P2FLTV      4-TH ORDER SMOOTHER for vel pts
+          6 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 93-03-02
+          7 |C
+          8 |C ABSTRACT:
+          9 |C     THIS ROUTINE WILL APPLY A FOURTH OTHER FILTER (SMOOTHER)
+         10 |C     OF A CONTINOUS FIELD AT VELOCITY POINTS ON THE STAGGERED
+         11 |C     E-GRID.  MULTIPLE APPLICATIONS OF THIS FILTER MAY BE
+         12 |C     MADE.
+         13 |C     IN THIS VERSION, EACH TASK WORKS ON THE DATA IT OWNS.
+         14 |C   .
+         15 |C
+         16 |C PROGRAM HISTORY LOG:
+         17 |C   93-03-02  RUSS TREADON - MODIFIED SUBROUTINE P2FILT.
+         18 |C   98-06-04  BLACK - CONVERSION TO 2-D
+         19 |C   00-01-04  JIM TUCCILLO - MPI VERSION
+         20 |C
+         21 |C USAGE:    CALL P2FLTV(MKOUNT,VBM2,FIELD)
+         22 |C   INPUT ARGUMENT LIST:
+         23 |C     MKOUNT   - NUMBER OF APPLICATIONS OF THE SMOOTHER.
+         24 |C     HBM2     - VELOCITY POINT BOUNDARY MASK.
+         25 |C     FIELD    - VELOCITY POINT FIELD TO BE SMOOTHED.
+         26 |C
+         27 |C   OUTPUT ARGUMENT LIST:
+         28 |C     FIELD    - SMOOTHED VELOCITY POINT FIELD.
+         29 |C
+         30 |C   OUTPUT FILES:
+         31 |C     NONE
+         32 |C
+         33 |C   SUBPROGRAMS CALLED:
+         34 |C     UTILITIES:
+         35 |C       NONE
+         36 |C     LIBRARY:
+         37 |C       NONE
+         38 |C
+         39 |C   ATTRIBUTES:
+         40 |C     LANGUAGE: FORTRAN
+         41 |C     MACHINE : CRAY Y-MP
+         42 |C$$$
+         43 |C
+         44 |C
+         45 |C     INCLUDE GLOBAL PARAMETERS.  SET DEPENDENT VARIABLES.
+         46 |C
+         47 |C----------------------------------------------------------------------
+         48 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         49 |C
+         50 |      INCLUDE "INDX.comm"
+  2       1 |C-----------------------------------------------------------------------
+  2       2 |                        C O M M O N /INDX/
+  2       3 |     & IHE(JM),IHW(JM),IVE(JM),IVW(JM)
+  2       4 |C-----------------------------------------------------------------------
+         51 |      INCLUDE "CTLBLK.comm"
+  3       1 |C-----------------------------------------------------------------------
+  3       2 |      COMMON /CTLBLK/
+  3       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  3       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  3       5 |     &,NPHS,NRADS,NRADL
+  3       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  3       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  3       8 |     &        JSTA_2L, JEND_2U
+  3       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  3      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  3      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  3      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  3      13 |     &                 MPI_COMM_COMP
+  3      14 |C-----------------------------------------------------------------------
+         52 |C----------------------------------------------------------------------
+         53 |                            D I M E N S I O N
+         54 |     & VBM2(IM,JM),FIELD(IM,JM),WFIELD(IM,JM),FNE(IM,JM),FSE(IM,JM)
+         55 |C
+         56 |C***********************************************************************
+         57 |C     START P2FLTV HERE.
+         58 |C
+         59 |C     IF NUMBER OF PASSES IS LESS THAN 1, EXIT ROUTINE.
+         60 |C
+         61 |      IF(MKOUNT.LT.1)        RETURN
+         62 |C
+         63 |C     OTHERWISE, APPLY SMOOTHER MKOUND TIMES.
+         64 |C
+         65 |C-----------------------------------------------------------------------
+         66 |      DO 400 KOUNT=1,MKOUNT
+         67 |C-----------------------------------------------------------------------
+         68 |C
+         69 |C        FILTERING STARTS
+         70 |C
+         71 |C-----------------------------------------------------------------------
+         72 |!$omp  parallel do
+         73 |      DO J=JSTA,JEND
+         74 |      DO I=1,IM
+         75 |        FNE   (I,J)=0.0
+         76 |        FSE   (I,J)=0.0
+         77 |        WFIELD(I,J)=0.0
+         78 |      ENDDO
+         79 |      ENDDO
+         80 |C
+         81 |C
+         82 |      CALL EXCH(FIELD)
+         83 |C
+         84 |C        2-ND ORDER DIAGONAL CONTRIBUTIONS
+         85 |C
+         86 |!$omp  parallel do
+         87 |      DO J=JSTA,JEND_M
+         88 |      DO I=1,IM-1
+         89 |        FNE(I,J)=FIELD(I+IVE(J),J+1)-FIELD(I,J)
+         90 |      ENDDO
+         91 |      ENDDO
+         92 |C
+         93 |!$omp  parallel do
+         94 |      DO J=JSTA_M,JEND
+         95 |      DO I=1,IM-1
+         96 |        FSE(I,J)=FIELD(I+IVE(J),J-1)-FIELD(I,J)
+         97 |      ENDDO
+         98 |      ENDDO
+         99 |C
+        100 |      CALL EXCH(FNE)
+        101 |      CALL EXCH(FSE)
+        102 |C
+        103 |!$omp  parallel do
+        104 |      DO J=JSTA_M2,JEND_M2
+        105 |      DO I=2,IM-1
+        106 |        WFIELD(I,J)=(FNE(I,J)-FNE(I+IVW(J),J-1)
+        107 |     1              +FSE(I,J)-FSE(I+IVW(J),J+1))
+        108 |     2              *VBM2(I,J)*0.125
+        109 |      ENDDO
+        110 |      ENDDO
+        111 |C
+        112 |C        4-TH ORDER DIAGONAL CONTRIBUTIONS
+        113 |C
+        114 |       CALL EXCH(WFIELD)
+        115 |C
+        116 |!$omp  parallel do
+        117 |      DO J=JSTA,JEND_M
+        118 |      DO I=1,IM-1
+        119 |        FNE(I,J)=WFIELD(I+IHE(J),J+1)-WFIELD(I,J)
+        120 |      ENDDO
+        121 |      ENDDO
+        122 |C
+        123 |!$omp  parallel do
+        124 |      DO J=JSTA_M,JEND
+        125 |      DO I=1,IM-1
+        126 |        FSE(I,J)=WFIELD(I+IVE(J),J-1)-WFIELD(I,J)
+        127 |      ENDDO
+        128 |      ENDDO
+        129 |C
+        130 |      CALL EXCH(FNE)
+        131 |      CALL EXCH(FSE)
+        132 |C
+        133 |!$omp  parallel do
+        134 |      DO J=JSTA_M2,JEND_M2
+        135 |      DO I=2,IM-1
+        136 |        FIELD(I,J)=FIELD(I,J)-(FNE(I,J)-FNE(I+IVW(J),J-1)
+        137 |     1                        +FSE(I,J)-FSE(I+IVW(J),J+1))
+        138 |     2                        *VBM2(I,J)*0.125
+        139 |      ENDDO
+        140 |      ENDDO
+        141 |C
+        142 | 400  CONTINUE
+        143 |C
+        144 |      CALL EXCH(FIELD)
+        145 |C
+        146 |C     END OF ROUTINE
+        147 |      RETURN
+        148 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 3-2.15$
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 3-4.8$
+ 
+exch                             External Subroutine
+                                 0-82.12  0-100.12  0-101.12  0-114.13  0-130.12  0-131.12  0-144.12
+ 
+field                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.20$  0-1.37  0-82.17  0-89.18  0-89.38  0-96.18  0-96.38  0-136.9@  0-136.20  0-144.17
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 3-3.32$
+ 
+fne                              Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.47$  0-75.9@  0-89.9@  0-100.17  0-106.22  0-106.31  0-119.9@  0-130.17  0-136.32  0-136.41
+ 
+fse                              Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.58$  0-76.9@  0-96.9@  0-101.17  0-107.22  0-107.31  0-126.9@  0-131.17  0-137.32  0-137.41
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-74.10@  0-75.16  0-76.16  0-77.16  0-88.10@  0-89.13  0-89.24  0-89.44  0-95.10@  0-96.13
+                                 0-96.24  0-96.44  0-105.10@  0-106.16  0-106.26  0-106.35  0-107.26  0-107.35  0-108.27  0-118.10@
+                                 0-119.13  0-119.25  0-119.46  0-125.10@  0-126.13  0-126.25  0-126.46  0-135.10@  0-136.15
+                                 0-136.26  0-136.36  0-136.45  0-137.36  0-137.45  0-138.37
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 3-7.59$  3-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 3-3.18$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 3-7.54$  3-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 3-7.65$  3-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 3-4.35$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihe                              Common member, Integer(4) (1:143), Offset: 0, Alignment: quadruple word
+                                 2-3.8$  0-119.27
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 3-3.26$
+ 
+ihw                              Common member, Integer(4) (1:143), Offset: 572, Alignment: full word
+                                 2-3.16$
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-54.13  0-54.26  0-54.40  0-54.51  0-54.62  0-74.14  0-88.14  0-95.14  0-105.14  0-118.14
+                                 0-125.14  0-135.14  1-11.23  1-11.34  1-14.35
+ 
+indx                             Common Block, Alignment: double word
+                                 2-2.38$
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 3-3.60$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 3-7.49$  3-10.42$
+ 
+ive                              Common member, Integer(4) (1:143), Offset: 1144, Alignment: double word
+                                 2-3.24$  0-89.26  0-96.26  0-126.27
+ 
+ivw                              Common member, Integer(4) (1:143), Offset: 1716, Alignment: full word
+                                 2-3.32$  0-106.37  0-107.37  0-136.47  0-137.47
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-73.10@  0-75.18  0-76.18  0-77.18  0-87.10@  0-89.15  0-89.30  0-89.33  0-89.46  0-94.10@
+                                 0-96.15  0-96.30  0-96.33  0-96.46  0-104.10@  0-106.18  0-106.28  0-106.41  0-106.44  0-107.28
+                                 0-107.41  0-107.44  0-108.29  0-117.10@  0-119.15  0-119.31  0-119.34  0-119.48  0-124.10@
+                                 0-126.15  0-126.31  0-126.34  0-126.48  0-134.10@  0-136.17  0-136.28  0-136.38  0-136.51  0-136.54
+                                 0-137.38  0-137.51  0-137.54  0-138.39
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 3-6.36$  3-9.45$  0-73.17  0-94.19  0-124.19
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 3-8.24$  3-12.33$
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 3-7.32$  3-9.59$  0-87.17  0-117.17
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 3-7.40$  3-10.33$  0-104.20  0-134.20
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-54.16  0-54.29  0-54.43  0-54.54  0-54.65  1-12.23  1-12.34  1-15.35  2-3.12  2-3.20
+                                 2-3.28  2-3.36
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 3-6.30$  3-9.39$  0-73.12  0-87.12  0-117.12
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 3-8.15$  3-12.24$
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 3-7.15$  3-9.51$  0-94.12  0-124.12
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 3-7.23$  3-10.24$  0-104.12  0-134.12
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+kount                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-66.14@
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 3-3.55$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 3-6.26$  3-9.35$
+ 
+mkount                           Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.25  0-61.10  0-66.22
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 3-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 3-12.55$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 3-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 3-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 3-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 3-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 3-3.45$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 3-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 3-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 3-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 3-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 3-4.47$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 3-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 3-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 3-6.15$  3-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 3-12.42$
+ 
+p2fltv                           Subroutine
+                                 0-1.18$
+ 
+parallel                         Common Block, Alignment: double word
+                                 3-9.15$
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 3-3.38$
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 3-3.14$
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 3-3.8$
+ 
+vbm2                             Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.8$  0-1.32  0-108.22  0-138.32
+ 
+wfield                           Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.33$  0-77.9@  0-106.9@  0-114.18  0-119.18  0-119.39  0-126.18  0-126.39
+ 
+** p2fltv   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    P2FLTV.f                    12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      48
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/INDX.comm
+                                      12/18/08   11:40:51      0      50
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     183
+1501-510  Compilation successful for file P2FLTV.f.
+1501-543  Object file created.

@@ -1,0 +1,215 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/TRNSGD.f 12/22/08 15:46:03
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE TRNSGD
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .
+          4 |C SUBPROGRAM:    TRNSGD      SET OUTPUT GRID PARAMETERS
+          5 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-23
+          6 |C
+          7 |C ABSTRACT:
+          8 |C     THIS ROUTINE LOADS COMMON BLOCK OUTGRD WITH
+          9 |C     OUTPUT GRID SPECIFICATIONS.
+         10 |C   .
+         11 |C
+         12 |C PROGRAM HISTORY LOG:
+         13 |C   ??-??-??  DAVID PLUMMER - SUBROUTINE TRNSCG IN ETAPACKC
+         14 |C   92-12-23  RUSS TREADON  - MODIFIED ETAPACKC TRNSCG FOR
+         15 |C                             USE IN ETA POST PROCESSOR.
+         16 |C   93-06-13  RUSS TREADON  - ADDED LOGIC PROJECTION PARAMETER.
+         17 |C
+         18 |C USAGE:    CALL TRNSGD
+         19 |C   INPUT ARGUMENT LIST:
+         20 |C     NONE
+         21 |C
+         22 |C   OUTPUT ARGUMENT LIST:
+         23 |C     NONE
+         24 |C
+         25 |C   OUTPUT FILES:
+         26 |C     STDOUT     - RUN-TIME STANDARD OUT.
+         27 |C
+         28 |C   SUBPROGRAMS CALLED:
+         29 |C     UTILITIES:
+         30 |C       NONE
+         31 |C     LIBRARY:
+         32 |C       COMMON   - OUTGRD
+         33 |C                  IOUNIT
+         34 |C
+         35 |C   ATTRIBUTES:
+         36 |C     LANGUAGE: FORTRAN
+         37 |C     MACHINE : CRAY C-90
+         38 |C$$$
+         39 |C
+         40 |C
+         41 |C
+         42 |C     DECLARE VARIABLES, COMMONS, AND CONSTANTS.
+         43 |C
+         44 |      LOGICAL NORTH
+         45 |      CHARACTER*6 PROJ
+         46 |      INTEGER IDIM, JDIM
+         47 |      REAL ALONVT, GI2, POLEI, POLEJ, RE, XMESHL
+         48 |C
+         49 |C     INCLUDE OUTPUT GRID COMMON BLOCK.
+         50 |      INCLUDE "OUTGRD.comm"
+  1       1 |C
+  1       2 |      COMMON /OUTGRD/ ALATVT,ALONVT,POLEI,POLEJ,XMESHL,
+  1       3 |     X	   IGOUT,JGOUT,IMDLTY,RE,GI2,NORTH,PROJ
+         51 |      INCLUDE "IOUNIT.comm"
+  2       1 |C
+  2       2 |      INTEGER STDOUT
+  2       3 |C
+  2       4 |      COMMON /IOUNIT/
+  2       5 |     & STDOUT, LCNTRL, LUNCO, LUNLL, LUNOUT
+  2       6 |C
+         52 |C
+         53 |C     SET EARTH RADIUS (KM).
+         54 |      DATA EARTHR/6371.2/
+         55 |C
+         56 |C******************************************************************
+         57 |C     START TRNSGD HERE.
+         58 |C
+         59 |C     SET COMMON BLOCK CONSTANTS.
+         60 |C
+         61 |      RE  = (EARTHR * 1.86603) / XMESHL
+         62 |      GI2 = RE * RE
+         63 |C
+         64 |      WRITE(STDOUT,*)'TRNSGD:  COMMON BLOCK OUTGRD BELOW'
+         65 |      WRITE(STDOUT,*)'  PROJ         :  ',PROJ
+         66 |      WRITE(STDOUT,*)'  NORTH        :  ',NORTH
+         67 |      WRITE(STDOUT,*)'  ALATVT,ALONVT:  ',ALATVT,ALONVT
+         68 |      WRITE(STDOUT,*)'  XMESHL       :  ',XMESHL
+         69 |      WRITE(STDOUT,*)'  POLEI,POLEJ  :  ',POLEI,POLEJ
+         70 |      WRITE(STDOUT,*)'  IGOUT,JGOUT  :  ',IGOUT,JGOUT
+         71 |      WRITE(STDOUT,*)'  RE,GI2       :  ',RE,GI2
+         72 |C
+         73 |      RETURN
+         74 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+alatvt                           Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 1-2.23$  0-67.43
+ 
+alonvt                           Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-47.12$  1-2.30$  0-67.50
+ 
+earthr                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-54.12*  0-61.14
+ 
+gi2                              Common member, Real(4), Offset: 36, Alignment: full word
+                                 0-47.20$  1-3.33$  0-62.7@  0-71.46
+ 
+idim                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-46.15$
+ 
+igout                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 1-3.11$  0-70.43
+ 
+imdlty                           Common member, Integer(4), Offset: 28, Alignment: full word
+                                 1-3.23$
+ 
+iounit                           Common Block, Alignment: double word
+                                 2-4.15$
+ 
+jdim                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-46.21$
+ 
+jgout                            Common member, Integer(4), Offset: 24, Alignment: double word
+                                 1-3.17$  0-70.49
+ 
+lcntrl                           Common member, Integer(4), Offset: 4, Alignment: full word
+                                 2-5.16$
+ 
+lunco                            Common member, Integer(4), Offset: 8, Alignment: double word
+                                 2-5.24$
+ 
+lunll                            Common member, Integer(4), Offset: 12, Alignment: full word
+                                 2-5.31$
+ 
+lunout                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 2-5.38$
+ 
+north                            Common member, Logical(4), Offset: 40, Alignment: double word
+                                 0-44.15$  1-3.37$  0-66.43
+ 
+outgrd                           Common Block, Alignment: double word
+                                 1-2.15$
+ 
+polei                            Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-47.25$  1-2.37$  0-69.43
+ 
+polej                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-47.32$  1-2.43$  0-69.49
+ 
+proj                             Common member, Character(6), Offset: 44, Alignment: full word
+                                 0-45.19$  1-3.43$  0-65.43
+ 
+re                               Common member, Real(4), Offset: 32, Alignment: quadruple word
+                                 0-47.39$  1-3.30$  0-61.7@  0-62.13  0-62.18  0-71.43
+ 
+stdout                           Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 2-2.15$  2-5.8$  0-64.13  0-65.13  0-66.13  0-67.13  0-68.13  0-69.13  0-70.13  0-71.13
+ 
+trnsgd                           Subroutine
+                                 0-1.18$
+ 
+xmeshl                           Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 0-47.43$  1-2.49$  0-61.34  0-68.43
+ 
+** trnsgd   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    TRNSGD.f                    12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/OUTGRD.comm
+                                      12/18/08   11:40:51      0      50
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/IOUNIT.comm
+                                      12/18/08   11:40:51      0      51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................      83
+1501-510  Compilation successful for file TRNSGD.f.
+1501-543  Object file created.

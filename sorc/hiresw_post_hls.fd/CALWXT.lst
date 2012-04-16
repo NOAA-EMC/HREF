@@ -1,0 +1,744 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CALWXT.f 12/22/08 15:45:45
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |       SUBROUTINE CALWXT(T,Q,RES,PD,HTM,LMH,PREC,PT,PDTOP
+          2 |     +  ,SGML1,SGML2,SG1,SG2,IWX)
+          3 |C
+          4 |C     FILE: CALWXT.f
+          5 |C     WRITTEN: 11 NOVEMBER 1993, MICHAEL BALDWIN
+          6 |C     REVISIONS:
+          7 |C               30 SEPT 1994-SETUP NEW DECISION TREE (M BALDWIN)
+          8 |C               12 JUNE 1998-CONVERSION TO 2-D (T BLACK)
+          9 |C     01-10-25  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
+         10 |C
+         11 |C
+         12 |C     ROUTINE TO COMPUTE PRECIPITATION TYPE USING A DECISION TREE
+         13 |C     APPROACH THAT USES VARIABLES SUCH AS INTEGRATED WET BULB TEMP
+         14 |C     BELOW FREEZING AND LOWEST LAYER TEMPERATURE
+         15 |C
+         16 |C     SEE BALDWIN AND CONTORNO PREPRINT FROM 13TH WEATHER ANALYSIS
+         17 |C     AND FORECASTING CONFERENCE FOR MORE DETAILS
+         18 |C     (OR BALDWIN ET AL, 10TH NWP CONFERENCE PREPRINT)
+         19 |C
+         20 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         21 |C
+         22 |      PARAMETER (LP1=LM+1)
+         23 |      PARAMETER (H1M12=1.E-12)
+         24 |      PARAMETER (PTHRESH=0.000004)
+         25 |C
+         26 |C  LIST OF VARIABLES NEEDED
+         27 |C    PARAMETERS:
+         28 |C      D608,ROG,H1,D00
+         29 |       PARAMETER(D608=0.608,ROG=287.04/9.806,H1=1.0,D00=0.0)
+         30 |C
+         31 |C    INPUT:
+         32 |C      T,Q,RES,PD,HTM,LMH,PREC,PT,AETA,ETA
+         33 |      DIMENSION T(IM,jsta_2l:jend_2u,LM),Q(IM,jsta_2l:jend_2u,LM)
+         34 |     &,         RES(IM,jsta_2l:jend_2u),PD(IM,jsta_2l:jend_2u)
+         35 |     &,         HTM(IM,jsta_2l:jend_2u,LM)
+         36 |      DIMENSION LMH(IM,JM),PREC(IM,JM),SG1(LP1),SG2(LP1)
+         37 |     & ,SGML1(LM),SGML2(LM)
+         38 |C    OUTPUT:
+         39 |C      IWX - INSTANTANEOUS WEATHER TYPE.
+         40 |C        ACTS LIKE A 4 BIT BINARY
+         41 |C          1111 = RAIN/FREEZING RAIN/ICE PELLETS/SNOW
+         42 |C          WHERE THE ONE'S DIGIT IS FOR SNOW
+         43 |C                THE TWO'S DIGIT IS FOR ICE PELLETS
+         44 |C                THE FOUR'S DIGIT IS FOR FREEZING RAIN
+         45 |C            AND THE EIGHT'S DIGIT IS FOR RAIN
+         46 |      DIMENSION IWX(IM,JM)
+         47 |C    INTERNAL:
+         48 |C      PDSL
+         49 |C
+         50 |      REAL, ALLOCATABLE :: TWET(:,:,:)
+         51 |      DIMENSION PDSL(IM,JM)
+         52 |      DIMENSION KARR(IM,JM)
+         53 |      DIMENSION LICEE(IM,JM),TCOLD(IM,JM),TWARM(IM,JM)
+         54 |C    SUBROUTINES CALLED:
+         55 |C     WETBULB
+         56 |C
+         57 |C
+         58 |C     INITIALIZE WEATHER TYPE ARRAY TO ZERO (IE, OFF).
+         59 |C     WE DO THIS SINCE WE WANT IWX TO REPRESENT THE
+         60 |C     INSTANTANEOUS WEATHER TYPE ON RETURN.
+         61 |C
+         62 |      INCLUDE "CTLBLK.comm"
+  2       1 |C-----------------------------------------------------------------------
+  2       2 |      COMMON /CTLBLK/
+  2       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  2       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  2       5 |     &,NPHS,NRADS,NRADL
+  2       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  2       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  2       8 |     &        JSTA_2L, JEND_2U
+  2       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  2      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  2      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  2      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  2      13 |     &                 MPI_COMM_COMP
+  2      14 |C-----------------------------------------------------------------------
+         63 |C
+         64 |C     ALLOCATE LOCAL STORAGE
+         65 |C
+         66 |      ALLOCATE ( TWET(IM,JSTA_2L:JEND_2U,LM) )
+         67 |C
+         68 |!$omp  parallel do
+         69 |      DO J=JSTA,JEND
+         70 |      DO I=1,IM
+         71 |        IWX(I,J) = 0
+         72 |        PDSL(I,J)=RES(I,J)*PD(I,J)
+         73 |      ENDDO
+         74 |      ENDDO
+         75 |C
+         76 |!$omp  parallel do
+         77 |!$omp& private(a,lmhk,pkl,psfck,qkl,tdchk,tdkl,tdpre,tkl)
+         78 |      DO 800 J=JSTA,JEND
+         79 |      DO 800 I=1,IM
+         80 |      LMHK=LMH(I,J)
+         81 |C
+         82 |C   SKIP THIS POINT IF NO PRECIP THIS TIME STEP
+         83 |C
+         84 |      IF (PREC(I,J).LE.PTHRESH) GOTO 800
+         85 |C
+         86 |C   FIND COLDEST AND WARMEST TEMPS IN SATURATED LAYER BETWEEN
+         87 |C   70 MB ABOVE GROUND AND 500 MB
+         88 |C   ALSO FIND HIGHEST SATURATED LAYER IN THAT RANGE
+         89 |C
+         90 |      PSFCK=PD(I,J)+PT+PDTOP
+         91 |      TDCHK=2.0
+         92 |  760 TCOLD(I,J)=T(I,J,LMHK)
+         93 |      TWARM(I,J)=T(I,J,LMHK)
+         94 |      LICEE(I,J)=LMHK
+         95 |C
+         96 |      DO 775 L=1,LMHK
+         97 |      QKL=Q(I,J,L)
+         98 |      QKL=AMAX1(H1M12,QKL)
+         99 |      TKL=T(I,J,L)
+        100 |      PKL=PDTOP*SGML1(L)+PDSL(I,J)*SGML2(L)+PT
+        101 |C
+        102 |C   SKIP PAST THIS IF THE LAYER IS NOT BETWEEN 70 MB ABOVE GROUND
+        103 |C       AND 500 MB
+        104 |C
+        105 |      IF (PKL.LT.50000.0.OR.PKL.GT.PSFCK-7000.0) GOTO 775
+        106 |      A=ALOG(QKL*PKL/(6.1078*(0.378*QKL+0.622)))
+        107 |      TDKL=(237.3*A)/(17.269-A)+273.15
+        108 |      TDPRE=TKL-TDKL
+        109 |      IF (TDPRE.LT.TDCHK.AND.TKL.LT.TCOLD(I,J)) TCOLD(I,J)=TKL
+        110 |      IF (TDPRE.LT.TDCHK.AND.TKL.GT.TWARM(I,J)) TWARM(I,J)=TKL
+        111 |      IF (TDPRE.LT.TDCHK.AND.L.LT.LICEE(I,J)) LICEE(I,J)=L
+        112 |  775 CONTINUE
+        113 |C
+        114 |C    IF NO SAT LAYER AT DEW POINT DEP=TDCHK, INCREASE TDCHK
+        115 |C     AND START AGAIN (BUT DON'T MAKE TDCHK > 6)
+        116 |C
+        117 |      IF (TCOLD(I,J).EQ.T(I,J,LMHK).AND.TDCHK.LT.6.0) THEN
+        118 |        TDCHK=TDCHK+2.0
+        119 |        GOTO 760
+        120 |      ENDIF
+        121 |  800 CONTINUE
+        122 |C
+        123 |C    LOWEST LAYER T
+        124 |C
+        125 |      DO 850 J=JSTA,JEND
+        126 |      DO 850 I=1,IM
+        127 |      KARR(I,J)=0
+        128 |      IF (PREC(I,J).LE.PTHRESH) GOTO 850
+        129 |      LMHK=LMH(I,J)
+        130 |      TLMHK=T(I,J,LMHK)
+        131 |C
+        132 |C    DECISION TREE TIME
+        133 |C
+        134 |      IF (TCOLD(I,J).GT.269.15) THEN
+        135 |          IF (TLMHK.LE.273.15) THEN
+        136 |C             TURN ON THE FLAG FOR
+        137 |C             FREEZING RAIN = 4
+        138 |C             IF ITS NOT ON ALREADY
+        139 |C             IZR=MOD(IWX(I,J),8)/4
+        140 |C             IF (IZR.LT.1) IWX(I,J)=IWX(I,J)+4
+        141 |              IWX(I,J)=IWX(I,J)+4
+        142 |            GOTO 850
+        143 |          ELSE
+        144 |C             TURN ON THE FLAG FOR
+        145 |C             RAIN = 8
+        146 |C             IF ITS NOT ON ALREADY
+        147 |C             IRAIN=IWX(I,J)/8
+        148 |C             IF (IRAIN.LT.1) IWX(I,J)=IWX(I,J)+8
+        149 |              IWX(I,J)=IWX(I,J)+8
+        150 |            GOTO 850
+        151 |          ENDIF
+        152 |      ENDIF
+        153 |      KARR(I,J)=1
+        154 |  850 CONTINUE
+        155 |C
+        156 |C   COMPUTE WET BULB ONLY AT POINTS THAT NEED IT
+        157 |C
+        158 |      CALL WETBULB(T,Q,PDSL,HTM,KARR,TWET)
+        159 |C
+        160 |!$omp  parallel do
+        161 |!$omp& private(area1,areap4,areas8,dzkl,ifrzl,iwrml,lice,
+        162 |!$omp&         lmhk,pintk1,pintk2,pm150,psfck,surfc,surfw,
+        163 |!$omp&         tlmhk,twrmk)
+        164 |      DO 1900 J=JSTA_M,JEND_M
+        165 |      DO 1900 I=2,IM-1
+        166 |      IF(KARR(I,J).GT.0)THEN
+        167 |        LMHK=LMH(I,J)
+        168 |        LICE=LICEE(I,J)
+        169 |        PSFCK=PD(I,J)+PT+PDTOP
+        170 |        TLMHK=T(I,J,LMHK)
+        171 |        TWRMK=TWARM(I,J)
+        172 |C
+        173 |C    TWET AREA VARIABLES
+        174 |C     CALCULATE ONLY WHAT IS NEEDED
+        175 |C      FROM GROUND TO 150 MB ABOVE SURFACE
+        176 |C      FROM GROUND TO TCOLD LAYER
+        177 |C      AND FROM GROUND TO 1ST LAYER WHERE WET BULB T < 0.0
+        178 |C
+        179 |C     PINTK1 IS THE PRESSURE AT THE BOTTOM OF THE LAYER
+        180 |C     PINTK2 IS THE PRESSURE AT THE TOP OF THE LAYER
+        181 |C
+        182 |C     AREAP4 IS THE AREA OF TWET ABOVE -4 C BELOW HIGHEST SAT LYR
+        183 |C
+        184 |        AREAS8=D00
+        185 |        AREAP4=D00
+        186 |        SURFW =D00
+        187 |        SURFC =D00
+        188 |        PINTK1=PSFCK
+        189 |C
+        190 |        DO 1945 L=LMHK,LICE,-1
+        191 |        PINTK2=PDTOP*SG1(L)+PDSL(I,J)*SG2(L)+PT
+        192 |        DZKL=T(I,J,L)*(Q(I,J,L)*D608+H1)*ROG*
+        193 |     1        ALOG(PINTK1/PINTK2)
+        194 |        AREA1=(TWET(I,J,L)-269.15)*DZKL
+        195 |        IF (TWET(I,J,L).GE.269.15) AREAP4=AREAP4+AREA1
+        196 |        PINTK1=PINTK2
+        197 | 1945   CONTINUE
+        198 |C
+        199 |        IF (AREAP4.LT.3000.0) THEN
+        200 |C             TURN ON THE FLAG FOR
+        201 |C             SNOW = 1
+        202 |C             IF ITS NOT ON ALREADY
+        203 |C             ISNO=MOD(IWX(I,J),2)
+        204 |C             IF (ISNO.LT.1) IWX(I,J)=IWX(I,J)+1
+        205 |          IWX(I,J)=IWX(I,J)+1
+        206 |          GO TO 1900
+        207 |        ENDIF
+        208 |C
+        209 |C     AREAS8 IS THE NET AREA OF TWET W.R.T. FREEZING IN LOWEST 150MB
+        210 |C
+        211 |        PINTK1=PSFCK
+        212 |        PM150=PSFCK-15000.
+        213 |C
+        214 |        DO 1955 L=LMHK,1,-1
+        215 |        PINTK2=PDTOP*SG1(L)+PDSL(I,J)*SG2(L)+PT
+        216 |        IF(PINTK1.LT.PM150)GO TO 1950
+        217 |        DZKL=T(I,J,L)*(Q(I,J,L)*D608+H1)*ROG*
+        218 |     1        ALOG(PINTK1/PINTK2)
+        219 |C
+        220 |C    SUM PARTIAL LAYER IF IN 150 MB AGL LAYER
+        221 |C
+        222 |        IF(PINTK2.LT.PM150)
+        223 |     &    DZKL=T(I,J,L)*(Q(I,J,L)*D608+H1)*ROG*
+        224 |     1         ALOG(PINTK1/PM150)
+        225 |        AREA1=(TWET(I,J,L)-273.15)*DZKL
+        226 |        AREAS8=AREAS8+AREA1
+        227 | 1950   PINTK1=PINTK2
+        228 | 1955   CONTINUE
+        229 |C
+        230 |C     SURFW IS THE AREA OF TWET ABOVE FREEZING BETWEEN THE GROUND
+        231 |C       AND THE FIRST LAYER ABOVE GROUND BELOW FREEZING
+        232 |C     SURFC IS THE AREA OF TWET BELOW FREEZING BETWEEN THE GROUND
+        233 |C       AND THE WARMEST SAT LAYER
+        234 |C
+        235 |        PINTK1=PSFCK
+        236 |        IFRZL=0
+        237 |        IWRML=0
+        238 |C
+        239 |        DO 2050 L=LMHK,1,-1
+        240 |        IF (IFRZL.EQ.0.AND.T(I,J,L).LT.273.15) IFRZL=1
+        241 |        IF (IWRML.EQ.0.AND.T(I,J,L).GE.TWRMK) IWRML=1
+        242 |C
+        243 |        IF (IWRML.EQ.0.OR.IFRZL.EQ.0) THEN
+        244 |          PINTK2=PDTOP*SG1(L)+PDSL(I,J)*SG2(L)+PT
+        245 |          DZKL=T(I,J,L)*(Q(I,J,L)*D608+H1)*ROG*
+        246 |     1         ALOG(PINTK1/PINTK2)
+        247 |          AREA1=(TWET(I,J,L)-273.15)*DZKL
+        248 |          PINTK1=PINTK2
+        249 |          IF(IFRZL.EQ.0.AND.TWET(I,J,L).GE.273.15)SURFW=SURFW+AREA1
+        250 |          IF(IWRML.EQ.0.AND.TWET(I,J,L).LE.273.15)SURFC=SURFC+AREA1
+        251 |        ENDIF
+        252 | 2050   CONTINUE
+        253 |        IF(SURFC.LT.-3000.0.OR.
+        254 |     &    (AREAS8.LT.-3000.0.AND.SURFW.LT.50.0)) THEN
+        255 |C             TURN ON THE FLAG FOR
+        256 |C             ICE PELLETS = 2
+        257 |C             IF ITS NOT ON ALREADY
+        258 |C             IIP=MOD(IWX(I,J),4)/2
+        259 |C             IF (IIP.LT.1) IWX(I,J)=IWX(I,J)+2
+        260 |          IWX(I,J)=IWX(I,J)+2
+        261 |          GOTO 1900
+        262 |        ENDIF
+        263 |C
+        264 |        IF(TLMHK.LT.273.15) THEN
+        265 |C             TURN ON THE FLAG FOR
+        266 |C             FREEZING RAIN = 4
+        267 |C             IF ITS NOT ON ALREADY
+        268 |C             IZR=MOD(IWX(K),8)/4
+        269 |C             IF (IZR.LT.1) IWX(K)=IWX(K)+4
+        270 |          IWX(I,J)=IWX(I,J)+4
+        271 |        ELSE
+        272 |C             TURN ON THE FLAG FOR
+        273 |C             RAIN = 8
+        274 |C             IF ITS NOT ON ALREADY
+        275 |C             IRAIN=IWX(K)/8
+        276 |C             IF (IRAIN.LT.1) IWX(K)=IWX(K)+8
+        277 |          IWX(I,J)=IWX(I,J)+8
+        278 |        ENDIF
+        279 |      ENDIF
+        280 | 1900 CONTINUE
+        281 |C---------------------------------------------------------
+        282 |      DEALLOCATE (TWET)
+        283 |      RETURN
+        284 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+a                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-106.7@  0-107.19  0-107.30
+ 
+alog                             Pure Intrinsic Real(4)
+                                 0-106.9  0-193.15  0-218.15  0-224.16  0-246.16
+ 
+amax1                            Pure Intrinsic Real(4)
+                                 0-98.11
+ 
+area1                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-194.9@  0-195.50  0-225.9@  0-226.23  0-247.11@  0-249.63  0-250.63
+ 
+areap4                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-185.9@  0-195.36@  0-195.43  0-199.13
+ 
+areas8                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-184.9@  0-226.9@  0-226.16  0-254.12
+ 
+calwxt                           Subroutine
+                                 0-1.19$
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 2-2.15$
+ 
+d00                              Parameter, Real(4)
+                                 0-29.53$  0-184.16  0-185.16  0-186.16  0-187.16
+ 
+d608                             Parameter, Real(4)
+                                 0-29.18$  0-192.33  0-217.33  0-223.35  0-245.35
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 2-4.8$
+ 
+dzkl                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-192.9@  0-194.36  0-217.9@  0-223.11@  0-225.36  0-245.11@  0-247.38
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 2-3.32$
+ 
+h1                               Parameter, Real(4)
+                                 0-29.46$  0-192.38  0-217.38  0-223.40  0-245.40
+ 
+h1m12                            Parameter, Real(4)
+                                 0-23.18$  0-98.17
+ 
+htm                              Reference argument, Real(4) (1:89, ?:?, 1:60), Offset: 0, Alignment: full word
+                                 0-35.17$  0-1.37  0-158.29
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-70.10@  0-71.13  0-72.14  0-72.23  0-72.31  0-79.14@  0-80.16  0-84.16  0-90.16  0-92.13  0-92.20
+                                 0-93.13  0-93.20  0-94.13  0-97.13  0-99.13  0-100.31  0-109.43  0-109.55  0-110.43  0-110.55
+                                 0-111.41  0-111.53  0-117.17  0-117.27  0-126.14@  0-127.12  0-128.16  0-129.16  0-130.15  0-134.17
+                                 0-141.19  0-141.28  0-149.19  0-149.28  0-153.12  0-165.15@  0-166.15  0-167.18  0-168.20  0-169.18
+                                 0-170.17  0-171.21  0-191.34  0-192.16  0-192.26  0-194.21  0-195.18  0-205.15  0-205.24  0-215.34
+                                 0-217.16  0-217.26  0-223.18  0-223.28  0-225.21  0-240.30  0-241.30  0-244.36  0-245.18  0-245.28
+                                 0-247.23  0-249.34  0-250.34  0-260.15  0-260.24  0-270.15  0-270.24  0-277.15  0-277.24
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 2-7.59$  2-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 2-3.18$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 2-7.54$  2-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 2-7.65$  2-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 2-4.35$
+ 
+ifrzl                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-236.9@  0-240.13  0-240.48@  0-243.27  0-249.14
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 2-3.26$
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-33.19  0-33.19  0-33.44  0-33.44  0-34.21  0-34.21  0-34.44  0-34.44  0-35.21  0-35.21
+                                 0-36.21  0-36.33  0-46.21  0-51.22  0-52.22  0-53.23  0-53.36  0-53.49  0-66.23  0-70.14  0-79.18
+                                 0-126.18  0-165.19  1-11.23  1-11.34  1-14.35
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 2-3.60$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 2-7.49$  2-10.42$
+ 
+iwrml                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-237.9@  0-241.13  0-241.47@  0-243.13  0-250.14
+ 
+iwx                              Reference argument, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-46.17$  0-2.30  0-71.9@  0-141.15@  0-141.24  0-149.15@  0-149.24  0-205.11@  0-205.20  0-260.11@
+                                 0-260.20  0-270.11@  0-270.20  0-277.11@  0-277.20
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-69.10@  0-71.15  0-72.16  0-72.25  0-72.33  0-78.14@  0-80.18  0-84.18  0-90.18  0-92.15  0-92.22
+                                 0-93.15  0-93.22  0-94.15  0-97.15  0-99.15  0-100.33  0-109.45  0-109.57  0-110.45  0-110.57
+                                 0-111.43  0-111.55  0-117.19  0-117.29  0-125.14@  0-127.14  0-128.18  0-129.18  0-130.17  0-134.19
+                                 0-141.21  0-141.30  0-149.21  0-149.30  0-153.14  0-164.15@  0-166.17  0-167.20  0-168.22  0-169.20
+                                 0-170.19  0-171.23  0-191.36  0-192.18  0-192.28  0-194.23  0-195.20  0-205.17  0-205.26  0-215.36
+                                 0-217.18  0-217.28  0-223.20  0-223.30  0-225.23  0-240.32  0-241.32  0-244.38  0-245.20  0-245.30
+                                 0-247.25  0-249.36  0-250.36  0-260.17  0-260.26  0-270.17  0-270.26  0-277.17  0-277.26
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 2-6.36$  2-9.45$  0-69.17  0-78.21  0-125.21
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 2-8.24$  0-33.30  0-33.55  0-34.32  0-34.55  0-35.32  2-12.33$  0-33.30  0-33.55  0-34.32  0-34.55
+                                 0-35.32  0-66.34
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 2-7.32$  2-9.59$  0-164.24
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 2-7.40$  2-10.33$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-36.24  0-36.36  0-46.24  0-51.25  0-52.25  0-53.26  0-53.39  0-53.52  1-12.23  1-12.34
+                                 1-15.35
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 2-6.30$  2-9.39$  0-69.12  0-78.16  0-125.16
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 2-8.15$  0-33.22  0-33.47  0-34.24  0-34.47  0-35.24  2-12.24$  0-33.22  0-33.47  0-34.24  0-34.47
+                                 0-35.24  0-66.26
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 2-7.15$  2-9.51$  0-164.17
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 2-7.23$  2-10.24$
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+karr                             Static, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-52.17$  0-127.7@  0-153.7@  0-158.33  0-166.10
+ 
+l                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-96.14@  0-97.17  0-99.17  0-100.23  0-100.42  0-111.30  0-111.58  0-190.17@  0-191.26  0-191.43
+                                 0-192.20  0-192.30  0-194.25  0-195.22  0-214.17@  0-215.26  0-215.43  0-217.20  0-217.30  0-223.22
+                                 0-223.32  0-225.25  0-239.17@  0-240.34  0-241.34  0-244.28  0-244.45  0-245.22  0-245.32  0-247.27
+                                 0-249.38  0-250.38
+ 
+lice                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-168.9@  0-190.24
+ 
+licee                            Static, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.17$  0-94.7@  0-111.35  0-111.47@  0-168.14
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 2-3.55$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  0-22.22  0-33.38  0-33.38  0-33.63  0-33.63  0-35.40  0-35.40  0-37.15  0-37.25  0-66.42
+ 
+lmh                              Reference argument, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-36.17$  0-1.41  0-80.12  0-129.12  0-167.14
+ 
+lmhk                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-80.7@  0-92.24  0-93.24  0-94.18  0-96.18  0-117.31  0-129.7@  0-130.19  0-167.9@  0-170.21
+                                 0-190.19  0-214.19  0-239.19
+ 
+lp1                              Parameter, Integer(4)
+                                 0-22.18$  0-36.44  0-36.53
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 2-6.26$  2-9.35$
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 2-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 2-12.55$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 2-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 2-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 2-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 2-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 2-3.45$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 2-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 2-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 2-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 2-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 2-4.47$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 2-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 2-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 2-6.15$  2-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 2-12.42$
+ 
+parallel                         Common Block, Alignment: double word
+                                 2-9.15$
+ 
+pd                               Reference argument, Real(4) (1:89, ?:?), Offset: 0, Alignment: full word
+                                 0-34.41$  0-1.34  0-72.28  0-90.13  0-169.15
+ 
+pdsl                             Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-51.17$  0-72.9@  0-100.26  0-158.24  0-191.29  0-215.29  0-244.31
+ 
+pdtop                            Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-1.53  0-90.24  0-100.11  0-169.26  0-191.16  0-215.16  0-244.18
+ 
+pintk1                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-188.9@  0-193.20  0-196.9@  0-211.9@  0-216.12  0-218.20  0-224.21  0-227.9@  0-235.9@  0-246.21
+                                 0-248.11@
+ 
+pintk2                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-191.9@  0-193.27  0-196.16  0-215.9@  0-218.27  0-222.12  0-227.16  0-244.11@  0-246.28  0-248.18
+ 
+pkl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-100.7@  0-105.11  0-105.29  0-106.18
+ 
+pm150                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-212.9@  0-216.22  0-222.22  0-224.28
+ 
+prec                             Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-36.28$  0-1.45  0-84.11  0-128.11
+ 
+psfck                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-90.7@  0-105.36  0-169.9@  0-188.16  0-211.16  0-212.15  0-235.16
+ 
+pt                               Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-1.50  0-90.21  0-100.45  0-169.23  0-191.46  0-215.46  0-244.48
+ 
+pthresh                          Parameter, Real(4)
+                                 0-24.18$  0-84.24  0-128.24
+ 
+q                                Reference argument, Real(4) (1:89, ?:?, 1:60), Offset: 0, Alignment: full word
+                                 0-33.42$  0-1.28  0-97.11  0-158.22  0-192.24  0-217.24  0-223.26  0-245.26
+ 
+qkl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-97.7@  0-98.7@  0-98.23  0-106.14  0-106.37
+ 
+res                              Reference argument, Real(4) (1:89, ?:?), Offset: 0, Alignment: full word
+                                 0-34.17$  0-1.30  0-72.19
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 2-3.38$
+ 
+rog                              Parameter, Real(4)
+                                 0-29.29$  0-192.42  0-217.42  0-223.44  0-245.44
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 2-3.14$
+ 
+sg1                              Reference argument, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-36.40$  0-2.22  0-191.22  0-215.22  0-244.24
+ 
+sg2                              Reference argument, Real(4) (1:61), Offset: 0, Alignment: full word
+                                 0-36.49$  0-2.26  0-191.39  0-215.39  0-244.41
+ 
+sgml1                            Reference argument, Real(4) (1:60), Offset: 0, Alignment: full word
+                                 0-37.9$  0-2.10  0-100.17
+ 
+sgml2                            Reference argument, Real(4) (1:60), Offset: 0, Alignment: full word
+                                 0-37.19$  0-2.16  0-100.36
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 2-3.8$
+ 
+surfc                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-187.9@  0-250.51@  0-250.57  0-253.12
+ 
+surfw                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-186.9@  0-249.51@  0-249.57  0-254.34
+ 
+t                                Reference argument, Real(4) (1:89, ?:?, 1:60), Offset: 0, Alignment: full word
+                                 0-33.17$  0-1.26  0-92.18  0-93.18  0-99.11  0-117.25  0-130.13  0-158.20  0-170.15  0-192.14
+                                 0-217.14  0-223.16  0-240.28  0-241.28  0-245.16
+ 
+tcold                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.30$  0-92.7@  0-109.37  0-109.49@  0-117.11  0-134.11
+ 
+tdchk                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-91.7@  0-109.20  0-110.20  0-111.20  0-117.41  0-118.9@  0-118.15
+ 
+tdkl                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-107.7@  0-108.17
+ 
+tdpre                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-108.7@  0-109.11  0-110.11  0-111.11
+ 
+tkl                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-99.7@  0-108.13  0-109.30  0-109.60  0-110.30  0-110.60
+ 
+tlmhk                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-130.7@  0-135.15  0-170.9@  0-264.12
+ 
+twarm                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-53.43$  0-93.7@  0-110.37  0-110.49@  0-171.15
+ 
+twet                             Allocatable, Controlled, Real(4) (:, :, :), Offset: 0, Alignment: full word
+                                 0-50.28$  0-66.18  0-158.38  0-194.16  0-195.13  0-225.16  0-247.18  0-249.29  0-250.29  0-282.19
+ 
+twrmk                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-171.9@  0-241.40
+ 
+wetbulb                          External Subroutine
+                                 0-158.12
+ 
+** calwxt   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    CALWXT.f                    12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      20
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      62
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     315
+1501-510  Compilation successful for file CALWXT.f.
+1501-543  Object file created.

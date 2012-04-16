@@ -1,0 +1,860 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CALVIS.f 12/22/08 15:45:44
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |c**********************************************************************c
+          2 |      SUBROUTINE CALVIS(QV,QC,QR,QI,QS,TT,PP,VIS)
+          3 |c
+          4 |c   This routine computes horizontal visibility at the
+          5 |c   surface or lowest model layer, from qc, qr, qi, and qs.
+          6 |c   qv--water vapor mixing ratio (kg/kg)
+          7 |c   qc--cloud water mixing ratio (kg/kg)
+          8 |c   qr--rain water mixing ratio  (kg/kg)
+          9 |c   qi--cloud ice mixing ratio   (kg/kg)
+         10 |c   qs--snow mixing ratio        (kg/kg)
+         11 |c   tt--temperature              (k)
+         12 |c   pp--pressure                 (Pa)
+         13 |c
+         14 |c   If iice=0:
+         15 |c      qprc=qr     qrain=qr and qclw=qc if T>0C
+         16 |c      qcld=qc          =0          =0  if T<0C
+         17 |c                  qsnow=qs and qclice=qc  if T<0C
+         18 |c                       =0            =0   if T>0C
+         19 |c   If iice=1:
+         20 |c      qprc=qr+qs   qrain=qr and qclw=qc
+         21 |c      qcld=qc+qi   qsnow=qs and qclice=qc
+         22 |c
+         23 |c   Independent of the above definitions, the scheme can use different
+         24 |c   assumptions of the state of hydrometeors:
+         25 |c        meth='d': qprc is all frozen if T<0, liquid if T>0
+         26 |c        meth='b': Bocchieri scheme used to determine whether qprc
+         27 |c           is rain or snow. A temperature assumption is used to
+         28 |c           determine whether qcld is liquid or frozen.
+         29 |c        meth='r': Uses the four mixing ratios qrain, qsnow, qclw,
+         30 |c           and qclice
+         31 |c
+         32 |c   The routine uses the following
+         33 |c   expressions for extinction coefficient, beta (in km**-1),
+         34 |c   with C being the mass concentration (in g/m**3):
+         35 |c
+         36 |c      cloud water:  beta = 144.7 * C ** (0.8800)
+         37 |c      rain water:   beta =  2.24 * C ** (0.7500)
+         38 |c      cloud ice:    beta = 327.8 * C ** (1.0000)
+         39 |c      snow:         beta = 10.36 * C ** (0.7776)
+         40 |c
+         41 |c   These expressions were obtained from the following sources:
+         42 |c
+         43 |c      for cloud water: from Kunkel (1984)
+         44 |c      for rainwater: from M-P dist'n, with No=8e6 m**-4 and
+         45 |c         rho_w=1000 kg/m**3
+         46 |c      for cloud ice: assume randomly oriented plates which follow
+         47 |c         mass-diameter relationship from Rutledge and Hobbs (1983)
+         48 |c      for snow: from Stallabrass (1985), assuming beta = -ln(.02)/vis
+         49 |c
+         50 |c   The extinction coefficient for each water species present is
+         51 |c   calculated, and then all applicable betas are summed to yield
+         52 |c   a single beta. Then the following relationship is used to
+         53 |c   determine visibility (in km), where epsilon is the threshhold
+         54 |c   of contrast, usually taken to be .02:
+         55 |c
+         56 |c      vis = -ln(epsilon)/beta      [found in Kunkel (1984)]
+         57 |c
+         58 |C------------------------------------------------------------------
+         59 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         60 |      INCLUDE "params"
+  2       1 |C
+  2       2 |C     ARRAY DIMENSIONS.
+  2       3 |      PARAMETER	
+  2       4 |     & (IMT=2*IM-1,JMT=JM/2+1)
+  2       5 |      PARAMETER
+  2       6 |     & (IM1=IM-1,JM2=JM-2,JAM=6+2*(JM-10)
+  2       7 |     &, NINC=2*IM-1
+  2       8 |     &, LM1=LM-1,LP1=LM+1
+  2       9 |     &, LB=2*IM+JM-3)
+  2      10 |C
+  2      11 |C     SMOOTHING PARAMETERS.
+  2      12 |      PARAMETER
+  2      13 |     & (KSMUD=4,KSLPD=1,KSSLP=2,KSFI=2,KST=2
+  2      14 |     &, KSUV=2,KSRH=2,KSAV=2,KSLI=2,KSLP=2
+  2      15 |     &, SMTHA=-1.8E-4,SMTHB=16.,NSUMD=1)
+  2      16 |C
+  2      17 |C     DIMENSIONS FOR PROFILE OUPUT ARRAYS.
+  2      18 |      PARAMETER
+  2      19 |     & (NSTAT=100,NWORD=6+6*LM+9,NWORD3=NWORD-3,NWORD6=NWORD-6)
+  2      20 |C
+  2      21 |C     CONSTANTS.
+  2      22 |      PARAMETER
+  2      23 |     & (CM1=2937.4,CM2=4.9283,CM3=23.5518)
+  2      24 |      PARAMETER
+  2      25 |     & (D00=0.0,D1=0.1,D01=0.01,D001=0.001,D50=0.50,H999=999.
+  2      26 |     &, H1=1.0,H2=2.0,H4=4.0,H99999=99999.,H1M12=1.E-12
+  2      27 |     &, H1000=1000.,H1M5=1.E-5,D125=.125,D25=0.25,H100=100.
+  2      28 |     &, H10000=10000.,H10E5=1.E5,CAPA=0.28589641E0
+  2      29 |     &, D115=0.115,D608=0.608,D05=0.05,D0065=0.0065
+  2      30 |     &, H1E2=100.,H1E4=1.E4,H1M2=1.E-2)
+  2      31 |      PARAMETER
+  2      32 |     & (G=9.8,RD=287.04,ROG=RD/G,GI=1./G
+  2      33 |     &, OVERRC=1.75,AD05=OVERRC*D05,CFT0=OVERRC-H1
+  2      34 |     &, DTR=1.745329E-2,RTD=1./DTR,ERAD=6.376E6,CP=1004.6
+  2      35 |     &, RCAPA=1./CAPA,P1000=1000.E2,DP10M=110
+  2      36 |     &, ELWV=2.50E6,CPDR=CP/RD,RG=1./GI,ELDR=ELWV/RD
+  2      37 |     &, BETA=.00367,BTG=BETA*9.8)
+  2      38 |      PARAMETER
+  2      39 |     & (FMW=18.015,FMD=28.964,EPS=FMW/FMD,ONEPS=1.-EPS,TFRZ=273.16
+  2      40 |     &, RDOCP=RD/CP,LHEAT=2.5E6,LHTOCP=LHEAT/CP,EPSQ2=0.2
+  2      41 |     &, PQ0=379.90516,A2=17.2693882,A3=273.16,A4=35.86)
+         61 |      INCLUDE "CTLBLK.comm"
+  3       1 |C-----------------------------------------------------------------------
+  3       2 |      COMMON /CTLBLK/
+  3       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  3       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  3       5 |     &,NPHS,NRADS,NRADL
+  3       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  3       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  3       8 |     &        JSTA_2L, JEND_2U
+  3       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  3      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  3      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  3      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  3      13 |     &                 MPI_COMM_COMP
+  3      14 |C-----------------------------------------------------------------------
+         62 |C
+         63 |      REAL QV(IM,JM),QC(IM,JM),QI(IM,JM),QR(IM,JM),QS(IM,JM)
+         64 |     1,    TT(IM,JM),PP(IM,JM),VIS(IM,JM)
+         65 |      CHARACTER METH*1
+         66 |C------------------------------------------------------------------
+         67 |C------------------------------------------------------------------
+         68 |      CELKEL=273.15
+         69 |      TICE=CELKEL-10.
+         70 |      COEFLC=144.7
+         71 |      COEFLP=2.24
+         72 |      COEFFC=327.8
+         73 |      COEFFP=10.36
+         74 |      EXPONLC=0.8800
+         75 |      EXPONLP=0.7500
+         76 |      EXPONFC=1.0000
+         77 |      EXPONFP=0.7776
+         78 |      CONST1=-LOG(.02)
+         79 |      RHOICE=917.
+         80 |      RHOWAT=1000.
+         81 |C
+         82 |      DO J=JSTA,JEND
+         83 |      DO I=1,IM
+         84 |c       IF(IICE.EQ.0)THEN
+         85 |c         QPRC=QR
+         86 |c         QCLD=QC
+         87 |c         IF(TT.LT.CELKEL)THEN
+         88 |c           QRAIN=0.
+         89 |c           QSNOW=QPRC
+         90 |c           QCLW=0.
+         91 |c           QCLICE=QCLD
+         92 |c         ELSE
+         93 |c           QRAIN=QPRC
+         94 |c           QSNOW=0.
+         95 |c           QCLW=QCLD
+         96 |c           QCLICE=0.
+         97 |c         ENDIF
+         98 |c       ELSE
+         99 |          QPRC=QR(I,J)+QS(I,J)
+        100 |          QCLD=QC(I,J)+QI(I,J)
+        101 |          QRAIN=QR(I,J)
+        102 |          QSNOW=QS(I,J)
+        103 |          QCLW=QC(I,J)
+        104 |          QCLICE=QI(I,J)
+        105 |c       ENDIF
+        106 |c       TV=VIRTUAL(TT,QV)
+        107 |        TV=TT(I,J)*(H1+D608*QV(I,J))
+        108 |        RHOAIR=PP(I,J)/(RD*TV)
+        109 |c       IF(METH.EQ.'D')THEN
+        110 |c         IF(TT.LT.CELKEL)THEN
+        111 |c           VOVERMD=(1.+QV)/RHOAIR+(QPRC+QCLD)/RHOICE
+        112 |c           CONCLC = 0.
+        113 |c           CONCLP = 0.
+        114 |c           CONCFC = QCLD/VOVERMD*1000.
+        115 |c           CONCFP = QPRC/VOVERMD*1000.
+        116 |c         ELSE
+        117 |c           VOVERMD=(1.+QV)/RHOAIR+(QPRC+QCLD)/RHOWAT
+        118 |c           CONCLC = QCLD/VOVERMD*1000.
+        119 |c           CONCLP = QPRC/VOVERMD*1000.
+        120 |c           CONCFC = 0.
+        121 |c           CONCFP = 0.
+        122 |c         ENDIF
+        123 |c       ELSEIF(METH.EQ.'B')THEN
+        124 |c         IF(TT.LT.TICE)THEN
+        125 |c           VOVERMD=(1.+QV)/RHOAIR+(QPRC+QCLD)/RHOICE
+        126 |c           CONCLC = 0.
+        127 |c           CONCLP = 0.
+        128 |c           CONCFC = QCLD/VOVERMD*1000.
+        129 |c           CONCFP = QPRC/VOVERMD*1000.
+        130 |c         ELSEIF(PRSNOW.GE.50.)THEN
+        131 |c           VOVERMD=(1.+QV)/RHOAIR+QPRC/RHOICE+QCLD/RHOWAT
+        132 |c           CONCLC = QCLD/VOVERMD*1000.
+        133 |c           CONCLP = 0.
+        134 |c           CONCFC = 0.
+        135 |c           CONCFP = QPRC/VOVERMD*1000.
+        136 |c         ELSE
+        137 |c           VOVERMD=(1.+QV)/RHOAIR+(QPRC+QCLD)/RHOWAT
+        138 |c           CONCLC = QCLD/VOVERMD*1000.
+        139 |c           CONCLP = QPRC/VOVERMD*1000.
+        140 |c           CONCFC = 0.
+        141 |c           CONCFP = 0.
+        142 |c         ENDIF
+        143 |c       ELSEIF(METH.EQ.'R')THEN
+        144 |          VOVERMD=(1.+QV(I,J))/RHOAIR+(QCLW+QRAIN)/RHOWAT+
+        145 |     1            (QCLICE+QSNOW)/RHOICE
+        146 |          CONCLC=QCLW/VOVERMD*1000.
+        147 |          CONCLP=QRAIN/VOVERMD*1000.
+        148 |          CONCFC=QCLICE/VOVERMD*1000.
+        149 |          CONCFP=QSNOW/VOVERMD*1000.
+        150 |c       ENDIF
+        151 |        BETAV=COEFFC*CONCFC**EXPONFC+COEFFP*CONCFP**EXPONFP
+        152 |     1       +COEFLC*CONCLC**EXPONLC+COEFLP*CONCLP**EXPONLP
+        153 |     2       +1.E-10
+        154 |c CHANGED GSM 3-10-00 -->  no point in distinguishing values
+        155 |c       above 20 km, so make that value the max (prev max was 80)
+        156 |        VIS(I,J)=1.E3*MIN(20.,CONST1/BETAV)   ! max of 20km
+        157 |      ENDDO
+        158 |      ENDDO
+        159 |C
+        160 |      RETURN
+        161 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+a2                               Parameter, Real(4)
+                                 2-41.23$
+ 
+a3                               Parameter, Real(4)
+                                 2-41.37$
+ 
+a4                               Parameter, Real(4)
+                                 2-41.47$
+ 
+ad05                             Parameter, Real(4)
+                                 2-33.21$
+ 
+beta                             Parameter, Real(4)
+                                 2-37.9$  2-37.25
+ 
+betav                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-151.9@  0-156.38
+ 
+btg                              Parameter, Real(4)
+                                 2-37.21$
+ 
+calvis                           Subroutine
+                                 0-2.18$
+ 
+capa                             Parameter, Real(4)
+                                 2-28.34$  2-35.18
+ 
+celkel                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-68.7@  0-69.12
+ 
+cft0                             Parameter, Real(4)
+                                 2-33.37$
+ 
+cm1                              Parameter, Real(4)
+                                 2-23.9$
+ 
+cm2                              Parameter, Real(4)
+                                 2-23.20$
+ 
+cm3                              Parameter, Real(4)
+                                 2-23.31$
+ 
+coeffc                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-72.7@  0-151.15
+ 
+coeffp                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-73.7@  0-151.38
+ 
+coeflc                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-70.7@  0-152.15
+ 
+coeflp                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-71.7@  0-152.38
+ 
+concfc                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-148.11@  0-151.22
+ 
+concfp                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-149.11@  0-151.45
+ 
+conclc                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-146.11@  0-152.22
+ 
+conclp                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-147.11@  0-152.45
+ 
+const1                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-78.7@  0-156.31
+ 
+cp                               Parameter, Real(4)
+                                 2-34.49$  2-36.26  2-40.18  2-40.46
+ 
+cpdr                             Parameter, Real(4)
+                                 2-36.21$
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 3-2.15$
+ 
+d00                              Parameter, Real(4)
+                                 2-25.9$
+ 
+d001                             Parameter, Real(4)
+                                 2-25.33$
+ 
+d0065                            Parameter, Real(4)
+                                 2-29.40$
+ 
+d01                              Parameter, Real(4)
+                                 2-25.24$
+ 
+d05                              Parameter, Real(4)
+                                 2-29.31$  2-33.33
+ 
+d1                               Parameter, Real(4)
+                                 2-25.17$
+ 
+d115                             Parameter, Real(4)
+                                 2-29.9$
+ 
+d125                             Parameter, Real(4)
+                                 2-27.32$
+ 
+d25                              Parameter, Real(4)
+                                 2-27.42$
+ 
+d50                              Parameter, Real(4)
+                                 2-25.44$
+ 
+d608                             Parameter, Real(4)
+                                 2-29.20$  0-107.24
+ 
+dp10m                            Parameter, Real(4)
+                                 2-35.37$
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 3-4.8$
+ 
+dtr                              Parameter, Real(4)
+                                 2-34.9$  2-34.32
+ 
+eldr                             Parameter, Real(4)
+                                 2-36.41$
+ 
+elwv                             Parameter, Real(4)
+                                 2-36.9$  2-36.46
+ 
+eps                              Parameter, Real(4)
+                                 2-39.31$  2-39.52
+ 
+epsq2                            Parameter, Real(4)
+                                 2-40.49$
+ 
+erad                             Parameter, Real(4)
+                                 2-34.36$
+ 
+exponfc                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-76.7@  0-151.30
+ 
+exponfp                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-77.7@  0-151.53
+ 
+exponlc                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-74.7@  0-152.30
+ 
+exponlp                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-75.7@  0-152.53
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 3-3.32$
+ 
+fmd                              Parameter, Real(4)
+                                 2-39.20$  2-39.39
+ 
+fmw                              Parameter, Real(4)
+                                 2-39.9$  2-39.35
+ 
+g                                Parameter, Real(4)
+                                 2-32.9$  2-32.32  2-32.40
+ 
+gi                               Parameter, Real(4)
+                                 2-32.34$  2-36.38
+ 
+h1                               Parameter, Real(4)
+                                 2-26.9$  0-107.21  2-33.49
+ 
+h100                             Parameter, Real(4)
+                                 2-27.51$
+ 
+h1000                            Parameter, Real(4)
+                                 2-27.9$
+ 
+h10000                           Parameter, Real(4)
+                                 2-28.9$
+ 
+h10e5                            Parameter, Real(4)
+                                 2-28.23$
+ 
+h1e2                             Parameter, Real(4)
+                                 2-30.9$
+ 
+h1e4                             Parameter, Real(4)
+                                 2-30.19$
+ 
+h1m12                            Parameter, Real(4)
+                                 2-26.44$
+ 
+h1m2                             Parameter, Real(4)
+                                 2-30.29$
+ 
+h1m5                             Parameter, Real(4)
+                                 2-27.21$
+ 
+h2                               Parameter, Real(4)
+                                 2-26.16$
+ 
+h4                               Parameter, Real(4)
+                                 2-26.23$
+ 
+h999                             Parameter, Real(4)
+                                 2-25.53$
+ 
+h99999                           Parameter, Real(4)
+                                 2-26.30$
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-83.10@  0-99.19  0-99.27  0-100.19  0-100.27  0-101.20  0-102.20  0-103.19  0-104.21  0-107.15
+                                 0-107.32  0-108.19  0-144.26  0-156.13
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 3-7.59$  3-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 3-3.18$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 3-7.54$  3-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 3-7.65$  3-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 3-4.35$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 3-3.26$
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-63.15  0-63.25  0-63.35  0-63.45  0-63.55  0-64.15  0-64.25  0-64.36  0-83.14  1-11.23
+                                 1-11.34  1-14.35  2-4.15  2-6.13  2-7.16  2-9.14
+ 
+im1                              Parameter, Integer(4)
+                                 2-6.9$
+ 
+imt                              Parameter, Integer(4)
+                                 2-4.9$
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 3-3.60$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 3-7.49$  3-10.42$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-82.10@  0-99.21  0-99.29  0-100.21  0-100.29  0-101.22  0-102.22  0-103.21  0-104.23  0-107.17
+                                 0-107.34  0-108.21  0-144.28  0-156.15
+ 
+jam                              Parameter, Integer(4)
+                                 2-6.27$
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 3-6.36$  3-9.45$  0-82.17
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 3-8.24$  3-12.33$
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 3-7.32$  3-9.59$
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 3-7.40$  3-10.33$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-63.18  0-63.28  0-63.38  0-63.48  0-63.58  0-64.18  0-64.28  0-64.39  1-12.23  1-12.34
+                                 1-15.35  2-4.24  2-6.22  2-6.36  2-9.17
+ 
+jm2                              Parameter, Integer(4)
+                                 2-6.18$
+ 
+jmt                              Parameter, Integer(4)
+                                 2-4.20$
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 3-6.30$  3-9.39$  0-82.12
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 3-8.15$  3-12.24$
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 3-7.15$  3-9.51$
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 3-7.23$  3-10.24$
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+ksav                             Parameter, Integer(4)
+                                 2-14.23$
+ 
+ksfi                             Parameter, Integer(4)
+                                 2-13.33$
+ 
+ksli                             Parameter, Integer(4)
+                                 2-14.30$
+ 
+kslp                             Parameter, Integer(4)
+                                 2-14.37$
+ 
+kslpd                            Parameter, Integer(4)
+                                 2-13.17$
+ 
+ksmud                            Parameter, Integer(4)
+                                 2-13.9$
+ 
+ksrh                             Parameter, Integer(4)
+                                 2-14.16$
+ 
+ksslp                            Parameter, Integer(4)
+                                 2-13.25$
+ 
+kst                              Parameter, Integer(4)
+                                 2-13.40$
+ 
+ksuv                             Parameter, Integer(4)
+                                 2-14.9$
+ 
+lb                               Parameter, Integer(4)
+                                 2-9.9$
+ 
+lheat                            Parameter, Integer(4)
+                                 2-40.21$  2-40.40
+ 
+lhtocp                           Parameter, Integer(4)
+                                 2-40.33$
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 3-3.55$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  2-8.13  2-8.22  2-19.29
+ 
+lm1                              Parameter, Integer(4)
+                                 2-8.9$
+ 
+log                              Pure Intrinsic
+                                 0-78.15
+ 
+lp1                              Parameter, Integer(4)
+                                 2-8.18$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 3-6.26$  3-9.35$
+ 
+meth                             Static, Character(1), Offset: 0, Alignment: full word
+                                 0-65.17$
+ 
+min                              Pure Intrinsic
+                                 0-156.23
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 3-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 3-12.55$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 3-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 3-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 3-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 3-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 3-3.45$
+ 
+ninc                             Parameter, Integer(4)
+                                 2-7.9$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 3-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 3-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 3-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 3-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 3-4.47$
+ 
+nstat                            Parameter, Integer(4)
+                                 2-19.9$
+ 
+nsumd                            Parameter, Integer(4)
+                                 2-15.33$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 3-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 3-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 3-6.15$  3-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 3-12.42$
+ 
+nword                            Parameter, Integer(4)
+                                 2-19.19$  2-19.41  2-19.56
+ 
+nword3                           Parameter, Integer(4)
+                                 2-19.34$
+ 
+nword6                           Parameter, Integer(4)
+                                 2-19.49$
+ 
+oneps                            Parameter, Real(4)
+                                 2-39.43$
+ 
+overrc                           Parameter, Real(4)
+                                 2-33.9$  2-33.26  2-33.42
+ 
+p1000                            Parameter, Real(4)
+                                 2-35.23$
+ 
+parallel                         Common Block, Alignment: double word
+                                 3-9.15$
+ 
+pp                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-64.22$  0-2.43  0-108.16
+ 
+pq0                              Parameter, Real(4)
+                                 2-41.9$
+ 
+qc                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-63.22$  0-2.28  0-100.16  0-103.16
+ 
+qcld                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-100.11@
+ 
+qclice                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-104.11@  0-145.20  0-148.18
+ 
+qclw                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-103.11@  0-144.40  0-146.18
+ 
+qi                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-63.32$  0-2.34  0-100.24  0-104.18
+ 
+qprc                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-99.11@
+ 
+qr                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-63.42$  0-2.31  0-99.16  0-101.17
+ 
+qrain                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-101.11@  0-144.45  0-147.18
+ 
+qs                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-63.52$  0-2.37  0-99.24  0-102.17
+ 
+qsnow                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-102.11@  0-145.27  0-149.18
+ 
+qv                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-63.12$  0-2.25  0-107.29  0-144.23
+ 
+rcapa                            Parameter, Real(4)
+                                 2-35.9$
+ 
+rd                               Parameter, Real(4)
+                                 2-32.15$  0-108.25  2-32.29  2-36.29  2-36.51  2-40.15
+ 
+rdocp                            Parameter, Real(4)
+                                 2-40.9$
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 3-3.38$
+ 
+rg                               Parameter, Real(4)
+                                 2-36.32$
+ 
+rhoair                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-108.9@  0-144.32
+ 
+rhoice                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-79.7@  0-145.34
+ 
+rhowat                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-80.7@  0-144.52
+ 
+rog                              Parameter, Real(4)
+                                 2-32.25$
+ 
+rtd                              Parameter, Real(4)
+                                 2-34.25$
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 3-3.14$
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 3-3.8$
+ 
+smtha                            Parameter, Real(4)
+                                 2-15.9$
+ 
+smthb                            Parameter, Real(4)
+                                 2-15.23$
+ 
+tfrz                             Parameter, Real(4)
+                                 2-39.56$
+ 
+tice                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-69.7@
+ 
+tt                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-64.12$  0-2.40  0-107.12
+ 
+tv                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-107.9@  0-108.28
+ 
+vis                              Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-64.32$  0-2.46  0-156.9@
+ 
+vovermd                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-144.11@  0-146.23  0-147.24  0-148.25  0-149.24
+ 
+** calvis   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    CALVIS.f                    12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      59
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/params
+                                      12/18/08   11:40:52      0      60
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      61
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     233
+1501-510  Compilation successful for file CALVIS.f.
+1501-543  Object file created.

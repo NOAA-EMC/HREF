@@ -1,0 +1,466 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/DEWPOINT.f 12/22/08 15:45:46
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE DEWPOINT( VP, TD, IM,JM )
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C
+          4 |C SUBPROGRAM:    DEWPOINT    COMPUTES DEWPOINTS FROM VAPOR PRESSURE
+          5 |C   PRGMMR: J TUCCILLO       ORG: W/NP2       DATE: 90-05-19
+          6 |C
+          7 |C ABSTRACT: COMPUTES THE DEWPOINTS FOR THE N VALUES
+          8 |C           OF VAPOR PRESSURE IN ARRAY VP.
+          9 |C   .
+         10 |C   .       THE FORMULA
+         11 |C   .
+         12 |C   .            VP = 0.611 * (X**A) * EXP( (A+B)*(1-X) )
+         13 |C   .
+         14 |C   IS USED TO GET DEWPOINT TEMPERATURE T, WHERE
+         15 |C   .
+         16 |C   X = T3/T,                   T3=TRIPLE PT TEMPERATURE,
+         17 |C   VP=VAPOR PRESSURE IN CBS,   0.611=VP AT T3,
+         18 |C   A=(SPEC. HT. OF WATER-CSUBP OF VAPOR)/GAS CONST OF VAPOR
+         19 |C   .                        AND
+         20 |C   B=LATENT HEAT AT T3/(GAS CONST OF VAPOR TIMES T3).
+         21 |C   .
+         22 |C   ON THE FIRST CALL, A TABLE  TDP  IS CONSTRUCTED GIVING
+         23 |C   DEWPOINT AS A FUNCTION OF VAPOR PRESSURE.
+         24 |C   .
+         25 |C   VALUES OF VP LESS THAN THE FIRST TABLE ENTRY
+         26 |C   (RVP1 IN THE CODE) WILL BE GIVEN DEWPOINTS FOR
+         27 |C   THAT BEGINNING VALUE.  SIMILARLY , VP VALUES THAT
+         28 |C   EXCEED THE MAXIMUM TABLE VALUE (RVP2 IN THE CODE)
+         29 |C   WILL BE ASSIGNED DEWPOINTS FOR THAT MAXIMUM VALUE.
+         30 |C   .
+         31 |C   THE VALUES 0.02 AND 8.0 FOR RVP1 AND RVP2 YIELD
+         32 |C   DEWPOINTS OF 233.6K AND 314.7K,RESPECTIVELY.
+         33 |C   .
+         34 |C
+         35 |C PROGRAM HISTORY LOG:
+         36 |C   90-05-19  J TUCCILLO
+         37 |C   93-05-12  R TREADON - EXPANDED TABLE SIZE AND RESET
+         38 |C                         RANGE OF PRESSURES COVERED BY
+         39 |C                         TABLE.
+         40 |C   98-06-12  T BLACK   - CONVERSION FROM 1-D TO 2-D
+         41 |C   00-01-04  JIM TUCCILLO - MPI VERSION
+         42 |C
+         43 |C USAGE:  CALL DEWPOINT( VP, TD, N )
+         44 |C   INPUT ARGUMENT LIST:
+         45 |C     VP       - ARRAY OF N VAPOR PRESSURES(CENTIBARS)
+         46 |C     IM,JM    - DIMENSIONS OF THE INPUT ARRAY VP.
+         47 |C
+         48 |C   OUTPUT ARGUMENT LIST:
+         49 |C     TD       - DEWPOINT IN DEGREES ABSOLUTE
+         50 |C
+         51 |C   SUBPROGRAMS CALLED:
+         52 |C     LIBRARY:
+         53 |C
+         54 |C ATTRIBUTES:
+         55 |C   LANGUAGE: FORTRAN
+         56 |C   MACHINE:  CRAY C-90
+         57 |C
+         58 |C$$$
+         59 |       INCLUDE "CTLBLK.comm"
+  1       1 |C-----------------------------------------------------------------------
+  1       2 |      COMMON /CTLBLK/
+  1       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  1       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  1       5 |     &,NPHS,NRADS,NRADL
+  1       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  1       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  1       8 |     &        JSTA_2L, JEND_2U
+  1       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  1      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  1      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  1      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  1      13 |     &                 MPI_COMM_COMP
+  1      14 |C-----------------------------------------------------------------------
+         60 |C
+         61 |C          NT IS THE TABLE SIZE
+         62 |      PARAMETER (NT=2000)
+         63 |C...TRANSLATED BY FPP 3.00Z36 11/09/90  14:48:53
+         64 |C...SWITCHES: OPTON=I47,OPTOFF=VAE0
+         65 |      DIMENSION TDP(NT),VP(IM,JM),TD(IM,JM)
+         66 |CX      LOGICAL LFRST
+         67 |CX      DATA LFRST / .TRUE. /
+         68 |C
+         69 |C
+         70 |CX      IF ( LFRST ) THEN
+         71 |C
+         72 |CX      LFRST = .FALSE.
+         73 |C          PREPARE THE TABLE (TDP=DEWPT AS FCN OF VAPOR PRESS).
+         74 |C          RANGE IN CENTIBARS IS FROM RVP1 THRU RVP2
+         75 |coff      RVP1=0.02E0
+         76 |coff      RVP2=8.E0
+         77 |      rvp1=0.0001E0
+         78 |      rvp2=10.E0
+         79 |C          THE TRIPLE POINT
+         80 |      RT3=273.16E0
+         81 |C          VAPOR PRESS AT THE TRIPLE POINT
+         82 |      RVP3=0.611E0
+         83 |      RLOG3=LOG(RVP3)
+         84 |C          (SPEC HT OF WATER -CSUBP OF VAPOR)/GAS CONST OF VAPOR.
+         85 |      RA=5.0065E0
+         86 |C          LATENT HEAT AT T3/(GAS CONST OF VAPOR * TRIPLE PT TEMP).
+         87 |      RB=19.83923E0
+         88 |      RAPB=RA+RB
+         89 |C          CRITERION FOR CONVERGENCE OF NEWTON ITERATION
+         90 |      RTEST=1.E-6
+         91 |CMEB  RTEST=1.E-8  !  PROBABLY WON'T CONVERGE WITH 32-BIT AT THIS CRITERION
+         92 |C
+         93 |      RNT=FLOAT(NT)
+         94 |C          TABLE INCREMENT IN VAPOR PRESS
+         95 |      RDVP=(RVP2-RVP1)/(RNT-1.E0)
+         96 |C          RGS WILL BE THE GUESSED VALUE OF (T3  /  DEWPOINT)
+         97 |      RGS=1.E0
+         98 |      RVP=RVP1-RDVP
+         99 |C
+        100 |      DO 20 NN=1,NT
+        101 |      RVP=RVP+RDVP
+        102 |      RLVP=LOG(RVP)-RLOG3-RAPB
+        103 |C     ***** ENTER NEWTON ITERATION LOOP
+        104 |   10 RN=RA*LOG(RGS)-RAPB*RGS-RLVP
+        105 |C          THAT WAS VALUE OF FUNCTION
+        106 |C          NOW GET ITS DERIVATIVE
+        107 |      RD=(RA/RGS)-RAPB
+        108 |C          THE DESIRED CHANGE IN THE GUESS
+        109 |      RCH=RN/RD
+        110 |      IF( ABS(RCH) .LT. RTEST ) GO TO 15
+        111 |C          NEED MORE ITERATIONS
+        112 |      RGS=RGS-RCH
+        113 |      GO TO 10
+        114 |C          *****
+        115 |C          HAVE ACCURATE ENUF VALUE OF RGS=T3/DEWPOINT.
+        116 |   15 RT=RT3/RGS
+        117 |      TDP(NN)=RT
+        118 |C
+        119 |   20 CONTINUE
+        120 |C      PRINT 25,RVP1,RVP2,TDP(1),TDP(NT)
+        121 |C  25  FORMAT(/'0', 'IN SUBROUTINE DEWPOINT, THE DEWPT TABLE ',
+        122 |C    1             'HAS RVP1=', 1PE13.6, ', RVP2=', 1PE13.6,
+        123 |C    2             ', TDP(1)=', 1PE13.6, ', AND TDP(NT)=',
+        124 |C    3             1PE13.6, '.'/)
+        125 |C           CONSTANTS FOR USING THE TABLE
+        126 |      A=1./RDVP
+        127 |      B=1.-A*RVP1
+        128 |      DNTM1=FLOAT(NT) -.01
+        129 |C
+        130 |CX      END IF
+        131 |C
+        132 |C          *********** ENTER TO USE THE TABLE.  ************
+        133 |C
+        134 |      DO J=JSTA,JEND
+        135 |      DO I=1,IM
+        136 |        W1=AMIN1(AMAX1((A*VP(I,J)+B),1.0),DNTM1)
+        137 |        W2=AINT(W1)
+        138 |        JNT=INT(W2)
+        139 |        TD(I,J) = TDP(JNT)+(W1-W2)*(TDP(JNT+1)-TDP(JNT))
+        140 |      ENDDO
+        141 |      ENDDO
+        142 |C
+        143 |C
+        144 |      RETURN
+        145 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+a                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-126.7@  0-127.12  0-136.25
+ 
+abs                              Pure Intrinsic
+                                 0-110.11
+ 
+aint                             Pure Intrinsic
+                                 0-137.12
+ 
+amax1                            Pure Intrinsic Real(4)
+                                 0-136.18
+ 
+amin1                            Pure Intrinsic Real(4)
+                                 0-136.12
+ 
+b                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-127.7@  0-136.35
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 1-2.15$
+ 
+dewpoint                         Subroutine
+                                 0-1.18$
+ 
+dntm1                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-128.7@  0-136.43
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 1-4.8$
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 1-3.32$
+ 
+float                            Pure Intrinsic
+                                 0-93.11  0-128.13
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-135.10@  0-136.30  0-139.12
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 1-7.59$  1-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 1-3.18$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 1-7.54$  1-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 1-7.65$  1-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 1-4.35$
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 1-3.26$
+ 
+im                               Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.36  0-65.28  0-65.28  0-65.38  0-65.38  0-135.14
+ 
+int                              Pure Intrinsic
+                                 0-138.13
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 1-3.60$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 1-7.49$  1-10.42$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-134.10@  0-136.32  0-139.14
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 1-6.36$  1-9.45$  0-134.17
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 1-8.24$  1-12.33$
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 1-7.32$  1-9.59$
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 1-7.40$  1-10.33$
+ 
+jm                               Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.39  0-65.31  0-65.31  0-65.41  0-65.41
+ 
+jnt                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-138.9@  0-139.23  0-139.41  0-139.52
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 1-6.30$  1-9.39$  0-134.12
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 1-8.15$  1-12.24$
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 1-7.15$  1-9.51$
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 1-7.23$  1-10.24$
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 1-3.55$
+ 
+log                              Pure Intrinsic
+                                 0-83.13  0-102.12  0-104.13
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 1-6.26$  1-9.35$
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 1-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 1-12.55$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 1-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 1-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 1-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 1-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 1-3.45$
+ 
+nn                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-100.13@  0-117.11
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 1-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 1-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 1-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 1-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 1-4.47$
+ 
+nt                               Parameter, Integer(4)
+                                 0-62.18$  0-65.21  0-93.17  0-100.18  0-128.19
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 1-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 1-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 1-6.15$  1-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 1-12.42$
+ 
+parallel                         Common Block, Alignment: double word
+                                 1-9.15$
+ 
+ra                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-85.7@  0-88.12  0-104.10  0-107.11
+ 
+rapb                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-88.7@  0-102.27  0-104.22  0-107.19
+ 
+rb                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-87.7@  0-88.15
+ 
+rch                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-109.7@  0-110.15  0-112.15
+ 
+rd                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-107.7@  0-109.14
+ 
+rdvp                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-95.7@  0-98.16  0-101.15  0-126.12
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 1-3.38$
+ 
+rgs                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-97.7@  0-104.17  0-104.27  0-107.14  0-112.7@  0-112.11  0-116.14
+ 
+rlog3                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-83.7@  0-102.21
+ 
+rlvp                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-102.7@  0-104.31
+ 
+rn                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-104.7@  0-109.11
+ 
+rnt                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-93.7@  0-95.25
+ 
+rt                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-116.7@  0-117.15
+ 
+rt3                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-80.7@  0-116.10
+ 
+rtest                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-90.7@  0-110.25
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 1-3.14$
+ 
+rvp                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-98.7@  0-101.7@  0-101.11  0-102.16
+ 
+rvp1                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-77.7@  0-95.18  0-98.11  0-127.14
+ 
+rvp2                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-78.7@  0-95.13
+ 
+rvp3                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-82.7@  0-83.17
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 1-3.8$
+ 
+td                               Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.35$  0-1.32  0-139.9@
+ 
+tdp                              Static, Real(4) (1:2000), Offset: 0, Alignment: full word
+                                 0-65.17$  0-117.7@  0-139.19  0-139.37  0-139.48
+ 
+vp                               Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.25$  0-1.28  0-136.27
+ 
+w1                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-136.9@  0-137.17  0-139.29
+ 
+w2                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-137.9@  0-138.17  0-139.32
+ 
+** dewpoint   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    DEWPOINT.f                  12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      59
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     159
+1501-510  Compilation successful for file DEWPOINT.f.
+1501-543  Object file created.
