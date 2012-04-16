@@ -1,0 +1,157 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/WDIR.f 12/22/08 15:46:03
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      FUNCTION WDIR(X,Y)
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .
+          4 |C SUBPROGRAM:    WDIR        CMPTE VEC DIR FROM U-V
+          5 |C   PRGRMMR: TREADON         ORG: W/NMC2     DATE: 93-05-12
+          6 |C
+          7 |C ABSTRACT:
+          8 |C     GIVEN U AND V WIND COMPONENTS, THIS FUNCTION CALCULATES
+          9 |C     THE VECTOR WIND DIRECTION (IN DEGREES)
+         10 |C   .
+         11 |C
+         12 |C PROGRAM HISTORY LOG:
+         13 |C   ??-??-??  CHRIS PETERS ??
+         14 |C   93-05-12  RUSS TREADON - ADDED DOCBLOC
+         15 |C
+         16 |C USAGE:   WIND = WDIR(X,Y)
+         17 |C   INPUT ARGUMENT LIST:
+         18 |C     X        - U WIND COMPONENT
+         19 |C     Y        - V WIND COMPONENT
+         20 |C
+         21 |C   OUTPUT ARGUMENT LIST:
+         22 |C     WDIR     - VECTOR WIND DIRECTION IN DEGREES
+         23 |C
+         24 |C   OUTPUT FILES:
+         25 |C     NONE
+         26 |C
+         27 |C   SUBPROGRAMS CALLED:
+         28 |C     UTILITIES:
+         29 |C       DIR    - CONPUTE VECTOR WIND DIRECTION FROM U-V WIND.
+         30 |C     LIBRARY:
+         31 |C       NONE
+         32 |C
+         33 |C   ATTRIBUTES:
+         34 |C     LANGUAGE: FORTRAN
+         35 |C     MACHINE : CRAY Y-MP
+         36 |C$$$
+         37 |C
+         38 |C**********************************************************************
+         39 |C     START WDIR HERE.
+         40 |C
+         41 |      RDIR = 270.-DIR(X,Y)
+         42 |      IF (RDIR.LT.0.) RDIR = RDIR+360.
+         43 |      IF (RDIR.GE.360.) RDIR = RDIR-360.
+         44 |      WDIR = RDIR
+         45 |      RETURN
+         46 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+dir                              External Function Real(4)
+                                 0-41.19
+ 
+rdir                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-41.7@  0-42.11  0-42.23@  0-42.30  0-43.11  0-43.25@  0-43.32  0-44.14
+ 
+wdir                             Function Real(4)
+                                 0-1.16$  0-44.7@
+ 
+x                                Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-1.21  0-41.23
+ 
+y                                Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-1.23  0-41.25
+ 
+** wdir   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+         47 |
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    WDIR.f                      12/18/08   11:40:51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................      47
+1501-510  Compilation successful for file WDIR.f.
+1501-543  Object file created.

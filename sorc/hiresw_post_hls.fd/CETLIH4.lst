@@ -1,0 +1,587 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CETLIH4.f 12/22/08 15:45:45
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE CETLIH4(HE,HX,IMOT,JMOT,KSB,IOFFS)
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .
+          4 |C SUBPROGRAM:    CETLIH4     INTERPOLATES
+          5 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-23
+          6 |C
+          7 |C ABSTRACT:
+          8 |C     THIS ROUTINE INTERPOLATES DATA IN ARRAY HE FROM HEIGHT
+          9 |C     POINTS ON AN ETA GRID TO HEIGHT POINTS ON ANOTHER GRID
+         10 |C     IN ARRAY HX.  THE INTERPOLATION CONSERVES THE AREA
+         11 |C     INTEGRAL OF HE.
+         12 |C
+         13 |C     ***WARNING***
+         14 |C     COMPUTATION OF THE INTERPOLATION 'WEIGHTS' CONSUMES
+         15 |C     AN ENORMOUS AMOUNT OF CPU TIME, MUCH MORE THAN
+         16 |C     THE ACTUAL TIME IT TAKES TO DO THE INTERPOLATION.
+         17 |C     IT IS MUCH BETTER TO PRECOMPUTE THE REQUIRED
+         18 |C     WEIGHTS.  SUBROUINE GD2EGK COMPUTES THESE 'WEIGHTS'.
+         19 |C   .
+         20 |C
+         21 |C PROGRAM HISTORY LOG:
+         22 |C   ??-??-??  ???
+         23 |C   92-12-23  RUSS TREADON - GENERALIZED CODE BY REMOVING
+         24 |C                            HARDCODED (IM,JM).
+         25 |C   93-06-09  RUSS TREADON - EXPANDED COMMENTS.
+         26 |C   98-06-17  T BLACK      - CONVERSION FROM 1-D TO 2-D
+         27 |C
+         28 |C USAGE:    CETLIH4(HE,HX,IMOT,JMOT,KSB)
+         29 |C   INPUT ARGUMENT LIST:
+         30 |C     HE       - DATA ON E-GRID.
+         31 |C     IMOT     - FIRST DIMENSION OF OUTPUT GRID.
+         32 |C     JMOT     - SECOND DIMENSION OF OUTPUT GRID.
+         33 |C     KSB      - NUMBER OF SUB BOXES
+         34 |C     IOFFS    - WIDTH (IN GRID POINTS) OF SEARCH WINDOW
+         35 |C                AROUND E-GRID POINT FROM WHICH INTERPOLATING.
+         36 |C
+         37 |C   OUTPUT ARGUMENT LIST:
+         38 |C     HX       - DATA INTERPOLATED TO THE OUTPUT GRID
+         39 |C
+         40 |C   OUTPUT FILES:
+         41 |C     NONE
+         42 |C
+         43 |C   SUBPROGRAMS CALLED:
+         44 |C     UTILITIES:
+         45 |C       NONE
+         46 |C     LIBRARY:
+         47 |C       COMMON   - LLGRDS
+         48 |C       COMMON   - INDX
+         49 |C
+         50 |C   ATTRIBUTES:
+         51 |C     LANGUAGE: FORTRAN
+         52 |C     MACHINE : CRAY C-90
+         53 |C$$$
+         54 |C
+         55 |C
+         56 |C     INCLUDE ETA GRID DIMENSIONS.  COMPUTE DEPENDENT PARAMETERS.
+         57 |C
+         58 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         59 |      INCLUDE "parmout"
+  2       1 |C     MAXIMUM DIMENSIONS FOR OUTPUT GRID, FIELDS, AND LEVELS.
+  2       2 |C
+  2       3 |      PARAMETER(IMX=IM,JMX=JM,MXFLD=250,MXLVL=LM)
+         60 |C
+         61 |      PARAMETER (IMT=2*IM-1,JMT=JM)
+         62 |C
+         63 |C     DECLARE VARIABLES.
+         64 |      INTEGER NZ(IMX,JMX)
+         65 |      REAL HE(IM,JM),HX(IMOT,JMOT)
+         66 |C
+         67 |C     INCLUDE COMMON BLOCK.
+         68 |      INCLUDE "LLGRDS.comm"
+  3       1 |C
+  3       2 |      COMMON /LLGRDS/
+  3       3 |     & GDLAT(IMX,JMX),GDLON(IMX,JMX)
+  3       4 |     &,GDTLAT(IMX,JMX),GDTLON(IMX,JMX)
+  3       5 |     &,HTLAT(IM,JM),HTLON(IM,JM)
+  3       6 |     &,IEGRDK(IM,JM),JEGRDK(IM,JM)
+  3       7 |     &,VTLAT(IM,JM),VTLON(IM,JM),FVTLON(IMT,JMT)
+  3       8 |     &,EVLAT(IMT,JMT),EVLON(IMT,JMT)
+  3       9 |     &,EGRDI(IMX,JMX),EGRDJ(IMX,JMX)
+  3      10 |     &,IEGRD(IMX,JMX),JEGRD(IMX,JMX)
+  3      11 |     &,IWGT(IMX,JMX),WIJ(IMX,JMX),WIPJ(IMX,JMX)
+  3      12 |     &,WIJP(IMX,JMX),WIPJP(IMX,JMX)
+         69 |      INCLUDE "INDX.comm"
+  4       1 |C-----------------------------------------------------------------------
+  4       2 |                        C O M M O N /INDX/
+  4       3 |     & IHE(JM),IHW(JM),IVE(JM),IVW(JM)
+  4       4 |C-----------------------------------------------------------------------
+         70 |C
+         71 |      REAL SBLAT(IM,JM),SBLON(IM,JM),DSQMN(IM,JM)
+         72 |      INTEGER IISB(IM,JM),JJSB(IM,JM)
+         73 |C
+         74 |C
+         75 |C**********************************************************************
+         76 |C     START CETLIH4.
+         77 |C
+         78 |C     ZERO OUTPUT ARRAY AND NORMALIZATION ARRAY.
+         79 |!$omp  parallel do
+         80 |      DO 100 JJ=1,JMOT
+         81 |      DO 100 II=1,IMOT
+         82 |         HX(II,JJ)=0.
+         83 |         NZ(II,JJ)=0
+         84 | 100  CONTINUE
+         85 |C
+         86 |C     SET CONSTANTS.
+         87 |      JMOT2 = JMOT-2
+         88 |      IMOT2 = IMOT-2
+         89 |      SBS=1./KSB
+         90 |C
+         91 |C     LOOP OVER E-GRID.  MOVE SOUTH TO NORTH THROUGH JM2 ROWS.
+         92 |C     ON EACH ROW MOVE WEST TO EAST THROUGH THE E-GRID K INDEX.
+         93 |C     AT EACH K INTERPOLATE DATA IN E-GRID ARRAY HE TO OUTPUT
+         94 |C     GRID ARRAY HX.
+         95 |C
+         96 |!$omp  parallel do
+         97 |!$omp& private(clat,clon,dsq,ie,iend,ip,is,iw,jp,js,p,pq,q)
+         98 |      DO 185 J=3,JM-2
+         99 |C
+        100 |      IEND=IM-1-MOD(J+1,2)
+        101 |C
+        102 |C        DISTRIBUTE THE E-GRID VALUES (IN ARRAY HE) TO THE SURROUNDING
+        103 |C        KSB*KSB OUTPUT GRID POINTS.
+        104 |C
+        105 |         DO 160 JB=1,KSB
+        106 |         DO 160 IB=1,KSB
+        107 |           DO 175 I=2,IEND
+        108 |C
+        109 |C        SET TRANSFORMED (LAT,LON) OF THE K-TH E-GRID MASS POINT.
+        110 |C        THIS BECOMES THE CENTER OF THE BOX OVER WHICH THE AREA
+        111 |C        CONSERVING INTERPOLATION IS DONE.
+        112 |C
+        113 |         DSQMN(I,J)=  1.
+        114 |         IISB(I,J) = -1
+        115 |         JJSB(I,J) = -1
+        116 |         JP  = JEGRDK(I,J)
+        117 |         IF (JP.LT.1) GOTO 175
+        118 |         CLON=HTLON(I,J)
+        119 |         CLAT=HTLAT(I,j)
+        120 |C
+        121 |C        LOAD THE OUTPUT GRID (I,J) NEAREST TO K-TH E-GRID MASS POINT.
+        122 |C        IF INTERPOLATION FROM THE K-TH E-GRID MASS POINT TO THE
+        123 |C        OUTPUT GRID IS NOT POSSIBLE (AT INDICATED BY ZERO OR NEGATIVE
+        124 |C        OUTPUT GRID (I,J), DO NOT ATTEMPT INTERPOLATION CENTERED ON
+        125 |C        THIS E-GRID MASS POINT.
+        126 |C
+        127 |C
+        128 |C           FOR THE (IB,JB)-TH SUB-BOX COMPUTE THE TRANSFORMED E-GRID
+        129 |C           LATITUDE AND LONGITUDE AT THE CENTER OF THIS SUB-BOX.
+        130 |C
+        131 |            P=(IB-(KSB+1.)/2.)*SBS
+        132 |            Q=(JB-(KSB+1.)/2.)*SBS
+        133 |            PQ=P*Q
+        134 |            IE=I+IHE(J)
+        135 |            IW=I+IHW(J)
+        136 |            SBLON(I,J)=CLON+P*(HTLON(IE,J+1)-CLON)
+        137 |     1                     +Q*(HTLON(IW,J+1)-CLON)
+        138 |     2           +PQ*(CLON-HTLON(IE,J+1)-HTLON(IW,J+1)+HTLON(I,J+2))
+        139 |            SBLAT(I,J)=CLAT+P*(HTLAT(IE,J+1)-CLAT)
+        140 |     1                     +Q*(HTLAT(IW,J+1)-CLAT)
+        141 |     2           +PQ*(CLAT-HTLAT(IE,J+1)-HTLAT(IW,J+1)+HTLAT(I,J+2))
+        142 | 175        CONTINUE
+        143 |C
+        144 |         DO 150 JJ=0,IOFFS
+        145 |         DO 150 II=0,IOFFS
+        146 |C
+        147 |            DO 180 I=2,IEND
+        148 |         JP  = JEGRDK(I,J)
+        149 |         IF (JP.LT.1) GOTO 180
+        150 |         IP  = IEGRDK(I,J)
+        151 |
+        152 |C        SET OUTPUT GRID (I,J) SURROUNDING THE E-GRID MASS POINT.
+        153 |C
+        154 |         IS=IP-(IOFFS-1)
+        155 |         JS=JP-(IOFFS-1)
+        156 |C           SEARCH FOR THE OUTPUT GRID POINT NEAREST TO THE CENTER
+        157 |C           OF THE (IB,JB)-TH SUB-BOX.  ASSIGN THE (I,J) INDEX OF
+        158 |C           THIS POINT TO (IISB,JJSB)
+        159 |C
+        160 |             DSQ=(GDTLON((IS+II),(JS+JJ))-SBLON(I,J))**2
+        161 |     *          +(GDTLAT((IS+II),(JS+JJ))-SBLAT(I,J))**2
+        162 |               IF(DSQ.LT.DSQMN(I,J)) THEN
+        163 |                  DSQMN(I,J)=DSQ
+        164 |                  IISB(I,J)=IS+II
+        165 |                  JJSB(I,J)=JS+JJ
+        166 |               ENDIF
+        167 | 180        CONTINUE
+        168 | 150        CONTINUE
+        169 |C
+        170 |C           IF INTERPOLATION WAS NOT POSSIBLE TO THE CURRENT
+        171 |C           OUTPUT GRID SUB-BOX, THEN SKIP THIS SUB-BOX AND
+        172 |C           TRY THE NEXT ONE.
+        173 |C
+        174 |            DO 155 I=2,IEND
+        175 |              IF(IISB(I,J).GT.0)THEN
+        176 |C
+        177 |C            ADD E-GRID AMOUNT IN ARRAY HE ON INPUT E-GRID TO THE
+        178 |C            NEAREST NEIGHBOR OUTPUT GRID SUB-BOX IDENTIFIED ABOVE.
+        179 |C
+        180 |             HX(IISB(I,J),JJSB(I,J))=HX(IISB(I,J),JJSB(I,J))+HE(I,J)
+        181 |             NZ(IISB(I,J),JJSB(I,J))=NZ(IISB(I,J),JJSB(I,J))+1
+        182 |            ENDIF
+        183 | 155        CONTINUE
+        184 |C
+        185 |C        REPEAT FOR NEXT SUB-BOX.
+        186 |C
+        187 | 160     CONTINUE
+        188 |C
+        189 |C     REPEAT INTERPOLATION FOR NEXT E-GRID MASS POINT.
+        190 |C
+        191 | 185  CONTINUE
+        192 |C
+        193 |C     NORMALIZE OUTPUT GRID AMOUNT IN ARRAY HX BY THE NUMBER OF
+        194 |C     E-GRID AMOUNTS SUMMED TO OBTAIN THE OUTPUT GRID AMOUNT.
+        195 |C
+        196 |!$omp  parallel do
+        197 |      DO 200 JJ=1,JMOT
+        198 |         DO 200 II=1,IMOT
+        199 |C
+        200 |C           AVOID DIVISION BY ZERO.  NZ=0 INDICATES NO
+        201 |C           INTERPOLATION WAS POSSIBLE AND SO THE OUTPUT
+        202 |C           GRID VALUE IN ARRAY HX SHOULD REMAIN THE ZERO
+        203 |C           IT WAS INITIALIZED TO.
+        204 |c            IF (NZ(II,JJ).EQ.0) NZ(II,JJ) = 1
+        205 |C
+        206 |            IF (NZ(II,JJ).NE.0) THEN
+        207 |             HX (II,JJ)=HX(II,JJ) / NZ(II,JJ)
+        208 |            ENDIF
+        209 |  200 CONTINUE
+        210 |C
+        211 |C     END OF ROUTINE.
+        212 |C
+        213 |      RETURN
+        214 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+cetlih4                          Subroutine
+                                 0-1.18$
+ 
+clat                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-119.10@  0-139.24  0-139.46  0-140.46  0-141.23
+ 
+clon                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-118.10@  0-136.24  0-136.46  0-137.46  0-138.23
+ 
+dsq                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-160.14@  0-162.19  0-163.30
+ 
+dsqmn                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-71.38$  0-113.10@  0-162.26  0-163.19@
+ 
+egrdi                            Common member, Real(4) (1:89, 1:143), Offset: 812812, Alignment: full word
+                                 3-9.8$
+ 
+egrdj                            Common member, Real(4) (1:89, 1:143), Offset: 863720, Alignment: double word
+                                 3-9.23$
+ 
+evlat                            Common member, Real(4) (1:177, 1:143), Offset: 610324, Alignment: full word
+                                 3-8.8$
+ 
+evlon                            Common member, Real(4) (1:177, 1:143), Offset: 711568, Alignment: quadruple word
+                                 3-8.23$
+ 
+fvtlon                           Common member, Real(4) (1:177, 1:143), Offset: 509080, Alignment: double word
+                                 3-7.34$
+ 
+gdlat                            Common member, Real(4) (1:89, 1:143), Offset: 0, Alignment: quadruple word
+                                 3-3.8$
+ 
+gdlon                            Common member, Real(4) (1:89, 1:143), Offset: 50908, Alignment: full word
+                                 3-3.23$
+ 
+gdtlat                           Common member, Real(4) (1:89, 1:143), Offset: 101816, Alignment: double word
+                                 3-4.8$  0-161.19
+ 
+gdtlon                           Common member, Real(4) (1:89, 1:143), Offset: 152724, Alignment: full word
+                                 3-4.24$  0-160.19
+ 
+he                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-65.12$  0-1.26  0-180.62
+ 
+htlat                            Common member, Real(4) (1:89, 1:143), Offset: 203632, Alignment: quadruple word
+                                 3-5.8$  0-119.15  0-139.32  0-140.32  0-141.28  0-141.42  0-141.56
+ 
+htlon                            Common member, Real(4) (1:89, 1:143), Offset: 254540, Alignment: full word
+                                 3-5.21$  0-118.15  0-136.32  0-137.32  0-138.28  0-138.42  0-138.56
+ 
+hx                               Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.22$  0-1.29  0-82.10@  0-180.14@  0-180.38  0-207.14@  0-207.25
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-107.19@  0-113.16  0-114.15  0-115.15  0-116.23  0-118.21  0-119.21  0-134.16  0-135.16  0-136.19
+                                 0-138.62  0-139.19  0-141.62  0-147.20@  0-148.23  0-150.23  0-160.49  0-161.49  0-162.32  0-163.25
+                                 0-164.24  0-165.24  0-174.20@  0-175.23  0-180.22  0-180.32  0-180.46  0-180.56  0-180.65  0-181.22
+                                 0-181.32  0-181.46  0-181.56
+ 
+ib                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-106.17@  0-131.16
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+ie                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-134.13@  0-136.38  0-138.34  0-139.38  0-141.34
+ 
+iegrd                            Common member, Integer(4) (1:89, 1:143), Offset: 914628, Alignment: full word
+                                 3-10.8$
+ 
+iegrdk                           Common member, Integer(4) (1:89, 1:143), Offset: 305448, Alignment: double word
+                                 3-6.8$  0-150.16
+ 
+iend                             Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-100.7@  0-107.23  0-147.24  0-174.24
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihe                              Common member, Integer(4) (1:143), Offset: 0, Alignment: quadruple word
+                                 4-3.8$  0-134.18
+ 
+ihw                              Common member, Integer(4) (1:143), Offset: 572, Alignment: full word
+                                 4-3.16$  0-135.18
+ 
+ii                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-81.14@  0-82.13  0-83.13  0-145.17@  0-160.30  0-161.30  0-164.32  0-198.17@  0-206.20  0-207.18
+                                 0-207.28  0-207.40
+ 
+iisb                             Static, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-72.15$  0-114.10@  0-164.19@  0-175.18  0-180.17  0-180.41  0-181.17  0-181.41
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-61.24  0-65.15  0-71.18  0-71.31  0-71.44  0-72.20  0-72.32  0-100.12  1-11.23  1-11.34
+                                 1-14.35  2-3.21  3-5.14  3-5.27  3-6.15  3-6.29  3-7.14  3-7.27
+ 
+imot                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.32  0-65.25  0-65.25  0-81.19  0-88.15  0-198.22
+ 
+imot2                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-88.7@
+ 
+imt                              Parameter, Integer(4)
+                                 0-61.18$  3-7.41  3-8.14  3-8.29
+ 
+imx                              Parameter, Integer(4)
+                                 2-3.17$  0-64.18  3-3.14  3-3.29  3-4.15  3-4.31  3-9.14  3-9.29  3-10.14  3-10.29  3-11.13
+                                 3-11.26  3-11.40  3-12.13  3-12.28
+ 
+indx                             Common Block, Alignment: double word
+                                 4-2.38$
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+ioffs                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.46  0-144.22  0-145.22  0-154.17  0-155.17
+ 
+ip                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-150.10@  0-154.13
+ 
+is                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-154.10@  0-160.27  0-161.27  0-164.29
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+ive                              Common member, Integer(4) (1:143), Offset: 1144, Alignment: double word
+                                 4-3.24$
+ 
+ivw                              Common member, Integer(4) (1:143), Offset: 1716, Alignment: full word
+                                 4-3.32$
+ 
+iw                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-135.13@  0-137.38  0-138.48  0-140.38  0-141.48
+ 
+iwgt                             Common member, Integer(4) (1:89, 1:143), Offset: 1016444, Alignment: full word
+                                 3-11.8$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-98.14@  0-100.21  0-113.18  0-114.17  0-115.17  0-116.25  0-118.23  0-119.23  0-134.22  0-135.22
+                                 0-136.21  0-136.41  0-137.41  0-138.37  0-138.51  0-138.64  0-139.21  0-139.41  0-140.41  0-141.37
+                                 0-141.51  0-141.64  0-148.25  0-150.25  0-160.51  0-161.51  0-162.34  0-163.27  0-164.26  0-165.26
+                                 0-175.25  0-180.24  0-180.34  0-180.48  0-180.58  0-180.67  0-181.24  0-181.34  0-181.48  0-181.58
+ 
+jb                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-105.17@  0-132.16
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jegrd                            Common member, Integer(4) (1:89, 1:143), Offset: 965536, Alignment: quadruple word
+                                 3-10.23$
+ 
+jegrdk                           Common member, Integer(4) (1:89, 1:143), Offset: 356356, Alignment: full word
+                                 3-6.22$  0-116.16  0-148.16
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jj                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-80.14@  0-82.16  0-83.16  0-144.17@  0-160.38  0-161.38  0-165.32  0-197.14@  0-206.23  0-207.21
+                                 0-207.31  0-207.43
+ 
+jjsb                             Static, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-72.27$  0-115.10@  0-165.19@  0-180.27  0-180.51  0-181.27  0-181.51
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-61.33  0-65.18  0-71.21  0-71.34  0-71.47  0-72.23  0-72.35  0-98.18  1-12.23  1-12.34
+                                 1-15.35  2-3.28  3-5.17  3-5.30  3-6.18  3-6.32  3-7.17  3-7.30  4-3.12  4-3.20  4-3.28  4-3.36
+ 
+jmot                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.37  0-65.30  0-65.30  0-80.19  0-87.15  0-197.19
+ 
+jmot2                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-87.7@
+ 
+jmt                              Parameter, Integer(4)
+                                 0-61.29$  3-7.45  3-8.18  3-8.33
+ 
+jmx                              Parameter, Integer(4)
+                                 2-3.24$  0-64.22  3-3.18  3-3.33  3-4.19  3-4.35  3-9.18  3-9.33  3-10.18  3-10.33  3-11.17
+                                 3-11.30  3-11.44  3-12.17  3-12.32
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jp                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-116.10@  0-117.14  0-148.10@  0-149.14  0-155.13
+ 
+js                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-155.10@  0-160.35  0-161.35  0-165.29
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+ksb                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.42  0-89.14  0-105.22  0-106.22  0-131.20  0-132.20
+ 
+llgrds                           Common Block, Alignment: double word
+                                 3-2.15$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  2-3.47
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+mod                              Pure Intrinsic
+                                 0-100.17
+ 
+mxfld                            Parameter, Integer(4)
+                                 2-3.31$
+ 
+mxlvl                            Parameter, Integer(4)
+                                 2-3.41$
+ 
+nz                               Static, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-64.15$  0-83.10@  0-181.14@  0-181.38  0-206.17  0-207.37
+ 
+p                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-131.13@  0-133.16  0-136.29  0-139.29
+ 
+pq                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-133.13@  0-138.19  0-141.19
+ 
+q                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-132.13@  0-133.18  0-137.29  0-140.29
+ 
+sblat                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-71.12$  0-139.13@  0-161.43
+ 
+sblon                            Static, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-71.25$  0-136.13@  0-160.43
+ 
+sbs                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-89.7@  0-131.32  0-132.32
+ 
+vtlat                            Common member, Real(4) (1:89, 1:143), Offset: 407264, Alignment: quadruple word
+                                 3-7.8$
+ 
+vtlon                            Common member, Real(4) (1:89, 1:143), Offset: 458172, Alignment: full word
+                                 3-7.21$
+ 
+wij                              Common member, Real(4) (1:89, 1:143), Offset: 1067352, Alignment: double word
+                                 3-11.22$
+ 
+wijp                             Common member, Real(4) (1:89, 1:143), Offset: 1169168, Alignment: quadruple word
+                                 3-12.8$
+ 
+wipj                             Common member, Real(4) (1:89, 1:143), Offset: 1118260, Alignment: full word
+                                 3-11.35$
+ 
+wipjp                            Common member, Real(4) (1:89, 1:143), Offset: 1220076, Alignment: full word
+                                 3-12.22$
+ 
+** cetlih4   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    CETLIH4.f                   12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      58
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmout
+                                      12/18/08   11:40:52      0      59
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/LLGRDS.comm
+                                      12/18/08   11:40:51      0      68
+     4    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/INDX.comm
+                                      12/18/08   11:40:51      0      69
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     250
+1501-510  Compilation successful for file CETLIH4.f.
+1501-543  Object file created.

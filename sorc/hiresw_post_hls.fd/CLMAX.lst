@@ -1,0 +1,480 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CLMAX.f 12/22/08 15:45:46
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE CLMAX
+          2 |     I (DSG1,DSG2,PDTOP,PDSL,HTM,Q2,ZINT,SM,HGT,LMH,IM,JM,LM,LP1
+          3 |     O, EL0
+          4 |     W, SQZ,SQ,RQ2L,RQ2H)
+          5 |CFPP$ NOCONCUR R
+          6 |C
+          7 |C     CALCULATES THE FREE-ATMOSPHERE ASYMPTOTE OF THE TURBULENCE LENGTH
+          8 |C     SCALE (L-INF IN THE BLACKADAR's FORMULA) FROM THE DISTRIBUTION
+          9 |C     OF THE TURBULENT ENERGY (see MY82)
+         10 |C
+         11 |C     EXTRACTED FROM EXISTING CODE BY L. LOBOCKI, JULY 28, 1992
+         12 |C   01-10-22  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
+         13 |C
+         14 |C     INPUT:
+         15 |C     ------
+         16 |C
+         17 |C     DETA (LM)        - VECTOR OF THE ETA COORDINATE STEPS
+         18 |C     PDSL (IM,JM)     - VECTORIZED ARRAY OF SURFACE PRESSURE
+         19 |C     HTM  (IM,JM,LM)  - HEIGHT TOPOGRAPHY MASK ARRAY
+         20 |C     Q2   (IM,JM,LM)  - TWICE THE TURBULENT ENERGY FIELD
+         21 |C     ZINT (IM,JM,LP1) - ETA INTERFACES HEIGHT FIELD
+         22 |C     SM   (IM,JM)     - SEA MASK
+         23 |C     HGT  (IM,JM)     - SURFACE ELEVATION ARRAY
+         24 |C     LMH  (IM,JM)     - TOPOGRAPHY INDEXES ARRAY
+         25 |C     IM,JM            - ARRAY DIMENSIONS FOR HORIZONTAL GRIDS
+         26 |C                        IN A VECTORIZED FORM
+         27 |C     KHL00            - INDEX POINTING TO THE BEGIN OF INTERNAL H-POINTS
+         28 |C                        IN HORIZONTAL GRIDS
+         29 |C     KHH00            - INDEX POINTING TO THE END OF INTERNAL H-POINTS
+         30 |C                        IN HORIZONTAL GRIDS
+         31 |C     LM               - ARRAY DIMENSION FOR VERTICAL GRIDS
+         32 |C     LP1              = LM+1
+         33 |C
+         34 |C
+         35 |C     OUTPUT:
+         36 |C     -------
+         37 |C
+         38 |C     EL0 (IM,JM)      - ARRAY OF RESULTING ASYMPTOTIC MIXING LENGTHS
+         39 |C
+         40 |C
+         41 |C     SCRATCH AREAS:
+         42 |C     --------------
+         43 |C
+         44 |C     SQZ(IM,JM),SQ(IM,JM),RQ2L(IM,JM),RQ2H(IM,JM)
+         45 |C
+         46 |C
+         47 |C     RELEVANT CONSTANTS:
+         48 |C     -------------------
+         49 |C
+         50 |C     PROPORTIONALITY CONSTANT BETWEEN ASYMPTOTIC MIXING LENGTH AND THE
+         51 |C     S.D. OF Q DISTRIBUTION, FOR LAND AND SEA AREAS, CORRESPONDINGLY:
+         52 |      PARAMETER (ALPHAL=0.2, ALPHAS=0.2)
+         53 |C
+         54 |C     ASYMPTOTIC MIXING LENGTH LIMITATIONS:
+         55 |      PARAMETER (EL0M=300.0, ELMIN=11.0)
+         56 |C
+         57 |C     MINIMAL VALUE OF TURBULENT ENERGY:
+         58 |      PARAMETER (EPSQ2=0.2)
+         59 |C
+         60 |C     ------------------------------------------------------------------
+         61 |C
+         62 |                         D I M E N S I O N
+         63 |     & DSG1(LM),DSG2(LM),PDSL(IM,JM),HTM(IM,jsta_2l:jend_2u,LM)
+         64 |     &,Q2(IM,jsta_2l:jend_2u,LM)
+         65 |     &,ZINT(IM,jsta_2l:jend_2u,LP1),SM(IM,JM),HGT(IM,jsta_2l:jend_2u)
+         66 |     &,EL0(IM,JM),LMH(IM,JM)
+         67 |     &,SQZ(IM,JM),SQ(IM,JM),RQ2L(IM,JM),RQ2H(IM,JM)
+         68 |C     ------------------------------------------------------------------
+         69 |C
+         70 |      INCLUDE "CTLBLK.comm"
+  1       1 |C-----------------------------------------------------------------------
+  1       2 |      COMMON /CTLBLK/
+  1       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  1       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  1       5 |     &,NPHS,NRADS,NRADL
+  1       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  1       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  1       8 |     &        JSTA_2L, JEND_2U
+  1       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  1      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  1      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  1      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  1      13 |     &                 MPI_COMM_COMP
+  1      14 |C-----------------------------------------------------------------------
+         71 |C
+         72 |!$omp  parallel do
+         73 |      DO J=JSTA,JEND
+         74 |      DO I=1,IM
+         75 |        SQZ(I,J)=0.0
+         76 |        SQ(I,J)=0.0
+         77 |        RQ2H(I,J)=0.0
+         78 |      ENDDO
+         79 |      ENDDO
+         80 |C
+         81 |      DO 220 L=1,LM
+         82 |!$omp  parallel do
+         83 |!$omp& private(dp,rq2m)
+         84 |      DO J=JSTA,JEND
+         85 |      DO I=1,IM
+         86 |        IF(Q2(I,J,L).LE.EPSQ2) THEN
+         87 |          RQ2L(I,J)=0.0
+         88 |        ELSE
+         89 |          RQ2L(I,J)=SQRT(Q2(I,J,L))
+         90 |        ENDIF
+         91 |C
+         92 |C         -----------------------------------------------------------------
+         93 |C         THIS PART OF THE CODE IS LEFT FOR TESTING OTHER PARAMETERIZATION
+         94 |C         SCHEMES
+         95 |C
+         96 |C         IF (L.GE.LMH(I,J)) GOTO 215
+         97 |c         RQ2L(I,J)=SQRT(Q2(I,J,L))
+         98 |c         IF(Q2(I,J,L).LT.0.0)THEN
+         99 |c           write(3,*)'NEGATIVE Q2 AT (I,J,L)=(',I,',',J,',',L,'): ',
+        100 |c                     Q2(I,J,L)
+        101 |c           STOP
+        102 |c         ENDIF
+        103 |C         -----------------------------------------------------------------
+        104 |C
+        105 |          DP=(DSG1(L)*PDTOP+DSG2(L)*PDSL(I,J))*HTM(I,J,L)
+        106 |C***
+        107 |C***      SUM OF Q2 AT BOTH LOWER & UPPER SURFACES:
+        108 |C***
+        109 |          RQ2M=(RQ2H(I,J)+RQ2L(I,J))
+        110 |C***
+        111 |C***      INTEGRAL OF Q*Z OVER DP
+        112 |C***
+        113 |          SQZ(I,J)=((ZINT(I,J,L)+ZINT(I,J,L+1))*0.5-HGT(I,J))*RQ2M*DP
+        114 |     1              +SQZ(I,J)
+        115 |C***
+        116 |C***      INTEGRAL OF Q OVER DP:
+        117 |C***
+        118 |          SQ(I,J)=RQ2M*DP+SQ(I,J)
+        119 |          RQ2H(I,J)=RQ2L(I,J)
+        120 |      ENDDO
+        121 |      ENDDO
+        122 |c215  CONTINUE
+        123 | 220  CONTINUE
+        124 |C***
+        125 |C***    CLIPPING & APPLYING DIFFERENT VALUES OF THE PROPORTIONALITY
+        126 |C***    CONSTANT ALPHA FOR THE LAND AND SEA AREA:
+        127 |C***
+        128 |!$omp  parallel do
+        129 |      DO J=JSTA,JEND
+        130 |      DO I=1,IM
+        131 |        EL0(I,J)= AMAX1(AMIN1(
+        132 |     1    ((SM(I,J)*ALPHAS+(1.0-SM(I,J))*ALPHAL)*SQZ(I,J)
+        133 |     2     /(SQ(I,J)+EPSQ2)),
+        134 |     3    EL0M),ELMIN)
+        135 |      ENDDO
+        136 |      ENDDO
+        137 |C
+        138 |      RETURN
+        139 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+alphal                           Parameter, Real(4)
+                                 0-52.18$  0-132.42
+ 
+alphas                           Parameter, Real(4)
+                                 0-52.30$  0-132.21
+ 
+amax1                            Pure Intrinsic Real(4)
+                                 0-131.19
+ 
+amin1                            Pure Intrinsic Real(4)
+                                 0-131.25
+ 
+clmax                            Subroutine
+                                 0-1.18$
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 1-2.15$
+ 
+dp                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-105.11@  0-113.68  0-118.24
+ 
+dsg1                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-63.8$  0-2.9  0-105.15
+ 
+dsg2                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-63.17$  0-2.14  0-105.29
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 1-4.8$
+ 
+el0                              Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-66.8$  0-3.9  0-131.9@
+ 
+el0m                             Parameter, Real(4)
+                                 0-55.18$  0-134.11
+ 
+elmin                            Parameter, Real(4)
+                                 0-55.30$  0-134.17
+ 
+epsq2                            Parameter, Real(4)
+                                 0-58.18$  0-86.25  0-133.22
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 1-3.32$
+ 
+hgt                              Reference argument, Real(4) (1:?, ?:?), Offset: 0, Alignment: full word
+                                 0-65.47$  0-2.45  0-113.53
+ 
+htm                              Reference argument, Real(4) (1:?, ?:?, 1:?), Offset: 0, Alignment: full word
+                                 0-63.38$  0-2.30  0-105.48
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-74.10@  0-75.13  0-76.12  0-77.14  0-85.10@  0-86.15  0-87.16  0-89.16  0-89.29  0-105.42
+                                 0-105.52  0-109.22  0-109.32  0-113.15  0-113.27  0-113.39  0-113.57  0-114.26  0-118.14  0-118.30
+                                 0-119.16  0-119.26  0-130.10@  0-131.13  0-132.16  0-132.36  0-132.54  0-133.17
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 1-7.59$  1-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 1-3.18$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 1-7.54$  1-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 1-7.65$  1-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 1-4.35$
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 1-3.26$
+ 
+im                               Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-2.53  0-63.31  0-63.31  0-63.42  0-63.42  0-64.11  0-64.11  0-65.13  0-65.13  0-65.40  0-65.40
+                                 0-65.51  0-65.51  0-66.12  0-66.12  0-66.23  0-66.23  0-67.12  0-67.12  0-67.22  0-67.22  0-67.34
+                                 0-67.34  0-67.46  0-67.46  0-74.14  0-85.14  0-130.14
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 1-3.60$
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 1-7.49$  1-10.42$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-73.10@  0-75.15  0-76.14  0-77.16  0-84.10@  0-86.17  0-87.18  0-89.18  0-89.31  0-105.44
+                                 0-105.54  0-109.24  0-109.34  0-113.17  0-113.29  0-113.41  0-113.59  0-114.28  0-118.16  0-118.32
+                                 0-119.18  0-119.28  0-129.10@  0-131.15  0-132.18  0-132.38  0-132.56  0-133.19
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 1-6.36$  1-9.45$  0-73.17  0-84.17  0-129.17
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 1-8.24$  0-63.53  0-64.22  0-65.24  0-65.62  1-12.33$  0-63.53  0-64.22  0-65.24  0-65.62
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 1-7.32$  1-9.59$
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 1-7.40$  1-10.33$
+ 
+jm                               Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-2.56  0-63.34  0-63.34  0-65.43  0-65.43  0-66.15  0-66.15  0-66.26  0-66.26  0-67.15  0-67.15
+                                 0-67.25  0-67.25  0-67.37  0-67.37  0-67.49  0-67.49
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 1-6.30$  1-9.39$  0-73.12  0-84.12  0-129.12
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 1-8.15$  0-63.45  0-64.14  0-65.16  0-65.54  1-12.24$  0-63.45  0-64.14  0-65.16  0-65.54
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 1-7.15$  1-9.51$
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 1-7.23$  1-10.24$
+ 
+l                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-81.14@  0-86.19  0-89.33  0-105.20  0-105.34  0-105.56  0-113.31  0-113.43
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 1-3.55$
+ 
+lm                               Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-2.59  0-63.13  0-63.13  0-63.22  0-63.22  0-63.61  0-63.61  0-64.30  0-64.30  0-81.18
+ 
+lmh                              Reference argument, Integer(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-66.19$  0-2.49
+ 
+lp1                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-2.62  0-65.32  0-65.32
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 1-6.26$  1-9.35$
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 1-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 1-12.55$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 1-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 1-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 1-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 1-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 1-3.45$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 1-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 1-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 1-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 1-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 1-4.47$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 1-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 1-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 1-6.15$  1-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 1-12.42$
+ 
+parallel                         Common Block, Alignment: double word
+                                 1-9.15$
+ 
+pdsl                             Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-63.26$  0-2.25  0-105.37
+ 
+pdtop                            Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.19  0-105.23
+ 
+q2                               Reference argument, Real(4) (1:?, ?:?, 1:?), Offset: 0, Alignment: full word
+                                 0-64.8$  0-2.34  0-86.12  0-89.26
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 1-3.38$
+ 
+rq2h                             Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-67.41$  0-4.21  0-77.9@  0-109.17  0-119.11@
+ 
+rq2l                             Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-67.29$  0-4.16  0-87.11@  0-89.11@  0-109.27  0-119.21
+ 
+rq2m                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-109.11@  0-113.63  0-118.19
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 1-3.14$
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 1-3.8$
+ 
+sm                               Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.37$  0-2.42  0-132.13  0-132.33
+ 
+sq                               Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-67.19$  0-4.13  0-76.9@  0-118.11@  0-118.27  0-133.14
+ 
+sqrt                             Pure Intrinsic
+                                 0-89.21
+ 
+sqz                              Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-67.8$  0-4.9  0-75.9@  0-113.11@  0-114.22  0-132.50
+ 
+zint                             Reference argument, Real(4) (1:?, ?:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.8$  0-2.37  0-113.22  0-113.34
+ 
+** clmax   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+        140 |
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    CLMAX.f                     12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      70
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     154
+1501-510  Compilation successful for file CLMAX.f.
+1501-543  Object file created.

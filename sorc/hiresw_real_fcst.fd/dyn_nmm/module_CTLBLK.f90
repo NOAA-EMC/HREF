@@ -1,0 +1,40 @@
+
+      MODULE MODULE_CTLBLK
+
+
+
+
+
+      INTEGER :: IM,JM,LM
+      INTEGER :: NROOT
+
+
+
+
+      INTEGER :: LIST=6            
+      INTEGER,PARAMETER :: LSM=39  
+
+
+
+
+      LOGICAL :: SINGLRST
+
+
+
+
+      LOGICAL :: RUN,FIRST,RESTRT,NEST
+
+
+      REAL :: TLM0D,TPH0D,TSPH
+
+      INTEGER :: IHRST,NFCST,NUNIT_NBC,IOUT                            &
+                ,NTSTM,NSTART,NTDDMP,NBOCO,NSHDE 
+
+
+      INTEGER,DIMENSION(3) :: IDAT
+
+      INTEGER,DIMENSION(99) :: ISHDE
+
+      REAL,DIMENSION(LSM) :: SPL
+
+      END MODULE MODULE_CTLBLK

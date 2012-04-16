@@ -1,0 +1,471 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/FILLV.f 12/22/08 15:45:50
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE FILLV(ARR1,ARR2,IFLAG,IDIM,JDIM)
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .
+          4 |C SUBPROGRAM:    FILLV       FILL V POINTS ON E-GRID H FIELD
+          5 |C   PRGRMMR: BLACK           ORG: W/NP2      DATE: 92-12-23
+          6 |C
+          7 |C ABSTRACT:
+          8 |C     THIS ROUTINE FILLS VELOCITY (V) POINTS ON A MASS
+          9 |C     POINT E-GRID.  PASSED VARIABLE IFLAG TELLS THE ROUTINE
+         10 |C     WHAT TO DO WITH NEGATIVE VALUES OBTAINED DURING THE
+         11 |C     FILLING PROCESS
+         12 |C        IFLAG=0, TAKE WHATEVER THE INTERPOLATION GIVES.
+         13 |C        IFLAG=1, TRUNCATE AT ZERO.
+         14 |C        IFLAG=2, TRUNCATE AT A VERY SMALL POSITIVE VALUE (EPS).
+         15 |C     THE INTERPOLATION CAN USE A BILINEAR SCHEME OR CUBIC
+         16 |C     INTERPOLATING POLYMONIALS.  PARAMETERS WGTCUB AND WGTLIN
+         17 |C     CONTROL THIS OPTION.  SETTING WGTCUB TO 1.0 ACTIVATES
+         18 |C     INTERPOLATION USING CUBIC INTERPOLATING POLYNOMIALS.
+         19 |C     SETTING WGTCUB TO 0.0 ACTIVATES BILINEAR INTERPOLATION.
+         20 |C
+         21 |C   .
+         22 |C
+         23 |C PROGRAM HISTORY LOG:
+         24 |C   ??-??-??  BLACK - ORIGINATOR
+         25 |C   93-12-23  RUSS TREADON - ADDED COMMENTS AND VARIABLE
+         26 |C                            GRID DIMENSIONS TO
+         27 |C                            SUBROUTINE CALL.
+         28 |C   98-06-04  BLACK - CONVERSION TO 2-D
+         29 |C
+         30 |C USAGE:    CALL FILLV(ARR1,ARR2,IFLAG,IDIM,JDIM)
+         31 |C   INPUT ARGUMENT LIST:
+         32 |C     ARR2     - VELOCITY POINT DATA ON STAGGERED E-GRID.
+         33 |C     IFLAG    -
+         34 |C     IDIM     - FIRST DIMENSION OF FILLED E-GRID.
+         35 |C     JDIM     - SECOND DIMENSION OF FILLED E-GRID.
+         36 |C
+         37 |C   OUTPUT ARGUMENT LIST:
+         38 |C     ARR1     - VELOCITY POINT DATA ON FILLED E-GRID.
+         39 |C
+         40 |C   OUTPUT FILES:
+         41 |C     NONE
+         42 |C
+         43 |C   SUBPROGRAMS CALLED:
+         44 |C     UTILITIES:
+         45 |C       EFILL - FILL MISSING VALUES ON STAGGERED
+         46 |C               E-GRID WITH FIELD MEAN.
+         47 |C       COEFI - COMPUTES ROW-WISE INTERPOLATION VALUES.
+         48 |C       COEFJ - COMPUTES COLUMN-WISE INTERPOLATION VALUES.
+         49 |C     LIBRARY:
+         50 |C       COMMON
+         51 |C
+         52 |C   ATTRIBUTES:
+         53 |C     LANGUAGE: FORTRAN
+         54 |C     MACHINE : CRAY C-90
+         55 |C$$$
+         56 |C
+         57 |C----------------------------------------------------------------------
+         58 |      PARAMETER (WGTCUB=0.0,WGTLIN=1.-WGTCUB,EPS=1.E-5)
+         59 |      PARAMETER (P5C=.125,P15C=3.375,P25C=15.625
+         60 |     1,          P35C=42.875,P45C=91.125)
+         61 |      PARAMETER (P5S=.25,P15S=2.25,P25S=6.25
+         62 |     1     ,          P35S=12.25,P45S=20.25)
+         63 |C----------------------------------------------------------------------
+         64 |                     D I M E N S I O N
+         65 |     1 ARR1((IDIM+1)/2,JDIM),ARR2(IDIM,JDIM)
+         66 |C
+         67 |C**********************************************************************
+         68 |C     START FILLV HERE.
+         69 |C
+         70 |C     REPLACE MISSING VALUES ON EGRID WITH FIELD MEAN
+         71 |      IM=(IDIM+1)/2
+         72 |      CALL EFILL(ARR1,IM,JDIM)
+         73 |C
+         74 |      DO J=1,JDIM
+         75 |      DO I=1,IDIM
+         76 |        ARR2(I,J)=0.
+         77 |      ENDDO
+         78 |      ENDDO
+         79 |C***
+         80 |C***  REASSIGN VALUES OF MODEL GRID TO IDIM X JDIM GRID ON ODD ROWS
+         81 |C***
+         82 |      DO J=1,JDIM,2
+         83 |      DO I=1,IDIM,2
+         84 |        II=(I+1)/2
+         85 |        ARR2(I,J)=ARR1(II,J)
+         86 |      ENDDO
+         87 |      ENDDO
+         88 |C***
+         89 |C***  REASSIGN VALUES OF MODEL GRID TO IDIM X JDIM GRID ON EVEN ROWS
+         90 |C***
+         91 |      DO J=2,JDIM-1,2
+         92 |      DO I=2,IDIM-1,2
+         93 |        II=I/2
+         94 |        ARR2(I,J)=ARR1(II,J)
+         95 |      ENDDO
+         96 |      ENDDO
+         97 |C
+         98 |      IF(WGTCUB.GT.0.99)GO TO 100
+         99 |C***
+        100 |C***  INTERPOLATE VALUES TO THOSE CORRESPONDING TO V POINTS NOW ON THE
+        101 |C***  IDIM X JDIM GRID FOR THE BOTTOM AND TOP ROWS.
+        102 |C***
+        103 |      DO I=2,IDIM-1,2
+        104 |        II=I/2
+        105 |        ARR2(I,1)=(ARR1(II,1)+ARR1(II+1,1))*0.5
+        106 |        ARR2(I,JDIM)=(ARR1(II,JDIM)+ARR1(II+1,JDIM))*0.5
+        107 |      ENDDO
+        108 |C***
+        109 |C***  INTERPOLATE VALUES TO THOSE CORRESPONDING TO V POINTS NOW ON THE
+        110 |C***  IDIM X JDIM GRID FOR WEST AND EAST SIDES.
+        111 |C***
+        112 |      DO J=2,JDIM-1,2
+        113 |        ARR2(1,J)=(ARR1(1,J+1)+ARR1(1,J-1))*0.5
+        114 |        ARR2(IDIM,J)=(ARR1(IM,J+1)+ARR1(IM,J-1))*0.5
+        115 |      ENDDO
+        116 |C***
+        117 |C***  INTERPOLATE TO CORRESPONDING V POINTS ON ALL INNER POINTS
+        118 |C***  OF ODD ROWS.
+        119 |C***
+        120 |      DO J=3,JDIM-2,2
+        121 |      DO I=2,IDIM-1,2
+        122 |        II=I/2
+        123 |        ARR2(I,J)=0.25*(ARR1(II,J)+ARR1(II+1,J)
+        124 |     1                 +ARR1(II,J+1)+ARR1(II,J-1))
+        125 |      ENDDO
+        126 |      ENDDO
+        127 |C***
+        128 |C***  INTERPOLATE TO CORRESPONDING V POINTS ON ALL INNER POINTS
+        129 |C***  OF EVEN ROWS.
+        130 |C***
+        131 |      DO J=2,JDIM-1,2
+        132 |      DO I=3,IDIM-2,2
+        133 |        II=I/2
+        134 |        ARR2(I,J)=0.25*(ARR1(II,J)+ARR1(II+1,J)
+        135 |     1                 +ARR1(II+1,J+1)+ARR1(II+1,J-1))
+        136 |      ENDDO
+        137 |      ENDDO
+        138 |      IF(WGTCUB.LT.0.01)GO TO 825
+        139 |C***
+        140 |C***  FILL IN THE VELOCITY POINTS USING CUBIC INTERPOLATING POLYNOMIALS.
+        141 |C***  FIRST DO THE ROWS.
+        142 |C***
+        143 |  100 WGT1=0.5*WGTCUB+WGTLIN
+        144 |      DO 200 J=1,JDIM,2
+        145 |      DO I=3,IDIM-8,2
+        146 |        CALL COEFI(ARR2,IDIM,JDIM,I,J,C1,C2,C3,C4)
+        147 |        ARR2(I+3,J)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        148 |     1               WGTLIN*ARR2(I+3,J))/WGT1
+        149 |      ENDDO
+        150 |C
+        151 |      CALL COEFI(ARR2,IDIM,JDIM,1,J,C1,C2,C3,C4)
+        152 |      ARR2(2,J)=(0.5*WGTCUB*(C1*P15C+C2*P15S+C3*1.5+C4)+
+        153 |     1           WGTLIN*ARR2(2,J))/WGT1
+        154 |      ARR2(4,J)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        155 |     1           WGTLIN*ARR2(4,J))/WGT1
+        156 |      CALL COEFI(ARR2,IDIM,JDIM,IDIM-6,J,C1,C2,C3,C4)
+        157 |      ARR2(IDIM-3,J)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        158 |     1                WGTLIN*ARR2(IDIM-3,J))/WGT1
+        159 |      ARR2(IDIM-1,J)=(0.5*WGTCUB*(C1*P35C+C2*P35S+C3*3.5+C4)+
+        160 |     1                WGTLIN*ARR2(IDIM-1,J))/WGT1
+        161 |  200 CONTINUE
+        162 |C
+        163 |      DO 400 J=2,JDIMM,2
+        164 |      DO I=4,IDIM-9,2
+        165 |        CALL COEFI(ARR2,IDIM,JDIM,I,J,C1,C2,C3,C4)
+        166 |        ARR2(I+3,J)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        167 |     1               WGTLIN*ARR2(I+3,J))/WGT1
+        168 |      ENDDO
+        169 |C
+        170 |      CALL COEFI(ARR2,IDIM,JDIM,2,J,C1,C2,C3,C4)
+        171 |      ARR2(1,J)=(0.5*WGTCUB*(C1*P5C+C2*P5S+C3*.5+C4)+
+        172 |     1           WGTLIN*ARR2(1,J))/WGT1
+        173 |      ARR2(3,J)=(0.5*WGTCUB*(C1*P15C+C2*P15S+C3*1.5+C4)+
+        174 |     1           WGTLIN*ARR2(3,J))/WGT1
+        175 |      ARR2(5,J)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        176 |     1           WGTLIN*ARR2(5,J))/WGT1
+        177 |      CALL COEFI(ARR2,IDIM,JDIM,IDIM-7,J,C1,C2,C3,C4)
+        178 |      ARR2(IDIM-4,J)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        179 |     1                WGTLIN*ARR2(IDIM-4,J))/WGT1
+        180 |      ARR2(IDIM-2,J)=(0.5*WGTCUB*(C1*P35C+C2*P35S+C3*3.5+C4)+
+        181 |     1                WGTLIN*ARR2(IDIM-2,J))/WGT1
+        182 |      ARR2(IDIM,J)=(0.5*WGTCUB*(C1*P45C+C2*P45S+C3*4.5+C4)+
+        183 |     1                WGTLIN*ARR2(IDIM,J))/WGT1
+        184 |  400 CONTINUE
+        185 |C***
+        186 |C***  NOW DO THE COLUMNS.
+        187 |C***
+        188 |      WGT2=0.5*WGTCUB+WGT1
+        189 |      DO 600 I=1,IDIM,2
+        190 |      DO J=3,JDIM-8,2
+        191 |        CALL COEFJ(ARR2,IDIM,JDIM,I,J,C1,C2,C3,C4)
+        192 |        ARR2(I,J+3)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        193 |     1               WGT1*ARR2(I,J+3))/WGT2
+        194 |      ENDDO
+        195 |C
+        196 |      CALL COEFJ(ARR2,IDIM,JDIM,I,1,C1,C2,C3,C4)
+        197 |      ARR2(I,2)=(0.5*WGTCUB*(C1*P15C+C2*P15S+C3*1.5+C4)+
+        198 |     1           WGT1*ARR2(I,2))/WGT2
+        199 |      ARR2(I,4)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        200 |     1           WGT1*ARR2(I,4))/WGT2
+        201 |      CALL COEFJ(ARR2,IDIM,JDIM,I,JDIM-6,C1,C2,C3,C4)
+        202 |      ARR2(I,JDIM-3)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        203 |     1                WGT1*ARR2(I,JDIM-3))/WGT2
+        204 |      ARR2(I,JDIM-1)=(0.5*WGTCUB*(C1*P35C+C2*P35S+C3*3.5+C4)+
+        205 |     1                WGT1*ARR2(I,JDIM-1))/WGT2
+        206 |  600 CONTINUE
+        207 |C
+        208 |      DO 800 I=2,IDIM-1,2
+        209 |      DO J=4,JDIM-9,2
+        210 |        CALL COEFJ(ARR2,IDIM,JDIM,I,J,C1,C2,C3,C4)
+        211 |        ARR2(I,J+3)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        212 |     1               WGT1*ARR2(I,J+3))/WGT2
+        213 |      ENDDO
+        214 |C
+        215 |      CALL COEFJ(ARR2,IDIM,JDIM,I,2,C1,C2,C3,C4)
+        216 |      ARR2(I,1)=(0.5*WGTCUB*(C1*P5C+C2*P5S+C3*.5+C4)+
+        217 |     1           WGT1*ARR2(I,1))/WGT2
+        218 |      ARR2(I,3)=(0.5*WGTCUB*(C1*P15C+C2*P15S+C3*1.5+C4)+
+        219 |     1           WGT1*ARR2(I,3))/WGT2
+        220 |      ARR2(I,5)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        221 |     1           WGT1*ARR2(I,5))/WGT2
+        222 |      CALL COEFJ(ARR2,IDIM,JDIM,I,JDIM-7,C1,C2,C3,C4)
+        223 |      ARR2(I,JDIM-4)=(0.5*WGTCUB*(C1*P25C+C2*P25S+C3*2.5+C4)+
+        224 |     1                WGT1*ARR2(I,JDIM-4))/WGT2
+        225 |      ARR2(I,JDIM-2)=(0.5*WGTCUB*(C1*P35C+C2*P35S+C3*3.5+C4)+
+        226 |     1                WGT1*ARR2(I,JDIM-2))/WGT2
+        227 |      ARR2(I,JDIM)=(0.5*WGTCUB*(C1*P35C+C2*P35S+C3*3.5+C4)+
+        228 |     1                WGT1*ARR2(I,JDIM))/WGT2
+        229 |  800 CONTINUE
+        230 |C
+        231 |  825 IF(IFLAG.EQ.1)THEN
+        232 |        DO J=1,JDIM,2
+        233 |        DO I=2,IDIM-1,2
+        234 |          IF(ARR2(I,J).LT.0.)ARR2(I,J)=0.
+        235 |        ENDDO
+        236 |        ENDDO
+        237 |C
+        238 |        DO J=2,JDIM-1,2
+        239 |        DO I=1,IDIM,2
+        240 |          IF(ARR2(I,J).LT.0.)ARR2(I,J)=0.
+        241 |        ENDDO
+        242 |        ENDDO
+        243 |      ELSEIF(IFLAG.EQ.2)THEN
+        244 |        DO J=1,JDIM,2
+        245 |        DO I=2,IDIM-1,2
+        246 |          IF(ARR2(I,J).LT.0.)ARR2(I,J)=EPS
+        247 |        ENDDO
+        248 |        ENDDO
+        249 |C
+        250 |        DO J=2,JDIM-1,2
+        251 |        DO I=1,IDIM,2
+        252 |          IF(ARR2(I,J).LT.0.)ARR2(I,J)=EPS
+        253 |        ENDDO
+        254 |        ENDDO
+        255 |      ENDIF
+        256 |C
+        257 |C     END OF ROUTINE.
+        258 |C
+        259 |      RETURN
+        260 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+arr1                             Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.8$  0-1.24  0-72.18  0-85.19  0-94.19  0-105.20  0-105.31  0-106.23  0-106.37  0-113.20
+                                 0-113.32  0-114.23  0-114.36  0-123.25  0-123.36  0-124.25  0-124.38  0-134.25  0-134.36  0-135.25
+                                 0-135.40
+ 
+arr2                             Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-65.30$  0-1.29  0-76.9@  0-85.9@  0-94.9@  0-105.9@  0-106.9@  0-113.9@  0-114.9@  0-123.9@
+                                 0-134.9@  0-146.20  0-147.9@  0-148.29  0-151.18  0-152.7@  0-153.25  0-154.7@  0-155.25  0-156.18
+                                 0-157.7@  0-158.30  0-159.7@  0-160.30  0-165.20  0-166.9@  0-167.29  0-170.18  0-171.7@  0-172.25
+                                 0-173.7@  0-174.25  0-175.7@  0-176.25  0-177.18  0-178.7@  0-179.30  0-180.7@  0-181.30  0-182.7@
+                                 0-183.30  0-191.20  0-192.9@  0-193.27  0-196.18  0-197.7@  0-198.23  0-199.7@  0-200.23  0-201.18
+                                 0-202.7@  0-203.28  0-204.7@  0-205.28  0-210.20  0-211.9@  0-212.27  0-215.18  0-216.7@  0-217.23
+                                 0-218.7@  0-219.23  0-220.7@  0-221.23  0-222.18  0-223.7@  0-224.28  0-225.7@  0-226.28  0-227.7@
+                                 0-228.28  0-234.14  0-234.30@  0-240.14  0-240.30@  0-246.14  0-246.30@  0-252.14  0-252.30@
+ 
+c1                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-146.39  0-147.34  0-151.37  0-152.30  0-154.30  0-156.42  0-157.35  0-159.35  0-165.39  0-166.34
+                                 0-170.37  0-171.30  0-173.30  0-175.30  0-177.42  0-178.35  0-180.35  0-182.33  0-191.39  0-192.34
+                                 0-196.37  0-197.30  0-199.30  0-201.42  0-202.35  0-204.35  0-210.39  0-211.34  0-215.37  0-216.30
+                                 0-218.30  0-220.30  0-222.42  0-223.35  0-225.35  0-227.33
+ 
+c2                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-146.42  0-147.42  0-151.40  0-152.38  0-154.38  0-156.45  0-157.43  0-159.43  0-165.42  0-166.42
+                                 0-170.40  0-171.37  0-173.38  0-175.38  0-177.45  0-178.43  0-180.43  0-182.41  0-191.42  0-192.42
+                                 0-196.40  0-197.38  0-199.38  0-201.45  0-202.43  0-204.43  0-210.42  0-211.42  0-215.40  0-216.37
+                                 0-218.38  0-220.38  0-222.45  0-223.43  0-225.43  0-227.41
+ 
+c3                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-146.45  0-147.50  0-151.43  0-152.46  0-154.46  0-156.48  0-157.51  0-159.51  0-165.45  0-166.50
+                                 0-170.43  0-171.44  0-173.46  0-175.46  0-177.48  0-178.51  0-180.51  0-182.49  0-191.45  0-192.50
+                                 0-196.43  0-197.46  0-199.46  0-201.48  0-202.51  0-204.51  0-210.45  0-211.50  0-215.43  0-216.44
+                                 0-218.46  0-220.46  0-222.48  0-223.51  0-225.51  0-227.49
+ 
+c4                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-146.48  0-147.57  0-151.46  0-152.53  0-154.53  0-156.51  0-157.58  0-159.58  0-165.48  0-166.57
+                                 0-170.46  0-171.50  0-173.53  0-175.53  0-177.51  0-178.58  0-180.58  0-182.56  0-191.48  0-192.57
+                                 0-196.46  0-197.53  0-199.53  0-201.51  0-202.58  0-204.58  0-210.48  0-211.57  0-215.46  0-216.50
+                                 0-218.53  0-220.53  0-222.51  0-223.58  0-225.58  0-227.56
+ 
+coefi                            External Subroutine
+                                 0-146.14  0-151.12  0-156.12  0-165.14  0-170.12  0-177.12
+ 
+coefj                            External Subroutine
+                                 0-191.14  0-196.12  0-201.12  0-210.14  0-215.12  0-222.12
+ 
+efill                            External Subroutine
+                                 0-72.12
+ 
+eps                              Parameter, Real(4)
+                                 0-58.46$  0-246.40  0-252.40
+ 
+fillv                            Subroutine
+                                 0-1.18$
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-75.10@  0-76.14  0-83.10@  0-84.13  0-85.14  0-92.10@  0-93.12  0-94.14  0-103.10@  0-104.12
+                                 0-105.14  0-106.14  0-121.10@  0-122.12  0-123.14  0-132.10@  0-133.12  0-134.14  0-145.10@
+                                 0-146.35  0-147.14  0-148.34  0-164.10@  0-165.35  0-166.14  0-167.34  0-189.14@  0-191.35
+                                 0-192.14  0-193.32  0-196.33  0-197.12  0-198.28  0-199.12  0-200.28  0-201.33  0-202.12  0-203.33
+                                 0-204.12  0-205.33  0-208.14@  0-210.35  0-211.14  0-212.32  0-215.33  0-216.12  0-217.28  0-218.12
+                                 0-219.28  0-220.12  0-221.28  0-222.33  0-223.12  0-224.33  0-225.12  0-226.33  0-227.12  0-228.33
+                                 0-233.12@  0-234.19  0-234.35  0-239.12@  0-240.19  0-240.35  0-245.12@  0-246.19  0-246.35
+                                 0-251.12@  0-252.19  0-252.35
+ 
+idim                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.40  0-65.14  0-65.14  0-65.35  0-65.35  0-71.11  0-75.14  0-83.14  0-92.14  0-103.14  0-114.14
+                                 0-121.14  0-132.14  0-145.14  0-146.25  0-151.23  0-156.23  0-156.33  0-157.12  0-158.35  0-159.12
+                                 0-160.35  0-164.14  0-165.25  0-170.23  0-177.23  0-177.33  0-178.12  0-179.35  0-180.12  0-181.35
+                                 0-182.12  0-183.35  0-189.18  0-191.25  0-196.23  0-201.23  0-208.18  0-210.25  0-215.23  0-222.23
+                                 0-233.16  0-239.16  0-245.16  0-251.16
+ 
+iflag                            Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.34  0-231.10  0-243.14
+ 
+ii                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-84.9@  0-85.24  0-93.9@  0-94.24  0-104.9@  0-105.25  0-105.36  0-106.28  0-106.42  0-122.9@
+                                 0-123.30  0-123.41  0-124.30  0-124.43  0-133.9@  0-134.30  0-134.41  0-135.30  0-135.45
+ 
+im                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-71.7@  0-72.23  0-114.28  0-114.41
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-74.10@  0-76.16  0-82.10@  0-85.16  0-85.27  0-91.10@  0-94.16  0-94.27  0-112.10@  0-113.16
+                                 0-113.27  0-113.39  0-114.19  0-114.31  0-114.44  0-120.10@  0-123.16  0-123.33  0-123.46  0-124.33
+                                 0-124.46  0-131.10@  0-134.16  0-134.33  0-134.46  0-135.35  0-135.50  0-144.14@  0-146.37
+                                 0-147.18  0-148.38  0-151.35  0-152.14  0-153.32  0-154.14  0-155.32  0-156.40  0-157.19  0-158.42
+                                 0-159.19  0-160.42  0-163.14@  0-165.37  0-166.18  0-167.38  0-170.35  0-171.14  0-172.32  0-173.14
+                                 0-174.32  0-175.14  0-176.32  0-177.40  0-178.19  0-179.42  0-180.19  0-181.42  0-182.17  0-183.40
+                                 0-190.10@  0-191.37  0-192.16  0-193.34  0-209.10@  0-210.37  0-211.16  0-212.34  0-232.12@
+                                 0-234.21  0-234.37  0-238.12@  0-240.21  0-240.37  0-244.12@  0-246.21  0-246.37  0-250.12@
+                                 0-252.21  0-252.37
+ 
+jdim                             Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.45  0-65.24  0-65.24  0-65.40  0-65.40  0-72.26  0-74.14  0-82.14  0-91.14  0-106.16  0-106.31
+                                 0-106.47  0-112.14  0-120.14  0-131.14  0-144.18  0-146.30  0-151.28  0-156.28  0-165.30  0-170.28
+                                 0-177.28  0-190.14  0-191.30  0-196.28  0-201.28  0-201.35  0-202.14  0-203.35  0-204.14  0-205.35
+                                 0-209.14  0-210.30  0-215.28  0-222.28  0-222.35  0-223.14  0-224.35  0-225.14  0-226.35  0-227.14
+                                 0-228.35  0-232.16  0-238.16  0-244.16  0-250.16
+ 
+jdimm                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-163.18
+ 
+p15c                             Parameter, Real(4)
+                                 0-59.27$  0-152.33  0-173.33  0-197.33  0-218.33
+ 
+p15s                             Parameter, Real(4)
+                                 0-61.26$  0-152.41  0-173.41  0-197.41  0-218.41
+ 
+p25c                             Parameter, Real(4)
+                                 0-59.38$  0-147.37  0-154.33  0-157.38  0-166.37  0-175.33  0-178.38  0-192.37  0-199.33  0-202.38
+                                 0-211.37  0-220.33  0-223.38
+ 
+p25s                             Parameter, Real(4)
+                                 0-61.36$  0-147.45  0-154.41  0-157.46  0-166.45  0-175.41  0-178.46  0-192.45  0-199.41  0-202.46
+                                 0-211.45  0-220.41  0-223.46
+ 
+p35c                             Parameter, Real(4)
+                                 0-60.18$  0-159.38  0-180.38  0-204.38  0-225.38  0-227.36
+ 
+p35s                             Parameter, Real(4)
+                                 0-62.23$  0-159.46  0-180.46  0-204.46  0-225.46  0-227.44
+ 
+p45c                             Parameter, Real(4)
+                                 0-60.30$  0-182.36
+ 
+p45s                             Parameter, Real(4)
+                                 0-62.34$  0-182.44
+ 
+p5c                              Parameter, Real(4)
+                                 0-59.18$  0-171.33  0-216.33
+ 
+p5s                              Parameter, Real(4)
+                                 0-61.18$  0-171.40  0-216.40
+ 
+wgt1                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-143.7@  0-148.42  0-153.36  0-155.36  0-158.46  0-160.46  0-167.42  0-172.36  0-174.36  0-176.36
+                                 0-179.46  0-181.46  0-183.44  0-188.23  0-193.22  0-198.18  0-200.18  0-203.23  0-205.23  0-212.22
+                                 0-217.18  0-219.18  0-221.18  0-224.23  0-226.23  0-228.23
+ 
+wgt2                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-188.7@  0-193.40  0-198.34  0-200.34  0-203.44  0-205.44  0-212.40  0-217.34  0-219.34  0-221.34
+                                 0-224.44  0-226.44  0-228.42
+ 
+wgtcub                           Parameter, Real(4)
+                                 0-58.18$  0-58.39  0-98.10  0-138.10  0-143.16  0-147.26  0-152.22  0-154.22  0-157.27  0-159.27
+                                 0-166.26  0-171.22  0-173.22  0-175.22  0-178.27  0-180.27  0-182.25  0-188.16  0-192.26  0-197.22
+                                 0-199.22  0-202.27  0-204.27  0-211.26  0-216.22  0-218.22  0-220.22  0-223.27  0-225.27  0-227.25
+ 
+wgtlin                           Parameter, Real(4)
+                                 0-58.29$  0-143.23  0-148.22  0-153.18  0-155.18  0-158.23  0-160.23  0-167.22  0-172.18  0-174.18
+                                 0-176.18  0-179.23  0-181.23  0-183.23
+ 
+** fillv   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    FILLV.f                     12/18/08   11:40:51
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     260
+1501-510  Compilation successful for file FILLV.f.
+1501-543  Object file created.

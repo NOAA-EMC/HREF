@@ -1,0 +1,531 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/TTBLEX.f 12/22/08 15:46:03
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE TTBLEX(TREF,TTBL,ITB,JTB,KARR,PDSL,SGML1L
+          2 |     1,SGML2L,PDTOP,HTML,PT,PL,QQ,PP,RDP,THE0,STHE,RDTHE,THESP
+          3 |     2,                 IPTB,ITHTB)
+          4 |CFPP$ NOCONCUR R
+          5 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          6 |C                .      .    .
+          7 |C SUBPROGRAM:    TTBLEX      COMPUTES T ALONG A MOIST ADIABAT
+          8 |C   PRGRMMR: BLACK           ORG: W/NP2      DATE: ??-??-??
+          9 |C
+         10 |C ABSTRACT:
+         11 |C     THIS ROUTINE COMPUTES THE TEMPERATURE ALONG A MOIST
+         12 |C     ADIABAT GIVEN THE SATURATION POTENTIAL TEMPERATURE
+         13 |C     AND THE PRESSURE
+         14 |C   .
+         15 |C
+         16 |C PROGRAM HISTORY LOG:
+         17 |C   ??-??-??  T BLACK - ORIGINATOR
+         18 |C   98-06-12  T BLACK - CONVERSION FROM 1-D TO 2-D
+         19 |C   00-01-04  JIM TUCCILLO - MPI VERSION
+         20 |C   01-10-22  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
+         21 |C
+         22 |C   OUTPUT FILES:
+         23 |C     NONE
+         24 |C
+         25 |C   SUBPROGRAMS CALLED:
+         26 |C     UTILITIES:
+         27 |C       NONE
+         28 |C
+         29 |C   ATTRIBUTES:
+         30 |C     LANGUAGE: FORTRAN
+         31 |C----------------------------------------------------------------------
+         32 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         33 |      INCLUDE "CTLBLK.comm"
+  2       1 |C-----------------------------------------------------------------------
+  2       2 |      COMMON /CTLBLK/
+  2       3 |     & SIGMA,RUN,IDAT(3),IHRST,FIRST,RESTRT,NFCST,NBC,LIST,IOUT
+  2       4 |     &,DT,NTSD,NTSTM,NDDAMP,NPREC,IDTAD,NBOCO,NSHDE,NCP
+  2       5 |     &,NPHS,NRADS,NRADL
+  2       6 |      INTEGER NUM_PROCS, ME, JSTA, JEND,
+  2       7 |     &        JSTA_M, JSTA_M2, JEND_M, JEND_M2, IUP, IDN, ICNT, IDSP,
+  2       8 |     &        JSTA_2L, JEND_2U
+  2       9 |      COMMON /PARALLEL/NUM_PROCS, ME, JSTA, JEND, JSTA_M, JEND_M,
+  2      10 |     &                 JSTA_M2, JEND_M2, IUP, IDN,
+  2      11 |     &                 ICNT(0:1023), IDSP(0:1023),
+  2      12 |     &                 JSTA_2L, JEND_2U, NUM_SERVERS, MPI_COMM_INTER,
+  2      13 |     &                 MPI_COMM_COMP
+  2      14 |C-----------------------------------------------------------------------
+         34 |C----------------------------------------------------------------------
+         35 |                             D I M E N S I O N
+         36 |     1 TREF(IM,JSTA_2L:JEND_2U),TTBL(JTB,ITB),KARR(IM,JM),PDSL(IM,JM),
+         37 |     8 HTML(IM,JSTA_2L:JEND_2U)
+         38 |     2,QQ(IM,JM),PP(IM,JM),THE0(ITB),STHE(ITB),THESP(IM,JM)
+         39 |     3,IPTB(IM,JM),ITHTB(IM,JM)
+         40 |C-----------------------------------------------------------------------
+         41 |!$omp  parallel do
+         42 |!$omp& private(bthe00k,bthe10k,bthk,ip,iptbk,ith,pk,sthe00k,sthe10k,
+         43 |!$omp&         sthk,t00k,t01k,t10k,t11k,tpk,tthk)
+         44 |      DO 500 J=JSTA_M,JEND_M
+         45 |      DO 500 I=2,IM-1
+         46 |      IF(KARR(I,J).GT.0)THEN
+         47 |C--------------SCALING PRESSURE & TT TABLE INDEX------------------------
+         48 |        PK=PDTOP*SGML1L+PDSL(I,J)*SGML2L+PT
+         49 |        TPK=(PK-PL)*RDP
+         50 |        QQ(I,J)=TPK-AINT(TPK)
+         51 |        IPTB(I,J)=INT(TPK)+1
+         52 |C--------------KEEPING INDICES WITHIN THE TABLE-------------------------
+         53 |        IF(IPTB(I,J).LT.1)THEN
+         54 |          IPTB(I,J)=1
+         55 |          QQ(I,J)=0.
+         56 |        ENDIF
+         57 |C
+         58 |        IF(IPTB(I,J).GE.ITB)THEN
+         59 |          IPTB(I,J)=ITB-1
+         60 |          QQ(I,J)=0.
+         61 |        ENDIF
+         62 |C--------------BASE AND SCALING FACTOR FOR THE--------------------------
+         63 |        IPTBK=IPTB(I,J)
+         64 |        BTHE00K=THE0(IPTBK)
+         65 |        STHE00K=STHE(IPTBK)
+         66 |        BTHE10K=THE0(IPTBK+1)
+         67 |        STHE10K=STHE(IPTBK+1)
+         68 |C--------------SCALING THE & TT TABLE INDEX-----------------------------
+         69 |        BTHK=(BTHE10K-BTHE00K)*QQ(I,J)+BTHE00K
+         70 |        STHK=(STHE10K-STHE00K)*QQ(I,J)+STHE00K
+         71 |        TTHK=(THESP(I,J)-BTHK)/STHK*RDTHE
+         72 |        PP(I,J)=TTHK-AINT(TTHK)
+         73 |        ITHTB(I,J)=INT(TTHK)+1
+         74 |C--------------KEEPING INDICES WITHIN THE TABLE-------------------------
+         75 |        IF(ITHTB(I,J).LT.1)THEN
+         76 |          ITHTB(I,J)=1
+         77 |          PP(I,J)=0.
+         78 |        ENDIF
+         79 |C
+         80 |        IF(ITHTB(I,J).GE.JTB)THEN
+         81 |          ITHTB(I,J)=JTB-1
+         82 |          PP(I,J)=0.
+         83 |        ENDIF
+         84 |C--------------TEMPERATURE AT FOUR SURROUNDING TT TABLE PTS.------------
+         85 |        ITH=ITHTB(I,J)
+         86 |        IP=IPTB(I,J)
+         87 |        T00K=TTBL(ITH  ,IP  )
+         88 |        T10K=TTBL(ITH+1,IP  )
+         89 |        T01K=TTBL(ITH  ,IP+1)
+         90 |        T11K=TTBL(ITH+1,IP+1)
+         91 |C--------------PARCEL TEMPERATURE-------------------------------------
+         92 |        TREF(I,J)=(T00K+(T10K-T00K)*PP(I,J)+(T01K-T00K)*QQ(I,J)
+         93 |     1           +(T00K-T10K-T01K+T11K)*PP(I,J)*QQ(I,J))*HTML(I,J)
+         94 |      ENDIF
+         95 |  500 CONTINUE
+         96 |C
+         97 |      RETURN
+         98 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+aint                             Pure Intrinsic
+                                 0-50.21  0-72.22
+ 
+bthe00k                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-64.9@  0-69.23  0-69.40
+ 
+bthe10k                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-66.9@  0-69.15
+ 
+bthk                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-69.9@  0-71.26
+ 
+ctlblk                           Common Block, Alignment: double word
+                                 2-2.15$
+ 
+dt                               Common member, Real(4), Offset: 48, Alignment: quadruple word
+                                 2-4.8$
+ 
+first                            Common member, Real(4), Offset: 24, Alignment: double word
+                                 2-3.32$
+ 
+html                             Reference argument, Real(4) (1:89, ?:?), Offset: 0, Alignment: full word
+                                 0-37.8$  0-2.21  0-93.58
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-45.14@  0-46.15  0-48.30  0-50.12  0-51.14  0-53.17  0-54.16  0-55.14  0-58.17  0-59.16  0-60.14
+                                 0-63.20  0-69.35  0-70.35  0-71.21  0-72.12  0-73.15  0-75.18  0-76.17  0-77.14  0-80.18  0-81.17
+                                 0-82.14  0-85.19  0-86.17  0-92.14  0-92.40  0-92.60  0-93.44  0-93.52  0-93.63
+ 
+icnt                             Common member, Integer(4) (0:1023), Offset: 40, Alignment: double word
+                                 2-7.59$  2-11.24$
+ 
+idat                             Common member, Integer(4) (1:3), Offset: 8, Alignment: double word
+                                 2-3.18$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+idn                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 2-7.54$  2-10.47$
+ 
+idsp                             Common member, Integer(4) (0:1023), Offset: 4136, Alignment: double word
+                                 2-7.65$  2-11.38$
+ 
+idtad                            Common member, Integer(4), Offset: 68, Alignment: full word
+                                 2-4.35$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+ihrst                            Common member, Integer(4), Offset: 20, Alignment: full word
+                                 2-3.26$
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-36.13  0-36.13  0-36.52  0-36.64  0-37.13  0-37.13  0-38.11  0-38.21  0-38.54  0-39.13
+                                 0-39.26  0-45.18  1-11.23  1-11.34  1-14.35
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+int                              Pure Intrinsic
+                                 0-51.19  0-73.20
+ 
+iout                             Common member, Integer(4), Offset: 44, Alignment: full word
+                                 2-3.60$
+ 
+ip                               Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-86.9@  0-87.25  0-88.25  0-89.25  0-90.25
+ 
+iptb                             Reference argument, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-39.8$  0-3.25  0-51.9@  0-53.12  0-54.11@  0-58.12  0-59.11@  0-63.15  0-86.12
+ 
+iptbk                            Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-63.9@  0-64.22  0-65.22  0-66.22  0-67.22
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+itb                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.35  0-36.42  0-36.42  0-38.33  0-38.33  0-38.43  0-38.43  0-58.25  0-59.21
+ 
+ith                              Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-85.9@  0-87.19  0-88.19  0-89.19  0-90.19
+ 
+ithtb                            Reference argument, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-39.20$  0-3.30  0-73.9@  0-75.12  0-76.11@  0-80.12  0-81.11@  0-85.13
+ 
+iup                              Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 2-7.49$  2-10.42$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-44.14@  0-46.17  0-48.32  0-50.14  0-51.16  0-53.19  0-54.18  0-55.16  0-58.19  0-59.18  0-60.16
+                                 0-63.22  0-69.37  0-70.37  0-71.23  0-72.14  0-73.17  0-75.20  0-76.19  0-77.16  0-80.20  0-81.19
+                                 0-82.16  0-85.21  0-86.19  0-92.16  0-92.42  0-92.62  0-93.46  0-93.54  0-93.65
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jend                             Common member, Integer(4), Offset: 12, Alignment: full word
+                                 2-6.36$  2-9.45$
+ 
+jend_2u                          Common member, Integer(4), Offset: 8236, Alignment: full word
+                                 2-8.24$  2-12.33$  0-36.24  0-36.24  0-37.24  0-37.24
+ 
+jend_m                           Common member, Integer(4), Offset: 20, Alignment: full word
+                                 2-7.32$  2-9.59$  0-44.23
+ 
+jend_m2                          Common member, Integer(4), Offset: 28, Alignment: full word
+                                 2-7.40$  2-10.33$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-36.55  0-36.67  0-38.14  0-38.24  0-38.57  0-39.16  0-39.29  1-12.23  1-12.34  1-15.35
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jsta                             Common member, Integer(4), Offset: 8, Alignment: double word
+                                 2-6.30$  2-9.39$
+ 
+jsta_2l                          Common member, Integer(4), Offset: 8232, Alignment: double word
+                                 2-8.15$  2-12.24$  0-36.16  0-36.16  0-37.16  0-37.16
+ 
+jsta_m                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 2-7.15$  2-9.51$  0-44.16
+ 
+jsta_m2                          Common member, Integer(4), Offset: 24, Alignment: double word
+                                 2-7.23$  2-10.24$
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+jtb                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.39  0-36.38  0-36.38  0-80.26  0-81.22
+ 
+karr                             Reference argument, Integer(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-36.47$  0-1.43  0-46.10
+ 
+list                             Common member, Integer(4), Offset: 40, Alignment: double word
+                                 2-3.55$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+me                               Common member, Integer(4), Offset: 4, Alignment: full word
+                                 2-6.26$  2-9.35$
+ 
+mpi_comm_comp                    Common member, Integer(4), Offset: 8248, Alignment: double word
+                                 2-13.24$
+ 
+mpi_comm_inter                   Common member, Integer(4), Offset: 8244, Alignment: full word
+                                 2-12.55$
+ 
+nbc                              Common member, Integer(4), Offset: 36, Alignment: full word
+                                 2-3.51$
+ 
+nboco                            Common member, Integer(4), Offset: 72, Alignment: double word
+                                 2-4.41$
+ 
+ncp                              Common member, Integer(4), Offset: 80, Alignment: quadruple word
+                                 2-4.53$
+ 
+nddamp                           Common member, Integer(4), Offset: 60, Alignment: full word
+                                 2-4.22$
+ 
+nfcst                            Common member, Integer(4), Offset: 32, Alignment: quadruple word
+                                 2-3.45$
+ 
+nphs                             Common member, Integer(4), Offset: 84, Alignment: full word
+                                 2-5.8$
+ 
+nprec                            Common member, Integer(4), Offset: 64, Alignment: quadruple word
+                                 2-4.29$
+ 
+nradl                            Common member, Integer(4), Offset: 92, Alignment: full word
+                                 2-5.19$
+ 
+nrads                            Common member, Integer(4), Offset: 88, Alignment: double word
+                                 2-5.13$
+ 
+nshde                            Common member, Integer(4), Offset: 76, Alignment: full word
+                                 2-4.47$
+ 
+ntsd                             Common member, Integer(4), Offset: 52, Alignment: full word
+                                 2-4.11$
+ 
+ntstm                            Common member, Integer(4), Offset: 56, Alignment: double word
+                                 2-4.16$
+ 
+num_procs                        Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 2-6.15$  2-9.24$
+ 
+num_servers                      Common member, Integer(4), Offset: 8240, Alignment: quadruple word
+                                 2-12.42$
+ 
+parallel                         Common Block, Alignment: double word
+                                 2-9.15$
+ 
+pdsl                             Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-36.59$  0-1.48  0-48.25
+ 
+pdtop                            Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.15  0-48.12
+ 
+pk                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-48.9@  0-49.14
+ 
+pl                               Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.29  0-49.17
+ 
+pp                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-38.18$  0-2.35  0-72.9@  0-77.11@  0-82.11@  0-92.37  0-93.41
+ 
+pt                               Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.26  0-48.42
+ 
+qq                               Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-38.8$  0-2.32  0-50.9@  0-55.11@  0-60.11@  0-69.32  0-70.32  0-92.57  0-93.49
+ 
+rdp                              Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.38  0-49.21
+ 
+rdthe                            Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.52  0-71.37
+ 
+restrt                           Common member, Real(4), Offset: 28, Alignment: full word
+                                 2-3.38$
+ 
+run                              Common member, Real(4), Offset: 4, Alignment: full word
+                                 2-3.14$
+ 
+sgml1l                           Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-1.53  0-48.18
+ 
+sgml2l                           Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.8  0-48.35
+ 
+sigma                            Common member, Real(4), Offset: 0, Alignment: quadruple word
+                                 2-3.8$
+ 
+sthe                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-38.38$  0-2.47  0-65.17  0-67.17
+ 
+sthe00k                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-65.9@  0-70.23  0-70.40
+ 
+sthe10k                          Static, Real(4), Offset: 0, Alignment: full word
+                                 0-67.9@  0-70.15
+ 
+sthk                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-70.9@  0-71.32
+ 
+t00k                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-87.9@  0-92.20  0-92.31  0-92.51  0-93.20
+ 
+t01k                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-89.9@  0-92.46  0-93.30
+ 
+t10k                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-88.9@  0-92.26  0-93.25
+ 
+t11k                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-90.9@  0-93.35
+ 
+the0                             Reference argument, Real(4) (1:?), Offset: 0, Alignment: full word
+                                 0-38.28$  0-2.42  0-64.17  0-66.17
+ 
+thesp                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-38.48$  0-2.58  0-71.15
+ 
+tpk                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-49.9@  0-50.17  0-50.26  0-51.23
+ 
+tref                             Reference argument, Real(4) (1:89, ?:?), Offset: 0, Alignment: full word
+                                 0-36.8$  0-1.25  0-92.9@
+ 
+ttbl                             Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-36.33$  0-1.30  0-87.14  0-88.14  0-89.14  0-90.14
+ 
+ttblex                           Subroutine
+                                 0-1.18$
+ 
+tthk                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-71.9@  0-72.17  0-72.27  0-73.24
+ 
+** ttblex   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+         99 |C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    TTBLEX.f                    12/18/08   11:40:51
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      32
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/CTLBLK.comm
+                                      12/18/08   11:40:50      0      33
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     130
+1501-510  Compilation successful for file TTBLEX.f.
+1501-543  Object file created.

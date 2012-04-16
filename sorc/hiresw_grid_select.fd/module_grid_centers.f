@@ -1,0 +1,98 @@
+!
+      MODULE MODULE_GRID_CENTERS
+!
+!----------------------------------------------------------------------
+!
+      INTEGER,PARAMETER :: NGRIDS=26
+!
+      REAL,DIMENSION(NGRIDS) :: GRID_LATITUDE,GRID_LONGITUDE
+!----------------------------------------------------------------------
+!
+      CONTAINS
+!
+!----------------------------------------------------------------------
+      SUBROUTINE ASSIGN_CENTERS
+!
+      GRID_LATITUDE(1)=33.5
+      GRID_LONGITUDE(1)=121.0
+!
+      GRID_LATITUDE(2)=32.0
+      GRID_LONGITUDE(2)=114.0
+!
+      GRID_LATITUDE(3)=31.0
+      GRID_LONGITUDE(3)=107.0
+!
+      GRID_LATITUDE(4)=30.0
+      GRID_LONGITUDE(4)=100.0
+!
+      GRID_LATITUDE(5)=30.0
+      GRID_LONGITUDE(5)=093.0
+!
+      GRID_LATITUDE(6)=30.0
+      GRID_LONGITUDE(6)=086.0
+!
+      GRID_LATITUDE(7)=29.0
+      GRID_LONGITUDE(7)=079.0
+!
+      GRID_LATITUDE(8)=39.5
+      GRID_LONGITUDE(8)=125.0
+!
+      GRID_LATITUDE(9)=39.5
+      GRID_LONGITUDE(9)=116.5
+!
+      GRID_LATITUDE(10)=39.0
+      GRID_LONGITUDE(10)=108.0
+!
+      GRID_LATITUDE(11)=37.5
+      GRID_LONGITUDE(11)=099.5
+!
+      GRID_LATITUDE(12)=37.5
+      GRID_LONGITUDE(12)=091.0
+!
+      GRID_LATITUDE(13)=36.5
+      GRID_LONGITUDE(13)=083.0
+!
+      GRID_LATITUDE(14)=36.0
+      GRID_LONGITUDE(14)=075.0
+!
+      GRID_LATITUDE(15)=46.0
+      GRID_LONGITUDE(15)=124.0
+!
+      GRID_LATITUDE(16)=45.5
+      GRID_LONGITUDE(16)=115.0
+!
+      GRID_LATITUDE(17)=45.0
+      GRID_LONGITUDE(17)=106.0
+!
+      GRID_LATITUDE(18)=44.5
+      GRID_LONGITUDE(18)=097.0
+!
+      GRID_LATITUDE(19)=44.0
+      GRID_LONGITUDE(19)=088.0
+!
+      GRID_LATITUDE(20)=43.5
+      GRID_LONGITUDE(20)=079.0
+!
+      GRID_LATITUDE(21)=43.0
+      GRID_LONGITUDE(21)=070.0
+!
+      GRID_LATITUDE(22)=21.5
+      GRID_LONGITUDE(22)=157.0
+!
+      GRID_LATITUDE(23)=61.0
+      GRID_LONGITUDE(23)=150.0
+!
+      GRID_LATITUDE(24)=65.0
+      GRID_LONGITUDE(24)=147.5
+!
+      GRID_LATITUDE(25)=58.5
+      GRID_LONGITUDE(25)=134.5
+!
+      GRID_LATITUDE(26)=18.5
+      GRID_LONGITUDE(26)=067.35
+!
+!----------------------------------------------------------------------
+      END SUBROUTINE ASSIGN_CENTERS
+!----------------------------------------------------------------------
+!
+      END MODULE MODULE_GRID_CENTERS

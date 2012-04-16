@@ -1,0 +1,13 @@
+C-----------------------------------------------------------------------
+                             C O M M O N /MAPOT/
+     & LSL,IXM,IYM
+     &,ISHDE(99)
+     &,R,PT,TSPH
+     &,WBD,SBD,TLM0D,TPH0D,DLMD,DPHD,CMLD,DP30,X1P,Y1P
+     &,DISLP,Z0SLP,SPL(LSM),ALSL(LSM)
+     &,DETA(LM),AETA(LM),ETA(LP1),TSHDE(99)
+     &,ERLAM0,CPHI0,SPHI0
+     &,KUNIT,LUNIT,MUNIT,IUNIT,NUNIT
+     &,DSG1(LM),SGML1(LM),SG1(LP1),PDTOP
+     &,DSG2(LM),SGML2(LM),SG2(LP1)
+C-----------------------------------------------------------------------

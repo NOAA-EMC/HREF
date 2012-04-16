@@ -1,0 +1,530 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/EUVGUV.f 12/22/08 15:45:49
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE EUVGUV(U,V,VTLON,IMT,JMT,EVLAT,EVLON,
+          2 |     1     ALATVT,ALVTOT,NRTHOT,PROJ)
+          3 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          4 |C                .      .    .
+          5 |C SUBPROGRAM:    EUVGUV
+          6 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-23
+          7 |C
+          8 |C ABSTRACT:
+          9 |C     THIS ROUTINE CONVERTS (ROTATES) U-V WIND COMPONENTS
+         10 |C     ON THE ETA E-GRID TO U-V WIND COMPONENTS ON THE
+         11 |C     SPECIFIED OUTPUT GRID.  IT ONLY DOES THE ROTATION,
+         12 |C     NOT THE INTERPOLATION.
+         13 |C   .
+         14 |C
+         15 |C PROGRAM HISTORY LOG:
+         16 |C   ??-??-??  ???
+         17 |C   92-12-23  RUSS TREADON - ADDED COMMENTS AND GENERALIZED
+         18 |C                            CODE TO HANDLE VARIABLE OUTPUT GRIDS.
+         19 |C   93-06-13  RUSS TREADON - GENERALIZED ROUTINE TO HANDLE BOTH
+         20 |C                            POLAR STEREOGRAPHIC AND LAT-LON
+         21 |C                            PROJECTIONS.
+         22 |C
+         23 |C USAGE:    CALL EUVGUV(U,V,VTLON,IMT,JMT,EVLAT,EVLON,
+         24 |C              ALVTOT,NRTHOT,PROJ)
+         25 |C   INPUT ARGUMENT LIST:
+         26 |C     U        - U WIND ON FILLED E-GRID
+         27 |C     V        - V WIND ON FILLED E-GRID
+         28 |C     VTLON    - V POINT LONGITUDES ON FILLED E-GRID
+         29 |C     IMT      - FIRST DIMENSION OF FILLED E-GRID
+         30 |C     JMT      - SECOND DIMENSION OF FILLED E-GRID
+         31 |C     EVLAT    - FILLED E-GRID TRANSFORMED LATITUDES
+         32 |C     EVLON    - FILLED E-GRID TRANSFORMED LONGITUDES
+         33 |C     ALVTOT   - ROTATION LONGITUDE OF OUTPUT GRID
+         34 |C     NRTHOT   - N/S HEMISPHERE LOGICAL SWITCH FOR OUTPUT GRID
+         35 |C     PROJ     - OUTPUT GRID PROJECTION.
+         36 |C
+         37 |C   OUTPUT ARGUMENT LIST:
+         38 |C     U        - U WIND ROTATED TO OUTPUT GRID.
+         39 |C     V        - V WIND ROTATED TO OUTPUT GRID.
+         40 |C
+         41 |C   OUTPUT FILES:
+         42 |C       NONE
+         43 |C
+         44 |C   SUBPROGRAMS CALLED:
+         45 |C     UTILITIES:
+         46 |C       NONE
+         47 |C     LIBRARY:
+         48 |C       COMMON   - EGRID
+         49 |C                  IOUNIT
+         50 |C
+         51 |C   ATTRIBUTES:
+         52 |C     LANGUAGE: FORTRAN
+         53 |C     MACHINE : CRAY C-90
+         54 |C$$$
+         55 |C
+         56 |C
+         57 |C     INCLUDE ETA MODEL DIMENSIONS.
+         58 |C---------------------------------------------------------------
+         59 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         60 |C---------------------------------------------------------------
+         61 |      PARAMETER (LP1=LM+1)
+         62 |C---------------------------------------------------------------
+         63 |C
+         64 |C     DECLARE VARIABLES.
+         65 |      LOGICAL NORTH, NRTHOT
+         66 |      CHARACTER*6 PROJ
+         67 |      REAL ALONVT, DLAM, DPHI, LAM0, PHI0, POLEI
+         68 |      REAL POLEJ, SINPH0, TANPH0, WLONC, XMESHL
+         69 |      REAL YLATC
+         70 |      REAL U(IMT,JMT),V(IMT,JMT),VTLON(IMT,JMT)
+         71 |      REAL EVLAT(IMT,JMT), EVLON(IMT,JMT)
+         72 |C---------------------------------------------------------------
+         73 |      INCLUDE "EGRID.comm"
+  2       1 |
+  2       2 |      COMMON /EGRID/NORTH,ALONVT,POLEI,POLEJ,
+  2       3 |     X     XMESHL,IDIM,JDIM,PHI0,LAM0,COSPH0,
+  2       4 |     X     SINPH0,TANPH0
+         74 |      INCLUDE "IOUNIT.comm"
+  3       1 |C
+  3       2 |      INTEGER STDOUT
+  3       3 |C
+  3       4 |      COMMON /IOUNIT/
+  3       5 |     & STDOUT, LCNTRL, LUNCO, LUNLL, LUNOUT
+  3       6 |C
+         75 |C---------------------------------------------------------------
+         76 |      EQUIVALENCE (YLATC,ALONVT), (DPHI, POLEI)
+         77 |      EQUIVALENCE (WLONC, POLEJ), (DLAM,XMESHL)
+         78 |C---------------------------------------------------------------
+         79 |      DATA CONV2R/0.017453293/,CONV2D/57.2958/
+         80 |      DATA EARTHR/6371.2/
+         81 |C
+         82 |C**************************************************************
+         83 |C     START EUVGUV HERE.
+         84 |C
+         85 |C     CASE I:  ROTATE FROM E-GRID TO POLAR STEREOGRAPHIC GRID.
+         86 |C
+         87 |      IF (INDEX(PROJ,'POLA').NE.0) THEN
+         88 |         SPHI0 = SINPH0
+         89 |!$omp  parallel do
+         90 |!$omp& private(a,alpha,arg,cosa,elat,elon,sina,ue,ve)
+         91 |         DO 10 J = 1, JMT
+         92 |         DO 10 I = 1, IMT
+         93 |            ELAT = EVLAT(I,J)
+         94 |            ELON = EVLON(I,J)
+         95 |	    ARG = SPHI0*SIN(VTLON(I,J)*CONV2R) /
+         96 |     1           COS(ELAT*CONV2R)
+         97 |	    IF(ABS(ARG).GT.1.0) THEN
+         98 |		ARG = SIGN(1.0,ARG)
+         99 |            END IF
+        100 |            ALPHA = ASIN(ARG)
+        101 |            COSA = COS(ALPHA)
+        102 |            SINA = SIN(ALPHA)
+        103 |            UE   = U(I,J)*COSA+V(I,J)*SINA
+        104 |            VE   = V(I,J)*COSA-U(I,J)*SINA
+        105 |            A    = (ELON-ALVTOT)*CONV2R
+        106 |            SINA = SIN(A)
+        107 |            COSA = COS(A)
+        108 |            IF (.NOT.NRTHOT) COSA = -COSA
+        109 |            U(I,J) =  UE*COSA+VE*SINA
+        110 |            V(I,J) = -UE*SINA+VE*COSA
+        111 | 10      CONTINUE
+        112 |C
+        113 |C     CASE II:  ROTATE FROM E-GRID TO LATITUDE-LONGITUDE GRID.
+        114 |C        THE BELOW CODE IS FROM THE PROFILE OUTPUT CODE IN
+        115 |C        SUBROUTINE OUTMAP OR EQUALLY SUBOMG.  NOTE THAT ELON
+        116 |C        AND WLONC ARE BOTH IN DEGREES WEST.  WE WANT THE DIFFERENCE
+        117 |C        IN DEGREES BETWEEN THE TWO.  WHAT MATTERS IS THAT ELON AND
+        118 |C        WLONC ARE EITHER BOTH IN DEGREES EAST OR WEST.
+        119 |C
+        120 |      ELSEIF (INDEX(PROJ,'LOLA').NE.0) THEN
+        121 |!$omp  parallel do
+        122 |!$omp& private(alpha,arg,cosalp,dlm,elat,elon,sinalp,tlon,ue,ve,xx,yy)
+        123 |         DO 20 J = 1,JMT
+        124 |         DO 20 I = 1,IMT
+        125 |            ELAT   =  EVLAT(I,J)
+        126 |            ELON   =  EVLON(I,J)
+        127 |            DLM    =  ELON-WLONC
+        128 |            XX     =  COSPH0*COS(ELAT*CONV2R)*COS(DLM*CONV2R)+
+        129 |     X                SINPH0*SIN(ELAT*CONV2R)
+        130 |            YY     = -COS(ELAT*CONV2R)*SIN(DLM*CONV2R)
+        131 |            TLON   = ATAN(YY/XX)
+        132 |	    ARG = SINPH0*SIN(TLON)/COS(ELAT*CONV2R)
+        133 |	    IF(ABS(ARG).GT.1.0)THEN
+        134 |              ARG = SIGN(1.0,ARG)
+        135 |            ENDIF
+        136 |            ALPHA  = ASIN(ARG)
+        137 |            SINALP = SIN(ALPHA)
+        138 |            COSALP = COS(ALPHA)
+        139 |            UE     = U(I,J)
+        140 |            VE     = V(I,J)
+        141 |            U(I,J) = UE*COSALP+VE*SINALP
+        142 |            V(I,J) = VE*COSALP-UE*SINALP
+        143 | 20      CONTINUE
+        144 |C
+        145 |C     CASE III.  ROTATE FROM E-GRID TO LAMBERT CONFORMAL GRID.
+        146 |C
+        147 |      ELSEIF (INDEX(PROJ,'LMBC').NE.0) THEN
+        148 |         SPHI0 = SINPH0
+        149 |!$omp  parallel do
+        150 |!$omp& private(a,alpha,arg,cone,cosa,elat,elon,sina,ue,ve)
+        151 |         DO 30 J = 1, JMT
+        152 |         DO 30 I = 1, IMT
+        153 |            ELAT = EVLAT(I,J)
+        154 |            ELON = EVLON(I,J)
+        155 |	    ARG = SPHI0*SIN(VTLON(I,J)*CONV2R) /
+        156 |     X           COS(ELAT*CONV2R)
+        157 |	    IF(ABS(ARG).GT.1.0)THEN
+        158 |              ARG = SIGN(1.0,ARG)
+        159 |            ENDIF
+        160 |            ALPHA = ASIN(ARG)
+        161 |            COSA = COS(ALPHA)
+        162 |            SINA = SIN(ALPHA)
+        163 |            UE   = U(I,J)*COSA+V(I,J)*SINA
+        164 |            VE   = V(I,J)*COSA-U(I,J)*SINA
+        165 |            CONE = SIN(ALATVT*CONV2R)
+        166 |            A    = CONE*(ELON-ALVTOT)*CONV2R
+        167 |            SINA = SIN(A)
+        168 |            COSA = COS(A)
+        169 |            IF (.NOT.NRTHOT) COSA = -COSA
+        170 |            U(I,J) =  UE*COSA+VE*SINA
+        171 |            V(I,J) = -UE*SINA+VE*COSA
+        172 | 30      CONTINUE
+        173 |C
+        174 |C     CASE IV.  OUTPUT WINDS ON ETA E_GRID.  DO NOTHING CASE.
+        175 |      ELSE
+        176 |         CONTINUE
+        177 |C
+        178 |      ENDIF
+        179 |C
+        180 |C     END OF ROUTINE.
+        181 |C
+        182 |      RETURN
+        183 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+a                                Static, Real(4), Offset: 0, Alignment: full word
+                                 0-105.13@  0-106.24  0-107.24  0-166.13@  0-167.24  0-168.24
+ 
+abs                              Pure Intrinsic
+                                 0-97.9  0-133.9  0-157.9
+ 
+alatvt                           Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.12  0-165.24
+ 
+alonvt                           Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-67.12$  2-2.27$  0-76.26
+ 
+alpha                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-100.13@  0-101.24  0-102.24  0-136.13@  0-137.26  0-138.26  0-160.13@  0-161.24  0-162.24
+ 
+alvtot                           Reference argument, Real(4), Offset: 0, Alignment: full word
+                                 0-2.19  0-105.26  0-166.31
+ 
+arg                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-95.6@  0-97.13  0-98.3@  0-98.18  0-100.26  0-132.6@  0-133.13  0-134.15@  0-134.30  0-136.27
+                                 0-155.6@  0-157.13  0-158.15@  0-158.30  0-160.26
+ 
+asin                             Pure Intrinsic
+                                 0-100.21  0-136.22  0-160.21
+ 
+atan                             Pure Intrinsic
+                                 0-131.22
+ 
+cone                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-165.13@  0-166.20
+ 
+conv2d                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-79.32*
+ 
+conv2r                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-79.12*  0-95.33  0-96.27  0-105.34  0-128.39  0-128.55  0-129.39  0-130.32  0-130.48  0-132.38
+                                 0-155.33  0-156.27  0-165.31  0-166.39
+ 
+cos                              Pure Intrinsic
+                                 0-96.18  0-101.20  0-107.20  0-128.30  0-128.47  0-130.23  0-132.29  0-138.22  0-156.18  0-161.20
+                                 0-168.20
+ 
+cosa                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-101.13@  0-103.27  0-104.27  0-107.13@  0-108.30@  0-108.38  0-109.26  0-110.34  0-161.13@
+                                 0-163.27  0-164.27  0-168.13@  0-169.30@  0-169.38  0-170.26  0-171.34
+ 
+cosalp                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-138.13@  0-141.25  0-142.25
+ 
+cosph0                           Common member, Real(4), Offset: 36, Alignment: full word
+                                 2-3.39$  0-128.23
+ 
+dlam                             Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 0-67.20$  0-77.36
+ 
+dlm                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-127.13@  0-128.51  0-130.44
+ 
+dphi                             Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-67.26$  0-76.36
+ 
+earthr                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-80.12*
+ 
+egrid                            Common Block, Alignment: double word
+                                 2-2.15$
+ 
+elat                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-93.13@  0-96.22  0-125.13@  0-128.34  0-129.34  0-130.27  0-132.33  0-153.13@  0-156.22
+ 
+elon                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-94.13@  0-105.21  0-126.13@  0-127.23  0-154.13@  0-166.26
+ 
+euvguv                           Subroutine
+                                 0-1.18$
+ 
+evlat                            Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-71.12$  0-1.43  0-93.20  0-125.23  0-153.20
+ 
+evlon                            Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-71.28$  0-1.49  0-94.20  0-126.23  0-154.20
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-92.16@  0-93.26  0-94.26  0-95.28  0-103.22  0-103.34  0-104.22  0-104.34  0-109.15  0-110.15
+                                 0-124.16@  0-125.29  0-126.29  0-139.24  0-140.24  0-141.15  0-142.15  0-152.16@  0-153.26
+                                 0-154.26  0-155.28  0-163.22  0-163.34  0-164.22  0-164.34  0-170.15  0-171.15
+ 
+idim                             Common member, Integer(4), Offset: 20, Alignment: full word
+                                 2-3.19$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  1-11.23  1-11.34  1-14.35
+ 
+imt                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.35  0-70.14  0-70.14  0-70.25  0-70.25  0-70.40  0-70.40  0-71.18  0-71.18  0-71.34  0-71.34
+                                 0-92.23  0-124.22  0-152.23
+ 
+index                            Pure Intrinsic
+                                 0-87.11  0-120.15  0-147.15
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+iounit                           Common Block, Alignment: double word
+                                 3-4.15$
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-91.16@  0-93.28  0-94.28  0-95.30  0-103.24  0-103.36  0-104.24  0-104.36  0-109.17  0-110.17
+                                 0-123.16@  0-125.31  0-126.31  0-139.26  0-140.26  0-141.17  0-142.17  0-151.16@  0-153.28
+                                 0-154.28  0-155.30  0-163.24  0-163.36  0-164.24  0-164.36  0-170.17  0-171.17
+ 
+jdim                             Common member, Integer(4), Offset: 24, Alignment: double word
+                                 2-3.24$
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  1-12.23  1-12.34  1-15.35
+ 
+jmt                              Reference argument, Integer(4), Offset: 0, Alignment: full word
+                                 0-1.39  0-70.18  0-70.18  0-70.29  0-70.29  0-70.44  0-70.44  0-71.22  0-71.22  0-71.38  0-71.38
+                                 0-91.23  0-123.22  0-151.23
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+lam0                             Common member, Real(4), Offset: 32, Alignment: quadruple word
+                                 0-67.32$  2-3.34$
+ 
+lcntrl                           Common member, Integer(4), Offset: 4, Alignment: full word
+                                 3-5.16$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$  0-61.22
+ 
+lp1                              Parameter, Integer(4)
+                                 0-61.18$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+lunco                            Common member, Integer(4), Offset: 8, Alignment: double word
+                                 3-5.24$
+ 
+lunll                            Common member, Integer(4), Offset: 12, Alignment: full word
+                                 3-5.31$
+ 
+lunout                           Common member, Integer(4), Offset: 16, Alignment: quadruple word
+                                 3-5.38$
+ 
+north                            Common member, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-65.15$  2-2.21$
+ 
+nrthot                           Reference argument, Logical(4), Offset: 0, Alignment: full word
+                                 0-65.22$  0-2.26  0-108.22  0-169.22
+ 
+phi0                             Common member, Real(4), Offset: 28, Alignment: full word
+                                 0-67.38$  2-3.29$
+ 
+polei                            Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-67.44$  2-2.34$  0-76.42
+ 
+polej                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-68.12$  2-2.40$  0-77.27
+ 
+proj                             Reference argument, Character(6), Offset: 0, Alignment: byte
+                                 0-66.19$  0-2.33  0-87.17  0-120.21  0-147.21
+ 
+sign                             Pure Intrinsic
+                                 0-98.9  0-134.21  0-158.21
+ 
+sin                              Pure Intrinsic
+                                 0-95.18  0-102.20  0-106.20  0-129.30  0-130.40  0-132.19  0-137.22  0-155.18  0-162.20  0-165.20
+                                 0-167.20
+ 
+sina                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-102.13@  0-103.39  0-104.39  0-106.13@  0-109.34  0-110.26  0-162.13@  0-163.39  0-164.39
+                                 0-167.13@  0-170.34  0-171.26
+ 
+sinalp                           Static, Real(4), Offset: 0, Alignment: full word
+                                 0-137.13@  0-141.35  0-142.35
+ 
+sinph0                           Common member, Real(4), Offset: 40, Alignment: double word
+                                 0-68.19$  2-4.12$  0-88.18  0-129.23  0-132.12  0-148.18
+ 
+sphi0                            Static, Real(4), Offset: 0, Alignment: full word
+                                 0-88.10@  0-95.12  0-148.10@  0-155.12
+ 
+stdout                           Common member, Integer(4), Offset: 0, Alignment: quadruple word
+                                 3-2.15$  3-5.8$
+ 
+tanph0                           Common member, Real(4), Offset: 44, Alignment: full word
+                                 0-68.27$  2-4.19$
+ 
+tlon                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-131.13@  0-132.23
+ 
+u                                Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-70.12$  0-1.25  0-103.20  0-104.32  0-109.13@  0-139.22  0-141.13@  0-163.20  0-164.32  0-170.13@
+ 
+ue                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-103.13@  0-109.23  0-110.23  0-139.13@  0-141.22  0-142.32  0-163.13@  0-170.23  0-171.23
+ 
+v                                Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-70.23$  0-1.27  0-103.32  0-104.20  0-110.13@  0-140.22  0-142.13@  0-163.32  0-164.20  0-171.13@
+ 
+ve                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-104.13@  0-109.31  0-110.31  0-140.13@  0-141.32  0-142.22  0-164.13@  0-170.31  0-171.31
+ 
+vtlon                            Reference argument, Real(4) (1:?, 1:?), Offset: 0, Alignment: full word
+                                 0-70.34$  0-1.29  0-95.22  0-155.22
+ 
+wlonc                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-68.35$  0-77.20  0-127.28
+ 
+xmeshl                           Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 0-68.42$  2-3.12$  0-77.41
+ 
+xx                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-128.13@  0-131.30
+ 
+ylatc                            Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-69.12$  0-76.20
+ 
+yy                               Static, Real(4), Offset: 0, Alignment: full word
+                                 0-130.13@  0-131.27
+ 
+** euvguv   === End of Compilation 1 ===
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    EUVGUV.f                    12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      59
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/EGRID.comm
+                                      12/18/08   11:40:50      0      73
+     3    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/IOUNIT.comm
+                                      12/18/08   11:40:51      0      74
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     210
+1501-510  Compilation successful for file EUVGUV.f.
+1501-543  Object file created.

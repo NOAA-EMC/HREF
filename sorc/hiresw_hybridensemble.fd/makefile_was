@@ -1,0 +1,1 @@
+xlf hybridensemble.f -o hiresw_hybridensemble -L/nwprod/lib -lw3_4 -lbacio_4 -lessl_r -lmass

@@ -1,0 +1,362 @@
+IBM XL Fortran for AIX, V12.1 (5724-U82) Version 12.01.0000.0001 --- /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/E2TLL.f 12/22/08 15:45:47
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+          1 |      SUBROUTINE E2TLL(HTLAT,HTLON,VTLAT,VTLON)
+          2 |C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+          3 |C                .      .    .
+          4 |C SUBPROGRAM:    E2TLL       COMPUTE ETA TRNSFM (LAT,LON)
+          5 |C   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-23
+          6 |C
+          7 |C ABSTRACT:
+          8 |C     THIS ROUTINE COMPUTES THE TRANSFORMED LATITUDE AND
+          9 |C     LONGITUDE OF MASS (H) AND VELOCITY (V) POINTS FOR
+         10 |C     GIVEN ETA E-GRID SPECIFICATIONS.
+         11 |C   .
+         12 |C
+         13 |C PROGRAM HISTORY LOG:
+         14 |C   ??-??-??  DAVID PLUMMER - ROUTINE ETATLL IN ETAPACKC
+         15 |C   92-12-23  RUSS TREADON  - GENERALIZED FOR ETAPOST USE.
+         16 |C   98-06-04  BLACK - CONVERSION TO 2-D
+         17 |C
+         18 |C USAGE:    CALL E2TLL(HTLAT,HTLON,VTLAT,VTLON)
+         19 |C   INPUT ARGUMENT LIST:
+         20 |C     NONE
+         21 |C
+         22 |C   OUTPUT ARGUMENT LIST:
+         23 |C     HTLAT    - TRANSFORMED LATITUDE OF H POINTS
+         24 |C     HTLON    - TRANSFORMED LONGITUDE OF H POINTS
+         25 |C     VTLAT    - TRANSFORMED LATITUDE OF V POINTS
+         26 |C     VTLON    - TRANSFORMED LONGITUDE OF V POINTS
+         27 |C
+         28 |C   OUTPUT FILES:
+         29 |C     NONE
+         30 |C
+         31 |C   SUBPROGRAMS CALLED:
+         32 |C     UTILITIES:
+         33 |C       NONE
+         34 |C     LIBRARY:
+         35 |C       COMMON   - EGRID
+         36 |C
+         37 |C   ATTRIBUTES:
+         38 |C     LANGUAGE: FORTRAN
+         39 |C     MACHINE : CRAY C-90
+         40 |C$$$
+         41 |C
+         42 |C     INCLUDE ETA GRID SPECIFICATIONS.  DERIVE OTHER PARAMETERS.
+         43 |C------------------------------------------------------------------
+         44 |      INCLUDE "parmeta"
+  1       1 |C-------------------------------------------------------------
+  1       2 |C***  SET PRIMARY GRID DIMENSIONS AND PRESSURE OUTPUT LEVELS
+  1       3 |      PARAMETER (IM=89,JM=143,LM=60,LSM=39)
+  1       4 |C-------------------------------------------------------------
+  1       5 |C***  SET THE NUMBER OF PEs IN THE I-DIRECTION AND J-DIRECTION
+  1       6 |      PARAMETER(INPES=5,JNPES=6)
+  1       7 |C-------------------------------------------------------------
+  1       8 |C
+  1       9 |      PARAMETER(IGSTL=-5,IGSTR=5)
+  1      10 |      PARAMETER(JGSTL=-5,JGSTR=5)
+  1      11 |      PARAMETER(ITAIL=IM-(INPES*(IM/INPES)))
+  1      12 |      PARAMETER(JTAIL=JM-(JNPES*(JM/JNPES)))
+  1      13 |C
+  1      14 |      PARAMETER(IDIM1=IGSTL,IDIM2=IM/INPES+IGSTR+1)
+  1      15 |      PARAMETER(JDIM1=JGSTL,JDIM2=JM/JNPES+JGSTR+1)
+  1      16 |C
+  1      17 |C-------------------------------------------------------------
+         45 |C------------------------------------------------------------------
+         46 |      PARAMETER (ICEN=2*IM/2,JCEN=(JM+1)/2)
+         47 |C------------------------------------------------------------------
+         48 |C
+         49 |C     DECLARE VARIABLES.
+         50 |C
+         51 |      LOGICAL NORTH
+         52 |      REAL ALONVT, DLAM, DPHI, LAM0, PHI0, POLEI, POLEJ
+         53 |      REAL SINPH0, TANPH0, WLONC, XMESHL, YLATC
+         54 |      REAL HTLAT(IM,JM),HTLON(IM,JM)
+         55 |      REAL VTLAT(IM,JM),VTLON(IM,JM)
+         56 |C------------------------------------------------------------------
+         57 |      EQUIVALENCE (YLATC,ALONVT), (DPHI, POLEI)
+         58 |      EQUIVALENCE (WLONC, POLEJ), (DLAM,XMESHL)
+         59 |C------------------------------------------------------------------
+         60 |      INCLUDE "EGRID.comm"
+  2       1 |
+  2       2 |      COMMON /EGRID/NORTH,ALONVT,POLEI,POLEJ,
+  2       3 |     X     XMESHL,IDIM,JDIM,PHI0,LAM0,COSPH0,
+  2       4 |     X     SINPH0,TANPH0
+         61 |C************************************************************************
+         62 |C***
+         63 |C***  TRANFORMED LONGITUDE OF WESTERN BOUNDARY AND
+         64 |C***  TRANSFORMED LATITUDE OF SOUTHERN BOUNDARY
+         65 |C***
+         66 |      WBD=(IM-1)*DLAM
+         67 |      SBD=(JM-1)/2*DPHI
+         68 |C
+         69 |C     COMPUTE TRANSFORMED (LAT,LON) OF THE HEIGHTS POINTS
+         70 |C     ON THE ETA GRID.
+         71 |C
+         72 |      DO J=1,JM
+         73 |      ELON=WBD+MOD(J+1,2)*DLAM-2.*DLAM
+         74 |      ELAT=SBD+(J-1)*DPHI
+         75 |      DO I=1,IM
+         76 |        ELON=ELON+2.*DLAM
+         77 |        HTLON(I,J)=ELON
+         78 |        HTLAT(I,J)=ELAT
+         79 |      ENDDO
+         80 |      ENDDO
+         81 |C
+         82 |C     COMPUTE TRANSFORMED (LAT,LON) OF THE VELOCITY POINTS
+         83 |C     ON THE ETA GRID.
+         84 |C
+         85 |      DO J=1,JM
+         86 |      ELON=WBD+MOD(J,2)*DLAM-2.*DLAM
+         87 |      ELAT=SBD+(J-1)*DPHI
+         88 |      DO I=1,IM
+         89 |        ELON=ELON+2.*DLAM
+         90 |        VTLON(I,J)=ELON
+         91 |        VTLAT(I,J)=ELAT
+         92 |      ENDDO
+         93 |      ENDDO
+         94 |C
+         95 |C     END OF ROUTINE.
+         96 |C
+         97 |      RETURN
+         98 |      END
+ 
+>>>>> ATTRIBUTE AND CROSS REFERENCE SECTION <<<<<
+ 
+ 
+ 
+IDENTIFIER NAME                  CROSS REFERENCE AND ATTRIBUTES
+ 
+alonvt                           Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-52.12$  2-2.27$  0-57.26
+ 
+cosph0                           Common member, Real(4), Offset: 36, Alignment: full word
+                                 2-3.39$
+ 
+dlam                             Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 0-52.20$  0-58.36  0-66.18  0-73.27  0-73.35  0-76.22  0-86.25  0-86.33  0-89.22
+ 
+dphi                             Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-52.26$  0-57.36  0-67.20  0-74.22  0-87.22
+ 
+e2tll                            Subroutine
+                                 0-1.18$
+ 
+egrid                            Common Block, Alignment: double word
+                                 2-2.15$
+ 
+elat                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-74.7@  0-78.20  0-87.7@  0-91.20
+ 
+elon                             Static, Real(4), Offset: 0, Alignment: full word
+                                 0-73.7@  0-76.9@  0-76.14  0-77.20  0-86.7@  0-89.9@  0-89.14  0-90.20
+ 
+htlat                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.12$  0-1.24  0-78.9@
+ 
+htlon                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-54.25$  0-1.30  0-77.9@
+ 
+i                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-75.10@  0-77.15  0-78.15  0-88.10@  0-90.15  0-91.15
+ 
+icen                             Parameter, Integer(4)
+                                 0-46.18$
+ 
+idim                             Common member, Integer(4), Offset: 20, Alignment: full word
+                                 2-3.19$
+ 
+idim1                            Parameter, Integer(4)
+                                 1-14.17$
+ 
+idim2                            Parameter, Integer(4)
+                                 1-14.29$
+ 
+igstl                            Parameter, Integer(4)
+                                 1-9.17$  1-14.23
+ 
+igstr                            Parameter, Integer(4)
+                                 1-9.26$  1-14.44
+ 
+im                               Parameter, Integer(4)
+                                 1-3.18$  0-46.25  0-54.18  0-54.31  0-55.18  0-55.31  0-66.12  0-75.14  0-88.14  1-11.23  1-11.34
+                                 1-14.35
+ 
+inpes                            Parameter, Integer(4)
+                                 1-6.17$  1-11.27  1-11.37  1-14.38
+ 
+itail                            Parameter, Integer(4)
+                                 1-11.17$
+ 
+j                                Static, Integer(4), Offset: 0, Alignment: full word
+                                 0-72.10@  0-73.20  0-74.17  0-77.17  0-78.17  0-85.10@  0-86.20  0-87.17  0-90.17  0-91.17
+ 
+jcen                             Parameter, Integer(4)
+                                 0-46.30$
+ 
+jdim                             Common member, Integer(4), Offset: 24, Alignment: double word
+                                 2-3.24$
+ 
+jdim1                            Parameter, Integer(4)
+                                 1-15.17$
+ 
+jdim2                            Parameter, Integer(4)
+                                 1-15.29$
+ 
+jgstl                            Parameter, Integer(4)
+                                 1-10.17$  1-15.23
+ 
+jgstr                            Parameter, Integer(4)
+                                 1-10.26$  1-15.44
+ 
+jm                               Parameter, Integer(4)
+                                 1-3.24$  0-46.36  0-54.21  0-54.34  0-55.21  0-55.34  0-67.12  0-72.14  0-85.14  1-12.23  1-12.34
+                                 1-15.35
+ 
+jnpes                            Parameter, Integer(4)
+                                 1-6.25$  1-12.27  1-12.37  1-15.38
+ 
+jtail                            Parameter, Integer(4)
+                                 1-12.17$
+ 
+lam0                             Common member, Real(4), Offset: 32, Alignment: quadruple word
+                                 0-52.32$  2-3.34$
+ 
+lm                               Parameter, Integer(4)
+                                 1-3.31$
+ 
+lsm                              Parameter, Integer(4)
+                                 1-3.37$
+ 
+mod                              Pure Intrinsic
+                                 0-73.16  0-86.16
+ 
+north                            Common member, Logical(4), Offset: 0, Alignment: quadruple word
+                                 0-51.15$  2-2.21$
+ 
+phi0                             Common member, Real(4), Offset: 28, Alignment: full word
+                                 0-52.38$  2-3.29$
+ 
+polei                            Common member, Real(4), Offset: 8, Alignment: double word
+                                 0-52.44$  2-2.34$  0-57.42
+ 
+polej                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-52.51$  2-2.40$  0-58.27
+ 
+sbd                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-67.7@  0-74.12  0-87.12
+ 
+sinph0                           Common member, Real(4), Offset: 40, Alignment: double word
+                                 0-53.12$  2-4.12$
+ 
+tanph0                           Common member, Real(4), Offset: 44, Alignment: full word
+                                 0-53.20$  2-4.19$
+ 
+vtlat                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-55.12$  0-1.36  0-91.9@
+ 
+vtlon                            Reference argument, Real(4) (1:89, 1:143), Offset: 0, Alignment: full word
+                                 0-55.25$  0-1.42  0-90.9@
+ 
+wbd                              Static, Real(4), Offset: 0, Alignment: full word
+                                 0-66.7@  0-73.12  0-86.12
+ 
+wlonc                            Common member, Real(4), Offset: 12, Alignment: full word
+                                 0-53.28$  0-58.20
+ 
+xmeshl                           Common member, Real(4), Offset: 16, Alignment: quadruple word
+                                 0-53.35$  2-3.12$  0-58.41
+ 
+ylatc                            Common member, Real(4), Offset: 4, Alignment: full word
+                                 0-53.43$  0-57.20
+ 
+** e2tll   === End of Compilation 1 ===
+ 
+>>>>> COMPILATION UNIT EPILOGUE SECTION <<<<<
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+>>>>> OPTIONS SECTION <<<<<
+***   Options In Effect   ***
+  
+         ==  On / Off Options  ==
+         CR              DBG             ESCAPE          FULLPATH
+         I4              INLGLUE         NOLIBESSL       NOLIBPOSIX
+         OBJECT          SOURCE          STRICT          SWAPOMP
+         THREADED        UNWIND          NOZEROSIZE
+  
+         ==  Options Of Integer Type ==
+         ALIAS_SIZE(65536)     FIXED(72)             MAXMEM(-1)
+         OPTIMIZE(2)           SPILLSIZE(2000)       STACKTEMP(0)
+  
+  
+         ==  Options Of Character Type  ==
+         64(LARGETYPE)         ALIAS(STD,INTPTR)     ALIGN(BINDC(POWER),STRUCT(NATURAL))
+         ARCH(PWR6)            ATTR(FULL)            AUTODBL(NONE)
+         DESCRIPTOR(V1)        DIRECTIVE(IBM*,IBMT)  ENUM()
+         FLAG(I,I)             FLOAT(RNDSNGL,MAF,FOLD,RNGCHK,SINGLE)
+         HALT(S)               IEEE(NEAR)            INTSIZE(4)
+         LANGLVL(EXTENDED)     POSITION(APPENDOLD)   REALSIZE(4)
+         SAVE(ALL)             TUNE(PWR6)            UNROLL(AUTO)
+         XREF(FULL)            XLF2003(NOPOLYMORPHIC,NOBOZLITARGS,NOSTOPEXCEPT,NOVOLATILE,NOAUTOREALLOC,OLDNANINF)
+         XLF77(NOLEADZERO,GEDIT77,NOBLANKPAD,OLDBOZ,INTARG,INTXOR,PERSISTENT,SOFTEOF)
+         XLF90(NOSIGNEDZERO,NOAUTODEALLOC,OLDPAD)
+  
+>>>>> SOURCE SECTION <<<<<
+         99 |
+ 
+>>>>> FILE TABLE SECTION <<<<<
+ 
+ 
+                                       FILE CREATION        FROM
+FILE NO   FILENAME                    DATE       TIME       FILE    LINE
+     0    E2TLL.f                     12/18/08   11:40:50
+     1    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/parmeta
+                                      12/18/08   11:40:52      0      44
+     2    /gpfs/c/nco/ops/nwprod/sorc/hiresw_post_hls.fd/EGRID.comm
+                                      12/18/08   11:40:50      0      60
+ 
+ 
+>>>>> COMPILATION EPILOGUE SECTION <<<<<
+ 
+ 
+FORTRAN Summary of Diagnosed Conditions
+ 
+TOTAL   UNRECOVERABLE  SEVERE       ERROR     WARNING    INFORMATIONAL
+               (U)       (S)         (E)        (W)          (I)
+    0           0         0           0          0            0
+ 
+ 
+    Source records read.......................................     120
+1501-510  Compilation successful for file E2TLL.f.
+1501-543  Object file created.
