@@ -598,7 +598,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
-     &               l,impf,jmpf,nframed2,NUMTA,IHINDX,JHINDX,QSHLTR) 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,QSHLTR) 
 
       DO N=1,NUMSTA
 !           write(0,*) 'N, TSHLTR_hold(N),PSHLTR(N):',N,TSHLTR_hold(N),

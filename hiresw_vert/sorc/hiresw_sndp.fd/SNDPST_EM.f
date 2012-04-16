@@ -182,8 +182,8 @@ C
        READ(11,OPTION,END=12322) !read from file eta_sndp.parm.mono
 12322  CONTINUE
 C
-cZHou        IFCSTL=-99
-cZhou        JHR=0
+       IFCSTL=-99
+       JHR=0
 C----------------------------------------------------------------------
 C---READ STATION DATA--------------------------------------------------
 C----------------------------------------------------------------------
@@ -192,22 +192,22 @@ cBZHOU      LRECPR=4*(8+9+LCL1ML1*LM1+LCL1SL1)        !for RSM/ETA
       LRECPR=4*(8+9+LCL1ML*LM1+LCL1SL)                !for NCAR-WRF
 
       OPEN(UNIT=LUNIT,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
-cBZHOU      NREC=0
-cBZHOU 33   CONTINUE
-cZHOU      NREC=NREC+1      
+      NREC=0
+ 33   CONTINUE
+      NREC=NREC+1      
 
-      DO 4000 JHR = 1, NFCST
-
-        write(*,*) ' ===== FCST ==== ', JHR
-
-       DO 3000 NST = 1, NSTAT              !Binbin: Station loop, one station on loop
-                                           !Note: the order of fcst time and stations are reversed in WRF and in ETA/RSM
-                                           !In ETA/RSM, reading recode is first one station store all fcst hours, so first read
-                                           !    station, then read fcst time
-                                           !In WRF, all stations saved in one fcst hour (i.e. one files), so first read
-                                           !    fcst hour, then read station
-                                           !So use DO 3000/4000 loop here
-      NREC=(JHR-1)*NSTAT + NST
+!      DO 4000 JHR = 1, NFCST
+!
+!        write(*,*) ' ===== FCST ==== ', JHR
+!
+!       DO 3000 NST = 1, NSTAT              !Binbin: Station loop, one station on loop
+!                                           !Note: the order of fcst time and stations are reversed in WRF and in ETA/RSM
+!                                           !In ETA/RSM, reading recode is first one station store all fcst hours, so first read
+!                                           !    station, then read fcst time
+!                                           !In WRF, all stations saved in one fcst hour (i.e. one files), so first read
+!                                           !    fcst hour, then read station
+!                                           !So use DO 3000/4000 loop here
+!      NREC=(JHR-1)*NSTAT + NST
 
       READ(LUNIT,REC=NREC,IOSTAT=IRR,END=999) IHRST,IDATE,IFCST,  
      &   ISTAT,CISTAT,(FPACK(N),N=1,9),(FPACK(N),N=10,FPACK(7))
@@ -224,15 +224,15 @@ c        end do
 c      end if
 
 
-cZhou        IF (IFCST.GT.IFCSTL) THEN
-cZhou         INUMS=1
-cZhou         JHR=JHR+1
-cZhou         IFCSTL=IFCST
-cZhou        ELSE
-cZhou         INUMS=INUMS+1
-cZhou        ENDIF
+        IF (IFCST.GT.IFCSTL) THEN
+         INUMS=1
+         JHR=JHR+1
+         IFCSTL=IFCST
+        ELSE
+         INUMS=INUMS+1
+        ENDIF
 
-        INUMS=NST
+!        INUMS=NST
 
         IYR=IDATE(3)
         IMON=IDATE(1)
@@ -489,11 +489,11 @@ c         write(*,*)i,PRODAT(i,INUMS,JHR)
 c        end do
 c      end if
 
-cZhou        GOTO 33
+        GOTO 33
 
-3000    CONTINUE
-        write(*,*) 'READ FCST ', JHR, 'done !'
-4000    CONTINUE
+! 3000    CONTINUE
+!        write(*,*) 'READ FCST ', JHR, 'done !'
+! 4000    CONTINUE
 
  999    CONTINUE
  
