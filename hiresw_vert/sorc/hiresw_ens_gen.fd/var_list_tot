@@ -1,0 +1,59 @@
+1. CAPE
+         mean, spread
+         prob > 500, 1000, 2000, 4000
+2. SREH
+         mean, spread
+         prob > 100, 150, 200, 250, 300
+3. LI
+         mean, spread
+         prob < 0, -2, -4, -6, -8
+4. CIN
+         mean, spread
+         prob < -50, -100, -200, -300, -400
+5. T2m
+         mean, spread
+         prob < 273
+6. U10   
+         mean, spread
+7. V10m 
+         mean, spread
+8. SLP
+         mean, spread
+9. T  
+         mean, spread at 850, 700, 500, 300mb respectively
+         prob < 273   at 850, 700, 500, 300mb respectively
+10. RH
+        mean, spread at 850, 700, 500, 300mb respectively
+11. Td2m
+        mean, spread
+12. Td
+        mean, spread at 850, 700, 500mb, respectively
+13. RH2m
+        mean, spread
+14. Height
+        mean, spread for 1000, 850, 700, 500, 300 250 mb,  respectively
+15. Potential Water
+        mean, spread
+16. Sfc visibility
+        mean, spread
+        prob < 1609, 4827
+17  Absolute Vortecity
+        mean, spread at 850, 700, 500 250mb,  respectively
+18. Thickness
+        mean, spread for 1000-500mb, 1000-850mb, 850-700mb, respectively
+19. Precip type
+        prob of rain, freezing rain, snow
+20. 3, 6, 12, 24hr QPF
+        mean, sprad
+        prob > 0.01, 0.25, 0.5, 1.0, 2.0 (in)
+21. 3, 6, 12, 24hr Snow
+        mean, sprad
+        prob > 1, 2, 2.5, 5, 4, 6, 7.5, 8, 10, 12, 16, 20, 24 (in)
+22. 10m Wind speed (knots) 
+        mean, spread
+        prob > 12.9 (25 knots), 17.5 (34 knots), 24.7 (48knots), 25.8 (50 knots)
+23. Wind speed
+        mean, spread at 850, 700, 500, 300mb, respectively
+24. Dominant precip 
+        
+
