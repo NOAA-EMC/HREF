@@ -166,8 +166,8 @@ C
        READ(11,OPTION,END=12322)
 12322  CONTINUE
 C
-cZhou        IFCSTL=-99
-cZhou        JHR=0
+        IFCSTL=-99
+        JHR=0
        write(*,*) 'NFCST=',NFCST
 C----------------------------------------------------------------------
 C---READ STATION DATA--------------------------------------------------
@@ -178,13 +178,11 @@ C----------------------------------------------------------------------
       write(*,*)'LRECPR=',LRECPR
       OPEN(UNIT=LUNIT,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
 
-czhou      NREC=0
-czhou 33   CONTINUE
-cZhou      NREC=NREC+1
+      NREC=0
+ 33   CONTINUE
+      NREC=NREC+1
 
-      DO 4000 JHR= 1,NFCST                 !Binbin: Forecast time loop
-       write(*,*) ' ===== FCST ==== ', JHR
-      DO 3000 NST = 1, NSTAT              !Binbin: Station loop, one station on loop     
+!      DO 3000 NST = 1, NSTAT              !Binbin: Station loop, one station on loop     
                                            !Note: the order of fcst time and stations are reversed in WRF and in ETA/RSM 
                                            !In ETA/RSM, reading recode is first one station store all fcst hours, so first read   
                                            !    station, then read fcst time 
@@ -192,19 +190,22 @@ cZhou      NREC=NREC+1
                                            !    fcst hour, then read station 
                                            !So use DO 3000/4000 loop here 
 
-      NREC=(JHR-1)*NSTAT + NST
+!      DO 4000 JHR= 1,NFCST                 !Binbin: Forecast time loop
+
+!      NREC=(JHR-1)*NSTAT + NST
+
       READ(LUNIT,REC=NREC,END=999) IHRST,IDATE,IFCST,ISTAT,CISTAT,  
      &   (FPACK(N),N=1,9),(FPACK(N),N=10,FPACK(7))
 
-cZhou        IF (IFCST.GT.IFCSTL) THEN
-c         INUMS=1
-c         JHR=JHR+1
-c         IFCSTL=IFCST
-c        ELSE
-c         INUMS=INUMS+1
-c        ENDIF
+       IF (IFCST.GT.IFCSTL) THEN
+         INUMS=1
+         JHR=JHR+1
+         IFCSTL=IFCST
+        ELSE
+         INUMS=INUMS+1
+        ENDIF
 
-        INUMS=NST
+!        INUMS=NST
 
         IYR=IDATE(3)
         IMON=IDATE(1)
@@ -429,7 +430,7 @@ C       BY ADDING LMH (THE SIZE OF THE RAIN ARRAY) TO THE FPACK INDEXING
             PRODAT (IJ-2,INUMS,JHR) = FPACK (MN)
           ENDDO
 c        write(*,*) 'NREC=',NREC,' done'
-c        GOTO 33
+         GOTO 33
 
 c       write(*,*) 'STATION#', NST,' done!' 
 3000    CONTINUE 

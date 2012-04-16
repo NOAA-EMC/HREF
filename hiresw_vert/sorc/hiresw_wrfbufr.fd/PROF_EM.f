@@ -1588,11 +1588,13 @@ C***
 C
 
 !!	ICE available in wrfinput file...zero out for now
-      VarName='XICE'
+      VarName='SEAICE'
       CALL retrieve_index(index,VarName,varname_all,nrecs,iret)
       CALL mpi_file_read_at(iunit,file_offset(index+1)
      + ,DUMMY,hor_size,mpi_real4
      + ,mpi_status_ignore, ierr)
+
+	DUMMY=0.
 
       DO N=1,NUMSTA
         I=IHINDX(N)
@@ -2039,8 +2041,8 @@ CC RAINNC is "ACCUMULATED TOTAL GRID SCALE PRECIPITATION"
         enddo
 
         DO N=1,NUMSTA
-          SFCSHX0(N)=-9999.
-          SFCLHX0(N)=-9999.
+!          SFCSHX0(N)=-9999.
+!          SFCLHX0(N)=-9999.
           SUBSHX0(N)=-9999.
           SNOPCX0(N)=-9999.
         ENDDO
