@@ -317,6 +317,8 @@ CONTAINS
       REAL :: ALBEDOMIN, ALBEDOMAX
       REAL :: EMISSMIN,  EMISSMAX
       REAL :: Z0MIN,     Z0MAX
+!------------------------------
+      REAL :: SMHIGH,REFSMC1,WLTSMC1,SMLOW
 
 ! ----------------------------------------------------------------------
 ! DECLARATIONS - PARAMETERS
@@ -371,14 +373,35 @@ CONTAINS
                          ALBEDOMAX, Z0MIN, Z0MAX, CSOIL, PTU, LLANDUSE,    &
                          LSOIL,LOCAL)
 
-!urban
+!urban    when only SMCMAX, SMCREF, SMCWLT and SMCDRY are assigned new values, then
+!they are not consistent with the other soil parameters, such as DKSAT, PSISAT,
+!DWSAT and F1.  Therefore, the values for these parameters are required to be recalculated.
+!Yihua Wu, 2-23-2012
+
          IF(VEGTYP==ISURBAN)THEN
-              SHDFAC=0.05
-              RSMIN=400.0
-              SMCMAX = 0.45
-              SMCREF = 0.42
-              SMCWLT = 0.40
-              SMCDRY = 0.40
+
+             SHDFAC=0.05
+             RSMIN=400.0
+             SMCMAX = 0.45
+             SMCREF = 0.42
+             SMCWLT = 0.25
+             SMCDRY = 0.25
+             
+             BEXP = 17.0
+             SMHIGH = 3.02
+             SMLOW = 0.4978
+
+             DKSAT=5.79E-9/((SMCREF*SMHIGH-SMCMAX)/(SMCMAX*(SMHIGH-1)))**(2.0*BEXP+3.0)
+             PSISAT = 200.0/(SMCWLT/(SMCMAX*(1.0-SMLOW)))**(-BEXP)
+             DWSAT  = BEXP*DKSAT*(PSISAT/SMCMAX)
+             F1 = ALOG10(PSISAT) + BEXP*ALOG10(SMCMAX) + 2.0
+!   The equations for DKSAT and PSISAT is derived from the following 4 equations.  Yihua Wu, Feb. 2012
+!             REFSMC1 = SMCMAX*(5.79E-9/DKSAT)**(1.0/(2.0*BEXP+3.0))
+!             SMCREF = REFSMC1 + (SMCMAX-REFSMC1) / SMHIGH
+!             WLTSMC1 = SMCMAX * (200.0/PSISAT)**(-1.0/BEXP)
+!             SMCWLT = WLTSMC1 - SMLOW * WLTSMC1
+!             SMCDRY = SMCWLT
+
          ENDIF
 
          IF ( SHDFAC >= SHDMAX ) THEN
@@ -852,11 +875,22 @@ CONTAINS
             END DO
             SOILWM = -1.0* (SMCMAX - SMCWLT)* ZSOIL (1)
             SOILWW = -1.0* (SMC (1) - SMCWLT)* ZSOIL (1)
+!            if (SOILWW .lt. 0.0) then
+!               print*,'Mark1 SOILWM SMCMAX SMCWLT ZSOIL1 =',SOILWM,SMCMAX,SMCWLT,ZSOIL(1)
+!               print*,'Mark1 SOILWW SMC1 SMCWLT ZSOIL = ',SOILWW, SMC(1), SMCWLT, ZSOIL
+!               print*,'Mark1 DWSAT DKSAT PSISAT F1 = ',DWSAT,DKSAT,PSISAT,F1
+!            endif
 
             IF (NROOT >= 2) THEN
               DO K = 2,NROOT
                SOILWM = SOILWM + (SMCMAX - SMCWLT)* (ZSOIL (K -1) - ZSOIL (K))
                SOILWW = SOILWW + (SMC(K) - SMCWLT)* (ZSOIL (K -1) - ZSOIL (K))
+
+!             if (SOILWW .lt. 0.0) then
+!                print*,'Mark2 SOILWW SMCk SMCWLT ZSOIL = ',K,SOILWW,SMC(K),SMCWLT,ZSOIL(K-1),ZSOIL(K)
+!                print*,'Mark2 DWSAT DKSAT PSISAT F1 = ',DWSAT,DKSAT,PSISAT,F1
+!             endif
+
               END DO
             END IF
             IF (SOILWM .LT. 1.E-6) THEN
@@ -864,6 +898,7 @@ CONTAINS
               SOILW  = 0.0
               SOILM  = 0.0
             ELSE
+!              SOILW = max(SOILWW / SOILWM,0.0)
               SOILW = SOILWW / SOILWM
             END IF
          ELSE
@@ -2347,6 +2382,8 @@ CONTAINS
       SMCMAX = MAXSMC (SOILTYP)
       SMCREF = REFSMC (SOILTYP)
       SMCWLT = WLTSMC (SOILTYP)
+
+
 ! ----------------------------------------------------------------------
 ! Set-up universal parameters (not dependent on SOILTYP, VEGTYP or
 ! SLOPETYP)
@@ -2663,7 +2700,7 @@ CONTAINS
                     DWSAT,DKSAT,SMCMAX,BEXP,RUNOFF1,                    &
                     RUNOFF2,DT,SMCWLT,SLOPE,KDT,FRZFACT,SICE,AI,BI,CI)
          CALL SSTEP (SH2OFG,SH2O,DUMMY,RHSTT,RHSCT,DT,NSOIL,SMCMAX,     &
-                        CMCMAX,RUNOFF3,ZSOIL,SMC,SICE,AI,BI,CI)
+                        CMCMAX,SMCWLT,RUNOFF3,ZSOIL,SMC,SICE,AI,BI,CI)
          DO K = 1,NSOIL
             SH2OA (K) = (SH2O (K) + SH2OFG (K)) * 0.5
          END DO
@@ -2671,14 +2708,14 @@ CONTAINS
                     DWSAT,DKSAT,SMCMAX,BEXP,RUNOFF1,                    &
                     RUNOFF2,DT,SMCWLT,SLOPE,KDT,FRZFACT,SICE,AI,BI,CI)
          CALL SSTEP (SH2O,SH2O,CMC,RHSTT,RHSCT,DT,NSOIL,SMCMAX,         &
-                        CMCMAX,RUNOFF3,ZSOIL,SMC,SICE,AI,BI,CI)
+                        CMCMAX,SMCWLT,RUNOFF3,ZSOIL,SMC,SICE,AI,BI,CI)
 
       ELSE
          CALL SRT (RHSTT,EDIR,ET,SH2O,SH2O,NSOIL,PCPDRP,ZSOIL,          &
                     DWSAT,DKSAT,SMCMAX,BEXP,RUNOFF1,                    &
                       RUNOFF2,DT,SMCWLT,SLOPE,KDT,FRZFACT,SICE,AI,BI,CI)
          CALL SSTEP (SH2O,SH2O,CMC,RHSTT,RHSCT,DT,NSOIL,SMCMAX,         &
-                        CMCMAX,RUNOFF3,ZSOIL,SMC,SICE,AI,BI,CI)
+                        CMCMAX,SMCWLT,RUNOFF3,ZSOIL,SMC,SICE,AI,BI,CI)
 !      RUNOF = RUNOFF
 
       END IF
@@ -3666,7 +3703,7 @@ CONTAINS
 ! ----------------------------------------------------------------------
 
       SUBROUTINE SSTEP (SH2OOUT,SH2OIN,CMC,RHSTT,RHSCT,DT,              &
-                        NSOIL,SMCMAX,CMCMAX,RUNOFF3,ZSOIL,SMC,SICE,     &
+                        NSOIL,SMCMAX,CMCMAX,SMCWLT,RUNOFF3,ZSOIL,SMC,SICE,     &
                         AI,BI,CI)
 
 ! ----------------------------------------------------------------------
@@ -3679,7 +3716,7 @@ CONTAINS
       INTEGER, INTENT(IN)       :: NSOIL
       INTEGER                   :: I, K, KK11
 
-      REAL, INTENT(IN)          :: CMCMAX, DT, SMCMAX
+      REAL, INTENT(IN)          :: CMCMAX, DT, SMCMAX,SMCWLT
       REAL, INTENT(OUT)         :: RUNOFF3
       REAL, INTENT(INOUT)       :: CMC
       REAL, DIMENSION(1:NSOIL), INTENT(IN)     :: SH2OIN, SICE, ZSOIL
@@ -3738,6 +3775,10 @@ CONTAINS
             WPLUS = 0.
          END IF
          SMC (K) = MAX ( MIN (STOT,SMCMAX),0.02 )
+!  The following statement is to make sure that SMC is not less than SMCWLT.
+!  Other wise, a negative SMSTAV will be produced.
+!  Yihua Wu, March 2 2012
+         SMC (K) = MAX ( SMC(K),SMCWLT )
          SH2OOUT (K) = MAX ( (SMC (K) - SICE (K)),0.0)
       END DO
 

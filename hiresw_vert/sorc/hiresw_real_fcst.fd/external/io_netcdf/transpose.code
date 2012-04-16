@@ -9,6 +9,7 @@
 ! pjj/cray
   if(IO == 'write') then
 !dir$ concurrent
+!$OMP PARALLEL DO
   do k=k1,k2
     do j=j1,j2
 !dir$ prefervector
@@ -21,6 +22,7 @@
   enddo
 else
 !dir$ concurrent
+!$OMP PARALLEL DO
   do k=k1,k2
     do j=j1,j2
 !dir$ prefervector
