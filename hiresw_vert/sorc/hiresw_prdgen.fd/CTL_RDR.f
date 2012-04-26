@@ -102,15 +102,14 @@ C* K. Brill/EMC		 6/97						*
 C* K. Brill/EMC		 8/97	Added KSMO, PRCSN			*
 C* K. Brill/EMC		 9/97	Added NAME				*
 C* K. Brill/EMC		10/97	Added KMDL, 2 smo #'s, K6PDS->KPDS	*
-C* G. Manikin/EMC        3/03   Added 2 more elements to KPDS
 C************************************************************************
 	CHARACTER*(*)	type (mxg,*)
 	CHARACTER*(*)	name (mxg,*)
-	INTEGER		kpds (7,*), kmdl (mxg,*), kgrd (mxg,*),
+	INTEGER		kpds (5,*), kmdl (mxg,*), kgrd (mxg,*),
      +			ksmpr (mxg,*), ksmpo (mxg,*), kgt (*)
 	REAL		prcsn (mxg,*)
 C*
-	CHARACTER*90	buff
+	CHARACTER*80	buff
 	CHARACTER*32	carr (10)
 C------------------------------------------------------------------------
 	iret = 0
@@ -180,8 +179,8 @@ C------------------------------------------------------------------------
 			END IF
 		    END IF
 		ELSE
-		    CALL ST_CLST ( buff, ' ', ' ', 7, carr, num, ier )
-		    IF ( ier .lt. 0 .or. num .lt. 7 ) THEN
+		    CALL ST_CLST ( buff, ' ', ' ', 5, carr, num, ier )
+		    IF ( ier .lt. 0 .or. num .lt. 5 ) THEN
 			iret = - 1
 		    ELSE
 			nr = nr + 1
@@ -189,7 +188,7 @@ C------------------------------------------------------------------------
 			kmdl (1,nr) = 0
 			kgrd (1,nr) = 0
 			type (1,nr) = ' '
-			DO i = 1, 7
+			DO i = 1, 5
 			  CALL ST_NUMB ( carr (i), kpds (i,nr), ier )
 			END DO
 		    END IF

@@ -1,6 +1,5 @@
       SUBROUTINE READ_SORT_GRIB (NFILE,MAXF,IBUFSIZE,LUGBIN,NFLDS,
-     &  JPDS5,JPDS6,JPDS7,JPDS16,JPDS19,IBUF,IHAVE,NBITL,RCBYTE,
-     &  ISTART,IRET)
+     &  JPDS5,JPDS6,JPDS7,JPDS16,IBUF,IHAVE,NBITL,RCBYTE,ISTART,IRET)
 C$$$  SUBPROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C   SUBPROGRAM: READ_SORT_GRIB
@@ -9,18 +8,16 @@ C
 C ABSTRACT: READ_SORT_GRIB PROCESSES THE INPUT GRIB FILE.
 C
 C PROGRAM HISTORY LOG:
-C 1998-08-11  BALDWIN       ORIGINATOR
-C 2002-10-11  GILBERT       FOR FROST: With 64-bit addressing the
-C                           file size returned from the STAT function
-C                           is now in element 11 of the array, instead of 8.
-C 2007-06-26  VANDENBURGHE  Change IBUF from character to integer array; use
-C                           vector syntax fro IBUF read (changes reduce runtime) 
+C   98-08-11  BALDWIN     ORIGINATOR
+C 2002-10-11  GILBERT     FOR FROST: With 64-bit addressing the
+C                         file size returned from the STAT function
+C                         is now in element 11 of the array, instead of 8.
 C
 C USAGE:  CALL READ_SORT_GRIB (NFILE,MAXF,IBUFSIZE,LUGBIN,NFLDS,
 C    &  JPDS5,JPDS6,JPDS7,JPDS16,IBUF,IHAVE,NBITL,RCBYTE,ISTART,IRET)
 C
 C   INPUT:
-C         NFILE             CHAR*90 - NAME OF INPUT GRIB FILE
+C         NFILE             CHAR*80 - NAME OF INPUT GRIB FILE
 C         MAXF              INTEGER - MAXIMUM NUMBER OF FIELDS
 C         IBUFSIZE          INTEGER - MAXIMUM SIZE OF INPUT GRIB FILE
 C         LUGBIN            INTEGER - UNIT NUMBER OF INPUT GRIB FILE
@@ -32,7 +29,7 @@ C         JPDS7(MAXF)       INTEGER - PDS OCTET 11-12 OF EACH FIELD
 C         JPDS16(MAXF)      INTEGER - PDS OCTET 21 OF EACH FIELD
 C
 C   OUTPUT:
-C         IBUF(IBUFSIZE)    CHAR*1  - GRIB MESSAGES
+C         IBUF(IBUFSIZE)    INTEGER*1  - GRIB MESSAGES
 C         IHAVE(MAXF)       LOGICAL - FLAG INDICATING WHETHER FIELD   
 C                                     REQUESTED FROM CONTROL FILE WAS
 C                                     FOUND IN GRIB FILE
@@ -56,17 +53,15 @@ C
 C$$$
 
       INTEGER JPDS5(MAXF),JPDS6(MAXF),
-     &        JPDS7(MAXF),JPDS16(MAXF),JPDS19(MAXF) 
+     &        JPDS7(MAXF),JPDS16(MAXF)
       INTEGER RCBYTE(MAXF),ISTART(MAXF)
       INTEGER NBITL(MAXF)
       INTEGER(4) STAT,JSTAT(13)
 
       LOGICAL*1 RUSE,IHAVE(MAXF)
 
-c     CHARACTER IBUF(IBUFSIZE)*1
       INTEGER IBUF(IBUFSIZE)*1
-
-      CHARACTER NFILE*90
+      CHARACTER NFILE*80
 
       IRET=0
 
@@ -106,8 +101,8 @@ C
            RETURN
          END IF
 
-c        READ  (LUGBIN, REC=1, IOSTAT=JERR2) (IBUF(I),I=1,KBYTES)
-         READ  (LUGBIN, REC=1, IOSTAT=JERR2) IBUF(1:kbytes)
+!         READ  (LUGBIN, REC=1, IOSTAT=JERR2) (IBUF(I),I=1,KBYTES)
+         READ  (LUGBIN, REC=1, IOSTAT=JERR2) IBUF(1:KBYTES)
 
          CLOSE (LUGBIN) 
 
@@ -147,7 +142,6 @@ C
            IPDS7=MOVA2I(IBUF(I1+11))*256
      &          +MOVA2I(IBUF(I1+12))
            IPDS16=MOVA2I(IBUF(I1+21))
-           IPDS19=MOVA2I(IBUF(I1+4))
 
            IFL=MOVA2I(IBUF(I1+8))
            IGDS=IFL/128
@@ -180,21 +174,18 @@ C
 
          DO N=1,NFLDS
           IF (IPDS5.EQ.JPDS5(N).AND.IPDS6.EQ.JPDS6(N).AND.
-     &        IPDS7.EQ.JPDS7(N).AND.IPDS16.EQ.JPDS16(N).AND.
-     &        IPDS19.EQ.JPDS19(N)) THEN
+     &        IPDS7.EQ.JPDS7(N).AND.IPDS16.EQ.JPDS16(N)) THEN
            RCBYTE(N) = IRCBYTE
            ISTART(N) = I
            NBITL (N) = IBITL
            IHAVE(N)  = .TRUE.
-	write(6,*) 'requested and have IPDS5, IPDS6, IPDS7: ', 
-     &                                 IPDS5, IPDS6, IPDS7
            RUSE=.TRUE.
           ENDIF
          ENDDO
 
          I = JSTART
-         IF (.NOT.RUSE) WRITE(6,3331) IPDS5,IPDS6,IPDS7,IPDS16,IPDS19
- 3331    FORMAT(' PDS ',5I8,' READ IN BUT NOT USED BY CONTROL FILE')
+         IF (.NOT.RUSE) WRITE(6,3331) IPDS5,IPDS6,IPDS7,IPDS16
+ 3331    FORMAT(' PDS ',4I8,' READ IN BUT NOT USED BY CONTROL FILE')
 
         ENDIF
 
@@ -202,8 +193,8 @@ C
 C
          DO N=1,NFLDS
           IF (.NOT.IHAVE(N)) WRITE(6,3332) JPDS5(N),JPDS6(N),
-     &            JPDS7(N),JPDS16(N),JPDS19(N)
- 3332     FORMAT(' PDS ',5I8,' REQUESTED BY CONTROL FILE BUT',
+     &            JPDS7(N),JPDS16(N)
+ 3332     FORMAT(' PDS ',4I8,' REQUESTED BY CONTROL FILE BUT',
      &           ' NOT FOUND IN GRIB FILE')
          ENDDO
 
