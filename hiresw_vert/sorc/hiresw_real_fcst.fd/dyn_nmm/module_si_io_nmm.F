@@ -3,6 +3,7 @@ MODULE module_si_io_nmm
    USE module_optional_input
 
    IMPLICIT NONE
+
 !! FROM MODULE_KINDS
 
 !   The numerical data types defined in this module are:
@@ -1396,9 +1397,9 @@ print *,'------------------> skipping ', var_info%name(1:8)
       USE module_soil_pre
       USE module_domain
 
+      IMPLICIT NONE
       INCLUDE "mpif.h"
 
-      IMPLICIT NONE
 
       TYPE(domain) , INTENT(INOUT)  :: grid
       CHARACTER (LEN=19) , INTENT(IN) :: file_date_string

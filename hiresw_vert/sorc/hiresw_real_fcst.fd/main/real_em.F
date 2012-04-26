@@ -406,7 +406,6 @@ real::t1,t2,t3,t4
 
 	write(0,*) 'to use_package test of io_form_auxinput1'
       SELECT CASE ( use_package(io_form_auxinput1) )
-	write(0,*) 'past select case'
 
 #ifdef NETCDF
       CASE ( IO_NETCDF   )

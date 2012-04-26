@@ -1,14 +1,14 @@
-#! /bin/ksh
+#! /bin/ksh --login
 
 export WRF_NMM_CORE=1
 export WRF_EM_CORE=0
-export NETCDF=/usrx/local/netcdf.3.5.0
 
-TARGDIR=/meso/save/wx20py/nextjif/nwtest/exec
+module load netcdf
 
-./clean -a
+TARGDIR=../../exec
 
-cp configure.wrf_O3 configure.wrf
+# ./clean -a
+# cp configure.wrf_O3 configure.wrf
 
 ./compile nmm_real > compile_nmm.sc.log 2>&1
 
