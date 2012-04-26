@@ -1103,10 +1103,6 @@ subroutine ext_ncd_open_for_update( FileName, Comm, IOComm, SysDepInfo, DataHand
   integer                                :: NumVars
   integer                                :: i
   character (NF_MAX_NAME)                :: Name
-!IBM mods begin
-  integer                                :: OMODE
-!IBM mods end
-
 
   if(WrfIOnotInitialized) then
     Status = WRF_IO_NOT_INITIALIZED 
@@ -1127,15 +1123,6 @@ subroutine ext_ncd_open_for_update( FileName, Comm, IOComm, SysDepInfo, DataHand
     call wrf_debug ( WARN , TRIM(msg))
     return
   endif
-!IBM mods begin
-  stat = NF_SET_FILL(DH%NCID, NF_NOFILL, OMODE)
-  call netcdf_err(stat,Status)
-  if(Status /= WRF_NO_ERR) then
-    write(msg,*) 'NetCDF error in ',__FILE__,', line', __LINE__
-    call wrf_debug ( WARN , TRIM(msg))
-    return
-  endif
-!IBM mods end
   stat = NF_INQ_VARID(DH%NCID,DH%TimesName,VarID)
   call netcdf_err(stat,Status)
   if(Status /= WRF_NO_ERR) then

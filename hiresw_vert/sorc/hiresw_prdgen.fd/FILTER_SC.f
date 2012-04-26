@@ -1,5 +1,5 @@
       SUBROUTINE FILTER_SC (IMAXIN,JJMAXIN,JMAXIN,JPASS,KGDSIN,
-     &                      KPDS5,FIN,LIN,IRET)
+     &                      FIN,LIN,IRET)
 C$$$  SUBPROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C   SUBPROGRAM: FILTER_SC
@@ -10,8 +10,6 @@ C           E-GRID SPECIALLY (201,203).
 C
 C PROGRAM HISTORY LOG:
 C   98-08-11  BALDWIN     ORIGINATOR
-C   03-03-18  MANIKIN     ADDED IN CODE TO PREVENT NEGATIVE RH VALUES
-C                            AND VALUES GREATER THAN 100
 C
 C USAGE:  CALL FILTER_SC (IMAXIN,JJMAXIN,JMAXIN,JPASS,KGDSIN,
 C    &                      FIN,LIN,IRET)
@@ -196,11 +194,5 @@ C
       ENDIF
 C
       ENDIF
-      IF (KPDS5 .EQ. 52) THEN
-         DO L = 1,JMAXIN
-            IF (FIN(L).GT.100.) FIN(L)=100.
-            IF (FIN(L).LT.0.)  FIN(L)=0.
-         ENDDO
-       ENDIF
       RETURN
       END
