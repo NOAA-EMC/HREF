@@ -1,16 +1,17 @@
-#! /bin/ksh
+#! /bin/ksh --login
+
+module load netcdf
+export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 
 ### BUILD ARW
 
 export WRF_NMM_CORE=0
 export WRF_EM_CORE=1
-export NETCDF=/usrx/local/netcdf.3.5.0
 
-TARGDIR=/nwtest/exec
+TARGDIR=../../exec
 
 ./clean -a
-
-cp configure.wrf_O3 configure.wrf
+cp configure.wrf_zeus configure.wrf
 
 ./compile em_real > compile_arw.sc.log 2>&1
 
@@ -23,8 +24,7 @@ export WRF_NMM_CORE=1
 export WRF_EM_CORE=0
 
 ./clean -a
-
-cp configure.wrf_O3 configure.wrf
+cp configure.wrf_zeus configure.wrf
 
 ./compile nmm_real > compile_nmm.sc.log 2>&1
 

@@ -354,8 +354,8 @@ SUBROUTINE med_sidata_input ( grid , config_flags )
       END IF
 !
       CALL close_dataset ( idsi , config_flags , "DATASET=AUXINPUT1" )
-
 #endif
+
 #ifdef INTIO
       CASE ( IO_INTIO )
 

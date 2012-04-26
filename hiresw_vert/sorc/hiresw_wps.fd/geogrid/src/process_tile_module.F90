@@ -806,7 +806,11 @@ module process_tile_module
         
                   if (idomcatstatus == 0) then
                      call mprintf(.true.,STDOUT,'  Processing %s', s1=trim(domname))
+                     call mprintf(.true.,STDOUT,' THE PRINT MAYBE %s', &
+                                         s1=trim(domname))
                      allocate(dominant_field(sm1:em1, sm2:em2))
+                     call mprintf(.true.,STDOUT,' PAST THE ALLOC %s', &
+                                         s1=trim(domname))
  
                      if (.not. only_save_dominant) then
                         field_count = field_count + 1
@@ -838,10 +842,18 @@ module process_tile_module
                      end do
                      call write_field(sm1, em1, sm2, em2, 1, 1, &
                                       trim(domname), datestr, dominant_field)
+                     call mprintf(.true.,STDOUT,' TO THE DEALLOC %s', &
+                                         s1=trim(domname))
                      deallocate(dominant_field)
+                     call mprintf(.true.,STDOUT,' PAST THE DEALLOC %s', &
+                                         s1=trim(domname))
                   end if
        
+                     call mprintf(.true.,STDOUT,' TO THE DEALLOC(2) %s', &
+                                         s1=trim(domname))
                   deallocate(field)
+                     call mprintf(.true.,STDOUT,' PAST THE DEALLOC(2) %s', &
+                                         s1=trim(domname))
    
                end if
       

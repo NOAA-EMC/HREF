@@ -1,28 +1,28 @@
 set -x
 
-TARGDIR=/nwtest/exec/
+TARGDIR=../../exec/
+
+LIBDEF="-L/home/Ratko.Vasic/lib_tmp -lw3-1.9_4 -lbacio_4"
+
+
+echo $LIBDEF
 
 cp parmeta.full4km parmeta
-ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
--L/nwprod/lib/ -lw3_4 -lbacio_4
+ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full4km
 
 cp parmeta.full5km parmeta
-ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
--L/nwprod/lib/ -lw3_4 -lbacio_4
+ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full5km
 
 cp parmeta.ak5km parmeta
-ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
--L/nwprod/lib/ -lw3_4 -lbacio_4
+ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_ak5km
 
 cp parmeta.hipr5km parmeta
-ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
--L/nwprod/lib/ -lw3_4 -lbacio_4
+ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_hipr5km
 
 cp parmeta.haitipr5km parmeta
-ncepxlf -o WRFBUCKET.x WRFBUCKET.F \
--L/nwprod/lib/ -lw3_4 -lbacio_4
+ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_haitipr5km

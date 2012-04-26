@@ -233,7 +233,7 @@ SUBROUTINE tc_med_sidata_input ( grid , config_flags )
    CHARACTER(LEN=8)  :: flag_name
 
    INTEGER :: time_loop_max , loop, rc,icnt,itmp
-   INTEGER :: julyr , julday ,itmp,icnt
+   INTEGER :: julyr , julday
    REAL :: gmt
    real::t1,t2,t3,t4
 

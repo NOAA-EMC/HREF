@@ -1,8 +1,8 @@
 MODULE module_wps_io_arw
 
    USE module_optional_input
-
    IMPLICIT NONE
+
 
 
 !! FROM MODULE_KINDS
@@ -122,9 +122,10 @@ CONTAINS
       USE module_soil_pre
       USE module_domain
 
-      INCLUDE "mpif.h"
 
       IMPLICIT NONE
+
+      INCLUDE "mpif.h"
 
       TYPE(domain) , INTENT(INOUT)  :: grid
       CHARACTER (LEN=19) , INTENT(IN) :: file_date_string
