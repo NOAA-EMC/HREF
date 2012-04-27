@@ -68,8 +68,6 @@
 !***************************************************************************
 !     START CALUPDHEL HERE.
 !     
-	write(6,*) 'min/max WH(:,:,20):: ', minval(WH(:,:,20)), &
-                                           maxval(WH(:,:,20))
 
       DO J=JSTA_2L,JEND_2U
       DO I=1,IM
@@ -102,8 +100,8 @@
        l_loop: DO L=1,LM
         ZMIDLOC=0.5*(ZINT(I,J,L)+ZINT(I,J,L+1))
 
-        IF ( (ZMIDLOC - HTSFC(I,J)) .ge. HLOWER  .AND.  &
-             (ZMIDLOC - HTSFC(I,J)) .le. HUPPER ) THEN
+        IF ( (ZMIDLOC - HTSFC(I,J)) .ge. HLOWER  .AND.  
+     &       (ZMIDLOC - HTSFC(I,J)) .le. HUPPER ) THEN
            DZ=(ZINT(I,J,L)-ZINT(I,J,L+1))
 
            IF (WH(I,J,L) .lt. 0) THEN
@@ -132,7 +130,6 @@
       ENDDO
 
 !
-      print*,'jsta_m, jend_m in calupdhel= ',jsta_m,jend_m
 !     
 !     END OF ROUTINE.
 !     

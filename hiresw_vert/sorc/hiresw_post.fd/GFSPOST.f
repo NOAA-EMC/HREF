@@ -334,11 +334,11 @@ subroutine rsearch1(km1,z1,km2,z2,l2)
     incy=1
     m=km1
     iopt=1
-    if(digits(1.).lt.digits(1._8)) then
-      call sbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
-    else
-      call dbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
-    endif
+!    if(digits(1.).lt.digits(1._8)) then
+!      call sbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
+!    else
+!      call dbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
+!    endif
     do k2=1,km2
       l2(k2)=indx(k2)-rc(k2)
     enddo
@@ -350,11 +350,11 @@ subroutine rsearch1(km1,z1,km2,z2,l2)
     incy=-1
     m=km1
     iopt=0
-    if(digits(1.).lt.digits(1._8)) then
-      call sbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
-    else
-      call dbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
-    endif
+!    if(digits(1.).lt.digits(1._8)) then
+!      call sbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
+!    else
+!      call dbsrch(z2,incx,n,z1,incy,m,indx,rc,iopt)
+!    endif
     do k2=1,km2
       l2(k2)=km1+1-indx(k2)
     enddo
