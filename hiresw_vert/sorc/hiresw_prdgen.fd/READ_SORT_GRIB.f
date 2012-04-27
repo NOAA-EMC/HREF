@@ -60,8 +60,9 @@ C$$$
 
       LOGICAL*1 RUSE,IHAVE(MAXF)
 
-      INTEGER IBUF(IBUFSIZE)*1
-      CHARACTER NFILE*80
+!mp      INTEGER IBUF(IBUFSIZE)*1
+      CHARACTER IBUF(IBUFSIZE)*1
+      CHARACTER NFILE*256
 
       IRET=0
 
@@ -77,7 +78,8 @@ C
            IRET=99
            RETURN
          ELSE
-           KBYTES = JSTAT(11)
+!rv        KBYTES = JSTAT(11)
+           KBYTES = JSTAT(8)
            PRINT *,'NUMBER OF BYTES IN GRIB FILE   = ',KBYTES
          END IF
 C
@@ -95,8 +97,10 @@ C
      &   FORM='UNFORMATTED',IOSTAT=MERR,RECL=KBYTES)
 
          IF (MERR.NE.0) THEN
+           
            PRINT *,'OPEN INPUT FILE ERROR ON FILE = ', NFILE
            PRINT *,'ERROR = ',MERR
+           PRINT *, 'LUGBIN is: ', LUGBIN
            IRET=20
            RETURN
          END IF

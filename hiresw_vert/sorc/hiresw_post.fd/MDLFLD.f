@@ -54,7 +54,7 @@
 !       CALMCVG  - COMPUTE MOISTURE CONVERGENCE.
 !       CALVOR   - COMPUTE ABSOLUTE VORTICITY.
 !       CALSTRM  - COMPUTE GEOSTROPHIC STREAMFUNCTION.
-!       CALMICT  - COMPUTES NEW CLOUD FIELDS AND RADAR REFLECTIVITY FACTOR
+!       CALMICT_LOC  - COMPUTES NEW CLOUD FIELDS AND RADAR REFLECTIVITY FACTOR
 !     LIBRARY:
 !       COMMON   - 
 !                  RQSTFLD
@@ -310,7 +310,7 @@
   !    ice (snow) follows algorithm in GSMCOLUMN; radar reflectivity
   !    is derived to be consistent with microphysical assumptions 
   !
-        CALL CALMICT(P1D,T1D,Q1D,C1D,FI1D,FR1D,FS1D,CUREFL        &
+        CALL CALMICT_LOC(P1D,T1D,Q1D,C1D,FI1D,FR1D,FS1D,CUREFL        &
      &               ,QW1,QI1,QR1,QS1,DBZ1,DBZR1,DBZI1,DBZC1)
         DO J=JSTA,JEND
         DO I=1,IM
