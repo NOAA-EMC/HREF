@@ -3496,6 +3496,7 @@ END SUBROUTINE get_nio_tasks_in_group
      &,          restart_interval,io_form_history                       &
      &,          io_form_restart,io_form_input                          &
      &,          io_form_boundary,debug_level                           &
+     &,          io_form_auxinput1                                      &
      &,          auxhist2_interval,io_form_auxhist2                     &
      &,          inputout_interval                                      &
      &,          inputout_begin_y,inputout_begin_mo                     &
@@ -3517,7 +3518,8 @@ END SUBROUTINE get_nio_tasks_in_group
      &,                      frames_per_outfile,restart                 &
      &,                      restart_interval,io_form_history           &
      &,                      io_form_restart,io_form_input              &
-     &,                      io_form_boundary,debug_level               &
+     &,                      io_form_boundary,io_form_auxinput1         &
+     &,                      debug_level                                &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
      &,                      inputout_interval,input_outname            &
@@ -3538,7 +3540,9 @@ END SUBROUTINE get_nio_tasks_in_group
         call int_get_fresh_handle(iunit)
         open(unit=iunit,file="namelist.input",form="formatted"          &
      &,      status="old")
+        write(0,*) 'read time_control'
         read(iunit,time_control)
+        write(0,*) 'past read time_control'
         close(iunit)
 !
         if(start_month==2.and.mod(start_year,4)==0)days_per_month(2)=29
@@ -3649,7 +3653,7 @@ END SUBROUTINE get_nio_tasks_in_group
      &,          history_interval,frames_per_outfile                    &
      &,          restart_interval,io_form_history                       &
      &,          io_form_restart,io_form_input                          &
-     &,          io_form_boundary,debug_level                           &
+     &,          io_form_boundary,io_form_auxinput1,debug_level         &
      &,          auxhist2_interval,io_form_auxhist2                     &
      &,          inputout_interval                                      &
      &,          inputout_begin_y,inputout_begin_mo                     &
@@ -3670,7 +3674,8 @@ END SUBROUTINE get_nio_tasks_in_group
      &,                      frames_per_outfile,restart                 &
      &,                      restart_interval,io_form_history           &
      &,                      io_form_restart,io_form_input              &
-     &,                      io_form_boundary,debug_level               &
+     &,                      io_form_boundary,io_form_auxinput1         &
+     &,                      debug_level                                &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
      &,                      inputout_interval,input_outname            &

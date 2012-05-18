@@ -861,7 +861,8 @@ SUBROUTINE construct_filename4a( result , basename , fld1 , len1 , date_char , i
   result=basename
   CALL zero_pad ( t1 , fld1 , len1 )
   IF      ( use_package(io_form) .EQ. IO_INTIO ) THEN
-     ext = '.int'
+!mp     ext = '.int'
+     ext = '.bin'
   ELSE IF ( use_package(io_form) .EQ. IO_NETCDF ) THEN
      ext = '.nc '
   ELSE IF ( use_package(io_form) .EQ. IO_PNETCDF ) THEN
