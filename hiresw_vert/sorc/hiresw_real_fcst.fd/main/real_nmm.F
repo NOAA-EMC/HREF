@@ -384,7 +384,8 @@ SUBROUTINE med_sidata_input ( grid , config_flags )
                                      config_flags%io_form_auxinput1 )
 
 !       call summary()
-        CALL read_wps ( grid, trim(si_inpname), current_date_char, config_flags%num_metgrid_levels )
+!!        CALL read_wps ( grid, trim(si_inpname), current_date_char, config_flags%num_metgrid_levels )
+        CALL read_wps_bin ( grid, trim(si_inpname), current_date_char, config_flags%num_metgrid_levels )
 !       call summary()
 
 
