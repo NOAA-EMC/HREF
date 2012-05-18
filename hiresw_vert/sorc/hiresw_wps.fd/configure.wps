@@ -36,30 +36,29 @@ PERL			=	perl
 
 RANLIB			=	echo
 
-WRF_DIR			=	/nwprod/sorc/hiresw_nmm_real_fcst.fd
+WRF_DIR			=	../hiresw_real_fcst.fd
 
 #### Architecture specific settings ####
 
-# Settings for AIX	DM parallel, NO GRIB2
+# Settings for PC Linux x86_64 (IA64 and Opteron), Ifort,  serial, NO GRIB2
 #
 COMPRESSION_LIBS	=
 COMPRESSION_INC		=
 FDEFS			=
-NCARG_LIBS		=
-NCARG_LIBS2		=	-L/usr/local/lib64/r4i4 -lncarg -lncarg_gks -lncarg_c \
-				-L/usr/X11R6/lib -lX11
-FC		=	mpxlf90_r
-SFC		=	xlf90_r
-FFLAGS		=	-qfree=f90
-F77FLAGS	=	-qfixed
+FC		=	ifort
+SFC		=	ifort
+FFLAGS		=	-FR -w -ftz -align all -fno-alias -fp-model precise -convert big_endian -O -g -traceback -check all -fpe0 -ftrapuv
+F77FLAGS	=	 -convert big_endian -O
 FNGFLAGS	=	$(FFLAGS)
 LDFLAGS		=	
-CC		=	mpcc_r
+CC		=	cc
 SCC		=	cc
-CFLAGS		=	
-CPP		=	/usr/lib/cpp -C -P
-CPPFLAGS	=	-DAIX -DIBM4 -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -D_MPI -DBIT32
-ARFLAGS		=
+CFLAGS		=	-O
+CPP		=	/lib/cpp -C -P -traditional
+CPPFLAGS	=	-D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32
+NCARG_LIBS2	=	-L${PGI}/linux86-64/5.2/lib -lpgftnrtl -lpgc \
+			-L/usr/lib64 -lg2c
+
 
 ###########################################################
 #
