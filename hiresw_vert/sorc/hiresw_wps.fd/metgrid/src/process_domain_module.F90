@@ -1088,6 +1088,9 @@ integer, parameter :: BDR_WIDTH = 3
       call mprintf(.true.,LOGFILE,'Closing output file.')
       call output_close()
 
+      print*, ' would close unit 47 here '
+      close(unit=47)
+
       ! Free up memory used by met fields for this valid time
       call storage_delete_all_td()
    

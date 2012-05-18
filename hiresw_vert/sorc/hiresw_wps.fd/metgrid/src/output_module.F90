@@ -80,7 +80,7 @@ module output_module
       integer :: i, istatus, save_domain, comm_1, comm_2
       integer :: sp1, ep1, sp2, ep2, ep1_stag, ep2_stag
       real :: dx, dy, cen_lat, cen_lon, moad_cen_lat
-      character (len=128) :: coption, output_fname
+      character (len=128) :: coption, output_fname, output_fname_bin
       logical :: supports_training, supports_3d_fields
   
       call init_output_fields(grid_type, &
@@ -204,6 +204,7 @@ module output_module
 #ifdef IO_BINARY
          if (io_form_output == BINARY) then
             output_fname = trim(opt_output_from_metgrid_path)//'met_nmm.d  .'//trim(datestr)//'.int'
+            output_fname_bin = trim(opt_output_from_metgrid_path)//'met_nmm.d  .'//trim(datestr)//'.bin'
          end if
 #endif
 #ifdef IO_NETCDF
@@ -218,6 +219,7 @@ module output_module
 #endif
          i = len_trim(opt_output_from_metgrid_path)
          write(output_fname(i+10:i+11),'(i2.2)') nest_number
+         write(output_fname_bin(i+10:i+11),'(i2.2)') nest_number
       end if
 
       if (nprocs > 1 .and. do_tiled_output) then
@@ -252,12 +254,17 @@ module output_module
             call mprintf((istatus /= 0), ERROR, 'Error in ext_pkg_open_for_write_begin.')
          end if
    
+        print*, 'open output_fname_bin as unit 47: ', trim(output_fname_bin)
+        open(unit=47,file=trim(output_fname_bin),form='unformatted')
+
          do i=1,NUM_FIELDS
    
             allocate(fields(i)%rdata_arr(fields(i)%mem_start(1):fields(i)%mem_end(1), &
                                          fields(i)%mem_start(2):fields(i)%mem_end(2), &
                                          fields(i)%mem_start(3):fields(i)%mem_end(3)))
      
+!         print*, 'is training, field: ', trim(fields(i)%fieldname)
+
             call write_field(fields(i)%mem_start(1), fields(i)%mem_end(1), fields(i)%mem_start(2), &
                              fields(i)%mem_end(2), fields(i)%mem_start(3), fields(i)%mem_end(3), &
                              trim(fields(i)%fieldname), datestr, fields(i)%rdata_arr, is_training=.true.)
@@ -773,6 +780,10 @@ module output_module
   
       allocated_real_locally = .false.
   
+               if (present(is_training)) then
+        print*, 'in write_field, is_training: ', is_training
+               endif
+
       ! If we are running distributed memory and need to gather all tiles onto a single processor for output
       if (nprocs > 1 .and. .not. do_tiled_output) then
          do i=1,NUM_FIELDS
@@ -852,6 +863,12 @@ module output_module
                   call ext_int_write_field(handle, datestr, trim(fields(i)%fieldname), &
                        real_dom_array, WRF_REAL, comm_1, comm_2, domain_desc, trim(fields(i)%mem_order), &
                        trim(fields(i)%stagger), fields(i)%dimnames, sd, ed, sm, em, sp, ep, istatus)
+
+               if (.not. present(is_training)) then
+        print*, 'not training, writing ' , trim(fields(i)%fieldname), &
+                                               ed(1),ed(2),ed(3)
+         write(47) real_dom_array
+        endif
                end if
 #endif
 #ifdef IO_NETCDF
@@ -906,10 +923,11 @@ module output_module
                end if
                exit
             end if
+
          end do
    
       end if
-  
+
       if (allocated_real_locally) deallocate(real_dom_array)
   
    end subroutine write_field
