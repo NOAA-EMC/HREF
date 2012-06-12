@@ -45,13 +45,13 @@ TARGET = ../../exec/hiresw_post
 #
 
 
-NETCDFPATH=/apps/netcdf/3.6.3
+NETCDFPATH=/apps/netcdf/3.6.3/intel
 FC       = ifort -lmpi -convert big_endian -g -traceback
 # FC       = ifort -lmpi -convert big_endian -O0
 CPP      = /usr/bin/cpp -P
 ARCH     = 
 CPPFLAGS = -DLINUX
-OPTS     = -O0 -check all -fpe0 -ftrapuv
+OPTS     = -O0 # -check all -fpe0 -ftrapuv
 #
 # OPTS     = -O0 -g -traceback -check all -fpe0 -ftrapuv
 # OPTS     = 
@@ -93,7 +93,7 @@ SEARCH   =
 FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(NCDFFLAGS) $(WRFFLAGS) $(CRTMFFLAGS) $(W3FLAGS) $(SFCFLAG) $(NEMSIOFLAG) $(FREE)
 FFLAGSM  = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG)
 FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(NCDFFLAGS) $(WRFFLAGS) $(CRTMFFLAGS) $(W3FLAGS) $(NEMSIOFLAG)
-LDFLAGS  = $(MEM) $(MAP) $(SMP) $(PROFILE) -mkl=sequential
+LDFLAGS  = -mkl=sequential $(MEM) $(MAP) $(SMP) $(PROFILE)
 LIBS     = $(ESSL) $(MASS) $(SEARCH) $(NCDLIBS) $(WRFLIB)\
            -L/home/Ratko.Vasic/lib_tmp/nemsio -lnemsio \
            -L/home/Ratko.Vasic/lib_tmp \
@@ -118,7 +118,7 @@ OBJS=	VRBLS2D_mod.o VRBLS3D_mod.o VRBLS4D_mod.o MASKS_mod.o PMICRPH.o SOIL_mod.o
         cuparm.o params.o svptbl.o \
 	BNDLYR.o  BOUND.o  CALCAPE.o  CALDWP.o  CALDRG.o CALHEL.o  CALLCL.o  \
 	CALMCVG.o CALPOT.o  CALPW.o CALRH.o  CALRCH.o CALRH_GSD.o \
-	CALSTRM.o CALTAU.o CALTHTE.o CALUPDHEL.f CALVIS.o CALVIS_GSD.o CALVOR.o CALWXT.o \
+	CALSTRM.o CALTAU.o CALTHTE.o CALUPDHEL.o CALVIS.o CALVIS_GSD.o CALVOR.o CALWXT.o \
         CALWXT_RAMER.o CALWXT_BOURG.o CALWXT_REVISED.o \
         CALWXT_EXPLICIT.o CALWXT_DOMINANT.o \
 	CLDRAD.o  CLMAX.o COLLECT.o  COLLECT_LOC.o \
@@ -200,9 +200,9 @@ EXCH.f         mersenne_twister.f
 #COMMS=	LOOKUP.comm   RQSTFLD.comm   CTLBLK.comm  \
 #        GRIDSPEC.comm CMASSI.comm RHGRD.comm
 
-# DEPS= $(COMMS) $(INCLUDES) $(SRCS)
+DEPS= $(COMMS) $(INCLUDES) $(SRCS)
 
-.SUFFIXES:	.F .f .o
+.SUFFIXES:	.F .f
 
 .F.f:
 	$(CPP) $(CPPFLAGS) $< > $*.f
