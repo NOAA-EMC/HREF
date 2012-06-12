@@ -475,7 +475,8 @@ real::t1,t2,t3,t4
         CALL construct_filename4a( si_inpname , config_flags%auxinput1_inname , grid%id , 2 , current_date_char , &
                                      config_flags%io_form_auxinput1 )
 
-        CALL read_wps ( grid, trim(si_inpname), current_date_char, config_flags%num_metgrid_levels )
+!        CALL read_wps ( grid, trim(si_inpname), current_date_char, config_flags%num_metgrid_levels )
+        CALL read_wps_bin_arw ( grid, trim(si_inpname), current_date_char, config_flags%num_metgrid_levels )
 
 !!! bogus set some flags??
 

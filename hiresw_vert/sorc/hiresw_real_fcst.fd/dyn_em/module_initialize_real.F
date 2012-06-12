@@ -246,7 +246,7 @@ integer::oops1,oops2
             DO i=its,min(ide,ite)
                grid%msfux(i,j) = grid%msfu(i,j)
                grid%msfuy(i,j) = grid%msfu(i,j)
-	    write(0,*) 'defining I,J,grid%msfuy(i,j) here: ', I,J,grid%msfuy(i,j)
+!	    write(0,*) 'defining I,J,grid%msfuy(i,j) here: ', I,J,grid%msfuy(i,j)
             ENDDO
          ENDDO
 
@@ -915,11 +915,11 @@ integer::oops1,oops2
                             ids , ide , jds , jde , kds , kde , &
                             ims , ime , jms , jme , kms , kme , &
                             its , ite , jts , jte , kts , kte )
-            DO j = jts, MIN(jte,jde-1)
-               DO i = its, MIN(ite,ide-1)
-	       write(0,*)  'i,j, grid%u_2: ', I,J, grid%u_2(I,1,J)
-	       ENDDO
-            ENDDO
+!            DO j = jts, MIN(jte,jde-1)
+!               DO i = its, MIN(ite,ide-1)
+!	       write(0,*)  'i,j, grid%u_2: ', I,J, grid%u_2(I,1,J)
+!	       ENDDO
+!            ENDDO
 
          CALL vert_interp ( grid%v_gc , grid%pd_gc , grid%v_2               , grid%pb , &
                             num_metgrid_levels , 'V' , &

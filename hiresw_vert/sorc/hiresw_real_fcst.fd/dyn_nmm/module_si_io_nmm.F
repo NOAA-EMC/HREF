@@ -1429,7 +1429,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
       integer(kind=i_llong), allocatable, save           :: file_offset(:)
 !!
 
-      REAL :: dummy,tmp,garb
+      REAL :: dummy,tmp,garb,garb1,garb2,garb3,garb4
       REAL,ALLOCATABLE,save:: dumdata(:,:,:),dumdata_soil(:,:,:)
       REAL,ALLOCATABLE,save:: dumdata_flex(:,:,:)
 
@@ -1609,6 +1609,18 @@ print *,'------------------> skipping ', var_info%name(1:8)
 
         open(unit=47,file=trim(fileName),form='unformatted')
 
+        read(47) garb1,garb2,garb3,garb4,igarb
+
+          CALL nl_set_cen_lat ( grid%id , garb1 )
+
+          CALL nl_set_cen_lon ( grid%id , garb2 )
+          CALL nl_set_stand_lon ( grid%id , garb2 )
+
+          CALL nl_set_truelat1 ( grid%id , garb3 )
+          CALL nl_set_truelat2 ( grid%id , garb4 )
+
+          CALL  nl_set_map_proj( grid%id, igarb)
+
 ! binary write of field: PRES         291         379          43
        read(47) dumdata
         write(0,*) 'read PRES'
@@ -1646,6 +1658,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
        ENDDO
 
 ! binary write of field: VEGCAT         291         379           1
+        write(0,*) 'read for VEGCAT'
        read(47) dumdata(:,:,1:1)
         write(0,*) 'read VEGCAT'
         DO J=JTS,min(JTE,JDE-1)
@@ -1655,6 +1668,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
 
 ! binary write of field: SOIL_CAT         291         379           1
+        write(0,*) 'to read for SOIL_CAT'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1663,6 +1677,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
 
 ! binary write of field: CANWAT         291         379           1
+        write(0,*) 'read for CANWAT'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1698,6 +1713,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
        read(47) dumdata(:,:,1:1) ! ignored
 
 ! binary write of field: SEAICE         291         379           1
+        write(0,*) 'to SEAICE'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1770,6 +1786,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
 
 ! binary write of field: PSFC         291         379           1
+        write(0,*) 'to PSFC'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1818,6 +1835,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
        ENDDO
 
+        write(0,*) 'to PMSL ignore'
 ! binary write of field: PMSL         291         379           1
        read(47) ! ignore
 
@@ -1848,6 +1866,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
        ENDDO
 
 ! binary write of field: ALBEDO12M   291         379          12
+        write(0,*) 'to ALBEDO12M'
        read(47) dumdata(:,:,1:12)
        DO K=1,12
         DO J=JTS,min(JTE,JDE-1)
@@ -1858,6 +1877,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
        ENDDO
 
 ! binary write of field: SOILCBOT         291         379          16
+        write(0,*) 'to SOILCBOT'
        read(47) dumdata(:,:,1:16)
        DO K=1,16
         DO J=JTS,min(JTE,JDE-1)
@@ -1866,6 +1886,9 @@ print *,'------------------> skipping ', var_info%name(1:8)
          ENDDO
         ENDDO
        ENDDO
+
+! SOILCAT
+       read(47) dumdata(:,:,1:1)
 
 ! binary write of field: SOILCTOP         291         379          16
        read(47) dumdata(:,:,1:16)
@@ -1894,6 +1917,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
 
 ! binary write of field: HGT_M         291         379           1
+        write(0,*) 'to HGT_M'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1940,6 +1964,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
        read(47) ! IGNORE 
 
 ! binary write of field: XLONG_V         291         379           1
+        write(0,*) 'to XLONG_V'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
