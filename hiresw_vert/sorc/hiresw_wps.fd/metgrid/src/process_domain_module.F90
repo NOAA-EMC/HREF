@@ -76,6 +76,9 @@ module process_domain_module
                     dom_dx, dom_dy, landmask, xlat, xlon, xlat_u, xlon_u, xlat_v, xlon_v, corner_lats, &
                     corner_lons, title)
 
+        print*, 'from get_static_fields have cen_lat, cen_lon: ', cen_lat, &
+                                                                  cen_lon
+
       allocate(output_flags(num_entries))
       do i=1,num_entries
          output_flags(i) = ' '
@@ -1046,15 +1049,22 @@ integer, parameter :: BDR_WIDTH = 3
       else if (len_trim(temp_date) == 16) then
          output_date(17:19) = ':00' 
       end if
+
+      print*, 'where call output_init, have cen_lat: ', cen_lat
+      print*, 'where call output_init, have cen_lon: ', cen_lon
       call output_init(n, title, output_date, gridtype, dyn_opt, &
                        corner_lats, corner_lons, &
                        we_domain_s, we_domain_e, sn_domain_s, sn_domain_e, &
                        we_patch_s,  we_patch_e,  sn_patch_s,  sn_patch_e, &
                        we_mem_s,    we_mem_e,    sn_mem_s,    sn_mem_e, &
-                       extra_col, extra_row)
+                       extra_col, extra_row )
    
       call get_bottom_top_dim(bottom_top_dim)
    
+      write(47) cen_lat, cen_lon, truelat1, truelat2, map_proj
+        print*, 'also wrote truelat1, truelat2, map_proj: ',truelat1,truelat2, &
+                map_proj
+
       ! First write out global attributes
       call mprintf(.true.,LOGFILE,'Writing global attributes to output.')
       call write_global_attrs(title, output_date, gridtype, dyn_opt, west_east_dim, &

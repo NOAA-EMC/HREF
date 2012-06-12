@@ -186,6 +186,7 @@ module output_module
 #ifdef IO_BINARY
          if (io_form_output == BINARY) then
             output_fname = trim(opt_output_from_metgrid_path)//'met_em.d  .'//trim(datestr)//'.int'
+            output_fname_bin = trim(opt_output_from_metgrid_path)//'met_em.d  .'//trim(datestr)//'.bin'
          end if
 #endif
 #ifdef IO_NETCDF
@@ -200,6 +201,7 @@ module output_module
 #endif
          i = len_trim(opt_output_from_metgrid_path)
          write(output_fname(i+9:i+10),'(i2.2)') nest_number
+         write(output_fname_bin(i+9:i+10),'(i2.2)') nest_number
       else if (grid_type == 'E') then
 #ifdef IO_BINARY
          if (io_form_output == BINARY) then
@@ -254,8 +256,13 @@ module output_module
             call mprintf((istatus /= 0), ERROR, 'Error in ext_pkg_open_for_write_begin.')
          end if
    
+        if (my_proc_id == IO_NODE) then
         print*, 'open output_fname_bin as unit 47: ', trim(output_fname_bin)
         open(unit=47,file=trim(output_fname_bin),form='unformatted')
+        print*, 'cen_lat, cen_lon: ', cen_lat, cen_lon
+!        print*, 'known_lat, known_lon: ', known_lat, known_lon
+!        write(47) cen_lat, cen_lon
+        endif
 
          do i=1,NUM_FIELDS
    
@@ -371,6 +378,8 @@ module output_module
                               dx, dy, cen_lat, moad_cen_lat, &
                               cen_lon, stand_lon, truelat1, truelat2, &
                               parent_grid_ratio(nest_number), corner_lats, corner_lons)
+
+
 #endif
  
    end subroutine output_init
@@ -867,7 +876,14 @@ module output_module
                if (.not. present(is_training)) then
         print*, 'not training, writing ' , trim(fields(i)%fieldname), &
                                                ed(1),ed(2),ed(3)
+
+! seems like real_dom_arry is full dimension even on multiple PE.
+
+        if (my_proc_id == IO_NODE) then
+        print*, 'size(real_dom_array): ', size(real_dom_array,dim=1), &
+               size(real_dom_array,dim=2), size(real_dom_array,dim=3)
          write(47) real_dom_array
+        endif
         endif
                end if
 #endif
