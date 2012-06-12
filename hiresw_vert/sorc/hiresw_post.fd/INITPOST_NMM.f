@@ -123,6 +123,8 @@
       NCLOD=0
       NPREC=0
 
+      gridtype='E'
+
 ! LMH always = LM for sigma-type vert coord
 ! LMV always = LM for sigma-type vert coord
 
@@ -1118,9 +1120,9 @@
        end do
        print*,'l, max exch = ',l,maxval(dummy)
       end do
-      do l=1,lm
-       print*,'sample EXCH_H= ',EXCH_H(im/2,jm/2,l)
-      end do
+!      do l=1,lm
+!       print*,'sample EXCH_H= ',EXCH_H(im/2,jm/2,l)
+!      end do
 
       VarName='EL_MYJ'
       call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,     &

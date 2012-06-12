@@ -602,7 +602,7 @@
 !      if(frac.le. 1.) print *,'frac,i,j',frac,i,j
 
            EGRID1(I,J) = 1. - frac
-	if (mod(I,10) .eq. 0 .and. mod(J,10) .eq. 0) then
+	if (mod(I,30) .eq. 0 .and. mod(J,30) .eq. 0) then
 	write(0,*) 'i,j, final frac: ', i,j,frac
 	write(6,*) 'i,j, final frac: ', i,j,frac
 	endif
