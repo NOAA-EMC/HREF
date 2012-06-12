@@ -156,7 +156,10 @@
 !------------------------------------------------------------------------------
 !     START HERE
 !
-      call start()
+!      call start()
+
+        ist=0
+
 !
 !     INITIALIZE MPI
       
@@ -651,15 +654,19 @@
 !
 !     MPI_LAST WILL SHUTDOWN THE IO SERVER, IF IT EXISTS
 !
+        print*, 'to MPI_LAST'
       CALL MPI_LAST
+        print*, 'past MPI_LAST'
 !
 !
       end if
 !
 !
 !
-      call summary()
-      CALL MPI_FINALIZE(IERR)
+!      call summary()
+!        print* , 'call MPI_FINALIZE'
+!      CALL MPI_FINALIZE(IERR)
+        print* , 'past skip of  MPI_FINALIZE'
       STOP 0
       END
 

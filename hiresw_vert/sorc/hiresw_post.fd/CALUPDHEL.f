@@ -100,7 +100,7 @@
        l_loop: DO L=1,LM
         ZMIDLOC=0.5*(ZINT(I,J,L)+ZINT(I,J,L+1))
 
-        IF ( (ZMIDLOC - HTSFC(I,J)) .ge. HLOWER  .AND.  
+        IF ( (ZMIDLOC - HTSFC(I,J)) .ge. HLOWER  .AND.   &
      &       (ZMIDLOC - HTSFC(I,J)) .le. HUPPER ) THEN
            DZ=(ZINT(I,J,L)-ZINT(I,J,L+1))
 

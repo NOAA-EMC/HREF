@@ -83,7 +83,7 @@
 !     DECLARE VARIABLES.
 !     
       REAL SLDPTH2(NSOIL)
-      REAL RINC(5)
+      REAL RINC(5),DUM0D
       REAL DUM1D (LM+1)
       REAL DUMMY ( IM, JM )
       REAL DUMMY2 ( IM, JM ),MSFT(IM,JM)
@@ -185,8 +185,8 @@
       jdate(5)=idat(4)
       jdate(6)=idat(5)
       CALL W3DIFDAT(JDATE,IDATE,0,RINC)
-      ifhr=nint(rinc(2)+rinc(1)*24.)
-      ifmin=nint(rinc(3))
+      ifhr=int(0.5+rinc(2)+rinc(1)*24.)
+      ifmin=int(0.5+rinc(3))
       print*,' in INITPOST ifhr ifmin fileName=',ifhr,ifmin,fileName
 !  OK, since all of the variables are dimensioned/allocated to be
 !  the same size, this means we have to be careful int getVariable
@@ -194,6 +194,23 @@
 !  DUM3D is dimensioned IM+1,JM+1,LM+1 but there might actually
 !  only be im,jm,lm points of data available for a particular variable.  
 ! get metadata
+        call ext_int_get_dom_ti_real(DataHandle,'DX',tmp                 &
+          ,1,ioutcount,istatus)
+        print*, 'istatus from DX get: ', istatus
+        print*, 'ioutcount: ', ioutcount
+        dxval=int(tmp+0.5)
+
+        write(6,*) 'dxval= ', dxval
+
+
+        if (dxval .eq. 0.) stop
+!!!
+        call ext_int_get_dom_ti_real(DataHandle,'DY',tmp                 &
+          ,1,ioutcount,istatus)
+        dyval=int(tmp+0.5)
+        write(6,*) 'dyval= ', dyval
+
+
         call ext_int_get_dom_ti_integer(DataHandle,'MP_PHYSICS'         &
           ,itmp,1,ioutcount,istatus)
         imp_physics=itmp
@@ -208,42 +225,39 @@
           ,itmp,1,ioutcount,istatus)
         icu_physics=itmp
         print*,'CU_PHYSICS= ',icu_physics
-	
-        call ext_int_get_dom_ti_real(DataHandle,'DX',tmp                 &
-          ,1,ioutcount,istatus)
-        dxval=nint(tmp)
-        write(6,*) 'dxval= ', dxval
-        call ext_int_get_dom_ti_real(DataHandle,'DY',tmp                 &
-          ,1,ioutcount,istatus)
-        dyval=nint(tmp)
-        write(6,*) 'dyval= ', dyval
+
+
         call ext_int_get_dom_ti_real(DataHandle,'CEN_LAT',tmp            &
           ,1,ioutcount,istatus)
-        cenlat=nint(1000.*tmp)
+        cenlat=int(1000.*tmp+0.5)
         write(6,*) 'cenlat= ', cenlat
         call ext_int_get_dom_ti_real(DataHandle,'CEN_LON',tmp            &
           ,1,ioutcount,istatus)
-        cenlon=nint(1000.*tmp)
+        cenlon=int(0.5+1000.*tmp)
         write(6,*) 'cenlon= ', cenlon
         call ext_int_get_dom_ti_real(DataHandle,'TRUELAT1',tmp           &
           ,1,ioutcount,istatus)
-        truelat1=nint(1000.*tmp)
+        truelat1=int(0.5+1000.*tmp)
         write(6,*) 'truelat1= ', truelat1
         call ext_int_get_dom_ti_real(DataHandle,'TRUELAT2',tmp           &
           ,1,ioutcount,istatus)
-        truelat2=nint(1000.*tmp)
+        truelat2=int(0.5+1000.*tmp)
         write(6,*) 'truelat2= ', truelat2
 	call ext_int_get_dom_ti_real(DataHandle,'STAND_LON',tmp          &
           ,1,ioutcount,istatus)
-        STANDLON=nint(1000.*tmp)
+        STANDLON=int(0.5+1000.*tmp)
         write(6,*) 'STANDLON= ', STANDLON
         call ext_int_get_dom_ti_integer(DataHandle,'MAP_PROJ',itmp       &
           ,1,ioutcount,istatus)
         maptype=itmp
         write(6,*) 'maptype is ', maptype
+
+        gridtype='A'
+
 !need to get DT
         call ext_int_get_dom_ti_real(DataHandle,'DT',tmp                 &
           ,1,ioutcount,istatus)
+           write(6,*) 'istatus for DT get'
         DT=tmp
         print*,'DT= ',DT
 
@@ -253,17 +267,66 @@
       call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY,      &
          IM,1,JM,1,IM,JS,JE,1)
 
+!here
+      VarName='ZNU'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM,1,1,1,LM)
+
+      VarName='ZNW'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,LM+1)
+
+      VarName='ZS'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,    &  
+       1,1,1,NSOIL,1,1,1,NSOIL)
+
+      IF(iSF_SURFACE_PHYSICS==3)then ! RUC LSM
+        DO N=1,NSOIL
+          SLLEVEL(N)=SLDPTH2(N)
+        END DO
+      END IF 
+
+	write(0,*) 'return getVariable for ZS'
+
+         SLDPTH(1)=0.10
+         SLDPTH(2)=0.3
+         SLDPTH(3)=0.6
+         SLDPTH(4)=1.0
+
+! or get SLDPTH from wrf output
+      call getVariableB(fileName,DateStr,DataHandle,'DZS',SLDPTH2,      &
+       1,1,1,NSOIL,1,1,1,NSOIL)
+	write(0,*) 'return getVariable for DZS'
+! if SLDPTH in wrf output is non-zero, then use it
+      DUMCST=0.0
+      DO N=1,NSOIL
+       DUMCST=DUMCST+SLDPTH2(N)
+      END DO 
+      IF(ABS(DUMCST-0.).GT.1.0E-2)THEN
+       DO N=1,NSOIL
+        SLDPTH(N)=SLDPTH2(N)
+       END DO
+      END IF
+      print*,'SLDPTH= ',(SLDPTH(N),N=1,NSOIL)
+
+
       print*,'im,jm,lm= ',im,jm,lm
 !
       VarName='U'
 !      call getVariable(fileName,DateStr,DataHandle,'U',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
+        print*, 'for U get, J loop: ', jsta_2l, jend_2u
       do l = 1, lm
        do j = jsta_2l, jend_2u
         do i = 1, im+1
             u ( i, j, l ) = dum3d ( i, j, l )
+
+        if (I .eq. 5 .and. J .eq. 54) then
+        print*, 'I,J,L, u(i,j,l): ', I,J,L, u(i,j,l)
+        endif
+
         end do
        end do
 !  fill up UH which is U at P-points including 2 row halo
@@ -279,8 +342,25 @@
 !      print*,'UH at ',ii,jj,ll,' = ',UH (ii,jj,ll)
 !      call getVariable(fileName,DateStr,DataHandle,'V',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JEV,LM)
+
+
+
+      VarName='Z_FORCE'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='U_G'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='U_G_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+
+
       VarName='V'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JEV,LM)
       do l = 1, lm
        do j = jsta_2l, jev
@@ -297,11 +377,23 @@
       end do
       print*,'finish reading V'
 !      print*,'VH at ',ii,jj,ll,' = ',VH (ii,jj,ll)
+
+      VarName='V_G'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='V_G_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+
+
+
 !
 !      call getVariable(fileName,DateStr,DataHandle,'W',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
       VarName='W'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       & 
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       & 
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
 !      do l = 1, lm+1
 !       do j = jsta_2l, jend_2u
@@ -320,22 +412,20 @@
       ENDDO
 !      print*,'WH at ',ii,jj,ll,' = ',WH (ii,jj,ll)
       print*,'finish reading W'
-!
-!
-!      VarName='WW'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
-!        IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
-!
-! reading geopotential
-!      call getVariable(fileName,DateStr,DataHandle,'PHB',DUM3D,
-!        IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
-!      call getVariable(fileName,DateStr,DataHandle,'PH',DUM3D2,
-!        IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
+
+      VarName='W_SUBS'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='W_SUBS_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
       VarName='PH'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
       VarName='PHB'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
       print*,'finish reading geopotential'
 ! ph/phb are geopotential z=(ph+phb)/9.801
@@ -360,7 +450,7 @@
 !      call getVariableB(fileName,DateStr,DataHandle,'T',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
       VarName='T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
       do l = 1, lm
        do j = jsta_2l, jend_2u
@@ -374,6 +464,75 @@
 !       print*,'theta at ',ii,jj,l,' = ',TH(ii,jj,l)
       end do
       print*,'finish reading T'
+
+
+!here
+      VarName='TH_UPSTREAM_X'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='TH_UPSTREAM_X_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='TH_UPSTREAM_Y'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='TH_UPSTREAM_Y_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='QV_UPSTREAM_X'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='QV_UPSTREAM_X_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='QV_UPSTREAM_Y'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='QV_UPSTREAM_Y_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='U_UPSTREAM_X'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='U_UPSTREAM_X_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='U_UPSTREAM_Y'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='U_UPSTREAM_Y_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='V_UPSTREAM_X'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='V_UPSTREAM_X_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='V_UPSTREAM_Y'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+      VarName='V_UPSTREAM_Y_TEND'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+        1,1,1,LM+1,1,1,1,8)
+
+
+
 !
 ! reading sfc pressure
       VarName='MU'
@@ -394,20 +553,20 @@
 !
 
 
-      VarName='MU0'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
+!      VarName='MU0'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='NEST_POS'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
       VarName='P'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D2,     &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D2,     &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
       VarName='PB'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !
 !      call getVariable(fileName,DateStr,DataHandle,'PB',DUM3D,
@@ -446,6 +605,35 @@
         end do
        end do      
 
+      VarName='POTEVP'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            POTEVP ( i, j ) = dummy ( i, j )
+        end do
+       end do      
+
+      VarName='SNOPCX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            SNOPCX ( i, j ) = dummy ( i, j )
+        end do
+       end do      
+
+      VarName='SOILTB'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            SOILTB ( i, j ) = dummy ( i, j )
+        end do
+       end do
+
       VarName='FNM'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
         1,1,1,LM,1,1,1,LM)
@@ -470,14 +658,6 @@
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
         1,1,1,LM,1,1,1,LM)
 
-      VarName='ZNU'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
-        1,1,1,LM,1,1,1,LM)
-
-      VarName='ZNW'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
-        1,1,1,LM+1,1,1,1,LM+1)
-     
       VarName='CFN'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
         1,1,1,1,1,1,1,1)
@@ -486,9 +666,9 @@
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
         1,1,1,1,1,1,1,1)
       
-      VarName='EPSTS'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
-        1,1,1,1,1,1,1,1)
+!      VarName='EPSTS'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
+!        1,1,1,1,1,1,1,1)
 
 ! reading 2 m mixing ratio 
       VarName='Q2'
@@ -506,6 +686,7 @@
       VarName='T2'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
+
 ! reading 2m theta
       VarName='TH2'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -520,6 +701,50 @@
       VarName='PSFC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
         IM,1,JM,1,IM,JS,JE,1)
+
+!
+      VarName='T02_MAX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            MAXTSHLTR( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='T02_MIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            MINTSHLTR( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='RH02_MAX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            MAXRHSHLTR( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='RH02_MIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            MINRHSHLTR( i, j ) = dummy ( i, j )
+        end do
+       end do
+
 
 
 ! reading 10 m wind
@@ -541,7 +766,101 @@
             V10 ( i, j ) = dummy2( i, j )
         end do
        end do
-!       print*,'V10 at ',ii,jj,' = ',V10(ii,jj)
+       print*,'V10 at ',ii,jj,' = ',V10(ii,jj)
+
+
+      VarName='WSPD10MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            WSPD10MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='U10MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            MAX10U( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+
+      VarName='V10MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            MAX10V( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='W_UP_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            W_UP_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='W_DN_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            W_DN_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='REFD_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            REFD_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='UP_HELI_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            UP_HELI_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+
+        VarName='W_MEAN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+        VarName='GRPL_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+
+
+
 
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -582,6 +901,10 @@
       call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
         1,1,1,1,1,1,1,1)
 
+      VarName='XTIME'
+      call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
+        1,1,1,1,1,1,1,1)
+
 !
 !      call getVariable(fileName,DateStr,DataHandle,'PB',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -611,7 +934,7 @@
 !
 ! reading water vapor mixing ratio
       VarName='QVAPOR'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QVAPOR',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -738,7 +1061,7 @@
  
       if(imp_physics.ne.5 .and. imp_physics.ne.0)then 
       VarName='QCLOUD'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -764,7 +1087,7 @@
 
       if(imp_physics.ne.5 .and. imp_physics.ne.0)then
       VarName='QRAIN'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -790,7 +1113,7 @@
       if(imp_physics.ne.1 .and. imp_physics.ne.3                        &
         .and. imp_physics.ne.5 .and. imp_physics.ne.0)then
       VarName='QICE'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -807,7 +1130,7 @@
       if(imp_physics.ne.1 .and. imp_physics.ne.3                         &
        .and. imp_physics.ne.5 .and. imp_physics.ne.0)then
       VarName='QSNOW'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -824,7 +1147,7 @@
       if(imp_physics.eq.2 .or. imp_physics.eq.6                         &
             .or. imp_physics.eq.8)then
       VarName='QGRAUP'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -865,7 +1188,7 @@
        end do
       else
        VarName='CWM'
-       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
          IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
        do l = 1, lm
         do j = jsta_2l, jend_2u
@@ -884,7 +1207,7 @@
 !
 ! reading soil temperature
       VarName='TSLB'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
       do l = 1, nsoil
        do j = jsta_2l, jend_2u
@@ -924,45 +1247,11 @@
 ! assign SLDPTH to be the same as eta
 
 
-!!!!! PROBLEM STARTS HERE
-	write(0,*) 'to here'
-      
-      VarName='ZS'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,    &  
-       1,1,1,NSOIL,1,1,1,NSOIL)
-      IF(iSF_SURFACE_PHYSICS==3)then ! RUC LSM
-        DO N=1,NSOIL
-          SLLEVEL(N)=SLDPTH2(N)
-        END DO
-      END IF 
-
-	write(0,*) 'return getVariable for ZS'
-
-         SLDPTH(1)=0.10
-         SLDPTH(2)=0.3
-         SLDPTH(3)=0.6
-         SLDPTH(4)=1.0
-
-! or get SLDPTH from wrf output
-      call getVariableB(fileName,DateStr,DataHandle,'DZS',SLDPTH2,      &
-       1,1,1,NSOIL,1,1,1,NSOIL)
-	write(0,*) 'return getVariable for DZS'
-! if SLDPTH in wrf output is non-zero, then use it
-      DUMCST=0.0
-      DO N=1,NSOIL
-       DUMCST=DUMCST+SLDPTH2(N)
-      END DO 
-      IF(ABS(DUMCST-0.).GT.1.0E-2)THEN
-       DO N=1,NSOIL
-        SLDPTH(N)=SLDPTH2(N)
-       END DO
-      END IF
-      print*,'SLDPTH= ',(SLDPTH(N),N=1,NSOIL)
 !
 !
 ! reading soil moisture
       VarName='SMOIS'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
       do l = 1, nsoil
        do j = jsta_2l, jend_2u
@@ -976,7 +1265,7 @@
 !     &,smc(ii,jj,3),smc(ii,jj,4),smc(ii,jj,5)
 
       VarName='SH2O'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
        
       do l = 1, nsoil
@@ -988,7 +1277,7 @@
       end do 
       
 
-      VarName='XICE'
+      VarName='SEAICE'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
      
@@ -998,16 +1287,20 @@
         end do
        end do
 
-!
-! reading SMSTAV
-      VarName='SMSTAV'
+      VarName='XICEM'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            SMSTAV ( i, j ) = dummy ( i, j )
-        end do
-       end do
+
+!
+! reading SMSTAV
+!      VarName='SMSTAV'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            SMSTAV ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
 !
 ! reading SURFACE RUNOFF 
       VarName='SFROFF'
@@ -1059,9 +1352,9 @@
        end do
 !      print*,'VEGFRC at ',ii,jj,' = ',VEGFRC(ii,jj) 
  
-      VarName='SFCEVP'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-        IM,1,JM,1,IM,JS,JE,1)
+!      VarName='SFCEVP'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+!        IM,1,JM,1,IM,JS,JE,1)
 
       
       VarName='GRDFLX'
@@ -1072,10 +1365,14 @@
             GRNFLX(I,J) = dummy ( i, j )
         end do
        end do    
- 
-      VarName='SFCEXC'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+
+      VarName='ACGRDFLX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
+ 
+!      VarName='SFCEXC'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+!        IM,1,JM,1,IM,JS,JE,1)
 
       
       VarName='ACSNOW'
@@ -1087,14 +1384,14 @@
         end do
        end do
        
-      VarName='ACSNOM'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            ACSNOM ( i, j ) = dummy ( i, j )
-        end do
-       end do
+!      VarName='ACSNOM'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            ACSNOM ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
 
       VarName='SNOW'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1107,6 +1404,10 @@
        end do
      
       VarName='SNOWH'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RHOSN'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
@@ -1128,22 +1429,32 @@
        end do
 !      print*,'SST at ',ii,jj,' = ',sst(ii,jj)      
 
-!      VarName='WEASD'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
+      VarName='SSTSK'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
 
+      VarName='LAI'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+
+! if exist next two are 3D
 !      VarName='TKE_MYJ'
 !      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
 !        IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='THZ0'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            THZ0 ( i, j ) = dummy ( i, j )
-        end do
-       end do
+!      VarName='EL_MYJ'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+
+!      VarName='THZ0'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            THZ0 ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
 !      print*,'THZ0 at ',ii,jj,' = ',THZ0(ii,jj)
 
       VarName='Z0'
@@ -1156,89 +1467,182 @@
        end do
 !      print*,'Z0 at ',ii,jj,' = ',Z0(ii,jj)
 
-      VarName='QZ0'
+!      VarName='QKE'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+
+
+      VarName='VAR'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
+      VarName='CON'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OA1'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OA2'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OA3'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OA4'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OL1'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OL2'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OL3'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      VarName='OL4'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAPFAC_M'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      do j = jsta_2l, jend_2u
         do i = 1, im
+            MSFT ( i, j ) = dummy ( i, j ) 
+        end do
+       end do
+
+      VarName='MAPFAC_U'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+      
+      VarName='MAPFAC_V'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       
+!here
+      VarName='MAPFAC_MX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAPFAC_MY'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAPFAC_UX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAPFAC_UY'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAPFAC_VX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MF_VX_INV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAPFAC_VY'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+
+
+
+!      VarName='TKE_PBL'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+
+!      VarName='EL_PBL'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+
+!      VarName='QZ0'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
             QZ0 ( i, j ) = dummy ( i, j )
-        end do
-       end do
+!        end do
+!       end do
 !      print*,'QZ0 at ',ii,jj,' = ',QZ0(ii,jj)
-      VarName='UZ0'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            UZ0 ( i, j ) = dummy ( i, j )
-        end do
-       end do
+!      VarName='UZ0'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            UZ0 ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
 !      print*,'UZ0 at ',ii,jj,' = ',UZ0(ii,jj)
-      VarName='VZ0'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            VZ0 ( i, j ) = dummy ( i, j )
-        end do
-       end do
+!      VarName='VZ0'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            VZ0 ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
 !      print*,'VZ0 at ',ii,jj,' = ',VZ0(ii,jj)
-      VarName='QSFC'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            QS ( i, j ) = dummy ( i, j )
-        end do
-       end do
-!      print*,'QS at ',ii,jj,' = ',QS(ii,jj)
-      VarName='AKHS'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            AKHS ( i, j ) = dummy ( i, j )
-        end do
-       end do
-      VarName='AKMS'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            AKMS ( i, j ) = dummy ( i, j )
-        end do
-       end do
-       
-      VarName='HTOP'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            HTOP ( i, j ) = float(LM)-dummy(i,j)+1.0
-        end do
-       end do
-      VarName='HBOT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            HBOT ( i, j ) = float(LM)-dummy(i,j)+1.0
-        end do
-       end do 
-       
-       VarName='CUPPT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            CUPPT ( i, j ) = dummy ( i, j )
-        end do
-       end do
+!      VarName='QSFC'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            QS ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
+!!      print*,'QS at ',ii,jj,' = ',QS(ii,jj)
+!      VarName='AKHS'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            AKHS ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
+!      VarName='AKMS'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            AKMS ( i, j ) = dummy ( i, j )
+!        end do
+!       end do
+!       
+!      VarName='HTOP'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            HTOP ( i, j ) = float(LM)-dummy(i,j)+1.0
+!        end do
+!       end do
+!      VarName='HBOT'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            HBOT ( i, j ) = float(LM)-dummy(i,j)+1.0
+!        end do
+!       end do 
+!       
+!       VarName='CUPPT'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
+!       do j = jsta_2l, jend_2u
+!        do i = 1, im
+!            CUPPT ( i, j ) = dummy ( i, j )
+!        end do
+!!!       end do
 
       if(imp_physics .eq. 5)then
 
       VarName='F_ICE_PHY'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1251,7 +1655,7 @@
       end do
 
       VarName='F_RAIN_PHY'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1264,7 +1668,7 @@
       end do
 
       VarName='F_RIMEF_PHY'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1278,22 +1682,6 @@
 
       end if
 !    
-      VarName='MAPFAC_M'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-      do j = jsta_2l, jend_2u
-        do i = 1, im
-            MSFT ( i, j ) = dummy ( i, j ) 
-        end do
-       end do
-       
-      VarName='MAPFAC_U'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-      
-      VarName='MAPFAC_V'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
 
 
       VarName='F'
@@ -1324,6 +1712,10 @@
         end do
        end do
 !       print*,'FIS at ',ii,jj,ll,' = ',FIS(ii,jj)
+
+      VarName='HGT_SHAD'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
 
         write(6,*) 'past getting of HGT'
 !
@@ -1359,37 +1751,64 @@
 !      print*,'PSFC at ',ii,jj,' = ',PINT (ii,jj,lm+1)
 !      print*,'THS at ',ii,jj,' = ',THS(ii,jj)
 
-      VarName='LAT_LL_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_LL_T,   &
+      VarName='T00'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
 
-      VarName='LAT_UL_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_UL_T,   &
+      VarName='P00'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
 
-      VarName='LAT_UR_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_UR_T,   &
+      VarName='TLP'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
 
-      VarName='LAT_LR_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_LR_T,   &
+      VarName='TISO'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
 
-      VarName='LON_LL_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_LL_T,   &
+      VarName='MAX_MSTFX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
 
-      VarName='LON_UL_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_UL_T,   &
+      VarName='MAX_MSTFY'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
+
+! here
+
+
+!      VarName='LAT_LL_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_LL_T,   &
+!        1,1,1,1,1,1,1,1)
+
+!      VarName='LAT_UL_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_UL_T,   &
+!        1,1,1,1,1,1,1,1)
+
+!      VarName='LAT_UR_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_UR_T,   &
+!        1,1,1,1,1,1,1,1)
+
+!!      VarName='LAT_LR_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LAT_LR_T,   &
+!        1,1,1,1,1,1,1,1)
+
+!      VarName='LON_LL_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_LL_T,   &
+!        1,1,1,1,1,1,1,1)
+
+!      VarName='LON_UL_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_UL_T,   &
+!        1,1,1,1,1,1,1,1)
      
-      VarName='LON_UR_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_UR_T,   &
-        1,1,1,1,1,1,1,1)     
+!      VarName='LON_UR_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_UR_T,   &
+!        1,1,1,1,1,1,1,1)     
 
-      VarName='LON_LR_T'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_LR_T,   &
-        1,1,1,1,1,1,1,1)
+!      VarName='LON_LR_T'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,LON_LR_T,   &
+!        1,1,1,1,1,1,1,1)
      
      
 !C
@@ -1420,6 +1839,14 @@
 !       print*,'ANCPRC at ',ii,jj,' = ',ANCPRC(ii,jj)
 	write(6,*) 'past getting RAINNC'
 
+      VarName='I_RAINC'
+      call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY      &  
+        ,IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='I_RAINNC'
+      call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY      &  
+        ,IM,1,JM,1,IM,JS,JE,1)
+
       VarName='RAINCV'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
@@ -1438,17 +1865,34 @@
         end do
        end do
 
-!      VarName='RAINBL'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
+      VarName='SNOWNC'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='GRAUPELNC'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='EDT_OUT'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='CLDFRA'
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      do l = 1, lm
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            CFR ( i, j, l ) = dum3d ( i, j, l )
+        end do
+       end do
+      end do
 
       VarName='SWDOWN'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='GSW'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-        IM,1,JM,1,IM,JS,JE,1)
 
 ! Seperate NET solar into upward and downward when we have albedo later 
 !       do j = jsta_2l, jend_2u
@@ -1501,6 +1945,9 @@
         end do
        end do
 
+      VarName='OLR'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
 !
       VarName='XLAT'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1514,7 +1961,8 @@
        end do
 ! pos north
       print*,'read past GDLAT'
-!      print*,'GDLAT at ',ii,jj,' = ',GDLAT(ii,jj)
+      print*,'GDLAT at ',ii,jj,' = ',GDLAT(ii,jj)
+
 
       VarName='XLONG'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1531,6 +1979,22 @@
 !       print*,'GDLON at ',ii,jj,' = ',GDLON(ii,jj)
        print*,'read past GDLON'
 
+      VarName='XLAT_U'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='XLONG_U'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='XLAT_V'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='XLONG_V'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
       VarName='ALBEDO'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
@@ -1543,6 +2007,18 @@
         end do
        end do
 
+      VarName='ALBBCK'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='EMISS'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='NOAHRES'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
       VarName='TMN'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
@@ -1552,6 +2028,7 @@
             SOILTB ( i, j ) = dummy ( i, j )
         end do
        end do
+
 !
 ! XLAND 1 land 2 sea
       VarName='XLAND'
@@ -1572,9 +2049,9 @@
         end do
        end do 
 
-      VarName='RMOL'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
+!      VarName='RMOL'
+!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+!        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='PBLH'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1613,15 +2090,23 @@
            SFCSHX(I,J)=SPVAL  
 	   SFCLHX(I,J)=SPVAL
 	   SUBSHX(I,J)=SPVAL
-	   SNOPCX(I,J)=SPVAL
+!	   SNOPCX(I,J)=SPVAL
 	   SFCUVX(I,J)=SPVAL
-	   POTEVP(I,J)=SPVAL
+!	   POTEVP(I,J)=SPVAL
 	   NCFRCV(I,J)=SPVAL
 	   NCFRST(I,J)=SPVAL
 	   ASRFC=1.0
 	   NSRFC=1
         end do
        end do
+
+      VarName='ACHFX'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='ACLHF'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SNOWC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1631,11 +2116,14 @@
             PCTSNO( i, j ) = dummy ( i, j )
         end do
        end do
+
+
 ! pos east
        call collect_loc(gdlat,dummy)
        if(me.eq.0)then
-        latstart=nint(dummy(1,1)*1000.)
-        latlast=nint(dummy(im,jm)*1000.)
+        print*, 'gdlat(1,1): ', gdlat(1,1)
+        latstart=int(0.5+dummy(1,1)*1000.)
+        latlast=int(0.5+dummy(im,jm)*1000.)
        end if
        write(6,*) 'laststart,latlast B calling bcast=',latstart,latlast
        call mpi_bcast(latstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
@@ -1643,49 +2131,23 @@
        write(6,*) 'laststart,latlast A calling bcast=',latstart,latlast
        call collect_loc(gdlon,dummy)
        if(me.eq.0)then
-        lonstart=nint(dummy(1,1)*1000.)
-        lonlast=nint(dummy(im,jm)*1000.)
+        lonstart=int(0.5+dummy(1,1)*1000.)
+        lonlast=int(0.5+dummy(im,jm)*1000.)
        end if
        write(6,*)'lonstart,lonlast B calling bcast=',lonstart,lonlast
        call mpi_bcast(lonstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        call mpi_bcast(lonlast,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        write(6,*)'lonstart,lonlast A calling bcast=',lonstart,lonlast
-!
-!        ncdump -h
-
-!!
-!! 
 !!
         write(6,*) 'filename in INITPOST=', filename,' is'
 
-!	status=nf_open(filename,NF_NOWRITE,ncid)
-!	        write(6,*) 'returned ncid= ', ncid
-!        status=nf_get_att_real(ncid,varid,'DX',tmp)
-!	dxval=int(tmp)
-!        status=nf_get_att_real(ncid,varid,'DY',tmp)
-!	dyval=int(tmp)
-!        status=nf_get_att_real(ncid,varid,'CEN_LAT',tmp)
-!	cenlat=int(1000.*tmp)
-!        status=nf_get_att_real(ncid,varid,'CEN_LON',tmp)
-!	cenlon=int(1000.*tmp)
-!        status=nf_get_att_real(ncid,varid,'TRUELAT1',tmp)
-!	truelat1=int(1000.*tmp)
-!        status=nf_get_att_real(ncid,varid,'TRUELAT2',tmp)
-!	truelat2=int(1000.*tmp)
-!        status=nf_get_att_real(ncid,varid,'MAP_PROJ',tmp)
-!        maptype=int(tmp)
-!	status=nf_close(ncid)
-
-!	dxval=30000.
-! 	dyval=30000.
-!
-!        write(6,*) 'dxval= ', dxval
-!        write(6,*) 'dyval= ', dyval
-!        write(6,*) 'cenlat= ', cenlat
-!        write(6,*) 'cenlon= ', cenlon
-!        write(6,*) 'truelat1= ', truelat1
-!        write(6,*) 'truelat2= ', truelat2
-!        write(6,*) 'maptype is ', maptype
+        write(6,*) 'dxval= ', dxval
+        write(6,*) 'dyval= ', dyval
+        write(6,*) 'cenlat= ', cenlat
+        write(6,*) 'cenlon= ', cenlon
+        write(6,*) 'truelat1= ', truelat1
+        write(6,*) 'truelat2= ', truelat2
+        write(6,*) 'maptype is ', maptype
 !
 
 !MEB not sure how to get these 

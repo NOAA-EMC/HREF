@@ -73,7 +73,7 @@
       real TC, Frain,Fice,Flimass,Flarge,     &
            Fsmall,RimeF,Xsimass,Qice,Qsat,ESAT,WV,RHO,RRHO,RQR,          &
            DRmm,Qsigrd,WVQW,Dum,XLi,Qlice,WC,DLI,xlimass
-      real,external :: fpvs
+      real,external :: fpvsnew
 !************************************************************************
 !--- Determine composition of condensate in the form of cloud water, 
 !    total ice (cloud ice & snow), & rain following GSMDRIVE in NMM model
@@ -135,7 +135,7 @@
 !
 !--- Saturation vapor pressure w/r/t water ( >=0C ) or ice ( <0C )
 !
-          ESAT=1000.*FPVS(T1D(I,J))
+          ESAT=1000.*FPVSNEW(T1D(I,J))
           QSAT=EPS*ESAT/(P1D(I,J)-ESAT)
 	  RHO=P1D(I,J)/(RD*T1D(I,J)*(1.+D608*Q1D(I,J)))
           RRHO=1./RHO

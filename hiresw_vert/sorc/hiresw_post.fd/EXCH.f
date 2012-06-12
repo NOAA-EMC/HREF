@@ -1,3 +1,4 @@
+!!@PROCESS NOCHECK
 !
 !--- The 1st line is an inlined compiler directive that turns off -qcheck
 !    during compilation, even if it's specified as a compiler option in the
@@ -71,6 +72,7 @@
 !
       end
 
+!!@PROCESS NOCHECK
 !
 !--- The 1st line is an inlined compiler directive that turns off -qcheck
 !    during compilation, even if it's specified as a compiler option in the
@@ -90,12 +92,6 @@
 !
       if ( num_procs .eq. 1 ) return
 !
-        write(0,*) 'jend, jend+1: ', jend, jend+1
-        write(0,*) 'jsta, jsta-1: ', jsta, jsta-1
-        write(0,*) 'im,jm: ', im,jm
-     bound_check: if (jsta-1 .lt. 1 .or. jend+1 .gt. jm) then
-        write(0,*) 'avoid exchange because on global boundary'
-      else
       call mpi_sendrecv(a(1,jend),im,MPI_REAL,iup,1,           &
      &                  a(1,jsta-1),im,MPI_REAL,idn,1,         &
      &                  MPI_COMM_COMP,status,ierr)
@@ -110,8 +106,6 @@
          print *, ' problem with second sendrecv in exch, ierr = ',ierr
          stop
       end if
-
-     endif bound_check
 !
       end
 
