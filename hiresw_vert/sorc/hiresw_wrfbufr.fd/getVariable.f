@@ -74,7 +74,7 @@ subroutine getVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,LM
 !   print*,'SPVAL in getVariable = ',SPVAL
    call ext_ncd_get_var_info(dh,TRIM(VarName),ndim,ordering,Stagger,start_index,end_index,WrfType,ierr)
 
-!	write(6,*) 'end_index values: ', end_index
+	write(6,*) 'end_index values: ', end_index
 
    allocate(data (end_index(1), end_index(2), end_index(3), 1))
 
@@ -94,6 +94,7 @@ subroutine getVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,LM
 !   allocate(data (end_index(1), end_index(2), end_index(3), 1))
 !   call ext_ncd_read_field(dh,DateStr,TRIM(VarName),data,WrfType,0,0,0,ordering,&
 ! CHANGE WrfType to WRF_REAL BECAUSE THIS TELLS WRF IO API TO CONVERT TO REAL
+        write(6,*) 'call ext_ncd_read_field'
    call ext_ncd_read_field(dh,DateStr,TRIM(VarName),data,WRF_REAL,0,0,0,ordering,&
                              staggering, dimnames , &
                              start_index,end_index, & !dom 

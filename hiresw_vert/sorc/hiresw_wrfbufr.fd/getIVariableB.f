@@ -16,7 +16,7 @@ subroutine getIVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,
 ! USAGE:    CALL getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,LM,IM1,JS,JE,LM1)
 !
 !   INPUT ARGUMENT LIST:
-!     fileName : Character(len=32)  : name of WRF output file
+!     fileName : Character(len=256)  : name of WRF output file
 !     DateStr  : Character(len=19)  : date/time of requested variable
 !     dh :  integer                 : data handle
 !     VarName :  Character(len=31)  : variable name
@@ -52,7 +52,7 @@ subroutine getIVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,
 
    implicit none
    include 'wrf_io_flags.h'
-   character(len=32) ,intent(in) :: fileName
+   character(len=256) ,intent(in) :: fileName
    character(len=19) ,intent(in) :: DateStr
    integer ,intent(in) :: dh
    character(*) ,intent(in) :: VarName

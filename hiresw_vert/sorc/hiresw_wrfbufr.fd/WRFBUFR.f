@@ -62,8 +62,8 @@ C
           integer iii
       character(len=6) :: IOFORM,model
       character(len=98) :: newname
-      character(len=98) :: fileName
-      character(len=98) :: prefileName
+      character(len=256) :: fileName
+      character(len=256) :: prefileName
       character(len=19) :: DateStr
       integer :: DataHandle
 !      integer, parameter:: INCR=3
@@ -77,18 +77,18 @@ C
 C     START PROGRAM WRFBUFR.
 C
 	write(6,*) 'to read statements'
-       read(5,111) fileName
+       read(666,111) fileName
 	write(6,*) 'initial filename= ', filename
-       read(5,113) model
+       read(666,113) model
 	write(6,*) 'model type= ', model
-       read(5,113) IOFORM
+       read(666,113) IOFORM
 	write(6,*) 'ioform= ', ioform
-       read(5,112) DateStr
+       read(666,112) DateStr
 	write(6,*) 'datestr= ', datestr
-       read(5,*) NFILES
-       read(5,*) INCR
-       read(5,*) IHR
-       read(5,111) prefileName
+       read(666,*) NFILES
+       read(666,*) INCR
+       read(666,*) IHR
+       read(666,111) prefileName
         write(6,*) 'previous filename= ', prefilename
 
 !!!! CHANGE THIS ASSUMPTION???
@@ -107,7 +107,7 @@ C      write(*,*) 'in WRFPOST iyear,imn,iday,ihrst',iyear,imn,iday,ihrst
          IDATE(1)=iyear
          IDATE(5)=ihrst
 
- 111  format(a98)
+ 111  format(a256)
  112  format(a19)
  113  format(a6)
 C
@@ -157,7 +157,9 @@ c20080707	filename=filename(1:len-19)//DateStr
 	if (model(1:4) .eq. 'NCEP') then
         CALL PROF_NMM(fileName,prefileName,DateStr,IHR,INCR)
 	elseif (model(1:4) .eq. 'NCAR') then
+        write(0,*) 'call PROF_EM'
 	CALL PROF_EM(fileName,prefileName,DateStr,IHR,INCR)
+        write(0,*) 'return PROF_EM'
 	endif
 
 	endif
