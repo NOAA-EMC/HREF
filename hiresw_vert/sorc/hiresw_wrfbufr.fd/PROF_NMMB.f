@@ -598,7 +598,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
-     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,QSHLTR) 
+     &               l,impf,jmpf,nframed2,NUMTA,IHINDX,JHINDX,QSHLTR) 
 
       DO N=1,NUMSTA
 !           write(0,*) 'N, TSHLTR_hold(N),PSHLTR(N):',N,TSHLTR_hold(N),
@@ -1312,7 +1312,8 @@ C***
  302	format(I3.3)
 
 	write(6,*) 'filename later in PROF: ', filename, '_END'
-        len=lnblnk_(filename)
+        len=lnblnk(filename)
+
 	write(6,*) 'LEN= ', LEN
         write(6,*) 'carried over part: ', filename(1:len-3)
 

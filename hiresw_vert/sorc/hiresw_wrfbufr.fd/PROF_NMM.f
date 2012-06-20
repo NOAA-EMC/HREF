@@ -1,56 +1,57 @@
-C      SUBROUTINE PROF(NHB,LRSTRT,ITAG,LCLAS1)
-C      SUBROUTINE PROF(ITAG,LCLAS1)
+!      SUBROUTINE PROF(NHB,LRSTRT,ITAG,LCLAS1)V
+!      SUBROUTINE PROF(ITAG,LCLAS1)
       SUBROUTINE PROF_NMM(filename,prefilename,startdate,
      +                    ITAG,INCR)
-C
-C$$$  SUBPROGRAM DOCUMENTATION BLOCK
-C                .      .    .
-C   SUBROUTINE:  PROF        PROFILE SOUNDINGS
-C   PRGRMMR: BLACK           ORG: W/NP22     DATE: 99-04-22
-C
-C ABSTRACT:  THIS ROUTINE GENERATES THE RAW PROFILE SOUNDING
-C            OUTPUT FILES FROM THE FORECAST RESTRT FILE AND
-C            AUXILIARY FILES
-C
-C PROGRAM HISTORY LOG:
-C   99-04-22  T BLACK - ORIGINATOR
-C   02-07-01  G MANIKIN - FIXED PROBLEM WITH DHCNVC AND DHRAIN
-C                          COMPUTATIONS - SEE COMMENTS BELOW
-C   03-04-01  M PYLE - BEGAN CONVERTING FOR WRF
-C   04-05-26  M PYLE - MADE CHANGES FOR WRF-NMM
-C   06-08-01  B ZHOU - ADAPTED FOR SREF WRF-NMM
-C   07-08-07  J. Du & B. Zhou -  a new prefilename is defined 
-C                for previous forecast file in order to calculate 
-C                precip rate during INCHOUR interval
-C   08-10-06  J. Du & B. Zhou - changed from IKJ to IJK 
-C
-C USAGE:  CALL PROF FROM PROGRAM POST0
-C
-C   INPUT ARGUMENT LIST:
-C     NHB    - THE UNIT NUMBER FOR READING THE NHB FILE
-C     LRSTRT - THE UNIT NUMBER FOR READING THE RESTRT FILE
-C     ITAG   - THE FORECAST HOUR WE ARE DEALING WITH
-C     LCLAS1 - THE UNIT NUMBER FOR WRITING THE PROFILE DATA
-C
-C   OUTPUT ARGUMENT LIST:
-C     NONE
-C
-C   SUBPROGRAMS CALLED:
-C     UNIQUE:
-C
-C-----------------------------------------------------------------------
-c      use vrbls3d
-c      use vrbls2d
-c      use soil
-c      use masks
+!
+!$$$  SUBPROGRAM DOCUMENTATION BLOCK
+!                .      .    .
+!   SUBROUTINE:  PROF        PROFILE SOUNDINGS
+!   PRGRMMR: BLACK           ORG: W/NP22     DATE: 99-04-22
+!
+! ABSTRACT:  THIS ROUTINE GENERATES THE RAW PROFILE SOUNDING
+!            OUTPUT FILES FROM THE FORECAST RESTRT FILE AND
+!            AUXILIARY FILES
+!
+! PROGRAM HISTORY LOG:
+!   99-04-22  T BLACK - ORIGINATOR
+!   02-07-01  G MANIKIN - FIXED PROBLEM WITH DHCNVC AND DHRAIN
+!                          COMPUTATIONS - SEE COMMENTS BELOW
+!   03-04-01  M PYLE - BEGAN CONVERTING FOR WRF
+!   04-05-26  M PYLE - MADE CHANGES FOR WRF-NMM
+!   06-08-01  B ZHOU - ADAPTED FOR SREF WRF-NMM
+!   07-08-07  J. Du & B. Zhou -  a new prefilename is defined 
+!                for previous forecast file in order to calculate 
+!                precip rate during INCHOUR interval
+!   08-10-06  J. Du & B. Zhou - changed from IKJ to IJK 
+!   12-06-14  M PYLE - non-MPIIO version for WCOSS
+!
+! USAGE:  CALL PROF FROM PROGRAM POST0
+!
+!   INPUT ARGUMENT LIST:
+!     NHB    - THE UNIT NUMBER FOR READING THE NHB FILE
+!     LRSTRT - THE UNIT NUMBER FOR READING THE RESTRT FILE
+!     ITAG   - THE FORECAST HOUR WE ARE DEALING WITH
+!     LCLAS1 - THE UNIT NUMBER FOR WRITING THE PROFILE DATA
+!
+!   OUTPUT ARGUMENT LIST:
+!     NONE
+!
+!   SUBPROGRAMS CALLED:
+!     UNIQUE:
+!
+!-----------------------------------------------------------------------
+!      use vrbls3d
+!      use vrbls2d
+!      use soil
+!      use masks
        use kinds, only             : i_llong
-C
+!
       include 'wrf_io_flags.h'
       include 'mpif.h'
 
-c     INCLUDE "parmeta"
+!     INCLUDE "parmeta"
        INCLUDE "parmsoil"
-C-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
                              P A R A M E T E R
      & (NSTAT=1500,LCL1ML=15,LCL1SL=52
      &, D608=0.608)
@@ -126,7 +127,7 @@ C------------------------------------------------------------------------
      &,W(:,:),WH(:,:)
 
 	
-	real, allocatable:: CROT(:),SROT(:)
+	real, allocatable:: CROT(:),SROT(:), SLDPTH2(:)
 C------------------------------------------------------------------------
 C
         integer, allocatable:: IDUM(:,:),LMH(:,:),IDUMMY(:,:)
@@ -146,9 +147,9 @@ C------------------------------------------------------------------------
 
 C	new stuff
       character(len=31) :: VarName,varin
-      character(len=98) :: fileName
-      character(len=98) :: prefileName     !Jun Du
-      character(len=98) :: newname
+      character(len=256) :: fileName
+      character(len=256) :: prefileName     !Jun Du
+      character(len=256) :: newname
       integer :: Status
       character(len=19):: startdate,datestr,datestrold
       character SysDepInfo*80
@@ -212,9 +213,13 @@ C
        endif
 
 C Getting start time
+
       CALL ext_int_get_dom_ti_char(DataHandle
      1 ,'START_DATE',startdate, status )
         print*,'startdate= ',startdate
+
+!      startdate='2012-06-15-00'
+
       jdate=0
       idate=0
       read(startdate,15)iyear,imn,iday,ihrst
@@ -307,12 +312,12 @@ C
         call ext_int_get_dom_ti_real(DataHandle,'DX',tmp
      + ,1,ioutcount,istatus)
         dxval=nint(tmp*1000.) ! E-grid dlamda in degree
-!        write(6,*) 'dxval= ', dxval
+        write(6,*) 'dxval= ', dxval
 
         call ext_int_get_dom_ti_real(DataHandle,'DY',tmp
      + ,1,ioutcount,istatus)
         dyval=nint(1000.*tmp)
-!        write(6,*) 'dyval= ', dyval
+        write(6,*) 'dyval= ', dyval
 
         call ext_int_get_dom_ti_real(DataHandle,'DT',tmp
      + ,1,ioutcount,istatus)
@@ -346,7 +351,7 @@ C
         call ext_int_get_dom_ti_integer(DataHandle,'MAP_PROJ',itmp
      + ,1,ioutcount,istatus)
         maptype=itmp
-!        write(6,*) 'maptype is ', maptype
+        write(6,*) 'maptype is ', maptype
 
 ! former parameter statements
         NWORDM=(LCL1ML+1)*LM+2*LCL1SL
@@ -368,7 +373,7 @@ C
      &,TH10(NUMSTA),Q10(NUMSTA),U10(NUMSTA),V10(NUMSTA)
      &,TLMIN(NUMSTA),TLMAX(NUMSTA)
      &,SMC(NUMSTA,NSOIL),CMC(NUMSTA),STC(NUMSTA,NSOIL)
-     &,SH2O(NUMSTA,NSOIL)
+     &,SH2O(NUMSTA,NSOIL),SLDPTH2(NSOIL)
      &,VEGFRC(NUMSTA),POTFLX(NUMSTA),PSLP(NUMSTA),PDSL1(NUMSTA)
      &,EGRID2(NUMSTA),SM(NUMSTA),SICE(NUMSTA)
      &,HBM2(NUMSTA),FACTR(NUMSTA)
@@ -406,111 +411,70 @@ C
 
       ALLOCATE(IDUM(IM,JM),LMH(IM,JM),IDUMMY(IM,JM))
 
-c closing wrf io api
 
-      call ext_int_ioclose ( DataHandle, Status )
 
-c start calling mpi io
 
-      iunit=33
-      call count_recs_wrf_binary_file(iunit, fileName, nrecs)
+      VarName='TOYVAR'
+        write(6,*) 'call getVariableBikj for : ', VarName
+        write(6,*) 'size(DUM3D): ', size(DUM3D,dim=1),
+     &                              size(DUM3D,dim=2),
+     &                              size(DUM3D,dim=3)
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 
-      print*,'- FILE CONTAINS ',nrecs, ' RECORDS'
-      allocate (datestr_all(nrecs))
-      allocate (varname_all(nrecs))
-      allocate (domainend_all(3,nrecs))
-      allocate (start_block(nrecs))
-      allocate (end_block(nrecs))
-      allocate (start_byte(nrecs))
-      allocate (end_byte(nrecs))
-      allocate (file_offset(nrecs))
 
-      call inventory_wrf_binary_file(iunit, filename, nrecs,
-     +                datestr_all,varname_all,domainend_all,
-     +      start_block,end_block,start_byte,end_byte,file_offset,
-     +      print_diag)
+      VarName='LU_INDEX'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
-      print_diag=.false.
 
-!     close(iunit)
+!      VarName='LMH'
+!       write(6,*) 'call getIVariable for : ', VarName
+!      call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
+!        IM,1,JM,1,IM,JS,JE,1)
 
-      call mpi_init(ierr)
-      call mpi_comm_rank(MPI_COMM_WORLD,mype,ierr)
-      call mpi_comm_size(MPI_COMM_WORLD,npes,ierr)
-
-      write(6,*) 'want to open: ', filename
-      write(6,*) 'mpi_mode_rdonly: ', mpi_mode_rdonly
-
-      call mpi_file_open(mpi_comm_world, filename
-     + , mpi_mode_rdonly,mpi_info_null, iunit, ierr)
-      if (ierr /= 0) then
-       print*,"Error opening file with mpi io ",iunit,ierr
-       call mpi_abort(mpi_comm_world, 59, ierr)
-!      stop
-      end if
+!      VarName='LMV'
+!       write(6,*) 'call getIVariable for : ', VarName
+!      call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
+!        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='HBM2'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        HBM2=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          HBM2=SPVAL
-        else
-          DO N=1,NUMSTA
-	   I=IHINDX(N)	
-	   J=JHINDX(N)
-	   HBM2(N)=DUMMY2(I,J)
-         END DO
-        end if
-      end if
-!
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
       VarName='SM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SM=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SM=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+!        if (ierr /= 0) then
+!          print*,"Error reading ", VarName,"Assigned missing values"
+!          SM=SPVAL
+!        else
           DO N=1,NUMSTA
 	    I=IHINDX(N)	
 	    J=JHINDX(N)
 	    SM(N)=DUMMY2(I,J)
           END DO
-        endif
-      endif
+!        endif
 
       VarName='SICE'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SICE=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SICE=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+!        if (ierr /= 0) then
+!          print*,"Error reading ", VarName,"Assigned missing values"
+!          SICE=SPVAL
+!        else
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   SICE(N)=DUMMY2(I,J)
           END DO
-        endif
-      endif
+!        endif
 
 ! HTM always 1 for sigma coord
 
@@ -523,83 +487,46 @@ c start calling mpi io
           END DO
 
       VarName='PD'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        PD=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          PD=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   pd(N)=DUMMY2(I,J)
          ENDDO
-        endif
-      endif
 	
 	write(6,*) 'PD(20) (a): ', PD(20)
 
+
+
       VarName='FIS'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        FIS=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          FIS=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   FIS(N)=DUMMY2(I,J)
           END DO
-        endif
-      endif
 
       VarName='RES'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        RES=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          RES=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,     &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   RES(N)=DUMMY2(I,J)
           END DO
-        endif
-      endif
+
 
       VarName='T'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        T=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          T=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -608,22 +535,11 @@ c start calling mpi io
             T(N,L) = DUM3D(I,J,LL)
            END DO 
           END DO
-        endif
-      endif
 
       VarName='Q'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        Q=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          Q=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -632,22 +548,11 @@ c start calling mpi io
             Q(N,L) = DUM3D(I,J,LL)
            END DO 
           END DO
-        endif
-      endif
 
       VarName='U'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        U=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          U=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -656,22 +561,11 @@ c start calling mpi io
             U(N,L) = DUM3D(I,J,LL)
            END DO 
           END DO
-        endif
-      endif
 
       VarName='V'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        V=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          V=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -680,101 +574,139 @@ c start calling mpi io
             V(N,L) = DUM3D(I,J,LL)
            END DO 
           END DO
-        endif
-       endif
+
+
+        varname='DX_NMM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+       varname='DETA1'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA1,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='AETA1'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA1,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='ETA1'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA1,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='DETA2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA2,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='AETA2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA2,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+        varname='ETA2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA2,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+        varname='DY_NMM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
+     +  1,1,1,1,1,1,1,1)
+
+        varname='DLMD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
+     +  1,1,1,1,1,1,1,1)
+
+        varname='DPHD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
+     +  1,1,1,1,1,1,1,1)
 
        varname='PDTOP'
-       call retrieve_index(index,VarName,varname_all,nrecs,iret)
-       if (iret /= 0) then
-         print*,VarName," not found in file-Assigned missing values"
-         PDTOP=SPVAL
-       else
-         call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + ,mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-         print*,"Error reading ", VarName,"Assigned missing values"
-         PDTOP=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  1,1,1,1,1,1,1,1)
           PDTOP=DUMMY2(1,1)
-        end if
-       end if
 
 	write(6,*) 'PDTOP: ', PDTOP
 
         varname='PT'
-        call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        PT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          PT=SPVAL
-        else
-          PT=DUMMY2(1,1)
-        end if
-      end if
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  1,1,1,1,1,1,1,1)
+        write(6,*) 'PT ', DUMMY2(1,1)
+        PT=DUMMY2(1,1)
+
+        varname='PBLH'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='MIXHT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='USTAR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
 !used?
       varname='Z0'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        Z0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          Z0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   Z0(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
+
 
       varname='THS'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        THS=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          THS=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   THS(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
+
+      VarName='QS'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='TWBS'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='QWBS'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='PREC' ! instantaneous precip rate?
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='APREC' ! instantaneous precip rate?
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       varname='ACPREC' ! accum total precip
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACPREC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACPREC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
            DO N=1,NUMSTA
 	     I=IHINDX(N)	
 	     J=JHINDX(N)
@@ -783,135 +715,121 @@ c start calling mpi io
 	       write(6,*) 'ACPREC at DCA: ', ACPREC(N)
 	     endif
            END DO
-        endif
-      endif
 
       varname='CUPREC' ! accum cumulus precip
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CUPREC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CUPREC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   CUPREC(N)=DUMMY2(I,J)
           END DO 
-        endif
-       endif
+
+      VarName='SNO'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+          DO N=1,NUMSTA
+	   I=IHINDX(N)	
+	   J=JHINDX(N)
+           SNO(N) = dummy ( i, j )
+          END DO
+
+      VarName='SI'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='CLDEFI'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       varname='TH10'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TH10=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TH10=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   TH10(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
 
       varname='Q10'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        Q10=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          Q10=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   Q10(N)=DUMMY2(I,J)
           END DO
-        endif
-      endif
 
       varname='PSHLTR'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        PSHLTR=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          PSHLTR=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   PSHLTR(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
 
       varname='TSHLTR'   !potential Temp'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TSHLTR_hold=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TSHLTR_hold=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   TSHLTR_hold(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
 
       varname='QSHLTR'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        QSHLTR=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          QSHLTR=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
 	   QSHLTR(N) = DUMMY2(I,J) / (1.0 + DUMMY2(I,J))
           END DO
-       endif
-      endif
+
+      VarName='Q2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+          DO L=1,LM
+           LL=LM-L+1
+           DO N=1,NUMSTA
+	    I=IHINDX(N)	
+	    J=JHINDX(N)
+            Q2(N,L) = DUM3D (I,J,LL)
+           END DO
+          END DO
+
+      varname='AKHS_OUT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='AKMS_OUT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='ALBASE'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='ALBEDO'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
 !
 !
 ! Very confusing story ...
@@ -927,108 +845,87 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
 ! For historical reasons model array CNVBOT is renamed HBOT
 ! and manipulated throughout the sounding post.
 !
-!     varname='HBOT'
       VarName='CNVBOT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        HBOT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          HBOT=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
            I=IHINDX(N)
            J=JHINDX(N)
-!          HBOT(N)=DUMMY2(I,J)
            HBOT(N)= float(LM)-dummy2(i,j)+1.0
           END DO
-        endif
-       endif
 
-      VarName='Q2'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        Q2=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          Q2=SPVAL
-        else
-          DO L=1,LM
-           LL=LM-L+1
-           DO N=1,NUMSTA
-	    I=IHINDX(N)	
-	    J=JHINDX(N)
-            Q2(N,L) = DUM3D (I,J,LL)
-           END DO
-          END DO
-        endif
-       endif
+      VarName='CNVTOP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       varname='CZEN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CZEN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CZEN=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   CZEN(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
 
       varname='CZMEAN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CZMEAN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CZMEAN=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   CZMEAN(N)=DUMMY2(I,J)
           END DO
-        endif
-       endif
+
+      varname='EPSR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='GLAT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='GLON'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='TSK'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='MXSNAL'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='RADOT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='SIGT4'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='TGROUND'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+
 
       varname='CWM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CWM=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CWM=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -1037,352 +934,199 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
             CWM(N,L) = DUM3D(I,J,LL)
            END DO 
           END DO
-        endif
-       endif
 
       varname='F_ICE'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        F_ICE=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3DIKJ,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          F_ICE=SPVAL
-        else
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
             I=IHINDX(N)
             J=JHINDX(N)
-            F_ICE(N,L) = DUM3DIKJ(I,LL,J)
+            F_ICE(N,L) = DUM3D(I,J,LL)
            END DO
           END DO
-        endif
-       endif
 
       varname='F_RAIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        F_RAIN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3DIKJ,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          F_RAIN=SPVAL
-        else
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
             I=IHINDX(N)
             J=JHINDX(N)
-            F_RAIN(N,L) = DUM3DIKJ(I,LL,J)
+            F_RAIN(N,L) = DUM3D(I,J,LL)
            END DO
           END DO
-        endif
-       endif
 
       varname='F_RIMEF'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        F_RIMEF=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3DIKJ,(im*jm*lm),mpi_real4           
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          F_RIMEF=SPVAL
-        else
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
           DO L = 1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
             I=IHINDX(N)
             J=JHINDX(N)
-            F_RIMEF(N,L) = DUM3DIKJ(I,LL,J)
+            F_RIMEF(N,L) = DUM3D(I,J,LL)
            END DO
           END DO
-        endif
-       endif
 
-      varname='CLDFRA'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CLDFRA=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CLDFRA=SPVAL
-        else
-          DO L = 1,LM
-           LL=LM-L+1
-           DO N=1,NUMSTA
-            I=IHINDX(N)
-            J=JHINDX(N)
-            CLDFRA(N,L) = DUM3D(I,J,LL)
-           END DO
-          END DO
-        endif
-       endif
+!      varname='CLDFRA'
+!          DO L = 1,LM
+!           LL=LM-L+1
+!           DO N=1,NUMSTA
+!            I=IHINDX(N)
+!            J=JHINDX(N)
+!            CLDFRA(N,L) = DUM3D(I,J,LL)
+!           END DO
+!          END DO
 
       varname='SR'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CFRACH=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SR=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
            I=IHINDX(N)
            J=JHINDX(N)
            SR(N)=DUMMY2(I,J)
           ENDDO
-        endif
-       endif
 
       varname='CFRACH'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CFRACH=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CFRACH=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            CFRACH(N)=DUMMY2(I,J)
           ENDDO
-        endif
-       endif
 
       varname='CFRACL'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CFRACL=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CFRACL=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            CFRACL(N)=DUMMY2(I,J)
           ENDDO
-        endif
-       endif
 
       varname='CFRACM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CFRACM=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CFRACM=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            CFRACM(N)=DUMMY2(I,J)
           ENDDO
-        endif
-       endif
 
-                                                                          
+      varname='ISLOPE'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='DZSOIL'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,
+     +    1,1,1,NSOIL,1,1,1,NSOIL)
+
+      VarName='SLDPTH'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,
+     +     1,1,1,NSOIL,1,1,1,NSOIL)
+
       VarName='CMC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CMC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CMC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            CMC(N) = DUMMY2(i,j)
           END DO
-        endif
-       endif
+
+        varname='GRNFLX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='PCTSNO'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       varname='SOILTB'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SOILTB=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SOILTB=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
   	   SOILTB(N)=DUMMY2(I,J)
           ENDDO
-        endif
-      endif
 
       varname='VEGFRC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        VEGFRC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          VEGFRC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
   	   VEGFRC(N)=DUMMY2(I,J)
           ENDDO
-        endif
-      endif
 
       VarName='SH2O'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SH20=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMSOIL3,(im*jm*NSOIL),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SH20=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+        write(6,*) 'know that NSOIL is: ', NSOIL
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,NSOIL)
           DO L = 1,NSOIL
            DO N=1,NUMSTA
 	    I=IHINDX(N)	
 	    J=JHINDX(N)
-            SH2O(N,L)=DUMSOIL3(I,L,J)
+            SH2O(N,L)=DUM3D(I,J,NSOIL-L+1)
            ENDDO
           ENDDO
-        endif
-      endif
 
       VarName='SMC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SMC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMSOIL3,(im*jm*NSOIL),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SMC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,NSOIL)
           DO L = 1,NSOIL
            DO N=1,NUMSTA
 	    I=IHINDX(N)	
 	    J=JHINDX(N)
-            SMC(N,L) = DUMSOIL3(i,l,j)
+            SMC(N,L) = DUM3D(i,j,nsoil-l+1)
            END DO
           END DO
-        endif
-       endif
 
       VarName='STC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        STC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMSOIL3,(im*jm*NSOIL),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          STC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,NSOIL)
           DO L = 1,NSOIL
            DO N=1,NUMSTA
 	    I=IHINDX(N)	
 	    J=JHINDX(N)
-            STC(N,L) = DUMSOIL3(i,l,j)
+            STC(N,L) = DUM3D(i,j,nsoil-l+1)
            END DO
           END DO
-        endif
-      endif
 
       VarName='PINT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        PINT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D2,(im*jm*lp1),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          PINT=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
+     + IM,1,JM,LM+1,IM,JS,JE,LM+1)
+
           DO L=1,LP1
            DO N=1,NUMSTA 
             LL=LP1-L+1
 	    I=IHINDX(N)	
 	    J=JHINDX(N)
              PINT (N,L) = dum3d2 (I,J,LL) 
-c            if (L .ge. 2) then
-c             PMID ( N,L-1 ) =  EXP( 0.5* (ALOG(DUM3D2(I,J,LL-1))+
-c    &                                     ALOG(DUM3D2(I,J,LL))) )
-c              if(n.eq.10) then
-c                print *,'1 ',n,l,ll,PMID(N,L-1),PINT(N,L)
-c              endif
-c            endif
             END DO
            END DO 
-         endif
-        endif
 
         DO L=2,LP1
          DO N=1,NUMSTA
@@ -1403,11 +1147,6 @@ c            endif
 
            IF (RH .gt. RHCRIT) THEN
            Q(N,L)=0.999*RHCRIT*QC
-
-c          IF (RH .gt. 1.02) then
-c          write(6,*) 'reducing RH from: ', RH, ' at N,L: ', N,L
-c          ENDIF
-
            ENDIF
 
          enddo
@@ -1416,18 +1155,9 @@ c          ENDIF
 !!!!! END RH CONSTRAIN
 
       VarName='W'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        W=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D2,(im*jm*lp1),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          W=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
+     + IM,1,JM,LM+1,IM,JS,JE,LM+1)
           DO L = 1,LP1
            LL=LP1-L+1
            DO N=1,NUMSTA
@@ -1436,8 +1166,6 @@ c          ENDIF
             W(N,L)=DUM3D2(I,J,LL)
           END DO
          END DO
-        endif
-       endif
 
       DO L = 1,LM
        DO N=1,NUMSTA
@@ -1447,209 +1175,120 @@ c          ENDIF
        END DO
       END DO
 
+
+      VarName='ACFRCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='ACFRST'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
       VarName='SSROFF'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SSROFF=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SSROFF=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SSROFF(N) = DUMMY(i,j)
           ENDDO
-        endif
-      endif
 
 c reading UNDERGROUND RUNOFF
       VarName='BGROFF'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        BGROFF=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          BGROFF=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            BGROFF(N) = dummy ( i, j )
           END DO
-        endif
-      endif
+
+      VarName='RLWIN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RLWTOA'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='ALWIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ALWIN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ALWIN=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ALWIN(N)=dummy(i,j)
           END DO
-        endif
-       endif
-!here
+
       VarName='ALWOUT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ALWOUT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ALWOUT=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ALWOUT(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='ALWTOA'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ALWTOA=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ALWTOA=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ALWTOA(N)=dummy(i,j)
           END DO
-        endif
-      endif
+
+      VarName='RSWIN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RSWINC'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RSWOUT'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='ASWIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASWIN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASWIN=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ASWIN(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='ASWOUT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASWOUT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASWOUT=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
       	   J=JHINDX(N)
            ASWOUT(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='ASWTOA'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASWTOA=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASWTOA=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ASWTOA(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='SFCSHX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SFCSHX=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SFCSHX=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SFCSHX(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='SFCLHX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SFCLHX=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SFCLHX=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
@@ -1658,132 +1297,91 @@ c reading UNDERGROUND RUNOFF
 	     write(6,*) 'DCA value for SFCLHX: ', SFCLHX(N)
 	   endif
           END DO
-        endif
-      endif
 
       VarName='SUBSHX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SUBSHX=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SUBSHX=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SUBSHX(N)=dummy(i,j)
-!          print *,' subshx ',n,subshx(n)
           END DO
-        endif
-      endif
 
       VarName='SNOPCX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SNOPCX=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SNOPCX=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SNOPCX(N)=dummy(i,j)
           END DO
-        endif
-      endif
+
+      VarName='SFCUVX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='POTEVP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='POTFLX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        POTFLX=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          POTFLX=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
            I=IHINDX(N)
            J=JHINDX(N)
            POTFLX(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='TLMIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TLMIN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TLMIN=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
            I=IHINDX(N)
            J=JHINDX(N)
            TLMIN(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='TLMAX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TLMAX=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TLMAX=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
            I=IHINDX(N)
            J=JHINDX(N)
            TLMAX(N)=dummy(i,j)
           END DO
-        endif
-      endif
-
-!here2
 
 ! big insert
 
+      VarName='T02_MIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='T02_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RH02_MIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RH02_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
       varname='RLWTT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        RLWTT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          RLWTT=SPVAL
-        else
+       write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 	  DO L=1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -1792,22 +1390,11 @@ c reading UNDERGROUND RUNOFF
 	    RLWTT(N,L)=DUM3D(I,J,LL)
 	   ENDDO	
 	  ENDDO
-        endif
-       endif
 
       varname='RSWTT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        RSWTT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          RSWTT=SPVAL
-        else
+       write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 	  DO L=1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -1816,46 +1403,14 @@ c reading UNDERGROUND RUNOFF
 	    RSWTT(N,L)=DUM3D(I,J,LL)
 	   ENDDO	
 	  ENDDO
-        endif
-       endif
 
       varname='TCUCN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TCUCN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
           TCUCN=SPVAL
-        else
-	  DO L=1,LM
-           LL=LM-L+1
-           DO N=1,NUMSTA
-	    I=IHINDX(N)	
-	    J=JHINDX(N)
-	    TCUCN(N,L)=DUM3D(I,J,LL)
-	   ENDDO	
-	  ENDDO
-        endif
-      endif
 
       varname='TRAIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TRAIN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TRAIN=SPVAL
-        else
+       write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 	  DO L=1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -1864,435 +1419,329 @@ c reading UNDERGROUND RUNOFF
 	    TRAIN(N,L)=DUM3D(I,J,LL)
 	   ENDDO	
 	  ENDDO
-        endif
-      endif
 !
-      VarName='AVRAIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        AVRAIN=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          AVRAIN=SPVAL
-        else
-          AVRAIN=DUMMY2(1,1)
-        end if
-      end if
-!
-      VarName='NPREC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        NPREC=NINT(SPVAL)
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,IDUMMY,1,mpi_integer4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          NPREC=NINT(SPVAL)
-        else
-          NPREC=IDUMMY(1,1)
-        end if
-      end if
 
+      VarName='NCFRCV'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='NCFRST'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='NPHS0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName, 
+     +  NPHS,1,1,1,1,1,1,1,1)
+      write(6,*) 'NPHS= ', NPHS
+
+      VarName='NPREC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName, 
+     +    IDUMMY(1,1),1,1,1,1,1,1,1,1)
+          NPREC=IDUMMY(1,1)
       write(6,*) 'NPREC= ', NPREC
 
       VarName='NCLOD'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        NCLOD=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,IDUMMY,1,mpi_integer4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          NCLOD=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,  
+     +    IDUMMY(1,1),1,1,1,1,1,1,1,1)
           NCLOD=IDUMMY(1,1)
-        end if
-      end if
       write(6,*) 'NCLOD= ', NCLOD
 
       VarName='NHEAT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        NHEAT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,IDUMMY,1,mpi_integer4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          NHEAT=SPVAL
-        else
-          NHEAT=IDUMMY(1,1)
-        end if
-      end if
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NHEAT,  
+     +    1,1,1,1,1,1,1,1)
       write(6,*) 'NHEAT= ', NHEAT
-                                                                                             
+
       VarName='NRDLW'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        NRDLW=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,IDUMMY,1,mpi_integer4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          NRDLW=SPVAL
-        else
-          NRDLW=IDUMMY(1,1)
-        end if
-      end if
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NRDLW, 
+     +    1,1,1,1,1,1,1,1)
       write(6,*) 'NRDLW= ', NRDLW
 
       VarName='NRDSW'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        NRDSW=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,IDUMMY,1,mpi_integer4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          NRDSW=SPVAL
-        else
-          NRDSW=IDUMMY(1,1)
-        end if
-      end if
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NRDSW, 
+     +  1,1,1,1,1,1,1,1)
         write(6,*) 'NRDSW= ', NRDSW
-           
+
       VarName='NSRFC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        NSRFC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,IDUMMY,1,mpi_integer4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          NSRFC=SPVAL
-        else
-          NSRFC=IDUMMY(1,1)
-        end if
-      end if
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NSRFC, 
+     +  1,1,1,1,1,1,1,1)
         write(6,*) 'NSRFC= ', NSRFC
 
+      VarName='AVRAIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
+          AVRAIN=DUMMY2(1,1)
+
+      VarName='AVCNVC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
+          AVCNVC=DUMMY2(1,1)
+!
       VarName='ACUTIM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACUTIM=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACUTIM=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           ACUTIM=DUMMY2(1,1)
-        end if
-      end if
       write(6,*) 'ACUTIM= ', ACUTIM
 
       VarName='ARDLW'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ARDLW=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ARDLW=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           ARDLW=DUMMY2(1,1)
-        end if
-      end if
       write(6,*) 'ARDLW= ', ARDLW
                                                                                              
       VarName='ARDSW'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ARDSW=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ARDSW=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           ARDSW=DUMMY2(1,1)
-        end if
-      end if
         write(6,*) 'ARDSW= ', ARDSW
            
       VarName='ASRFC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASRFC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASRFC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           ASRFC=DUMMY2(1,1)
-        end if
-      end if
 
       VarName='APHTIM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        APHTIM=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          APHTIM=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           APHTIM=DUMMY2(1,1)
-        end if
-      end if
 
-!  end nmm-core specific vars
+      VarName='MAX10MW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAX10U'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAX10V'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXUPDR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXDNDR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXHLCY'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXDBZ'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='LANDMASK'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='PSFC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='TH2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
 c
 c reading 10 m wind
       VarName='U10'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        U10=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          U10=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            U10(N) = dummy ( i, j )
           END DO
-        endif
-      endif
 
       VarName='V10'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        V10=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          V10=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            V10(N) = dummy ( i, j )
           END DO
-        endif
-      endif
   
       VarName='SMSTAV'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SMSTAV=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SMSTAV=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SMSTAV (N) = dummy ( i, j )
           ENDDO
-        endif
-      endif
 
       VarName='SMSTOT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SMSTOT=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SMSTOT=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SMSTOT (N) = dummy ( i, j )
           ENDDO
-        endif
-      endif
+
+      VarName='SFROFF'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+!
+      VarName='UDROFF'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='IVGTYP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY       &
+     +  ,IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='ISLTYP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY       &
+     +  ,IM,1,JM,1,IM,JS,JE,1)
 
       VarName='VEGFRA'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        VEGFRA=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          VEGFRA=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
     	   J=JHINDX(N)
   	   VEGFRA(N)=DUMMY(I,J)
           ENDDO
-        endif
-      endif
+
+      VarName='SFCEVP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='GRDFLX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SFCEXC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SFCEXC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SFCEXC=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SFCEXC (N) = dummy ( i, j )
           ENDDO
-        endif
-      endif
 
       VarName='ACSNOW'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACSNOW=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACSNOW=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ACSNOW (N) = dummy ( i, j )
           END DO
-        endif
-      endif
  
       VarName='ACSNOM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACSNOM=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACSNOM=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ACSNOM (N) = dummy ( i, j )
           END DO
-        endif
-      endif
 
-      VarName='SNO'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SN0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SN0=SPVAL
-        else
-          DO N=1,NUMSTA
-	   I=IHINDX(N)	
-	   J=JHINDX(N)
-           SNO(N) = dummy ( i, j )
-          END DO
-        endif
-      endif
+      VarName='SNOW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='CPRATE'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CPRATE=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SN0=SPVAL
-        else
-          DO N=1,NUMSTA
-           I=IHINDX(N)
-           J=JHINDX(N)
-           CPRATE(N) = dummy ( i, j )
-          END DO
-        endif
-      endif
+      VarName='CANWAT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SST'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='WEASD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='THZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='QZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='UZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='VZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='QSFC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='HTOP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='HBOT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+!      VarName='CPRATE'
+!          DO N=1,NUMSTA
+!           I=IHINDX(N)
+!           J=JHINDX(N)
+!           CPRATE(N) = dummy ( i, j )
+!          END DO
 
 !!!! does closing the datahandle help?
 !       close(iunit)
@@ -2301,19 +1750,11 @@ c reading 10 m wind
 
 	write(6,*) 'PD(20) (b): ', PD(20)
 
-        call mpi_file_close(iunit,ierr)
-        deallocate (datestr_all)
-        deallocate (varname_all)
-        deallocate (domainend_all)
-        deallocate (start_block)
-        deallocate (end_block)
-        deallocate (start_byte)
-        deallocate (end_byte)
-        deallocate (file_offset)
 
 !!!! DONE GETTING
 
-      DO L=1,LM+1
+!      DO L=1,LM+1
+      DO L=1,LM
       DO N=1,NUMSTA
 	I=IHINDX(N)	
 	J=JHINDX(N)
@@ -2321,8 +1762,13 @@ c reading 10 m wind
 	write(6,*) 'G, RD, D608: ', G, RD, D608
 	endif
 
+!            IF(ABS(T(N,L)).GT.1.0E-3)
+!     &        OMGA(N,L) = -W(N,L)*PINT(N,L)*G/
+!     &                 (RD*T(N,L)*(1.+D608*Q(N,L)))
+
+        WMID=(W(N,L)+W(N,L+1))/2.
             IF(ABS(T(N,L)).GT.1.0E-3)
-     &        OMGA(N,L) = -W(N,L)*PINT(N,L)*G/
+     &        OMGA(N,L) = -WMID*PMID(N,L)*G/
      &                 (RD*T(N,L)*(1.+D608*Q(N,L)))
 
 !	if (mod(N,60) .eq. 0 .and. mod(L,10) .eq. 0) then
@@ -2357,9 +1803,6 @@ C
 c     READ(NHB)DY,CPGFV,EN,ENT,R,PT,TDDAMP
 c    1,        F4D,F4Q,EF4T,DETA,RDETA,AETA
 
-!!!!!!!!!!!!
-!!!!!!!!!!!!  Made modifications down to about here.
-!!!!!!!!!!!!
 
 	write(6,*) 'TLM0D, TPH0D: ', TLM0D, TPH0D
 
@@ -2499,7 +1942,8 @@ cZhou        write(6,*) 'date for old file is: ', datestrold
           write(cfhr,'(i2)')  ITAG0
          end if
 
-         len=lnblnk_(filename)          !call C code which has been compiled to object file
+         len=lnblnk(filename)          !call C code which has been compiled to object file
+
 
          filename=prefilename(1:len)
 c        filename=filename(1:len-2)//cfhr
@@ -2563,401 +2007,685 @@ C
      + ,1,ioutcount,istatus)
         maptype=itmp
 
-c closing wrf io api
-                                                                                                                                  
-      call ext_int_ioclose ( DataHandle, Status )
 
-c start calling mpi io
-      iunit=33
-      call count_recs_wrf_binary_file(iunit, fileName, nrecs)
+! dup block from above
 
-      print*,'- FILE CONTAINS ',nrecs, ' RECORDS'
+      VarName='TOYVAR'
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 
-      allocate (datestr_all(nrecs))
-      allocate (varname_all(nrecs))
-      allocate (domainend_all(3,nrecs))
-      allocate (start_block(nrecs))
-      allocate (end_block(nrecs))
-      allocate (start_byte(nrecs))
-      allocate (end_byte(nrecs))
-      allocate (file_offset(nrecs))
-                                                                                          
-      call inventory_wrf_binary_file(iunit, filename, nrecs,
-     +                datestr_all,varname_all,domainend_all,
-     +      start_block,end_block,start_byte,end_byte,file_offset,
-     +      print_diag)
-                                                                                          
-!     close(iunit)
-                                                                                          
-      call mpi_file_open(mpi_comm_world, filename
-     + , mpi_mode_rdonly,mpi_info_null, iunit, ierr)
-      if (ierr /= 0) then
-       print*,"Error opening file with mpi io"
-       stop
-      end if
+      VarName='LU_INDEX'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='HBM2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SICE'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='PD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FIS'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RES'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,     &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='T'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      VarName='Q'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      VarName='U'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      VarName='V'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+        varname='DX_NMM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+       varname='DETA1'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA1,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='AETA1'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA1,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='ETA1'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA1,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='DETA2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA2,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+       varname='AETA2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA2,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+        varname='ETA2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,ETA2,       &
+     +  LM,1,1,1,LM,1,1,1)
+
+        varname='DY_NMM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
+     +  1,1,1,1,1,1,1,1)
+
+        varname='DLMD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
+     +  1,1,1,1,1,1,1,1)
+
+        varname='DPHD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
+     +  1,1,1,1,1,1,1,1)
+
+       varname='PDTOP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  1,1,1,1,1,1,1,1)
+          PDTOP=DUMMY2(1,1)
+
+	write(6,*) 'PDTOP: ', PDTOP
+
+        varname='PT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  1,1,1,1,1,1,1,1)
+        write(6,*) 'PT ', DUMMY2(1,1)
+        PT=DUMMY2(1,1)
+
+        varname='PBLH'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='MIXHT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='USTAR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='Z0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='THS'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='QS'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='TWBS'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='QWBS'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='PREC' ! instantaneous precip rate?
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='APREC' ! instantaneous precip rate?
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       varname='ACPREC' ! accum total precip
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACPREC0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACPREC0=SPVAL
-        else
-          DO N=1,NUMSTA
-	   I=IHINDX(N)	
-	   J=JHINDX(N)
-	   ACPREC0(N)=DUMMY2(I,J)
-	    if (IDSTN(N) .eq. 724050) then
-	     write(6,*) 'ACPREC0 at DCA: ', ACPREC(N)
-	    endif
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+           DO N=1,NUMSTA
+	     I=IHINDX(N)	
+	     J=JHINDX(N)
+	     ACPREC0(N)=DUMMY2(I,J)
+	     if (IDSTN(N) .eq. 724050) then
+	       write(6,*) 'ACPREC0 at DCA: ', ACPREC0(N)
+	     endif
            END DO
-         endif
-       endif
 
       varname='CUPREC' ! accum cumulus precip
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        CUPREC0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          CUPREC0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
 	   CUPREC0(N)=DUMMY2(I,J)
           END DO 
-        endif
-       endif
+
+      VarName='SNO'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SI'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='CLDEFI'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='TH10'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='Q10'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='PSHLTR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='TSHLTR'   !potential Temp'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='QSHLTR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='Q2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      varname='AKHS_OUT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='AKMS_OUT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='ALBASE'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='ALBEDO'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+!
+!
+! Very confusing story ...
+!
+! Retrieve hbot => It is named CNVBOT in the model and
+! with HBOTS (shallow conv) and HBOTD (deep conv) represent
+! the 3 sets of convective cloud base/top arrays tied to the frequency
+! that history files are written.
+!
+! IN THE *MODEL*, array HBOT is similar to CNVBOT but is
+! used in radiation and is tied to the frequency of radiation updates.
+!
+! For historical reasons model array CNVBOT is renamed HBOT
+! and manipulated throughout the sounding post.
+!
+      VarName='CNVBOT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='CNVTOP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='CZEN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='CZMEAN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='EPSR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='GLAT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='GLON'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='TSK'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='MXSNAL'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='RADOT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='SIGT4'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='TGROUND'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='CWM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      varname='F_ICE'
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      varname='F_RAIN'
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      varname='F_RIMEF'
+        write(6,*) 'call getVariableBikj for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+
+      varname='SR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='CFRACH'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='CFRACL'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='CFRACM'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='ISLOPE'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='DZSOIL'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,
+     +    1,1,1,NSOIL,1,1,1,NSOIL)
+
+      VarName='SLDPTH'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,
+     +     1,1,1,NSOIL,1,1,1,NSOIL)
+
+      VarName='CMC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='GRNFLX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+        varname='PCTSNO'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='SOILTB'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='VEGFRC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SH2O'
+        write(6,*) 'call getVariableB for : ', VarName
+        write(6,*) 'know that NSOIL is: ', NSOIL
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,NSOIL)
+
+      VarName='SMC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,NSOIL)
+
+      VarName='STC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,NSOIL)
+
+      VarName='PINT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
+     + IM,1,JM,LM+1,IM,JS,JE,LM+1)
+
+      VarName='W'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
+     + IM,1,JM,LM+1,IM,JS,JE,LM+1)
+
+      VarName='ACFRCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='ACFRST'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SSROFF'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SSROFF0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SSROFF0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
-           SSROFF0(N) = dummy ( i, j )
-          END DO
-        endif
-      endif
+           SSROFF0(N) = DUMMY(i,j)
+          ENDDO
 
+c reading UNDERGROUND RUNOFF
       VarName='BGROFF'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        BGROFF0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          BGROFF0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            BGROFF0(N) = dummy ( i, j )
           END DO
-        endif
-      endif
+
+      VarName='RLWIN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RLWTOA'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='ALWIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ALWIN0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ALWIN0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ALWIN0(N)=dummy(i,j)
           END DO
-        endif
-      endif
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!here
+
       VarName='ALWOUT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ALWOUT0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ALWOUT0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ALWOUT0(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='ALWTOA'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ALWTOA0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ALWTOA0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ALWTOA0(N)=dummy(i,j)
           END DO
-        endif
-      endif
+
+      VarName='RSWIN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RSWINC'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RSWOUT'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='ASWIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASWIN0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASWIN0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ASWIN0(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='ASWOUT'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASWOUT0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASWOUT0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
-	   J=JHINDX(N)
+      	   J=JHINDX(N)
            ASWOUT0(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='ASWTOA'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ASWTOA0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ASWTOA0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ASWTOA0(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='SFCSHX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SFCSHX0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SFCSHX0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SFCSHX0(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
       VarName='SFCLHX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SFCLHX0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SFCLHX0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SFCLHX0(N)=dummy(i,j)
+	   if (IDSTN(N) .eq. 724050) then
+	     write(6,*) 'DCA value for SFCLHX0: ', SFCLHX0(N)
+	   endif
           END DO
-        endif
-      endif
 
       VarName='SUBSHX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SUBSHX0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SUBSHX0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SUBSHX0(N)=dummy(i,j)
-!          print *,' subshx0 ',n,subshx0(n)
           END DO
-        endif
-      endif
 
       VarName='SNOPCX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        SNOPCX0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          SNOPCX0=SPVAL
-        else
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            SNOPCX0(N)=dummy(i,j)
           END DO
-        endif
-      endif
+
+      VarName='SFCUVX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='POTEVP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='POTFLX'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        POTFLX0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          POTFLX0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
            I=IHINDX(N)
            J=JHINDX(N)
            POTFLX0(N)=dummy(i,j)
           END DO
-        endif
-      endif
 
-!here2
+      VarName='TLMIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+          DO N=1,NUMSTA
+           I=IHINDX(N)
+           J=JHINDX(N)
+           TLMIN(N)=dummy(i,j)
+          END DO
+
+      VarName='TLMAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+          DO N=1,NUMSTA
+           I=IHINDX(N)
+           J=JHINDX(N)
+           TLMAX(N)=dummy(i,j)
+          END DO
+
 ! big insert
 
-      varname='TCUCN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TCUCN0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TCUCN0=SPVAL
-        else
+      VarName='T02_MIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='T02_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RH02_MIN'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='RH02_MAX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      varname='RLWTT'
+       write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 	  DO L=1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
 	    I=IHINDX(N)	
 	    J=JHINDX(N)
-	    TCUCN0(N,L)=DUM3D(I,J,LL)
+	    RLWTT(N,L)=DUM3D(I,J,LL)
 	   ENDDO	
 	  ENDDO
-        endif
-      endif
+
+      varname='RSWTT'
+       write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
+	  DO L=1,LM
+           LL=LM-L+1
+           DO N=1,NUMSTA
+	    I=IHINDX(N)	
+	    J=JHINDX(N)
+	    RSWTT(N,L)=DUM3D(I,J,LL)
+	   ENDDO	
+	  ENDDO
+
+      varname='TCUCN'
+          TCUCN0=SPVAL
 
       varname='TRAIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TRAIN0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUM3D,(im*jm*lm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TRAIN0=SPVAL
-        else
+       write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+     + IM,1,JM,LM,IM,JS,JE,LM)
 	  DO L=1,LM
            LL=LM-L+1
            DO N=1,NUMSTA
@@ -2966,124 +2694,294 @@ c start calling mpi io
 	    TRAIN0(N,L)=DUM3D(I,J,LL)
 	   ENDDO	
 	  ENDDO
-        endif
-      endif
+!
 
+      VarName='NCFRCV'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
-! end big insert
+      VarName='NCFRST'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='NPHS0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName, 
+     +  NPHS,1,1,1,1,1,1,1,1)
+      write(6,*) 'NPHS= ', NPHS
+
+      VarName='NPREC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName, 
+     +    IDUMMY(1,1),1,1,1,1,1,1,1,1)
+          NPREC=IDUMMY(1,1)
+      write(6,*) 'NPREC= ', NPREC
+
+      VarName='NCLOD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,  
+     +    IDUMMY(1,1),1,1,1,1,1,1,1,1)
+          NCLOD=IDUMMY(1,1)
+      write(6,*) 'NCLOD= ', NCLOD
+
+      VarName='NHEAT'
+        write(6,*) 'call getIVariable for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NHEAT,  
+     +    1,1,1,1,1,1,1,1)
+      write(6,*) 'NHEAT= ', NHEAT
+
+      VarName='NRDLW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NRDLW, 
+     +    1,1,1,1,1,1,1,1)
+      write(6,*) 'NRDLW= ', NRDLW
+
+      VarName='NRDSW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NRDSW, 
+     +  1,1,1,1,1,1,1,1)
+        write(6,*) 'NRDSW= ', NRDSW
+
+      VarName='NSRFC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,NSRFC, 
+     +  1,1,1,1,1,1,1,1)
+        write(6,*) 'NSRFC= ', NSRFC
 
       VarName='AVRAIN'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        AVRAIN0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          AVRAIN0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           AVRAIN0=DUMMY2(1,1)
-        end if
-      end if
 
       VarName='AVCNVC'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        AVCNVC=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          AVCNVC=SPVAL
-        else
-          AVCNVC=DUMMY2(1,1)
-        end if
-      end if
-
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
+          AVCNVC0=DUMMY2(1,1)
+!
       VarName='ACUTIM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACUTIM0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACUTIM0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           ACUTIM0=DUMMY2(1,1)
-        end if
-      end if
-      write(6,*) 'ACUTIM0= ', ACUTIM0
+
+      VarName='ARDLW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
+          ARDLW=DUMMY2(1,1)
+      write(6,*) 'ARDLW= ', ARDLW
+                                                                                             
+      VarName='ARDSW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
+          ARDSW=DUMMY2(1,1)
+        write(6,*) 'ARDSW= ', ARDSW
+           
+      VarName='ASRFC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
+          ASRFC=DUMMY2(1,1)
 
       VarName='APHTIM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        APHTIM0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY2,1,mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          APHTIM0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2(1,1), 
+     +  1,1,1,1,1,1,1,1)
           APHTIM0=DUMMY2(1,1)
-        end if
-      end if
 
-      write(6,*) 'APHTIM0 now : ', APHTIM0
+      VarName='MAX10MW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAX10U'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAX10V'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXUPDR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXDNDR'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXHLCY'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='MAXDBZ'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='LANDMASK'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='PSFC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='TH2'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+c
+c reading 10 m wind
+      VarName='U10'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='V10'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+  
+      VarName='SMSTAV'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SMSTOT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SFROFF'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+!
+      VarName='UDROFF'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='IVGTYP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY       &
+     +  ,IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='ISLTYP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY       &
+     +  ,IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='VEGFRA'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SFCEVP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='GRDFLX'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SFCEXC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
 
       VarName='ACSNOW'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACSNOW0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACSNOW0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
-           ACSNOW0(N) = dummy ( i, j )
+           ACSNOW0 (N) = dummy ( i, j )
           END DO
-        endif
-      endif
  
       VarName='ACSNOM'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        ACSNOM0=SPVAL
-      else
-        call mpi_file_read_at(iunit,file_offset(index+1)
-     + ,DUMMY,(im*jm),mpi_real4
-     + , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          ACSNOM0=SPVAL
-        else
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
           DO N=1,NUMSTA
 	   I=IHINDX(N)	
 	   J=JHINDX(N)
            ACSNOM0 (N) = dummy ( i, j )
           END DO
-        endif
-      endif
+
+      VarName='SNOW'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='CANWAT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='SST'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='WEASD'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='THZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='QZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='UZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='VZ0'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='QSFC'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='HTOP'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='HBOT'
+        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     + IM,1,JM,1,IM,JS,JE,1)
+
+
+! end dup block from above
 
 	write(6,*) 'PD(20) (d): ', PD(20)
 
@@ -3094,15 +2992,6 @@ c       DO N=1,NUMSTA
 c         POTFLX0(N)=-9999.
 c       ENDDO
 C
-
-        deallocate (datestr_all)
-        deallocate (varname_all)
-        deallocate (domainend_all)
-        deallocate (start_block)
-        deallocate (end_block)
-        deallocate (start_byte)
-        deallocate (end_byte)
-        deallocate (file_offset)
 
       ENDIF
 
@@ -3903,6 +3792,8 @@ C***  END OF PROFILE SITE LOOP
 C
 C***  END PROFILE POSTING CODE.
 C---------------------------------------------------------------------
+
+  979  continue
         DEALLOCATE( DETA,RDETA,AETA,UL
      &,RES,FIS,THS,HBOT
      &,CFRACL,CFRACM,CFRACH,SNO
@@ -3936,13 +3827,13 @@ C---------------------------------------------------------------------
      &,SFCSHX0,SUBSHX0,SNOPCX0,ASWIN0
      &,ASWOUT0,ALWIN0,ALWOUT0,ALWTOA0
      &,ASWTOA0,ACSNOW0,ACSNOM0,SSROFF0
-     &,BGROFF0)
+     &,BGROFF0,SLDPTH2)
    
       print *," deallocate 1"
       print *, "PROF_NMM DONE!!!"
 
-      call mpi_file_close(iunit,ierr)
-      call mpi_finalize(mpi_comm_world, ierr)
+!      call mpi_file_close(iunit,ierr)
+!      call mpi_finalize(mpi_comm_world, ierr)
 
       RETURN
       END

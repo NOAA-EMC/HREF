@@ -44,7 +44,7 @@ C
       INCLUDE "parmsoil"
 C-----------------------------------------------------------------------
                              P A R A M E T E R
-     & (NSTAT=1200,LCL1ML=13,LCL1SL=50
+     & (NSTAT=1500,LCL1ML=15,LCL1SL=52
      &, D608=0.608)
 
 C-----------------------------------------------------------------------
@@ -75,7 +75,7 @@ C
      &,RES(:),FIS(:),THS(:),HBOT(:)
      &,CFRACL(:),CFRACM(:),CFRACH(:),SNO(:)
      &,SOILTB(:),SFCEXC(:),SMSTAV(:),SMSTOT(:)
-     &,Z0(:),CZEN(:),CZMEAN(:),U00(:),SR(:)
+     &,Z0(:),CZEN(:),CZMEAN(:),U00(:),SR(:),CPRATE(:)
      &,ACPREC(:),CUPREC(:),ACSNOW(:),ACSNOM(:)
      &,SSROFF(:),BGROFF(:),SFCSHX(:),SFCLHX(:)
      &,SUBSHX(:),SNOPCX(:),ASWIN(:),ASWOUT(:)
@@ -90,6 +90,8 @@ C
      &,PTBL(:,:),TTBL(:,:),VEGFRA(:)
      &,T(:,:),Q(:,:),U(:,:),V(:,:),Q2(:,:)
      &,OMGALF(:,:),CWM(:,:),TRAIN(:,:),TCUCN(:,:)
+     &,F_RAIN(:,:),F_ICE(:,:),CLDFRA(:,:)
+     &,F_RIMEF(:,:)
      &,RSWTT(:,:),RLWTT(:,:),CCR(:,:),RTOP(:,:)
      &,HTM(:,:),OMGA(:,:)
      &,PRODAT(:),FPACK(:)
@@ -126,20 +128,20 @@ C
         integer, allocatable:: IW(:,:), IDUM(:,:),LMH(:,:),IDUMMY(:,:)
 
                              I N T E G E R
-     & IDAT(3),IDAT0(3),GDS(200)
+     & IDAT(3),IDAT0(3),GDS(200),SYSDEPINFO
 C------------------------------------------------------------------------
                              L O G I C A L
      & RUN,RESTRT,FRST
 C------------------------------------------------------------------------
                              C H A R A C T E R
      & RSTFIL*98,RESTHR*4,LABEL*32,CISTAT*8,CIDSTN(NSTAT)*8
-     &,FNAME*98,ENVAR*98,BLANK*4
+     &,FNAME*256,ENVAR*98,BLANK*4
 
 C	new stuff
       character(len=31) :: VarName,varin
-	character(len=98) :: fileName
-	character(len=98) :: fileNamehold
-       character(len=98) :: newname
+	character(len=256) :: fileName
+	character(len=256) :: fileNamehold
+       character(len=256) :: newname
       integer :: Status
       character(len=19):: startdate,datestr,datestrold
 
@@ -171,7 +173,7 @@ C
      1,               IHINDX(N),JHINDX(N),IVINDX(N),JVINDX(N)
      2,               CIDSTN(N),N=1,NUMSTA)
 	endif
-   30 FORMAT(2X,I6,2F8.2,4I8,4X,A8)
+   30 FORMAT(3X,I7,2F9.3,4I9,4X,A10)
 
 c	if (ITAG .eq. 0) then
 	  FRST=.TRUE.
@@ -182,8 +184,9 @@ c	endif
 
        if ( frst ) then
          frst = .false.
-         CALL ext_ncd_ioinit(Status)
-          print*,'CALLed ioinit', Status
+        write(0,*) 'calling ext_ncd_ioinit: '
+         CALL ext_ncd_ioinit(SYSDEPINFO, Status)
+          write(0,*) 'CALLed ioinit', Status
 	write(6,*) 'filename early in PROF= ', trim(filename)
          CALL ext_ncd_open_for_read( trim(fileName), 0, 0, " ",
      &  DataHandle, Status)
@@ -311,7 +314,7 @@ C Getting start time
      &,ASWTOA(NUMSTA),ALWIN(NUMSTA),ALWOUT(NUMSTA),ALWTOA(NUMSTA)
      &,TSHLTR(NUMSTA),TSHLTR_hold(NUMSTA),QSHLTR(NUMSTA),PSHLTR(NUMSTA)
      &,TH10(NUMSTA),Q10(NUMSTA),U10(NUMSTA),V10(NUMSTA)
-     &,TLMIN(NUMSTA),TLMAX(NUMSTA)
+     &,TLMIN(NUMSTA),TLMAX(NUMSTA),CPRATE(NUMSTA)
      &,SMC(NUMSTA,NSOIL),CMC(NUMSTA),STC(NUMSTA,NSOIL)
      &,SH2O(NUMSTA,NSOIL)
      &,VEGFRC(NUMSTA),POTFLX(NUMSTA),PSLP(NUMSTA),PDSL1(NUMSTA)
@@ -321,7 +324,8 @@ C Getting start time
      &,T(NUMSTA,LM),Q(NUMSTA,LM),U(NUMSTA,LM),V(NUMSTA,LM)
      &,Q2(NUMSTA,LM)
      &,OMGALF(NUMSTA,LM),CWM(NUMSTA,LM),TRAIN(NUMSTA,LM)
-     &,TCUCN(NUMSTA,LM)
+     &,F_RAIN(NUMSTA,LM),F_ICE(NUMSTA,LM),CLDFRA(NUMSTA,LM)
+     &,TCUCN(NUMSTA,LM),F_RIMEF(NUMSTA,LM)
      &,RSWTT(NUMSTA,LM),RLWTT(NUMSTA,LM),CCR(NUMSTA,LM)
      &,RTOP(NUMSTA,LM)
      &,HTM(NUMSTA,LM),OMGA(NUMSTA,LM)
@@ -385,17 +389,18 @@ C Getting start time
 	SICE(N)=DUMMY2(I,J)
       END DO
 
-      VarName='HTM'
+!      VarName='HTM'
 !	write(6,*) 'call getVariable for : ', VarName
-      call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
-     &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
+!        write(6,*) 'LM: ', LM
+!      call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
+!     &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !	write(6,*) 'DUM3D(20,20,1): ', DUM3D(20,20,1)
 
       DO L = 1,LM
       DO N=1,NUMSTA
 	I=IHINDX(N)	
 	J=JHINDX(N)
-            HTM(N,L) = DUM3D(I,J,L)
+            HTM(N,L) = 1.
       END DO 
       END DO
 
@@ -553,6 +558,7 @@ C Getting start time
 	I=IHINDX(N)	
 	J=JHINDX(N)
 	CUPREC(N)=DUMMY2(I,J)
+         CPRATE(N)=-9999.
       END DO 
 
         varname='TH10'
@@ -578,6 +584,8 @@ C Getting start time
 	J=JHINDX(N)
 	Q10(N)=DUMMY2(I,J)
       END DO
+
+        
 
         varname='PSHLTR'
         write(6,*) 'call getVariable for : ', VarName
@@ -668,7 +676,7 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
 
 
 	varname='CWM'
-!	write(6,*) 'call getVariable for : ', VarName
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
      &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !	write(6,*) 'DUM3D(20,20,30): ', DUM3D(20,20,30)
@@ -681,8 +689,64 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
       END DO 
       END DO
 
+	varname='F_ICE'
+	write(6,*) 'call getVariable for : ', VarName
+      call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
+     &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
+!	write(6,*) 'DUM3D(20,20,30): ', DUM3D(20,20,30)
+
+      DO L = 1,LM
+      DO N=1,NUMSTA
+	I=IHINDX(N)	
+	J=JHINDX(N)
+            F_ICE(N,L) = DUM3D(I,J,L)
+      END DO 
+      END DO
+
+	varname='F_RAIN'
+	write(6,*) 'call getVariable for : ', VarName
+      call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
+     &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
+!	write(6,*) 'DUM3D(20,20,30): ', DUM3D(20,20,30)
+
+      DO L = 1,LM
+      DO N=1,NUMSTA
+	I=IHINDX(N)	
+	J=JHINDX(N)
+            F_RAIN(N,L) = DUM3D(I,J,L)
+      END DO 
+      END DO
+
+	varname='F_RIMEF'
+	write(6,*) 'call getVariable for : ', VarName
+      call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
+     &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
+!	write(6,*) 'DUM3D(20,20,30): ', DUM3D(20,20,30)
+
+      DO L = 1,LM
+      DO N=1,NUMSTA
+	I=IHINDX(N)	
+	J=JHINDX(N)
+            F_RIMEF(N,L) = DUM3D(I,J,L)
+      END DO 
+      END DO
+
+	varname='CLDFRA'
+	write(6,*) 'call getVariable for : ', VarName
+      call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
+     &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
+!	write(6,*) 'DUM3D(20,20,30): ', DUM3D(20,20,30)
+
+      DO L = 1,LM
+      DO N=1,NUMSTA
+	I=IHINDX(N)	
+	J=JHINDX(N)
+            CLDFRA(N,L) = DUM3D(I,J,L)
+      END DO 
+      END DO
+
 	varname='CFRACH'
-!	write(6,*) 'call getVariable for : ', VarName
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY2,
      &  IM,1,JM,1,IM,JS,JE,1)
 !	write(6,*) 'DUMMY2(20,20): ', DUMMY2(20,20)
@@ -694,7 +758,7 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
       ENDDO
 
 	varname='CFRACL'
-!	write(6,*) 'call getVariable for : ', VarName
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY2,
      &  IM,1,JM,1,IM,JS,JE,1)
 !	write(6,*) 'DUMMY2(20,20): ', DUMMY2(20,20)
@@ -749,7 +813,7 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
 !      print*,'SLDPTH= ',(SLDPTH(N),N=1,NSOIL)
 
       VarName='CMC'
-!        write(6,*) 'call getVariable for : ', VarName
+        write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY,
      &  IM,1,JM,1,IM,JS,JE,1)
 
@@ -760,7 +824,7 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
       END DO
 
         varname='SOILTB'
-!        write(6,*) 'call getVariable for : ', VarName
+        write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY2,
      &  IM,1,JM,1,IM,JS,JE,1)
 !        write(6,*) 'DUMMY2(20,20): ', DUMMY2(20,20)
@@ -772,7 +836,7 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
       ENDDO
 
 	varname='VEGFRC'
-!	write(6,*) 'call getVariable for : ', VarName
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUMMY2,
      &  IM,1,JM,1,IM,JS,JE,1)
 !	write(6,*) 'DUMMY2(20,20): ', DUMMY2(20,20)
@@ -782,12 +846,13 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
 	J=JHINDX(N)
   	    VEGFRC(N)=DUMMY2(I,J)
 
-!	if (mod(N,20) .eq. 0) write(6,*) 'N, VEGFRC(N): ', 
-!     &			N, VEGFRC(N)
+	if (mod(N,20) .eq. 0) write(6,*) 'N, VEGFRC(N): ', 
+     &			N, VEGFRC(N)
 
       ENDDO
 
       VarName='SH2O'
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
      &  IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
 
@@ -800,7 +865,7 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
       ENDDO
 
       VarName='SMC'
-!	write(6,*) 'call getVariable for : ', VarName
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
      &  IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
 
@@ -816,11 +881,12 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
             SMC(N,L) = DUM3D(i,j,nsoil-l+1)
        END DO
        END DO
-      print*,'SMC at ', N ,' = ',smc(N,1),smc(N,2)
-     &,smc(N,3),smc(N,4)
+        write(6,*) 'past SMC definition, about to print SMC values'
+      print*,'SMC at N=10 ',smc(10,1),smc(10,2)
+     &,smc(10,3),smc(10,4)
 
       VarName='STC'
-!	write(6,*) 'call getVariable for : ', VarName
+	write(6,*) 'call getVariable for : ', VarName
       call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
      &  IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
 
@@ -831,8 +897,8 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
             STC(N,L) = DUM3D(i,j,nsoil-l+1)
        END DO
        END DO
-      print*,'STC at ', N ,' = ',stc(N,1),stc(N,2)
-     &,stc(N,3),stc(N,4)
+!      print*,'STC at ', N ,' = ',stc(N,1),stc(N,2)
+!     &,stc(N,3),stc(N,4)
 
 
       VarName='PINT'
@@ -1268,12 +1334,11 @@ c reading SMSTAV
             SNO(N) = dummy ( i, j )
       END DO
 
-	write(6,*) 'to TKE_MYJ'
 	write(6,*) 'DUM3D sizes: ', size(DUM3D,dim=1),size(DUM3D,dim=2),
      &			size(DUM3D,dim=3)
 	write(6,*) 'Q2 sizes: ', size(Q2,dim=1),size(Q2,dim=2)
 
-      VarName='TKE_MYJ'
+      VarName='Q2'
       call getVariable(fileName,DateStr,DataHandle,VarName,DUM3D,
      &  IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
@@ -1293,14 +1358,15 @@ c reading SMSTAV
 
 
 !!!! does closing the datahandle help?
-	call ext_ncd_ioclose(DataHandle)
+	call ext_ncd_ioclose(SYSDEPINFO, Status)
 
 	write(6,*) 'past ext_ncd_ioclose'
 
 
 !!!! DONE GETTING
 
-      DO L=1,LM+1
+!      DO L=1,LM+1
+      DO L=1,LM
       DO N=1,NUMSTA
 	I=IHINDX(N)	
 	J=JHINDX(N)
@@ -1309,10 +1375,10 @@ c reading SMSTAV
      &        OMGA(N,L) = -W(N,L)*PINT(N,L)*G/
      &                 (RD*T(N,L)*(1.+D608*Q(N,L)))
 
-!	if (mod(N,60) .eq. 0 .and. mod(L,10) .eq. 0) then
-!	write(6,*) 'N, L, W, PINT, T, Q, OMGA: ', N,L,W(N,L),PINT(N,L),
-!     &  T(N,L),Q(N,L),OMGA(N,L)
-!	endif
+	if (mod(N,60) .eq. 0 .and. mod(L,10) .eq. 0) then
+	write(6,*) 'N, L, W, PINT, T, Q, OMGA: ', N,L,W(N,L),PINT(N,L),
+     &  T(N,L),Q(N,L),OMGA(N,L)
+	endif
 	
       END DO
       END DO
@@ -1498,8 +1564,11 @@ C***
 	write(6,*) 'old filename is ', trim(filename)
 	write(6,*) 'date for old file is: ', datestrold
 
+        write(6,*) 'calling ext_ncd_ioinit'
 	
-         CALL ext_ncd_ioinit(Status)
+         CALL ext_ncd_ioinit(SYSDEPINFO,Status)
+        write(6,*) 'status from call: ', status
+        write(6,*) 'trim(filename): ', trim(filename)
          CALL ext_ncd_open_for_read( trim(fileName), 0, 0, " ",
      &  DataHandle, Status)
 
@@ -1514,8 +1583,10 @@ C***  READ THE PREVIOUS RESTRT FILE
 C***
 C
           DO N=1,NUMSTA
+          DO L=1,LM
 	TRAIN0(N,L)=-9999.
 	TCUCN0(N,L)=-9999.
+          ENDDO
           ENDDO
 C
 
@@ -1992,16 +2063,27 @@ c     TIME=(NTSD-1)*DT
 
 	write(6,*) 'hardwired NPHS'
 
+        write(6,*) 'DT is: ', dt
 	if (DT .eq. 18) then
 	NPHS=10
 	elseif (DT .eq. 20) then
 	NPHS=20
+        else
+        NPHS=8
 	endif
 
+
+        write(6,*) 'NPHS set to : ', NPHS
+
+        IFCST=3600*ITAG
+
 	TIME=IFCST
+        write(6,*) 'set time to : ', TIME
 	NTSD=(TIME/DT)+1
       RESET0=TIME-(NTSD/NPREC)*NPREC*DT
       RESET1=(NPHS-1)*DT+3600.
+
+        write(6,*) 'NPHS, RESET0, RESET1: ', NPHS, RESET0, RESET1
 
 C
 c      IF(MOD(NTSD,NPREC).GE.NPHS.AND.RESET0.LE.RESET1)THEN
@@ -2014,7 +2096,7 @@ c          STASRF(N)=0.
 c          STABRF(N)=0.
 c        ENDDO
 c      ELSE
-C	write(6,*) 'set STATPR'
+	write(6,*) 'set STATPR'
         DO N=1,NUMSTA
           STATPR(N)=ACPREC0(N)*1.E3
           STACPR(N)=CUPREC0(N)*1.E3
@@ -2024,7 +2106,7 @@ C	write(6,*) 'set STATPR'
           STABRF(N)=BGROFF0(N)*1.E3
         ENDDO
 
-c	write(6,*) 'past set'
+	write(6,*) 'past set'
 c      ENDIF          
 C
       RESET0=TIME-(NTSD/NRDSW)*NRDSW*DT
@@ -2221,17 +2303,20 @@ C
       ENDIF
 	write(6,*) 'APHTIM, RTSPH: ', APHTIM-APHTIM0, RTSPH
 C
+!
+        ACUTIM=0
+
       IF(ACUTIM.GT.0.)THEN
         RTSCU=1./ACUTIM
       ELSE
         RTSCU=1.
       ENDIF
 C
-      IF(ARATIM.GT.0.)THEN
-        RTSRA=1./ARATIM
-      ELSE
+!      IF(ARATIM.GT.0.)THEN
+!        RTSRA=1./ARATIM
+!      ELSE
         RTSRA=1.
-      ENDIF
+!      ENDIF
 C
 C--------------------------------------------------------------------------
 C--------------------------------------------------------------------------
@@ -2241,11 +2326,13 @@ C***
 C--------------------------------------------------------------------------
 	LCLAS1=79
 
+       
       OPEN(UNIT=LCLAS1,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
 C--------------------------------------------------------------------------
 	write(6,*) 'RECORD LENGTH = ', LRECPR
 
       DO 1000 N=1,NUMSTA
+        write(0,*) 'working station N: ', N
 C
 C***  ZERO OUTPUT ARRAY.
 C
@@ -2277,6 +2364,8 @@ C
       NWORD11  = 11*LMHK
       NWORD12  = 12*LMHK
       NWORD13  = 13*LMHK
+      NWORD14  = 14*LMHK
+      NWORD15  = 15*LMHK
       ISTAT    = IDSTN(N)
       CISTAT   = CIDSTN(N)
 C
@@ -2349,16 +2438,28 @@ C
 Cmp     1   PRODAT(NWORD5+LVL) = OMGALF(N,LV)*CP/(RTOP(N,LV)*DT)
 	ENDIF
 
-        IF(IW(N,LV).GT.0.5)THEN
-          PRODAT(NWORD6+LVL) = -CWM(N,LV)
-        ELSE
-          PRODAT(NWORD6+LVL) = CWM(N,LV)
-        ENDIF
+!        IF(IW(N,LV).GT.0.5)THEN
+!          PRODAT(NWORD6+LVL) = -CWM(N,LV)
+!        ELSE
+!          PRODAT(NWORD6+LVL) = CWM(N,LV)
+!        ENDIF
 
-	if (LV .eq. LM/2) then
-!	write(6,*) 'N,IW,CWM,PRODAT: ',N,IW(N,LV),CWM(N,LV),
-!     &		PRODAT(NWORD6+LVL)
-	endif
+
+!--- Separate posting of cloud water (NWORD6), rain (NWORD14), and
+!    ice (cloud ice + snow, NWORD13).  The ice and rain fields are
+!    *APPENDED* at the end of the section dealing with vertical
+!    profile fields  (Ferrier/Manikin 11/30/04)
+!
+        QLIQ = (1.-F_ice(N,LV))*CWM(N,LV)
+        PRODAT(NWORD13+LVL) = F_rain(N,LV)*QLIQ
+        PRODAT(NWORD6+LVL) = QLIQ-PRODAT(NWORD13+LVL)
+        PRODAT(NWORD14+LVL) = F_ice(N,LV)*CWM(N,LV)
+        PRODAT(NWORD7+LVL) = TCUCN(N,LV)
+        PRODAT(NWORD8+LVL) = TRAIN(N,LV)
+        PRODAT(NWORD9+LVL) = RSWTT(N,LV)
+        PRODAT(NWORD10+LVL)= RLWTT(N,LV)
+        PRODAT(NWORD11+LVL)= CLDFRA(N,LV)*100.
+
 C
         PRODAT(NWORD7+LVL) = TCUCN(N,LV)
         PRODAT(NWORD8+LVL) = TRAIN(N,LV)
@@ -2385,11 +2486,11 @@ C
 
       DO LL=1,LMHK
         LVL=LMHK-LL+1
-!        STADHC(LL) = PRODAT(NWORD7+LL) - DHCNVC(LVL,N)
-!        STADHR(LL) = PRODAT(NWORD8+LL) - DHRAIN(LVL,N)
+        STADHC(LL) = PRODAT(NWORD7+LL) - DHCNVC(LVL,N)
+        STADHR(LL) = PRODAT(NWORD8+LL) - DHRAIN(LVL,N)
 C
-!        DHCNVC(LVL,N) = PRODAT(NWORD7+LL)
-!        DHRAIN(LVL,N) = PRODAT(NWORD8+LL)
+        DHCNVC(LVL,N) = PRODAT(NWORD7+LL)
+        DHRAIN(LVL,N) = PRODAT(NWORD8+LL)
 C
 Ctmp        IF(MOD(NTSD,NHEAT).LT.NCNVC)THEN
           DHCNVC(LVL,N) = 0.
@@ -2399,18 +2500,18 @@ Ctmp        ENDIF
 C
 C***  EXTRACT SINGLE LEVEL DATA.   EGRID2 IS SURFACE TEMPERATURE.
 C
-      PRODAT(NWORD13+1)  = PSLP  (N)
-      PRODAT(NWORD13+2)  = PDS   (N)
-      PRODAT(NWORD13+3)  = EGRID2(N)
-      PRODAT(NWORD13+4)  = TLMIN (N)
-      PRODAT(NWORD13+5)  = TLMAX (N)
-      PRODAT(NWORD13+6)  = SMSTAV(N)*100.
-      PRODAT(NWORD13+7)  = ACPREC(N)*1000.
-      PRODAT(NWORD13+8)  = CUPREC(N)*1000.
-      PRODAT(NWORD13+27) = Z0    (N)
+      PRODAT(NWORD15+1)  = PSLP  (N)
+      PRODAT(NWORD15+2)  = PDS   (N)
+      PRODAT(NWORD15+3)  = EGRID2(N)
+      PRODAT(NWORD15+4)  = TLMIN (N)
+      PRODAT(NWORD15+5)  = TLMAX (N)
+      PRODAT(NWORD15+6)  = SMSTAV(N)*100.
+      PRODAT(NWORD15+7)  = ACPREC(N)*1000.
+      PRODAT(NWORD15+8)  = CUPREC(N)*1000.
+      PRODAT(NWORD15+27) = Z0    (N)
 C
-      STAPRX=PRODAT(NWORD13+7)-STATPR(N)
-      STACRX=PRODAT(NWORD13+8)-STACPR(N)
+      STAPRX=PRODAT(NWORD15+7)-STATPR(N)
+      STACRX=PRODAT(NWORD15+8)-STACPR(N)
 
 !	if (STAPRX .gt. 0) then
 !	write(6,*) '1hr precip: ',  N,STAPRX
@@ -2420,85 +2521,85 @@ C***  ROTATE WINDS
 C
       UT     = U10(N)
       VT     = V10(N)
-      PRODAT(NWORD13+28) = UT*COSALP+VT*SINALP
-      PRODAT(NWORD13+29) = VT*COSALP-UT*SINALP
+      PRODAT(NWORD15+28) = UT*COSALP+VT*SINALP
+      PRODAT(NWORD15+29) = VT*COSALP-UT*SINALP
 C
-      PRODAT(NWORD13+30) = TH10  (N)
-      PRODAT(NWORD13+31) = Q10   (N)
-      PRODAT(NWORD13+32) = TSHLTR(N)
-      PRODAT(NWORD13+33) = QSHLTR(N)
-      PRODAT(NWORD13+34) = SFCEXC(N)
-      PRODAT(NWORD13+35) = VEGFRC(N)
-      PRODAT(NWORD13+36) = CMC   (N)*1000.
-      PRODAT(NWORD13+37) = SMC   (N,1)
-      PRODAT(NWORD13+38) = SMC   (N,2)
-      PRODAT(NWORD13+39) = SMC   (N,3)
-      PRODAT(NWORD13+40) = SMC   (N,4)
-      PRODAT(NWORD13+41) = STC   (N,1)
-      PRODAT(NWORD13+42) = STC   (N,2)
-      PRODAT(NWORD13+43) = STC   (N,3)
-      PRODAT(NWORD13+44) = STC   (N,4)
-      PRODAT(NWORD13+45) = SM    (N) + SICE(N)
-      PRODAT(NWORD13+46) = CFRACL(N)*100.
-      PRODAT(NWORD13+47) = CFRACM(N)*100.
-      PRODAT(NWORD13+48) = CFRACH(N)*100.
-      PRODAT(NWORD13+49) = SR    (N)*100.
-      PRODAT(NWORD13+50) = NINT(HBOT(N))
+      PRODAT(NWORD15+30) = TH10  (N)
+      PRODAT(NWORD15+31) = Q10   (N)
+      PRODAT(NWORD15+32) = TSHLTR(N)
+      PRODAT(NWORD15+33) = QSHLTR(N)
+      PRODAT(NWORD15+34) = SFCEXC(N)
+      PRODAT(NWORD15+35) = VEGFRC(N)*100.
+      PRODAT(NWORD15+36) = CMC   (N)*1000.
+      PRODAT(NWORD15+37) = SMC   (N,1)
+      PRODAT(NWORD15+38) = SMC   (N,2)
+      PRODAT(NWORD15+39) = SMC   (N,3)
+      PRODAT(NWORD15+40) = SMC   (N,4)
+      PRODAT(NWORD15+41) = STC   (N,1)
+      PRODAT(NWORD15+42) = STC   (N,2)
+      PRODAT(NWORD15+43) = STC   (N,3)
+      PRODAT(NWORD15+44) = STC   (N,4)
+      PRODAT(NWORD15+45) = SM    (N) + SICE(N)
+      PRODAT(NWORD15+46) = CFRACL(N)*100.
+      PRODAT(NWORD15+47) = CFRACM(N)*100.
+      PRODAT(NWORD15+48) = CFRACH(N)*100.
+      PRODAT(NWORD15+49) = SR    (N)*100.
+      PRODAT(NWORD15+50) = NINT(HBOT(N))
+      PRODAT(NWORD15+51) = CPRATE(N)
+      PRODAT(NWORD15+52) = F_RIMEF(N,LMHK)
+
 C
-      PRODAT(NWORD13+9)   = SFCLHX(N)
-      PRODAT(NWORD13+10)  = POTFLX(N)
-      PRODAT(NWORD13+11)  = SFCSHX(N)
-      PRODAT(NWORD13+12)  = SUBSHX(N)
-      PRODAT(NWORD13+13)  = SNOPCX(N)
-      PRODAT(NWORD13+14)  = ASWIN (N)
-      PRODAT(NWORD13+15)  = ASWOUT(N)
-      PRODAT(NWORD13+16)  = ALWIN (N)
-      PRODAT(NWORD13+17)  = ALWOUT(N)
-      PRODAT(NWORD13+18)  =-ALWTOA(N)
-      PRODAT(NWORD13+19)  = ASWTOA(N)
-      PRODAT(NWORD13+20)  = ACSNOW(N)*1000.
-      PRODAT(NWORD13+21)  = SMSTOT(N)*1000.
-!      PRODAT(NWORD13+22)  = SNO   (N)*1000.
-      PRODAT(NWORD13+22)  = SNO   (N)
-      PRODAT(NWORD13+23)  = ACSNOM(N)*1000.
-      PRODAT(NWORD13+24)  = SSROFF(N)*1000.
-      PRODAT(NWORD13+25)  = BGROFF(N)*1000.
-      PRODAT(NWORD13+26)  = SOILTB(N)
+      PRODAT(NWORD15+9)   = SFCLHX(N)
+      PRODAT(NWORD15+10)  = POTFLX(N)
+      PRODAT(NWORD15+11)  = SFCSHX(N)
+      PRODAT(NWORD15+12)  = SUBSHX(N)
+      PRODAT(NWORD15+13)  = SNOPCX(N)
+      PRODAT(NWORD15+14)  = ASWIN (N)
+      PRODAT(NWORD15+15)  = ASWOUT(N)
+      PRODAT(NWORD15+16)  = ALWIN (N)
+      PRODAT(NWORD15+17)  = ALWOUT(N)
+      PRODAT(NWORD15+18)  =-ALWTOA(N)
+      PRODAT(NWORD15+19)  = ASWTOA(N)
+      PRODAT(NWORD15+20)  = ACSNOW(N)
+      PRODAT(NWORD15+21)  = SMSTOT(N)
+      PRODAT(NWORD15+22)  = SNO   (N)
+      PRODAT(NWORD15+23)  = ACSNOM(N)
+      PRODAT(NWORD15+24)  = SSROFF(N)
+      PRODAT(NWORD15+25)  = BGROFF(N)
+      PRODAT(NWORD15+26)  = SOILTB(N)
 C
 C***  ACCUMULATED CHANGE SINCE LAST PROFILE OUTPUT TIME.
 C
-      PSFCEVP  = PRODAT(NWORD13+9 ) - STAEVP(N)
-      PPOTEVP  = PRODAT(NWORD13+10) - STAPOT(N)
-      PSFCSHX  = PRODAT(NWORD13+11) - STASHX(N)
-      PSFCSUB  = PRODAT(NWORD13+12) - STASUB(N)
-      PSNOPCX  = PRODAT(NWORD13+13) - STAPCX(N)
-      PRSWIN   = PRODAT(NWORD13+14) - STASWI(N)
+      PSFCEVP  = PRODAT(NWORD15+9 ) - STAEVP(N)
+      PPOTEVP  = PRODAT(NWORD15+10) - STAPOT(N)
+      PSFCSHX  = PRODAT(NWORD15+11) - STASHX(N)
+      PSFCSUB  = PRODAT(NWORD15+12) - STASUB(N)
+      PSNOPCX  = PRODAT(NWORD15+13) - STAPCX(N)
+      PRSWIN   = PRODAT(NWORD15+14) - STASWI(N)
 	if (N .eq. 90) then
-	write(6,*) 'N, PRODAT(NWORD13+14) , STASWI(N), PRSWIN: ', N,
-     &     PRODAT(NWORD13+14), STASWI(N), PRSWIN
+	write(6,*) 'N, PRODAT(NWORD15+14) , STASWI(N), PRSWIN: ', N,
+     &     PRODAT(NWORD15+14), STASWI(N), PRSWIN
 	endif
-      PRSWOUT  = PRODAT(NWORD13+15) - STASWO(N)
-      PRLWIN   = PRODAT(NWORD13+16) - STALWI(N)
+      PRSWOUT  = PRODAT(NWORD15+15) - STASWO(N)
+      PRLWIN   = PRODAT(NWORD15+16) - STALWI(N)
 	if (N .eq. 90) then
-	write(6,*) 'N, PRODAT(NWORD13+16) , STALWI(N), PRLWIN: ', N,
-     &     PRODAT(NWORD13+16), STALWI(N), PRLWIN
+	write(6,*) 'N, PRODAT(NWORD53+16) , STALWI(N), PRLWIN: ', N,
+     &     PRODAT(NWORD15+16), STALWI(N), PRLWIN
 	endif
-      PRLWOUT  = PRODAT(NWORD13+17) - STALWO(N)
-      PRLWTOA  = PRODAT(NWORD13+18) - STALWT(N)
-      PRSWTOA  = PRODAT(NWORD13+19) - STASWT(N)
-      PACSNOW  = PRODAT(NWORD13+20) - STASNO(N)
-      PACSNOM  = PRODAT(NWORD13+23) - STASNM(N)
-      PSSROFF  = PRODAT(NWORD13+24) - STASRF(N)
-      PBGROFF  = PRODAT(NWORD13+25) - STABRF(N)
-!	write(6,*) 'N, PBGROFF: ', N, PBGROFF
+      PRLWOUT  = PRODAT(NWORD15+17) - STALWO(N)
+      PRLWTOA  = PRODAT(NWORD15+18) - STALWT(N)
+      PRSWTOA  = PRODAT(NWORD15+19) - STASWT(N)
+      PACSNOW  = PRODAT(NWORD15+20) - STASNO(N)
+      PACSNOM  = PRODAT(NWORD15+23) - STASNM(N)
+      PSSROFF  = PRODAT(NWORD15+24) - STASRF(N)
+      PBGROFF  = PRODAT(NWORD15+25) - STABRF(N)
+	write(6,*) 'N, PBGROFF: ', N, PBGROFF
 C***
 C***  TRANSFER STATION PROFILE DATA TO "PACKED" OUTPUT ARRAY.
 C***
       NN   = 0
       NLEN = FPACK(7)
-C	write(6,*) 'NWORD13+41,NWORD13+32 ', NWORD13+41,NWORD13+32
-C	write(6,*) 'SOIL TEMP ', PRODAT(NWORD13+41)
-C        write(6,*) 'SHELT TEMP ', PRODAT(NWORD13+32) 
+        write(6,*) 'SHELT TEMP ', PRODAT(NWORD15+32) 
 C
       DO NL = 10,NLEN
         NN = NL-9
@@ -2515,34 +2616,33 @@ C
         FPACK(9+NWORD8+LL) = -9999.
       ENDDO
 C
-      FPACK(9+NWORD13+7)  = STAPRX
+      FPACK(9+NWORD15+7)  = STAPRX
 !	write(6,*) 'precip written to FPACK element: ', 9+NWORD13+7
-      FPACK(9+NWORD13+8)  = STACRX
-      FPACK(9+NWORD13+9)  = PSFCEVP * RTSPH
-      FPACK(9+NWORD13+10) = PPOTEVP * RTSPH
+      FPACK(9+NWORD15+8)  = STACRX
+      FPACK(9+NWORD15+9)  = PSFCEVP * RTSPH
+      FPACK(9+NWORD15+10) = PPOTEVP * RTSPH
 
 !	if (IDSTN(N) .eq. 725840) then
 !	write(6,*) 'PPOTEVP, RTSPH: ', PPOTEVP, RTSPH
 !	write(6,*) 'packing PPOTEVP*RTSPH= ', FPACK(9+NWORD13+10)
 !	endif
 
-      FPACK(9+NWORD13+11) = PSFCSHX * RTSPH
-!sign problem?      FPACK(9+NWORD13+12) = PSFCSUB * RTSPH
-      FPACK(9+NWORD13+12) =-PSFCSUB * RTSPH
-      FPACK(9+NWORD13+13) = PSNOPCX * RTSPH
-      FPACK(9+NWORD13+14) = PRSWIN  * RTSPH
+      FPACK(9+NWORD15+11) = PSFCSHX * RTSPH
+      FPACK(9+NWORD15+12) =-PSFCSUB * RTSPH
+      FPACK(9+NWORD15+13) = PSNOPCX * RTSPH
+      FPACK(9+NWORD15+14) = PRSWIN  * RTSPH
 !	if (mod(N,NUMSTA/5) .eq. 0) then
 !	write(6,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
 !	endif
-      FPACK(9+NWORD13+15) = PRSWOUT * RTSPH
-      FPACK(9+NWORD13+16) = PRLWIN  * RTSPH
-      FPACK(9+NWORD13+17) = PRLWOUT * RTSPH
-      FPACK(9+NWORD13+18) = PRLWTOA * RTSPH
-      FPACK(9+NWORD13+19) = PRSWTOA * RTSPH
-      FPACK(9+NWORD13+20) = PACSNOW
-      FPACK(9+NWORD13+23) = PACSNOM
-      FPACK(9+NWORD13+24) = PSSROFF
-      FPACK(9+NWORD13+25) = PBGROFF
+      FPACK(9+NWORD15+15) = PRSWOUT * RTSPH
+      FPACK(9+NWORD15+16) = PRLWIN  * RTSPH
+      FPACK(9+NWORD15+17) = PRLWOUT * RTSPH
+      FPACK(9+NWORD15+18) = PRLWTOA * RTSPH
+      FPACK(9+NWORD15+19) = PRSWTOA * RTSPH
+      FPACK(9+NWORD15+20) = PACSNOW
+      FPACK(9+NWORD15+23) = PACSNOM
+      FPACK(9+NWORD15+24) = PSSROFF
+      FPACK(9+NWORD15+25) = PBGROFF
 C
 !      IF(RESTRT)THEN
       IF(ITAG .eq. 0)THEN
@@ -2551,23 +2651,23 @@ C
           FPACK(9+NWORD8+LL) = 0.
         ENDDO
 C
-        FPACK(9+NWORD13+7)  = 0.
-        FPACK(9+NWORD13+8)  = 0.
-        FPACK(9+NWORD13+9)  = 0.
-        FPACK(9+NWORD13+10) = 0.
-        FPACK(9+NWORD13+11) = 0.
-        FPACK(9+NWORD13+12) = 0.
-        FPACK(9+NWORD13+13) = 0.
-        FPACK(9+NWORD13+14) = 0.
-        FPACK(9+NWORD13+15) = 0.
-        FPACK(9+NWORD13+16) = 0.
-        FPACK(9+NWORD13+17) = 0.
-        FPACK(9+NWORD13+18) = 0.
-        FPACK(9+NWORD13+19) = 0.
-        FPACK(9+NWORD13+20) = 0.
-        FPACK(9+NWORD13+23) = 0.
-        FPACK(9+NWORD13+24) = 0.
-        FPACK(9+NWORD13+25) = 0.
+        FPACK(9+NWORD15+7)  = 0.
+        FPACK(9+NWORD15+8)  = 0.
+        FPACK(9+NWORD15+9)  = 0.
+        FPACK(9+NWORD15+10) = 0.
+        FPACK(9+NWORD15+11) = 0.
+        FPACK(9+NWORD15+12) = 0.
+        FPACK(9+NWORD15+13) = 0.
+        FPACK(9+NWORD15+14) = 0.
+        FPACK(9+NWORD15+15) = 0.
+        FPACK(9+NWORD15+16) = 0.
+        FPACK(9+NWORD15+17) = 0.
+        FPACK(9+NWORD15+18) = 0.
+        FPACK(9+NWORD15+19) = 0.
+        FPACK(9+NWORD15+20) = 0.
+        FPACK(9+NWORD15+23) = 0.
+        FPACK(9+NWORD15+24) = 0.
+        FPACK(9+NWORD15+25) = 0.
       ENDIF
 C---------------------------------------------------------------------
 C***
@@ -2576,58 +2676,81 @@ C***
       
 !      NREC=(IFHR/INCR)*NUMSTA+N
       NREC=N
-C      write(6,*) 'NREC,IHRST,IDAT: ', NREC,IHRST,IDAT,IFCST
+      write(6,*) 'NREC,IHRST,IDAT: ', NREC,IHRST,IDAT,IFCST
 
-!        if (mod(NREC,10) .eq. 0) then
-!        write(6,*) 'IDAT, IFCST, ISTAT, CISTAT: ',
-!     &  IDAT, IFCST, ISTAT, CISTAT
-!        endif
+        if (mod(NREC,5) .eq. 0) then
+        write(6,*) 'IDAT, IFCST, ISTAT, CISTAT: ',
+     &  IDAT, IFCST, ISTAT, CISTAT
+        endif
 
       WRITE(LCLAS1,REC=NREC)IHRST,IDAT,IFCST,ISTAT,CISTAT
      1,                    (FPACK(NL),NL=1,NLEN)
-!	write(6,*) 'FPACK(458) written: ', FPACK(458)
+	write(6,*) 'FPACK(458) written: ', FPACK(458)
 
 C---------------------------------------------------------------------
  1000 CONTINUE
+        write(6,*) 'past 1000 continue'
       CLOSE(LCLAS1)
 C
+        write(6,*) 'past file close'
 C***  END OF PROFILE SITE LOOP
 C
 C***  END PROFILE POSTING CODE.
 C---------------------------------------------------------------------
+        write(6,*) 'to deallocate'
         DEALLOCATE( DETA,RDETA,AETA,UL
      &,RES,FIS,THS,HBOT
      &,CFRACL,CFRACM,CFRACH,SNO
-     &,SOILTB,SFCEXC,SMSTAV,SMSTOT
-     &,Z0,CZEN,CZMEAN,U00,SR
+     &,SOILTB,SFCEXC,SMSTAV,SMSTOT)
+        write(6,*) 'past 1st dealloc'
+        DEALLOCATE(Z0,CZEN,CZMEAN,U00,SR
      &,ACPREC,CUPREC,ACSNOW,ACSNOM
      &,SSROFF,BGROFF,SFCSHX,SFCLHX
      &,SUBSHX,SNOPCX,ASWIN,ASWOUT
      &,ASWTOA,ALWIN,ALWOUT,ALWTOA
-     &,TSHLTR,TSHLTR_hold,QSHLTR,PSHLTR
-     &,TH10,Q10,U10,V10
+     &,TSHLTR,TSHLTR_hold,QSHLTR,PSHLTR)
+        write(6,*) 'past 2nd dealloc'
+
+      DEALLOCATE(TH10,Q10,U10,V10
      &,TLMIN,TLMAX
      &,SMC,CMC,STC,SH2O
      &,VEGFRC,POTFLX,PSLP,PDSL1
      &,EGRID2,SM,SICE
-     &,HBM2,FACTR
-     &,PTBL,TTBL,VEGFRA
+     &,HBM2,FACTR)
+        write(6,*) 'past 3rd dealloc'
+      DEALLOCATE(PTBL,TTBL,VEGFRA
      &,T,Q,U,V,Q2
-     &,OMGALF,CWM,TRAIN,TCUCN
-     &,RSWTT,RLWTT,CCR,RTOP
+     &,OMGALF,CWM,TRAIN,TCUCN)
+
+        write(6,*) 'past 4th dealloc'
+      DEALLOCATE(RSWTT,RLWTT,CCR,RTOP
      &,HTM,OMGA
-     &,PRODAT,FPACK
-     &,STATPR,STACPR,STAEVP
+     &,PRODAT,FPACK)
+        write(6,*) 'past 5th dealloc'
+
+ 
+      DEALLOCATE(STATPR,STACPR,STAEVP
      &,STAPOT,STASHX,STASUB,STAPCX
      &,STASWI,STASWO,STALWI,STALWO
      &,STALWT,STASWT,STASNM,STASRF
      &,STABRF,STASNO,DHCNVC,DHRAIN
-     &,STADHC,STADHR
-     &,ACPREC0,CUPREC0,SFCLHX0,POTFLX0
-     &,SFCSHX0,SUBSHX0,SNOPCX0,ASWIN0
-     &,ASWOUT0,ALWIN0,ALWOUT0,ALWTOA0
-     &,ASWTOA0,ACSNOW0,ACSNOM0,SSROFF0
-     &,BGROFF0)
+     &,STADHC,STADHR)
+        write(6,*) 'past 6th dealloc'
+
+       DEALLOCATE(ACPREC0,CUPREC0,SFCLHX0,POTFLX0
+     &,SFCSHX0,SUBSHX0,SNOPCX0,ASWIN0)
+
+        write(6,*) 'past 7th dealloc'
+       DEALLOCATE(ASWOUT0,ALWIN0,ALWOUT0,ALWTOA0)
+        write(6,*) 'past 8th dealloc'
+       DEALLOCATE(ASWTOA0,ACSNOW0,ACSNOM0,SSROFF0)
+        write(6,*) 'past 9th dealloc'
+        write(6,*) 'to dealloc of BGROFF0'
+        write(6,*) 'min/max of BGROFF0: ', minval(BGROFF0),
+     &                                     maxval(BGROFF0)
+        DEALLOCATE(BGROFF0)
+         write(6,*) 'past 10th dealloc'
+        write(6,*) 'past deallocate, to return'
 
       RETURN
       END
