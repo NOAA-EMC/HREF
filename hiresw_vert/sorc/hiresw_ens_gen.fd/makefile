@@ -7,21 +7,19 @@
 #
 
 
-FC=     ncepxlf -O2  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
+FC=     ifort -O2 -g  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
 #FC=     ncepxlf -O3 -qhot -bmaxdata:0x1200000000
-ARCH     = auto
-OPTS     =  -g -qnosave -qarch=$(ARCH) -qmaxmem=-1 -NS2000 # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
+ARCH     =
+OPTS     =  -g  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
 LIST     =
-#FREE     = -qfree
-FREE     =
 TRAPS    =
 PROFILE  =
 DEBUG    = -g
 MEM      =
 MAP      =
-W3LIBDIR = /nwprod/lib
-ESSL     = -lessl
-MASS     = -lmass
+W3LIBDIR = /home/Ratko.Vasic/lib_tmp
+ESSL     = 
+MASS     =
 
 
 SRC=	util.f \
@@ -32,12 +30,12 @@ SRC=	util.f \
 
 OBJ=${SRC:.f=.o}
 
-LIBS= $(ESSL) $(MASS) $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) -L/nwprod/lib -lip_4 -lw3_4 -lbacio_4 -lsp_4 -l  essl -l  mass
+LIBS= $(ESSL) $(MASS) $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) -L$(W3LIBDIR) -lw3-2.1_4 -lbacio_4 -lip_4
 
 ../../exec/hiresw_ens_gen: $(OBJ)
-	$(FC)  -o $(@) sref_ens_gen.f $(OBJ) $(LIBS)
+	$(FC)  -o $(@) $(OBJ) $(LIBS)
 clean:
-	/bin/rm sref_ens_gen *.o
+	/bin/rm hiresw_ens_gen *.o
 clear:
 	/bin/rm  *.o
 #
