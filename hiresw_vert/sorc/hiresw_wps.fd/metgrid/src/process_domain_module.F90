@@ -62,6 +62,7 @@ module process_domain_module
       ! 
       ! Do time-independent processing
       ! 
+!        write(0,*) 'call get_static_fields (write0)'
       call get_static_fields(n, dyn_opt, west_east_dim, south_north_dim, bottom_top_dim, map_proj, &
                     we_dom_s, we_dom_e, sn_dom_s, sn_dom_e, &
                     we_patch_s,      we_patch_e, &
@@ -76,7 +77,7 @@ module process_domain_module
                     dom_dx, dom_dy, landmask, xlat, xlon, xlat_u, xlon_u, xlat_v, xlon_v, corner_lats, &
                     corner_lons, title)
 
-        print*, 'from get_static_fields have cen_lat, cen_lon: ', cen_lat, &
+        write(0,*) 'from get_static_fields have cen_lat, cen_lon: ', cen_lat, &
                                                                   cen_lon
 
       allocate(output_flags(num_entries))
@@ -86,6 +87,7 @@ module process_domain_module
    
       ! This call is to process the constant met fields (SST or SEAICE, for example)
       ! That we process constant fields is indicated by the first argument
+        write(0,*) 'call process_single_met_time with extra_col: ', extra_col
       call process_single_met_time(.true., temp_date, n, extra_row, extra_col, xlat, xlon, &
                           xlat_u, xlon_u, xlat_v, xlon_v, landmask, &
                           title, dyn_opt, &
@@ -99,6 +101,7 @@ module process_domain_module
                           j_parent_start, i_parent_end, j_parent_end, dom_dx, dom_dy, &
                           cen_lat, moad_cen_lat, cen_lon, stand_lon, truelat1, &
                           truelat2, parent_grid_ratio, corner_lats, corner_lons, output_flags)
+        write(0,*) 'return from process_single_met_time'
 
       !
       ! Begin time-dependent processing
@@ -126,6 +129,7 @@ module process_domain_module
             td_output_flags(i) = output_flags(i)
          end do
    
+        write(0,*) 'call process_single_met_time'
          call process_single_met_time(.false., temp_date, n, extra_row, extra_col, xlat, xlon, &
                              xlat_u, xlon_u, xlat_v, xlon_v, landmask, &
                              title, dyn_opt, &
@@ -139,6 +143,7 @@ module process_domain_module
                              j_parent_start, i_parent_end, j_parent_end, dom_dx, dom_dy, &
                              cen_lat, moad_cen_lat, cen_lon, stand_lon, truelat1, &
                              truelat2, parent_grid_ratio, corner_lats, corner_lons, td_output_flags)
+        write(0,*) 'return process_single_met_time'
 
          deallocate(td_output_flags)
    
@@ -310,8 +315,14 @@ module process_domain_module
       !   fields to be read when read_next_field() returns a non-zero status.
       istatus = 0
       do while (istatus == 0)  
+        write(0,*) '----------------------------------------'
+        write(0,*) 'into read_next_field'
+        write(0,*) '   '
         call read_next_field(sp1, ep1, sp2, ep2, sp3, ep3, cname, cunits, cdesc, &
                              memorder, stagger, dimnames, real_array, istatus)
+        write(0,*) 'return read_next_field for ', trim(cname)
+        writE(0,*) 'returned with stagger: ', trim(stagger)
+!        write(0,*) 'ep1, ep2, ep3: ', ep1, ep2, ep3
         if (istatus == 0) then
 
           call mprintf(.true.,LOGFILE, 'Read in static field %s.',s1=cname)
@@ -395,6 +406,9 @@ module process_domain_module
              field%header%array_order = memorder
              field%header%is_wind_grid_rel = .true.
              field%header%array_has_missing_values = .false.
+
+             write(0,*) 'trim(cname), trim(stagger): ', trim(cname), ' ', &
+                         trim(stagger)
              if (gridtype == 'C') then
                 if (trim(stagger) == 'M') then
                    field%map%stagger = M
@@ -446,6 +460,7 @@ module process_domain_module
                    end do
                 end do
              else if (field%map%stagger == U) then
+        write(0,*) 'working a U staggered field'
                 allocate(field%r_arr(we_mem_stag_s:we_mem_stag_e,&
                                      sn_mem_s:sn_mem_e))
                 field%r_arr(we_patch_stag_s:we_patch_stag_e,sn_patch_s:sn_patch_e) = real_array(sp1:ep1,sp2:ep2,k)
@@ -599,7 +614,11 @@ integer, parameter :: BDR_WIDTH = 3
          istatus = 0
 
          ! Initialize the module for reading in the met fields
+        write(0,*) 'call read_met_init'
+
          call read_met_init(trim(input_name), do_const_processing, temp_date, istatus)
+
+        write(0,*) 'istatus from read_met_init: ', istatus
 
          if (istatus == 0) then
    
@@ -607,11 +626,13 @@ integer, parameter :: BDR_WIDTH = 3
             !   will return a non-zero status when there are no more fields to be read.
             do while (istatus == 0) 
       
+!        write(0,*) 'call read_next_met_field'
                call read_next_met_field(version, short_fieldnm, hdate, xfcst, xlvl, units, desc, &
                                    met_map_proj, startlat, startlon, starti, startj, deltalat, &
                                    deltalon, met_dx, met_dy, met_cen_lon, &
                                    met_truelat1, met_truelat2, earth_radius, nx, ny, &
                                    map_src, slab, is_wind_grid_rel, istatus)
+         write(0,*) 'return read_next_met_field'
       
                if (istatus == 0) then
       
@@ -745,6 +766,7 @@ integer, parameter :: BDR_WIDTH = 3
                   ! Interpolate to U staggering
                   if (output_stagger(idx) == U) then
    
+!        write(0,*) 'call storage_query_field for U'
                      call storage_query_field(field, iqstatus)
                      if (iqstatus == 0) then
                         call storage_get_field(field, iqstatus)
@@ -776,6 +798,7 @@ integer, parameter :: BDR_WIDTH = 3
    
                   ! Interpolate to V staggering
                   else if (output_stagger(idx) == V) then
+!        write(0,*) 'call storage_query_field for V'
    
                      call storage_query_field(field, iqstatus)
                      if (iqstatus == 0) then
@@ -844,8 +867,10 @@ integer, parameter :: BDR_WIDTH = 3
                   ! All other fields interpolated to M staggering for C grid, H staggering for E grid
                   else
    
+!        write(0,*) 'call storage_query_field for M/H staggering'
                      call storage_query_field(field, iqstatus)
                      if (iqstatus == 0) then
+!        write(0,*) 'call storage_get_field'
                         call storage_get_field(field, iqstatus)
                         call mprintf((iqstatus /= 0),ERROR,'Queried field %s at level %i and found it,'// &
                                      ' but could not get data.',s1=short_fieldnm,i1=nint(xlvl))
@@ -885,7 +910,9 @@ integer, parameter :: BDR_WIDTH = 3
                   deallocate(halo_slab)
                                
                   ! Store the interpolated field
+!        write(0,*) 'call storage_put_field'
                   call storage_put_field(field)
+!        write(0,*) 'return storage_put_field'
    
                   call pop_source_projection()
    
@@ -894,6 +921,7 @@ integer, parameter :: BDR_WIDTH = 3
       
             call read_met_close()
    
+        write(0,*) 'past read_met_close, call push_source_projection'
             call push_source_projection(met_map_proj, met_cen_lon, met_truelat1, &
                               met_truelat2, met_dx, met_dy, deltalat, deltalon, starti, startj, &
                               startlat, startlon, earth_radius=earth_radius*1000.)
@@ -902,8 +930,10 @@ integer, parameter :: BDR_WIDTH = 3
             ! If necessary, rotate winds to earth-relative for this fg source
             !
       
+        write(0,*) 'call storage_get_levels for U and V'
             call storage_get_levels(u_field, u_levels)
             call storage_get_levels(v_field, v_levels)
+        write(0,*) 'return storage_get_levels for U and V'
       
             if (associated(u_levels) .and. associated(v_levels)) then 
                u_idx = 1
@@ -973,6 +1003,7 @@ integer, parameter :: BDR_WIDTH = 3
       ! Rotate winds from earth-relative to grid-relative
       !
    
+        write(0,*) 'call storage_get_levels for U and V(b)'
       call storage_get_levels(u_field, u_levels)
       call storage_get_levels(v_field, v_levels)
    
@@ -1038,6 +1069,7 @@ integer, parameter :: BDR_WIDTH = 3
       ! All of the processing is now done for this time period for this domain;
       !   now we simply output every field from the storage module.
       !
+        write(0,*) 'to outputting'
     
       title = 'OUTPUT FROM METGRID' 
    
@@ -1050,23 +1082,25 @@ integer, parameter :: BDR_WIDTH = 3
          output_date(17:19) = ':00' 
       end if
 
-      print*, 'where call output_init, have cen_lat: ', cen_lat
-      print*, 'where call output_init, have cen_lon: ', cen_lon
+      write(0,*)  'where call output_init, have cen_lat: ', cen_lat
+      write(0,*) 'where call output_init, have cen_lon: ', cen_lon
       call output_init(n, title, output_date, gridtype, dyn_opt, &
                        corner_lats, corner_lons, &
                        we_domain_s, we_domain_e, sn_domain_s, sn_domain_e, &
                        we_patch_s,  we_patch_e,  sn_patch_s,  sn_patch_e, &
                        we_mem_s,    we_mem_e,    sn_mem_s,    sn_mem_e, &
                        extra_col, extra_row )
+        write(0,*) 'past output_init'
    
       call get_bottom_top_dim(bottom_top_dim)
    
       write(47) cen_lat, cen_lon, truelat1, truelat2, map_proj
-        print*, 'also wrote truelat1, truelat2, map_proj: ',truelat1,truelat2, &
+        write(0,*) 'also wrote truelat1, truelat2, map_proj: ',truelat1,truelat2, &
                 map_proj
 
       ! First write out global attributes
       call mprintf(.true.,LOGFILE,'Writing global attributes to output.')
+        write(0,*) 'call write_global_attrs'
       call write_global_attrs(title, output_date, gridtype, dyn_opt, west_east_dim, &
                               south_north_dim, bottom_top_dim, &
                               we_patch_s, we_patch_e, we_patch_stag_s, we_patch_stag_e, &
@@ -1075,6 +1109,7 @@ integer, parameter :: BDR_WIDTH = 3
                               j_parent_start, i_parent_end, j_parent_end, dom_dx, dom_dy, &
                               cen_lat, moad_cen_lat, cen_lon, stand_lon, truelat1, &
                               truelat2, parent_grid_ratio, corner_lats, corner_lons, output_flags, num_entries)
+        write(0,*) 'return write_global_attrs'
     
       call reset_next_field()
 
@@ -1087,6 +1122,7 @@ integer, parameter :: BDR_WIDTH = 3
          if (istatus == 0) then
 
             call mprintf(.true.,LOGFILE,'Writing field %s to output.',s1=cname)
+!        write(0,*) 'write_field for : ', trim(cname)
             call write_field(sm1, em1, sm2, em2, sm3, em3, &
                              cname, output_date, real_array)
             deallocate(real_array)
@@ -1096,9 +1132,9 @@ integer, parameter :: BDR_WIDTH = 3
       end do
 
       call mprintf(.true.,LOGFILE,'Closing output file.')
+!        write(0,*) 'call output_close'
       call output_close()
 
-      print*, ' would close unit 47 here '
       close(unit=47)
 
       ! Free up memory used by met fields for this valid time
@@ -1645,6 +1681,7 @@ integer, parameter :: BDR_WIDTH = 3
       ! Given headers of all fields, we first build a list of all possible levels
       !    for 3-d met fields (excluding sea-level, though).
       !
+        write(0,*) 'loop I from 1 to : ', size(headers)
       do i=1,size(headers)
          call get_z_dim_name(headers(i)%header%field, z_dim)
    
@@ -1652,6 +1689,13 @@ integer, parameter :: BDR_WIDTH = 3
          if (z_dim(1:18) == 'num_metgrid_levels') then
 
             ! Find out what levels the current field has
+        write(0,*) 'call storage_get_levels (c)'
+        write(0,*) 'i: ', i
+        write(0,*) 'headers(i): ', headers(i)%header%field
+
+        write(0,*) 'size(field_levels) into storage_get_levels: ',&
+                    size(field_levels)
+
             call storage_get_levels(headers(i), field_levels)
             do j=1,size(field_levels)
    
@@ -1721,6 +1765,7 @@ integer, parameter :: BDR_WIDTH = 3
       do i=1,size(headers)
    
          ! Find out what levels the current field has
+        write(0,*) 'call storage_get_levels (d)'
          call storage_get_levels(headers(i), field_levels)
          do j=1,size(field_levels)
    
@@ -1789,6 +1834,7 @@ integer, parameter :: BDR_WIDTH = 3
          !
          do i=1,size(headers)
    
+        write(0,*) 'call storage_get_levels(e)'
             call storage_get_levels(headers(i), field_levels)
    
             ! If this isn't a 3-d array, nothing to do
@@ -2026,6 +2072,7 @@ integer, parameter :: BDR_WIDTH = 3
                   else
                      query_field%header%field = level_template(idx)
                      nullify(all_list)
+        write(0,*) 'call storage_get_levels(f)'
                      call storage_get_levels(query_field, all_list)
                      if (associated(all_list)) then
                         do j=1,size(all_list)
@@ -2046,6 +2093,7 @@ integer, parameter :: BDR_WIDTH = 3
                   else
                      query_field%header%field = level_template(idx)
                      nullify(all_list)
+        write(0,*) 'call storage_get_levels(g)'
                      call storage_get_levels(query_field, all_list)
                      if (associated(all_list)) then
                         do j=1,size(all_list)
@@ -2065,6 +2113,7 @@ integer, parameter :: BDR_WIDTH = 3
                   else
                      query_field%header%field = keys(i)%cvalue  ! Use same levels as source field, not level_template
                      nullify(all_list)
+        write(0,*) 'call storage_get_levels(h)'
                      call storage_get_levels(query_field, all_list)
                      if (associated(all_list)) then
                         do j=1,size(all_list)

@@ -1,0 +1,19 @@
+#! /bin/sh --login
+
+module load netcdf
+
+clean -a
+
+cp configure.wps_le_ungrib configure.wps
+# cp configure.wps_be configure.wps
+
+compile ungrib >& build_ungrib.log
+
+cp ungrib.exe ../../exec/hiresw_ungrib
+
+# clean -a
+# cp configure.wps_le_ configure.wps
+
+compile metgrid >& build_metgrid.log
+
+cp metgrid.exe ../../exec/hiresw_metgrid
