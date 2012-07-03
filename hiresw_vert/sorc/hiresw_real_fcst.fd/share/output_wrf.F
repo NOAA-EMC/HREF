@@ -268,6 +268,7 @@
 
     WRITE( message , * ) "OUTPUT FROM " , TRIM(program_name)
     CALL wrf_put_dom_ti_char ( fid , 'TITLE' , TRIM(message) , ierr )
+        write(0,*) 'placing: ', trim(MESSAGE) , ' into TITLE'
     ! added grib-specific metadata:  Todd Hutchinson 8/21/2005
     IF ( ( use_package( io_form ) == IO_GRIB1 ) .OR. &
          ( use_package( io_form ) == IO_GRIB2 ) ) THEN
@@ -310,6 +311,7 @@
     END IF
 
     ibuf(1) = config_flags%e_we - config_flags%s_we + 1
+        write(0,*) 'placing: ', ibuf(1) ,' into WEST-EAST_GRID_DIMENSION'
     CALL wrf_put_dom_ti_integer ( fid , 'WEST-EAST_GRID_DIMENSION' ,  ibuf , 1 , ierr )
 
     ibuf(1) = config_flags%e_sn - config_flags%s_sn + 1
