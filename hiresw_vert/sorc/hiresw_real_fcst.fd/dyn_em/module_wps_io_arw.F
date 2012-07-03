@@ -2376,6 +2376,7 @@ end subroutine retrieve_field
                                        size(dumdata_u,dim=2),&
                                        size(dumdata_u,dim=3)
        read(47) dumdata_u
+        write(0,*) 'read dumdata_u'
        DO K=1,num_metgrid_levels
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE)
@@ -2386,6 +2387,7 @@ end subroutine retrieve_field
 
 ! binary write of field: TT           
        read(47) dumdata
+        write(0,*) 'read dumdata for TT'
        DO K=1,num_metgrid_levels
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -2409,12 +2411,15 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
-        do J=1,10
-        read(47) ! ignore GWD fields
-        enddo
+!        write(0,*) 'to GWD skips'
+!        do J=1,10
+!        read(47) ! ignore GWD fields
+!        enddo
+!        write(0,*) 'past GWD skips'
 
 ! binary write of field: SLOPECAT        
        read(47) dumdata(:,:,1:1)
+        write(0,*) 'read SLOPECAT'
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%slopecat(I,J)=dumdata(I,J,1)
@@ -2423,6 +2428,7 @@ end subroutine retrieve_field
 
 ! binary write of field: SNOALB         
        read(47) dumdata(:,:,1:1)
+        write(0,*) 'read SNOALB'
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%snoalb(I,J)=dumdata(I,J,1)
@@ -2430,7 +2436,13 @@ end subroutine retrieve_field
         ENDDO
 
 ! binary write of field: GREENFRAC 
+        write(0,*) 'to read of GREENFRAC'
+        write(0,*) 'size(dumdata): ', &
+                   size(dumdata,dim=1), &
+                   size(dumdata,dim=2), &
+                   size(dumdata,dim=3)
        read(47) dumdata(:,:,1:12)
+        write(0,*) 'read GREENFRAC'
        DO K=1,12
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -2450,7 +2462,7 @@ end subroutine retrieve_field
         ENDDO
        ENDDO
 
-        read(47) ! ignore SCB_DOM
+!???        read(47) ! ignore SCB_DOM
 
 ! binary write of field: SOILCBOT  
         write(0,*) 'to SOILCBOT'
@@ -2464,7 +2476,7 @@ end subroutine retrieve_field
        ENDDO
 
 ! SOILCAT
-       read(47) dumdata(:,:,1:1)
+!???       read(47) dumdata(:,:,1:1)
 
 ! binary write of field: SOILCTOP         291         379          16
        read(47) dumdata(:,:,1:16)
@@ -2545,22 +2557,31 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
+        write(0,*) 'COSALPHA'
         read(47) dumdata(:,:,1:1)  ! COSALPHA
 
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%cosa(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,cosa:: ', I,J,grid%cosa(I,J)
+        endif
          ENDDO
         ENDDO
 
+        write(0,*) 'SINALPHA'
         read(47) dumdata(:,:,1:1)  ! SINALPHA
 
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%sina(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,sina:: ', I,J,grid%sina(I,J)
+        endif
          ENDDO
         ENDDO
 
+        write(0,*) 'F'
        read(47) dumdata(:,:,1:1) ! F
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -2568,6 +2589,7 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
+        write(0,*) 'E'
        read(47) dumdata(:,:,1:1) ! E
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -2575,28 +2597,46 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
+        write(0,*) 'MAPFAC_UY'
                        ! MAPFAC_UY
        read(47) dumdata_u(:,:,1:1)
+
+        write(0,*) 'read dumdata_u for MAPFAC_UY'
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE)
+
            grid%msfuy(I,J)=dumdata_u(I,J,1)
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msfuy: ', I,J,grid%msfuy(I,J)
+        endif
          ENDDO
         ENDDO
 
-       read(47) ! MAPFAC_UX
+        write(0,*) 'MAPFAC_UX skip'
+       read(47) dumdata_u(:,:,1:1) ! MAPFAC_UX
 
                ! MAPFAC_U
+        write(0,*) 'MAPFAC_U'
        read(47) dumdata_u(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE)
+
            grid%msfu(I,J)=dumdata_u(I,J,1)
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msfu: ', I,J,grid%msfu(I,J)
+        endif
          ENDDO
         ENDDO
 
+        write(0,*) 'MAPFAC_VY skip'
        read(47) ! MAPFAC_VY
+        write(0,*) 'MAPFAC_VX skip'
        read(47) ! MAPFAC_VX
 
                       ! MAPFAC_V
+        write(0,*) 'MAPFAC_V'
        read(47) dumdata_v(:,:,1:1)
 
         DO J=JTS,min(JTE,JDE)
@@ -2612,23 +2652,38 @@ end subroutine retrieve_field
 
         endif
 
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msfv: ', I,J,grid%msfv(I,J)
+        endif
+
          ENDDO
         ENDDO
 
+        write(0,*) 'MAPFAC_MY'
        read(47) ! MAPFAC_MY
+        write(0,*) 'MAPFAC_MX'
        read(47) ! MAPFAC_MX
 
         ! MAPFAC_M
+        write(0,*) 'MAPFAC_M'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%msft(I,J)=dumdata(I,J,1)
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msft: ', I,J,grid%msft(I,J)
+        endif
+
          ENDDO
         ENDDO
 
+        write(0,*) 'CLONG'
        read(47) ! CLONG
+        write(0,*) 'CLAT'
        read(47) ! CLAT
 
+        write(0,*) 'XLONG_U'
        read(47) dumdata_u(:,:,1:1) ! XLONG_U
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE)
@@ -2636,6 +2691,7 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
+        write(0,*) 'XLAT_U'
        read(47) dumdata_u(:,:,1:1) ! XLAT_U
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE)

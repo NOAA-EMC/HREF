@@ -7,8 +7,8 @@ module load netcdf
 
 TARGDIR=../../exec
 
-# ./clean -a
-# cp configure.wrf_O3 configure.wrf
+./clean -a
+cp configure.wrf_zeus configure.wrf
 
 ./compile nmm_real > compile_nmm.sc.log 2>&1
 

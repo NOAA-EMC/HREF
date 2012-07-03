@@ -8,8 +8,8 @@ module load netcdf
 
 TARGDIR=../../exec
 
-# ./clean -a
-# cp configure.wrf_zeus configure.wrf
+./clean -a
+cp configure.wrf_zeus configure.wrf
 
 ./compile em_real > compile_arw.sc.log 2>&1
 
