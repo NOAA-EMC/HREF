@@ -257,11 +257,8 @@ module output_module
          end if
    
         if (my_proc_id == IO_NODE) then
-        print*, 'open output_fname_bin as unit 47: ', trim(output_fname_bin)
+        write(0,*) 'open output_fname_bin as unit 47: ', trim(output_fname_bin)
         open(unit=47,file=trim(output_fname_bin),form='unformatted')
-        print*, 'cen_lat, cen_lon: ', cen_lat, cen_lon
-!        print*, 'known_lat, known_lon: ', known_lat, known_lon
-!        write(47) cen_lat, cen_lon
         endif
 
          do i=1,NUM_FIELDS
@@ -869,20 +866,22 @@ module output_module
                istatus = 0
 #ifdef IO_BINARY
                if (io_form_output == BINARY) then
+!        write(0,*) 'commented out ext_int_write_field'
                   call ext_int_write_field(handle, datestr, trim(fields(i)%fieldname), &
                        real_dom_array, WRF_REAL, comm_1, comm_2, domain_desc, trim(fields(i)%mem_order), &
                        trim(fields(i)%stagger), fields(i)%dimnames, sd, ed, sm, em, sp, ep, istatus)
 
                if (.not. present(is_training)) then
-        print*, 'not training, writing ' , trim(fields(i)%fieldname), &
-                                               ed(1),ed(2),ed(3)
 
 ! seems like real_dom_arry is full dimension even on multiple PE.
 
         if (my_proc_id == IO_NODE) then
-        print*, 'size(real_dom_array): ', size(real_dom_array,dim=1), &
+        write(0,*) 'not training, writing ' , trim(fields(i)%fieldname), &
+                                               ed(1),ed(2),ed(3)
+        write(0,*) 'size(real_dom_array): ', size(real_dom_array,dim=1), &
                size(real_dom_array,dim=2), size(real_dom_array,dim=3)
          write(47) real_dom_array
+        write(0,*) 'val(50,50,1): ', real_dom_array(50,50,1)
         endif
         endif
                end if

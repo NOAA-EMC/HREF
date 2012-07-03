@@ -40,6 +40,7 @@ module read_met_module
          if (.not. is_used) exit
       end do 
       call mprintf((input_unit > 100),ERROR,'In read_met_init(), couldn''t find an available Fortran unit.')
+!mp      open(unit=input_unit, file=trim(filename), status='old', form='unformatted', iostat=io_status)
       open(unit=input_unit, file=trim(filename), status='old', form='unformatted', iostat=io_status)
 
       if (io_status > 0) istatus = 1
@@ -76,6 +77,7 @@ module read_met_module
   
       !  1) READ FORMAT VERSION
       read(unit=input_unit,err=1001,end=1001) version
+!        print*, 'read version : ', version
   
       ! PREGRID
       if (version == 3) then

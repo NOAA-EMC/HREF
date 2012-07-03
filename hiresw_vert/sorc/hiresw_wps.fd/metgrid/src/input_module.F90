@@ -90,7 +90,7 @@ module input_module
          istatus = 0
 #ifdef IO_BINARY
          if (io_form_input == BINARY) &
-            call ext_int_open_for_read(trim(input_fname), comm_1, comm_2, 'sysdep info', handle, istatus)
+            call ext_int_open_for_read_loc(trim(input_fname), comm_1, comm_2, 'sysdep info', handle, istatus)
 #endif
 #ifdef IO_NETCDF
          if (io_form_input == NETCDF) &
@@ -114,7 +114,7 @@ module input_module
    subroutine read_next_field(start_patch_i, end_patch_i, &
                               start_patch_j, end_patch_j, &
                               start_patch_k, end_patch_k, &
-                              cname, cunits, cdesc, memorder, stagger, &
+                              cname,cunits,cdesc,memorder,stagger, &
                               dimnames, real_array, istatus)
  
       implicit none
@@ -158,6 +158,7 @@ module input_module
    
 #ifdef IO_BINARY
          if (io_form_input == BINARY) call ext_int_get_next_var(handle, cname, istatus) 
+        write(0,*) 'pulled cname: ', trim(cname)
 #endif
 #ifdef IO_NETCDF
          if (io_form_input == NETCDF) call ext_ncd_get_next_var(handle, cname, istatus) 
@@ -176,6 +177,8 @@ module input_module
 #ifdef IO_BINARY
          if (io_form_input == BINARY) &
             call ext_int_get_var_info(handle, cname, ndim, memorder, stagger, domain_start, domain_end, wrftype, istatus)
+        write(0,*) 'domain_end(1:2): ', domain_end(1:2)
+        write(0,*) 'found stagger: ', trim(stagger)
 #endif
 #ifdef IO_NETCDF
          if (io_form_input == NETCDF) &
@@ -207,10 +210,15 @@ module input_module
          allocate(real_domain(start_patch_i:end_patch_i, start_patch_j:end_patch_j, start_patch_k:end_patch_k))
 #ifdef IO_BINARY
          if (io_form_input == BINARY) then
+        write(0,*) 'reading field over I , J range: ', start_patch_i, &
+                            end_patch_i, start_patch_j, end_patch_j
+
             call ext_int_read_field(handle, '0000-00-00_00:00:00', cname, real_domain, WRF_REAL, &
                           1, 1, 0, memorder, stagger, &
                           dimnames, domain_start, domain_end, domain_start, domain_end, &
                           domain_start, domain_end, istatus)
+        write(0,*) 'return from ext_int_read_field with stagger: ',&
+                            trim(stagger)
          end if
 #endif
 #ifdef IO_NETCDF
@@ -233,10 +241,13 @@ module input_module
          call mprintf((istatus /= 0),ERROR,'In read_next_field(), got error code %i.', i1=istatus)
      
          if (io_form_input == BINARY) then
-            qd = q_remove(unit_desc)
-            cunits = qd%units
-            cdesc = qd%description
-            stagger = qd%stagger
+        write(0,*) 'stagger here: ', trim(stagger)
+        write(0,*) 'ignore qd stuff and see what happens'
+!            qd = q_remove(unit_desc)
+!            cunits = qd%units
+!            cdesc = qd%description
+!            stagger = qd%stagger
+!        write(0,*) 'qd%stagger provides: ', trim(stagger)
          else
             cunits = ' '
             cdesc = ' '
@@ -752,5 +763,39 @@ module input_module
       call q_destroy(unit_desc)
  
    end subroutine input_close
+
+SUBROUTINE ext_int_open_for_read_loc(FileName,Comm_compute,Comm_io,SysDepInfo,&
+                               DataHandle , Status )
+  USE module_ext_internal
+  IMPLICIT NONE
+#include "wrf_io_flags.h"
+  CHARACTER*(*) :: FileName
+  INTEGER ,       INTENT(IN)  :: Comm_compute , Comm_io
+  CHARACTER*(*) :: SysDepInfo
+  INTEGER ,       INTENT(OUT) :: DataHandle
+  INTEGER ,       INTENT(OUT) :: Status
+  INTEGER i
+  CHARACTER*256 :: fname
+
+  CALL int_get_fresh_handle(i)
+  DataHandle = i
+  CurrentDateInFile(i) = ""
+  fname = TRIM(FileName)
+
+  CALL int_gen_ofr_header( open_file_descriptors(1,i), hdrbufsize, itypesize, &
+                            fname,SysDepInfo,DataHandle )
+!
+!  OPEN (unit=DataHandle,status="old",file=TRIM(FileName),form='unformatted', &
+!     CONVERT="BIG_ENDIAN",iostat=Status )
+  OPEN (unit=DataHandle,status="old",file=TRIM(FileName),form='unformatted', &
+        iostat=Status )
+
+  okay_for_io(DataHandle) = .true.
+  file_status(DataHandle) = WRF_FILE_OPENED_FOR_READ
+  file_read_only(DataHandle) = .TRUE.
+
+  RETURN
+END SUBROUTINE ext_int_open_for_read_loc
+
  
 end module input_module
