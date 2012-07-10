@@ -1657,6 +1657,8 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
        ENDDO
 
+        if (num_metgrid_levels .ne. 27) then ! not GFS
+
 ! binary write of field: VEGCAT         291         379           1
         write(0,*) 'read for VEGCAT'
        read(47) dumdata(:,:,1:1)
@@ -1685,7 +1687,10 @@ print *,'------------------> skipping ', var_info%name(1:8)
          ENDDO
         ENDDO
 
+        endif
+
 ! binary write of field: SNOW         291         379           1
+        write(0,*) 'read for SNOW '
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1694,6 +1699,7 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
 
 ! binary write of field: SKINTEMP         291         379           1
+        write(0,*) 'read for SKINTEMP'
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
@@ -1791,6 +1797,9 @@ print *,'------------------> skipping ', var_info%name(1:8)
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%psfc(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'grid%psfc(I,J): ', grid%psfc(I,J)
+        endif
          ENDDO
         ENDDO
 
@@ -1887,11 +1896,19 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
        ENDDO
 
+        write(0,*) 'past SOILCBOT'
+
+!        if (num_metgrid_levels .ne. 27) then ! not GFS
+
+!!! very not sure about this item !!!
 ! SOILCAT
-       read(47) dumdata(:,:,1:1)
+        read(47) dumdata(:,:,1:1)
+ 
+!        endif
 
 ! binary write of field: SOILCTOP         291         379          16
        read(47) dumdata(:,:,1:16)
+        write(0,*) 'past SOILCTOP'
        DO K=1,16
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
