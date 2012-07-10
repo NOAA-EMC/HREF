@@ -1,8 +1,8 @@
  15       row variables and mean/spread/prob info
-U10M   33   105  M1   10  
+U10M   33   105  M1   10
 V10M   34   105  M1   10
-U      33   100  M2   850 250 
-V      34   100  M2   850 250 
+U      33   100  M2   850 250
+V      34   100  M2   850 250
 SLP   130   102  M1   0
 HGT     7   100  M1   500
 RH     52   100  M1   850
@@ -19,4 +19,4 @@ WIND   32  105  M1 10 P1 10  > T3 12.89 17.5 25.78
 WIND   32  100  M2 850 250
 
 NOTE: M/S*1.94 -> KNOT
-      INCH = 25.4 MM = 25.4 KG/M2 
+      INCH = 25.4 MM = 25.4 KG/M2
