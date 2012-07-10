@@ -2205,6 +2205,9 @@ end subroutine retrieve_field
         ENDDO
        ENDDO
 
+
+        if (num_metgrid_levels .ne. 27) then  ! not GFS
+
 ! binary write of field: VEGCAT    
         write(0,*) 'read for VEGCAT'
        read(47) dumdata(:,:,1:1)
@@ -2232,6 +2235,8 @@ end subroutine retrieve_field
            grid%canwat(I,J)=dumdata(I,J,1)
          ENDDO
         ENDDO
+
+        endif
 
 ! binary write of field: SNOW   
        read(47) dumdata(:,:,1:1)
