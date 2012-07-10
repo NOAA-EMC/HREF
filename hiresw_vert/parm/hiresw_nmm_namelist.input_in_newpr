@@ -17,19 +17,18 @@
  end_minute                          = 00,
  end_second                          = 00,
  interval_seconds                    = 10800,
- history_interval                    = 60
+ input_from_file                     = .true.,
+ history_interval                    = 60,
  frames_per_outfile                  = 1,
  restart                             = .false.,
  restart_interval                    = 7200,
- reset_simulation_start              = F,
- io_form_input                       = 1
- io_form_history                     = 1
- io_form_restart                     = 1
- io_form_boundary                    = 1
- io_form_auxinput1                   = 1
- debug_level                         = 0
+ io_form_history                     = 1,
+ io_form_restart                     = 1,
+ io_form_input                       = 1,
+ io_form_boundary                    = 1,
+ io_form_auxinput1                   = 1,
+ debug_level                         = 100,
  /
-#  auxinput1_inname                    = "met_nmm.d<domain>.<date>"
 
  &fdda
 /
@@ -125,6 +124,6 @@
 /
 
  &namelist_quilt
- nio_tasks_per_group = 1,
+ nio_tasks_per_group = 6,
  nio_groups = 1,
  /

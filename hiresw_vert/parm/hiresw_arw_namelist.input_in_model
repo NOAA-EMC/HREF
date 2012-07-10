@@ -27,7 +27,6 @@
  io_form_auxinput1                   = 1
  io_form_boundary                    = 1
  debug_level                         = 0
- auxinput1_inname                    = "met_em.d<domain>.<date>"
  /
 
  &dfi_control
