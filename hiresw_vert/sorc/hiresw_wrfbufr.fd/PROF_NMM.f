@@ -152,7 +152,7 @@ C	new stuff
       character(len=256) :: newname
       integer :: Status
       character(len=19):: startdate,datestr,datestrold
-      character SysDepInfo*80
+      character SysDepInfo*80, titlestring*80
 
 	real:: rinc(5)
 	integer:: IDATE(8),JDATE(8),IDATENEW(8)
@@ -198,6 +198,7 @@ C
        if ( frst ) then
          PRINT_DIAG=.true.
          frst = .false.
+          status=0
          CALL ext_int_ioinit(SysDepInfo,Status)
           print*,'CALLed ioinit', Status
 	  write(6,*) 'filename early in PROF= ', trim(filename)
@@ -212,11 +213,18 @@ C
          print*,'error opening ',fileName, ' Status = ', Status ; stop
        endif
 
+        write(0,*) 'call ext_int_get_dom_ti_char for title'
+        call ext_int_get_dom_ti_char(DataHandle,'TITLE',
+     &        titlestring,status)
+        write(0,*) 'TITLE= ',trim(titlestring)
+        write(6,*) 'TITLE= ',trim(titlestring)
+        write(0,*) 'status from TITLE get: ', status
+
 C Getting start time
 
-      CALL ext_int_get_dom_ti_char(DataHandle
-     1 ,'START_DATE',startdate, status )
-        print*,'startdate= ',startdate
+!      CALL ext_int_get_dom_ti_char(DataHandle
+!     1 ,'START_DATE',startdate, status )
+!        print*,'startdate from read= ',startdate
 
 !      startdate='2012-06-15-00'
 
@@ -272,10 +280,13 @@ C
 C
 
 
+
+
         call ext_int_get_dom_ti_integer(DataHandle,
      &   'WEST-EAST_GRID_DIMENSION',itmp
      + ,1,ioutcount,istatus)
 
+        write(6,*) 'istatus for west-east dimension: ', istatus
         write(6,*) 'west-east dimension: ', itmp
         IM=itmp-1
 
@@ -311,6 +322,8 @@ C
 
         call ext_int_get_dom_ti_real(DataHandle,'DX',tmp
      + ,1,ioutcount,istatus)
+        write(6,*) 'istatus from DX get: ', istatus
+        write(6,*) 'tmp: ', tmp
         dxval=nint(tmp*1000.) ! E-grid dlamda in degree
         write(6,*) 'dxval= ', dxval
 

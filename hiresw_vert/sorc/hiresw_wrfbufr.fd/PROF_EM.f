@@ -1,5 +1,3 @@
-C      SUBROUTINE PROF(NHB,LRSTRT,ITAG,LCLAS1)
-C      SUBROUTINE PROF(ITAG,LCLAS1)
       SUBROUTINE PROF_EM(filename,prefilename,startdate,
      +                   ITAG,INCR) 
 C
@@ -152,7 +150,7 @@ C------------------------------------------------------------------------
                              I N T E G E R
      & IDSTN(NSTAT),IHINDX(NSTAT),JHINDX(NSTAT)
      &,             IVINDX(NSTAT),JVINDX(NSTAT),IDAT(3)
-	INTEGER:: GDS(200)
+	INTEGER:: GDS(200), ITAG, IHR
 C------------------------------------------------------------------------
                              L O G I C A L
      & RUN,RESTRT,FRST, PRINT_DIAG
@@ -165,8 +163,8 @@ C------------------------------------------------------------------------
 
 C	new stuff
       character(len=31) :: VarName,varin
-	character(len=256) :: fileName
-	character(len=256) :: prefileName       !new added by Jun Du
+	character(len=256) :: filename
+	character(len=256) :: prefilename       !new added by Jun Du
       integer :: Status, DataHandle, hor_size, hor_size_u, hor_size_v
       character(len=19):: startdate,datestr,datestrold
 
@@ -193,9 +191,16 @@ C***
 C***  READ IN THE INFORMATION FILE ABOUT THE SOUNDINGS
 C***
 
-        write(6,*) 'filename= ', trim(filename)
-        write(6,*) 'startedate= ', startdate
-        write(6,*) 'itag, incr: ', itag, incr
+!        write(6,*) 'filename= ', trim(filename)
+!        write(6,*) 'startedate= ', startdate
+!        write(6,*) 'itag, incr: ', itag, incr
+
+        print*, 'at start: '
+        print*, 'filename: ', filename
+        print*, 'prefilename: ', prefilename
+        write(0,*) 'prefilename: ', prefilename
+        print*, 'startdate: ', startdate
+        print*, 'itag, incr: ', itag, incr
 
 	datestr=startdate
 
@@ -232,6 +237,8 @@ C
       write(*,*) 'ITAG=', ITAG
 
       FRST=.TRUE.
+
+!good        goto 979
 
 !--------------------------------------------------------------------
 !--------------------------------------------------------------------
@@ -444,6 +451,7 @@ c20080701        print*,'MP_PHYSICS= ',imp_physics
 
         imp_physics=3
 
+!goodhere        goto 979
 
 
         call ext_int_get_dom_ti_real(DataHandle,'CEN_LAT',tmp
@@ -501,6 +509,7 @@ c
      +  1,1,1,LM+1,1,1,1,LM)
 
         write(6,*) 'returned from ZNU'
+!good        goto 979
 
        varname='ZNW'
         write(6,*) 'call getVariableB for : ', VarName
@@ -545,6 +554,7 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
      +  1,1,1,LM+1,1,1,1,8)
 
+!good       goto 979
 
       VarName='V'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D_V,      &
@@ -571,7 +581,7 @@ c
 
       VarName='W'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D2,       &
-     +  IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
+     +  IM,1,JM,LM+1,IM,JS,JE,LM+1)
           DO L = 1,LM+1
            DO N=1,NUMSTA
             I=IVINDX(N)
@@ -605,6 +615,9 @@ c
       VarName='PHB'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D3,       &
      +  IM,1,JM,LM+1,IM,JS,JE,LM+1)
+
+!bad       goto 979
+
 
         allocate(ZINT(NUMSTA,LM+1))
 
@@ -717,6 +730,7 @@ c
 
   633   format(15(f6.0,1x))
 
+!bad        goto 979
         if (allocated(pint_part)) deallocate(pint_part)
         allocate(pint_part(NUMSTA))
 
@@ -2165,7 +2179,7 @@ c
 
       VarName='W'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D2,       &
-     +  IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
+     +  IM,1,JM,LM+1,IM,JS,JE,LM+1)
 
       VarName='W_SUBS'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
@@ -3566,7 +3580,7 @@ C
 C***  END PROFILE POSTING CODE.
 
         print*, 'filename: ', filename
-        print*, 'prefilename: ', prefliename
+        print*, 'prefilename: ', prefilename
         print*, 'startdate: ', startdate
         print*, 'itag, incr: ', itag, incr
 C

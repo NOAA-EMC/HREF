@@ -65,11 +65,8 @@ C
       character(len=256) :: fileName
       character(len=256) :: prefileName
       character(len=19) :: DateStr
-      integer :: DataHandle
+      integer :: DataHandle, IHR, INCR
 !      integer, parameter:: INCR=3
-
-      print*,'ME,NUM_PROCS,NUM_SERVERS=',ME,NUM_PROCS,NUM_SERVERS
-
 
 C
 C**************************************************************************
@@ -158,6 +155,12 @@ c20080707	filename=filename(1:len-19)//DateStr
         CALL PROF_NMM(fileName,prefileName,DateStr,IHR,INCR)
 	elseif (model(1:4) .eq. 'NCAR') then
         write(0,*) 'call PROF_EM'
+        write(0,*) 'with filename: ', trim(filename)
+        write(0,*) 'with prefilename: ', trim(prefilename)
+        write(0,*) 'with datestr: ', datestr
+        write(0,*) 'with IHR: ', IHR
+        write(0,*) 'with INCR: ', INCR
+!                      c*256,  c*256,       c*19,  I?  , I?
 	CALL PROF_EM(fileName,prefileName,DateStr,IHR,INCR)
         write(0,*) 'return PROF_EM'
 	endif
