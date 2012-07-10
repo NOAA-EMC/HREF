@@ -2,7 +2,7 @@ set -x
 
 TARGDIR=../../exec/
 
-LIBDEF="-L/home/Ratko.Vasic/lib_tmp -lw3-1.9_4 -lbacio_4"
+LIBDEF="-L/home/Ratko.Vasic/lib_tmp -lw3-2.1_4 -lbacio_4"
 
 
 echo $LIBDEF

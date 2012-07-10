@@ -12,8 +12,8 @@
 	character(len=2), dimension(2):: hrs
 
 	character(len=255):: file1,file2,file3,file4,file5,testout
-	character(len=100):: dirname
-	character(len=100):: filename
+	character(len=150):: dirname
+	character(len=150):: filename
 	character(len=10):: cycname
 	character(len=1):: reflag
 
