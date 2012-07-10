@@ -16,12 +16,12 @@ OBJS=	BFRHDR.o BFRIZE.o CALHEL.o CALWXT.o SMIX.o SNDPST_EM.o VAP.o \
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-FC =		ncepxlf
+FC =		ifort
 LDFLAGS = 
 CMD = ../../exec/hiresw_sndp_arw
-LIBS =            -L/nwprod/lib -lbufr_4_64
+LIBS =            -L/home/Ratko.Vasic/lib_tmp -lbufr_4_64
 
-FFLAGS = -O   -qrealsize=4 -qmaxmem=-1  -qspillsize=548  
+FFLAGS = -O   
 
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.
