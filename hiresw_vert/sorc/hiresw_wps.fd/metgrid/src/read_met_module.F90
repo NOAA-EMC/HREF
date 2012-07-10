@@ -139,7 +139,7 @@ module read_met_module
     
       ! GRIB_PREP
       else if (version == 4) then
-  
+
          read(unit=input_unit) hdate, xfcst, map_source, field, units, desc, xlvl, nx, ny, iproj
   
          if (field == 'HGT      ') field = 'GHT      '
@@ -148,6 +148,8 @@ module read_met_module
          if (iproj == 0) then
             iproj = PROJ_LATLON
             read(unit=input_unit,err=1001,end=1001) startloc, startlat, startlon, deltalat, deltalon
+        dx=0.
+        dy=0.
 
          ! Mercator
          else if (iproj == 1) then
@@ -179,11 +181,14 @@ module read_met_module
             startj = 1.0
          end if
 
+
          earth_radius = EARTH_RADIUS_M / 1000.
 
 #if (defined _GEOGRID) || (defined _METGRID)
+        write(0,*) 'dx, dy were: ', dx, dy
          dx = dx * 1000.
          dy = dy * 1000.
+        write(0,*) 'dx, dy now are: ', dx, dy
 
          if (xlonc > 180.) xlonc = xlonc - 360.
          if (startlon > 180.) startlon = startlon - 360.
