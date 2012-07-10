@@ -866,10 +866,10 @@ module output_module
                istatus = 0
 #ifdef IO_BINARY
                if (io_form_output == BINARY) then
-!        write(0,*) 'commented out ext_int_write_field'
-                  call ext_int_write_field(handle, datestr, trim(fields(i)%fieldname), &
-                       real_dom_array, WRF_REAL, comm_1, comm_2, domain_desc, trim(fields(i)%mem_order), &
-                       trim(fields(i)%stagger), fields(i)%dimnames, sd, ed, sm, em, sp, ep, istatus)
+        write(0,*) 'commented out ext_int_write_field'
+!                  call ext_int_write_field(handle, datestr, trim(fields(i)%fieldname), &
+!                       real_dom_array, WRF_REAL, comm_1, comm_2, domain_desc, trim(fields(i)%mem_order), &
+!                       trim(fields(i)%stagger), fields(i)%dimnames, sd, ed, sm, em, sp, ep, istatus)
 
                if (.not. present(is_training)) then
 
