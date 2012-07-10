@@ -194,7 +194,8 @@ C----------------------------------------------------------------------
 
 !      NREC=(JHR-1)*NSTAT + NST
 
-      READ(LUNIT,REC=NREC,END=999) IHRST,IDATE,IFCST,ISTAT,CISTAT,  
+!      READ(LUNIT,REC=NREC,END=999) IHRST,IDATE,IFCST,ISTAT,CISTAT,  
+      READ(LUNIT,REC=NREC,ERR=999) IHRST,IDATE,IFCST,ISTAT,CISTAT,  
      &   (FPACK(N),N=1,9),(FPACK(N),N=10,FPACK(7))
 
        IF (IFCST.GT.IFCSTL) THEN
