@@ -1898,13 +1898,10 @@ print *,'------------------> skipping ', var_info%name(1:8)
 
         write(0,*) 'past SOILCBOT'
 
-!        if (num_metgrid_levels .ne. 27) then ! not GFS
-
-!!! very not sure about this item !!!
-! SOILCAT
+! SOILCAT - now should be in all NMM static files
+        write(0,*) 'reading SOILCAT'
         read(47) dumdata(:,:,1:1)
  
-!        endif
 
 ! binary write of field: SOILCTOP         291         379          16
        read(47) dumdata(:,:,1:16)
