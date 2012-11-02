@@ -27,7 +27,7 @@
  io_form_input                       = 1,
  io_form_boundary                    = 1,
  io_form_auxinput1                   = 1,
- debug_level                         = 100,
+ debug_level                         = 0,
  /
 
  &fdda
@@ -124,6 +124,6 @@
 /
 
  &namelist_quilt
- nio_tasks_per_group = 6,
+ nio_tasks_per_group = 1,
  nio_groups = 1,
  /

@@ -84,8 +84,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x = 13
- nproc_y = 22
+ nproc_x = 7
+ nproc_y = 15 
  /
 
  &physics
@@ -144,6 +144,6 @@
  /
 
  &namelist_quilt
- nio_tasks_per_group = 11,
+ nio_tasks_per_group = 3,
  nio_groups = 1,
  /
