@@ -16,10 +16,11 @@ OBJS=	BFRHDR.o BFRIZE.o CALHEL.o CALWXT.o SMIX.o SNDPST_EM.o VAP.o \
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-FC =		ifort
+FC =		ifort -convert big_endian
 LDFLAGS = 
 CMD = ../../exec/hiresw_sndp_arw
-LIBS =            -L/home/Ratko.Vasic/lib_tmp -lbufr_4_64
+# LIBS =            -L/u/Ratko.Vasic/lib_tmp -lbufr_4_64
+LIBS = -L/nwprod/lib -lbufr_v10.2.0_4_64
 
 FFLAGS = -O   
 
