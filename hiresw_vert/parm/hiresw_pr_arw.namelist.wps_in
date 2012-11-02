@@ -42,5 +42,4 @@
  opt_ignore_dom_center        = .false.
  opt_output_from_metgrid_path = './',
  opt_metgrid_tbl_path         = './',
- constants_name = './TAVGSFC'
 /
