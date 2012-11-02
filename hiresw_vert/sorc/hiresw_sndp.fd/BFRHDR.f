@@ -138,7 +138,8 @@ C
 C*	Handle profile sequence.
 C
 	IF ( prfflg .and. found ) THEN
-	    sbuf = cseqn ( 1:lc ) // '^ ' // clist ( 1:lenc )
+C	    sbuf = cseqn ( 1:lc ) // '^ ' // clist ( 1:lenc )
+	    sbuf = clist ( 1:lenc )
 	    clist = sbuf
 	END IF
 C
