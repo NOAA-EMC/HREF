@@ -320,7 +320,7 @@ paramEOF
 
 ln -sf $PARMhiresw/hiresw_product_variable.tbl.${freq} variable.tbl
 
-ln -sf input fort.621
+export FORT11="input"
 
 $EXEChiresw/hiresw_ens_gen 1>output.f${HR} 2>errfile.f${HR}
 

@@ -16,6 +16,7 @@
 # 2007-04-30  Matthew Pyle - Adopted for HiresW use
 # 2008-05-06  Chris Magee - Add prdgendone file for gempak step to key on.
 # 2009-09-24  Shawna Cokley - Eliminates copy of date file to working directory
+# 2012-12-13  Matthew Pyle - Small changes for WCOSS machine
 #
 
 set -x
@@ -98,7 +99,7 @@ do
 if [ $icnt -ge 200 ]
 then
     msg="ABORTING after 30 minutes of waiting for HIRESW POST JOB F${fhr} to end."
-    err_exit $msg
+    ./err_exit $msg
 fi
 done
 
@@ -118,15 +119,8 @@ export MP_CMDFILE=$DATA/poescript
 # Execute the script.
 mpirun.lsf
 
-export err=$?; err_chk
+export err=$?; ./err_chk
 
-# if [ $NEST = "east" ]
-# then
-# $USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER &
-# $USHhiresw/hiresw_prdgen_4km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER
-#  else
-# $USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER
-# fi
 
 echo "done executing prdgen" > $DATA/prdgendone${fhr}
 postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"
@@ -141,5 +135,3 @@ fi
 wdate=`$NDATE ${fhr} $CYCLE`
 
 done
-
-

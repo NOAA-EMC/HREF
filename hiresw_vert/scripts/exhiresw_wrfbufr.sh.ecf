@@ -160,7 +160,12 @@ EOF
 echo made itag file
  
 export pgm=hiresw_wrfbufr
-# . prep_step
+
+
+if [ -e prep_step ]
+then
+. ./prep_step
+fi
 
 echo past prep_step
 
@@ -169,11 +174,11 @@ echo past prep_step
 
 echo linking files
 
-ln -sf $DATA/bufrpost/hiresw_profdat fort.19
-ln -sf $DATA/bufrpost/profilm.c1.${tmmark} fort.79
-ln -sf itag                                fort.666
+export FORT19="$DATA/bufrpost/hiresw_profdat"
+export FORT79="$DATA/bufrpost/profilm.c1.${tmmark}"
+export FORT11="itag"
 
-startmsg
+./startmsg
 
 datestr=`date`
 echo about to run program at $datestr
@@ -189,7 +194,11 @@ datestr=`date`
 echo done run program at $datestr
 
 echo return execution
-# export err=$?;err_chk
+
+if [ -e err_chk ]
+then
+export err=$?;./err_chk
+fi
 
 mv $DATA/bufrpost/profilm.c1.${tmmark} $DATA/profilm.c1.${tmmark}.f${fhr}
 echo done > $DATA/sndpostdone${fhr}.${tmmark}
@@ -218,7 +227,11 @@ cd $DATA
 ########################################################
 
 export pgm=hiresw_sndp_${RUN}
-# . prep_step
+
+if [ -e prep_step ]
+then
+. ./prep_step
+fi
 
 
 cp $PARMhiresw/hiresw_sndp.parm.mono $DATA/hiresw_sndp.parm.mono
@@ -229,16 +242,18 @@ cp $PARMhiresw/hiresw_bufr.tbl $DATA/hiresw_bufr.tbl
 # export XLFUNIT_66=$DATA/profilm.c1.${tmmark}
 # export XLFUNIT_78=$DATA/class1.bufr
 
-ln -sf $DATA/hiresw_sndp.parm.mono      fort.11
-ln -sf $DATA/hiresw_bufr.tbl           fort.32
-ln -sf $DATA/profilm.c1.${tmmark}      fort.66
-ln -sf $DATA/class1.bufr    fort.78
+export FORT11="$DATA/hiresw_sndp.parm.mono"
+export FORT32="$DATA/hiresw_bufr.tbl"
+export FORT66="$DATA/profilm.c1.${tmmark}"
+export FORT78="$DATA/class1.bufr"
 
-
-# startmsg
-echo run sndp
+./startmsg
 $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
-# export err=$?;err_chk
+
+if [ -e err_chk ]
+then
+export err=$?;./err_chk
+fi
 
 ############### put into gempak (eliminate when RFC)
 ############### end put into gempak (eliminate when RFC)
