@@ -76,7 +76,7 @@ C hybrid ensemble fcsts
 c Passing over date information
        namelist/namin/iyr,imon,idy,ihr,id_grid,itime
 
-       read(611,namin,end=1000)
+       read(11,namin,end=1000)
        imin=0
 1000   continue
        print*, iyr,imon,idy,ihr,imin,id_grid
