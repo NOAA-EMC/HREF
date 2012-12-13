@@ -86,14 +86,15 @@ C
 C
 	INTEGER       iigemc ( 4 )
 C
-	EQUIVALENCE ( chnull, c8null (8:8) ), ( chtab , c8tab  (8:8) ),
-     +              ( chspac, c8spac (8:8) ), ( chtlda, c8tlda (8:8) ) 
+	DATA iigemc / X'00',    X'09',    X'20',    X'7E' /
+C                     Null      Tab       Space     Tilda
+C
+	EQUIVALENCE ( chnull, c8null (1:1) ), ( chtab , c8tab  (1:1) ),
+     +              ( chspac, c8spac (1:1) ), ( chtlda, c8tlda (1:1) ) 
 C
 	EQUIVALENCE ( iigemc ( 1), c8null ), ( iigemc ( 2), c8tab  ),
      +              ( iigemc ( 3), c8spac ), ( iigemc ( 4), c8tlda )
 C
-	DATA iigemc / X'00',    X'09',    X'20',    X'7E' /
-C                     Null      Tab       Space     Tilda
 C!
 C*
 	CHARACTER*(*)	string, outstr
@@ -202,8 +203,8 @@ C
 C
 	INTEGER       iigemc ( 4 )
 C
-	EQUIVALENCE ( chnull, c8null (8:8) ), ( chtab , c8tab  (8:8) ),
-     +              ( chspac, c8spac (8:8) ), ( chtlda, c8tlda (8:8) ) 
+	EQUIVALENCE ( chnull, c8null (1:1) ), ( chtab , c8tab  (1:1) ),
+     +              ( chspac, c8spac (1:1) ), ( chtlda, c8tlda (1:1) ) 
 C
 	EQUIVALENCE ( iigemc ( 1), c8null ), ( iigemc ( 2), c8tab  ),
      +              ( iigemc ( 3), c8spac ), ( iigemc ( 4), c8tlda )
@@ -457,8 +458,8 @@ C
 C
 	INTEGER       iigemc ( 4 )
 C
-	EQUIVALENCE ( chnull, c8null (8:8) ), ( chtab , c8tab  (8:8) ),
-     +              ( chspac, c8spac (8:8) ), ( chtlda, c8tlda (8:8) ) 
+	EQUIVALENCE ( chnull, c8null (1:1) ), ( chtab , c8tab  (1:1) ),
+     +              ( chspac, c8spac (1:1) ), ( chtlda, c8tlda (1:1) ) 
 C
 	EQUIVALENCE ( iigemc ( 1), c8null ), ( iigemc ( 2), c8tab  ),
      +              ( iigemc ( 3), c8spac ), ( iigemc ( 4), c8tlda )
@@ -586,8 +587,8 @@ C
 C
 	INTEGER       iigemc ( 4 )
 C
-	EQUIVALENCE ( chnull, c8null (8:8) ), ( chtab , c8tab  (8:8) ),
-     +              ( chspac, c8spac (8:8) ), ( chtlda, c8tlda (8:8) ) 
+	EQUIVALENCE ( chnull, c8null (1:1) ), ( chtab , c8tab  (1:1) ),
+     +              ( chspac, c8spac (1:1) ), ( chtlda, c8tlda (1:1) ) 
 C
 	EQUIVALENCE ( iigemc ( 1), c8null ), ( iigemc ( 2), c8tab  ),
      +              ( iigemc ( 3), c8spac ), ( iigemc ( 4), c8tlda )
@@ -708,8 +709,8 @@ C
 C
 	INTEGER       iigemc ( 4 )
 C
-	EQUIVALENCE ( chnull, c8null (8:8) ), ( chtab , c8tab  (8:8) ),
-     +              ( chspac, c8spac (8:8) ), ( chtlda, c8tlda (8:8) ) 
+	EQUIVALENCE ( chnull, c8null (1:1) ), ( chtab , c8tab  (1:1) ),
+     +              ( chspac, c8spac (1:1) ), ( chtlda, c8tlda (1:1) ) 
 C
 	EQUIVALENCE ( iigemc ( 1), c8null ), ( iigemc ( 2), c8tab  ),
      +              ( iigemc ( 3), c8spac ), ( iigemc ( 4), c8tlda )
