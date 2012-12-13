@@ -125,7 +125,7 @@ fi
 
 if [ $err1 -ne 0 ] 
 then
-  err_exit "$whr input GRIB file from Nam not found.  FATAL ERROR"
+  ./err_exit "$whr input GRIB file from Nam not found.  FATAL ERROR"
 fi
 
 whr=`expr $whr + $incr`
@@ -334,28 +334,25 @@ cp $FIXhiresw/hiresw_tr49t85 tr49t85
 cp $FIXhiresw/hiresw_tr67t85 tr67t85
 
 export pgm=hiresw_${MODEL}_real
-# . prep_step
+. ./prep_step
 
 if [ $MODEL = nmm ] ; then
-#   export XLFUNIT_14=co2.35_hybrid_50mbtop
-ln -sf co2.35_hybrid_50mbtop fort.14
+export FORT14="co2.35_hybrid_50mbtop"
 fi
 
-# startmsg
+./startmsg
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
-# $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
-
 export err=$?
 
 if [ $err -ne 0 ]; then
    echo EXIT FROM REAL with err $err
    mv $DATA $COMOUT/.
-   err_chk
+   ./err_chk
 fi
 
 # Copy 3 files needed to run WRF forecast to COM
@@ -366,7 +363,7 @@ cp namelist.input_model $COMOUT/${NEST}${MODEL}.t${cyc}z.namelist.input
 
 if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
    mv $DATA $COMOUT/.
-   err_exit "WRF initial or boundary condition files missing"
+   ./err_exit "WRF initial or boundary condition files missing"
 fi
  
 # Cat REAL log files and send to COM

@@ -10,6 +10,7 @@
 #
 # Change log:
 # 02/20/2010: Jun Du, initial scripts
+#       2012: Jun Du, modifications for SREF v6 membership
 # 
 ##########################################################
 set -x
@@ -220,8 +221,7 @@ paramEOF
 echo RUN hiresw_hybridensemble
 # $EXEChiresw/hiresw_hybridensemble <input >error.out
 
-rm fort.611
-ln -sf input fort.611
+export FORT11="input"
 
 $EXEChiresw/hiresw_hybridensemble > error.out_$newHR 2>&1
 
@@ -293,21 +293,19 @@ do
  do
 
 echo "$CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2" >> poescript
+$CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2
 
-# $CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2
 
 $WGRIB ${COMOUT}/${model}.t${hh1}z.${member}.f$HR | grep "APCP" | $WGRIB -i -grib ${COMOUT}/${model}.t${hh1}z.${member}.f$HR -o ${COMOUT}/${model}.t${hh1}z.${member}.f${HR}_pcp
 
  done # member
 done # model
 
-# poe
-mpirun.lsf  ## instead of poe????
+# mpirun.lsf  ## instead of poe????
 
 
-# cat poescript
-cp poescript poescript_second_members
-rm poescript
+# cp poescript poescript_second_members
+# rm poescript
 
 fi
 

@@ -42,8 +42,8 @@ err3=$?
 
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
 then
-msg="MODEL is missing a key input file such as wrfinput_d01, wrfbdy_d01, or namelist.input"
-err_exit $msg
+msg="FATAL ERROR: MODEL is missing a key input file such as wrfinput_d01, wrfbdy_d01, or namelist.input"
+./err_exit $msg
 fi
 
 cp $PARMhiresw/hiresw_LANDUSE.TBL LANDUSE.TBL
@@ -63,18 +63,17 @@ cp $PARMhiresw/hiresw_micro_lookup.dat micro_lookup.dat
 rm fort.*
 
 export pgm=hiresw_${MODEL}_fcst
-# . prep_step
+. ./prep_step
 
 if [ $MODEL = nmm ] ; then
-#   export XLFUNIT_14=co2.35_hybrid_50mbtop
-ln -sf co2.35_hybrid_50mbtop fort.14
+export FORT14="co2.35_hybrid_50mbtop"
 fi
 
-# startmsg
+./startmsg
 
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst
 
-export err=$?;err_chk
+export err=$?;./err_chk
 
 cat $DATA/TASKOUTPUT/0000/rsl.error.0000 $DATA/TASKOUTPUT/0000/rsl.out.0000 > $COMOUT/${NEST}${MODEL}.t${cyc}z.fcst.log
 cat $DATA/TASKOUTPUT/0000/rsl.error.0000 $DATA/TASKOUTPUT/0000/rsl.out.0000 >>$pgmout

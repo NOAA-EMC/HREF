@@ -145,7 +145,7 @@ do
 if [ $icnt -ge 200 ]
 then
     msg="ABORTING after 30 minutes of waiting for HIRESW FCST F${fhr} to end."
-    err_exit $msg
+    ./err_exit $msg
 fi
 done
 
@@ -178,11 +178,9 @@ fi
 # /nwprod/util/exec/fsync_file $filedir/wrfout_d01_${timeform}
 
 export pgm=hiresw_${MODEL}_post
-# . prep_step
+. ./prep_step
 
-# export XLFUNIT_14=wrf_cntrl.parm 
-
-ln -sf wrf_cntrl.parm fort.14
+export FORT14="wrf_cntrl.parm"
 
 echo RUNNING PROGRAM
 
@@ -203,7 +201,7 @@ mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
 datestr=`date`
 echo done running executable at $datestr
 
-# export err=$?;err_chk
+export err=$?;./err_chk
 
 cp $pgmout ${pgmout}_${fhr}
 cp errfile errfile_${fhr}
