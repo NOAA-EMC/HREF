@@ -1,0 +1,85 @@
+#! /bin/ksh
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exhiresw_fcst.sh.sms
+# Script description:  Runs WRF-NMM or WRF-EM forecast model
+#
+# Author:        Eric Rogers       Org: NP22         Date: 2004-07-07
+#
+# Script history log:
+# 2003-11-01  Matt Pyle - Original script for parallel
+# 2004-07-07  Eric Rogers - Preliminary modifications for production.
+# 2009-09-24  Shawna Cokley - Removes copy of date file to nmcdate
+
+set -x
+
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+cd $DATA
+
+#
+# Get needed variables from exhiresw_prelim.sh.sms
+#
+. $COMIN/${RUN}.t${cyc}z.envir.sh
+
+echo $CYCLE > fcstdate
+
+PDY=`cat fcstdate | cut -c1-8`
+CYC=`cat fcstdate | cut -c9-10`
+
+# export OMP_MAX_THREADS=1
+# export XLSMPOPTS="parthds=1:spins=0:yields=0:stack=128000000:schedule=static"
+export tmmark="tm00"
+
+cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 wrfbdy_d01
+err1=$?
+cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 wrfinput_d01
+err2=$?
+cp $COMIN/${NEST}${MODEL}.t${cyc}z.namelist.input namelist.input
+err3=$?
+
+if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
+then
+msg="MODEL is missing a key input file such as wrfinput_d01, wrfbdy_d01, or namelist.input"
+err_exit $msg
+fi
+
+cp $PARMhiresw/hiresw_LANDUSE.TBL LANDUSE.TBL
+cp $PARMhiresw/hiresw_ETAMPNEW_DATA ETAMPNEW_DATA
+cp $PARMhiresw/hiresw_VEGPARM.TBL VEGPARM.TBL
+cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
+cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
+cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2.35_hybrid_50mbtop
+cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2_trans
+
+cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
+cp $FIXhiresw/hiresw_tr49t67 tr49t67
+cp $FIXhiresw/hiresw_tr49t85 tr49t85
+cp $FIXhiresw/hiresw_tr67t85 tr67t85
+cp $PARMhiresw/hiresw_micro_lookup.dat micro_lookup.dat
+
+rm fort.*
+
+export pgm=hiresw_${MODEL}_fcst
+# . prep_step
+
+if [ $MODEL = nmm ] ; then
+#   export XLFUNIT_14=co2.35_hybrid_50mbtop
+ln -sf co2.35_hybrid_50mbtop fort.14
+fi
+
+# startmsg
+
+mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst
+
+export err=$?;err_chk
+
+cat $DATA/TASKOUTPUT/0000/rsl.error.0000 $DATA/TASKOUTPUT/0000/rsl.out.0000 > $COMOUT/${NEST}${MODEL}.t${cyc}z.fcst.log
+cat $DATA/TASKOUTPUT/0000/rsl.error.0000 $DATA/TASKOUTPUT/0000/rsl.out.0000 >>$pgmout
+
+msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
+postmsg "$jlogfile" "$msg"
+
+date
