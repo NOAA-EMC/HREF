@@ -2,7 +2,7 @@
 
 set -x
 
-ifort -O3  -c -o hybridensemble.o hybridensemble.f
-ifort -O3 -g -o hiresw_hybridensemble hybridensemble.o -L/home/Ratko.Vasic/lib_tmp -lw3-2.1_4 -lbacio_4
+ifort -O3 -convert big_endian  -c -o hybridensemble.o hybridensemble.f
+ifort -O3 -g -o hiresw_hybridensemble hybridensemble.o -L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4
 
 cp hiresw_hybridensemble ../../exec/

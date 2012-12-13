@@ -16,6 +16,9 @@ c                      west-region domain for the Hanson Dam project
 c 12/08/2010: M. pyle - modified some kpds(22) entries to pack more
 c                       precision in output files, and to use
 c                       Eta type SLP reduction (#130) where available
+c 02/17/2012: Jun Du - modified for the new SREFv6.0.0 by adding NMMB
+c                      model, getting rid of Eta and RSM models, and 
+c                      adjusting membership
 c
 c cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c 2-dimension variable list (the order needs to be followed):
@@ -42,7 +45,7 @@ c 20  sfch
 
        parameter(im=884,jm=614,jfm=im*jm,nt=41,nv=20)   !maximum dimension
 c      parameter(im=884,jm=614,jfm=im*jm,nt=17,nv=20)   !maximum dimension, 3hrly
-C      1-5(nmm),6-10(arw),11-13(eta_bmj),14-16(eta_kf),17-21(rsm),22(hi-res nmm),23(hi-res arw)
+C      1-7(nmb),8-14(nmm),15-21(arw),22(hi-res nmm),23(hi-res arw)
        parameter(mbase=2,mem=21,iens=mem+mbase)
        parameter(newmem=mbase*(mem+1))
 C raw ensemble fcsts
@@ -73,7 +76,7 @@ C hybrid ensemble fcsts
 c Passing over date information
        namelist/namin/iyr,imon,idy,ihr,id_grid,itime
 
-       read(5,namin,end=1000)
+       read(611,namin,end=1000)
        imin=0
 1000   continue
        print*, iyr,imon,idy,ihr,imin,id_grid
@@ -190,10 +193,9 @@ c 1hrly apcp
      &.or.itime.eq.14.or.itime.eq.17.or.itime.eq.20.or.itime.eq.23
      &.or.itime.eq.26.or.itime.eq.29.or.itime.eq.32.or.itime.eq.35)
      & then
-        if(irun.ge.1.and.irun.le.5) var_raw(igrid,irun,6)=var(igrid)/2.0   !nmm
-        if(irun.ge.6.and.irun.le.10) var_raw(igrid,irun,6)=var(igrid)/3.0  !em
-        if(irun.ge.11.and.irun.le.16) var_raw(igrid,irun,6)=var(igrid)/2.0 !eta
-        if(irun.ge.17.and.irun.le.21) var_raw(igrid,irun,6)=var(igrid)/3.0 !rsm
+        if(irun.ge.1.and.irun.le.7) var_raw(igrid,irun,6)=var(igrid)/2.0   !nmb
+        if(irun.ge.8.and.irun.le.14) var_raw(igrid,irun,6)=var(igrid)/2.0  !nmm
+        if(irun.ge.15.and.irun.le.21) var_raw(igrid,irun,6)=var(igrid)/3.0 !em
         if(irun.ge.22) var_raw(igrid,irun,6)=var(igrid)/2.0                !hi-res nmm
         if(irun.ge.23) var_raw(igrid,irun,6)=var(igrid)                    !hi-res arw
        endif
@@ -202,10 +204,9 @@ c 1hrly apcp
      &.or.itime.eq.13.or.itime.eq.16.or.itime.eq.19.or.itime.eq.22
      &.or.itime.eq.25.or.itime.eq.28.or.itime.eq.31.or.itime.eq.34)
      & then
-        if(irun.ge.1.and.irun.le.5) var_raw(igrid,irun,6)=var(igrid)       !nmm
-        if(irun.ge.6.and.irun.le.10) var_raw(igrid,irun,6)=var(igrid)/3.0  !em
-        if(irun.ge.11.and.irun.le.16) var_raw(igrid,irun,6)=var(igrid)     !eta
-        if(irun.ge.17.and.irun.le.21) var_raw(igrid,irun,6)=var(igrid)/3.0 !rsm
+        if(irun.ge.1.and.irun.le.7) var_raw(igrid,irun,6)=var(igrid)       !nmb
+        if(irun.ge.8.and.irun.le.14) var_raw(igrid,irun,6)=var(igrid)      !nmm
+        if(irun.ge.15.and.irun.le.21) var_raw(igrid,irun,6)=var(igrid)/3.0 !em
         if(irun.ge.22) var_raw(igrid,irun,6)=var(igrid)                    !hi-res nmm
         if(irun.ge.23) var_raw(igrid,irun,6)=var(igrid)                    !hi-res arw
        endif
@@ -236,7 +237,7 @@ C 500mb geopotential height:
         do igrid=1,jf
          var_raw(igrid,irun,9)=var(igrid) 
         enddo
-         print*,'500h(10,1)=',var_raw(10,irun,9)
+         print*,'SREF 500h(jf/2,1)=',jf, irun, var_raw(jf/2,irun,9)
        endif
 C 850mb relative humidity:
        if(kpds(5).eq.52.and.kpds(6).eq.100.and.kpds(7).eq.850) then
@@ -324,11 +325,22 @@ c-----------------------------------------
 C#########################################
 C find ensemble mean
       var_mean=0.0
+        write(0,*) 'num vars ,num members ', nv, mem
       do i=1,nv
        do irun=1,mem      
         do igrid=1,jf       
+
+        if (i .eq. 9 .and. igrid .eq. 10) then
+        write(0,*) 'adding var_raw: ',irun,mem,var_raw(igrid,irun,i)
+        endif
+
          var_mean(igrid,i)=var_mean(igrid,i)+
      &   var_raw(igrid,irun,i)/mem
+
+        if (i .eq. 9 .and. igrid .eq. 10) then
+        write(0,*) 'var_mean(igrid,i) now: ',irun,mem,var_mean(igrid,i)
+        endif
+
         enddo
        enddo
 
@@ -340,7 +352,7 @@ C find ensemble mean
        if(i.eq.6) print*,'mean precip=',var_mean(10,i)
        if(i.eq.7) print*,'mean cape=',var_mean(10,i)
        if(i.eq.8) print*,'mean cin=',var_mean(10,i)
-       if(i.eq.9) print*,'mean 500H=',var_mean(10,i)
+       if(i.eq.9) print*,'mean 500H=',var_mean(jf/2,i)
        if(i.eq.10) print*,'mean 850RH=',var_mean(10,i)
        if(i.eq.11) print*,'mean 850U=',var_mean(10,i)
        if(i.eq.12) print*,'mean 850V=',var_mean(10,i)
@@ -361,7 +373,7 @@ C find ensemble mean
        if(i.eq.6) print*,'indiv precip=',var_raw(10,2,i)
        if(i.eq.7) print*,'indiv cape=',var_raw(10,2,i)
        if(i.eq.8) print*,'indiv cin=',var_raw(10,2,i)
-       if(i.eq.9) print*,'indiv 500H=',var_raw(10,2,i)
+       if(i.eq.9) print*,'indiv 500H=',var_raw(jf/2,2,i)
        if(i.eq.10) print*,'indiv 850RH=',var_raw(10,2,i)
        if(i.eq.11) print*,'indiv 850U=',var_raw(10,2,i)
        if(i.eq.12) print*,'indiv 850V=',var_raw(10,2,i)
@@ -402,6 +414,13 @@ C add low-res ens "spread" to hires run (using difference from ens mean, which c
         if(irun.ne.mend) var_new(igrid,i)=base+
      &  var_raw(igrid,irun-(m-1)*(mem+1),i)-var_mean(igrid,i)  !adding apread on top of hires base
 
+        if (igrid .eq. jf/2 .and. i .eq. 9 .and. irun .ne. mend) then
+      write(0,*) 'irun,mem,var_raw index:',irun, mem, irun-(m-1)*(mem+1)
+        write(0,*) 'mem+m, base,var_raw, var_mean, var_new: ', mem+m,  
+     &    base,var_raw(igrid,irun-(m-1)*(mem+1),i), var_mean(igrid,i), 
+     &    var_new(igrid,i)
+        endif
+
 C add difference between hires and low-res members to low-res ens mean
 c       if(irun.ne.mend) var_new(igrid,i)=var_mean(igrid,i)+
 c    &  base-var_raw(igrid,irun-(m-1)*(mem+1),i)       !adding details on top of low-res mean
@@ -410,24 +429,22 @@ C keep low-res ensemble
 c       if(irun.ge.1.and.irun.le.mem) var_new(igrid,i)=
 c    &  var_raw(igrid,irun,i)
 
-C consider model difference (nmm-arw,nmm-rsm,nmm-eta,eta-rsm,eta-arw,rsm-arw) to have larger spread
-c       if(irun.ge.1.and.irun.le.5) var_new(igrid,i)=base+
-c    &  (var_raw(igrid,irun,i)-var_raw(igrid,irun+5,i))   !plus nmm-arw
-c       if(irun.ge.6.and.irun.le.10) var_new(igrid,i)=base+
-c    &  (var_raw(igrid,irun-5,i)-var_raw(igrid,irun,i))
-c       if(irun.ge.11.and.irun.le.16) var_new(igrid,i)=base+
-c    &  (var_raw(igrid,irun,i)-var_raw(igrid,irun+5,i))   !plus eta-rsm
-c       if(irun.ge.17.and.irun.le.21) var_new(igrid,i)=base+
-c    &  (var_raw(igrid,irun-5,i)-var_raw(igrid,irun,i))
+C consider model difference (nmb-nmm,nmb-arw,nmm-arw) to have larger spread
+c       if(irun.ge.1.and.irun.le.7) var_new(igrid,i)=base+
+c    &  (var_raw(igrid,irun,i)-var_raw(igrid,irun+7,i))   !plus nmb-nmm
+c       if(irun.ge.8.and.irun.le.14) var_new(igrid,i)=base+
+c    &  (var_raw(igrid,irun-7,i)-var_raw(igrid,irun+7,i)) !plus nmb-arw
+c       if(irun.ge.15.and.irun.le.21) var_new(igrid,i)=base+
+c    &  (var_raw(igrid,irun-7,i)-var_raw(igrid,irun,i))   !plus nmm-arw
+c mem 22 is hiresw-nmm itself
 
-c       if(irun.ge.23.and.irun.le.27) var_new(igrid,i)=base-
-c    &  (var_raw(igrid,irun-22,i)-var_raw(igrid,irun-17,i))   !minus nmm-arw
-c       if(irun.ge.28.and.irun.le.32) var_new(igrid,i)=base-
-c    &  (var_raw(igrid,irun-27,i)-var_raw(igrid,irun-22,i))
-c       if(irun.ge.33.and.irun.le.38) var_new(igrid,i)=base-
-c    &  (var_raw(igrid,irun-22,i)-var_raw(igrid,irun-17,i))   !minus eta-rsm
-c       if(irun.ge.39.and.irun.le.43) var_new(igrid,i)=base-
-c    &  (var_raw(igrid,irun-27,i)-var_raw(igrid,irun-22,i))
+c       if(irun.ge.23.and.irun.le.29) var_new(igrid,i)=base-
+c    &  (var_raw(igrid,irun-22,i)-var_raw(igrid,irun-15,i))   !minus nmb-nmm
+c       if(irun.ge.30.and.irun.le.36) var_new(igrid,i)=base-
+c    &  (var_raw(igrid,irun-29,i)-var_raw(igrid,irun-15,i))   !minus nmb-arw
+c       if(irun.ge.37.and.irun.le.43) var_new(igrid,i)=base-
+c    &  (var_raw(igrid,irun-29,i)-var_raw(igrid,irun-22,i))   !minus nmm-arw
+c mem 44 is hiresw-arw itself
        enddo
       endif   !3hr fcst
 
