@@ -1657,27 +1657,33 @@ print *,'------------------> skipping ', var_info%name(1:8)
         ENDDO
        ENDDO
 
-        if (num_metgrid_levels .ne. 27) then ! not GFS
+!        if (num_metgrid_levels .ne. 27 .and. num_metgrid_levels .ne. 40 ) then ! not GFS or HI NAM
 
 ! binary write of field: VEGCAT         291         379           1
-        write(0,*) 'read for VEGCAT'
-       read(47) dumdata(:,:,1:1)
-        write(0,*) 'read VEGCAT'
-        DO J=JTS,min(JTE,JDE-1)
-         DO I=ITS,min(ITE,IDE-1)
-           grid%vegcat(I,J)=dumdata(I,J,1)
-         ENDDO
-        ENDDO
+!        write(0,*) 'read for VEGCAT'
+!       read(47) dumdata(:,:,1:1)
+!        write(0,*) 'read VEGCAT'
+!        DO J=JTS,min(JTE,JDE-1)
+!         DO I=ITS,min(ITE,IDE-1)
+!           grid%vegcat(I,J)=dumdata(I,J,1)
+!         ENDDO
+!        ENDDO
+!        write(0,*) 'maxval(vegcat); ', maxval(grid%vegcat)
 
 ! binary write of field: SOIL_CAT         291         379           1
-        write(0,*) 'to read for SOIL_CAT'
-       read(47) dumdata(:,:,1:1)
-        DO J=JTS,min(JTE,JDE-1)
-         DO I=ITS,min(ITE,IDE-1)
-           grid%soilcat(I,J)=dumdata(I,J,1)
-         ENDDO
-        ENDDO
+!        write(0,*) 'to read for SOIL_CAT'
+!       read(47) dumdata(:,:,1:1)
+!        DO J=JTS,min(JTE,JDE-1)
+!         DO I=ITS,min(ITE,IDE-1)
+!           grid%soilcat(I,J)=dumdata(I,J,1)
+!         ENDDO
+!        ENDDO
+!        write(0,*) 'maxval(soilcat); ', maxval(grid%soilcat)
+!
+!        endif  ! not GFS or HI NAM
+!
 
+        if (num_metgrid_levels .ne. 27) then
 ! binary write of field: CANWAT         291         379           1
         write(0,*) 'read for CANWAT'
        read(47) dumdata(:,:,1:1)
@@ -1687,7 +1693,8 @@ print *,'------------------> skipping ', var_info%name(1:8)
          ENDDO
         ENDDO
 
-        endif
+
+        endif  ! not GFS
 
 ! binary write of field: SNOW         291         379           1
         write(0,*) 'read for SNOW '
@@ -1714,6 +1721,9 @@ print *,'------------------> skipping ', var_info%name(1:8)
            grid%toposoil(I,J)=dumdata(I,J,1)
          ENDDO
         ENDDO
+
+        write(0,*) 'min,max of toposoil: ', &
+                    minval(grid%toposoil),maxval(grid%toposoil)
 
 ! binary write of field: LANDSEA         291         379           1
        read(47) dumdata(:,:,1:1) ! ignored

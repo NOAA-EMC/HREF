@@ -476,7 +476,7 @@ CONTAINS
      ptsgm             = model_config_rec%ptsgm
      p_top_requested = grid%p_top_requested
      pt=p_top_requested
-      boundary_flux=model_config_rec%boundary_flux
+     boundary_flux=model_config_rec%boundary_flux
         write(0,*) 'boundary_flux now: ', boundary_flux
 
 
@@ -4084,6 +4084,9 @@ CONTAINS
 !       REAL :: vbo(2*(IDE-1)+(JDE-1)-3, KME )
 
        INTEGER :: LD, LDMIN
+
+
+        amdvel=0.
 
         write(0,*) 'KME is: ', KME
 
