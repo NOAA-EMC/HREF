@@ -1,0 +1,334 @@
+#!/bin/ksh -l
+##########################################################
+# The program converts low-res ensemble and high-res single
+# run into a common domain and produces a downscaled hybrid 
+# ensemble of forecasts by using the Hybrid Ensembling approach
+# (Du, 2004, available online at the SREF web: 
+# http://www.emc.ncep.noaa.gov/mmb/SREF/reference.html ).
+# 
+# Programmer: Jun Du, Mesoscale Branch, EMC/NCEP
+#
+# Change log:
+# 02/20/2010: Jun Du, initial scripts
+# 
+##########################################################
+set -x
+
+XLFRTEOPTS="namelist=old"
+export XLFRTEOPTS
+
+XLSMPOPTS="parthds=2"
+export XLSMPOPTS
+
+echo start script
+date
+
+# cyc=${1}
+
+echo have NEST $NEST
+echo have cyc $cyc
+
+hour=$cyc
+
+if [ $NEST = east ]; then
+ export reg=east
+ FIRST_INC=01
+ export id_grid=256
+fi
+
+if [ $NEST = hi ]; then
+ export reg=hi
+ FIRST_INC=03
+ export id_grid=258
+fi
+
+if [ $NEST = west ]; then
+ export reg=west
+ FIRST_INC=01
+ export id_grid=256
+fi
+
+if [ $NEST = ak ]; then
+ export reg=ak
+ FIRST_INC=03
+ export id_grid=257
+fi
+
+if [ $NEST = pr ]; then
+ export reg=pr
+ FIRST_INC=03
+ export id_grid=259
+fi
+
+membership=21
+let fmax1=membership+1
+let fmax2=membership+2
+if [ $fmax1 -lt 10 ];then fmax1=0$fmax1;fi
+if [ $fmax2 -lt 10 ];then fmax2=0$fmax2;fi
+
+# hires-window initialization date
+yy1=`echo $PDY | cut -c 1-4`
+mm1=`echo $PDY | cut -c 5-6`
+dd1=`echo $PDY | cut -c 7-8`
+hh1=$cyc
+date=$yy1$mm1$dd1$hh1
+
+# sref initialization date
+fdate=` /nwprod/util/exec/ndate -3 $date`
+yy2=`echo ${fdate} | cut -c1-4`
+mm2=`echo ${fdate} | cut -c5-6`
+dd2=`echo ${fdate} | cut -c7-8`
+hh2=`echo ${fdate} | cut -c9-10`
+
+#################################
+rm -f $DATA/*
+
+###########################################################
+###########################################################
+# obtain SREF data:
+###########################################################
+###########################################################
+
+# hi-res window grids GDS definitions-
+#East US (Lambert): "255,3,884,614,22100,-109800,8,-089000,5000,5000,0,64,38000,38000"
+#West US (Lambert): "255,3,884,614,24500,-129200,8,-108000,5000,5000,0,64,40500,40500"
+#Alaska (Polar Stereo):"255,5,825,603,44800,-174500,8,-150000,5000,5000,0,64" 
+#Hawaii (latlon):      "255,0,223,170,16400,-162350,128,24005,-152360,45,45,0"
+#Puerto Rico (latlon): "255,0,223,170,14400,-071500,128,22005,-061510,45,45,0"
+#HaitiPR (latlon):     "255,0,340,208,13500,-76590,128,22815,-61335,45,45,0"
+
+# check availability of sref data here
+
+if [ $membership -eq 21 ];then name="nmb nmm em";fi
+for model in $name
+do
+ if [ $model = nmb ];then pair="ctl p1 n1 n2 p2 n3 p3";fi
+ if [ $model = nmm ];then pair="ctl p1 n1 n2 p2 n3 p3";fi
+ if [ $model = em ]; then pair="ctl p1 n1 n2 p2 n3 p3";fi
+
+
+ for mem in $pair
+ do
+  if [ $model = nmb -a $mem = ctl ];then num=01;fi
+  if [ $model = nmb -a $mem = p1 ];then num=02;fi
+  if [ $model = nmb -a $mem = n1 ];then num=03;fi
+  if [ $model = nmb -a $mem = p2 ];then num=04;fi
+  if [ $model = nmb -a $mem = n2 ];then num=05;fi
+  if [ $model = nmb -a $mem = p3 ];then num=06;fi
+  if [ $model = nmb -a $mem = n3 ];then num=07;fi
+
+  if [ $model = nmm -a $mem = ctl ];then num=08;fi
+  if [ $model = nmm -a $mem = p1 ];then num=09;fi
+  if [ $model = nmm -a $mem = n1 ];then num=10;fi
+  if [ $model = nmm -a $mem = p2 ];then num=11;fi
+  if [ $model = nmm -a $mem = n2 ];then num=12;fi
+  if [ $model = nmm -a $mem = p3 ];then num=13;fi
+  if [ $model = nmm -a $mem = n3 ];then num=14;fi
+
+  if [ $model = em -a $mem = ctl ];then num=15;fi
+  if [ $model = em -a $mem = p1 ];then num=16;fi
+  if [ $model = em -a $mem = n1 ];then num=17;fi
+  if [ $model = em -a $mem = p2 ];then num=18;fi
+  if [ $model = em -a $mem = n2 ];then num=19;fi
+  if [ $model = em -a $mem = p3 ];then num=20;fi
+  if [ $model = em -a $mem = n3 ];then num=21;fi
+
+
+oldHR=03
+newHR=00
+ENDHOUR=51
+while [ $oldHR -le $ENDHOUR ]
+ do
+ if [ $newHR -lt 36 ];then INCHOUR=${FIRST_INC};fi
+ if [ $newHR -ge 36 ];then INCHOUR=03;fi
+ let "p2=oldHR"
+
+echo "$USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg" >> poescript
+# $USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg
+
+ oldHR=`expr $oldHR + $INCHOUR`
+ newHR=`expr $newHR + $INCHOUR`
+ if [ $oldHR -lt 10 ];then oldHR=0$oldHR;fi
+ if [ $newHR -lt 10 ];then newHR=0$newHR;fi
+done
+
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=poescript
+export MP_LABELIO=YES
+export MP_INFOLEVEL=3
+export MP_STDOUTMODE=ordered
+# poe 
+
+cp poescript poescript_first_sref
+
+mpirun.lsf  ## instead of poe????
+
+rm -f poescript
+
+done
+done
+
+#### DONE SREF PROCESSING
+
+###########################################################
+###########################################################
+# process HIRESW data as becomes available
+###########################################################
+###########################################################
+
+echo start looking for HiresW
+date
+
+oldHR=00
+newHR=00
+ENDHOUR=48
+while [ $oldHR -le $ENDHOUR ]
+ do
+
+#### trying to eliminate nearly zero length files at non-3hrly times
+
+ if [ $reg = ak -o $reg = hi -o $reg = pr ]
+ then
+ if [ $newHR -lt 36 ];then INCHOUR=03;fi
+ else
+ if [ $newHR -lt 36 ];then INCHOUR=01;fi
+ fi
+ if [ $newHR -ge 36 ];then INCHOUR=03;fi
+
+
+name="${reg}nmm ${reg}arw"
+ for model in $name
+ do
+  if [ $model = eastnmm -o $model = westnmm -o $model = aknmm -o $model = hinmm -o $model = prnmm ] ; then
+      num=$fmax1
+  fi
+  if [ $model = eastarw -o $model = westarw -o $model = akarw -o $model = hiarw -o $model = prarw ] ; then
+      num=$fmax2
+  fi
+
+ let "p2=oldHR"
+$USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg
+
+done # model
+
+cat <<paramEOF >input
+ &namin
+   iyr=${yy1},imon=${mm1},idy=${dd1},ihr=${hh1},id_grid=${id_grid}, itime=$newHR
+ &end
+paramEOF
+
+echo RUN hiresw_hybridensemble
+# $EXEChiresw/hiresw_hybridensemble <input >error.out
+
+rm fort.611
+ln -sf input fort.611
+
+$EXEChiresw/hiresw_hybridensemble > error.out_$newHR 2>&1
+
+CNVGRIB=/nwprod/util/exec/cnvgrib
+WGRIB2=/nwprod/util/exec/wgrib2
+WGRIB=/nwprod/util/exec/wgrib
+
+if [ $SENDCOM = YES ]; then
+
+# send grib1 data to /com
+
+HR=$newHR
+
+#---------nmm---------------
+n=1
+nend=$membership
+nf=1
+while [ $n -le $nend ]
+do
+ if [ $nf -lt 10 ];then nf=0$nf;fi
+ if [ $n -lt 10 ];then n=0$n;fi
+ mv hybd_pgrb212.${n}.f$HR ${COMOUT}/${reg}nmm.t${hh1}z.p${nf}.f$HR
+ sync
+ n=`expr $n + 1`
+ nf=`expr $nf + 1`
+done
+if [ $n -lt 10 ];then n=0$n;fi
+mv hybd_pgrb212.${n}.f$HR ${COMOUT}/${reg}nmm.t${hh1}z.c00.f$HR
+sync
+
+#---------arw---------------
+n=`expr $membership + 2`
+nend=`expr $membership + $membership + 1`
+nf=1
+while [ $n -le $nend ]
+do
+ if [ $nf -lt 10 ];then nf=0$nf;fi
+ if [ $n -lt 10 ];then n=0$n;fi
+ mv hybd_pgrb212.${n}.f$HR ${COMOUT}/${reg}arw.t${hh1}z.p${nf}.f$HR
+ sync
+ n=`expr $n + 1`
+ nf=`expr $nf + 1`
+done
+if [ $n -lt 10 ];then n=0$n;fi
+mv hybd_pgrb212.${n}.f$HR ${COMOUT}/${reg}arw.t${hh1}z.c00.f$HR
+sync
+n=`expr $n + 1`
+if [ $n -lt 10 ];then n=0$n;fi
+mv hybd_pgrb212.${n}.f$HR ${COMOUT}/${reg}.t${hh1}z.mean.f$HR
+sync
+
+fi
+
+# convert grib1 to grib2
+if [ $SENDGB2 = YES ]; then
+
+echo start GRIB2 at
+date
+
+name="${reg} ${reg}nmm ${reg}arw"
+for model in $name
+do
+ if [ $model = ${reg} ];then 
+  pair="mean"
+ else
+  pair="c00 p01 p02 p03 p04 p05 p06 p07 p08 p09 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21"
+ fi
+ for member in $pair
+ do
+
+echo "$CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2" >> poescript
+
+# $CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2
+
+$WGRIB ${COMOUT}/${model}.t${hh1}z.${member}.f$HR | grep "APCP" | $WGRIB -i -grib ${COMOUT}/${model}.t${hh1}z.${member}.f$HR -o ${COMOUT}/${model}.t${hh1}z.${member}.f${HR}_pcp
+
+ done # member
+done # model
+
+# poe
+mpirun.lsf  ## instead of poe????
+
+
+# cat poescript
+cp poescript poescript_second_members
+rm poescript
+
+fi
+
+rcc=$?
+if [ ${rcc} -ne 0 ]; then
+  echo "!!! Error *** ${rcc} *** converting files.  Exiting..."
+  exit 8
+fi
+
+ oldHR=`expr $oldHR + $INCHOUR`
+ newHR=`expr $newHR + $INCHOUR`
+ if [ $oldHR -lt 10 ];then oldHR=0$oldHR;fi
+ if [ $newHR -lt 10 ];then newHR=0$newHR;fi
+
+
+datestr=`date`
+echo DONE BIG LOOP AT $datestr
+
+done   # time
+
+cat error.out_${HR} >> $pgmout 
+## cp $pgmout /com/output/${envir}/today/hiresw_hybridensemble.o${pid}
+
+exit
