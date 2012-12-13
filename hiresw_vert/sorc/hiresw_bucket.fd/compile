@@ -2,27 +2,28 @@ set -x
 
 TARGDIR=../../exec/
 
-LIBDEF="-L/home/Ratko.Vasic/lib_tmp -lw3-2.1_4 -lbacio_4"
+LIBDEF="-L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4"
 
+OPT=-convert big_endian
 
 echo $LIBDEF
 
 cp parmeta.full4km parmeta
-ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full4km
 
 cp parmeta.full5km parmeta
-ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full5km
 
 cp parmeta.ak5km parmeta
-ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_ak5km
 
 cp parmeta.hipr5km parmeta
-ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_hipr5km
 
 cp parmeta.haitipr5km parmeta
-ifort -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_haitipr5km
