@@ -339,7 +339,7 @@ c Passing over date information
 c
 c      CALL W3TAGB('SREF_COM_GRIB',2002,0002,0074,'NP21')
 C
-      read(621,namin,end=1000)
+      read(11,namin,end=1000)
         i00=1+fhr/3
         loutput=i00
 	write(0,*) 'loutput for allocate: ', loutput
