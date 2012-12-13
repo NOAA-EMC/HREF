@@ -939,7 +939,10 @@ integer::oops1,oops2
       CALL nl_get_iswater ( grid%id , grid%iswater )
       CALL nl_get_islake  ( grid%id , grid%islake )
 
-      IF ( grid%islake < 0 ) THEN
+        write(0,*) 'grid%islake: ', grid%islake
+
+!was      IF ( grid%islake < 0 ) THEN
+      IF ( grid%islake <= 0 ) THEN
          CALL wrf_debug ( 0 , 'Old data, no inland lake information')
       ELSE
          IF ( we_have_tavgsfc ) THEN

@@ -2157,6 +2157,10 @@ end subroutine retrieve_field
         open(unit=47,file=trim(fileName),form='unformatted')
 
         read(47) garb1,garb2,garb3,garb4,igarb
+        write(0,*) 'garb1: ', garb1
+        write(0,*) 'garb3: ', garb3
+        write(0,*) 'garb4: ', garb4
+        write(0,*) 'igarb: ', igarb
 
           CALL nl_set_cen_lat ( grid%id , garb1 )
 
@@ -2169,6 +2173,8 @@ end subroutine retrieve_field
           CALL  nl_set_map_proj( grid%id, igarb)
 
 ! binary write of field: PRES        
+        write(0,*) 'to read for PRES'
+        write(0,*) 'shape(dumdata): ', shape(dumdata)
        read(47) dumdata
         write(0,*) 'read PRES'
         DO J=JTS,min(JTE,JDE-1)
@@ -2206,27 +2212,30 @@ end subroutine retrieve_field
        ENDDO
 
 
-        if (num_metgrid_levels .ne. 27) then  ! not GFS
+!        if (num_metgrid_levels .ne. 27 .and. num_metgrid_levels .ne. 40) then  ! not GFS
+!
+!! binary write of field: VEGCAT    
+!        write(0,*) 'read for VEGCAT'
+!       read(47) dumdata(:,:,1:1)
+!        write(0,*) 'read VEGCAT'
+!        DO J=JTS,min(JTE,JDE-1)
+!         DO I=ITS,min(ITE,IDE-1)
+!           grid%vegcat(I,J)=dumdata(I,J,1)
+!         ENDDO
+!        ENDDO
 
-! binary write of field: VEGCAT    
-        write(0,*) 'read for VEGCAT'
-       read(47) dumdata(:,:,1:1)
-        write(0,*) 'read VEGCAT'
-        DO J=JTS,min(JTE,JDE-1)
-         DO I=ITS,min(ITE,IDE-1)
-           grid%vegcat(I,J)=dumdata(I,J,1)
-         ENDDO
-        ENDDO
+!!! binary write of field: SOIL_CAT 
+!        write(0,*) 'to read for SOIL_CAT'
+!       read(47) dumdata(:,:,1:1)
+!        DO J=JTS,min(JTE,JDE-1)
+!         DO I=ITS,min(ITE,IDE-1)
+!           grid%soilcat(I,J)=dumdata(I,J,1)
+!         ENDDO
+!        ENDDO
 
-! binary write of field: SOIL_CAT 
-        write(0,*) 'to read for SOIL_CAT'
-       read(47) dumdata(:,:,1:1)
-        DO J=JTS,min(JTE,JDE-1)
-         DO I=ITS,min(ITE,IDE-1)
-           grid%soilcat(I,J)=dumdata(I,J,1)
-         ENDDO
-        ENDDO
+!        endif ! not GFS or HI NAM
 
+        if (num_metgrid_levels .ne. 27) then !  not GFS
 ! binary write of field: CANWAT  
         write(0,*) 'read for CANWAT'
        read(47) dumdata(:,:,1:1)
@@ -2602,9 +2611,10 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
-        write(0,*) 'MAPFAC_UY'
+        write(0,*) 'to read for MAPFAC_UY'
                        ! MAPFAC_UY
        read(47) dumdata_u(:,:,1:1)
+        write(0,*) 'past read for MAPFAC_UY'
 
         write(0,*) 'read dumdata_u for MAPFAC_UY'
         DO J=JTS,min(JTE,JDE-1)
