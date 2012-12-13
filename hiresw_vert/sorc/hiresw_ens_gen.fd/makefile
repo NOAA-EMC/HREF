@@ -7,17 +7,17 @@
 #
 
 
-FC=     ifort -O2 -g  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
+FC=     ifort -O2 -g -convert big_endian  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
 #FC=     ncepxlf -O3 -qhot -bmaxdata:0x1200000000
 ARCH     =
-OPTS     =  -g  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
+OPTS     =  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
 LIST     =
 TRAPS    =
 PROFILE  =
 DEBUG    = -g
 MEM      =
 MAP      =
-W3LIBDIR = /home/Ratko.Vasic/lib_tmp
+W3LIBDIR = /nwprod/lib
 ESSL     = 
 MASS     =
 
@@ -30,7 +30,7 @@ SRC=	util.f \
 
 OBJ=${SRC:.f=.o}
 
-LIBS= $(ESSL) $(MASS) $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) -L$(W3LIBDIR) -lw3-2.1_4 -lbacio_4 -lip_4
+LIBS= $(ESSL) $(MASS) $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) -L$(W3LIBDIR) -lw3nco_4 -lw3emc_4 -lbacio_4 -lip_4
 
 ../../exec/hiresw_ens_gen: $(OBJ)
 	$(FC)  -o $(@) $(OBJ) $(LIBS)
