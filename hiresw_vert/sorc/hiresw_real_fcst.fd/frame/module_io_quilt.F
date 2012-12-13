@@ -492,9 +492,10 @@ okay_to_w = .false.
         ! first element of reduced is obufsize, second is DataHandle 
         ! if needed (currently needed only for ioclose).
         reduced_dummy = 0
-        CALL MPI_Reduce( reduced_dummy, reduced, 2, MPI_INTEGER,  &
-                         MPI_SUM, mytask_io_group,          &
-                         mpi_comm_io_groups(1), ierr )
+!YKT        CALL MPI_Reduce( reduced_dummy, reduced, 2, MPI_INTEGER,  &
+!YKT                         MPI_SUM, mytask_io_group,          &
+!YKT                         mpi_comm_io_groups(1), ierr )
+        call recv_flag(reduced, mpi_comm_io_groups(1))
         obufsize = reduced(1)
 !JMTIMING CALL end_timing("MPI_Reduce at top of forever loop") 
 !JMDEBUGwrite(0,*)'obufsize = ',obufsize
@@ -1571,9 +1572,10 @@ SUBROUTINE wrf_quilt_open_for_write_begin( FileName , Comm_compute, Comm_io, Sys
   reduced = 0
   reduced(1) = hdrbufsize 
   IF ( wrf_dm_on_monitor() )  reduced(2) = i 
-  CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                   MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                   comm_io_group, ierr )
+!YKT  CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                   MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                   comm_io_group, ierr )
+  call send_flag(reduced, tasks_in_group-1, comm_io_group)
 !JMTIMING   CALL end_timing("MPI_Reduce in wrf_quilt_open_for_write_begin")
 
   ! send data to the i/o processor
@@ -1633,9 +1635,11 @@ SUBROUTINE wrf_quilt_open_for_write_commit( DataHandle , Status )
   reduced = 0
   reduced(1) = hdrbufsize 
   IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-  CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                   MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                   comm_io_group, ierr )
+!  CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!                   MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!                   comm_io_group, ierr )
+  call send_flag(reduced, tasks_in_group-1, comm_io_group)
+
 !JMTIMING   CALL end_timing("MPI_Reduce in wrf_quilt_open_for_write_commit")
 
   ! send data to the i/o processor
@@ -1791,9 +1795,10 @@ SUBROUTINE wrf_quilt_iosync ( DataHandle, Status )
     reduced = 0
     reduced(1) = locsize 
     IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-    CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                     MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                     comm_io_group, ierr )
+!YKT    CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                    MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                     comm_io_group, ierr )
+   call send_flag(reduced, tasks_in_group-1, comm_io_group)
 !JMTIMING     CALL end_timing("MPI_Reduce in wrf_quilt_iosync")
 
     ! send data to the i/o processor
@@ -1862,9 +1867,10 @@ SUBROUTINE wrf_quilt_ioclose ( DataHandle, Status )
   ! send the size of my local buffer to the i/o task (reduced_dummy doesnt mean anything on client side)
   reduced = 0
   IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-  CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                   MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                   comm_io_group, ierr )
+!YKT  CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                   MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                   comm_io_group, ierr )
+  call send_flag(reduced, tasks_in_group-1, comm_io_group)
 !JMTIMING   CALL end_timing("MPI_Reduce in ioclose")
 
 #if 0
@@ -1931,9 +1937,10 @@ SUBROUTINE wrf_quilt_ioexit( Status )
     hdrbufsize = -100 
     reduced = 0
     IF ( me .eq. 0 ) reduced(1) = hdrbufsize 
-    CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                     MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                     comm_io_group, ierr )
+!YKT    CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                     MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                     comm_io_group, ierr )
+    call send_flag(reduced, tasks_in_group-1, comm_io_group)
 
   ENDDO
   Status = 0
@@ -2012,9 +2019,10 @@ SUBROUTINE wrf_quilt_set_time ( DataHandle, Data,  Status )
       reduced = 0
       reduced(1) = hdrbufsize 
       IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                       comm_io_group, ierr )
+!YKT      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                       comm_io_group, ierr )
+      call send_flag(reduced, tasks_in_group-1, comm_io_group)
       ! send data to the i/o processor
       CALL collect_on_comm_debug(__FILE__,__LINE__, comm_io_group,            &
                             onebyte,                       &
@@ -2116,9 +2124,10 @@ SUBROUTINE wrf_quilt_put_dom_ti_real ( DataHandle,Element,   Data, Count,  Statu
       reduced = 0
       reduced(1) = hdrbufsize 
       IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                       comm_io_group, ierr )
+!YKT      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                       comm_io_group, ierr )
+      call send_flag(reduced, tasks_in_group-1, comm_io_group)
 !JMTIMING       CALL end_timing("MPI_Reduce in wrf_quilt_put_dom_ti_real")
       ! send data to the i/o processor
       CALL collect_on_comm_debug(__FILE__,__LINE__, comm_io_group,            &
@@ -2256,10 +2265,10 @@ SUBROUTINE wrf_quilt_put_dom_ti_integer ( DataHandle,Element,   Data, Count,  St
       reduced = 0
       reduced(1) = hdrbufsize 
       IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                       comm_io_group, ierr )
-
+!YKT      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                       comm_io_group, ierr )
+      call send_flag(reduced, tasks_in_group-1, comm_io_group)
 !JMTIMING       CALL end_timing("MPI_Reduce in wrf_quilt_put_dom_ti_integer")
       ! send data to the i/o processor
       CALL collect_on_comm_debug(__FILE__,__LINE__, comm_io_group,            &
@@ -2410,9 +2419,10 @@ SUBROUTINE wrf_quilt_put_dom_ti_char ( DataHandle, Element,  Data,  Status )
 
 !call mpi_comm_rank( comm_io_group , me, ierr )
 
-      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                       MPI_SUM, tasks_in_group-1,          &   ! nio_tasks_in_group-1 is me
-                       comm_io_group, ierr )
+!YKT      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                       MPI_SUM, tasks_in_group-1,          &   ! nio_tasks_in_group-1 is me
+!YKT                       comm_io_group, ierr )
+      call send_flag(reduced, tasks_in_group-1, comm_io_group)
 
 !JMTIMING       CALL end_timing("MPI_Reduce in wrf_quilt_put_dom_ti_char")
       ! send data to the i/o processor
@@ -2930,9 +2940,11 @@ SUBROUTINE wrf_quilt_put_var_ti_char ( DataHandle,Element,  Varname, Data,  Stat
       reduced = 0
       reduced(1) = hdrbufsize 
       IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                       comm_io_group, ierr )
+!YKT      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                       comm_io_group, ierr )
+      call send_flag(reduced, tasks_in_group-1, comm_io_group)
+
 !JMTIMING       CALL end_timing("MPI_Reduce in wrf_quilt_put_var_ti_char")
       ! send data to the i/o processor
       CALL collect_on_comm_debug(__FILE__,__LINE__, comm_io_group,            &
@@ -3349,9 +3361,10 @@ SUBROUTINE wrf_quilt_write_field ( DataHandle , DateStr , VarName , Field , Fiel
       reduced = 0
       reduced(1) = hdrbufsize 
       IF ( wrf_dm_on_monitor() )  reduced(2) = DataHandle
-      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
-                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
-                       comm_io_group, ierr )
+!YKT      CALL MPI_Reduce( reduced, reduced_dummy, 2, MPI_INTEGER,  &
+!YKT                       MPI_SUM, tasks_in_group-1,          &   ! root = nio_tasks_in_group-1 is me
+!YKT                       comm_io_group, ierr )
+      call send_flag(reduced, tasks_in_group-1, comm_io_group)
 !JMTIMING       CALL end_timing("MPI_Reduce in wrf_quilt_write_field dryrun")
       ! send data to the i/o processor
 
@@ -3495,8 +3508,8 @@ END SUBROUTINE get_nio_tasks_in_group
      &,          history_interval,frames_per_outfile                    &
      &,          restart_interval,io_form_history                       &
      &,          io_form_restart,io_form_input                          &
-     &,          io_form_boundary,debug_level                           &
      &,          io_form_auxinput1                                      &
+     &,          io_form_boundary,debug_level                           &
      &,          auxhist2_interval,io_form_auxhist2                     &
      &,          inputout_interval                                      &
      &,          inputout_begin_y,inputout_begin_mo                     &
@@ -3518,8 +3531,8 @@ END SUBROUTINE get_nio_tasks_in_group
      &,                      frames_per_outfile,restart                 &
      &,                      restart_interval,io_form_history           &
      &,                      io_form_restart,io_form_input              &
-     &,                      io_form_boundary,io_form_auxinput1         &
-     &,                      debug_level                                &
+     &,          io_form_auxinput1                                      &
+     &,                      io_form_boundary,debug_level               &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
      &,                      inputout_interval,input_outname            &
@@ -3540,9 +3553,7 @@ END SUBROUTINE get_nio_tasks_in_group
         call int_get_fresh_handle(iunit)
         open(unit=iunit,file="namelist.input",form="formatted"          &
      &,      status="old")
-        write(0,*) 'read time_control'
         read(iunit,time_control)
-        write(0,*) 'past read time_control'
         close(iunit)
 !
         if(start_month==2.and.mod(start_year,4)==0)days_per_month(2)=29
@@ -3653,7 +3664,7 @@ END SUBROUTINE get_nio_tasks_in_group
      &,          history_interval,frames_per_outfile                    &
      &,          restart_interval,io_form_history                       &
      &,          io_form_restart,io_form_input                          &
-     &,          io_form_boundary,io_form_auxinput1,debug_level         &
+     &,          io_form_boundary,debug_level                           &
      &,          auxhist2_interval,io_form_auxhist2                     &
      &,          inputout_interval                                      &
      &,          inputout_begin_y,inputout_begin_mo                     &
@@ -3674,8 +3685,7 @@ END SUBROUTINE get_nio_tasks_in_group
      &,                      frames_per_outfile,restart                 &
      &,                      restart_interval,io_form_history           &
      &,                      io_form_restart,io_form_input              &
-     &,                      io_form_boundary,io_form_auxinput1         &
-     &,                      debug_level                                &
+     &,                      io_form_boundary,debug_level               &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
      &,                      inputout_interval,input_outname            &
@@ -3812,3 +3822,37 @@ SUBROUTINE collect_on_comm_debug2(file,line,var,tag,sz,hdr_rec_size, comm_io_gro
 !  write(0,*)'collect_on_comm_debug2 ',trim(file),line,'returning for ',trim(var)
   RETURN
 END
+
+!-------------------------------------------------------------
+!YKT replacement routines for MPI_Reduce, using point-to-point
+!-------------------------------------------------------------
+subroutine send_flag(ibuf, rank, comm)
+implicit none
+  include 'mpif.h'
+  integer ibuf(2), rank, comm, tag, info
+  tag = 99
+  call mpi_send(ibuf, 2, mpi_integer, rank, tag, comm, info)
+  return
+end
+
+subroutine recv_flag(ibuf, comm)
+implicit none
+  include 'mpif.h'
+  integer ibuf(2), itmp(2), rank, size, tag, comm, info
+  integer status(mpi_status_size)
+
+  tag = 99
+
+  call mpi_comm_size(comm, size, info)
+
+  ibuf(:) = 0
+
+  itmp(:) = 0
+
+  do rank = 0, size - 2
+    call mpi_recv(itmp, 2, mpi_integer, rank, tag, comm, status, info)
+    ibuf(:) = ibuf(:) + itmp(:)
+  end do
+  return
+end
+

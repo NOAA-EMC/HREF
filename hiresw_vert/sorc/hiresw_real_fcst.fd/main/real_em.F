@@ -325,6 +325,7 @@ real::t1,t2,t3,t4
 
    grid%input_from_file = .true.
    grid%input_from_file = .false.
+   using_binary_wrfsi = .false.
 
    CALL compute_si_start_and_end ( model_config_rec%start_year  (grid%id) , &
                                    model_config_rec%start_month (grid%id) , &
