@@ -293,7 +293,7 @@ do
  do
 
 echo "$CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2" >> poescript
-$CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2
+# $CNVGRIB -g12 -p40 -nv ${COMOUT}/${model}.t${hh1}z.${member}.f$HR ${COMOUT}/${model}.t${hh1}z.${member}.f$HR.grib2
 
 
 $WGRIB ${COMOUT}/${model}.t${hh1}z.${member}.f$HR | grep "APCP" | $WGRIB -i -grib ${COMOUT}/${model}.t${hh1}z.${member}.f$HR -o ${COMOUT}/${model}.t${hh1}z.${member}.f${HR}_pcp
@@ -301,11 +301,57 @@ $WGRIB ${COMOUT}/${model}.t${hh1}z.${member}.f$HR | grep "APCP" | $WGRIB -i -gri
  done # member
 done # model
 
-# mpirun.lsf  ## instead of poe????
+cp poescript poescript_second_members
 
 
-# cp poescript poescript_second_members
-# rm poescript
+### invoke it multiple times based on how many tasks are available
+if [ $FIRST_INC == "03" ]
+then
+# poelimit=17
+head -n17 poescript_second_members > poescript
+cp poescript poescript_n17_first
+echo before first
+date
+mpirun.lsf
+echo after first
+date
+
+tail -n28 poescript_second_members > remainder
+head -n17 remainder > poescript
+cp poescript poescript_n17_second
+echo before second
+date
+mpirun.lsf
+echo after second
+date
+
+tail -n17 remainder > poescript
+# tail -n11 remainder > poescript
+cp poescript poescript_n17_third
+echo before third
+date
+mpirun.lsf 
+echo after third
+date
+
+else
+
+
+### hugely inefficient.  Possible to run with fewer 
+### than the total tasks?? mpirun.lsf -np xx poescript??
+
+# poelimit=41
+head -n41 poescript_second_members > poescript
+cp poescript poescript_n41_first
+mpirun.lsf
+
+tail -n41 poescript_second_members > poescript
+cp poescript poescript_n41_second
+mpirun.lsf
+
+fi
+
+rm poescript
 
 fi
 
