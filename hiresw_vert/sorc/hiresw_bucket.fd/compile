@@ -8,9 +8,9 @@ OPT=-convert big_endian
 
 echo $LIBDEF
 
-cp parmeta.full4km parmeta
-ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
-mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full4km
+# cp parmeta.full4km parmeta
+# ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+# mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full4km
 
 cp parmeta.full5km parmeta
 ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
