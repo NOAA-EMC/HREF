@@ -36,20 +36,23 @@ MULTINUM_IN=$ICOUNT
 
 ### figure out start and end times for this segment
 
+# NDATE=/u/Matthew.Pyle/ndate
+NDATE=/nwprod/util/exec/ndate
+
 ystart=`echo $PDY | cut -c1-4`
 mstart=`echo $PDY | cut -c5-6`
 dstart=`echo $PDY | cut -c7-8`
 hstart=$CYC
 
 orig_start=$ystart$mstart$dstart${CYC}
-start=`/nwprod/util/exec/ndate +${STARTHR} ${orig_start}`
+start=`$NDATE +${STARTHR} ${orig_start}`
 
 ystart=`echo $start | cut -c1-4`
 mstart=`echo $start | cut -c5-6`
 dstart=`echo $start | cut -c7-8`
 hstart=`echo $start | cut -c9-10`
 
-end=`/nwprod/util/exec/ndate +${ENDHR} ${orig_start}`
+end=`$NDATE +${ENDHR} ${orig_start}`
 
 yend=`echo $end | cut -c1-4`
 mend=`echo $end | cut -c5-6`
@@ -84,7 +87,7 @@ cp ../namelist.wps.${ICOUNT} namelist.wps
 FHR=$STARTHR
 while [ $FHR -le $ENDHR ]
 do
-time=`/nwprod/util/exec/ndate +${FHR} ${orig_start}`
+time=`$NDATE +${FHR} ${orig_start}`
 yy=`echo $time | cut -c1-4`
 mm=`echo $time | cut -c5-6`
 dd=`echo $time | cut -c7-8`
@@ -98,7 +101,7 @@ export err=$?; $DATA/err_chk
 
 echo "DONE" > wpsdone.${ICOUNT}
 
-mv met*.int $DATA/.
+mv met*.int met*.bin  $DATA/.
 mv wpsdone.${ICOUNT} ../
 
 cp metgrid.log $DATA/metgrid.log.0000_${ICOUNT}

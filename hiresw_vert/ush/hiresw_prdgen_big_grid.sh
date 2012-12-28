@@ -122,13 +122,14 @@ EOF5
 
 rm fort.*
 
-export pgm=hiresw_prdgen;. prep_step
-export XLFRTEOPTS="unit_vars=yes"
-export XLFUNIT_21=$FIXhiresw/hiresw_wgt_${DOMIN}.g255
-export XLFUNIT_10=master${fhr}.ctl
+export pgm=hiresw_prdgen # ;. ./prep_step
 
-$EXEChiresw/hiresw_prdgen < input${fhr}.prd > prdgen.out${fhr} 2>errfile
-export err=$?;err_chk
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
+export FORT10="master${fhr}.ctl"
+export FORT11="input${fhr}.prd"
+
+$EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
+export err=$?;./err_chk
 
 cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
 
@@ -190,7 +191,7 @@ else  # (not f00)
   echo $reflag >> input.card
 
    $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
-   export err=$?;err_chk
+   export err=$?;./err_chk
 
      if [ $model = "arw" ] ; then
 
@@ -207,7 +208,7 @@ else  # (not f00)
   echo $reflag >> input.card
 
   $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
-  export err=$?;err_chk
+  export err=$?;./err_chk
 
      fi
 

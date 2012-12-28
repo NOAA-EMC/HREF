@@ -1,4 +1,11 @@
-
+###########################################################
+# Change log:
+# 02/20/10: Jun Du, initial scripts
+# 02/14/12: Jun Du, modified to the new SREFv6.0.0 by adding
+#                   NMMB model, getting rid of Eta and RSM
+#                   models and adjusting membership
+#
+###########################################################
 set -x
 
 wb=/nwprod/util/exec
@@ -13,7 +20,7 @@ model=$7
 mem=$8
 region=$9
 
-if [ $model = eta -o $model = rsm -o $model = nmm -o $model = eastnmm -o $model = westnmm -o $model = aknmm -o $model = prnmm -o $model = hinmm ]; then
+if [ $model = nmb -o $model = nmm -o $model = eastnmm -o $model = westnmm -o $model = aknmm -o $model = prnmm -o $model = hinmm ]; then
 
  if [ $newHR -eq 03 -o $newHR -eq 06 -o $newHR -eq 09 -o $newHR -eq 12 -o $newHR -eq 15  -o $newHR -eq 18  -o $newHR -eq 21  -o $newHR -eq 24  -o $newHR -eq 27  -o $newHR -eq 30  -o $newHR -eq 33  -o $newHR -eq 36 -o $newHR -eq 39 -o $newHR -eq 42 -o $newHR -eq 45 -o $newHR -eq 48 ]; then
  let "p1=p2-3"
@@ -74,7 +81,7 @@ sh $utilscript/setup.sh
 ###########################################################################
 
 # select variables:
-if [ $model = nmm -o $model = em -o $model = eta -o $model = rsm ];then
+if [ $model = nmm -o $model = em -o $model = nmb ];then
  infile=${COMIN_SREF}/sref_${model}.t${hh2}z.pgrb${inputgrid}.${mem}.f$oldHR
  ls -l $infile
  needcheck=no
@@ -137,7 +144,7 @@ fi
 # 243 grid is used for HI and is 3hrly
 
 
-if [ $model = nmm -o $model = em -o $model = eta -o $model = rsm \
+if [ $model = nmm -o $model = em -o $model = nmb \
   -o $model = eastnmm -o $model = westnmm -o $model = aknmm \
   -o $model = hinmm -o $model = prnmm  \
   -o $model = hiarw -o $model = prarw  \
@@ -157,27 +164,27 @@ else
 echo not three hourly so looking for infile $infile
 
 # check if input data is available
-icnt=1
-while [ $icnt -lt 1000 ]
-do
- str=`ls -s $infile`  #get file size in block (1024 bytes)
- echo "checking on icnt, found str " $icnt $str
- set -A fsize $str
- if [ -s $infile ] && [ ${fsize[0]} -gt 50 ] ; then
-   dump=0
-   break
- else
-   sync
-   icnt=$((icnt + 1))
-   sleep 10
-   if [ $icnt -ge 360 ]
-    then
-    echo $infile "not exist"
-    msg="ABORTING after 60 minutes of waiting for $infile"
-    err_exit $msg
-   fi
- fi
-done
+# icnt=1
+# while [ $icnt -lt 1000 ]
+# do
+#  str=`ls -s $infile`  #get file size in block (1024 bytes)
+#  echo "checking on icnt, found str " $icnt $str
+#  set -A fsize $str
+#  if [ -s $infile ] && [ ${fsize[0]} -gt 50 ] ; then
+#    dump=0
+#    break
+#  else
+#    sync
+#    icnt=$((icnt + 1))
+#    sleep 10
+#    if [ $icnt -ge 360 ]
+#     then
+#     echo $infile "not exist"
+#     msg="ABORTING after 60 minutes of waiting for $infile"
+#     err_exit $msg
+#    fi
+#  fi
+# done
 fi # 3 hourly alaska
 fi # model
 
@@ -219,7 +226,7 @@ fi
 ls -l selected.data
 
 # convert to a common grid:
-if [ $model = nmm -o $model = em -o $model = eta -o $model = rsm ];then
+if [ $model = nmm -o $model = em -o $model = nmb ];then
 
  if [ $region = east ];then
 $utilexec/copygb -x -g "255,3,884,614,22100,-109800,8,-89000,5000,5000,0,64,38000,38000" selected.data $DATA/r_gribawips${num}.f$newHR
