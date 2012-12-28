@@ -34,11 +34,11 @@ DOMOUT=${DOMIN_SMALL}${modelout}
 if [ $DOMIN = "eastnmm" ]
 then
   filenamthree="wrf.EAST04"
-  DOMIN_bucket="full4km"
+  DOMIN_bucket="full5km"
 elif [ $DOMIN = "westnmm" ]
 then
   filenamthree="wrf.WEST04"
-  DOMIN_bucket="full4km"
+  DOMIN_bucket="full5km"
 elif [ $DOMIN = "aknmm" ]
 then
   filenamthree="wrf.AK04"
@@ -60,11 +60,11 @@ fi
 if [ $DOMIN = "eastarw" ]
 then
   filenamthree="wrf.EMEST04"
-  DOMIN_bucket="full4km"
+  DOMIN_bucket="full5km"
 elif [ $DOMIN = "westarw" ]
 then
   filenamthree="wrf.EMWST04"
-  DOMIN_bucket="full4km"
+  DOMIN_bucket="full5km"
 elif [ $DOMIN = "akarw" ]
 then
   filenamthree="wrf.EMAK04"
@@ -110,13 +110,20 @@ EOF5
 
 rm fort.*
 
-export pgm=hiresw_prdgen;. prep_step
-export XLFRTEOPTS="unit_vars=yes"
-export XLFUNIT_21=$FIXhiresw/hiresw_wgt_${DOMIN}.g255
-export XLFUNIT_10=master${fhr}.ctl
+export pgm=hiresw_prdgen  ;. ./prep_step
 
-$EXEChiresw/hiresw_prdgen < input${fhr}.prd > prdgen.out${fhr} 2>errfile
-export err=$?;err_chk
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
+export FORT10="master${fhr}.ctl"
+
+echo EXECUTING hiresw_prdgen  for 4 km
+
+
+
+export FORT11="input${fhr}.prd"
+
+$EXEChiresw/hiresw_prdgen  > prdgen.out${fhr}_4km 2>errfile_4km
+
+export err=$?;./err_chk
 
 ### cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
 
@@ -181,7 +188,7 @@ else
   echo $reflag >> input.card
 
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;err_chk
+ export err=$?;./err_chk
 
   if [ $model = "arw" ] ; then
 
@@ -197,7 +204,7 @@ else
   echo $reflag >> input.card
 
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;err_chk
+ export err=$?;./err_chk
 
   fi
 
