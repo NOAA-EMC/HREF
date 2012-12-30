@@ -43,6 +43,7 @@
 !---  READ IN MASSI FROM LOOKUP TABLES 
 !
       OPEN (UNIT=1,FILE="eta_micro_lookup.dat",FORM="UNFORMATTED")
+        rewind(1)
       DO I=1,3
         READ(1)
       ENDDO
@@ -52,6 +53,7 @@
       ENDDO
       READ(1) MASSI
       CLOSE(1)
+
       RQR_DRmin=N0r0*MASSR(MDRmin)    ! Rain content for mean drop diameter of .05 mm
       RQR_DRmax=N0r0*MASSR(MDRmax)    ! Rain content for mean drop diameter of .45 mm
 !      PI=ACOS(-1.) ! defined in params now

@@ -704,7 +704,7 @@
 
 !
       VarName='T02_MAX'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
        do j = jsta_2l, jend_2u
@@ -725,7 +725,7 @@
        end do
 
       VarName='RH02_MAX'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
        do j = jsta_2l, jend_2u

@@ -1,0 +1,13 @@
+WRFDIR=../hiresw_real_fcst.fd
+
+mkdir wrflibs
+
+cp $WRFDIR/frame/pack_utils.o                         ./wrflibs/
+cp $WRFDIR/external/esmf_time_f90/libesmf_time.a      ./wrflibs/
+cp $WRFDIR/external/RSL_LITE/librsl_lite.a            ./wrflibs/
+cp $WRFDIR/external/io_grib1/libio_grib1.a            ./wrflibs/
+cp $WRFDIR/external/io_grib_share/libio_grib_share.a  ./wrflibs/
+cp $WRFDIR/external/io_int/libwrfio_int.a             ./wrflibs/
+cp $WRFDIR/external/io_netcdf/libwrfio_nf.a           ./wrflibs/
+cp $WRFDIR/main/libwrflib.a                           ./wrflibs/
+
