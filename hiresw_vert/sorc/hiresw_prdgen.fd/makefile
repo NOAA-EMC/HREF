@@ -21,17 +21,18 @@ OBJS=	ADD_WMO.o PRDGEN.o CTL_RDR.o \
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-FC =		ifort -openmp -convert big_endian -g -traceback -heap-arrays
+FC =		ifort -O2 -openmp -convert big_endian # -g -traceback -heap-arrays
 LDFLAGS =	    
-LIBS =		-L/home/Ratko.Vasic/lib_tmp/  -lip_4 -lw3-1.9_4 -lsp_noessl_4 -lbacio_4 -L/scratch2/portfolios/NCEPDEV/meso/save/Ratko.Vasic/nwprod/lib -lgem
-CMD =		hiresw_prdgen
+LIBS =		-L/nwprod/lib/  -lip_4 -lw3emc_4 -lw3nco_4 -lbacio_4 -ltransutil_4
+
+CMD =		../../exec/hiresw_prdgen
 PROFLIB =	-lprof
 
 # To perform the default compilation, use the first line
 # To compile with flowtracing turned on, use the second line
 # To compile giving profile additonal information, use the third line
 # WARNING:  SIMULTANEOUSLY PROFILING AND FLOWTRACING IS NOT RECOMMENDED 
-FFLAGS =         -O  
+FFLAGS =         -O2  
 
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build prdgen.
