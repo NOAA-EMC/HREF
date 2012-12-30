@@ -118,6 +118,7 @@ cwas  REAL(8) PRODAT(NSTAT,NPNT,NWORD),RISTAT
       DIMENSION P(LM),T(LM),U(LM),V(LM),Q(LM),PINT(LM+1),ZINT(LM+1)
       REAL CWTR(LM),IMXR(LM),RAIN(LM)
       INTEGER IDATE(3),NP1(8),LLMH(NSTAT),NLVL(2)
+      INTEGER NSTAT_TRUE
       EQUIVALENCE (CISTAT,RISTAT)
 C--------------------------------------------------------------------     
 C
@@ -217,7 +218,7 @@ C----------------------------------------------------------------------
         LLMH(INUMS)=NINT(FPACK(4))
         LMH=NINT(FPACK(4))
 
-        write(*,*) 'STATION=',INUMS,' IHRST,IDATE,IFCST,ISTAT,CISTAT=',
+        write(0,*) 'STATION=',INUMS,' IHRST,IDATE,IFCST,ISTAT,CISTAT=',
      +   IHRST,IDATE,IFCST,ISTAT,CISTAT,' FPACK(1-3)=',(FPACK(K),K=1,3) 
 c        do k=1,9
 c         write(*,*) k, FPACK(K)
@@ -497,8 +498,13 @@ C
 C     INITIALIZE BUFR LISTS SO BFRHDR WILL BE CALLED THE FIRST
 C     TIME THROUGH.
 C
+       NSTAT_TRUE=(NREC-1)/NFCST
+
+        write(0,*) 'computed NSTAT_TRUE as: ', NSTAT_TRUE
+
             CLIST1(1)=' '
-        DO I=1,NSTAT                            !loop for all stations
+C        DO I=1,NSTAT                            !loop for all stations
+        DO I=1,NSTAT_TRUE                            !loop for all stations
          NLVL(1)=LLMH(I)
          NLVL(2)=NSOIL
 C
