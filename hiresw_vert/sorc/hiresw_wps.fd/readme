@@ -1,0 +1,6 @@
+The build.scr script will copy the appropriate configuration file to configure.wps, 
+and then runs compile to build the two needed programs that are copied to
+../../exec/hiresw_ungrib and ../../exec/hiresw_metgrid
+
+The "clean" script will remove contents from a previous build, with a "clean -a" doing
+a thorough cleaning.

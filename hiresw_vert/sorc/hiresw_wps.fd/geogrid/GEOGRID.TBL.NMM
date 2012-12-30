@@ -10,7 +10,7 @@ name = HGT_M
         interp_option =     10m:four_pt
         interp_option = default:four_pt
         fill_missing=0.
-smooth_option = smth-desmth; smooth_passes=2
+smooth_option = smth-desmth; smooth_passes=10
         rel_path=     30s:topo_30s/
         rel_path=      2m:topo_2m/
         rel_path=      5m:topo_5m/
@@ -27,7 +27,7 @@ name = HGT_V
         interp_option =     10m:four_pt
         interp_option = default:four_pt
         fill_missing=0.
-smooth_option = smth-desmth; smooth_passes=2
+smooth_option = smth-desmth; smooth_passes=10
         rel_path=     30s:topo_30s/
         rel_path=      2m:topo_2m/
         rel_path=      5m:topo_5m/

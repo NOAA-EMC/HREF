@@ -932,6 +932,7 @@ integer, parameter :: BDR_WIDTH = 3
       
         write(0,*) 'call storage_get_levels for U and V'
             call storage_get_levels(u_field, u_levels)
+        write(0,*) 'past for u_field get'
             call storage_get_levels(v_field, v_levels)
         write(0,*) 'return storage_get_levels for U and V'
       
@@ -1003,7 +1004,6 @@ integer, parameter :: BDR_WIDTH = 3
       ! Rotate winds from earth-relative to grid-relative
       !
    
-        write(0,*) 'call storage_get_levels for U and V(b)'
       call storage_get_levels(u_field, u_levels)
       call storage_get_levels(v_field, v_levels)
    
@@ -1035,8 +1035,8 @@ integer, parameter :: BDR_WIDTH = 3
 
          end do
 
-         deallocate(u_levels)
-         deallocate(v_levels)
+!         deallocate(u_levels)
+!         deallocate(v_levels)
 
       end if
 
@@ -1691,7 +1691,7 @@ integer, parameter :: BDR_WIDTH = 3
             ! Find out what levels the current field has
         write(0,*) 'call storage_get_levels (c)'
         write(0,*) 'i: ', i
-        write(0,*) 'headers(i): ', headers(i)%header%field
+        write(0,*) 'headers(i): ', trim(headers(i)%header%field)
 
         write(0,*) 'size(field_levels) into storage_get_levels: ',&
                     size(field_levels)

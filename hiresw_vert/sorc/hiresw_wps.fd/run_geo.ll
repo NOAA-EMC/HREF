@@ -18,16 +18,11 @@
 ENDHR=48
 CYC=00
 
-cd /meso/save/wx20py/JIF_CODES/WPS_NMM/geogrid
 
-ln -sf GEOGRID.TBL.${1} GEOGRID.TBL
+cd /u/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps.fd/geogrid
+
+ln -sf GEOGRID.TBL.NMM GEOGRID.TBL
 
 cd ..
 
-# cp hiresw_${dir}.namelist.wps_in namelist.wps_in
-
 ./geogrid.exe
-
-# mv geo_nmm.d01.int hiresw_wps_static_${dir}
-
-done

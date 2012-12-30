@@ -175,6 +175,7 @@ MODULE map_utils
                                    !  ready for use
       LOGICAL          :: wrap     ! For Gaussian -- flag to indicate wrapping 
                                    !  around globe?
+      LOGICAL          :: comp_ll  ! Work in computational lat/lon space for
       REAL, POINTER, DIMENSION(:) :: gauss_lat  ! Latitude array for Gaussian grid
  
    END TYPE proj_info
@@ -213,6 +214,7 @@ MODULE map_utils
       proj%re_m     = EARTH_RADIUS_M
       proj%init     = .FALSE.
       proj%wrap     = .FALSE.
+      proj%comp_ll  = .false.
       nullify(proj%gauss_lat)
    
    END SUBROUTINE map_init
