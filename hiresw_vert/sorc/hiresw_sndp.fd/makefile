@@ -20,7 +20,7 @@ FC =		ncepxlf
 LDFLAGS = 
 CMD = hiresw_sndp
 
-LIBS =            -L/nwprod/lib -lbufr_4_64
+LIBS =            -L/nwprod/lib -lbufr_v10.2.0_4_64
 
 FFLAGS = -O   -qrealsize=4 -qmaxmem=-1  -qspillsize=548  
 

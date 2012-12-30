@@ -132,6 +132,7 @@ cwas  REAL(8) PRODAT(NSTAT,NPNT,NWORD),RISTAT
       DIMENSION P(LM),T(LM),U(LM),V(LM),Q(LM),PINT(LM+1),ZINT(LM+1)
       REAL CWTR(LM),IMXR(LM)
       INTEGER IDATE(3),NP1(8),LLMH(NSTAT),NLVL(2)
+      INTEGER NSTAT_TRUE
       EQUIVALENCE (CISTAT,RISTAT)
 C--------------------------------------------------------------------     
 C
@@ -172,6 +173,8 @@ C
        READ(5,MODTOP,END=12321)  !read from standard io (screen)
 12321  CONTINUE
        PTOP=ETOP*100.0
+
+        write(0,*) 'PTOP is: ', PTOP
 C
 C   READ IN SWITCHES TO CONTROL WHETHER TO DO...
 C     MONOL=.TRUE.   DO MONOLITHIC FILE
@@ -191,10 +194,14 @@ C----------------------------------------------------------------------
 cBZHOU      LRECPR=4*(8+9+LCL1ML1*LM1+LCL1SL1)        !for RSM/ETA
       LRECPR=4*(8+9+LCL1ML*LM1+LCL1SL)                !for NCAR-WRF
 
+        write(0,*) 'LRECPR is: ', LRECPR
+
       OPEN(UNIT=LUNIT,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
       NREC=0
  33   CONTINUE
       NREC=NREC+1      
+
+        write(0,*) 'will read NREC: ', NREC
 
 !      DO 4000 JHR = 1, NFCST
 !
@@ -212,6 +219,8 @@ cBZHOU      LRECPR=4*(8+9+LCL1ML1*LM1+LCL1SL1)        !for RSM/ETA
 !      READ(LUNIT,REC=NREC,IOSTAT=IRR,END=999) IHRST,IDATE,IFCST,  
       READ(LUNIT,REC=NREC,IOSTAT=IRR,ERR=999) IHRST,IDATE,IFCST,  
      &   ISTAT,CISTAT,(FPACK(N),N=1,9),(FPACK(N),N=10,FPACK(7))
+
+        write(0,*) 'IFCST, CISTAT, FPACK(7): ', IFCST, CISTAT, FPACK(7)
 
       IF(IRR.NE.0) THEN
        WRITE(*,*) NREC, '  read error, IRR=',IRR
@@ -500,6 +509,11 @@ c      end if
  
         write(*,*) 'Write all of data into one big Bufr file ...'
 
+
+        write(0,*) 'NREC-1: ', NREC-1
+        write(0,*) 'estimated true NSTA: ', (NREC-1)/NFCST
+        NSTAT_TRUE=(NREC-1)/NFCST
+        write(0,*) 'NWORD is: ', NWORD
 C
 C  WRITE OUT INDIVIDUAL FILES FOR EACH STATION
 C
@@ -558,7 +572,8 @@ C     INITIALIZE BUFR LISTS SO BFRHDR WILL BE CALLED THE FIRST
 C     TIME THROUGH.
 C
             CLIST1(1)=' '
-        DO I=1,NSTAT
+!        DO I=1,NSTAT
+        DO I=1,NSTAT_TRUE
          NLVL(1)=LLMH(I)
          NLVL(2)=NSOIL
 C

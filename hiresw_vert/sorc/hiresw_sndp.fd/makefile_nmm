@@ -20,7 +20,6 @@ FC =		ifort -convert big_endian
 LDFLAGS = 
 CMD = ../../exec/hiresw_sndp_nmm
 
-## LIBS =            -L/u/Ratko.Vasic/lib_tmp -lbufr_4_64
 LIBS = -L/nwprod/lib -lbufr_4_64
 
 

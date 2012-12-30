@@ -123,6 +123,9 @@ C-----------------------------------------------------------------------
 	iret = 0
 C
 C*	Close BUFR file if LUNTBL = 0.
+
+
+         CALL SETBLOCK(1)
 C
 	IF ( luntbl .eq. 0 ) THEN
 	    CALL CLOSBF ( lunbfr )
