@@ -38,23 +38,18 @@
 #
 # Define the name of the executable
 #
-#TARGET = ../exec/nceppost.x
 TARGET = ../../exec/hiresw_post
 #
 # CPP, Compiler, and Linker Options
 #
 
 
-NETCDFPATH=/apps/netcdf/3.6.3/intel
-FC       = ifort -lmpi -convert big_endian -g -traceback
-# FC       = ifort -lmpi -convert big_endian -O0
+NETCDFPATH=/usrx/local/NetCDF/3.6.3
+FC       = mpfort -convert big_endian -g -traceback
 CPP      = /usr/bin/cpp -P
 ARCH     = 
 CPPFLAGS = -DLINUX
-OPTS     = -O0 # -check all -fpe0 -ftrapuv
-#
-# OPTS     = -O0 -g -traceback -check all -fpe0 -ftrapuv
-# OPTS     = 
+OPTS     = -lmpi -O2 # -check all -fpe0 -ftrapuv
 LIST     = 
 FREE     = -FR
 TRAPS    = 
@@ -68,22 +63,22 @@ MASS     =
 NCDLIBS = -L$(NETCDFPATH)/lib -lnetcdf
 NCDFFLAGS = -I$(NETCDFPATH)
 
-NWPRODLIB=/home/George.Vandenberghe/w/nwprod/libintel
 
-WRFPATH=/scratch2/portfolios/NCEPDEV/meso/save/Matthew.Pyle/wcoss_transition/sorc/hiresw_real_fcst.fd
-WRFFFLAGS = -I$(WRFPATH)/external/io_quilt
+# WRFPATH=..//hiresw_real_fcst.fd
+# WRFFFLAGS = -I$(WRFPATH)/external/io_quilt
 
-CRTMFFLAGS = -I/home/Ratko.Vasic/lib_tmp/GSI_libs/incmod/CRTM
-# W3FLAGS = -I${NWPRODLIB}/incmod/w3_4
+CRTMFFLAGS = -I/nwprod/lib/incmod/crtm
+
 W3FLAGS = 
-SFCFLAG = -I/home/Ratko.Vasic/lib_tmp/sfcio_big_4
-NEMSIOFLAG = -I/home/Ratko.Vasic/lib_tmp/nemsio/incmod
+SFCFLAG = -I/nwprod/lib/incmod/sfcio_4
+
+NEMSIOFLAG = -I/nwprod/lib/incmod/nemsio
 
 
 WRFLIB    = ./wrflibs/libwrflib.a  ./wrflibs/libwrfio_int.a ./wrflibs/libwrfio_nf.a \
             ./wrflibs/pack_utils.o  ./wrflibs/libesmf_time.a ./wrflibs/librsl_lite.a  ./wrflibs/libio_grib1.a ./wrflibs/libio_grib_share.a
 
-CRTMLIB = /home/Ratko.Vasic/lib_tmp/GSI_libs/libCRTM.a
+CRTMLIB = /nwprod/lib/libcrtm.a
 
 SEARCH   =
 #
@@ -95,10 +90,9 @@ FFLAGSM  = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG)
 FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(NCDFFLAGS) $(WRFFLAGS) $(CRTMFFLAGS) $(W3FLAGS) $(NEMSIOFLAG)
 LDFLAGS  = -mkl=sequential $(MEM) $(MAP) $(SMP) $(PROFILE)
 LIBS     = $(ESSL) $(MASS) $(SEARCH) $(NCDLIBS) $(WRFLIB)\
-           -L/home/Ratko.Vasic/lib_tmp/nemsio -lnemsio \
-           -L/home/Ratko.Vasic/lib_tmp \
-           -lsfcio_big_4 -lbacio_4 -lsp_4 -lw3-2.0_4 $(CRTMLIB) $(NCDLIBS)
-#
+           -L/nwprod/lib/nemsio -lnemsio \
+           -L/nwprod/lib \
+           -lsfcio_4 -lbacio_4 -lsp_4 -lw3emc_4 -lw3nco_4 $(CRTMLIB) $(NCDLIBS)
 #
 # Threaded object files
 #
