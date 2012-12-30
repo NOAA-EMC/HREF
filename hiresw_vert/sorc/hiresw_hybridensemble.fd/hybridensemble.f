@@ -118,9 +118,9 @@ c       itime=(i00-1)*3                   !00,03,06,....,48 (01->17). 3-hourly
 
 c initialization (otherwise to use previous hour forecast variance if ensemble data doesn't exist
 c such as AK grid)
-       do igrid=1,jf
+       do i=1,nv
         do irun=1,iens
-         do i=1,nv
+         do igrid=1,jf
           var_raw(igrid,irun,i)=0.0
          enddo
         enddo
