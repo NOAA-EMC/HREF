@@ -234,18 +234,18 @@ subroutine inventory_wrf_binary_file(in_unit,wrf_ges_filename,nrecs, &
 
 end subroutine inventory_wrf_binary_file
 
-SUBROUTINE wrf_sizeof_integer( retval )
-  IMPLICIT NONE
-  INTEGER retval
-! 4 is defined by CPP
-  retval = 4
-  RETURN
-END SUBROUTINE wrf_sizeof_integer
+! SUBROUTINE wrf_sizeof_integer( retval )
+!  IMPLICIT NONE
+!  INTEGER retval
+!! 4 is defined by CPP
+!  retval = 4
+!  RETURN
+!END SUBROUTINE wrf_sizeof_integer
 
-SUBROUTINE wrf_sizeof_real( retval )
-  IMPLICIT NONE
-  INTEGER retval
-! 4 is defined by CPP
-  retval = 4
-  RETURN
-END SUBROUTINE wrf_sizeof_real
+!SUBROUTINE wrf_sizeof_real( retval )
+!  IMPLICIT NONE
+!  INTEGER retval
+!! 4 is defined by CPP
+!  retval = 4
+!  RETURN
+!END SUBROUTINE wrf_sizeof_real

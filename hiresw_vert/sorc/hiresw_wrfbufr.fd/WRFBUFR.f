@@ -74,18 +74,18 @@ C
 C     START PROGRAM WRFBUFR.
 C
 	write(6,*) 'to read statements'
-       read(666,111) fileName
+       read(11,111) fileName
 	write(6,*) 'initial filename= ', filename
-       read(666,113) model
+       read(11,113) model
 	write(6,*) 'model type= ', model
-       read(666,113) IOFORM
+       read(11,113) IOFORM
 	write(6,*) 'ioform= ', ioform
-       read(666,112) DateStr
+       read(11,112) DateStr
 	write(6,*) 'datestr= ', datestr
-       read(666,*) NFILES
-       read(666,*) INCR
-       read(666,*) IHR
-       read(666,111) prefileName
+       read(11,*) NFILES
+       read(11,*) INCR
+       read(11,*) IHR
+       read(11,111) prefileName
         write(6,*) 'previous filename= ', prefilename
 
 !!!! CHANGE THIS ASSUMPTION???
@@ -152,15 +152,10 @@ c20080707	filename=filename(1:len-19)//DateStr
 	if (ioform(1:6) .eq. 'binary') then 
 
 	if (model(1:4) .eq. 'NCEP') then
+        write(0,*) 'call PROF_NMM'
         CALL PROF_NMM(fileName,prefileName,DateStr,IHR,INCR)
 	elseif (model(1:4) .eq. 'NCAR') then
         write(0,*) 'call PROF_EM'
-        write(0,*) 'with filename: ', trim(filename)
-        write(0,*) 'with prefilename: ', trim(prefilename)
-        write(0,*) 'with datestr: ', datestr
-        write(0,*) 'with IHR: ', IHR
-        write(0,*) 'with INCR: ', INCR
-!                      c*256,  c*256,       c*19,  I?  , I?
 	CALL PROF_EM(fileName,prefileName,DateStr,IHR,INCR)
         write(0,*) 'return PROF_EM'
 	endif

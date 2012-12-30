@@ -47,7 +47,7 @@
        use kinds, only             : i_llong
 !
       include 'wrf_io_flags.h'
-      include 'mpif.h'
+C      include 'mpif.h'
 
 !     INCLUDE "parmeta"
        INCLUDE "parmsoil"
@@ -168,6 +168,9 @@ C	new stuff
       integer this_offset, this_length
 
       character*2 cfhr
+
+      real(kind=8) :: timef,btim,curtim
+
 C------------------------------------------------------------------------
       DATA BLANK/'    '/
 C------------------------------------------------------------------------
@@ -177,6 +180,9 @@ C***
 
 c	write(6,*) 'filename= ', filename
 c	write(6,*) 'startedate= ', startdate
+
+        btim=timef()
+
 
 	datestr=startdate
 
@@ -222,19 +228,21 @@ C
 
 C Getting start time
 
-!      CALL ext_int_get_dom_ti_char(DataHandle
-!     1 ,'START_DATE',startdate, status )
-!        print*,'startdate from read= ',startdate
+      CALL ext_int_get_dom_ti_char(DataHandle
+     1 ,'START_DATE',startdate, status )
+        print*,'startdate from read= ',startdate
 
-!      startdate='2012-06-15-00'
 
       jdate=0
       idate=0
       read(startdate,15)iyear,imn,iday,ihrst
+
+        write(0,*) 'read iday: ', iday
          IDATE(1)=iyear
          IDATE(2)=imn
          IDATE(3)=iday
          IDATE(5)=ihrst
+        write(0,*) 'defined idate(3): ', idate(3)
 
  15   format(i4,1x,i2,1x,i2,1x,i2)
       print*,'start yr mo day hr =',iyear,imn,iday,ihrst
@@ -273,13 +281,13 @@ C
 C reset imn,iyear,iday,ihrst since they are packed into IDAT which
 C is written into the profile output file!
 C
+
+
           imn=IDATE(2)
-           iday=IDATE(3)
+          iday=IDATE(3)
           iyear=IDATE(1)
           ihrst=IDATE(5)
 C
-
-
 
 
         call ext_int_get_dom_ti_integer(DataHandle,
@@ -512,6 +520,10 @@ C
 	
 	write(6,*) 'PD(20) (a): ', PD(20)
 
+       curtim=timef()
+       write(0,*) 'elapsed to PD read: ',1.e-3*(curtim-btim)
+
+
 
 
       VarName='FIS'
@@ -588,6 +600,8 @@ C
            END DO 
           END DO
 
+       curtim=timef()
+       write(0,*) 'elapsed past V read: ',1.e-3*(curtim-btim)
 
         varname='DX_NMM'
         write(6,*) 'call getVariableB for : ', VarName
@@ -986,6 +1000,9 @@ CHC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
             F_RIMEF(N,L) = DUM3D(I,J,LL)
            END DO
           END DO
+
+       curtim=timef()
+       write(0,*) 'elapsed past F_RIMEF read: ',1.e-3*(curtim-btim)
 
 !      varname='CLDFRA'
 !          DO L = 1,LM
@@ -1976,6 +1993,10 @@ c        filename=filename(1:len-2)//cfhr
 	STOP
        endif
 	write(6,*) 'PD(20) (cac): ', PD(20)
+
+       curtim=timef()
+       write(0,*) 'elapsed past full read first file : ',
+     &        1.e-3*(curtim-btim)
 
 C***  READ THE PREVIOUS RESTRT FILE
 C***
@@ -2993,6 +3014,9 @@ c reading 10 m wind
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      + IM,1,JM,1,IM,JS,JE,1)
 
+       curtim=timef()
+       write(0,*) 'elapsed past full read second file : ',
+     + 1.e-3*(curtim-btim)
 
 ! end dup block from above
 
@@ -3354,6 +3378,7 @@ C
 c      IHR  =NTSD/NTSPH+0.5
 
 !MAYBE      read(datestr,15)iyear,imn,iday,ihrst
+
          IDATE(2)=imn
          IDATE(3)=iday
          IDATE(1)=iyear
@@ -3362,7 +3387,7 @@ c      IHR  =NTSD/NTSPH+0.5
 	IDAT(3)=IDATE(1)
 	IDAT(1)=IDATE(2)
 	IDAT(2)=IDATE(3)
-	
+
       IYR  =IDAT(3)
       IMNTH=IDAT(1)
       IDAY =IDAT(2)
@@ -3417,6 +3442,9 @@ C***  OUTPUT PROFILE DATA.  THE FOLLOWING LOOP IS OVER ALL PROFILE SITES.
 C***
 C--------------------------------------------------------------------------
 	LCLAS1=79
+       curtim=timef()
+       write(0,*) 'elapsed to begin preparing for write : ',
+     + 1.e-3*(curtim-btim)
 
       OPEN(UNIT=LCLAS1,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
 C--------------------------------------------------------------------------
@@ -3799,6 +3827,9 @@ c      end do
 c     end if
 C---------------------------------------------------------------------
  1000 CONTINUE
+       curtim=timef()
+       write(0,*) 'elapsed to end of all writes : ',
+     + 1.e-3*(curtim-btim)
       CLOSE(LCLAS1)
 C
 C***  END OF PROFILE SITE LOOP
@@ -3850,3 +3881,22 @@ C---------------------------------------------------------------------
 
       RETURN
       END
+
+!
+!       function written early Dec. 1999 by M. Pyle to support  workstation
+!       Eta for users with etime but not timef functionality (like  certain
+!mp     HPs)  Designed to duplicate timef (elapsed time in milliseconds)
+!
+        function timef()
+        real et(2)
+        real*8 timef
+        timef=etime(et)
+        timef=timef*1.e3
+        end
+
+        function rtc()
+        real et(2)
+        real*8 rtc
+        rtc=etime(et)
+        rtc=rtc*1.e3
+        end
