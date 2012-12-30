@@ -7,14 +7,13 @@
 #
 
 
-FC=     ifort -O2 -g -convert big_endian  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
-#FC=     ncepxlf -O3 -qhot -bmaxdata:0x1200000000
+FC=     ifort -O2 -convert big_endian  
 ARCH     =
-OPTS     =  # -qflttrap=zerodivide:invalid:enable -qsigtrap -qcheck
+OPTS     = 
 LIST     =
 TRAPS    =
 PROFILE  =
-DEBUG    = -g
+DEBUG    =
 MEM      =
 MAP      =
 W3LIBDIR = /nwprod/lib
@@ -35,7 +34,7 @@ LIBS= $(ESSL) $(MASS) $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) -L$(W3LIBDIR)
 ../../exec/hiresw_ens_gen: $(OBJ)
 	$(FC)  -o $(@) $(OBJ) $(LIBS)
 clean:
-	/bin/rm hiresw_ens_gen *.o
+	/bin/rm ../../exec/hiresw_ens_gen *.o
 clear:
 	/bin/rm  *.o
 #
