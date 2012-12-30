@@ -476,19 +476,22 @@ CONTAINS
 ! Calculate the max/min 2 m RH
 
        vpres=(q2(I,J)/(q2(I,J)+0.622))*psfc(I,J)
-       
        brack1=2.5e6/461
        brack2=1/273.15
        brack3=1/t2(i,j)
        brack=brack1*(brack2-brack3)
        satvpres=611.*exp(brack)
 
+
        rh2=vpres/satvpres
+       rh2=min(rh2,0.99)
+       rh2=max(rh2,0.01)
+
 
 !	if (rh2 .lt. 0 .or. rh2 .gt. 105.) then
 !	write(0,*) 'i,j,rh2: ',i,j, rh2
 !	call wrf_error_fatal("bad rh2 value")
-!*	endif
+!	endif
 
        IF ( rh2 .GT. rh2max(i,j) ) THEN
           rh2max(i,j) = rh2
@@ -497,7 +500,7 @@ CONTAINS
        IF ( rh2 .LT. rh2min(i,j) ) THEN
           rh2min(i,j) = rh2
        ENDIF
-
+        
 
 ! Calculate the column mean vertical velocity between output times
 
