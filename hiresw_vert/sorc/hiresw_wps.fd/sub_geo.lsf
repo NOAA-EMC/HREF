@@ -1,0 +1,8 @@
+
+#BSUB -oo geo.out
+#BSUB -eo geo.err
+#BSUB -W 0:45
+
+module load ics
+
+/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps.fd/run_geo.ll

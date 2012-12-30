@@ -686,7 +686,8 @@ call mprintf(.true.,WARN,'PLEASE REPORT THIS BUG TO THE DEVELOPER!')
       type (head_node), pointer :: name_cursor
       type (data_node), pointer :: data_cursor
 
-      if (associated(list)) deallocate(list)
+!      if (associated(list)) deallocate(list)
+        write(0,*) 'skip past check of associated(list)'
       nullify(list)
 
       ! We'll first see if there is a list for this header 

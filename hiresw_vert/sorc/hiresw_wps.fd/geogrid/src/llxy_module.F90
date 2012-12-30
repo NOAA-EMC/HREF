@@ -556,7 +556,7 @@ module llxy_module
    !
    ! Purpose:
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
-   subroutine xytoll(x, y, xlat, xlon, stagger)
+   subroutine xytoll(x, y, xlat, xlon, stagger, comp_ll)
  
       implicit none
   
@@ -564,9 +564,13 @@ module llxy_module
       integer, intent(in) :: stagger
       real, intent(in) :: x, y
       real, intent(out) :: xlat, xlon
+      logical, optional, intent(in) :: comp_ll
+
   
       ! Local variables
       real :: rx, ry
+      logical :: save_comp_ll
+
   
       ! Account for grid staggering; we cannot modify x and y, so modify local
       !   copies of them
@@ -587,6 +591,11 @@ module llxy_module
       else
          rx = x
          ry = y
+      end if
+
+      if (present(comp_ll)) then
+         save_comp_ll = proj_stack(current_nest_number)%comp_ll
+         proj_stack(current_nest_number)%comp_ll = comp_ll
       end if
   
       call ij_to_latlon(proj_stack(current_nest_number), rx, ry, xlat, xlon)

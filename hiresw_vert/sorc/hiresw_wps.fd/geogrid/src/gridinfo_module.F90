@@ -16,7 +16,8 @@ module gridinfo_module
    integer :: iproj_type, n_domains, io_form_output, dyn_opt
    integer, dimension(MAX_DOMAINS) :: parent_grid_ratio, parent_id, ixdim, jydim
    real :: known_lat, known_lon, stand_lon, truelat1, truelat2, known_x, known_y, &
-           dxkm, dykm, phi, lambda, ref_lat, ref_lon, ref_x, ref_y
+           dxkm, dykm, phi, lambda, ref_lat, ref_lon, ref_x, ref_y, pole_lat, &
+           pole_lon
    real, dimension(MAX_DOMAINS) :: parent_ll_x, parent_ll_y, parent_ur_x, parent_ur_y
    character (len=128) :: geog_data_path, opt_output_from_geogrid_path, opt_geogrid_tbl_path
 
@@ -63,6 +64,8 @@ module gridinfo_module
                          geog_data_res, geog_data_path, opt_geogrid_tbl_path
   
       ! Set defaults for namelist variables
+      pole_lat=90.0
+      pole_lon=0.0
       debug_level = 0
       io_form_geogrid = 2
       wrf_core = 'ARW'
