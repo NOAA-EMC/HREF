@@ -46,7 +46,7 @@ c      use masks
        use kinds, only             : i_llong
 
       include 'wrf_io_flags.h'
-      include 'mpif.h'
+C      include 'mpif.h'
 
       INCLUDE "parmsoil"
 
@@ -160,6 +160,7 @@ C------------------------------------------------------------------------
      &,FNAME*90,ENVAR*90,BLANK*4
 
 	CHARACTER(LEN=8), ALLOCATABLE :: CIDSTN_SAVE(:)
+        INTEGER, ALLOCATABLE:: IDSTN_SAVE(:)
 
 C	new stuff
       character(len=31) :: VarName,varin
@@ -187,6 +188,9 @@ C------------------------------------------------------------------------
       DATA BLANK/'    '/
       DATA SPVAL/-9999./
 C------------------------------------------------------------------------
+
+      IDSTN(1:NSTAT)=0
+
 C***
 C***  READ IN THE INFORMATION FILE ABOUT THE SOUNDINGS
 C***
@@ -217,8 +221,10 @@ C
 
 !mp
 	allocate(CIDSTN_SAVE(NUMSTA))
+	allocate(IDSTN_SAVE(NUMSTA))
 	DO N=1,NUMSTA
 	CIDSTN_SAVE(N)=CIDSTN(N)
+        IDSTN_SAVE(N)=IDSTN(N)
 	ENDDO
 !mp
 
@@ -239,6 +245,7 @@ C
       FRST=.TRUE.
 
 !good        goto 979
+        write(0,*) 'IDSTN(1) here(aa): ', IDSTN(1)
 
 !--------------------------------------------------------------------
 !--------------------------------------------------------------------
@@ -1336,8 +1343,10 @@ c
       DO N=1,NUMSTA
         CUPREC(N)=DUMMY(IHINDX(N),JHINDX(N))*.001
         ACPREC(N)=( DUMMY(IHINDX(N),JHINDX(N))+
-     &              DUMMY(IHINDX(N),JHINDX(N)) )*.001
+     &              DUMMY2(IHINDX(N),JHINDX(N)) )*.001
       ENDDO
+
+        write(0,*) 'max of ACPREC: ', maxval(ACPREC)
 
 
       VarName='I_RAINC'
@@ -1396,6 +1405,8 @@ c
      +  IM,1,JM,1,IM,JS,JE,1)
 
         write(6,*) 'max GLW: ', maxval(DUMMY)
+
+
       DO N=1,NUMSTA
         I=IHINDX(N)
         J=JHINDX(N)
@@ -1604,11 +1615,6 @@ c
 
 !!!! end vapor fix
 
-!!! what is the vertical order of fields??
-!!!
-!!! PINT has ground at LM+1, but temp appears to have ground at L=1
-!!!
-!!! make PINT(1)=sfc
 !!!
 !!! ?????????????????????
 !!!
@@ -1761,13 +1767,18 @@ C
        PSFC = PDS(N)
        ZSFC = FIS(N)*GI
        PSLP(N) = PSFC
+
+!       write(0,*) 'N, ZSFC, PSFC: ', N, ZSFC, PSFC
 C
 C    COMPUTE LAYER TAU (VIRTUAL TEMP*RD/G).
-       TVRT = T(N,1)*(1.0+D608*Q(N,1))
-!       if (mod(N,50) .eq. 0) then
-!       write(0,*) 'N, T(N,1), Q(N,1), TVRT: ',
-!     &          N, T(N,1), Q(N,1), TVRT
-!       endif
+Cwrong       TVRT = T(N,1)*(1.0+D608*Q(N,1))
+       TVRT = T(N,LM)*(1.0+D608*Q(N,LM))
+       if (mod(N,50) .eq. 0) then
+       write(0,*) 'N, T(N,LM), Q(N,LM), TVRT: ',
+     &          N, T(N,LM), Q(N,LM), TVRT
+       endif
+
+!        write(0,*) 'N, TVRT: ', N, TVRT
        TAU  = TVRT*RD*GI
 C
 C    COMPUTE TAU AT THE GROUND (Z=ZSFC) AND SEA LEVEL (Z=0)
@@ -1790,8 +1801,8 @@ C
 C    COMPUTE SEA LEVEL PRESSURE.
        IF (FIS(N).GT.1.0) PSLP(N) = PSFC*EXP(ZSFC/TAUAVG)
 c      print *,n,idstn(n),pslp(n),tvrt
-        if (mod(N,20) .eq. 0) then
-        write(0,*) 'N, PDS(N), PSLP(N): ', N, PDS(N), PSLP(N)
+        if (mod(N,25) .eq. 0) then
+        write(0,*) 'N, PDS(N), PSLP(N): ', N, PDS(N),TAUAVG, PSLP(N)
         endif
 
       ENDDO
@@ -2709,6 +2720,8 @@ c
      &               DUMMY2(IHINDX(N),JHINDX(N)) )*.001
       ENDDO
 
+        write(0,*) 'maxval ACPREC0: ', maxval(acprec0)
+
       VarName='I_RAINC'
       call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY      &
      +  ,IM,1,JM,1,IM,JS,JE,1)
@@ -3002,10 +3015,12 @@ c     RESET1=(NPHS-1)*DT+3600.
 
         DO N=1,NUMSTA
           STATPR(N)=ACPREC0(N)*1.E3
-        if (ACPREC0(N) .gt. 0) then
-          write(6,*) 'N,ACPREC0(N),STATPR(N): ', N,
-     &                  ACPREC0(N),STATPR(N)
-        endif
+!        if (ACPREC0(N) .gt. 0) then
+!          write(6,*) 'N,ACPREC0(N),STATPR(N): ', N,
+!     &                  ACPREC0(N),STATPR(N)
+          write(6,*) 'N,STATPR(N): ', N,
+     &                  STATPR(N)
+!        endif
 
           STACPR(N)=CUPREC0(N)*1.E3
           STASNM(N)=ACSNOM0(N)*1.E3
@@ -3097,10 +3112,12 @@ C
 C***  EGRID2 IS THE SURFACE TEMPERATURE.
 C
 !$OMP parallel do
+        write(0,*) 'maxval(ACPREC) before: ', maxval(ACPREC)
       DO N=1,NUMSTA
         IF(ACPREC(N).LT.0.)ACPREC(N)=0.
         IF(CUPREC(N).LT.0.)CUPREC(N)=0.
       ENDDO
+        write(0,*) 'maxval(ACPREC) after : ', maxval(ACPREC)
 C
 C***  SET CYCLE, DATE, AND FORECAST TIME.
 C
@@ -3205,9 +3222,9 @@ C
       NWORD13  = 13*LMHK
 c20080708      NWORD14  = 14*LMHK
 c20080708      NWORD13  = 15*LMHK
-      ISTAT    = IDSTN(N)
+      ISTAT    = IDSTN_SAVE(N)
       CISTAT   = CIDSTN_SAVE(N)
-!	write(6,*) 'CISTAT: ', CISTAT
+	write(0,*) 'CISTAT: ', CISTAT, ISTAT, idstn_save(n)
 C
       FPACK(1) = STNLAT(N)/DTR
 !mp      FPACK(2) = -STNLON(N)/DTR
@@ -3218,6 +3235,10 @@ C
       FPACK(5) = LCL1ML -2  !20080708: B Zhou don't store 13 and 14th sounding 
       FPACK(6) = LCL1SL
       FPACK(7) = 9+FPACK(5)*FPACK(4)+FPACK(6)
+        write(0,*) 'FPACK(4) LMH: ', FPACK(4)
+        write(0,*) 'FPACK(5) LCLML-2: ', FPACK(5)
+        write(0,*) 'FPACK(6) LCL1SL: ', FPACK(6)
+        writE(0,*) 'results in FPACK(7): ', FPACK(7)
       FPACK(8) = 999.
       FPACK(9) = 999.
 
@@ -3328,6 +3349,7 @@ C
      &                     NWORD13+6, PRODAT(NWORD13+6)
         endif
       PRODAT(NWORD13+7)  = ACPREC(N)*1000.  !ACCUMULATED TOTAL GRID SCALE PRECIPITATION
+        write(0,*) 'N, ACPREC*1000: ', N, PRODAT(NWORD13+7)
       PRODAT(NWORD13+8)  = CUPREC(N)*1000.  !ACCUMULATED TOTAL CUMULUS PRECIPITATION
       PRODAT(NWORD13+27) = Z0    (N)        !Roughness length
 C
@@ -3335,7 +3357,9 @@ C
       STACRX=PRODAT(NWORD13+8)-STACPR(N)
 
 !	if (STAPRX .gt. 0) then
-!	write(6,*) '1hr precip: ',  N,STAPRX
+	write(0,*) '1hr precip: ',  N,STAPRX
+        write(0,*) 'N, STATPR(old), PRODAT(new): ', N,
+     &         STATPR(N), PRODAT(NWORD13+7)
 !	endif
 C
 C***  ROTATE WINDS
@@ -3432,7 +3456,7 @@ C
       ENDDO
 C
       FPACK(9+NWORD13+7)  = STAPRX
-!	write(6,*) 'precip written to FPACK element: ', 9+NWORD13+7
+	write(6,*) 'precip written to FPACK element: ', 9+NWORD13+7
       FPACK(9+NWORD13+8)  = STACRX
       FPACK(9+NWORD13+9)  = PSFCEVP * RTSPH
       FPACK(9+NWORD13+10) = PPOTEVP * RTSPH
@@ -3489,7 +3513,7 @@ C***
 cZHOU       NREC=(IFHR/INCR)*NUMSTA+N
         NREC=N
 	write(6,*) 'NREC, NLEN, FPACK: ', NREC, NLEN,
-     &                      (FPACK(NNN),NNN=1,NLEN,NLEN/5)
+     &                      (FPACK(NNN),NNN=1,NLEN,NLEN/3)
 
 
  	if (NREC.eq.1 .or. NREC.eq.100) then
