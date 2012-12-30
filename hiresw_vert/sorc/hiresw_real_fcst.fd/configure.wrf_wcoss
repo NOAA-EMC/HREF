@@ -202,14 +202,14 @@ LIB_BUNDLED     = \
                      $(WRF_SRC_ROOT_DIR)/frame/pack_utils.o 
 
 LIB_EXTERNAL    = \
-                     $(WRF_SRC_ROOT_DIR)/external/io_netcdf/libwrfio_nf.a -L/meso/save/Matthew.Pyle/hiresw_vert/netcdf/lib  -lnetcdf   
+                     $(WRF_SRC_ROOT_DIR)/external/io_netcdf/libwrfio_nf.a -L/usrx/local/NetCDF/3.6.3/lib  -lnetcdf   
 
 LIB             =    $(LIB_BUNDLED) $(LIB_EXTERNAL) $(LIB_LOCAL)
 LDFLAGS         =    $(OMP) $(FCFLAGS) $(LDFLAGS_LOCAL) 
 ENVCOMPDEFS     =    
 WRF_CHEM	=	0 
 CPPFLAGS        =    $(ARCHFLAGS) $(ENVCOMPDEFS) -I$(LIBINCLUDE) $(TRADFLAG) 
-NETCDFPATH      =    /meso/save/Matthew.Pyle/hiresw_vert/netcdf
+NETCDFPATH      =    /usrx/local/NetCDF/3.6.3
 PNETCDFPATH     =    
 
 bundled:  wrf_ioapi_includes wrfio_grib_share wrfio_grib1 wrfio_int esmf_time fftpack
