@@ -1,0 +1,71 @@
+Note: general variable declaration grammar is:
+Var    n1  n2    Xa a1 a2 ...  Pb b1 b2 .... op  Tc  c1 c2 c3 c4 ....
+  where Var-name of variable
+         n1-KPDS(5)
+         n2-KPDS(6)
+         X is M|H|D
+          M-symbol for mean/spread 
+          H-symbol for accumulated mean/spread symbol
+          D-symbol just for other derived variables
+         a-number of levels at which mean/spread will be calculated (maximum = 40, if larger than 40, modify maxmlvl in parm.inc file)
+         a1, a2, ..ai, list of levels defined by KPDS(7), i=a 
+         P-symbol for probability
+         b-number of levels at which probability will be calculated (maximum = 40, if larger than 40, modify maxplvl in parm.inc file)
+         b1, b2, ..bj,  list of levels defined by KPDS(7), j=b
+         op-one of three threshold comparison opertors: >|<|=
+         T-sybol for threshold in probability computation
+         c-number of thresholds (maximum = 25, if larger than 25, modify maxtlvl in parm.inc file)
+         c1, c2, ..ck,  list of thresholds, k=c
+
+   Derived variables: current only following Derived variables can be specified
+        (1) Thickness                     -> height must be declared 
+        (2) Accumulated precipitation     -> precipitation must be declared
+        (3) Accumulated snow              -> precipitation and rain,freez rain, ice must be declared
+        (4) Precipitation type            -> rain,freez rain, ice must be declared
+        (5) Dominant precipitation        -> rain,freez rain, ice must be declared
+        (6) Wind speed                    -> U and V component must be declared
+          
+        if a variable already is declared for mean/spread, this variable needs no declare again
+
+        If want to get products other than these 6 variable, please contact Binbin Zhou to add it into the program
+
+ examples:
+
+  (1)      T2m    11  105  M1    2  P1    2   < T1 273.0
+
+       This declaration is: compute 2m mean and spread of temperature at 2m and its probability of < 273K
+       Note, this declaration can be splitted into two declarations:
+
+           T2m    11  105  M1  2
+           T2m    11  105  M0    P1  2   < T1 273.0
+             
+  (2)      PWTR   54  200  M1  0
+
+       This declaration is: compute mean and spread of potential water, no probability computation
+
+  (3)      POP    193  1   M0   P1 0 = T1 1.0
+
+       This declaration is: compute probability of rain, no mean/spread is required to compute
+
+  (4)     T      11  100  M4  850  700 500 300 P4 850  700 500 300 < T1 273              
+
+       This declaration is: compute mean and spread of temperature at 850  700 500 300mb respectively, and
+         compute probability of temperature < 373K at 850  700 500 300mb respectively
+
+  (5)    APAC   61   1   H4  3  6  12  24  P4 3  6  12  24  > T8 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8
+
+       This declaration is: compute 3,6,12,24hr accumulated precip and their probability > 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8  
+       This this declaration can be splitted into:
+
+         APAC   61   1   H1  3 P1  3  > T8 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8
+         APAC   61   1   H1  6 P1  6  > T8 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8
+         APAC   61   1   H1 12 P1 12  > T8 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8
+         APAC   61   1   H1 24 P1 24  > T8 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8
+
+  (6)   THKN   7   101  M1  21860 1000 850
+  
+       This declaration is: compute 1000-850 layer thickness mean adn spread 
+
+  (7)   PRCP   61   1   D1    0
+     
+       This declaration is: just declare it for accumulated precip computation
