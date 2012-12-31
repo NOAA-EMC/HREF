@@ -210,7 +210,7 @@ $USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL
 
 else
 
-mpirun.lsf
+mpirun.lsf 
 err=$?
 echo "err from metgrid poe job: " $err
 
@@ -345,7 +345,7 @@ fi
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+mpirun.lsf /usr/bin/time $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
 export err=$?
 

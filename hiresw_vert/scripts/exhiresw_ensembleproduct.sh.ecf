@@ -322,7 +322,7 @@ ln -sf $PARMhiresw/hiresw_product_variable.tbl.${freq} variable.tbl
 
 export FORT11="input"
 
-$EXEChiresw/hiresw_ens_gen 1>output.f${HR} 2>errfile.f${HR}
+/usr/bin/time $EXEChiresw/hiresw_ens_gen 1>output.f${HR} 2>errfile.f${HR}
 
 ###################################################
 # Part III: output grib data with proper file names

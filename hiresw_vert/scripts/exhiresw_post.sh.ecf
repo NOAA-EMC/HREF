@@ -195,7 +195,7 @@ echo to run executable at $datestr
 # seems like yes.  Single PE job runs fast
 # 
 
-mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
+mpirun.lsf /usr/bin/time $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
 # $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
 
 datestr=`date`
