@@ -1,0 +1,13 @@
+
+#BSUB -a poe
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_hybens.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_hybens.err
+#BSUB -n _NPROC_
+#BSUB -q "hpc_ibm"
+#BSUB -W 1:19
+
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_HYBRIDENSEMBLE.sms.test _DOM_ _CORE_ _CYC_

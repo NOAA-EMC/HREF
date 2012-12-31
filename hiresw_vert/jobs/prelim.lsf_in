@@ -1,0 +1,29 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.err__DOM___CORE___CYC_
+#BSUB -q "hpc_ibm"
+#BSUB -W 0:59
+#BSUB -a poe
+#BSUB -n 9
+
+module load ics
+module load ibmpe
+
+echo START `date`
+
+export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+/usr/bin/time /meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test _DOM_ _CORE_ _CYC_
+
+echo END `date`
+
+bsub < sub_model.lsf__DOM___CORE___CYC_
+bsub < sub_post.lsf__DOM___CORE___CYC_
+bsub < sub_prdgen.lsf__DOM___CORE___CYC_
+bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
+bsub < sub_hybridensemble.lsf__DOM___CORE___CYC_
+bsub < sub_ensembleproduct.lsf__DOM___CORE___CYC_
+
+# rm sub_model.lsf__DOM___CORE___CYC_ sub_post.lsf__DOM___CORE___CYC_ sub_prdgen.lsf__DOM___CORE___CYC_
+rm sub_wrfbufrsnd.lsf__DOM___CORE___CYC_ sub_hybridensemble.lsf__DOM___CORE___CYC_ sub_ensembleproduct.lsf__DOM___CORE___CYC_

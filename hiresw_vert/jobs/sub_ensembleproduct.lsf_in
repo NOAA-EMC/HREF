@@ -1,0 +1,9 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ensprod.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ensprod.err
+#BSUB -q "hpc_ibm"
+#BSUB -W 1:19
+
+
+module load ics
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_ENSEMBLEPRODUCT_ALL.sms.test _DOM_ _CORE_ _CYC_
