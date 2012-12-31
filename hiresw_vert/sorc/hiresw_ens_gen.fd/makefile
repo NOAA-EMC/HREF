@@ -34,7 +34,7 @@ LIBS= $(ESSL) $(MASS) $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) -L$(W3LIBDIR)
 ../../exec/hiresw_ens_gen: $(OBJ)
 	$(FC)  -o $(@) $(OBJ) $(LIBS)
 clean:
-	/bin/rm ../../exec/hiresw_ens_gen *.o
+	/bin/rm  *.o
 clear:
 	/bin/rm  *.o
 #
