@@ -1,0 +1,14 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgen.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgen.err__DOM__CORE__CYC_
+#BSUB -q "hpc_ibm"
+#BSUB -a poe
+#BSUB -n _NPROC_
+#BSUB -W 1:09
+
+export MP_EUILIB=us
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PRDGEN.sms.test _DOM_ _CORE_ _CYC_

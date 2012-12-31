@@ -1,0 +1,21 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_wrfbufrsnd.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_wrfbufrsnd.err
+#BSUB -R span[ptile=1]
+#BSUB -n 1
+#BSUB -q "hpc_ibm"
+#BSUB -a poe
+#BSUB -W 1:19
+
+module load ics
+module load ibmpe
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+# export MP_IOAGENT_CNT=all
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_WRFBUFRSND.sms.test _DOM_ _CORE_ _CYC_
