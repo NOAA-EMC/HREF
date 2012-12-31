@@ -71,7 +71,7 @@ fi
 
 ./startmsg
 
-mpirun.lsf /usr/bin/time $EXEChiresw/hiresw_${MODEL}_fcst
+mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst
 
 export err=$?;./err_chk
 

@@ -188,12 +188,7 @@ echo about to run program at $datestr
 
 # mpirun.lsf $EXEChiresw/hiresw_wrfbufr  >> $pgmout 2>errfile 
 
-/usr/bin/time $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
-
-datestr=`date`
-echo done run program at $datestr
-
-echo return execution
+$EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
 
 if [ -e err_chk ]
 then
@@ -248,7 +243,7 @@ export FORT66="$DATA/profilm.c1.${tmmark}"
 export FORT78="$DATA/class1.bufr"
 
 ./startmsg
-/usr/bin/time $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+$EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 
 if [ -e err_chk ]
 then
