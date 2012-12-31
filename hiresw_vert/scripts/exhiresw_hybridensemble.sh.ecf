@@ -21,11 +21,6 @@ export XLFRTEOPTS
 XLSMPOPTS="parthds=2"
 export XLSMPOPTS
 
-echo start script
-date
-
-# cyc=${1}
-
 echo have NEST $NEST
 echo have cyc $cyc
 
@@ -144,8 +139,7 @@ while [ $oldHR -le $ENDHOUR ]
  if [ $newHR -ge 36 ];then INCHOUR=03;fi
  let "p2=oldHR"
 
-echo "$USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg" >> poescript
-# $USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg
+echo "/usr/bin/time $USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg" >> poescript
 
  oldHR=`expr $oldHR + $INCHOUR`
  newHR=`expr $newHR + $INCHOUR`
@@ -176,9 +170,6 @@ done
 # process HIRESW data as becomes available
 ###########################################################
 ###########################################################
-
-echo start looking for HiresW
-date
 
 oldHR=00
 newHR=00
@@ -218,12 +209,11 @@ cat <<paramEOF >input
  &end
 paramEOF
 
-echo RUN hiresw_hybridensemble
 # $EXEChiresw/hiresw_hybridensemble <input >error.out
 
 export FORT11="input"
 
-$EXEChiresw/hiresw_hybridensemble > error.out_$newHR 2>&1
+/usr/bin/time $EXEChiresw/hiresw_hybridensemble > error.out_$newHR 2>&1
 
 CNVGRIB=/nwprod/util/exec/cnvgrib
 WGRIB2=/nwprod/util/exec/wgrib2
@@ -278,9 +268,6 @@ fi
 # convert grib1 to grib2
 if [ $SENDGB2 = YES ]; then
 
-echo start GRIB2 at
-date
-
 name="${reg} ${reg}nmm ${reg}arw"
 for model in $name
 do
@@ -303,44 +290,33 @@ done # model
 
 cp poescript poescript_second_members
 
-
 ### invoke it multiple times based on how many tasks are available
 if [ $FIRST_INC == "03" ]
 then
-# poelimit=17
+
+# poelimit=17 case
+
 head -n17 poescript_second_members > poescript
 cp poescript poescript_n17_first
-echo before first
-date
 mpirun.lsf
-echo after first
-date
 
 tail -n28 poescript_second_members > remainder
 head -n17 remainder > poescript
 cp poescript poescript_n17_second
-echo before second
-date
 mpirun.lsf
-echo after second
-date
 
 tail -n17 remainder > poescript
-# tail -n11 remainder > poescript
 cp poescript poescript_n17_third
-echo before third
-date
 mpirun.lsf 
-echo after third
-date
+rcc=$?
 
 else
 
-
-### hugely inefficient.  Possible to run with fewer 
+### Possible to run with fewer 
 ### than the total tasks?? mpirun.lsf -np xx poescript??
 
-# poelimit=41
+# poelimit=41 case
+
 head -n41 poescript_second_members > poescript
 cp poescript poescript_n41_first
 mpirun.lsf
@@ -348,6 +324,7 @@ mpirun.lsf
 tail -n41 poescript_second_members > poescript
 cp poescript poescript_n41_second
 mpirun.lsf
+rcc=$?
 
 fi
 
@@ -355,7 +332,6 @@ rm poescript
 
 fi
 
-rcc=$?
 if [ ${rcc} -ne 0 ]; then
   echo "!!! Error *** ${rcc} *** converting files.  Exiting..."
   exit 8
@@ -365,10 +341,6 @@ fi
  newHR=`expr $newHR + $INCHOUR`
  if [ $oldHR -lt 10 ];then oldHR=0$oldHR;fi
  if [ $newHR -lt 10 ];then newHR=0$newHR;fi
-
-
-datestr=`date`
-echo DONE BIG LOOP AT $datestr
 
 done   # time
 
