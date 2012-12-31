@@ -36,7 +36,6 @@ MULTINUM_IN=$ICOUNT
 
 ### figure out start and end times for this segment
 
-# NDATE=/u/Matthew.Pyle/ndate
 NDATE=/nwprod/util/exec/ndate
 
 ystart=`echo $PDY | cut -c1-4`
