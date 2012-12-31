@@ -139,7 +139,7 @@ while [ $oldHR -le $ENDHOUR ]
  if [ $newHR -ge 36 ];then INCHOUR=03;fi
  let "p2=oldHR"
 
-echo "/usr/bin/time $USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg" >> poescript
+echo "$USHhiresw/hiresw_copygb4hybridensemble.sh $num $oldHR $newHR $hh2 $hh1 $p2 $model $mem $reg" >> poescript
 
  oldHR=`expr $oldHR + $INCHOUR`
  newHR=`expr $newHR + $INCHOUR`
@@ -213,7 +213,7 @@ paramEOF
 
 export FORT11="input"
 
-/usr/bin/time $EXEChiresw/hiresw_hybridensemble > error.out_$newHR 2>&1
+$EXEChiresw/hiresw_hybridensemble > error.out_$newHR 2>&1
 
 CNVGRIB=/nwprod/util/exec/cnvgrib
 WGRIB2=/nwprod/util/exec/wgrib2

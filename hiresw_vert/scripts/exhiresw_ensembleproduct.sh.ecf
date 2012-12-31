@@ -245,7 +245,10 @@ fi
 for HR in $HRLIST
 do
 
-if [ ${HR}%3 -eq 0 ]
+if [ ${HR} -eq 00 ]
+then
+freq="3hrly"
+elif [ ${HR} -ne 00 -a ${HR}%3 -eq 0 ]
 then
 freq="3hrly"
 else
@@ -322,7 +325,7 @@ ln -sf $PARMhiresw/hiresw_product_variable.tbl.${freq} variable.tbl
 
 export FORT11="input"
 
-/usr/bin/time $EXEChiresw/hiresw_ens_gen 1>output.f${HR} 2>errfile.f${HR}
+$EXEChiresw/hiresw_ens_gen 1>output.f${HR} 2>errfile.f${HR}
 
 ###################################################
 # Part III: output grib data with proper file names

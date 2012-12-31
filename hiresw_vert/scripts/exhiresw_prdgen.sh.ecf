@@ -105,10 +105,10 @@ done
 
 
 rm $DATA/poescript
-echo "/usr/bin/time $USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript
+echo "$USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript
 if [ $NEST = "east" ]
 then
-echo "/usr/bin/time $USHhiresw/hiresw_prdgen_4km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript
+echo "$USHhiresw/hiresw_prdgen_4km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript
 fi
 
 chmod 775 $DATA/poescript
