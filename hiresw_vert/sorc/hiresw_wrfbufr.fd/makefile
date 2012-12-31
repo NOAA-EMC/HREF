@@ -39,7 +39,6 @@ TARGET = ../../exec/hiresw_wrfbufr
 
 NETLIB   = /usrx/local/NetCDF/3.6.3/lib
 
-WRFPATH  = ../hiresw_real_fcst.fd
 FC       = mpfort 
 CPP      = /lib/cpp -P
 ARCH     =
@@ -57,7 +56,6 @@ MAP      =
 ESSL     =
 MASS     =
 W3FLAGS = -I/nwprod/lib
-### WRFFFLAGS = -I$(WRFPATH)/external/io_quilt
 NEMSIOFLAG = -I/nwprod/lib/incmod/nemsio
 WRFLIB    = ./wrflibs/libwrflib.a  \
             ./wrflibs/pack_utils.o  \
@@ -123,5 +121,5 @@ $(OBJST):	$(DEPS)
 	$(FC) -c $(FFLAGST) $(@:.o=.f)
 
 clean:	
-	/bin/rm -f  $(TARGET) *.lst *.o *.mod
+	/bin/rm -f  *.lst *.o *.mod
 #
