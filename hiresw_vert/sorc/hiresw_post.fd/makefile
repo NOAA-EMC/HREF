@@ -63,10 +63,6 @@ MASS     =
 NCDLIBS = -L$(NETCDFPATH)/lib -lnetcdf
 NCDFFLAGS = -I$(NETCDFPATH)
 
-
-# WRFPATH=..//hiresw_real_fcst.fd
-# WRFFFLAGS = -I$(WRFPATH)/external/io_quilt
-
 CRTMFFLAGS = -I/nwprod/lib/incmod/crtm
 
 W3FLAGS = 
