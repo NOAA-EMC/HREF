@@ -985,7 +985,7 @@
         end do
        end do
       end do
-!      print*,'qqg at ',ii,jj,ll,' = ',qqg(ii,jj,ll)
+      print*,'qqg at ',ii,jj,ll,' = ',qqg(ii,jj,ll)
       end if
       
       if(imp_physics.ne.5)then
@@ -1023,6 +1023,8 @@
         end do
        end do 
       end if 
+
+        write(0,*) 'maxval(cwm): ', maxval(CWM)
 
 
 !!! past cloud fields
@@ -1684,6 +1686,27 @@
 !       print*,'ANCPRC at ',ii,jj,' = ',ANCPRC(ii,jj)
 	write(6,*) 'past getting RAINNC'
 
+      VarName='RAINCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            CPRATE ( i, j ) = dummy ( i, j )* 0.001
+        end do
+       end do
+!       
+       VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            prec ( i, j ) = (dummy ( i, j )+dummy2(i,j))* 0.001
+        end do
+       end do
+
+        write(0,*) 'maxval(prec): ', maxval(prec)
+
+
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
@@ -1708,24 +1731,6 @@
 !      VarName='I_RAINNC'
 !      call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY      &  
 !        ,IM,1,JM,1,IM,JS,JE,1)
-
-!      VarName='RAINCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!       do j = jsta_2l, jend_2u
-!        do i = 1, im
-!            CPRATE ( i, j ) = dummy ( i, j )* 0.001
-!        end do
-!       end do
-!       
-!       VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!       do j = jsta_2l, jend_2u
-!        do i = 1, im
-!            prec ( i, j ) = (dummy ( i, j )+dummy2(i,j))* 0.001
-!        end do
-!!       end do
 
 
 !      VarName='EDT_OUT'
