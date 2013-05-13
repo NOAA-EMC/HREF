@@ -37,35 +37,35 @@
  dfi_cutoff_seconds                  = 3600,
  dfi_write_filtered_input            = .true.
  dfi_write_dfi_history               = .true.
- dfi_bckstop_year                    = YSTART,
- dfi_bckstop_month                   = MSTART,
- dfi_bckstop_day                     = DSTART,
- dfi_bckstop_hour                    = HSTART,
- dfi_bckstop_minute                  = 00,
+ dfi_bckstop_year                    = FILT_YS,
+ dfi_bckstop_month                   = FILT_MS,
+ dfi_bckstop_day                     = FILT_DS,
+ dfi_bckstop_hour                    = FILT_HS,
+ dfi_bckstop_minute                  = 30,
  dfi_bckstop_second                  = 00,
- dfi_fwdstop_year                    = YSTART,
- dfi_fwdstop_month                   = MSTART,
- dfi_fwdstop_day                     = DSTART,
- dfi_fwdstop_hour                    = HSTART,
- dfi_fwdstop_minute                  = 00,
+ dfi_fwdstop_year                    = FILT_YE,
+ dfi_fwdstop_month                   = FILT_ME,
+ dfi_fwdstop_day                     = FILT_DE,
+ dfi_fwdstop_hour                    = FILT_HE,
+ dfi_fwdstop_minute                  = 15,
  dfi_fwdstop_second                  = 00,
  /
 
 
  &domains
- time_step                           = 30,
+ time_step                           = 18,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 874,    
+ e_we                                = 1189,    
  s_sn                                = 1,     
- e_sn                                = 614,    
+ e_sn                                = 931,    
  s_vert                              = 1,     
  e_vert                              = 36,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 5150, 
- dy                                  = 5150, 
+ dx                                  = 3000, 
+ dy                                  = 3000, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
@@ -86,8 +86,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x = 7
- nproc_y = 15 
+ nproc_x = 15
+ nproc_y = 40
  /
 
  &physics
@@ -147,6 +147,6 @@ do_radar_ref                        = 1,
  /
 
  &namelist_quilt
- nio_tasks_per_group = 3,
+ nio_tasks_per_group = 8,
  nio_groups = 1,
  /
