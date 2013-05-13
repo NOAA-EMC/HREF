@@ -22,7 +22,7 @@ CONTAINS
                      ,I_ACSWUPB,I_ACSWUPBC,I_ACSWDNB,I_ACSWDNBC       & ! Optional
                      ,I_ACLWUPT,I_ACLWUPTC,I_ACLWDNT,I_ACLWDNTC       & ! Optional
                      ,I_ACLWUPB,I_ACLWUPBC,I_ACLWDNB,I_ACLWDNBC       & ! Optional
-                     ,dt,xtime,sbw,t2                                 &
+                     ,dt,xtime,sbw,t2,q2,psfc                         &
                      ,diag_print                                      &
                      ,bucket_mm, bucket_J                             &
                      ,prec_acc_c, prec_acc_nc, snow_acc_nc            &
@@ -34,6 +34,8 @@ CONTAINS
                      ,wspd10max                                       &
                      ,up_heli_max                                     &
                      ,w_up_max,w_dn_max                               &
+                     ,rh02_max, rh02_min                              &
+                     ,t02_max, t02_min                                &
                      ,znw,w_colmean                                   &
                      ,numcolpts,w_mean                                &
                      ,grpl_max,grpl_colint,refd_max,refl_10cm         &
@@ -138,7 +140,8 @@ CONTAINS
                                                     ,       HFX  &
                                                     ,        LH  &
                                                     ,    SFCEVP  &  
-                                                    ,        T2     
+                                                    ,        T2  &    
+                                                    ,        Q2     
 
    REAL, DIMENSION( ims:ime , jms:jme ),                         &
           INTENT(INOUT) ::                                DPSDT  &
@@ -196,7 +199,8 @@ CONTAINS
 
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(IN) ::            &
                                                             u10  &
-                                                           ,v10
+                                                           ,v10  &
+                                                           ,psfc 
 
    REAL, INTENT(IN) :: g
 
@@ -206,7 +210,12 @@ CONTAINS
                                              ,w_up_max,w_dn_max  &
                                     ,w_colmean,numcolpts,w_mean  &
                                           ,grpl_max,grpl_colint  &
-                                                      ,refd_max
+                                                      ,refd_max  &
+                                    ,rh02_max,rh02_min           &
+                                    ,t02_max,t02_min           
+
+   REAL                                      :: value,vpres,brack1,brack2,     &                            
+                                                brack3,satvpres,brack,rh2
 
    INTEGER :: idump
 
@@ -214,12 +223,18 @@ CONTAINS
    REAL :: depth
 
 !-----------------------------------------------------------------
+
+write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
+                                        nwp_diagnostics, diagflag
+
 ! Handle accumulations with buckets to prevent round-off truncation in long runs
 ! This is done every 360 minutes assuming time step fits exactly into 360 minutes
    IF(bucket_mm .gt. 0. .AND. MOD(NINT(XTIME),360) .EQ. 0)THEN
 ! SET START AND END POINTS FOR TILES
 !  !$OMP PARALLEL DO   &
 !  !$OMP PRIVATE ( ij )
+
+
 
    DO ij = 1 , num_tiles
 
@@ -391,10 +406,10 @@ CONTAINS
 
      idump = (history_interval * 60.) / dt
 
-!   print *,' history_interval = ', history_interval
-!   print *,' itimestep        = ', itimestep
-!   print *,' idump            = ', idump
-!   print *,' xtime            = ', xtime
+   print *,' history_interval = ', history_interval
+   print *,' itimestep        = ', itimestep
+   print *,' idump            = ', idump
+   print *,' xtime            = ', xtime
 
 ! IF ( MOD(itimestep, idump) .eq. 0 ) THEN
 !    WRITE(outstring,*) 'Computing PH0 for this domain with curr_secs = ', curr_secs
@@ -416,6 +431,10 @@ CONTAINS
          w_mean(i,j)      = 0.
          grpl_max(i,j)    = 0.
          refd_max(i,j)    = 0.
+         rh02_max(i,j)    = -999.
+         rh02_min(i,j)    = 999.
+         t02_max(i,j)    = -999.
+         t02_min(i,j)    = 999.
        ENDDO
        ENDDO
      ENDDO
@@ -491,6 +510,35 @@ CONTAINS
    DO ij = 1 , num_tiles
      DO j=j_start(ij),j_end(ij)
      DO i=i_start(ij),i_end(ij)
+
+! Calculate the max/min 2 m RH
+
+       vpres=(q2(I,J)/(q2(I,J)+0.622))*psfc(I,J)
+       brack1=2.5e6/461
+       brack2=1/273.15
+       brack3=1/t2(i,j)
+       brack=brack1*(brack2-brack3)
+       satvpres=611.*exp(brack)
+
+
+       rh2=vpres/satvpres
+       rh2=min(rh2,0.99)
+       rh2=max(rh2,0.01)
+
+
+!       if (rh2 .lt. 0 .or. rh2 .gt. 105.) then
+!       write(0,*) 'i,j,rh2: ',i,j, rh2
+!       call wrf_error_fatal("bad rh2 value")
+!       endif
+
+       IF ( rh2 .GT. rh02_max(i,j) ) THEN
+          rh02_max(i,j) = rh2
+       ENDIF
+
+       IF ( rh2 .LT. rh02_min(i,j) ) THEN
+          rh02_min(i,j) = rh2
+       ENDIF
+
 
 ! Calculate the max 10 m wind speed between output times
 
@@ -863,7 +911,7 @@ CONTAINS
    CHARACTER (LEN=80)                        :: timestr
 
    REAL, DIMENSION( ims:ime , jms:jme ),                                          & 
-                          INTENT(IN)         :: t2, q2, u10, v10 
+                          INTENT(IN)         :: t2, q2, u10, v10
    REAL, DIMENSION( ims:ime , jms:jme ),                                          &
                           INTENT(OUT)        :: t2clmin, t2clmax, tt2clmin,       &
                           tt2clmax, t2clmean, t2clstd,                            & 
@@ -879,7 +927,6 @@ CONTAINS
                           raincclstd, rainncclstd 
    REAL, PARAMETER                           :: minimum0= 1000000.,               &
                           maximum0= -1000000. 
-   REAL                                      :: value
    INTEGER, INTENT(IN)                       :: clwrfH
    CHARACTER (LEN=1024)                      :: message
    REAL, SAVE                                :: nsteps
