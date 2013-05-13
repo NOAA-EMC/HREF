@@ -27,6 +27,8 @@
  io_form_auxinput1                   = 1
  io_form_boundary                    = 1
  debug_level                         = 0
+ nwp_diagnostics  =  1,
+ output_diagnostics  =  1,
  auxinput1_inname                    = "met_em.d<domain>.<date>"
  /
 
@@ -89,7 +91,7 @@
  nproc_y=20
 
  &physics
- mp_physics                          = 3,  
+ mp_physics                          = 6,  
  ra_lw_physics                       = 1,  
  ra_sw_physics                       = 1,   
  radt                                = 10,  
@@ -110,6 +112,7 @@
  maxens2                             = 3,
  maxens3                             = 16,
  ensdim                              = 144,
+do_radar_ref                        = 1,
  /
 
  &fdda
