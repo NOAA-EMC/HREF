@@ -3980,7 +3980,8 @@ BENCH_END(bc_2d_tim)
       &             ,I_RAINC=grid%i_rainc    ,I_RAINNC=grid%i_rainnc       &
       &             ,HFX=grid%hfx   ,SFCEVP=grid%sfcevp    ,LH=grid%lh     &
       &             ,DT=grid%dt      ,SBW=config_flags%spec_bdy_width      &
-      &             ,XTIME=grid%xtime   ,T2=grid%t2                        &
+      &             ,XTIME=grid%xtime   ,T2=grid%t2, Q2=grid%q2            &
+      &             ,PSFC=grid%psfc                                        &
       &        ,ACSWUPT=grid%acswupt    ,ACSWUPTC=grid%acswuptc            &
       &        ,ACSWDNT=grid%acswdnt    ,ACSWDNTC=grid%acswdntc            &
       &        ,ACSWUPB=grid%acswupb    ,ACSWUPBC=grid%acswupbc            &
@@ -4018,6 +4019,8 @@ BENCH_END(bc_2d_tim)
       &             ,NUMCOLPTS=numcolpts,W_MEAN=grid%w_mean                &
       &             ,GRPL_MAX=grid%grpl_max,GRPL_COLINT=grpl_colint        &
       &             ,REFD_MAX=grid%refd_max                                &
+      &             ,RH02_MIN=grid%rh02_min, RH02_MAX=grid%rh02_max        &
+      &             ,T02_MIN=grid%t2min, T02_MAX=grid%t2max        &
       &             ,refl_10cm=grid%refl_10cm                              &
       &             ,QG_CURR=moist(ims,kms,jms,P_QG)                       &
       &             ,RHO=rho,PH=grid%ph_2,PHB=grid%phb,G=g                 &
@@ -4030,6 +4033,8 @@ BENCH_END(bc_2d_tim)
       &             ,KTS=k_start, KTE=min(k_end,kde-1)                     &
       &             ,NUM_TILES=grid%num_tiles                              &
       &                                                          )
+
+        write(0,*) 'maxval(grid%refd_max) ', maxval(grid%refd_max)
 
    IF (config_flags%output_diagnostics == 1) THEN
 !     IF ((config_flags%auxhist3_interval == 0 ) ) THEN
