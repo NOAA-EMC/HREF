@@ -105,7 +105,7 @@ ls -l $PARMhiresw/hiresw_${model}_master.${DOMIN}_4km.ctl
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}_4km.ctl master${fhr}.ctl
 
 cat >input${fhr}.prd <<EOF5
-$DATA/post/WRFPRS${fhr}.tm00
+$DATA/post_${fhr}/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*

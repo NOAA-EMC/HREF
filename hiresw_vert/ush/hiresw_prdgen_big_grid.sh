@@ -66,6 +66,10 @@ elif [ $DOMIN = "guamnmm" ]
 then
   filenamthree="wrf.GU04"
   DOMIN_bucket="hipr5km"
+elif [ $DOMIN = "conusnmmb" ]
+then
+  filenamthree="wrf.CONUS04"
+  DOMIN_bucket="fullndfd"
 fi
 
 if [ $DOMIN = "eastarw" ]
@@ -92,6 +96,10 @@ elif [ $DOMIN = "guamarw" ]
 then
   filenamthree="wrf.EMGU04"
   DOMIN_bucket="hipr5km"
+elif [ $DOMIN = "conusarw" ]
+then
+  filenamthree="wrf.EMCONUS04"
+  DOMIN_bucket="fullndfd"
 fi
 
 
@@ -117,7 +125,7 @@ ls -l $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl master${fhr}.ctl
 
 cat >input${fhr}.prd <<EOF5
-$DATA/post/WRFPRS${fhr}.tm00
+$DATA/post_${fhr}/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*
@@ -128,10 +136,17 @@ export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
 export FORT10="master${fhr}.ctl"
 export FORT11="input${fhr}.prd"
 
+if [ $model = "nmmb" ]
+then
+export FORT621="input${fhr}.prd"
+$EXEChiresw/hiresw_nmmb_prdgen > prdgen.out${fhr} 2>&1
+else
 $EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
+fi
+
 export err=$?;./err_chk
 
-cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
+cp $DATA/post_${fhr}/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
 
 ###############################################################
 ###############################################################
