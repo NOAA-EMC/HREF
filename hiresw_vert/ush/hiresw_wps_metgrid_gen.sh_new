@@ -65,13 +65,13 @@ mkdir -p ./run_metgrid_${ICOUNT}
 if [ $MODEL = nmm ] ; then
   cp $FIXhiresw/hiresw_wps_static_${DOMNAM}_${MODEL} $DATA/run_metgrid_${ICOUNT}/geo_nmm.d01.int
 elif [ $MODEL = arw ] ; then
-  cp $FIXhiresw/hiresw_wps_static_${DOMNAM}_${MODEL} $DATA/run_metgrid_${ICOUNT}/geo_em.d01.int
+  cp $FIXhiresw/hiresw_wps_static_${DOMNAM}_${MODEL}_new $DATA/run_metgrid_${ICOUNT}/geo_em.d01.int
 elif [ $MODEL = nmmb ] ; then
   cp $FIXhiresw/hiresw_nps_static_${DOMNAM}_${MODEL} $DATA/run_metgrid_${ICOUNT}/geo_nmb.d01.dio
 fi
 
 if [ $MODEL != nmmb ] ; then
-cat $PARMhiresw/hiresw_${DOMNAM}_${MODEL}.namelist.wps_in  \
+cat $PARMhiresw/hiresw_${DOMNAM}_${MODEL}.namelist.wps_in_new  \
  | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:${hstart}: | sed s:YEND:$yend: \
  | sed s:MEND:$mend:     | sed s:DEND:$dend:   \
@@ -89,12 +89,12 @@ cd  ./run_metgrid_${ICOUNT}
 
 if [ $MODEL != nmmb ]
 then
-cp $EXEChiresw/hiresw_metgrid  .
+cp $EXEChiresw/hiresw_metgrid_new  .
 else
 cp $EXEChiresw/hiresw_nps_metgrid  .
 fi
 
-cp $PARMhiresw/hiresw_METGRID.TBL.${MODEL} METGRID.TBL
+cp $PARMhiresw/hiresw_METGRID.TBL.${MODEL}_new METGRID.TBL
 
 if [ $MODEL != nmmb ] ; then
 cp ../namelist.wps.${ICOUNT} namelist.wps
@@ -117,7 +117,7 @@ FHR=`expr $FHR + $INT`
 done
 
 if [ $MODEL != nmmb ] ; then
-./hiresw_metgrid
+./hiresw_metgrid_new
 else
 ./hiresw_nps_metgrid
 fi
