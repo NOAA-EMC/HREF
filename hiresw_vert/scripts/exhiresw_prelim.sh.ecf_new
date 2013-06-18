@@ -102,7 +102,7 @@ cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib/Vtable
 if [ $MODEL != "nmmb" ]
 then
 
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
  | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc: > $DATA/run_ungrib/namelist.wps
 
@@ -189,7 +189,8 @@ cd $DATA/run_ungrib/
 
 if [ $MODEL != "nmmb" ]
 then
-cp $EXEChiresw/hiresw_ungrib ungrib.exe
+cp $EXEChiresw/hiresw_ungrib_new ungrib.exe
+
 ./ungrib.exe >> $pgmout 2>errfile
 else
 cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
@@ -205,15 +206,15 @@ fi
 cd $DATA
 rm -rf poescript
 
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL" > poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 03 1 $MODEL" > poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 06 09 2 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 12 15 3 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 18 21 4 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 24 27 5 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 30 33 6 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 36 39 7 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 42 45 8 $MODEL" >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 48 48 9 $MODEL" >> poescript
 
  
 chmod 775 $DATA/poescript
@@ -229,15 +230,15 @@ NOMPI=0
 
 if [ $NOMPI -eq 1 ]
 then
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 03 1 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 06 09 2 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 12 15 3 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 18 21 4 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 24 27 5 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 30 33 6 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 36 39 7 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 42 45 8 $MODEL  &
+$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 48 48 9 $MODEL
 
 else
 
@@ -434,7 +435,7 @@ fi
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real_new > $pgmout 2>&1
 
 export err=$?
 
