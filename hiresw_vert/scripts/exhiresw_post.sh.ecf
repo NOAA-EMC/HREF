@@ -39,15 +39,16 @@ export INCR=01
 NDATE=/nwprod/util/exec/ndate
 ######
 
-mkdir -p $DATA/post
-cd $DATA/post
+# also done in J-JOB
+echo post_times $post_times
+
+mkdir -p $DATA/post_${post_times}
+cd $DATA/post_${post_times}
 
 rm OUTPUT* errfil*
 
 cp $PARMhiresw/hiresw_micro_lookup.dat .
 cp hiresw_micro_lookup.dat eta_micro_lookup.dat
-
-rm ${DATA}/postdone*
 
 #
 # Get needed variables from exhiresw_prelim.sh.sms
@@ -57,6 +58,11 @@ rm ${DATA}/postdone*
 
 # OUTTYP=binarympiio
 OUTTYP=binary
+
+if [ $MODEL = "nmmb" ]
+then
+OUTTYP=binarynemsio
+fi
 
 # echo $MODEL > lower
 # model=`cat lower | tr '[a-z]' '[A-Z]'`
@@ -110,16 +116,10 @@ else
    cp $PARMhiresw/hiresw_arw_cntrl.parm wrf_cntrl.parm
 fi
 
-if [ $wdate -eq $startdate ] ; then
-  fhr=00
-else
-  fhr=`/nwprod/util/exec/nhour $wdate $startdate`
-fi
+export fhr=${post_times}
 
-export fhr
-
-while [ $wdate -le $edate ]
-do
+# while [ $wdate -le $edate ]
+# do
 
 date=`$NDATE $fhr $CYCLE`
 
@@ -132,22 +132,7 @@ timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
 
 icnt=1
                                                                                                                    
-# wait for model restart file
-while [ $icnt -lt 1000 ]
-do
-   if [ -s $filedir/fcstdone${fhr}.${tmmark} ]
-   then
-      break
-   else
-      icnt=$((icnt + 1))
-      sleep 9
-   fi
-if [ $icnt -ge 200 ]
-then
-    msg="ABORTING after 30 minutes of waiting for HIRESW FCST F${fhr} to end."
-    ./err_exit $msg
-fi
-done
+### assume that ready to process based on postmgr jobhj
 
 if [ $MODEL = nmm ] ; then 
 
@@ -158,7 +143,7 @@ $timeform
 $model
 EOF
 
-else
+elif [ $MODEL = arw ] ; then
 
 export POSTMOD=NCAR
 
@@ -168,6 +153,20 @@ $OUTTYP
 $timeform
 $POSTMOD
 EOF
+
+else
+
+export POSTMOD=NMM
+
+cat > itag <<EOF
+$filedir/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+$OUTTYP
+$timeform
+$POSTMOD
+EOF
+
+
+
 
 fi
 #-----------------------------------------------------------------------
@@ -195,8 +194,13 @@ echo to run executable at $datestr
 # seems like yes.  Single PE job runs fast
 # 
 
+if [ $MODEL != "nmmb" ]
+then
 mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
 # $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
+else
+mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
+fi
 
 datestr=`date`
 echo done running executable at $datestr
@@ -218,7 +222,7 @@ fi
 
 wdate=`$NDATE ${fhr} $CYCLE`
 
-done
+# done
 
 echo EXITING $0
 exit

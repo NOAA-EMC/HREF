@@ -1,0 +1,210 @@
+#! /bin/ksh
+
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exhiresw_postmgr.sh.ecf
+# Script description:  Runs WRF-NMM or WRF-EM post-processor managing job
+#
+# Author:        Matthew.Pyle       Org: NP22         Date: 2004-07-07
+#
+# Script history log:
+#
+# 2003-11-01  Matt Pyle - Original script for parallel
+#
+# 2004-07-07  Matthew.Pyle - Preliminary modifications for production.
+#
+# 2007-04-30  Matthew Pyle - Changed to a "one size fits all" version of the WRF post.
+#                             Eliminated inline call of prdgen job.
+#
+# 2009-09-24  Pyle/Cokley  - Reduces potential for conflict with other jobs by:
+#
+#                            1) doing work in a "post" subdirectory
+#                            2) eliminating write of "lower" file
+#                            3) Extracting date information from PDY rather than
+#                               copying date file
+#
+#                            Also, cleaned out some unused items related to prdgen to
+#                            streamline and prevent confusion.
+
+set -x
+export MEMBER=ctl
+
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+
+######
+NDATE=/nwprod/util/exec/ndate
+######
+
+# mkdir -p $DATA/post
+# cd $DATA/post
+
+rm OUTPUT* errfil*
+
+cp $PARMhiresw/hiresw_micro_lookup.dat .
+cp hiresw_micro_lookup.dat eta_micro_lookup.dat
+
+rm ${DATA}/postdone*
+
+#
+# Get needed variables from exhiresw_prelim.sh.sms
+#
+
+. $COMIN/${RUN}.t${cyc}z.envir.sh
+
+# OUTTYP=binarympiio
+OUTTYP=binary
+
+if [ $MODEL = "nmmb" ]
+then
+OUTTYP=binarynemsio
+fi
+
+filedir=$DATA
+
+ENDHR=48
+
+  fhr=0
+
+export fhr
+
+if [ -e posthours ]; then
+   rm -f posthours
+fi
+
+while [ $fhr -lt $ENDHR ]
+do
+   echo $fhr >> posthours
+   let "fhr=fhr+1"
+done
+
+postjobs=`cat posthours`
+
+#############################
+#
+if [ $MODEL == "nmmb" ]
+then
+
+echo "NMMB BRANCH"
+
+icnt=1
+while [ $icnt -lt 1500 ]
+do
+for fhr in $postjobs
+do
+
+fhr=`printf '%02d' $fhr`
+
+
+# wait for NMMB model done file
+
+   if [ -s $filedir/fcstdone.01.00${fhr}h_00m_00.00s ]
+   then
+
+echo "#!/bin/ksh -l" > jobsub_nmmb_post.${fhr}
+echo "#BSUB -J hiresw_nmmb_post_f${fhr}_${cyc}" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhr}.out${cyc}z" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhr}.out${cyc}z" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -W 00:05" >> jobsub_nmmb_post.${fhr}
+if [ $NEST == "conus" -o $NEST == "aknew" ]
+then
+echo "#BSUB -n 8" >> jobsub_arw_post.${fhr}
+else
+echo "#BSUB -n 1" >> jobsub_arw_post.${fhr}
+fi
+echo "#BSUB -q "dev"" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -R "span[ptile=8]"" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -x" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -a poe" >> jobsub_nmmb_post.${fhr}
+echo "set -x" >> jobsub_nmmb_post.${fhr}
+echo "export MP_EUILIB=us" >> jobsub_nmmb_post.${fhr}
+echo "export MP_EUIDEVICE=sn_all" >> jobsub_nmmb_post.${fhr}
+echo "export MP_MPILIB=mpich2" >> jobsub_nmmb_post.${fhr}
+echo "export MP_STDOUTMODE=unordered" >> jobsub_nmmb_post.${fhr}
+echo "export MP_LABELIO=yes" >> jobsub_nmmb_post.${fhr}
+echo "export MP_TASK_AFFINITY=core" >> jobsub_nmmb_post.${fhr}
+echo "export cyc=${cyc} ; export envir=para ; export job=hiresw_nmmb_post_f${fhr}_${cyc}" >> jobsub_nmmb_post.${fhr} 
+echo "export tmmark=tm00 ; export post_times=${fhr} ; export RUN_ENVIR=para" >> jobsub_nmmb_post.${fhr}
+echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_nmmb_post.${fhr}
+
+      bsub < jobsub_nmmb_post.${fhr}
+      postjobs=`echo $postjobs | sed s/${fhr}//g`
+
+   else
+      sleep 10
+      icnt=$((icnt + 1))
+      if [ $icnt -ge 1080 ]
+      then
+        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
+        err_exit $msg
+      fi
+   fi
+
+done
+done
+
+else # wrf-arw
+
+echo "WRF ARW BRANCH"
+
+icnt=1
+
+while [ $icnt -lt 1500 ]
+do
+for fhr in $postjobs
+do
+
+fhr=`printf '%02d' $fhr`
+
+
+# wait for fcstdone file
+
+   while [ ! -e $filedir/fcstdone${fhr}.tm00 ]
+   do
+   sleep 10
+      icnt=$((icnt + 1))
+
+      if [ $icnt -ge 1080 ]
+      then
+        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
+        err_exit $msg
+      fi
+   done
+
+
+echo "#!/bin/ksh -l" > jobsub_arw_post.${fhr}
+echo "#BSUB -J arw_post_f${fhr}_${cyc}" >> jobsub_arw_post.${fhr}
+echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhr}.out${cyc}z" >> jobsub_arw_post.${fhr}
+echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhr}.out${cyc}z" >> jobsub_arw_post.${fhr}
+echo "#BSUB -W 00:05" >> jobsub_arw_post.${fhr}
+if [ $NEST == "conus" -o $NEST == "aknew" ]
+then
+echo "#BSUB -n 8" >> jobsub_arw_post.${fhr}
+else
+echo "#BSUB -n 1" >> jobsub_arw_post.${fhr}
+fi
+echo "#BSUB -q "dev"" >> jobsub_arw_post.${fhr}
+echo "#BSUB -R "span[ptile=8]"" >> jobsub_arw_post.${fhr}
+echo "#BSUB -x" >> jobsub_arw_post.${fhr}
+echo "#BSUB -a poe" >> jobsub_arw_post.${fhr}
+echo "set -x" >> jobsub_arw_post.${fhr}
+echo "export MP_EUILIB=us" >> jobsub_arw_post.${fhr}
+echo "export MP_EUIDEVICE=sn_all" >> jobsub_arw_post.${fhr}
+echo "export MP_MPILIB=mpich2" >> jobsub_arw_post.${fhr}
+echo "export MP_STDOUTMODE=unordered" >> jobsub_arw_post.${fhr}
+echo "export MP_LABELIO=yes" >> jobsub_arw_post.${fhr}
+echo "export MP_TASK_AFFINITY=core" >> jobsub_arw_post.${fhr}
+echo "export MODEL=${MODEL}; export cyc=${cyc} ; export NEST=${NEST};  export envir=para ; export job=hiresw_arw_post_f${fhr}_${cyc} ; export tmmark=tm00 ; export post_times=${fhr} ; export RUN_ENVIR=para" >> jobsub_arw_post.${fhr}
+echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_arw_post.${fhr}
+
+cat jobsub_arw_post.${fhr}
+
+      bsub < jobsub_arw_post.${fhr}
+      postjobs=`echo $postjobs | sed s/${fhr}//g`
+
+done
+done
+
+fi
