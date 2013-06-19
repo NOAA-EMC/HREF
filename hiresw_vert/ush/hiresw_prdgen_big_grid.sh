@@ -69,7 +69,9 @@ then
 elif [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS04"
-  DOMIN_bucket="fullndfd"
+  DOMIN_bucket="general"
+  IM=1719
+  JM=1044
 fi
 
 if [ $DOMIN = "eastarw" ]
@@ -84,6 +86,12 @@ elif [ $DOMIN = "akarw" ]
 then
   filenamthree="wrf.EMAK04"
   DOMIN_bucket="ak5km"
+elif [ $DOMIN = "aknewarw" ]
+then
+  filenamthree="wrf.EMAK04"
+  DOMIN_bucket="general"
+  IM=1175
+  JM=906
 elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR04"
@@ -99,7 +107,9 @@ then
 elif [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS04"
-  DOMIN_bucket="fullndfd"
+  DOMIN_bucket="general"
+  IM=1719
+  JM=1044
 fi
 
 
@@ -204,6 +214,7 @@ else  # (not f00)
   echo $onehrprev >> input.card
   echo $fhr >> input.card
   echo $reflag >> input.card
+  echo $IM $JM >> input.card
 
    $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
    export err=$?;./err_chk
@@ -221,6 +232,7 @@ else  # (not f00)
   echo $threehrprev >> input.card
   echo $fhr >> input.card
   echo $reflag >> input.card
+  echo $IM $JM >> input.card
 
   $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
   export err=$?;./err_chk
