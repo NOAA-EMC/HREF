@@ -43,8 +43,8 @@ TARGET = ../../exec/hiresw_post
 # CPP, Compiler, and Linker Options
 #
 
+NETCDF=/usrx/local/NetCDF/3.6.3
 
-NETCDFPATH=/usrx/local/NetCDF/3.6.3
 FC       = mpfort -convert big_endian -g -traceback
 CPP      = /usr/bin/cpp -P
 ARCH     = 
@@ -60,8 +60,8 @@ MAP      =
 W3LIBDIR = /nwprod/lib
 ESSL     = 
 MASS     =
-NCDLIBS = -L$(NETCDFPATH)/lib -lnetcdf
-NCDFFLAGS = -I$(NETCDFPATH)
+NCDLIBS = -L$(NETCDF)/lib -lnetcdf
+NCDFFLAGS = -I$(NETCDF)
 
 CRTMFFLAGS = -I/nwprod/lib/incmod/crtm
 
@@ -184,6 +184,7 @@ EXCH.f         mersenne_twister.f
 #
 ##INCLUDES= parm.tbl parmeta parmout parmsoil cuparm
 #INCLUDES= parm.tbl cuparm
+INCLUDES=
 #
 # Common Blocks
 #

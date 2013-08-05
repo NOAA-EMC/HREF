@@ -1879,7 +1879,7 @@
 
       VarName='CLDFRA'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
-        IM,1,JM,1,IM,JS,JE,1)
+        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
       do l = 1, lm
        do j = jsta_2l, jend_2u
