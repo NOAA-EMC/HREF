@@ -2,8 +2,8 @@
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.err__DOM___CORE___CYC_
 #BSUB -q "dev"
-#BSUB -R "span[ptile=_SPAN_]"
-#BSUB -W 0:59
+#BSUB -W 0:29
+#BSUB -R "span[ptile=3]"
 #BSUB -a poe
 #BSUB -n 9
 

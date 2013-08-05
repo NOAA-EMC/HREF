@@ -1,0 +1,67 @@
+cycle=${1}
+
+cd /meso/save/Matthew.Pyle/hiresw_vert/jobs/
+
+if [ $cycle -eq 00 ]
+
+then
+
+# HI ARW 00
+
+DOM=hinew
+CORE=arw
+CYC=00
+NPROC_SPAN_PRELIM=9
+NPROC_SPAN_MODEL=16
+NPROC_MODEL=26
+NPROC_POST=2
+NPROC_PRDGEN=1
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+                    sed s:_SPAN_:${NPROC_SPAN_PRELIM}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in_new | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g | sed s:_SPAN_:${NPROC_SPAN_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgenmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgenmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+exit
+
+# HI NMMB 00
+
+DOM=hinew
+CORE=nmmb
+CYC=00
+NPROC_SPAN_PRELIM=9
+NPROC_SPAN_MODEL=16
+NPROC_MODEL=30
+NPROC_POST=2
+NPROC_PRDGEN=1
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+                    sed s:_SPAN_:${NPROC_SPAN_PRELIM}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in_new | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g | sed s:_SPAN_:${NPROC_SPAN_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgenmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgenmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+fi

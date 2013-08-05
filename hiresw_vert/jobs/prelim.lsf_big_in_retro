@@ -2,8 +2,8 @@
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.err__DOM___CORE___CYC_
 #BSUB -q "dev"
-#BSUB -R "span[ptile=_SPAN_]"
-#BSUB -W 0:59
+#BSUB -W 0:29
+#BSUB -R "span[ptile=3]"
 #BSUB -a poe
 #BSUB -n 9
 
@@ -13,7 +13,9 @@ module load ibmpe
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
 
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_new _DOM_ _CORE_ _CYC_
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_new_retro _DOM_ _CORE_ _CYC_ _DATE_
+
+exit
 
 bsub < sub_model.lsf__DOM___CORE___CYC_
 bsub < sub_postmgr.lsf__DOM___CORE___CYC_
