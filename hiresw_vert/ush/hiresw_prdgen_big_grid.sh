@@ -15,8 +15,8 @@ MEMBER=$5
 
 reflag=1
 
-mkdir ${DATA}/prdgen_full
-cd ${DATA}/prdgen_full/
+# mkdir ${DATA}/prdgen_full
+cd ${DATA}/prdgen_full_${fhr}/
 sh $utilscript/setup.sh
 
 #cd $DATA
@@ -72,6 +72,30 @@ then
   DOMIN_bucket="general"
   IM=1719
   JM=1044
+elif [ $DOMIN = "aknewnmmb" ]
+then
+  filenamthree="wrf.AK04"
+  DOMIN_bucket="general"
+  IM=1175
+  JM=906
+elif [ $DOMIN = "guamnewnmmb" ]
+then
+  filenamthree="wrf.GU04"
+  DOMIN_bucket="general"
+  IM=287
+  JM=219
+elif [ $DOMIN = "hinewnmmb" ]
+then
+  filenamthree="wrf.HI04"
+  DOMIN_bucket="general"
+  IM=287
+  JM=219
+elif [ $DOMIN = "prnewnmmb" ]
+then
+  filenamthree="wrf.PR04"
+  DOMIN_bucket="general"
+  IM=440
+  JM=269
 fi
 
 if [ $DOMIN = "eastarw" ]
@@ -110,6 +134,24 @@ then
   DOMIN_bucket="general"
   IM=1719
   JM=1044
+elif [ $DOMIN = "guamnewarw" ]
+then
+  filenamthree="wrf.EMGU04"
+  DOMIN_bucket="general"
+  IM=287
+  JM=219
+elif [ $DOMIN = "hinewarw" ]
+then
+  filenamthree="wrf.EMHI04"
+  DOMIN_bucket="general"
+  IM=287
+  JM=219
+elif [ $DOMIN = "prnewarw" ]
+then
+  filenamthree="wrf.EMPR04"
+  DOMIN_bucket="general"
+  IM=440
+  JM=269
 fi
 
 
@@ -146,13 +188,17 @@ export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
 export FORT10="master${fhr}.ctl"
 export FORT11="input${fhr}.prd"
 
-if [ $model = "nmmb" ]
-then
+# if [ $model = "nmmb" ]
+# then
+
+# can both use this now?
+
 export FORT621="input${fhr}.prd"
 $EXEChiresw/hiresw_nmmb_prdgen > prdgen.out${fhr} 2>&1
-else
-$EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
-fi
+
+# else
+# $EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
+# fi
 
 export err=$?;./err_chk
 
