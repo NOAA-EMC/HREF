@@ -23,9 +23,9 @@
  restart_interval                    = 5000,
  io_form_history                     = 1
  io_form_restart                     = 1
- io_form_input                       = 2
+ io_form_input                       = 1
  io_form_auxinput1                   = 1
- io_form_boundary                    = 2
+ io_form_boundary                    = 1
  debug_level                         = 0
  nwp_diagnostics  =  1,
  output_diagnostics  =  1,
@@ -53,19 +53,19 @@
 
 
  &domains
- time_step                           = 21,
- time_step_fract_num                 = 3,
- time_step_fract_den                 = 7,
+ time_step                           = 22,
+ time_step_fract_num                 = 1,
+ time_step_fract_den                 = 2,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 1564,    
+ e_we                                = 1560,    
  s_sn                                = 1,     
- e_sn                                = 966,    
+ e_sn                                = 965,    
  s_vert                              = 1,     
- e_vert                              = 36,    
+ e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3700, 
- dy                                  = 3700, 
+ dx                                  = 3800, 
+ dy                                  = 3800, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
@@ -75,10 +75,11 @@
  feedback                            = 1,
  smooth_option                       = 0
  p_top_requested                     = 5000
- eta_levels                          =  1.0000, .994, .982, .968, .95, .93, .908, .882, .853,
-                                         .821, .788, .752, .715, .677, .637, .597, .557, .517,
-                                         .477, .438, .401, .365, .330, .298, .268, .240, .214,
-                                         .188, .162, .137, .114, .091, .068, .045, .022, .0000
+ eta_levels                          =  1.0000, .9930, .9849, .9756, .9649, .9525, .9382, .9215, .9019,
+                                         .8790, .8521, .8209, .7853, .7454, .7016, .6546, .6052, .5545,
+                                         .5039, .4548, .4088, .3669, .3295, .2965, .2675, .2413, .2169,
+                                         .1937, .1712, .1496, .1290, .1094, .0912, .0743, .0588, .0448,
+                                         .0352, .0218, .0128, .0055, 0.
  interp_type                         = 1
  lowest_lev_from_sfc                 = .false.
  lagrange_order                      = 1
@@ -92,6 +93,7 @@
 
  &physics
  mp_physics                          = 6,  
+ mp_tend_lim                         = 10.0,
  ra_lw_physics                       = 1,  
  ra_sw_physics                       = 1,   
  radt                                = 10,  

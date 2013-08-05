@@ -27,8 +27,6 @@
  io_form_auxinput1                   = 1
  io_form_boundary                    = 1
  debug_level                         = 0
- nwp_diagnostics  =  1,
- output_diagnostics  =  1,
  /
 
  &dfi_control
@@ -111,7 +109,6 @@
  maxens2                             = 3,
  maxens3                             = 16,
  ensdim                              = 144,
- do_radar_ref                        = 1,
  /
 
  &fdda

@@ -39,7 +39,6 @@
 &metgrid
  fg_name = './FILE'
  io_form_metgrid = 1, 
- opt_ignore_dom_center        = .false.
  opt_output_from_metgrid_path = './',
  opt_metgrid_tbl_path         = './',
 /
