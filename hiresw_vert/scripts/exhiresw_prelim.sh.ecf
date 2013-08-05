@@ -117,7 +117,7 @@ fi
 while [ $whr -le $last ]
 do
 
-if [ $NEST = "pr"  -o $NEST = "conus" ] 
+if [ $NEST = "pr"  -o $NEST = "conus" -o $NEST = "prnew" ] 
 then 
   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
   err1=$?
@@ -321,6 +321,9 @@ if [ $NEST = "hi" -o $NEST = "guam" ] ; then
 elif [ $NEST = "pr" ] ; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_newpr namelist.input_in
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_newpr namelist.input_in_model
+elif [ $NEST = "prnew" ] ; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_prnew namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_prnew namelist.input_in_model
 elif [ $NEST = "aknew" ] ; then
 
 if [ $MODEL = "arw" ]; then

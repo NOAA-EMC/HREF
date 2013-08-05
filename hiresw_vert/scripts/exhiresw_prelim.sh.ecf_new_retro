@@ -45,7 +45,7 @@ echo start $start
 # NDATE=/u/Matthew.Pyle/ndate
 NDATE=/nwprod/util/exec/ndate
 
-end=`$NDATE 48 $start`
+end=`$NDATE $LENGTH $start`
 
 echo end $end
 
@@ -69,7 +69,7 @@ echo filt_start $filt_start
 
 whr=00
 count=0
-last=48
+last=$LENGTH
 incr=3
 
 #
@@ -133,11 +133,11 @@ then
   suf=.tm00
 elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
 then
-  cp ${COMGFS}/gfs.t${cyc}z.pgrbf${whr} $DATA/run_ungrib/.
+  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
   err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
   mod=gfs
-  type=pgrbf
+  type=pgrb2f
   suf=""
 else
   cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.

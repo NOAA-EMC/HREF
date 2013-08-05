@@ -112,6 +112,8 @@ timeform=$STARTDATE
 
 if [ $MODEL = nmm ] ; then
    cp $PARMhiresw/hiresw_nmm_cntrl.parm wrf_cntrl.parm
+elif [ $MODEL = nmmb ] ; then
+   cp $PARMhiresw/hiresw_nmmb_cntrl.parm wrf_cntrl.parm
 else
    cp $PARMhiresw/hiresw_arw_cntrl.parm wrf_cntrl.parm
 fi
@@ -196,8 +198,8 @@ echo to run executable at $datestr
 
 if [ $MODEL != "nmmb" ]
 then
-mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
-# $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
+#was  mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
+mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
 else
 mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
 fi

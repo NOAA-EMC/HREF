@@ -66,7 +66,7 @@ filedir=$DATA
 
 ENDHR=48
 
-  fhr=0
+  fhr=00
 
 export fhr
 
@@ -74,9 +74,10 @@ if [ -e posthours ]; then
    rm -f posthours
 fi
 
-while [ $fhr -lt $ENDHR ]
+while [ $fhr -le $ENDHR ]
 do
-   echo $fhr >> posthours
+   fhruse=`printf '%02d' $fhr`
+   echo $fhruse >> posthours
    let "fhr=fhr+1"
 done
 
@@ -95,51 +96,66 @@ do
 for fhr in $postjobs
 do
 
-fhr=`printf '%02d' $fhr`
+fhruse=`printf '%02d' $fhr`
 
 
 # wait for NMMB model done file
 
-   if [ -s $filedir/fcstdone.01.00${fhr}h_00m_00.00s ]
+while [ ! -s $filedir/fcstdone.01.00${fhruse}h_00m_00.00s ]
+do
+sleep 10
+icnt=$((icnt + 1))
+
+# elim for testing
+
+#      if [ $icnt -ge 1080 ]
+#      then
+#        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
+#        err_exit $msg
+#      fi
+
+done
+
+
+   if [ -s $filedir/fcstdone.01.00${fhruse}h_00m_00.00s ]
    then
 
-echo "#!/bin/ksh -l" > jobsub_nmmb_post.${fhr}
-echo "#BSUB -J hiresw_nmmb_post_f${fhr}_${cyc}" >> jobsub_nmmb_post.${fhr}
-echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhr}.out${cyc}z" >> jobsub_nmmb_post.${fhr}
-echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhr}.out${cyc}z" >> jobsub_nmmb_post.${fhr}
-echo "#BSUB -W 00:05" >> jobsub_nmmb_post.${fhr}
+echo "#!/bin/ksh -l" > jobsub_nmmb_post.${fhruse}
+echo "#BSUB -J hiresw_nmmb_post_f${fhruse}_${cyc}" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -W 00:08" >> jobsub_nmmb_post.${fhruse}
 if [ $NEST == "conus" -o $NEST == "aknew" ]
 then
-echo "#BSUB -n 8" >> jobsub_arw_post.${fhr}
+echo "#BSUB -n 24" >> jobsub_nmmb_post.${fhruse}
 else
-echo "#BSUB -n 1" >> jobsub_arw_post.${fhr}
+echo "#BSUB -n 1" >> jobsub_nmmb_post.${fhruse}
 fi
-echo "#BSUB -q "dev"" >> jobsub_nmmb_post.${fhr}
-echo "#BSUB -R "span[ptile=8]"" >> jobsub_nmmb_post.${fhr}
-echo "#BSUB -x" >> jobsub_nmmb_post.${fhr}
-echo "#BSUB -a poe" >> jobsub_nmmb_post.${fhr}
-echo "set -x" >> jobsub_nmmb_post.${fhr}
-echo "export MP_EUILIB=us" >> jobsub_nmmb_post.${fhr}
-echo "export MP_EUIDEVICE=sn_all" >> jobsub_nmmb_post.${fhr}
-echo "export MP_MPILIB=mpich2" >> jobsub_nmmb_post.${fhr}
-echo "export MP_STDOUTMODE=unordered" >> jobsub_nmmb_post.${fhr}
-echo "export MP_LABELIO=yes" >> jobsub_nmmb_post.${fhr}
-echo "export MP_TASK_AFFINITY=core" >> jobsub_nmmb_post.${fhr}
-echo "export cyc=${cyc} ; export envir=para ; export job=hiresw_nmmb_post_f${fhr}_${cyc}" >> jobsub_nmmb_post.${fhr} 
-echo "export tmmark=tm00 ; export post_times=${fhr} ; export RUN_ENVIR=para" >> jobsub_nmmb_post.${fhr}
-echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_nmmb_post.${fhr}
+echo "#BSUB -q "dev"" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -R "span[ptile=8]"" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -x" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -a poe" >> jobsub_nmmb_post.${fhruse}
+echo "set -x" >> jobsub_nmmb_post.${fhruse}
+echo "export MP_EUILIB=us" >> jobsub_nmmb_post.${fhruse}
+echo "export MP_EUIDEVICE=sn_all" >> jobsub_nmmb_post.${fhruse}
+echo "export MP_MPILIB=mpich2" >> jobsub_nmmb_post.${fhruse}
+echo "export MP_STDOUTMODE=unordered" >> jobsub_nmmb_post.${fhruse}
+echo "export MP_LABELIO=yes" >> jobsub_nmmb_post.${fhruse}
+echo "export MP_TASK_AFFINITY=core" >> jobsub_nmmb_post.${fhruse}
+echo "export cyc=${cyc} ; export envir=para ; export job=hiresw_nmmb_post_f${fhruse}_${cyc}" >> jobsub_nmmb_post.${fhruse} 
+echo "export tmmark=tm00 ; export post_times=${fhruse} ; export RUN_ENVIR=para" >> jobsub_nmmb_post.${fhruse}
+echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_nmmb_post.${fhruse}
 
-      bsub < jobsub_nmmb_post.${fhr}
-      postjobs=`echo $postjobs | sed s/${fhr}//g`
+	echo submitted post for $fhruse
+      bsub < jobsub_nmmb_post.${fhruse}
+      postjobs=`echo $postjobs | sed s/${fhruse}//g`
+	echo new postjobs $postjobs
 
-   else
-      sleep 10
-      icnt=$((icnt + 1))
-      if [ $icnt -ge 1080 ]
-      then
-        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
-        err_exit $msg
-      fi
+	if [ $fhruse -eq 48 ]
+	then
+	exit
+	fi
+
    fi
 
 done
@@ -156,32 +172,35 @@ do
 for fhr in $postjobs
 do
 
-fhr=`printf '%02d' $fhr`
+fhruse=`printf '%02d' $fhr`
 
 
 # wait for fcstdone file
 
-   while [ ! -e $filedir/fcstdone${fhr}.tm00 ]
+   while [ ! -e $filedir/fcstdone${fhruse}.tm00 ]
    do
    sleep 10
       icnt=$((icnt + 1))
 
-      if [ $icnt -ge 1080 ]
-      then
-        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
-        err_exit $msg
-      fi
+# remove for testing
+#
+#      if [ $icnt -ge 1080 ]
+#      then
+#        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
+#        err_exit $msg
+#      fi
+
    done
 
 
 echo "#!/bin/ksh -l" > jobsub_arw_post.${fhr}
 echo "#BSUB -J arw_post_f${fhr}_${cyc}" >> jobsub_arw_post.${fhr}
-echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhr}.out${cyc}z" >> jobsub_arw_post.${fhr}
-echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhr}.out${cyc}z" >> jobsub_arw_post.${fhr}
-echo "#BSUB -W 00:05" >> jobsub_arw_post.${fhr}
+echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
+echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
+echo "#BSUB -W 00:08" >> jobsub_arw_post.${fhr}
 if [ $NEST == "conus" -o $NEST == "aknew" ]
 then
-echo "#BSUB -n 8" >> jobsub_arw_post.${fhr}
+echo "#BSUB -n 24" >> jobsub_arw_post.${fhr}
 else
 echo "#BSUB -n 1" >> jobsub_arw_post.${fhr}
 fi
@@ -196,13 +215,18 @@ echo "export MP_MPILIB=mpich2" >> jobsub_arw_post.${fhr}
 echo "export MP_STDOUTMODE=unordered" >> jobsub_arw_post.${fhr}
 echo "export MP_LABELIO=yes" >> jobsub_arw_post.${fhr}
 echo "export MP_TASK_AFFINITY=core" >> jobsub_arw_post.${fhr}
-echo "export MODEL=${MODEL}; export cyc=${cyc} ; export NEST=${NEST};  export envir=para ; export job=hiresw_arw_post_f${fhr}_${cyc} ; export tmmark=tm00 ; export post_times=${fhr} ; export RUN_ENVIR=para" >> jobsub_arw_post.${fhr}
+echo "export MODEL=${MODEL}; export cyc=${cyc} ; export NEST=${NEST};  export envir=para ; export job=hiresw_arw_post_f${fhr}_${cyc} ; export tmmark=tm00 ; export post_times=${fhruse} ; export RUN_ENVIR=para" >> jobsub_arw_post.${fhr}
 echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_arw_post.${fhr}
 
 cat jobsub_arw_post.${fhr}
 
       bsub < jobsub_arw_post.${fhr}
-      postjobs=`echo $postjobs | sed s/${fhr}//g`
+      postjobs=`echo $postjobs | sed s/${fhruse}//g`
+
+	if [ $fhruse -eq 48 ]
+	then
+	exit
+	fi
 
 done
 done

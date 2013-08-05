@@ -32,84 +32,18 @@ NHOUR=/nwprod/util/exec/nhour
 cd $DATA
 filedir=$DATA
 
-rm prdgendone*
-
-YYYY=`echo $PDY | cut -c1-4`
-MM=`echo $PDY | cut -c5-6`
-DD=`echo $PDY | cut -c7-8`
-CYCLE=$PDY$cyc
-
-startd=$YYYY$MM$DD
-startdate=$CYCLE
-
-STARTDATE=${YYYY}-${MM}-${DD}_${cyc}:00:00
-
-endtime=`$NDATE 48 $CYCLE`
-
-YYYY=`echo $endtime | cut -c1-4`
-MM=`echo $endtime | cut -c5-6`
-DD=`echo $endtime | cut -c7-8`
-
-FINALDATE=${YYYY}-${MM}-${DD}_${cyc}:00:00
-
 export tmmark=tm00
 
-wyr=`echo $STARTDATE | cut -c1-4`
-wmn=`echo $STARTDATE | cut -c6-7`
-wdy=`echo $STARTDATE | cut -c9-10`
-whr=`echo $STARTDATE | cut -c12-13`
-
-eyr=`echo $FINALDATE | cut -c1-4`
-emn=`echo $FINALDATE | cut -c6-7`
-edy=`echo $FINALDATE | cut -c9-10`
-ehr=`echo $FINALDATE | cut -c12-13`
-
-edate=$eyr$emn$edy$ehr
-
-# If job needs to be restarted due to production failure, reset
-# wdate=valid date of first available WRF restart file
-
-wdate=$wyr$wmn$wdy$whr
-
-while [ $wdate -le $edate ]
-do
-
-if [ $wdate -eq $startdate ] ; then
-  fhr=00
-else
-  fhr=`$NHOUR $wdate $startdate`
-fi
-
-export fhr
+export fhr=${post_times}
 
 icnt=1
 
-# wait for model restart file
-while [ $icnt -lt 1000 ]
-do
-   if [ -s $filedir/postdone${fhr} ]
-#  if [ -s $DATA1/postdone${fhr} ]
-   then
-      break
-   else
-      icnt=$((icnt + 1))
-#	echo "sleep until find it"
-      sleep 9
-   fi
-if [ $icnt -ge 200 ]
-then
-    msg="ABORTING after 30 minutes of waiting for HIRESW POST JOB F${fhr} to end."
-    ./err_exit $msg
-fi
-done
-
-
-rm $DATA/poescript
 echo "$USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript
-if [ $NEST = "east" ]
-then
-echo "$USHhiresw/hiresw_prdgen_4km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript
-fi
+
+# if [ $NEST = "east" ]
+# then
+# echo "$USHhiresw/hiresw_prdgen_4km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript
+# fi
 
 chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
@@ -121,17 +55,5 @@ mpirun.lsf
 
 export err=$?; ./err_chk
 
-
 echo "done executing prdgen" > $DATA/prdgendone${fhr}
 postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"
-
-fhr=`expr $fhr + $INCR`
-
-if [ $fhr -lt 10 ]
-then
-fhr=0$fhr
-fi
-
-wdate=`$NDATE ${fhr} $CYCLE`
-
-done
