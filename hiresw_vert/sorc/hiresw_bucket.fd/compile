@@ -12,9 +12,11 @@ echo $LIBDEF
 # ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 # mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full4km
 
-cp parmeta.full5km parmeta
+# cp parmeta.full5km parmeta
 ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
-mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_full5km
+mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_general
+
+exit
 
 cp parmeta.ak5km parmeta
 ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
@@ -27,3 +29,8 @@ mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_hipr5km
 cp parmeta.haitipr5km parmeta
 ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
 mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_haitipr5km
+
+cp parmeta.fullndfd parmeta
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_fullndfd
+
