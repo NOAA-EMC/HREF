@@ -5,9 +5,11 @@
 !	get precip buckets with a duration equal to the interval between
 !	output times.
 
-	include "parmeta"
+!	include "parmeta"
 
-	real pdiff(im,jm)
+!	real pdiff(im,jm)
+        real, allocatable :: pdiff(:,:)
+
         integer :: ihrs1, ihrs2, reset_flag
 	character(len=2), dimension(2):: hrs
 
@@ -23,6 +25,9 @@ c       read(5,FMT='(A)') cycname
         read(5,FMT='(A)') hrs(1)
         read(5,FMT='(A)') hrs(2)
         read(5,FMT='(I1)') reset_flag
+        read(5,*) IM, JM
+
+        allocate(pdiff(im,jm))
 
 	write(0,*) 'read reset_flag: ', reset_flag
 	write(6,*) 'read reset_flag: ', reset_flag
@@ -32,9 +37,9 @@ c       read(5,FMT='(A)') cycname
 
 	do I=2,2
 	
-	file1= dirname(1:n)//'/'//filename(1:m)
+	file1= dirname(1:n)//'_'//HRS(I-1)//'/'//filename(1:m)
      +					//HRS(I-1)//'.tm00'
-	file2= dirname(1:n)//'/'//filename(1:m)//HRS(I)//'.tm00'
+	file2= dirname(1:n)//'_'//HRS(I)//'/'//filename(1:m)//HRS(I)//'.tm00'
 
 	read(HRS(I-1), '(I2)' ) ihrs1
 	read(HRS(I)  , '(I2)' ) ihrs2
@@ -42,11 +47,11 @@ c       read(5,FMT='(A)') cycname
 	interv=ihrs2-ihrs1
 	
 	if (interv .eq. 3) then
-	  testout= dirname(1:n)//'/PCP3HR'//HRS(I)//'.tm00'
+	  testout= dirname(1:n)//'_'//HRS(I)//'/PCP3HR'//HRS(I)//'.tm00'
 	elseif (interv .eq. 1) then
-	  testout= dirname(1:n)//'/PCP1HR'//HRS(I)//'.tm00'
+	  testout= dirname(1:n)//'_'//HRS(I)//'/PCP1HR'//HRS(I)//'.tm00'
 	elseif (interv .eq. 6) then
-	  testout= dirname(1:n)//'/PCP6HR'//HRS(I)//'.tm00'
+	  testout= dirname(1:n)//'_'//HRS(I)//'/PCP6HR'//HRS(I)//'.tm00'
 	endif
 
 	mm=index(file1,' ')-1
@@ -67,7 +72,7 @@ c       read(5,FMT='(A)') cycname
         write(0,*) 'call calc_pdiff with reset_flag: ', reset_flag
 
 	call calc_pdiff(file1(1:mm),file2(1:nn),TESTOUT(1:mmm),
-     &                  pdiff,reset_flag)
+     &                  pdiff,reset_flag,IM,JM)
 
 	enddo
 
@@ -75,8 +80,8 @@ c       read(5,FMT='(A)') cycname
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	SUBROUTINE CALC_PDIFF(FNAME1,FNAME2,TESTOUT,DPRECIP,reset_flag)
-	include "parmeta"
+	SUBROUTINE CALC_PDIFF(FNAME1,FNAME2,TESTOUT,DPRECIP,reset_flag,IM,JM)
+C	include "parmeta"
 	character(*):: FNAME1,FNAME2,testout
 	integer:: JPDS(200),JGDS(200), reset_flag
 	integer:: KPDS1(200),KGDS(200),KPDS2(200),KPDS(200),KGDS2(200)
