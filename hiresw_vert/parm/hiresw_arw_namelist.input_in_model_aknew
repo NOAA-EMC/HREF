@@ -112,7 +112,7 @@
  maxens2                             = 3,
  maxens3                             = 16,
  ensdim                              = 144,
-do_radar_ref                        = 1,
+ do_radar_ref                        = 1,
  /
 
  &fdda

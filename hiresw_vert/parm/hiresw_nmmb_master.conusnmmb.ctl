@@ -474,6 +474,16 @@
 112/255/X/-3.0/wrf.CONUS04/0/0                      
    34 103   5 244   0 2 1  V WIND AT FD HEIGHTS
 112/255/X/-3.0/wrf.CONUS04/0/0                      
+   33 103   0  80   0 2 1  U WIND AT FD HEIGHTS
+112/255/X/-3.0/wrf.CONUS04/0/0                      
+   34 103   0  80   0 2 1  V WIND AT FD HEIGHTS
+112/255/X/-3.0/wrf.CONUS04/0/0                      
+   11 103   0  80   0 2 1  TEMP AT FD HEIGHTS
+112/255/X/-3.0/wrf.CONUS04/0/0                      
+    1 103   0  80   0 2 1  PRESS AT FD HEIGHTS
+112/255/X/-3.0/wrf.CONUS04/0/0                      
+   51 103   0  80   0 2 1  SPEC HUM AT FD HEIGHTS
+112/255/X/-3.0/wrf.CONUS04/0/0                      
    85 112   0  10   0 2 1  SOIL TEMPERATURE
 112/255/X/2.7/wrf.CONUS04/0/0
   144 112   0  10   0 2 1  SOIL MOISTURE
@@ -560,4 +570,3 @@
 112/255/X/-4.0/wrf.CONUS04/0/0
    34 220   0   0   0 2 1  TRANSPORT V WIND
 112/255/X/-4.0/wrf.CONUS04/0/0
-

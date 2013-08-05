@@ -1,0 +1,67 @@
+&share
+ wrf_core = 'NMB',
+ max_dom = 1,
+ start_date = 'YSTART-MSTART-DSTART_HSTART:00:00'
+ end_date   = 'YEND-MEND-DEND_HEND:00:00'
+ interval_seconds = 10800
+ io_form_geogrid = 2,
+ debug_level = 50 
+/
+
+&geogrid
+ parent_id =           0, 1, 2
+ parent_grid_ratio =   1, 3, 3
+ s_we           = 1, 1, 1
+ e_we           = 575, 97, 349
+ s_sn           = 1, 1, 1
+ e_sn           = 385, 97, 199
+ geog_data_res  = '2m', '2m', '2m'
+ dx = 0.027
+ dy = 0.027
+ map_proj = 'rotated_llb'
+ ref_lat   = 18.0
+ ref_lon   = -69.0
+ dom_cen_lat = 18.0, 40.0, 38.0
+ dom_cen_lon = -69.0, -100.0, -119.0
+ truelat1  =  18.0
+ truelat2  =  18.0
+ stand_lon =  -69.0
+ geog_data_path = '/meso/noscrub/Matthew.Pyle/geog'
+ ncep_processing = .true. 
+ ncep_proc_path = '/stmp/wx20py/nmmb_init/ncep'
+ ncep_proc_prefix = 'b'
+ ncep_proc_domain_type = 'bgrid'
+ do_gwd = .false.
+ just_last = .false.
+ use_igbp = .true.
+/
+
+&ungrib
+ out_format = 'WPS'
+ spectral = .false.
+/
+
+&metgrid
+ fg_name = './FILE'
+ io_form_metgrid = 2, 
+ opt_metgrid_tbl_path         = './',
+ opt_output_from_metgrid_path = './',
+/
+ opt_output_from_metgrid_path = './',
+ opt_ignore_dom_center        = .false.
+ constants_name = './TAVGSFC'
+
+&nemsinterp
+ pt = 5000.
+ ptsgm = 30000.
+ nz = 40 
+ direct_temp = .true.
+ global = .false.
+ do_clouds = .false.
+ grib_src = 'NAM'
+ boundary_flux = .true.
+ lnsh = 5
+ lnsv = 5
+ vcoord = 1
+ coord_levs = 
+/
