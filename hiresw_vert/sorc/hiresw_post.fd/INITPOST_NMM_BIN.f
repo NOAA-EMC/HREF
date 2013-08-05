@@ -1016,7 +1016,7 @@
 
 	varname='F_ICE'
 	write(6,*) 'call getVariableBikj for : ', VarName
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3DIKJ,      &
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
       do l = 1, lm

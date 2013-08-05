@@ -604,7 +604,7 @@ module gfsio_module
     type(gfsio_meta2) :: meta2
     integer(gfsio_intkind) :: ios
 !------------------------------------------------------------
-! set gfile meta data to operational model (default) if its empty
+! set gfile meta data to operational model (default) if it's empty
 !------------------------------------------------------------
     iret=-3
     if ( gfile%lonb .eq. gfsio_intfill .or. gfile%latb .eq. gfsio_intfill &
@@ -883,7 +883,6 @@ module gfsio_module
     real(gfsio_realkind),optional,intent(out) :: Cpi(:),Ri(:)
 !------------------------------------------------------------
     if (present(iret)) iret=-3
-    if(present(idusr)) idusr=gfile%idusr !rv
     if(present(gtype)) gtype=gfile%gtype
     if(present(gfname)) gfname=gfile%gfname
     if(present(gaction)) gaction=gfile%gaction
@@ -2522,8 +2521,8 @@ module gfsio_module
           BWORK(JS)=-D1/(4*(JS-1)**2-1)
         ENDDO
 
-!rv call ludcmp(awork,jho,jhe,ipvt)
-!rv call lubksb(awork,jho,jhe,ipvt,bwork)
+        call ludcmp(awork,jho,jhe,ipvt)
+        call lubksb(awork,jho,jhe,ipvt,bwork)
 
 
 
@@ -2561,8 +2560,8 @@ module gfsio_module
           BWORK(JS)=-D1/(4*(JS-1)**2-1)
         ENDDO
 
-!rv call ludcmp(awork,jho,jhe,ipvt)
-!rv call lubksb(awork,jho,jhe,ipvt,bwork)
+        call ludcmp(awork,jho,jhe,ipvt)
+        call lubksb(awork,jho,jhe,ipvt,bwork)
 
 
 
@@ -2680,8 +2679,8 @@ module gfsio_module
           BWORK(JS)=-D1/(4*(JS-1)**2-1)
         ENDDO
 
-!rv call ludcmp(awork,jho,jhe,ipvt)
-!rv call lubksb(awork,jho,jhe,ipvt,bwork)
+        call ludcmp(awork,jho,jhe,ipvt)
+        call lubksb(awork,jho,jhe,ipvt,bwork)
 
 
 
@@ -2719,8 +2718,8 @@ module gfsio_module
           BWORK(JS)=-D1/(4*(JS-1)**2-1)
         ENDDO
 
-!rv call ludcmp(awork,jho,jhe,ipvt)
-!rv call lubksb(awork,jho,jhe,ipvt,bwork)
+        call ludcmp(awork,jho,jhe,ipvt)
+        call lubksb(awork,jho,jhe,ipvt,bwork)
 
 
 
