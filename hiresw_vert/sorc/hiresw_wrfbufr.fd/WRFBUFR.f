@@ -158,6 +158,8 @@ c20080707	filename=filename(1:len-19)//DateStr
         write(0,*) 'call PROF_EM'
 	CALL PROF_EM(fileName,prefileName,DateStr,IHR,INCR)
         write(0,*) 'return PROF_EM'
+        elseif (model(1:4) .eq. 'nmmb') then
+	CALL PROF_NMMB(fileName,IHR,INCR)
 	endif
 
 	endif
