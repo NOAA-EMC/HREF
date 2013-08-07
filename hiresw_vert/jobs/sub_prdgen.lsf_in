@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgen.out__DOM__CORE__CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgen.err__DOM__CORE__CYC_
-#BSUB -q "hpc_ibm"
+#BSUB -q "dev"
 #BSUB -a poe
 #BSUB -n _NPROC_
 #BSUB -W 1:09

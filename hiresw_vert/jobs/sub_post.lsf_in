@@ -3,7 +3,7 @@
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_post.err
 #BSUB -R span[ptile=16]
 #BSUB -x
-#BSUB -q "hpc_ibm"
+#BSUB -q "dev"
 #BSUB -n _NPROC_
 #BSUB -W 1:19
 #BSUB -a poe

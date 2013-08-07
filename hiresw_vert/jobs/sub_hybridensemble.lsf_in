@@ -3,7 +3,7 @@
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_hybens.out
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_hybens.err
 #BSUB -n _NPROC_
-#BSUB -q "hpc_ibm"
+#BSUB -q "dev"
 #BSUB -W 1:19
 
 

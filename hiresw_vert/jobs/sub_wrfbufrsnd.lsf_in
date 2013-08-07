@@ -3,7 +3,7 @@
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_wrfbufrsnd.err
 #BSUB -R span[ptile=1]
 #BSUB -n 1
-#BSUB -q "hpc_ibm"
+#BSUB -q "dev"
 #BSUB -a poe
 #BSUB -W 1:19
 
