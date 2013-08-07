@@ -156,13 +156,15 @@ C------------------------------------------------------------------------
 
 C	new stuff
       character(len=31) :: varin
-      character(len=98) :: fileName
-      character(len=98) :: fileNamehold
-      character(len=98) :: newname
+      character(len=256) :: fileName
       integer :: Status
       character(len=19):: startdate,datestr,datestrold
       character SysDepInfo*80
       character(len=3):: ITAGLAB
+      character(len=2):: hrpiece
+      character(len=8):: minpiece
+      character(len=2):: IMINLAB
+
 
 	real:: rinc(5)
 	integer:: IDATE(8),JDATE(8),IDATENEW(8)
@@ -171,12 +173,15 @@ C	new stuff
       integer this_offset, this_length
 C------------------------------------------------------------------------
       DATA BLANK/'    '/
+      DATA hrpiece /'h_'/
+      DATA minpiece /'m_00.00s'/
+      DATA IMINLAB /'00'/
 C------------------------------------------------------------------------
 C***
 C***  READ IN THE INFORMATION FILE ABOUT THE SOUNDINGS
 C***
 
-c	write(6,*) 'filename= ', filename
+	write(6,*) 'filename at top ', filename
 c	write(6,*) 'startedate= ', startdate
 
 	datestr=startdate
@@ -199,6 +204,11 @@ c	if (ITAG .eq. 0) then
 c	else 
 c	  FRST=.FALSE.
 c	endif
+
+      call mpi_init(ierr)
+      call mpi_comm_rank(MPI_COMM_WORLD,mype,ierr)
+      call mpi_comm_size(MPI_COMM_WORLD,npes,ierr)
+
 
        call nemsio_init(iret=status)
        call nemsio_open(nfile,trim(filename),'read',iret=status)
@@ -1308,16 +1318,21 @@ C***
 !        write(DateStrold,301) JDATE(1),JDATE(2),JDATE(3),JDATE(5)
  301    format(i4,'-',i2.2,'-',i2.2,'_',i2.2,':00:00')
 
+        write(0,*) 'have ITAG: ', itag
+
         write(ITAGLAB,302) ITAG
+        write(0,*) 'produced ITAGLAB: ', itaglab
  302	format(I3.3)
 
-	write(6,*) 'filename later in PROF: ', filename, '_END'
+!	write(6,*) 'filename later in PROF: ', trim(filename), '_END'
         len=lnblnk(filename)
+        write(0,*) 'len: ', len
 
-	write(6,*) 'LEN= ', LEN
-        write(6,*) 'carried over part: ', filename(1:len-3)
+	write(0,*) 'filename later in PROF: ', trim(filename), '_END'
+	write(0,*) 'LEN= ', LEN
+        write(0,*) 'carried over part: ', filename(1:len-15)
 
-        filename=filename(1:len-3)//ITAGLAB
+        filename=filename(1:len-15)//ITAGLAB//hrpiece//IMINLAB//minpiece
 
         write(6,*) 'new filename is ', trim(filename)
 
