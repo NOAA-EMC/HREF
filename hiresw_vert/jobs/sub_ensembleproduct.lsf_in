@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ensprod.out
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ensprod.err
-#BSUB -q "hpc_ibm"
+#BSUB -q "dev"
 #BSUB -W 1:19
 
 

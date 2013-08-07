@@ -1,0 +1,16 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgenmgr.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgenmgr.err__DOM__CORE__CYC_
+#BSUB -q "dev"
+#BSUB -a poe
+#BSUB -R span[ptile=16]
+#BSUB -R rusage[mem=500]
+#BSUB -n 1
+#BSUB -W 1:09
+
+export MP_EUILIB=us
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PRDGENMGR.sms.test _DOM_ _CORE_ _CYC_

@@ -1,0 +1,21 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_postmgr.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_postmgr.err
+#BSUB -R span[ptile=16]
+#BSUB -R rusage[mem=500]
+#BSUB -q "dev"
+#BSUB -n 1
+#BSUB -W 1:19
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POSTMGR.sms.test _DOM_ _CORE_ _CYC_
