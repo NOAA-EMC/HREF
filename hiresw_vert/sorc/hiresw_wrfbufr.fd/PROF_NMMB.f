@@ -157,6 +157,7 @@ C------------------------------------------------------------------------
 C	new stuff
       character(len=31) :: varin
       character(len=256) :: fileName
+      character(len=256) :: fileName_alt
       integer :: Status
       character(len=19):: startdate,datestr,datestrold
       character SysDepInfo*80
@@ -213,6 +214,7 @@ c	endif
        call nemsio_init(iret=status)
        call nemsio_open(nfile,trim(filename),'read',iret=status)
 
+	write(6,*) 'filename after open: ', filename
        allocate(recname(nrec),reclevtyp(nrec),reclev(nrec))
 
 
@@ -381,6 +383,7 @@ C
 
 
        HBM2=1.0
+	write(6,*) 'filename after randomly: ', filename
 
 	allocate(glon1d(impf*jmpf))
 	allocate(glat1d(impf*jmpf))
@@ -1325,8 +1328,11 @@ C***
  302	format(I3.3)
 
 !	write(6,*) 'filename later in PROF: ', trim(filename), '_END'
+!        filename_alt="test_filename.27"
         len=lnblnk(filename)
         write(0,*) 'len: ', len
+
+!!! problem is with the contents of filenme down here.  How corrupted?
 
 	write(0,*) 'filename later in PROF: ', trim(filename), '_END'
 	write(0,*) 'LEN= ', LEN
