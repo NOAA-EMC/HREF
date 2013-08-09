@@ -1,5 +1,0 @@
-#
-for i in `ls *.f`
-do
-diff $i /emcsrc/wx20hc/etapost_hyb/$i  >  $i.diff
-done
