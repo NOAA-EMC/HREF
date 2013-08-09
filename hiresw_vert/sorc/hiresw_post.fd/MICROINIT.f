@@ -1,4 +1,4 @@
-      SUBROUTINE MICROINIT
+      SUBROUTINE MICROINIT(imp_physics)
 !
 !-- ABSTRACT:
 !     Initializes arrays for new cloud microphysics
@@ -27,23 +27,47 @@
 !     Machine : IBM SP
 !
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      use params_mod
-      use cmassi_mod
-      use gridspec_mod
-      use rhgrd_mod
+      use params_mod, only: tfrz, pi
+      use cmassi_mod, only: dmrmax, t_ice, nlimax, flarge2, xmrmax, mdrmax, mdrmin,&
+              trad_ice, massi, rqr_drmin, n0r0, rqr_drmax, cn0r0, cn0r_dmrmin,&
+              cn0r_dmrmax, dmrmin
+!      use gridspec_mod
+      use rhgrd_mod, only: rhgrd
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !
       REAL, PARAMETER :: RHOL=1000.
       real ax,C_N0r0
       integer i
+      integer, intent(in):: imp_physics
+      real, allocatable:: MASSR(:)
 !
 !------------------------ START EXECUTION ------------------------
 !
 !---  READ IN MASSI FROM LOOKUP TABLES 
 !
-      OPEN (UNIT=1,FILE="eta_micro_lookup.dat",FORM="UNFORMATTED")
-        rewind(1)
+      if(imp_physics==5)then
+       DMRmax=1.E-3
+       T_ICE=-40.
+       NLImax=20.E3
+       FLARGE2=0.07
+      else if(imp_physics==85)then
+       DMRmax=.45E-3
+       T_ICE=-40.
+       NLImax=20.E3
+       FLARGE2=0.2
+      else  !-- Should be imp_physics==95
+       DMRmax=.45E-3
+       T_ICE=-40.  
+       NLImax=5.E3
+       FLARGE2=0.03
+      end if 
+      XMRmax=1.E6*DMRmax 
+      MDRmax=XMRmax
+      allocate(MASSR(MDRmin:MDRmax))
+      TRAD_ice=0.5*T_ICE+TFRZ
+      
+      OPEN (UNIT=1,FILE="eta_micro_lookup.dat",convert='big_endian',FORM="UNFORMATTED")
       DO I=1,3
         READ(1)
       ENDDO
@@ -53,7 +77,6 @@
       ENDDO
       READ(1) MASSI
       CLOSE(1)
-
       RQR_DRmin=N0r0*MASSR(MDRmin)    ! Rain content for mean drop diameter of .05 mm
       RQR_DRmax=N0r0*MASSR(MDRmax)    ! Rain content for mean drop diameter of .45 mm
 !      PI=ACOS(-1.) ! defined in params now
@@ -79,6 +102,7 @@
 !      AX=MIN(100., MAX(5., AX) )
 !      RHgrd=0.90+.08*((100.-AX)/95.)**.5
       RHgrd=1.
+      deallocate(MASSR)
 !--- 
       RETURN
       END

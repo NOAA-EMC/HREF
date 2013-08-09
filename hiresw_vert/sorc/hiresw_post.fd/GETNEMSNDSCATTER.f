@@ -2,9 +2,12 @@
       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
       ,l,impf,jmpf,nframe,buf)
 !      
-      use nemsio_module
+      use nemsio_module, only: nemsio_gfile, nemsio_readrecvw34
       implicit none
       type(nemsio_gfile),intent(inout) :: nfile
+
+       real(kind=8) :: timef,btimx
+
       INCLUDE "mpif.h"
 !
       character(len=20),intent(in) :: VarName,VcoordName
@@ -18,12 +21,16 @@
 !      real dummy2(impf,jmpf)
       real, allocatable:: dum1d(:)
       
+        btimx=timef()
       if(me == 0)then
 !        nframe=nframed2*2
 	allocate(dum1d((impf)*(jmpf)))
 	idiff=(impf-im)/2
         call nemsio_readrecvw34(nfile,trim(VarName)                      &  
         ,trim(VcoordName),l,data=dum1d,nframe=nframe,iret=iret)
+
+        write(0,*) 'past nemsio_readrecvw34: ', 1.e-3*(timef()-btimx)
+
 !	if(trim(VarName)=='tmp')print*,'in getnems debug: ',impf,jmpf, &
 !	nframe,trim(VarName),trim(VcoordName),l	 
         if (iret /= 0) then

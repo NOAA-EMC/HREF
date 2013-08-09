@@ -1,4 +1,4 @@
-       SUBROUTINE CALWXT_REVISED(T,Q,PMID,PINT,HTM,LMH,PREC,     &
+       SUBROUTINE CALWXT_REVISED_POST(T,Q,PMID,PINT,HTM,LMH,PREC,     &
      &ZINT,IWX)
 ! 
 !     FILE: CALWXT.f
@@ -25,8 +25,9 @@
 !      FOR FREEZING RAIN AND SLEET, THE GOAL IS TO BALANCE THAT BIAS
 !      WITH A VERSION MORE LIKELY TO PREDICT SNOW
 !
-     use params_mod
-     use ctlblk_mod
+     use params_mod, only: h1m12, d00, d608, h1, rog
+     use ctlblk_mod, only: jsta, jend, modelname, pthresh, im, jsta_2l, jend_2u, lm,&
+              lp1, jm
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !
@@ -40,7 +41,7 @@
       REAL,dimension(IM,jsta_2l:jend_2u,LM),intent(in) ::  T,Q,PMID,HTM
       REAL,dimension(IM,jsta_2l:jend_2u,LP1),intent(in) ::  PINT,ZINT 
       REAL,dimension(IM,jsta_2l:jend_2u),intent(in) ::  LMH
-      REAL,dimension(IM,jsta_2l:jend_2u),intent(out) ::  PREC
+      REAL,dimension(IM,jsta_2l:jend_2u),intent(in) ::  PREC
 !    OUTPUT:
 !      IWX - INSTANTANEOUS WEATHER TYPE.
 !        ACTS LIKE A 4 BIT BINARY
@@ -80,15 +81,6 @@
         IWX(I,J) = 0
       ENDDO
       ENDDO
-
-      IF(MODELNAME.eq.'RSM') THEN          !add by Binbin because of different unit
-       DO J=JSTA,JEND
-       DO I=1,IM
-        PREC(I,J) = PREC(I,J)*3*3600.0
-       ENDDO
-       ENDDO
-      END IF
-
 
 !
 !$omp  parallel do
@@ -306,14 +298,6 @@
 
 !---------------------------------------------------------
       DEALLOCATE (TWET)
-
-      IF(MODELNAME.eq.'RSM') THEN    !add by Binbin, change back
-       DO J=JSTA,JEND
-       DO I=1,IM
-        PREC(I,J) = PREC(I,J)/(3*3600.0)
-       ENDDO
-       ENDDO
-      END IF
 
 
       RETURN

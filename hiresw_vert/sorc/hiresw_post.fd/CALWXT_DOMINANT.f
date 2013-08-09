@@ -1,4 +1,4 @@
-       SUBROUTINE CALWXT_DOMINANT(PREC,RAIN,FREEZR,SLEET,SNOW,     &
+       SUBROUTINE CALWXT_DOMINANT_POST(PREC,RAIN,FREEZR,SLEET,SNOW,     &
      &         DOMR,DOMZR,DOMIP,DOMS)
 !
 !     WRITTEN: 24 AUGUST 2005, G MANIKIN 
@@ -6,8 +6,8 @@
 !     THIS ROUTINE TAKES THE PRECIP TYPE SOLUTIONS FROM DIFFERENT
 !       ALGORITHMS AND SUMS THEM UP TO GIVE A DOMINANT TYPE
 !
-      use params_mod
-      use ctlblk_mod
+!      use params_mod, only:
+      use ctlblk_mod, only: jsta, jend, pthresh, im, jsta_2l, jend_2u, jm
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !

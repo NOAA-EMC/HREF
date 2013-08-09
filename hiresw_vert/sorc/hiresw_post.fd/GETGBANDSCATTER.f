@@ -2,7 +2,7 @@
       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,jpds,jgds,kpds,buf)
 !      
       implicit none
-      INCLUDE 'mpif.h'
+      INCLUDE "mpif.h"
 !
       character(len=20),intent(in) :: VarName
       real,intent(in) :: spval

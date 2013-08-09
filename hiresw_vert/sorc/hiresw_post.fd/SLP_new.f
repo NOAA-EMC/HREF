@@ -20,6 +20,8 @@
 !   02-08-21  H CHUANG - MODIFIED TO ALWAYS USE OLD TTV FOR RELAXATION
 !                        SO THAT THERE WAS BIT REPRODUCIBILITY BETWEEN
 !                        USING ONE AND MULTIPLE TASKS	      
+!   11-04-29  H CHUANG - FIX GFS GIBSING BY USING LM-1 STATE VARIABLES
+!                        TO DERIVE SLP HYDROSTATICALLY
 !
 ! USAGE:  CALL SLPSIG FROM SUBROUITNE ETA2P
 !
@@ -39,11 +41,12 @@
 !             NONE
 !
 !-----------------------------------------------------------------------
-      use vrbls3d
-      use vrbls2d
-      use masks
-      use params_mod
-      use ctlblk_mod
+      use vrbls3d, only: pint, zint, t, q
+      use vrbls2d, only: pslp, fis
+      use masks, only: lmh
+      use params_mod, only: overrc, ad05, cft0, g, rd, d608, h1, kslpd
+      use ctlblk_mod, only: jend, jsta, spl, num_procs, mpi_comm_comp, lsmp1, jsta_m, jend_m,&
+              lm, im, jsta_2l, jend_2u, lsm, jm, im_jm
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !      
@@ -74,8 +77,8 @@
 !***  CALCULATE THE I-INDEX EAST-WEST INCREMENTS
 !***
 !
-      ii=332
-      jj=136
+      ii=IM/2
+      jj=(JEND-JSTA)/2
       DO J=1,JM
         IHE(J)=1
         IHW(J)=-1
@@ -98,6 +101,7 @@
         ,FIS(i,j),PSLP(I,J)
         TTV(I,J)=0.
         LMHO(I,J)=0
+	DONE(I,J)=.FALSE.
       ENDDO
       ENDDO
 !
@@ -131,8 +135,18 @@
           HTMO(I,J,L)=0.
           IF(L.GT.1.AND.HTMO(I,J,L-1).GT.0.5)LMHO(I,J)=L-1
         ENDIF
-!
         IF(L.EQ.LSM.AND.HTMO(I,J,L).GT.0.5)LMHO(I,J)=LSM
+!
+! test new idea of filtering above-ground pressure levels for Gibsing
+!        IF(L.EQ.LSM.AND.HTMO(I,J,L).GT.0.5)THEN
+!	 IF(FIS(I,J)>0.)THEN 
+!	  LMHO(I,J)=LSM
+!	 ELSE
+!	  LMHO(I,J)=LSM-2
+!	  HTMO(I,J,LSM)=0.
+!	  HTMO(I,J,LSM-1)=0. 
+!	 END IF
+!	END IF  
         if(i.eq.ii.and.j.eq.jj)print*,'Debug: HTMO= ',HTMO(I,J,L)
       ENDDO
       ENDDO
@@ -167,7 +181,7 @@
       LHMNT = LXXX
       end if
       IF(LHMNT.EQ.LSMP1)THEN
-        GO TO 430
+        GO TO 325
       ENDIF
       print*,'Debug in SLP: LHMNT A ALLREDUCE=',LHMNT
 !***
@@ -302,7 +316,7 @@
       DO J=JSTA,JEND
       DO I=1,IM
 !        P1(I,J)=SPL(NINT(LMH(I,J)))
-        DONE(I,J)=.FALSE.
+!        DONE(I,J)=.FALSE.
         IF(ABS(FIS(I,J)).LT.1.)THEN
           PSLP(I,J)=PINT(I,J,NINT(LMH(I,J))+1)
           DONE(I,J)=.TRUE.
@@ -312,8 +326,10 @@
         ELSE IF(FIS(I,J).LT.-1.0) THEN
           DO L=LM,1,-1
             IF(ZINT(I,J,L).GT.0.)THEN
-              PSLP(I,J)=PINT(I,J,L)/EXP(-ZINT(I,J,L)*G                &
-              /(RD*T(I,J,L)*(Q(I,J,L)*D608+1.0)))
+!              PSLP(I,J)=PINT(I,J,L)/EXP(-ZINT(I,J,L)*G                &
+!              /(RD*T(I,J,L)*(Q(I,J,L)*D608+1.0)))
+	      PSLP(I,J)=PINT(I,J,L-1)/EXP(-ZINT(I,J,L-1)*G                &
+              /(RD*(T(I,J,L)+T(I,J,L-1))*0.5*((Q(I,J,L)+Q(I,J,L-1))*0.5*D608+1.0)))
               DONE(I,J)=.TRUE.
               if(i.eq.ii.and.j.eq.jj)print*                           &
               ,'Debug:DONE,PINT,PSLP A S1='                           &
@@ -378,6 +394,7 @@
 !HC MODIFICATION FOR SMALL HILL HIGH PRESSURE SITUATION
 !HC IF SURFACE PRESSURE IS CLOSER TO SEA LEVEL THAN LWOEST
 !HC OUTPUT PRESSURE LEVEL, USE SURFACE PRESSURE TO DO EXTRAPOLATION
+ 325  CONTINUE 
       LP=LSM
       DO 330 J=JSTA,JEND
       DO 330 I=1,IM

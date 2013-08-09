@@ -81,7 +81,7 @@ module params_mod
     real, parameter :: RDOCP=RD/CP
     real, parameter :: LHEAT=2.5E6
     real, parameter :: LHTOCP=LHEAT/CP
-    real, parameter :: EPSQ2=0.2
+    real, parameter :: EPSQ2=0.02
     real, parameter :: PQ0=379.90516
     real, parameter :: A2=17.2693882
     real, parameter :: A3=273.16
@@ -90,9 +90,10 @@ module params_mod
     real, parameter :: QCLDmin=1.E-6
     real, parameter :: CLFRmin=D1
     real, parameter :: NLImin=1.E3
-    real, parameter :: NLImax=5.E3
-    real, parameter :: T_ICE=-30.
-    real, parameter :: TRAD_ice=0.5*T_ICE+TFRZ
+! move definition of NLImax and T_ICE to MICROINIT 2012012018
+!    real, parameter :: NLImax=5.E3
+!    real, parameter :: T_ICE=-30.
+!    real, parameter :: TRAD_ice=0.5*T_ICE+TFRZ
     real, parameter :: Qconv=0.1E-3
 !
     real, parameter :: STBOL=1./5.67E-8
@@ -102,7 +103,7 @@ module params_mod
     real, parameter :: XLAI=4.0         ! Leaf area index
     real, parameter :: RHmin=1.0E-6     ! minimal RH bound
     real, parameter :: SMALL=1.E-6
-    real, parameter :: PTHRESH=0.000000
+!    real, parameter :: PTHRESH=0.000000
     real, parameter :: ELIVW=2.72E6
     real, parameter :: ELOCP=ELIVW/CP
 !

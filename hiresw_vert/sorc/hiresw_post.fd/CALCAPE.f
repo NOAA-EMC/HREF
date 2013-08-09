@@ -117,11 +117,12 @@
 !     MACHINE : CRAY C-90
 !$$$  
 !
-      use vrbls3d
-      use masks
-      use params_mod
-      use lookup_mod
-      use ctlblk_mod
+      use vrbls3d, only: pmid, t, q, zint
+      use masks, only: lmh 
+      use params_mod, only: d00, h1m12, h99999, h10e5, capa, elocp, eps, oneps, g
+      use lookup_mod, only: thl, rdth, jtb, qs0, sqs, rdq, itb, ptbl, plq, ttbl, pl,&
+              rdp, the0, sthe, rdthe, ttblq, itbq, jtbq, rdpq, the0q, stheq, rdtheq
+      use ctlblk_mod, only: jsta_2l, jend_2u, lm, jsta, jend, im, jm
 
 !     
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,7 +143,8 @@
       INTEGER IEQL(IM,JM),IPTB(IM,JM),ITHTB(IM,JM),PARCEL(IM,JM)      
       INTEGER KLRES(IM,JM),KHRES(IM,JM),LCL(IM,JM)
 !     
-      REAL THESP(IM,JM),PSP(IM,JM),TV(IM,JM,LM),CAPE20(IM,JM)
+      REAL TV
+      REAL THESP(IM,JM),PSP(IM,JM),CAPE20(IM,JM)
       REAL, ALLOCATABLE :: TPAR(:,:,:)
       REAL QQ(IM,JM),PP(IM,JM),THUND(IM,JM)
       LOGICAL THUNDER(IM,JM), NEEDTHUN 
@@ -187,7 +189,7 @@
         CINS(I,J) = D00
         LCL(I,J)  = D00
         THESP(I,J)= D00
-        IEQL(I,J) = LM+1
+        IEQL(I,J) = LM
 	PARCEL(I,J)=LM
         PPARC(I,J)=D00
         THUNDER(I,J) = .TRUE.
@@ -245,6 +247,13 @@
             QBTK   =Q1D(I,J)
             APEBTK =(H10E5/PKL)**CAPA
           ENDIF
+
+!----------Breogan Gomez - 2009-02-06
+! To prevent QBTK to be less than 0 which
+!  leads to a unrealistic value of PRESK
+!  and a floating invalid.
+          if(QBTK<0) QBTK=0
+
 !--------------SCALING POTENTIAL TEMPERATURE & TABLE INDEX--------------
           TTHBTK =TBTK*APEBTK
           TTHK   =(TTHBTK-THL)*RDTH
@@ -288,7 +297,8 @@
 !--------------SATURATION POINT VARIABLES AT THE BOTTOM-----------------
           TPSPK=P00K+(P10K-P00K)*PP(I,J)+(P01K-P00K)*QQ(I,J)            &
             +(P00K-P10K-P01K+P11K)*PP(I,J)*QQ(I,J)
-          APESPK=(H10E5/TPSPK)**CAPA
+!!from WPP::tgs          APESPK=(H10E5/TPSPK)**CAPA
+          APESPK=(max(0.,H10E5/ TPSPK))**CAPA
           TTHESK=TTHBTK*EXP(ELOCP*QBTK*APESPK/TTHBTK)
 !--------------CHECK FOR MAXIMUM THETA E--------------------------------
           IF(TTHESK.GT.THESP(I,J)) THEN
@@ -433,8 +443,8 @@
             QSATP=EPS*ESATP/(PRESK-ESATP*ONEPS)
             TVP=TPAR(I,J,L)*(1+0.608*QSATP)
             THETAP=TVP*(H10E5/PRESK)**CAPA
-            TV(I,J,L)=T(I,J,L)*(1+0.608*Q(I,J,L)) 
-            THETAA=TV(I,J,L)*(H10E5/PRESK)**CAPA
+            TV=T(I,J,L)*(1+0.608*Q(I,J,L)) 
+            THETAA=TV*(H10E5/PRESK)**CAPA
             IF(THETAP.LT.THETAA)THEN
               CINS(I,J)=CINS(I,J)                                &   
                          +G*(ALOG(THETAP)-ALOG(THETAA))*DZKL

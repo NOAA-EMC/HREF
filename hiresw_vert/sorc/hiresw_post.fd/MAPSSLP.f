@@ -9,13 +9,14 @@
 !     PSLP - THE FINAL REDUCED SEA LEVEL PRESSURE ARRAY
 !
 !-----------------------------------------------------------------------
-      use ctlblk_mod
-      use gridspec_mod
+      use ctlblk_mod, only: jsta, jend, spl, smflag, lm, im, jsta_2l, jend_2u, lsm, jm
+      use gridspec_mod, only: maptype, dxval
+      use vrbls3d, only: pmid, t, pint
+      use vrbls2d, only: pslp, fis
+      use masks, only: lmh
+      use params_mod, only: rog, p1000, capa, erad, pi ,gi
 
-      use vrbls3d
-      use vrbls2d
-      use masks
-      use params_mod
+      implicit none
 !      
       INCLUDE "mpif.h"
 !
@@ -23,8 +24,12 @@
  
       real LAPSES, EXPo,EXPINV,TSFCNEW
 
-      REAL T700(IM,JM), TH700(IM,JM),SDUMMY(IM,2)
+      REAL,dimension(im, jsta_2l:jend_2u) :: T700
+      real,dimension(im,2) :: sdummy
+      REAL,dimension(im,jm) :: GRID1, TH700
       INTEGER NSMOOTH
+      integer l, j, i, k, ii, jj 
+      real dxm
 !-----------------------------------------------------------------------
 !***
         LAPSES = 0.0065
@@ -46,11 +51,19 @@
  100  CONTINUE
 
 ! smooth 700 mb temperature first
-         NSMOOTH=nint(10.*(13000./dxval))
-           print *,'In MAPSSLP NSMOOTH=',NSMOOTH,dxval
+       if(MAPTYPE.EQ.6) then
+         dxm=(DXVAL / 360.)*(ERAD*2.*pi)/1000.
+       else
+         dxm=dxval
+       endif
+
+       IF (SMFLAG) THEN   ! mhu
+         NSMOOTH=nint(10.*(13500./dxm))
+        call AllGETHERV(TH700)
         do k = 1,NSMOOTH
           CALL SMOOTH(TH700,SDUMMY,IM,JM,0.5)
         end do
+        ENDIF
           ii=im/2
           jj=(jsta+jend)/2
           if(i.eq.ii.and.j.eq.jj)                              &
@@ -68,16 +81,22 @@
           PSLP(I,J) = PINT(I,J,NINT(LMH(I,J))+1)*               &
               ((TSFCNEW+LAPSES*FIS(I,J)*GI)/TSFCNEW)**EXPINV
 !          print*,'PSLP(I,J),I,J',PSLP(I,J),I,J
+           GRID1(I,J)=PSLP(I,J)
          ENDDO
        ENDDO
 
          IF (SMFLAG) THEN
 ! - in WRF number of passes depends on the resolution: nsmooth=int(15*(13/dxval))
-         NSMOOTH=nint(15.*(13000./dxval))
-           print *,'In MAPSSLP NSMOOTH=',NSMOOTH,dxval
+         NSMOOTH=nint(15.*(13500./dxm))
+         call AllGETHERV(GRID1)
          do k=1,NSMOOTH
-          CALL SMOOTH(PSLP,SDUMMY,IM,JM,0.5)
+          CALL SMOOTH(GRID1,SDUMMY,IM,JM,0.5)
          end do
+         DO J=JSTA,JEND
+            DO I=1,IM
+               PSLP(I,J)=GRID1(I,J)
+            ENDDO
+         ENDDO
          ENDIF
 !
 

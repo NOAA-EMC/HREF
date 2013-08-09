@@ -1,8 +1,9 @@
-      SUBROUTINE FRZLVL(ZFRZ,RHFRZ)
+      SUBROUTINE FRZLVL(ZFRZ,RHFRZ,PFRZL)
 !$$$  SUBPROGRAM DOCUMENTATION BLOCK
 !                .      .    .     
 ! SUBPROGRAM:    FRZLVL      COMPUTES FRZING LVL Z AND RH
 !   PRGRMMR: TREADON         ORG: W/NP2      DATE: 92-12-22       
+! T. Smirnova - 8-27-2010 - added PFRZL to the output
 !     
 ! ABSTRACT:
 !     THIS ROUTINE COMPUTES THE FREEZING LEVEL HEIGHT AND RELATIVE
@@ -41,6 +42,7 @@
 !   OUTPUT ARGUMENT LIST: 
 !     ZFRZ     - ABOVE GROUND LEVEL FREEZING HEIGHT.
 !     RHFRZ    - RELATIVE HUMIDITY AT FREEZING LEVEL.
+!     PFRZL    - PRESSURE AT FREEZING LEVEL.
 !     
 !   OUTPUT FILES:
 !     NONE
@@ -62,20 +64,22 @@
 !$$$  
 !     
 !     
-      use vrbls3d
-      use vrbls2d
-      use masks
-      use params_mod
-      use ctlblk_mod
+      use vrbls3d, only: pint, t, zmid, q, pmid
+      use vrbls2d, only: fis, tshltr, pshltr, qshltr
+      use masks, only: lmh
+      use params_mod, only: gi, d00, capa, d0065, tfrz, pq0, a2, a3, a4
+      use ctlblk_mod, only: jsta, jend, spval, lm, modelname, im, jm
       use physcons, only: con_rd, con_rv, con_eps, con_epsm1
+
       implicit none
+
       real,external::FPVSNEW
 !
 !      implicit none
 !
 !     DECLARE VARIABLES.
 !     
-      REAL RHFRZ(IM,JM),ZFRZ(IM,JM)
+      REAL,dimension(im,jm) :: RHFRZ, ZFRZ, PFRZL
       integer I,J,LLMH,L
       real HTSFC,PSFC,TSFC,QSFC,QSAT,RHSFC,DELZ,DELT,DELQ,DELALP,     &
            DELZP,ZL,DZABV,QFRZ,ALPL,ALPH,ALPFRZ,PFRZ,QSFRZ,RHZ,ZU,    &
@@ -100,6 +104,7 @@
          RHFRZ(I,J) = D00
          ZFRZ(I,J)  = HTSFC
          PSFC    = PINT(I,J,LLMH+1)
+         PFRZL(I,J) = PSFC
 !     
 !        CHECK IF FREEZING LEVEL IS AT THE GROUND.
 !     
@@ -131,7 +136,7 @@
 	     PSFC=PMID(I,J,LM)  
             END IF  
 !
-            IF(MODELNAME == 'GFS')THEN
+            IF(MODELNAME == 'GFS' .OR. MODELNAME == 'RAPR')THEN
 	     ES=FPVSNEW(TSFC)
 	     ES=MIN(ES,PSFC)
 	     QSAT=CON_EPS*ES/(PSFC+CON_EPSM1*ES)
@@ -143,6 +148,7 @@
             RHSFC   = AMAX1(0.01,RHSFC)
             RHSFC   = AMIN1(RHSFC,1.0)
             RHFRZ(I,J)= RHSFC
+            PFRZL(I,J)= PSFC
             GOTO 20
          ENDIF
 !     
@@ -166,7 +172,8 @@
                   ALPH   = ALOG(PMID(I,J,L))
                   ALPFRZ = ALPL + (ALPH-ALPL)/DELZ*DZABV
                   PFRZ   = EXP(ALPFRZ)
-		  IF(MODELNAME == 'GFS')THEN
+                  PFRZL(I,J)  = PFRZ
+		  IF(MODELNAME == 'GFS' .OR.MODELNAME == 'RAPR')THEN
 	            ES=FPVSNEW(TFRZ)
 	            ES=MIN(ES,PFRZ)
 	            QSFRZ=CON_EPS*ES/(PFRZ+CON_EPSM1*ES)
@@ -209,7 +216,9 @@
                   DELALP  = ALPH-ALPL
                   ALPFRZ  = ALPL + DELALP/DELZ*DZABV
                   PFRZ    = EXP(ALPFRZ)
-		  IF(MODELNAME == 'GFS')THEN
+!
+                  PFRZL(I,J)  = PFRZ
+		  IF(MODELNAME == 'GFS'.OR.MODELNAME == 'RAPR')THEN
 	            ES=FPVSNEW(TFRZ)
 	            ES=MIN(ES,PFRZ)
 	            QSFRZ=CON_EPS*ES/(PFRZ+CON_EPSM1*ES)

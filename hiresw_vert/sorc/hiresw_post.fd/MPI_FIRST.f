@@ -13,6 +13,8 @@
 !   00-01-06  TUCCILLO - ORIGINAL
 !   01-10-25  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
 !   02-06-19  MIKE BALDWIN - WRF VERSION
+!   11-12-16  SARAH LU - MODIFIED TO INITIALIZE AEROSOL FIELDS
+!   12-01-07  SARAH LU - MODIFIED TO INITIALIZE AIR DENSITY/LAYER THICKNESS
 !
 ! USAGE:    CALL MPI_FIRST
 !   INPUT ARGUMENT LIST:
@@ -34,14 +36,52 @@
 !     MACHINE : IBM RS/6000 SP
 !$$$
 !
-      use vrbls4d
-      use vrbls3d
-      use vrbls2d
-      use soil
-      use masks
+      use vrbls4d, only: dust, salt, soot, waso, suso
+      use vrbls3d, only: u, v, t, q, uh, vh, wh, pmid, pmidv, pint, alpint, zmid,&
+              zint, q2, omga, t_adj, ttnd, rswtt, rlwtt, exch_h, train, tcucn,&
+              el_pbl, cwm, f_ice, f_rain, f_rimef, qqw, qqi, qqr, qqs,qqg, qqni, qqnr,&
+              extcof55, cfr, dbz, dbzr, dbzi, dbzc, mcvg, nlice, o3, vdifftt,&
+              tcucns, vdiffmois, dconvmois, sconvmois, nradtt, o3vdiff, o3prod,&
+              o3tndy, mwpv, unknown, vdiffzacce, zgdrag, cnvctummixing, vdiffmacce,&
+              mgdrag, cnvctvmmixing, ncnvctcfrac, cnvctumflx, cnvctdmflx, cnvctdetmflx,&
+              cnvctzgdrag, cnvctmgdrag, icing_gfip, asy, ssa, duem, dusd, dudp,&
+              duwt, suem, susd, sudp, suwt, ocem, ocsd, ocdp, ocwt, bcem, bcsd,&
+              bcdp, bcwt, ssem, sssd, ssdp, sswt, ext, dpres, rhomid
+      use vrbls2d, only: wspd10max, w_up_max, w_dn_max, w_mean, refd_max, up_heli_max,&
+              up_heli_max16, grpl_max, up_heli, up_heli16, ltg1_max, ltg2_max, &
+              ltg3_max, nci_ltg, nca_ltg, nci_wq, nca_wq, nci_refd, vil, radarvil,&
+              echotop, u10, v10, tshltr, qshltr, mrshltr, smstav, ssroff, bgroff,&
+              nca_refd, vegfrc, acsnow, acsnom, cmc, sst, qz0, thz0, uz0, vz0, qs, ths,&
+              sno, snonc, snoavg, psfcavg, t10m, t10avg, akmsavg, akhsavg, u10max,&
+              v10max, u10h, v10h, akms, akhs, cuprec, acprec, ancprc, cuppt,&
+              rainc_bucket, rainnc_bucket, pcp_bucket, snow_bucket, qrmax, tmax,&
+              snownc, graupelnc, tsnow, qvg, qv2m, rswin, rlwin, rlwtoa, tg, sfcshx,&
+              fis, t500, cfracl, cfracm, cfrach, acfrst, acfrcv, hbot, potevp,&
+              sfclhx, htop, aswin, alwin, aswout, alwout, aswtoa, alwtoa, czen, czmean,&
+              sigt4, rswout, radot, ncfrst, ncfrcv, smstot, pctsno, pshltr, th10,&
+              q10, sr, prec, subshx, snopcx, sfcuvx, sfcevp, z0, ustar, pblh, mixht,&
+              twbs, qwbs, sfcexc, grnflx, soiltb, z1000, slp, pslp, f, albedo, albase,&
+              cldfra, cprate, cnvcfr, ivgtyp, hbotd, htopd, hbots, isltyp, htops,&
+              cldefi, islope, si, lspa, rswinc, vis, pd, mxsnal, epsr, sfcux,&
+              sfcvx, avgalbedo, avgcprate, avgprec, ptop, pbot, avgcfrach, avgcfracm,&
+              avgcfracl, avgtcdc, auvbin, auvbinc, ptopl, pbotl, ttopl, ptopm,&
+              pbotm, ttopm, ptoph, pboth, ttoph, sfcugs, sfcvgs, pblcfr, cldwork,&
+              gtaux, gtauy, mdltaux, mdltauy, runoff, maxtshltr, mintshltr,&
+              maxrhshltr, minrhshltr, dzice, alwinc, alwoutc, alwtoac, aswinc,&
+              aswoutc,aswtoac, aswintoa, smcwlt, suntime, fieldcapa, avisbeamswin,&
+              avisdiffswin, airbeamswin, airdiffswin, snowfall, dusmass, ducmass,&
+              dusmass25, susmass, sucmass, susmass25, sucmass25, ocsmass, occmass,&
+              ocsmass25, occmass25, bcsmass, bccmass, bcsmass25, bccmass25,&
+              sssmass, sscmass, sssmass25, sscmass25, ducmass25
+      use soil, only:  smc, stc, sh2o, sldpth, rtdpth, sllevel
+      use masks, only: htm, vtm, hbm2, sm, sice, lmh, gdlat, gdlon, dx, dy, lmv
+      use ctlblk_mod, only: me, num_procs, jm, jsta, jend, jsta_m, jsta_m2,&
+              jend_m, jend_m2, iup, idn, icnt, im, idsp, jsta_2l, jend_2u,&
+              jvend_2u, lm, lp1, jsta_2l, jend_2u, nsoil, nbin_du, nbin_ss,&
+              nbin_bc, nbin_oc, nbin_su
+
 !
-      use params_mod
-      use ctlblk_mod
+!      use params_mod
 !- - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - 
       implicit none
 !
@@ -130,273 +170,4 @@
                'jvend_2u=',jvend_2u,'im=',im,'jm=',jm,'lm=',lm, &
                'lp1=',lp1
 
-      allocate(u(im+1,jsta_2l:jend_2u,lm))
-      allocate(v(im,jsta_2l:jvend_2u,lm))
-      allocate(t(im,jsta_2l:jend_2u,lm))
-! CHUANG ADD POTENTIAL TEMP BECAUSE WRF OUTPUT THETA
-!      allocate(th(im,jsta_2l:jend_2u,lm))   
-      allocate(q(im,jsta_2l:jend_2u,lm))
-!      allocate(w(im,jsta_2l:jend_2u,lp1))
-      allocate(uh(im,jsta_2l:jend_2u,lm))
-      allocate(vh(im,jsta_2l:jend_2u,lm))
-      allocate(wh(im,jsta_2l:jend_2u,lm))
-      allocate(pmid(im,jsta_2l:jend_2u,lm))
-      allocate(pmidv(im,jsta_2l:jend_2u,lm))
-      allocate(pint(im,jsta_2l:jend_2u,lp1))
-      allocate(alpint(im,jsta_2l:jend_2u,lp1))
-      allocate(zmid(im,jsta_2l:jend_2u,lm))
-      allocate(zint(im,jsta_2l:jend_2u,lp1))
-!      allocate(rainw(im,jsta_2l:jend_2u,lm))
-      allocate(q2(im,jsta_2l:jend_2u,lm))
-      allocate(omga(im,jsta_2l:jend_2u,lm))
-      allocate(T_ADJ(im,jsta_2l:jend_2u,lm))
-      allocate(ttnd(im,jsta_2l:jend_2u,lm))
-      allocate(rswtt(im,jsta_2l:jend_2u,lm))
-      allocate(rlwtt(im,jsta_2l:jend_2u,lm))
-      allocate(exch_h(im,jsta_2l:jend_2u,lm)) 
-      allocate(train(im,jsta_2l:jend_2u,lm))
-      allocate(tcucn(im,jsta_2l:jend_2u,lm))
-      allocate(el_myj(im,jsta_2l:jend_2u,lm))
-!     MP FIELD   
-      allocate(cwm(im,jsta_2l:jend_2u,lm))
-      allocate(F_ice(im,jsta_2l:jend_2u,lm))
-      allocate(F_rain(im,jsta_2l:jend_2u,lm))
-      allocate(F_RimeF(im,jsta_2l:jend_2u,lm))
-      allocate(QQW(im,jsta_2l:jend_2u,lm))
-      allocate(QQI(im,jsta_2l:jend_2u,lm))
-      allocate(QQR(im,jsta_2l:jend_2u,lm))
-      allocate(QQS(im,jsta_2l:jend_2u,lm))
-      allocate(QQG(im,jsta_2l:jend_2u,lm))
-      allocate(EXTCOF55(im,jsta_2l:jend_2u,lm))
-      allocate(CFR(im,jsta_2l:jend_2u,lm))
-      allocate(DBZ(im,jsta_2l:jend_2u,lm))
-      allocate(DBZR(im,jsta_2l:jend_2u,lm))
-      allocate(DBZI(im,jsta_2l:jend_2u,lm))
-      allocate(DBZC(im,jsta_2l:jend_2u,lm))
-      allocate(mcvg(im,jsta_2l:jend_2u,lm))
-!GFS FIELD
-      allocate(o3(im,jsta_2l:jend_2u,lm))
-! Add GFS d3d fields
-      allocate(vdifftt(im,jsta_2l:jend_2u,lm))
-      allocate(tcucns(im,jsta_2l:jend_2u,lm))
-      allocate(vdiffmois(im,jsta_2l:jend_2u,lm))
-      allocate(dconvmois(im,jsta_2l:jend_2u,lm))
-      allocate(sconvmois(im,jsta_2l:jend_2u,lm))
-      allocate(nradtt(im,jsta_2l:jend_2u,lm))
-      allocate(o3vdiff(im,jsta_2l:jend_2u,lm))
-      allocate(o3prod(im,jsta_2l:jend_2u,lm))
-      allocate(o3tndy(im,jsta_2l:jend_2u,lm))
-      allocate(mwpv(im,jsta_2l:jend_2u,lm))
-      allocate(unknown(im,jsta_2l:jend_2u,lm))
-      allocate(vdiffzacce(im,jsta_2l:jend_2u,lm))
-      allocate(zgdrag(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctummixing(im,jsta_2l:jend_2u,lm))
-      allocate(vdiffmacce(im,jsta_2l:jend_2u,lm))
-      allocate(mgdrag(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctvmmixing(im,jsta_2l:jend_2u,lm))
-      allocate(ncnvctcfrac(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctumflx(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctdmflx(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctdetmflx(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctzgdrag(im,jsta_2l:jend_2u,lm))
-      allocate(cnvctmgdrag(im,jsta_2l:jend_2u,lm))
-!
-      allocate(htm(im,jsta_2l:jend_2u,lm))
-      allocate(vtm(im,jsta_2l:jend_2u,lm))
-!
-!
-!     FROM SOIL
-!
-      allocate(smc(im,jsta_2l:jend_2u,nsoil))
-      allocate(stc(im,jsta_2l:jend_2u,nsoil))
-      allocate(sh2o(im,jsta_2l:jend_2u,nsoil))
-      allocate(SLDPTH(NSOIL))
-      allocate(RTDPTH(NSOIL))
-      allocate(SLLEVEL(NSOIL))
-!
-!     FROM VRBLS2D
-!
-! SRD
-      allocate(wspd10max(im,jsta_2l:jend_2u))
-      allocate(w_up_max(im,jsta_2l:jend_2u))
-      allocate(w_dn_max(im,jsta_2l:jend_2u))
-      allocate(w_mean(im,jsta_2l:jend_2u))
-      allocate(refd_max(im,jsta_2l:jend_2u))
-      allocate(up_heli_max(im,jsta_2l:jend_2u))
-      allocate(grpl_max(im,jsta_2l:jend_2u))
-!hires2
-      allocate(max10u(im,jsta_2l:jend_2u))
-      allocate(max10v(im,jsta_2l:jend_2u))
-! SRD
-      allocate(u10(im,jsta_2l:jend_2u))
-      allocate(v10(im,jsta_2l:jend_2u))
-      allocate(tshltr(im,jsta_2l:jend_2u))
-      allocate(qshltr(im,jsta_2l:jend_2u))
-      allocate(smstav(im,jsta_2l:jend_2u))
-      allocate(ssroff(im,jsta_2l:jend_2u))
-      allocate(bgroff(im,jsta_2l:jend_2u))
-      allocate(vegfrc(im,jsta_2l:jend_2u))
-      allocate(acsnow(im,jsta_2l:jend_2u))
-      allocate(acsnom(im,jsta_2l:jend_2u))
-      allocate(cmc(im,jsta_2l:jend_2u))
-      allocate(sst(im,jsta_2l:jend_2u))
-      allocate(qz0(im,jsta_2l:jend_2u))
-      allocate(thz0(im,jsta_2l:jend_2u))
-      allocate(uz0(im,jsta_2l:jend_2u))
-      allocate(vz0(im,jsta_2l:jend_2u))
-      allocate(qs(im,jsta_2l:jend_2u))
-      allocate(ths(im,jsta_2l:jend_2u))
-      allocate(sno(im,jsta_2l:jend_2u))
-      allocate(akms(im,jsta_2l:jend_2u))
-      allocate(akhs(im,jsta_2l:jend_2u))
-      allocate(cuprec(im,jsta_2l:jend_2u))
-      allocate(acprec(im,jsta_2l:jend_2u))
-      allocate(ancprc(im,jsta_2l:jend_2u))
-      allocate(cuppt(im,jsta_2l:jend_2u))
-! GSD
-      allocate(rainc_bucket(im,jsta_2l:jend_2u))
-      allocate(rainnc_bucket(im,jsta_2l:jend_2u))
-      allocate(pcp_bucket(im,jsta_2l:jend_2u))
-      allocate(snow_bucket(im,jsta_2l:jend_2u))
-      allocate(qrmax(im,jsta_2l:jend_2u))
-      allocate(tmax(im,jsta_2l:jend_2u))
-      allocate(snownc(im,jsta_2l:jend_2u))
-      allocate(graupelnc(im,jsta_2l:jend_2u))
-! GSD
-      allocate(rswin(im,jsta_2l:jend_2u))
-      allocate(rlwin(im,jsta_2l:jend_2u))
-      allocate(rlwtoa(im,jsta_2l:jend_2u))
-      allocate(tg(im,jsta_2l:jend_2u))
-      allocate(sfcshx(im,jsta_2l:jend_2u))
-      allocate(sfclhx(im,jsta_2l:jend_2u))
-      allocate(fis(im,jsta_2l:jend_2u))
-      allocate(t500(im,jsta_2l:jend_2u))
-      allocate(cfracl(im,jsta_2l:jend_2u))
-      allocate(cfracm(im,jsta_2l:jend_2u))
-      allocate(cfrach(im,jsta_2l:jend_2u))
-      allocate(acfrst(im,jsta_2l:jend_2u))
-      allocate(acfrcv(im,jsta_2l:jend_2u))
-      allocate(hbot(im,jsta_2l:jend_2u))
-      allocate(htop(im,jsta_2l:jend_2u))
-      allocate(aswin(im,jsta_2l:jend_2u))
-      allocate(alwin(im,jsta_2l:jend_2u))
-      allocate(aswout(im,jsta_2l:jend_2u))
-      allocate(alwout(im,jsta_2l:jend_2u))
-      allocate(aswtoa(im,jsta_2l:jend_2u))
-      allocate(alwtoa(im,jsta_2l:jend_2u))
-      allocate(czen(im,jsta_2l:jend_2u))
-      allocate(czmean(im,jsta_2l:jend_2u))
-      allocate(sigt4(im,jsta_2l:jend_2u))
-      allocate(rswout(im,jsta_2l:jend_2u))
-      allocate(radot(im,jsta_2l:jend_2u))
-      allocate(ncfrst(im,jsta_2l:jend_2u))  ! real
-      allocate(ncfrcv(im,jsta_2l:jend_2u))  ! real
-      allocate(smstot(im,jsta_2l:jend_2u))
-      allocate(pctsno(im,jsta_2l:jend_2u))
-      allocate(pshltr(im,jsta_2l:jend_2u))
-      allocate(th10(im,jsta_2l:jend_2u))
-      allocate(q10(im,jsta_2l:jend_2u))
-      allocate(sr(im,jsta_2l:jend_2u))
-      allocate(prec(im,jsta_2l:jend_2u))
-      allocate(subshx(im,jsta_2l:jend_2u))
-      allocate(snopcx(im,jsta_2l:jend_2u))
-      allocate(sfcuvx(im,jsta_2l:jend_2u))
-      allocate(sfcevp(im,jsta_2l:jend_2u))
-      allocate(potevp(im,jsta_2l:jend_2u))
-      allocate(z0(im,jsta_2l:jend_2u))
-      allocate(ustar(im,jsta_2l:jend_2u))
-      allocate(pblh(im,jsta_2l:jend_2u))
-      allocate(twbs(im,jsta_2l:jend_2u))
-      allocate(qwbs(im,jsta_2l:jend_2u))
-      allocate(sfcexc(im,jsta_2l:jend_2u))
-      allocate(grnflx(im,jsta_2l:jend_2u))
-      allocate(soiltb(im,jsta_2l:jend_2u))
-      allocate(z1000(im,jsta_2l:jend_2u))
-      allocate(slp(im,jsta_2l:jend_2u))
-      allocate(pslp(im,jsta_2l:jend_2u))
-      allocate(f(im,jsta_2l:jend_2u))
-      allocate(albedo(im,jsta_2l:jend_2u))
-      allocate(albase(im,jsta_2l:jend_2u))
-      allocate(cldfra(im,jsta_2l:jend_2u))
-      allocate(cprate(im,jsta_2l:jend_2u))
-      allocate(cnvcfr(im,jsta_2l:jend_2u))
-      allocate(ivgtyp(im,jsta_2l:jend_2u))
-      allocate(isltyp(im,jsta_2l:jend_2u))
-      allocate(hbotd(im,jsta_2l:jend_2u))
-      allocate(htopd(im,jsta_2l:jend_2u))
-      allocate(hbots(im,jsta_2l:jend_2u))
-      allocate(htops(im,jsta_2l:jend_2u))
-      allocate(cldefi(im,jsta_2l:jend_2u))
-      allocate(islope(im,jsta_2l:jend_2u))
-      allocate(si(im,jsta_2l:jend_2u))
-      allocate(lspa(im,jsta_2l:jend_2u))
-      allocate(rswinc(im,jsta_2l:jend_2u))
-      allocate(vis(im,jsta_2l:jend_2u))
-      allocate(pd(im,jsta_2l:jend_2u))
-      allocate(mxsnal(im,jsta_2l:jend_2u))
-! add GFS fields
-      allocate(sfcux(im,jsta_2l:jend_2u))
-      allocate(sfcvx(im,jsta_2l:jend_2u))
-      allocate(avgalbedo(im,jsta_2l:jend_2u))
-      allocate(avgcprate(im,jsta_2l:jend_2u))
-      allocate(avgprec(im,jsta_2l:jend_2u))
-      allocate(ptop(im,jsta_2l:jend_2u))
-      allocate(pbot(im,jsta_2l:jend_2u))
-      allocate(avgcfrach(im,jsta_2l:jend_2u))
-      allocate(avgcfracm(im,jsta_2l:jend_2u))
-      allocate(avgcfracl(im,jsta_2l:jend_2u))
-      allocate(avgtcdc(im,jsta_2l:jend_2u))
-      allocate(auvbin(im,jsta_2l:jend_2u))
-      allocate(auvbinc(im,jsta_2l:jend_2u))
-      allocate(ptopl(im,jsta_2l:jend_2u))
-      allocate(pbotl(im,jsta_2l:jend_2u))
-      allocate(Ttopl(im,jsta_2l:jend_2u))
-      allocate(ptopm(im,jsta_2l:jend_2u))
-      allocate(pbotm(im,jsta_2l:jend_2u))
-      allocate(Ttopm(im,jsta_2l:jend_2u))
-      allocate(ptoph(im,jsta_2l:jend_2u))
-      allocate(pboth(im,jsta_2l:jend_2u))
-      allocate(Ttoph(im,jsta_2l:jend_2u))
-      allocate(sfcugs(im,jsta_2l:jend_2u))
-      allocate(sfcvgs(im,jsta_2l:jend_2u))
-      allocate(pblcfr(im,jsta_2l:jend_2u))
-      allocate(cldwork(im,jsta_2l:jend_2u))
-      allocate(gtaux(im,jsta_2l:jend_2u))
-      allocate(gtauy(im,jsta_2l:jend_2u))
-      allocate(runoff(im,jsta_2l:jend_2u))
-      allocate(maxtshltr(im,jsta_2l:jend_2u))
-      allocate(mintshltr(im,jsta_2l:jend_2u))
-      allocate(maxrhshltr(im,jsta_2l:jend_2u))
-      allocate(minrhshltr(im,jsta_2l:jend_2u))
-      allocate(dzice(im,jsta_2l:jend_2u))
-      allocate(alwinc(im,jsta_2l:jend_2u))
-      allocate(alwoutc(im,jsta_2l:jend_2u))
-      allocate(alwtoac(im,jsta_2l:jend_2u))
-      allocate(aswinc(im,jsta_2l:jend_2u))
-      allocate(aswoutc(im,jsta_2l:jend_2u))
-      allocate(aswtoac(im,jsta_2l:jend_2u))
-      allocate(aswintoa(im,jsta_2l:jend_2u))
-      allocate(smcwlt(im,jsta_2l:jend_2u))
-      allocate(suntime(im,jsta_2l:jend_2u))
-      allocate(fieldcapa(im,jsta_2l:jend_2u))
-      allocate(avisbeamswin(im,jsta_2l:jend_2u))
-      allocate(avisdiffswin(im,jsta_2l:jend_2u))
-      allocate(airbeamswin(im,jsta_2l:jend_2u))
-      allocate(airdiffswin(im,jsta_2l:jend_2u))
-      allocate(snowfall(im,jsta_2l:jend_2u))
-!
-!     FROM MASKS
-!
-      allocate(hbm2(im,jsta_2l:jend_2u))
-      allocate(sm(im,jsta_2l:jend_2u))
-      allocate(sice(im,jsta_2l:jend_2u))
-      allocate(lmh(im,jsta_2l:jend_2u))  ! real
-      allocate(lmv(im,jsta_2l:jend_2u))  ! real
-      allocate(gdlat(im,jsta_2l:jend_2u))
-      allocate(gdlon(im,jsta_2l:jend_2u))
-      allocate(dx(im,jsta_2l:jend_2u))
-      allocate(dy(im,jsta_2l:jend_2u))
-! vrbls4d
-      allocate(dust(im,jsta_2l:jend_2u,lm,5))
-!
       end
