@@ -31,20 +31,39 @@
 !     LANGUAGE: FORTRAN
 !     MACHINE : CRAY C-90
 !$$$  
-      use vrbls3d
-      use vrbls2d
-      use soil
-      use masks
-      use kinds, only             : i_llong
-      use gfsio_module
-      use physcons
-      use params_mod
-      use lookup_mod
-      use ctlblk_mod
-      use gridspec_mod
-      use rqstfld_mod
-      use wrf_io_flags_mod
-      use sfcio_module
+      use vrbls3d, only: t, q, uh, vh, pmid, pint, alpint, zint, zmid, zint, o3, qqr, qqs, cwm,&
+              qqi, qqw, omga, q2, cfr, rlwtt, rswtt, tcucn, tcucns, train, el_pbl, exch_h, vdifftt,&
+              vdiffmois, dconvmois, sconvmois, nradtt, o3vdiff, o3prod, o3tndy, mwpv, unknown,&
+              vdiffzacce, zgdrag, cnvctummixing, vdiffmacce, mgdrag, cnvctvmmixing, ncnvctcfrac,&
+              cnvctumflx, cnvctdmflx, cnvctdetmflx, cnvctzgdrag, cnvctmgdrag
+      use vrbls2d, only: f, pd, fis, pblh, ustar, z0, ths, qs, twbs, qwbs, avgcprate, cprate, avgprec,&
+              prec, sr, lspa, sno, si, cldefi, th10, q10, tshltr, pshltr, qshltr, albase, avgalbedo,&
+              avgtcdc, czen, czmean, mxsnal, radot, sigt4, cfrach, cfracl, cfracm, avgcfrach,&
+              cnvcfr, islope, cmc, grnflx, soiltb, tg, avgcfracl, avgcfracm, vegfrc, acfrcv, acfrst,&
+              ncfrcv, ncfrst, ssroff, bgroff, rlwin, rlwtoa, aswin, auvbin, alwin, alwout, sfcvx, sfcux,&
+              snopcx, subshx, sfclhx, sfclhx, sfcshx, smstot, smstav, v10, u10, potevp, sfcvgs, sfcugs,&
+              sfcuvx, airdiffswin, airbeamswin, avisdiffswin, alwtoa, rswin, aswinc, aswoutc, aswtoac,&
+              aswintoa, avisbeamswin, rswinc, rswout, auvbinc, aswout, aswtoa, ivgtyp, isltyp, sfcevp,&
+              acsnow, acsnom, sst, thz0, qz0, uz0, vz0, ptop, htop, sfcexc, pbot, hbot, pbot, ptopl,&
+              ttopl, ptopm, pbotm, ttopm, ptoph, pboth, ttoph, pblcfr, cldwork, gtaux, gtauy, runoff,&
+              maxtshltr, mintshltr, maxrhshltr, minrhshltr, dzice, smcwlt, suntime, pbotl,fieldcapa,&
+              snowfall, htopd, hbotd, htops, hbots, cuppt
+      use soil, only: sldpth, sh2o, smc, stc
+      use masks, only: lmv, lmh, htm, vtm, gdlat, gdlon, dx, dy, hbm2, sm, sice
+      use kinds, only: i_llong
+      use gfsio_module, only: gfsio_gfile, gfsio_getfilehead, gfsio_readrecvw34, gfsio_close
+      use physcons, only: con_g, con_fvirt, con_rd, con_eps, con_epsm1
+      use params_mod, only: erad, dtr, tfrz, p1000, capa
+      use lookup_mod, only: thl, plq, ptbl, ttbl, rdq, rdth, rdp, rdthe, pl, qs0, sqs, sthe, the0, ttblq,&
+              rdpq, rdtheq, stheq, the0q
+      use ctlblk_mod, only: me, mpi_comm_comp, icnt, idsp, jsta, jend_m, jend, ihrst, imin, idat, sdat, ifhr,&
+              ifmin, filename, restrt, sdat, imp_physics, icu_physics, dt, spval, pdtop, pt, nphs, dtq2, tprec,&
+              tclod, ardlw, trdlw, ardsw, trdsw, tsrfc, asrfc, avrain, avcnvc, theat, tmaxmin, td3d, gdsdegr,&
+              spl, lsm, alsl, im, jm, im_jm, lm, jsta_2l, jend_2u, nsoil, lp1
+      use gridspec_mod, only: maptype, gridtype, latstart, latlast, lonstart,lonlast, cenlon, dxval, dyval,&
+              truelat2, psmapf, cenlat, truelat1
+      use rqstfld_mod, only: igds, iq, is, avbl
+      use sfcio_module, only: sfcio_head, sfcio_data, sfcio_srohdc
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
       implicit none
 !
@@ -87,8 +106,8 @@
       CHARACTER*40 CONTRL,FILALL,FILMST,FILTMP,FILTKE,FILUNV            &  
          , FILCLD,FILRAD,FILSFC
       CHARACTER*4 RESTHR
-      CHARACTER FNAME*80,ENVAR*50,sfcfilename*80
-      INTEGER IDATB(3),IDATE(8),JDATE(8)
+      CHARACTER FNAME*80,ENVAR*50,sfcfilename*256
+      INTEGER IDATE(8),JDATE(8)
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
       LOGICAL*1 LB(IM,JM)
       INTEGER IRET
@@ -99,7 +118,6 @@
 !     DECLARE VARIABLES.
 !     
       REAL fhour
-      REAL SLDPTH2(NSOIL)
       REAL RINC(5)
       REAL ETA1(LM), ETA2(LM)
       REAL DUM1D (LM+1)
@@ -122,6 +140,7 @@
       integer ibuf(im,jsta_2l:jend_2u)
       real buf(im,jsta_2l:jend_2u),bufsoil(im,nsoil,jsta_2l:jend_2u)   &
         ,buf3d(im,jsta_2l:jend_2u,lm),buf3d2(im,lp1,jsta_2l:jend_2u)
+      real LAT
 !
 !      DATA BLANK/'    '/
 !
@@ -399,7 +418,13 @@
       END IF 
       
       imp_physics=99 !set GFS mp physics to 99 for Zhao scheme
-      print*,'MP_PHYSICS= ',imp_physics
+      iCU_PHYSICS=4
+      print*,'MP_PHYSICS,cu_physics=',imp_physics,icu_physics
+
+! Initializes constants for Ferrier microphysics       
+      if(imp_physics==5 .or. imp_physics==85 .or. imp_physics==95)then
+       CALL MICROINIT(imp_physics)
+      end if
 
 ! waiting to retrieve lat lon infor from raw GFS output
 !      VarName='DX'
@@ -1165,6 +1190,9 @@
            ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName              &
            ,jpds,jgds,kpds,avgcprate)
       where(avgcprate /= spval)avgcprate=avgcprate*dtq2/1000. ! convert to m
+      print *,'in INIT_GFS,avgcprate=',maxval(avgcprate(1:im,jsta:jend)),  &
+              minval(avgcprate(1:im,jsta:jend)),'varname=',trim(varname),  &
+              'jpds(5)=',jpds(5),'jpds(6)=',jpds(6),'dtq2=',dtq2
       
       cprate=avgcprate   
 !      print*,'maxval CPRATE: ', maxval(CPRATE)
@@ -2895,7 +2923,7 @@
       sst=spval
 
 ! GFS does not have mixing length
-      el_myj=spval      
+      el_pbl=spval      
 
 ! GFS does not output exchange coefficient
       exch_h=spval
@@ -3739,8 +3767,8 @@
 ! pos east
        call collect_loc(gdlat,dummy)
        if(me.eq.0)then
-        latstart=nint(dummy(1,1)*1000.)
-        latlast=nint(dummy(im,jm)*1000.)
+        latstart=nint(dummy(1,1)*gdsdegr)
+        latlast=nint(dummy(im,jm)*gdsdegr)
 	print*,'laststart,latlast B bcast= ',latstart,latlast
        end if
        call mpi_bcast(latstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
@@ -3748,8 +3776,8 @@
        write(6,*) 'laststart,latlast,me A calling bcast=',latstart,latlast,me
        call collect_loc(gdlon,dummy)
        if(me.eq.0)then
-        lonstart=nint(dummy(1,1)*1000.)
-        lonlast=nint(dummy(im,jm)*1000.)
+        lonstart=nint(dummy(1,1)*gdsdegr)
+        lonlast=nint(dummy(im,jm)*gdsdegr)
        end if
        call mpi_bcast(lonstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        call mpi_bcast(lonlast,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
@@ -3881,6 +3909,18 @@
           WRITE(igdout)TRUELAT2  !Assume projection at +-90
           WRITE(igdout)TRUELAT1
           WRITE(igdout)255
+        !  Note: The calculation of the map scale factor at the standard
+        !        lat/lon and the PSMAPF
+        ! Get map factor at 60 degrees (N or S) for PS projection, which will
+        ! be needed to correctly define the DX and DY values in the GRIB GDS
+          if (TRUELAT1 .LT. 0.) THEN
+            LAT = -60.
+          else
+            LAT = 60.
+          end if
+
+          CALL MSFPS (LAT,TRUELAT1*0.001,PSMAPF)
+
         ELSE IF(MAPTYPE .EQ. 3)THEN  !Mercator
           WRITE(igdout)1
           WRITE(igdout)im

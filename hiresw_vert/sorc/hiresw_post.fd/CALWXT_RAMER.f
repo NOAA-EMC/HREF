@@ -9,7 +9,7 @@
 !   CODE ADAPTED FOR WRF POST  24 AUGUST 2005    G MANIKIN
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !
-      SUBROUTINE CALWXT_RAMER(T,Q,PMID,PINT,LMH,PREC,PTYP)
+      SUBROUTINE CALWXT_RAMER_POST(T,Q,PMID,PINT,LMH,PREC,PTYP)
 
 !      SUBROUTINE dophase(pq,   !  input pressure sounding mb
 !     +    t,   !  input temperature sounding K
@@ -20,13 +20,13 @@
 !     +    prec,      ! input amount of precipitation
 !     +    ptyp) !  output(2) phase 2=Rain, 3=Frzg, 4=Solid,
 !                                               6=IP     JC  9/16/99
-      use params_mod
-      use CTLBLK_mod 
+      use params_mod, only: pq0, a2, a3, a4
+      use CTLBLK_mod, only: me, im, jsta_2l, jend_2u, lm, lp1, jm, jsta, jend
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !
       LOGICAL,parameter :: trace = .false.
-      real,PARAMETER :: RCP=0.2857141,LECP=1572.5
+!      real,PARAMETER :: RCP=0.2857141,LECP=1572.5
       real,PARAMETER :: twice=266.55,rhprcp=0.80,deltag=1.02,prcpmin=0.3, &
      &             emelt=0.045,rlim=0.04,slim=0.85
       real,PARAMETER :: twmelt=273.15,tz=273.15,efac=1.0 ! specify in params now 
@@ -40,15 +40,14 @@
       real,DIMENSION(IM,jsta_2l:jend_2u),intent(in) :: LMH,PREC
       real,DIMENSION(IM,JM),intent(inout) :: PTYP
 !
-      real,DIMENSION(IM,jsta_2l:jend_2u,LM) :: P,TQ,QQ,PQ,RHQ
-      real,DIMENSION(IM,jsta_2l:jend_2u,LM) :: tqtmp,pqtmp,rhqtmp
-      real,DIMENSION(IM,JM,LM) :: TWQ
+      real,DIMENSION(IM,jsta_2l:jend_2u,LM) :: P,TQ,PQ,RHQ
+      real,DIMENSION(IM,JSTA:JEND,LM) :: TWQ
       REAL, ALLOCATABLE :: TWET(:,:,:)
 !
       integer J,L,LEV,LNQ,LMHK,ii
       real RHMAX,TWMAX,PTOP,dpdrh,twtop,rhtop,wgt1,wgt2,    &
            rhavg,dtavg,dpk,ptw,rate,pbot,qc, b
-      real,external :: xmytw,esat,tdofesat
+      real,external :: xmytw_post,esat,tdofesat
 !
       DATA iflag / -9/
 !
@@ -67,16 +66,11 @@
         LEV=NQ-L+1
         P(I,J,L)=PMID(I,J,L)
         QC=PQ0/P(I,J,L) * EXP(A2*(T(I,J,L)-A3)/(T(I,J,L)-A4))
-        RHQTMP(I,J,LEV)=Q(I,J,L)/QC
-        PQTMP(I,J,LEV)=P(I,J,L)/100.
-        TQTMP(I,J,LEV)=T(I,J,L)
+	TQ(I,J,LEV)=T(I,J,L)
+	PQ(I,J,LEV)=P(I,J,L)/100.
+	RHQ(I,J,LEV)=Q(I,J,L)/QC
    88 CONTINUE
 
-      do 92 L=1,NQ 
-         TQ(I,J,L)=TQTMP(I,J,L)
-         PQ(I,J,L)=PQTMP(I,J,L)
-         RHQ(I,J,L)=RHQTMP(I,J,L)
-   92 continue
       enddo
       enddo
 
@@ -111,7 +105,8 @@
       NQ=LMH(I,J)
       DO 10 L = 1, nq
           xxx = tdofesat(esat(tq(I,J,L),flag,flg)*rhq(I,J,L),flag,flg)
-          twq(I,J,L) = xmytw(tq(I,J,L),xxx,pq(I,J,L))
+          twq(I,J,L) = xmytw_post(tq(I,J,L),xxx,pq(I,J,L))
+
           IF(I .EQ. 324 .and. J .EQ. 390) THEN
             print *, 'tw ramer ', L, Twq(I,J,L),'me=',me
           ENDIF
@@ -122,7 +117,7 @@
           IF (pq(I,J,L).ge.400.0) THEN
               IF (rhq(I,J,L).gt.rhmax) THEN
                   rhmax = rhq(I,J,L)
-                  k2 = i
+                  k2 = l
                   IF (trace) WRITE (*,*) 'rhmax,k2,L', rhmax, k2, L
               END IF
 !
@@ -450,17 +445,17 @@
 !
 !--------------------------------------------------------------------------
 !      REAL*4 FUNCTION mytw(t,td,p)
-      FUNCTION xmytw(t,td,p)
+      FUNCTION xmytw_post(t,td,p)
 !
       IMPLICIT NONE
 !
-      INTEGER*4 cflag, l
+      INTEGER*4 cflag, l,i,j
       REAL*4 f, c0, c1, c2, k, kd, kw, ew, t, td, p, ed, fp, s,        &
-     &          de, xmytw
+     &          de, xmytw_post
       DATA f, c0, c1, c2 /0.0006355, 26.66082, 0.0091379024, 6106.3960/
 !
 !
-      xmytw = (t+td) / 2
+      xmytw_post= (t+td) / 2
       IF (td.ge.t) RETURN
 !
       IF (t.lt.100.0) THEN
@@ -497,9 +492,9 @@
 !
 !      print *, 'kw ', kw
       IF (cflag.ne.0) THEN
-          xmytw = kw - 273.15
+          xmytw_post= kw - 273.15
       ELSE
-          xmytw = kw
+          xmytw_post = kw
       END IF
 !
       RETURN

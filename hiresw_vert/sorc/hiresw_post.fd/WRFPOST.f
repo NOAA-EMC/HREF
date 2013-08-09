@@ -35,6 +35,9 @@
 !   06-03-03  H CHUANG - ADDED PARRISH'S MPI BINARY IO TO READ BINARY
 !             WRF FILE AS RANDOM ASSCESS SO THAT VARIABLES IN WRF OUTPUT
 !             DON'T HAVE TO BE READ IN IN SPECIFIC ORDER 
+!   11-02-06  J WANG  - ADD GRIB2 OPTION
+!   11-12-14  SARAH LU - ADD THE OPTION TO READ NGAC AER FILE 
+!   12-01-28  J WANG  - Use post available fields in xml file for grib2
 !  
 ! USAGE:    WRFPOST
 !   INPUT ARGUMENT LIST:
@@ -125,14 +128,25 @@
 !
 !===========================================================================================
 !
-      use gfsio_module
-      use nemsio_module
-      use CTLBLK_mod
+      use gfsio_module, only: gfsio_gfile, gfsio_init, gfsio_open, gfsio_getfilehead
+      use nemsio_module, only: nemsio_getheadvar, nemsio_gfile, nemsio_init, nemsio_open, &
+              nemsio_getfilehead
+      use CTLBLK_mod, only: filenameaer, me, num_procs, num_servers, mpi_comm_comp, datestr,&
+              mpi_comm_inter, filename, ioform, grib, idat, filenameflux, filenamed3d, gdsdegr,&
+              spldef, modelname, ihrst, lsmdef,vtimeunits, tprec, pthresh, datahandle, im, jm, lm,&
+              lp1, lm1, im_jm, isf_surface_physics, nsoil, spl, lsmp1, global,&
+              jsta, jend, jsta_m, jend_m, jsta_2l, jend_2u, novegtype, icount_calmict, npset, datapd,&
+              lsm, fld_info, etafld2_tim, eta2p_tim, mdl2sigma_tim, cldrad_tim, miscln_tim,&
+              fixed_tim, time_output, imin, surfce2_tim, komax, ivegsrc
+      use grib2_module, only: gribit2,num_pset,nrecout,first_grbtbl,grib_info_finalize
+      use sigio_module, only: sigio_head
+      use sigio_r_module, only: sigio_rropen, sigio_rrhead
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
       implicit none
 !
       type(gfsio_gfile) :: gfile
-      type(nemsio_gfile) :: nfile,ffile
+      type(nemsio_gfile):: nfile,ffile,rfile
+      type(sigio_head):: sighead
       INCLUDE "mpif.h"
 !
 !     DECLARE VARIABLES.
@@ -143,23 +157,23 @@
 !
       real(kind=8) :: time_initpost=0.,INITPOST_tim=0.,btim,timef,rtc
       real rinc(5)
-      integer iii,l,k,ist,ierr,Status,iostatusD3D,nrec,iostatusFlux
+      integer :: status=0,iostatusD3D=0,iostatusFlux=0
+      integer iii,l,k,ierr,nrec,ist,lusig,idrt
       integer :: PRNTSEC,iim,jjm,llm,ioutcount,itmp,iret,iunit,        &
                  iunitd3d,iyear,imn,iday,LCNTRL,ieof
+      integer :: iostatusAER
 !
       integer :: kpo,kth,kpv
       real,dimension(komax) :: po,th,pv
-      namelist/nampgb/kpo,po,kth,th,kpv,pv
+      namelist/nampgb/kpo,po,kth,th,kpv,pv,fileNameAER
 
-      character startdate*19,SysDepInfo*80,IOWRFNAME*3
+      character startdate*19,SysDepInfo*80,IOWRFNAME*3,post_fname*80
+      character cgar*1,cdum*4
 !
 !------------------------------------------------------------------------------
 !     START HERE
 !
-!      call start()
-
-        ist=0
-
+      call start()
 !
 !     INITIALIZE MPI
       
@@ -194,6 +208,15 @@
       print*,'fileName= ',fileName
       read(5,113) IOFORM
            print*,'IOFORM= ',IOFORM
+      read(5,120) grib
+           print*,'OUTFORM= ',grib
+      if(index(grib,"grib")==0) then
+       grib='grib1'
+       rewind(5,iostat=ierr)
+       read(5,111,end=1000) fileName
+       read(5,113) IOFORM
+      endif
+           print*,'OUTFORM2= ',grib
       read(5,112) DateStr
       read(5,114) MODELNAME 
 ! assume for now that the first date in the stdin file is the start date
@@ -210,7 +233,8 @@
  112  format(a19)
  113  format(a20)
  114  format(a4)
-      print*,'MODELNAME= ',MODELNAME
+ 120  format(a5)
+      print*,'MODELNAME= ',MODELNAME,'grib=',grib
 !Chuang: If model is GFS, read in flux file name from unit5
       if(MODELNAME .EQ. 'GFS')then
          read(5,111,end=117)fileNameFlux
@@ -225,7 +249,22 @@
       end if
  118  continue
 !    fileNameD3D=' '  
- 
+
+!      if(MODELNAME .EQ. 'GFS')then
+!       read(5,111,end=1118)fileNameAER
+!       print*,'AER names in GFS= ',trim(fileNameAER)
+!      end if
+!1118  continue
+
+!
+! set ndegr
+      if(grib=='grib1') then
+        gdsdegr=1000.
+      else if (grib=='grib2') then
+        gdsdegr=1000000.
+      endif
+      print *,'gdsdegr=',gdsdegr
+! 
 ! set default for kpo, kth, th, kpv, pv     
       kpo=0
       po=0
@@ -243,8 +282,8 @@
 !      if(kpv > komax)print*,'PV levels cannot exceed ',komax; STOP 
  119  continue
       if(me==0)print*,'komax,iret for nampgb= ',komax,iret 
-      if(me==0)print*,'komax,kpo,kth,th,kpv,pv= ',komax,kpo            &
-     &  ,kth,th(1:kth),kpv,pv(1:kpv) 
+      if(me==0)print*,'komax,kpo,kth,th,kpv,pv,fileNameAER= ',komax,kpo            &
+     &  ,kth,th(1:kth),kpv,pv(1:kpv),trim(fileNameAER) 
 
 ! set up pressure level from POSTGPVARS or DEFAULT
       if(kpo == 0)then
@@ -271,8 +310,15 @@
          end do
         end if
       end if
+      LSMP1=LSM+1
       print*,'LSM, SPL = ',lsm,spl(1:lsm)        
 !      end if
+! CRA READ VALID TIME UNITS
+      if(MODELNAME.EQ.'RAPR')then
+        read(5,114) VTIMEUNITS
+        print*,'VALID TIME UNITS = ', VTIMEUNITS
+      endif
+! CRA
       
 !Chuang, Jun and Binbin: If model is RSM, read in precip accumulation frequency (sec) from unit5
       if(MODELNAME .EQ. 'RSM')then
@@ -282,6 +328,12 @@
       end if
  115  format(f7.1)
  116  continue
+! set PTHRESH for different models
+      if(MODELNAME == 'NMM')then
+       PTHRESH=0.000004
+      else
+       PTHRESH=0.000000
+      end if  
 !Chuang: add dynamical allocation
       if(TRIM(IOFORM) .EQ. 'netcdf')THEN
         call ext_ncd_ioinit(SysDepInfo,Status)
@@ -307,9 +359,11 @@
        
         print*,'im jm lm from wrfout= ',im,jm, lm
        
-
+        ! Read and set global value for surface physics scheme
         call ext_ncd_get_dom_ti_integer(DataHandle                      &
           ,'SF_SURFACE_PHYSICS',itmp,1,ioutcount, status )
+        iSF_SURFACE_PHYSICS = itmp
+        print*,'SF_SURFACE_PHYSICS= ',iSF_SURFACE_PHYSICS
 ! set NSOIL to 4 as default for NOAH but change if using other
 ! SFC scheme
         NSOIL=4
@@ -317,6 +371,8 @@
          NSOIL=5
         ELSE IF(itmp.eq.3)then ! RUC LSM
          NSOIL=6
+        ELSE IF(itmp.eq.7)then !Pleim Xu
+         NSOIL=2
         END IF
         print*,'NSOIL from wrfout= ',NSOIL
 
@@ -332,8 +388,7 @@
             DataHandle, Status)
           print*,'called open for read', Status
           if ( Status /= 0 ) then
-            print*,'error opening ',trim(fileName), ' Status = ', Status 
-            call mpi_abort(MPI_COMM_COMP, iret, ierr )
+            print*,'error opening ',fileName, ' Status = ', Status ; stop
           endif
 
           call ext_int_get_dom_ti_integer(DataHandle,                 &
@@ -357,7 +412,9 @@
             NSOIL=2
           ELSE	   
            call ext_int_get_dom_ti_integer(DataHandle                   &
-     &    ,'SF_SURFACE_PHYSICS',itmp,1,ioutcount, status )
+          ,'SF_SURFACE_PHYSICS',itmp,1,ioutcount, status )
+           iSF_SURFACE_PHYSICS = itmp
+           print*,'SF_SURFACE_PHYSICS= ',iSF_SURFACE_PHYSICS
 ! set NSOIL to 4 as default for NOAH but change if using other 
 ! SFC scheme
            NSOIL=4
@@ -365,6 +422,8 @@
             NSOIL=5
            ELSE IF(itmp.eq.3)then ! RUC LSM
             NSOIL=6
+           ELSE IF(itmp.eq.7)then !Pleim Xu
+            NSOIL=2
            END IF
           END IF	
          print*,'NSOIL from wrfout= ',NSOIL
@@ -396,6 +455,7 @@
 !             iostatusD3D=-1
 !jun
              print*,'iostatusD3D in WRFPOST= ',iostatusD3D
+
 ! comment this out because GFS analysis post processing
 ! does not use Grib file
 !	 if ( Status /= 0 ) then
@@ -436,13 +496,12 @@
 ! NEMSIO format
       ELSE IF(TRIM(IOFORM) == 'binarynemsio' )THEN
       
-!         IF(MODELNAME == 'GFS') THEN
            IF(ME == 0)THEN
 	     call nemsio_init(iret=status)
              print *,'nemsio_init, iret=',status
              call nemsio_open(nfile,trim(filename),'read',iret=status)
 	     if ( Status /= 0 ) then
-              print*,'error opening ',fileName, ' Status = ', Status ; stop
+               print*,'error opening ',fileName, ' Status = ', Status ; stop
              endif
 !---
              call nemsio_getfilehead(nfile,iret=status,nrec=nrec            &
@@ -481,7 +540,7 @@
 !	     iunit=33
 	     call nemsio_open(ffile,trim(fileNameFlux),'read',iret=iostatusFlux)
 	     if ( iostatusFlux /= 0 ) then
-              print*,'error opening ',fileName, ' Status = ', Status
+              print*,'error opening ',fileNameFlux, ' Status = ', iostatusFlux
              endif
 !             call baopenr(iunit,trim(fileNameFlux),iostatusFlux)
 !	     if(iostatusFlux/=0)print*,'flux file not opened'
@@ -489,17 +548,104 @@
 !             call baopenr(iunitd3d,trim(fileNameD3D),iostatusD3D)
              iostatusD3D=-1
 	     iunitd3d=-1
+!
+! opening GFS aer file
+	     call nemsio_open(rfile,trim(fileNameAER),'read',iret=iostatusAER)
+	     if ( iostatusAER /= 0 ) then
+              print*,'error opening AER ',fileNameAER, ' Status = ', iostatusAER
+             endif
+!
 !             print*,'iostatusD3D in WRFPOST= ',iostatusD3D
+	
 	    END IF 
 !        END IF		          
+
+      ELSE IF(TRIM(IOFORM) == 'sigio' )THEN
+      
+         IF(MODELNAME == 'GFS') THEN
+	   lusig=32
+
+           !IF(ME == 0)THEN
+
+	   call sigio_rropen(lusig,trim(filename),status)
+
+	   if ( Status /= 0 ) then
+            print*,'error opening ',fileName, ' Status = ', Status ; stop
+           endif
+!---
+           call sigio_rrhead(lusig,sighead,status)
+           if ( Status /= 0 ) then
+            print*,'error finding GFS dimensions '; stop
+	   else
+	     idrt=4 ! set default to Gaussian first
+             call getenv('IDRT',cgar) ! then read idrt to see if user request latlon
+             if(cgar /= " ")then
+               read(cgar,'(I1)',iostat=Status)idrt
+               !if(Status==0)idrt=idum
+	       call getenv('LONB',cdum)
+	       read(cdum,'(I4)',iostat=Status)im
+	       if(Status/=0)then
+	        print*,'error reading user specified lonb for latlon grid, stopping'
+		call mpi_abort()
+		stop
+	       end if		       
+	       call getenv('LATB',cdum)
+	       read(cdum,'(I4)',iostat=Status)jm
+	       if(Status/=0)then
+	        print*,'error reading user specified latb for latlon grid, stopping'
+		call mpi_abort()
+		stop
+	       end if
+             else 
+               idrt=4
+	       im=sighead%lonb
+	       jm=sighead%latb
+             endif
+	     print*,'idrt=',idrt 
+	     lm=sighead%levs 
+	   end if  
+           nsoil=4
+! opening GFS flux file	
+            if(me==0)then 
+	     iunit=33
+             call baopenr(iunit,trim(fileNameFlux),iostatusFlux)
+	     if(iostatusFlux/=0)print*,'flux file not opened'
+	     iunitd3d=34
+             call baopenr(iunitd3d,trim(fileNameD3D),iostatusD3D)
+!             iostatusD3D=-1
+	    END IF
+	    !CALL mpi_bcast(im,1,MPI_INTEGER,0,                   &
+            !     mpi_comm_comp,status) 
+	    !call mpi_bcast(jm,1,MPI_INTEGER,0,                   &
+            !     mpi_comm_comp,status)
+            !call mpi_bcast(lm,1,MPI_INTEGER,0,                   &
+            !     mpi_comm_comp,status)
+            !call mpi_bcast(nsoil,1,MPI_INTEGER,0,                &
+            !     mpi_comm_comp,status)
+            call mpi_bcast(iostatusFlux,1,MPI_INTEGER,0,          &
+                 mpi_comm_comp,status)
+            call mpi_bcast(iostatusD3D,1,MPI_INTEGER,0,          &
+                 mpi_comm_comp,status)
+       	    print*,'im jm lm nsoil from GFS= ',im,jm, lm ,nsoil
+	    LP1=LM+1
+            LM1=LM-1
+            IM_JM=IM*JM
+	 ELSE
+	    print*,'post only reads sigma files for GFS, stopping';stop    
+         END IF
+
       ELSE
         PRINT*,'UNKNOWN MODEL OUTPUT FORMAT, STOPPING'
         STOP 9999
       END IF  
 
+
       CALL MPI_FIRST()
       print*,'jsta,jend,jsta_m,jend_m,jsta_2l,jend_2u=',jsta,        &
               jend,jsta_m,jend_m, jsta_2l,jend_2u
+      CALL ALLOCATE_ALL()	      
+        write(0,*) 'past allocate_all'
+        write(6,*) 'past allocate_all'
      
 !
 !     INITIALIZE POST COMMON BLOCKS 
@@ -509,12 +655,27 @@
 !
 !--- Initialize a few constants for new cloud fields (Ferrier, Feb '02)
 !
-      CALL MICROINIT
+!      CALL MICROINIT ! this call is moved to INITPOST* and is only called when using Ferrier
       print *,'in WRFPOST_EXP, IOFORM=',TRIM(IOFORM)
 !
 ! EXP. initialize netcdf here instead
       btim = timef()
+! set default novegtype
+      if(MODELNAME == 'GFS')then 
+       novegtype=13
+       ivegsrc=2
+      else if(MODELNAME=='NMM' .and. TRIM(IOFORM)=='binarynemsio')then
+       novegtype=20
+       ivegsrc=1 
+      else ! USGS
+       novegtype=24
+       ivegsrc=0 
+      end if
+      
+! Reading model output for different models and IO format     
+ 
       IF(TRIM(IOFORM) .EQ. 'netcdf')THEN
+
        IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME.EQ.'RAPR')THEN
         print*,'CALLING INITPOST TO PROCESS NCAR NETCDF OUTPUT'
         CALL INITPOST
@@ -525,23 +686,9 @@
         PRINT*,'POST does not have netcdf option for this model, STOPPING'
         STOP 9998
        END IF
-      ELSE IF(TRIM(IOFORM) .EQ. 'binary')THEN
-       IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME.EQ.'RAPR')THEN
-        print*,'CALLING INITPOST_BIN TO PROCESS NCAR BINARY OUTPUT'
-        CALL INITPOST_BIN
-       ELSE IF (MODELNAME .EQ. 'NMM')THEN
-        print*,'CALLING INITPOST_NMM_BIN TO PROCESS NMM BINARY OUTPUT'
-        CALL INITPOST_NMM_BIN
 
-       ELSE IF(MODELNAME .EQ. 'RSM') THEN                            
-          print*,'CALLING INITPOST_RSM TO PROCESS BINARY OUTPUT'
-          CALL INITPOST_RSM
-
-       ELSE
-        PRINT*,'POST does not have binary option for this model, STOPPING'
-        STOP 9998
-       END IF
       ELSE IF(TRIM(IOFORM) .EQ. 'binarympiio')THEN 
+
        IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME.EQ.'RAPR')THEN
          print*,'CALLING INITPOST_BIN_MPIIO TO PROCESS ARW BINARY OUTPUT'
          CALL INITPOST_BIN_MPIIO
@@ -561,31 +708,59 @@
        IF(MODELNAME == 'GFS') THEN
         CALL INITPOST_GFS(NREC,iunit,iostatusFlux,iunitd3d,iostatusD3D,gfile)
        END IF
+
+      ELSE IF(TRIM(IOFORM) .EQ. 'binary')THEN 
+       IF(MODELNAME .EQ. 'NCAR')THEN
+         print*,'CALLING INITPOST_BIN TO PROCESS ARW BINARY OUTPUT'
+         CALL INITPOST_BIN
+       ENDIF
+
       ELSE IF(TRIM(IOFORM) == 'binarynemsio')THEN 
+
        IF(MODELNAME == 'NMM') THEN
         CALL INITPOST_NEMS(NREC,nfile)
        ELSE IF(MODELNAME == 'GFS') THEN
-        CALL INITPOST_GFS_NEMS(NREC,iostatusFlux,iostatusD3D,nfile,ffile)
+!       CALL INITPOST_GFS_NEMS(NREC,iostatusFlux,iostatusD3D,nfile,ffile)
+        CALL INITPOST_GFS_NEMS(NREC,iostatusFlux,iostatusD3D,iostatusAER, &
+                               nfile,ffile,rfile)
        ELSE
-        PRINT*,'POST does not have nemsio option for this model, STOPPING'
+        PRINT*,'POST does not have nemsio option for model,',MODELNAME,' STOPPING,'
 	STOP 9998		
+       END IF
+       
+       ELSE IF(TRIM(IOFORM) == 'sigio')THEN 
+       IF(MODELNAME == 'GFS') THEN
+        CALL INITPOST_GFS_SIGIO(lusig,iunit,iostatusFlux,iostatusD3D,idrt,sighead)
+       ELSE
+        PRINT*,'POST does not have sigio option for this model, STOPPING'
+	STOP 99981		
        END IF 	
-!       END IF 	 
+
       ELSE
        PRINT*,'UNKNOWN MODEL OUTPUT FORMAT, STOPPING'
        STOP 9999
       END IF 
       INITPOST_tim = INITPOST_tim +(timef() - btim)
-      time_initpost = time_initpost + rtc() - ist
+      time_initpost = time_initpost + rtc()
       IF(ME.EQ.0)THEN
         WRITE(6,*)'WRFPOST:  INITIALIZED POST COMMON BLOCKS'
       ENDIF
 !
+!     IF GRIB2  read out post aviable fields xml file and
+!     post control file
+!
+      if(grib=="grib2") then
+        call READ_xml()
+      endif
+! 
 !     LOOP OVER THE OUTPUT GRID(S).  FIELD(S) AND 
 !     OUTPUT GRID(S) ARE SPECIFIED IN THE CONTROL 
 !     FILE.  WE PROCESS ONE GRID AND ITS FIELDS 
 !     AT A TIME.  THAT'S WHAT THIS LOOP DOES.
 !     
+      icount_calmict=0
+      first_grbtbl=.true.
+      npset=0
  10   CONTINUE
 !     
 !        READ CONTROL FILE DIRECTING WHICH FIELDS ON WHICH
@@ -593,6 +768,8 @@
 !        VARIABLE IEOF.NE.0 WHEN THERE ARE NO MORE GRIDS
 !        TO PROCESS.
 !     
+      write(0,*)'bfe readcntrl,grib=',grib
+      if(grib=="grib1") then
          IEOF=1
          CALL READCNTRL(kth,IEOF)
          IF(ME.EQ.0)THEN
@@ -600,6 +777,17 @@
                 'IEOF=',IEOF
          ENDIF
          IF (IEOF.NE.0) GOTO 20
+       else if(grib=="grib2") then
+         npset=npset+1
+         CALL SET_OUTFLDS(kth,kpv,pv)
+         print *,'before npset=',npset
+         if(allocated(datapd))deallocate(datapd)
+         allocate(datapd(im,1:jend-jsta+1,nrecout+100))
+         datapd=0.
+         call get_postfilename(post_fname)
+         print *,'get_postfilename,post_fname=',trim(post_fname),'npset=',npset, &
+            'num_pset=',num_pset,'iSF_SURFACE_PHYSICS=',iSF_SURFACE_PHYSICS
+       endif
 !     
 !        PROCESS SELECTED FIELDS.  FOR EACH SELECTED FIELD/LEVEL
 !        WE GO THROUGH THE FOLLOWING STEPS:
@@ -611,6 +799,16 @@
            WRITE(6,*)' '
            WRITE(6,*)'WRFPOST:  PREPARE TO PROCESS NEXT GRID'
          ENDIF
+!
+       if(grib=="grib2") then
+         call mpi_barrier(mpi_comm_comp,ierr)
+!      if(me==0)call w3tage('bf grb2  ')
+         call gribit2(post_fname)
+         deallocate(datapd)
+         deallocate(fld_info)
+         if(npset>=num_pset) go to 20
+        endif
+
 !     
 !     PROCESS NEXT GRID.
 !     
@@ -619,13 +817,20 @@
 !     ALL GRIDS PROCESSED.
 !     
  20   CONTINUE
+!
+!-------
+     call grib_info_finalize()
+!
       IF(ME.EQ.0)THEN
         WRITE(6,*)' '
         WRITE(6,*)'ALL GRIDS PROCESSED.'
+        WRITE(0,*)'ALL GRIDS PROCESSED.'
         WRITE(6,*)' '
       ENDIF
 !
+        write(0,*) 'to DE_ALLOCATE call'
       call DE_ALLOCATE
+        write(0,*) 'past DE_ALLOCATE call'
 !      if(IOFORM .EQ. 'netcdf')THEN
 !       call ext_ncd_ioclose ( DataHandle, Status )
 !      else
@@ -654,19 +859,15 @@
 !
 !     MPI_LAST WILL SHUTDOWN THE IO SERVER, IF IT EXISTS
 !
-        print*, 'to MPI_LAST'
       CALL MPI_LAST
-        print*, 'past MPI_LAST'
 !
 !
       end if
 !
 !
 !
-!      call summary()
-!        print* , 'call MPI_FINALIZE'
-!      CALL MPI_FINALIZE(IERR)
-        print* , 'past skip of  MPI_FINALIZE'
+      call summary()
+      CALL MPI_FINALIZE(IERR)
       STOP 0
       END
 

@@ -1,4 +1,7 @@
-      SUBROUTINE INITPOST_GFS_NEMS(NREC,iostatusFlux,iostatusD3D,nfile,ffile)
+       SUBROUTINE INITPOST_GFS_NEMS(NREC,iostatusFlux,iostatusD3D,   &
+                                   iostatusAER,nfile,ffile,rfile)
+!       SUBROUTINE INITPOST_GFS_NEMS(NREC,iostatusFlux,iostatusD3D,nfile,ffile)
+
 !$$$  SUBPROGRAM DOCUMENTATION BLOCK
 !                .      .    .     
 ! SUBPROGRAM:    INITPOST    INITIALIZE POST FOR RUN
@@ -7,6 +10,11 @@
 ! ABSTRACT:  THIS ROUTINE INITIALIZES CONSTANTS AND
 !   VARIABLES AT THE START OF AN ETA MODEL OR POST 
 !   PROCESSOR RUN.
+!
+! REVISION HISTORY
+!   2011-02-07 Jun Wang    add grib2 option
+!   2011-12-14 Sarah Lu    add aer option
+!   2012-01-07 Sarah Lu    compute air density
 !
 ! USAGE:    CALL INIT
 !   INPUT ARGUMENT LIST:
@@ -31,24 +39,47 @@
 !     LANGUAGE: FORTRAN
 !     MACHINE : CRAY C-90
 !$$$  
-      use vrbls4d
-      use vrbls3d
-      use vrbls2d
-      use soil
-      use masks
-      use kinds, only             : i_llong
-      use nemsio_module
-      use physcons
-      use params_mod
-      use lookup_mod
-      use ctlblk_mod
-      use gridspec_mod
-      use rqstfld_mod
-!      use wrf_io_flags_mod
+      use vrbls4d, only: dust
+      use vrbls3d, only: t, q, uh, vh, pmid, pint, alpint, dpres, zint, zmid, o3,&
+              qqr, qqs, cwm, qqi, qqw, omga, rhomid, q2, cfr, rlwtt, rswtt, tcucn,&
+              tcucns, train, el_pbl, exch_h, vdifftt, vdiffmois, dconvmois, nradtt,&
+              o3vdiff, o3prod, o3tndy, mwpv, unknown, vdiffzacce, zgdrag,cnvctummixing,&
+              vdiffmacce, mgdrag, cnvctvmmixing, ncnvctcfrac, cnvctumflx, cnvctdmflx,&
+              cnvctzgdrag, sconvmois, cnvctmgdrag, cnvctdetmflx, duwt, duem, dusd, dudp
+      use vrbls2d, only: f, pd, fis, pblh, ustar, z0, ths, qs, twbs, qwbs, avgcprate,&
+              cprate, avgprec, prec, lspa, sno, si, cldefi, th10, q10, tshltr, pshltr,&
+              tshltr, albase, avgalbedo, avgtcdc, czen, czmean, mxsnal, radot, sigt4,&
+              cfrach, cfracl, cfracm, avgcfrach, qshltr, avgcfracl, avgcfracm, cnvcfr,&
+              islope, cmc, grnflx, vegfrc, acfrcv, ncfrcv, acfrst, ncfrst, ssroff,&
+              bgroff, rlwin, rlwtoa, cldwork, alwin, alwout, alwtoa, rswin, rswinc,&
+              rswout, aswin, auvbin, auvbinc, aswout, aswtoa, sfcshx, sfclhx, subshx,&
+              snopcx, sfcux, sfcvx, sfcuvx, gtaux, gtauy, potevp, u10, v10, smstav,&
+              smstot, ivgtyp, isltyp, sfcevp, sfcexc, acsnow, acsnom, sst, thz0, qz0,&
+              uz0, vz0, ptop, htop, pbot, hbot, ptopl, pbotl, ttopl, ptopm, pbotm, ttopm,&
+              ptoph, pboth, pblcfr, ttoph, runoff, maxtshltr, mintshltr, maxrhshltr,&
+              minrhshltr, dzice, smcwlt, suntime, fieldcapa, htopd, hbotd, htops, hbots,&
+              cuppt, dusmass, ducmass, dusmass25, ducmass25
+      use soil, only: sldpth, sh2o, smc, stc
+      use masks, only: lmv, lmh, htm, vtm, gdlat, gdlon, dx, dy, hbm2, sm, sice
+      use kinds, only: i_llong
+      use nemsio_module, only: nemsio_gfile, nemsio_getfilehead, nemsio_getheadvar, nemsio_close
+      use physcons, only: con_g, con_fvirt, con_rd, con_eps, con_epsm1
+      use params_mod, only: erad, dtr, tfrz, h1, d608, rd, p1000, capa
+      use lookup_mod, only: thl, plq, ptbl, ttbl, rdq, rdth, rdp, rdthe, pl, qs0, sqs, sthe,&
+              ttblq, rdpq, rdtheq, stheq, the0q, the0
+      use ctlblk_mod, only: me, mpi_comm_comp, icnt, idsp, jsta, jend, ihrst, idat, sdat, ifhr,&
+              ifmin, filename, tprec, tclod, trdlw, trdsw, tsrfc, tmaxmin, td3d, restrt, sdat,&
+              jend_m, imin, imp_physics, dt, spval, pdtop, pt, qmin, nbin_du, nphs, dtq2, ardlw,&
+              ardsw, asrfc, avrain, avcnvc, theat, gdsdegr, spl, lsm, alsl, im, jm, im_jm, lm,&
+              jsta_2l, jend_2u, nsoil, lp1, icu_physics, ivegsrc, novegtype
+      use gridspec_mod, only: maptype, gridtype, latstart, latlast, lonstart, lonlast, cenlon,&
+              dxval, dyval, truelat2, truelat1, psmapf, cenlat
+      use rqstfld_mod, only: igds, avbl, iq, is
+      use wrf_io_flags_mod, only:
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
       implicit none
 !
-      type(nemsio_gfile),intent(inout) :: nfile,ffile
+      type(nemsio_gfile),intent(inout) :: nfile,ffile,rfile
 !
 !     INCLUDE/SET PARAMETERS.
 !     
@@ -67,7 +98,7 @@
 ! close a NetCDF dataset. In order to change it to read an internal (binary)
 ! dataset, do a global replacement of _ncd_ with _int_. 
 
-      integer,intent(in) :: NREC,iostatusFlux,iostatusD3D
+      integer,intent(in) :: NREC,iostatusFlux,iostatusD3D,iostatusAER
       character(len=20) :: VarName
       character(len=20) :: VcoordName
       integer :: Status
@@ -87,7 +118,7 @@
          , FILCLD,FILRAD,FILSFC
       CHARACTER*4 RESTHR
       CHARACTER FNAME*80,ENVAR*50
-      INTEGER IDATB(3),IDATE(8),JDATE(8)
+      INTEGER IDATE(8),JDATE(8)
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
       LOGICAL*1 LB(IM,JM)
       INTEGER IRET
@@ -99,7 +130,6 @@
 !     
 !      REAL fhour
       integer nfhour ! forecast hour from nems io file
-      REAL SLDPTH2(NSOIL)
       REAL RINC(5)
       REAL ETA1(LM), ETA2(LM)
       REAL DUM1D (LM+1)
@@ -123,6 +153,10 @@
       integer ibuf(im,jsta_2l:jend_2u)
       real buf(im,jsta_2l:jend_2u),bufsoil(im,nsoil,jsta_2l:jend_2u)   &
         ,buf3d(im,jsta_2l:jend_2u,lm),buf3d2(im,lp1,jsta_2l:jend_2u)
+      real LAT
+!      REAL,  PARAMETER    :: QMIN = 1.E-15
+      real                :: TV
+
 !
 !      DATA BLANK/'    '/
 !
@@ -193,6 +227,7 @@
          ,reclevtyp=reclevtyp,reclev=reclev,lat=glat1d               &
          ,lon=glon1d,nframe=nframe)
        if(iret/=0)print*,'error getting idate,nfhour'
+        print *,'latstar1=',glat1d(1),glat1d(im*jm)
 !       print *,'printing an inventory of GFS nemsio file'
 !       do i=1,nrec
 !        print *,'recname=',(trim(recname(i)))
@@ -455,7 +490,44 @@
       
       imp_physics=99 !set GFS mp physics to 99 for Zhao scheme
       print*,'MP_PHYSICS= ',imp_physics
+      
+! Initializes constants for Ferrier microphysics       
+      if(imp_physics==5 .or. imp_physics==85 .or. imp_physics==95)then
+       CALL MICROINIT(imp_physics)
+      end if      
 
+! IVEGSRC=1 for IGBP, 0 for USGS, 2 for UMD
+      VarName='IVEGSRC'
+      if(me == 0)then
+        call nemsio_getheadvar(nfile,trim(VarName),IVEGSRC,iret)
+        if (iret /= 0) then
+          print*,VarName," not found in file-Assigned 2 for UMD as default"
+          IVEGSRC=1
+        end if
+      end if
+      call mpi_bcast(IVEGSRC,1,MPI_INTEGER,0,mpi_comm_comp,iret)
+      print*,'IVEGSRC= ',IVEGSRC
+
+! set novegtype based on vegetation classification
+      if(ivegsrc==2)then
+       novegtype=13
+      else if(ivegsrc==1)then
+       novegtype=20
+      else if(ivegsrc==0)then
+       novegtype=24
+      end if
+      print*,'novegtype= ',novegtype
+
+      VarName='CU_PHYSICS'
+      if(me == 0)then
+        call nemsio_getheadvar(nfile,trim(VarName),iCU_PHYSICS,iret)
+        if (iret /= 0) then
+          print*,VarName," not found in file-Assigned 4 for SAS as default"
+          iCU_PHYSICS=4
+        end if
+      end if
+      call mpi_bcast(iCU_PHYSICS,1,MPI_INTEGER,0,mpi_comm_comp,iret)
+      print*,'CU_PHYSICS= ',iCU_PHYSICS
 ! waiting to retrieve lat lon infor from raw GFS output
 !      VarName='DX'
 
@@ -654,7 +726,8 @@
         ll=lm-l+1
         call getnemsandscatter(me,nfile,im,jm,jsta,jsta_2l &
        ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
-       ,l,im,jm,nframe,buf3d(1,jsta_2l,ll))
+       ,l,im,jm,nframe,dpres(1,jsta_2l,ll))
+!      ,l,im,jm,nframe,buf3d(1,jsta_2l,ll))
 !        if(debugprint)print*,'sample ',ll,VarName,' = ',ll,pmid(im/2,(jsta+jend)/2,ll)      
       end do ! do loop for l
 
@@ -671,7 +744,8 @@
       do l=2,lm
         do j=jsta,jend
 	  do i=1,im	    
-	    pint(i,j,l)=pint(i,j,l-1)+buf3d(i,j,l-1)
+!	    pint(i,j,l)=pint(i,j,l-1)+buf3d(i,j,l-1)
+	    pint(i,j,l)=pint(i,j,l-1)+dpres(i,j,l-1)
 	    ALPINT(I,J,L)=ALOG(PINT(I,J,L))     
 	    if(i==ii .and. j==jj)print*,'sample pint,pmid'                     &   
               ,i,j,l,pint(i,j,l),pmid(i,j,l)	    
@@ -808,7 +882,8 @@
         if(debugprint)print*,'sample l ',VarName,' = ',ll,omga(im/2,(jsta+jend)/2,ll)      
       end do ! do loop for l
       
-! GFS output dust in nemsio
+! GFS output dust in nemsio (GOCART)
+      DUST = SPVAL
       VarName='du001'
       VcoordName='mid layer'
       do l=1,lm	
@@ -858,7 +933,23 @@
        ,l,im,jm,nframe,dust(1,jsta_2l,ll,5))
         if(debugprint)print*,'sample l ',VarName,' = ',ll,dust(im/2,(jsta+jend)/2,ll,5)      
       end do ! do loop for l 
-      
+
+! -- compute air density RHOMID and remove negative tracer values
+      do l=1,lm
+        do j=jsta,jend
+          do i=1,im
+           TV=T(I,J,L)*(H1+D608*MAX(Q(I,J,L),QMIN))
+           RHOMID(I,J,L)=PMID(I,J,L)/(RD*TV)
+           do n = 1,  NBIN_DU
+             IF ( dust(i,j,l,n) .LT. SPVAL) THEN
+               DUST(i,j,l,n) = MAX(DUST(i,j,l,n), 0.0)    
+             ENDIF
+           enddo
+          end do
+        end do
+      end do
+!
+
 ! PBL height using nemsio
       VarName='hpbl'
       VcoordName='sfc'
@@ -1789,7 +1880,7 @@
       sst=spval
 
 ! GFS does not have mixing length
-      el_myj=spval      
+      EL_PBL=spval      
 
 ! GFS does not output exchange coefficient
       exch_h=spval
@@ -1943,7 +2034,7 @@
                                                                                                
 ! retrieve time averaged high cloud top temperature using nemsio
       VarName='tmp'
-      VcoordName='mid cld top' 
+      VcoordName='high cld top' 
       l=1
       call getnemsandscatter(me,ffile,im,jm,jsta,jsta_2l &
       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
@@ -2052,6 +2143,7 @@
       HBOTS=SPVAL 
       CUPPT=SPVAL 
 
+!
 !!!! DONE GETTING
 ! Will derive isobaric OMEGA from continuity equation later. 
 !      OMGA=SPVAL
@@ -2467,29 +2559,134 @@
 	print*,'done reading D3D fields'            
       end if ! end of d3d file read
       print *,'after d3d files reading,mype=',me
+
+! Retrieve aer fields if it's listed (GOCART)
+      print *, 'iostatus for aer file=', iostatusAER
+      if(iostatusAER==0)then ! start reading aer file
+
+! retrieve dust emission fluxes
+      do K = 1, nbin_du
+       if ( K == 1) VarName='DUEM001'
+       if ( K == 2) VarName='DUEM002'
+       if ( K == 3) VarName='DUEM003'
+       if ( K == 4) VarName='DUEM004'
+       if ( K == 5) VarName='DUEM005'
+       VcoordName='atmos col'
+       l=1
+       call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+       ,l,im,jm,nframe,duem(1,jsta_2l,K))
+      if(debugprint)print*,'sample ',VarName,' = ',duem(im/2,(jsta+jend)/2,k)
+      enddo
+
+! retrieve dust sedimentation fluxes
+      do K = 1, nbin_du
+       if ( K == 1) VarName='DUSD001'
+       if ( K == 2) VarName='DUSD002'
+       if ( K == 3) VarName='DUSD003'
+       if ( K == 4) VarName='DUSD004'
+       if ( K == 5) VarName='DUSD005'
+       VcoordName='atmos col'
+       l=1
+       call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+       ,l,im,jm,nframe,dusd(1,jsta_2l,K))
+      if(debugprint)print*,'sample ',VarName,' = ',dusd(im/2,(jsta+jend)/2,k)
+      enddo
+
+! retrieve dust dry deposition fluxes
+      do K = 1, nbin_du
+       if ( K == 1) VarName='DUDP001'
+       if ( K == 2) VarName='DUDP002'
+       if ( K == 3) VarName='DUDP003'
+       if ( K == 4) VarName='DUDP004'
+       if ( K == 5) VarName='DUDP005'
+       VcoordName='atmos col'
+       l=1
+       call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+       ,l,im,jm,nframe,dudp(1,jsta_2l,K))
+        print *,'dudp,ck=',maxval(dudp(1:im,jsta:jend,k)), &
+             minval(dudp(1:im,jsta:jend,k))
+      if(debugprint)print*,'sample ',VarName,' = ',dudp(im/2,(jsta+jend)/2,k)
+      enddo
+
+! retrieve dust wet deposition fluxes
+      do K = 1, nbin_du
+       if ( K == 1) VarName='DUWT001'
+       if ( K == 2) VarName='DUWT002'
+       if ( K == 3) VarName='DUWT003'
+       if ( K == 4) VarName='DUWT004'
+       if ( K == 5) VarName='DUWT005'
+       VcoordName='atmos col'
+       l=1
+       call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+       ,l,im,jm,nframe,duwt(1,jsta_2l,K))
+      if(debugprint)print*,'sample ',VarName,' = ',duwt(im/2,(jsta+jend)/2,k)
+      enddo
+
+! retrieve sfc mass concentration
+      VarName='DUSMASS'
+      VcoordName='atmos col'
+      l=1
+      call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,im,jm,nframe,dusmass)
+      if(debugprint)print*,'sample ',VarName,' = ',dusmass(im/2,(jsta+jend)/2)
+
+! retrieve col mass density
+      VarName='DUCMASS'
+      VcoordName='atmos col'
+      l=1
+      call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,im,jm,nframe,ducmass)
+      if(debugprint)print*,'sample ',VarName,' = ',ducmass(im/2,(jsta+jend)/2)
+
+! retrieve sfc mass concentration (pm2.5)
+      VarName='DUSMASS25'
+      VcoordName='atmos col'
+      l=1
+      call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,im,jm,nframe,dusmass25)
+      if(debugprint)print*,'sample ',VarName,' = ',dusmass25(im/2,(jsta+jend)/2)
+
+! retrieve col mass density (pm2.5)
+      VarName='DUCMASS25'
+      VcoordName='atmos col'
+      l=1
+      call getnemsandscatter(me,rfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,im,jm,nframe,ducmass25)
+      if(debugprint)print*,'sample ',VarName,' = ',ducmass25(im/2,(jsta+jend)/2)
+
+      end if ! end of aer file read
+      print *,'after aer files reading,mype=',me
+
 ! pos east
        call collect_loc(gdlat,dummy)
        if(me.eq.0)then
-        latstart=nint(dummy(1,1)*1000.)
-        latlast=nint(dummy(im,jm)*1000.)
-	print*,'laststart,latlast B bcast= ',latstart,latlast
+        latstart=nint(dummy(1,1)*gdsdegr)
+        latlast=nint(dummy(im,jm)*gdsdegr)
+	print*,'laststart,latlast B bcast= ',latstart,latlast,'gdsdegr=',gdsdegr,&
+          'dummy(1,1)=',dummy(1,1),dummy(im,jm),'gdlat=',gdlat(1,1)
        end if
        call mpi_bcast(latstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        call mpi_bcast(latlast,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        write(6,*) 'laststart,latlast,me A calling bcast=',latstart,latlast,me
        call collect_loc(gdlon,dummy)
        if(me.eq.0)then
-        lonstart=nint(dummy(1,1)*1000.)
-        lonlast=nint(dummy(im,jm)*1000.)
+        lonstart=nint(dummy(1,1)*gdsdegr)
+        lonlast=nint(dummy(im,jm)*gdsdegr)
        end if
        call mpi_bcast(lonstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        call mpi_bcast(lonlast,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
        write(6,*)'lonstart,lonlast A calling bcast=',lonstart,lonlast
 !
 !        ncdump -h
-
 !!
-!! 
 !!
         write(6,*) 'filename in INITPOST=', filename,' is'
 
@@ -2612,6 +2809,18 @@
           WRITE(igdout)TRUELAT2  !Assume projection at +-90
           WRITE(igdout)TRUELAT1
           WRITE(igdout)255
+        !  Note: The calculation of the map scale factor at the standard
+        !        lat/lon and the PSMAPF
+        ! Get map factor at 60 degrees (N or S) for PS projection, which will
+        ! be needed to correctly define the DX and DY values in the GRIB GDS
+          if (TRUELAT1 .LT. 0.) THEN
+            LAT = -60.
+          else
+            LAT = 60.
+          end if
+
+          CALL MSFPS (LAT,TRUELAT1*0.001,PSMAPF)
+
         ELSE IF(MAPTYPE .EQ. 3)THEN  !Mercator
           WRITE(igdout)1
           WRITE(igdout)im
@@ -2649,6 +2858,7 @@
 ! close all files
         call nemsio_close(nfile,iret=status)
 	call nemsio_close(ffile,iret=status)
+	call nemsio_close(rfile,iret=status)
 !	call baclose(iunit,status)
 	
       RETURN

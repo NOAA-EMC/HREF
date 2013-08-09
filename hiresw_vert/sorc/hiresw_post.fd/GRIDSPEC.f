@@ -8,8 +8,10 @@
 !
        integer DXVAL,DYVAL,CENLAT,CENLON,TRUELAT1,TRUELAT2
        integer LATSTART,LONSTART,LATLAST,LONLAST
+       integer latnw,lonnw,latse,lonse
        integer MAPTYPE,STANDLON
        integer latstartv,cenlatv,lonstartv,cenlonv,latlastv,lonlastv
+       real    PSMAPF
        character(len=1) gridtype
 !
      end module GRIDSPEC_mod
