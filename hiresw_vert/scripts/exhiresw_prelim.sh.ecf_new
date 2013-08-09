@@ -117,39 +117,39 @@ fi
 while [ $whr -le $last ]
 do
 
-if [ $NEST = "pr"  -o $NEST = "prnew" -o $NEST = "conus" ] 
-then 
-  cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
-  err1=$?
-  mod=nam
-  type=awip32
-  suf=.tm00
-elif [ $NEST = "hi" -o $NEST = "hinew" ]
-then
-  cp ${COMNAM}/nam.t${cyc}z.awiphi${whr}.tm00 $DATA/run_ungrib/.
-  err1=$?
-  mod=nam
-  type=awiphi
-  suf=.tm00
-elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
-then
+# if [ $NEST = "pr"  -o $NEST = "prnew" -o $NEST = "conus" ] 
+# then 
+#   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
+#   err1=$?
+#   mod=nam
+#   type=awip32
+#   suf=.tm00
+# elif [ $NEST = "hi" -o $NEST = "hinew" ]
+# then
+#  cp ${COMNAM}/nam.t${cyc}z.awiphi${whr}.tm00 $DATA/run_ungrib/.
+#  err1=$?
+#  mod=nam
+#  type=awiphi
+#  suf=.tm00
+#elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
+#then
   cp ${COMGFS}/gfs.t${cyc}z.pgrbf${whr} $DATA/run_ungrib/.
   err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
   mod=gfs
   type=pgrbf
   suf=""
-else
-  cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
-  err1=$?
-  mod=nam
-  type=awip3d
-  suf=.tm00
-fi
+#else
+#  cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
+#  err1=$?
+#  mod=nam
+#  type=awip3d
+#  suf=.tm00
+#fi
 
 if [ $err1 -ne 0 ] 
 then
-  ./err_exit "$whr input GRIB file from Nam not found.  FATAL ERROR"
+  ./err_exit "$whr input GRIB file from GFS not found.  FATAL ERROR"
 fi
 
 whr=`expr $whr + $incr`
@@ -394,13 +394,13 @@ fi
 
 ### number of input levels depends on source model data
 
-if [ $NEST = "hi" -o $NEST = "hinew" -o $NEST = "east" -o $NEST = "eastnew"  -o $NEST = "west" ] ; then
-NUMLEVS=40
-elif [ $NEST = "pr"  -o $NEST = "conus"  -o $NEST = "prnew" ] ; then
-NUMLEVS=43
-elif [ $NEST = "ak" -o $NEST = "aknew" -o $NEST = "guam" -o $NEST = "guamnew" ] ; then
+# if [ $NEST = "hi" -o $NEST = "hinew" -o $NEST = "east" -o $NEST = "eastnew"  -o $NEST = "west" ] ; then
+# NUMLEVS=40
+# elif [ $NEST = "pr"  -o $NEST = "conus"  -o $NEST = "prnew" ] ; then
+# NUMLEVS=43
+# elif [ $NEST = "ak" -o $NEST = "aknew" -o $NEST = "guam" -o $NEST = "guamnew" ] ; then
 NUMLEVS=27
-fi
+# fi
 
 if [ $MODEL = "nmmb" ]
 then
