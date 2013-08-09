@@ -21,6 +21,7 @@
  frames_per_outfile                  = 1, 
  restart                             = .false.,
  restart_interval                    = 5000,
+ auxhist3_interval                   = 60
  io_form_history                     = 1,
  io_form_restart                     = 1,
  io_form_input                       = 1,

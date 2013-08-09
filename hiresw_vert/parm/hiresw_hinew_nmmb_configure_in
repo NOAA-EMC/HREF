@@ -11,7 +11,7 @@ core: nmm                   # Introduce ourselves to the NEMS
 
 im:  400                  # I gridpoints
 jm:  320                    # J gridpoints
-lm:  35                     # Number of atmospheric layers
+lm:  40                     # Number of atmospheric layers
 
 tph0d:   20.0               # Central geographic latitude of grid (degrees)
 tlm0d: -157.0               # Central geographic longitude of grid (degrees, positive east)
@@ -24,7 +24,7 @@ sbd:  -4.306                # Grid's southern boundary (rotated degrees)
 #####  Grid Decomposition  #####
 ################################
 
-inpes:  3             # Number of compute tasks in the I direction
+inpes:  5             # Number of compute tasks in the I direction
 jnpes:  9             # Number of compute tasks in the J direction
 
 
@@ -36,7 +36,7 @@ quilting:              true    # Do you want asynchronous quilting/history write
 read_groups:           0
 read_tasks_per_group:  0
 write_groups:          1
-write_tasks_per_group: 3
+write_tasks_per_group: 1
 
 
 ############################################
