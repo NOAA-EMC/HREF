@@ -58,10 +58,10 @@
  direct_temp = .true.
  global = .false.
  do_clouds = .false.
- grib_src = 'NAM'
+ grib_src = 'GFS'
  boundary_flux = .true.
  lnsh = 5
  lnsv = 5
  vcoord = 1
- coord_levs = 
+ coord_levs =
 /

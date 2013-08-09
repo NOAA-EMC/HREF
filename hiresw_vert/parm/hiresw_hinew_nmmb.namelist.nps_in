@@ -54,11 +54,11 @@
 &nemsinterp
  pt = 5000.
  ptsgm = 30000.
- nz =  35
+ nz =  40 
  direct_temp = .true.
  global = .false.
  do_clouds = .false.
- grib_src = 'NAM'
+ grib_src = 'GFS'
  boundary_flux = .true.
  lnsh = 5
  lnsv = 5

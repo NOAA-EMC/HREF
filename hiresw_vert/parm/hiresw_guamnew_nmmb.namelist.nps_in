@@ -54,7 +54,7 @@
 &nemsinterp
  pt = 5000.
  ptsgm = 30000.
- nz =  35
+ nz = 40 
  direct_temp = .true.
  global = .false.
  do_clouds = .false.
