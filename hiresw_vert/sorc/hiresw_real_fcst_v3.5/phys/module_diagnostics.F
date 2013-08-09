@@ -22,7 +22,7 @@ CONTAINS
                      ,I_ACSWUPB,I_ACSWUPBC,I_ACSWDNB,I_ACSWDNBC       & ! Optional
                      ,I_ACLWUPT,I_ACLWUPTC,I_ACLWDNT,I_ACLWDNTC       & ! Optional
                      ,I_ACLWUPB,I_ACLWUPBC,I_ACLWDNB,I_ACLWDNBC       & ! Optional
-                     ,dt,xtime,sbw,t2,q2,psfc                         &
+                     ,dt,xtime,sbw,t2                                 &
                      ,diag_print                                      &
                      ,bucket_mm, bucket_J                             &
                      ,prec_acc_c, prec_acc_nc, snow_acc_nc            &
@@ -30,12 +30,12 @@ CONTAINS
                      ,nwp_diagnostics, diagflag                       &
                      ,history_interval                                &
                      ,itimestep                                       &
+                     ,q2,psfc                                      &
+                     ,t2max,t2min,rh2max,rh2min                       &
                      ,u10,v10,w                                       &
                      ,wspd10max                                       &
                      ,up_heli_max                                     &
                      ,w_up_max,w_dn_max                               &
-                     ,rh02_max, rh02_min                              &
-                     ,t02_max, t02_min                                &
                      ,znw,w_colmean                                   &
                      ,numcolpts,w_mean                                &
                      ,grpl_max,grpl_colint,refd_max,refl_10cm         &
@@ -140,8 +140,10 @@ CONTAINS
                                                     ,       HFX  &
                                                     ,        LH  &
                                                     ,    SFCEVP  &  
-                                                    ,        T2  &    
-                                                    ,        Q2     
+                                                    ,        T2  &
+                                                    ,        Q2  &
+                                                    ,      PSFC
+   
 
    REAL, DIMENSION( ims:ime , jms:jme ),                         &
           INTENT(INOUT) ::                                DPSDT  &
@@ -149,7 +151,12 @@ CONTAINS
                                                     ,    RAINNC  &
                                                     ,     RAINC  &
                                                     ,     MU_2M  &
-                                                    ,      PK1M
+                                                    ,      PK1M  &
+                                                    ,     T2MAX  &
+                                                    ,     T2MIN  &
+                                                    ,    RH2MAX  &
+                                                    ,    RH2MIN
+
  
    REAL,  INTENT(IN   ) :: DT, XTIME
    INTEGER,  INTENT(IN   ) :: SBW
@@ -180,6 +187,7 @@ CONTAINS
    REAL              :: dpsdt_sum, dmudt_sum, dardt_sum, drcdt_sum, drndt_sum
    REAL              :: hfx_sum, lh_sum, sfcevp_sum, rainc_sum, rainnc_sum, raint_sum
    REAL              :: dmumax, raincmax, rainncmax, snowhmax
+   REAL              :: rh2,brack1,brack2,brack3,brack,vpres,satvpres
    LOGICAL, EXTERNAL :: wrf_dm_on_monitor
    CHARACTER*256     :: outstring
    CHARACTER*6       :: grid_str
@@ -199,8 +207,7 @@ CONTAINS
 
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(IN) ::            &
                                                             u10  &
-                                                           ,v10  &
-                                                           ,psfc 
+                                                           ,v10
 
    REAL, INTENT(IN) :: g
 
@@ -210,12 +217,7 @@ CONTAINS
                                              ,w_up_max,w_dn_max  &
                                     ,w_colmean,numcolpts,w_mean  &
                                           ,grpl_max,grpl_colint  &
-                                                      ,refd_max  &
-                                    ,rh02_max,rh02_min           &
-                                    ,t02_max,t02_min           
-
-   REAL                                      :: value,vpres,brack1,brack2,     &                            
-                                                brack3,satvpres,brack,rh2
+                                                      ,refd_max
 
    INTEGER :: idump
 
@@ -223,18 +225,12 @@ CONTAINS
    REAL :: depth
 
 !-----------------------------------------------------------------
-
-write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
-                                        nwp_diagnostics, diagflag
-
 ! Handle accumulations with buckets to prevent round-off truncation in long runs
 ! This is done every 360 minutes assuming time step fits exactly into 360 minutes
    IF(bucket_mm .gt. 0. .AND. MOD(NINT(XTIME),360) .EQ. 0)THEN
 ! SET START AND END POINTS FOR TILES
 !  !$OMP PARALLEL DO   &
 !  !$OMP PRIVATE ( ij )
-
-
 
    DO ij = 1 , num_tiles
 
@@ -406,10 +402,10 @@ write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
 
      idump = (history_interval * 60.) / dt
 
-   print *,' history_interval = ', history_interval
-   print *,' itimestep        = ', itimestep
-   print *,' idump            = ', idump
-   print *,' xtime            = ', xtime
+!   print *,' history_interval = ', history_interval
+!   print *,' itimestep        = ', itimestep
+!   print *,' idump            = ', idump
+!   print *,' xtime            = ', xtime
 
 ! IF ( MOD(itimestep, idump) .eq. 0 ) THEN
 !    WRITE(outstring,*) 'Computing PH0 for this domain with curr_secs = ', curr_secs
@@ -425,16 +421,16 @@ write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
        DO j=j_start(ij),j_end(ij)
        DO i=i_start(ij),i_end(ij)
          wspd10max(i,j)   = 0.
+         t2max(i,j) = -9999.
+         t2min(i,j) = 9999.
+         rh2max(i,j) = -9999.
+         rh2min(i,j) = 9999.
          up_heli_max(i,j) = 0.
          w_up_max(i,j)    = 0.
          w_dn_max(i,j)    = 0.
          w_mean(i,j)      = 0.
          grpl_max(i,j)    = 0.
          refd_max(i,j)    = 0.
-         rh02_max(i,j)    = -999.
-         rh02_min(i,j)    = 999.
-         t02_max(i,j)    = -999.
-         t02_min(i,j)    = 999.
        ENDDO
        ENDDO
      ENDDO
@@ -511,6 +507,23 @@ write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
      DO j=j_start(ij),j_end(ij)
      DO i=i_start(ij),i_end(ij)
 
+! Calculate the max 10 m wind speed between output times
+
+       wind_vel = sqrt ( u10(i,j)*u10(i,j) + v10(i,j)*v10(i,j) )
+       IF ( wind_vel .GT. wspd10max(i,j) ) THEN
+         wspd10max(i,j) = wind_vel
+       ENDIF
+
+! Calculate the max/min 2 m temperatures
+
+       IF ( t2(i,j) .GT. t2max(i,j) ) THEN
+          t2max(i,j) = t2(i,j)
+       ENDIF
+
+       IF ( t2(i,j) .LT. t2min(i,j) ) THEN
+          t2min(i,j) = t2(i,j)
+       ENDIF
+
 ! Calculate the max/min 2 m RH
 
        vpres=(q2(I,J)/(q2(I,J)+0.622))*psfc(I,J)
@@ -531,20 +544,12 @@ write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
 !       call wrf_error_fatal("bad rh2 value")
 !       endif
 
-       IF ( rh2 .GT. rh02_max(i,j) ) THEN
-          rh02_max(i,j) = rh2
+       IF ( rh2 .GT. rh2max(i,j) ) THEN
+          rh2max(i,j) = rh2
        ENDIF
 
-       IF ( rh2 .LT. rh02_min(i,j) ) THEN
-          rh02_min(i,j) = rh2
-       ENDIF
-
-
-! Calculate the max 10 m wind speed between output times
-
-       wind_vel = sqrt ( u10(i,j)*u10(i,j) + v10(i,j)*v10(i,j) )
-       IF ( wind_vel .GT. wspd10max(i,j) ) THEN
-         wspd10max(i,j) = wind_vel
+       IF ( rh2 .LT. rh2min(i,j) ) THEN
+          rh2min(i,j) = rh2
        ENDIF
 
 ! Calculate the column mean vertical velocity between output times
@@ -911,7 +916,7 @@ write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
    CHARACTER (LEN=80)                        :: timestr
 
    REAL, DIMENSION( ims:ime , jms:jme ),                                          & 
-                          INTENT(IN)         :: t2, q2, u10, v10
+                          INTENT(IN)         :: t2, q2, u10, v10 
    REAL, DIMENSION( ims:ime , jms:jme ),                                          &
                           INTENT(OUT)        :: t2clmin, t2clmax, tt2clmin,       &
                           tt2clmax, t2clmean, t2clstd,                            & 
@@ -927,6 +932,7 @@ write(0,*) 'diagnostic_output_calc with nwp_diagnostics, diagflag: ', &
                           raincclstd, rainncclstd 
    REAL, PARAMETER                           :: minimum0= 1000000.,               &
                           maximum0= -1000000. 
+   REAL                                      :: value
    INTEGER, INTENT(IN)                       :: clwrfH
    CHARACTER (LEN=1024)                      :: message
    REAL, SAVE                                :: nsteps

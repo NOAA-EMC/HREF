@@ -2,6 +2,8 @@
 
 # module load NetCDF/3.6.3
 
+module load NetCDF/4.2/serial
+
 ### BUILD ARW
 
 export WRF_NMM_CORE=0

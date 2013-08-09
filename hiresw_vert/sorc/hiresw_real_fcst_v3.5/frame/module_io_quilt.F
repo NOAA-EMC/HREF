@@ -5190,7 +5190,7 @@ END
      &,          end_day,end_hour,end_minute                            &
      &,          end_second,interval_seconds                            &
      &,          history_interval,frames_per_outfile                    &
-     &,          restart_interval,io_form_history                       &
+     &,          restart_interval,auxhist3_interval,io_form_history     &
      &,          io_form_restart,io_form_input                          &
      &,          io_form_auxinput1                                      &
      &,          io_form_boundary,debug_level                           &
@@ -5201,7 +5201,7 @@ END
      &,          inputout_begin_s,inputout_end_y                        &
      &,          inputout_end_mo,inputout_end_d                         &
      &,          inputout_end_h,inputout_end_s                          &
-     &,          output_diagnostics,nwp_diagnostics                          
+     &,          nwp_diagnostics,output_diagnostics
 !
       real,save :: tstart
 !
@@ -5214,10 +5214,12 @@ END
      &,                      end_second,interval_seconds                &
      &,                      input_from_file,history_interval           &
      &,                      frames_per_outfile,restart                 &
-     &,                      restart_interval,io_form_history           &
+     &,                      restart_interval,auxhist3_interval         &
+     &,                      io_form_history           &
      &,                      io_form_restart,io_form_input              &
      &,          io_form_auxinput1                                      &
      &,                      io_form_boundary,debug_level               &
+     &,                      nwp_diagnostics,output_diagnostics         &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
      &,                      inputout_interval,input_outname            &
@@ -5225,8 +5227,7 @@ END
      &,                      inputout_begin_d,inputout_begin_h          &
      &,                      inputout_begin_s,inputout_end_y            &
      &,                      inputout_end_mo,inputout_end_d             &
-     &,                      inputout_end_h,inputout_end_s              &
-     &,                      output_diagnostics,nwp_diagnostics
+     &,                      inputout_end_h,inputout_end_s
 !-----------------------------------------------------------------------
 !***********************************************************************
 !-----------------------------------------------------------------------
@@ -5358,7 +5359,7 @@ END
      &,          inputout_begin_s,inputout_end_y                        &
      &,          inputout_end_mo,inputout_end_d                         &
      &,          inputout_end_h,inputout_end_s                          &
-     &,          output_diagnostics,nwp_diagnostics                          
+     &,          nwp_diagnostics,output_diagnostics
 !
       real,save :: tstart
 !
@@ -5373,6 +5374,7 @@ END
      &,                      restart_interval,io_form_history           &
      &,                      io_form_restart,io_form_input              &
      &,                      io_form_boundary,debug_level               &
+     &,                      nwp_diagnostics,output_diagnostics         &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
      &,                      inputout_interval,input_outname            &
@@ -5380,8 +5382,7 @@ END
      &,                      inputout_begin_d,inputout_begin_h          &
      &,                      inputout_begin_s,inputout_end_y            &
      &,                      inputout_end_mo,inputout_end_d             &
-     &,                      inputout_end_h,inputout_end_s              &
-     &,          output_diagnostics,nwp_diagnostics                          
+     &,                      inputout_end_h,inputout_end_s
 !-----------------------------------------------------------------------
 !***********************************************************************
 !-----------------------------------------------------------------------
