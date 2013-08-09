@@ -146,6 +146,7 @@ mpirun.lsf $EXEChiresw/hiresw_nmmbfcst
 
 else
 
+# mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst_new3.5
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst_new
 
 export err=$?;./err_chk

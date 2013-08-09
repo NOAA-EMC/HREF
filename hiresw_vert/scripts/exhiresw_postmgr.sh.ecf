@@ -127,7 +127,7 @@ echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${
 echo "#BSUB -W 00:08" >> jobsub_nmmb_post.${fhruse}
 if [ $NEST == "conus" -o $NEST == "aknew" ]
 then
-echo "#BSUB -n 24" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -n 16" >> jobsub_nmmb_post.${fhruse}
 else
 echo "#BSUB -n 1" >> jobsub_nmmb_post.${fhruse}
 fi
@@ -200,7 +200,7 @@ echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${c
 echo "#BSUB -W 00:08" >> jobsub_arw_post.${fhr}
 if [ $NEST == "conus" -o $NEST == "aknew" ]
 then
-echo "#BSUB -n 24" >> jobsub_arw_post.${fhr}
+echo "#BSUB -n 16" >> jobsub_arw_post.${fhr}
 else
 echo "#BSUB -n 1" >> jobsub_arw_post.${fhr}
 fi
