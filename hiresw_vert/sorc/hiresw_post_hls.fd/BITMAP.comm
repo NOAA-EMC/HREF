@@ -1,3 +1,0 @@
-C
-      COMMON /BITMAP/
-     & IBMAP(IMX,JMX)
