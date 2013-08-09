@@ -96,6 +96,7 @@ OBJS=	VRBLS2D_mod.o VRBLS3D_mod.o MASKS_mod.o SOIL_mod.o \
 iw3jdn.o w3fs26.o w3movdat.o w3reddat.o gdswiz.o gdswiz01.o \
 gdswiz03.o gdswiz05.o
 #
+SRCS=	PROF_EM.f PROF_NMMB.f WRFBUFR.f
 # Includes
 #
 INCLUDES= parmsoil
@@ -104,7 +105,7 @@ INCLUDES= parmsoil
 #
 COMMS=
 
-DEPS= $(COMMS) $(INCLUDES)
+DEPS= $(COMMS) $(INCLUDES) $(SRCS)
 
 .SUFFIXES:	.F .f .o
 
