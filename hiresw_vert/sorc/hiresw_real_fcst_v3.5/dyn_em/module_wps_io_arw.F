@@ -2214,43 +2214,9 @@ end subroutine retrieve_field
        ENDDO
 
 
-!        if (num_metgrid_levels .ne. 27 .and. num_metgrid_levels .ne. 40) then  ! not GFS
-!
-!! binary write of field: VEGCAT    
-!        write(0,*) 'read for VEGCAT'
-!       read(47) dumdata(:,:,1:1)
-!        write(0,*) 'read VEGCAT'
-!        DO J=JTS,min(JTE,JDE-1)
-!         DO I=ITS,min(ITE,IDE-1)
-!           grid%vegcat(I,J)=dumdata(I,J,1)
-!         ENDDO
-!        ENDDO
-
-!!! binary write of field: SOIL_CAT 
-!        write(0,*) 'to read for SOIL_CAT'
-!       read(47) dumdata(:,:,1:1)
-!        DO J=JTS,min(JTE,JDE-1)
-!         DO I=ITS,min(ITE,IDE-1)
-!           grid%soilcat(I,J)=dumdata(I,J,1)
-!         ENDDO
-!        ENDDO
-
-!        endif ! not GFS or HI NAM
-
-!        if (num_metgrid_levels .ne. 27) then !  not GFS
-! binary write of field: CANWAT  
-!        write(0,*) 'read for CANWAT'
-!       read(47) dumdata(:,:,1:1)
-!        DO J=JTS,min(JTE,JDE-1)
-!         DO I=ITS,min(ITE,IDE-1)
-!           grid%canwat(I,J)=dumdata(I,J,1)
-!         ENDDO
-!        ENDDO
-
-!        endif
-!
 ! binary write of field: SNOWH   
-        read(47) 
+!mp        read(47) 
+
 ! binary write of field: SNOW   
        read(47) dumdata(:,:,1:1)
         DO J=JTS,min(JTE,JDE-1)
@@ -2361,6 +2327,9 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
+        write(0,*) 'min/max of PSFC: ', minval(grid%psfc), &
+                                        maxval(grid%psfc)
+
 
 ! binary write of field: RH         
        read(47) dumdata
@@ -2374,6 +2343,9 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
        ENDDO
+        
+        write(0,*) 'min/max of grid%rh_gc: ', minval(grid%rh_gc), &
+                                              maxval(grid%rh_gc)
 
 ! binary write of field: VV        
         write(0,*) 'size dumdata_v: ', size(dumdata_v,dim=1),&
