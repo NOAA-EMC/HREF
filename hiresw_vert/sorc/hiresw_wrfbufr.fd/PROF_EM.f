@@ -1460,7 +1460,7 @@ c
       call getIVariableB(fileName,DateStr,DataHandle,VarName,DUM1D(1),     &
      +  1,1,1,1,1,1,1,1)
 
-      VarName='WPD10MAX'
+      VarName='WSPD10MAX'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
@@ -2240,9 +2240,9 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM1D,      &
      +  1,1,1,1,1,1,1,1)
 
-      VarName='P_HYD'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
-     +  IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
+!      VarName='P_HYD'
+!      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+!     +  IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
 
 
 
