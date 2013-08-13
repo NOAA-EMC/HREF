@@ -262,6 +262,13 @@ else  # (not f00)
   echo $reflag >> input.card
   echo $IM $JM >> input.card
 
+
+while [ ! -e $DATA/prdgen_full_${onehrprev}/$filenamthree$onehrprev.tm00 ]
+do
+echo waiting for $DATA/prdgen_full_${onehrprev}/$filenamthree$onehrprev.tm00
+sleep 10
+done
+
    $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
    export err=$?;./err_chk
 
@@ -271,6 +278,12 @@ else  # (not f00)
      then
 
 #       create a 3 h bucket as well
+
+while [ ! -e $DATA/prdgen_full_${threehrprev}/$filenamthree$threehrprev.tm00 ]
+do
+echo waiting for $DATA/prdgen_full_${threehrprev}/$filenamthree$threehrprev.tm00
+sleep 10
+done
 
   rm input.card
   echo "$DATA/prdgen_full" > input.card
