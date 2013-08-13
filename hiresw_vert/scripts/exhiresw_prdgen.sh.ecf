@@ -38,16 +38,17 @@ export fhr=${post_times}
 
 icnt=1
 
-echo "$USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript
+echo "$USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript_${fhr}
 
-# if [ $NEST = "east" ]
-# then
-# echo "$USHhiresw/hiresw_prdgen_4km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript
-# fi
 
-chmod 775 $DATA/poescript
+if [ $NEST = "conus" ]
+then
+echo "$USHhiresw/hiresw_prdgen_5km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+fi
+
+chmod 775 $DATA/poescript_${fhr}
 export MP_PGMMODEL=mpmd
-export MP_CMDFILE=$DATA/poescript
+export MP_CMDFILE=$DATA/poescript_${fhr}
 #
 
 # Execute the script.
