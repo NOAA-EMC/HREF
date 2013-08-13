@@ -86,12 +86,23 @@ do
 
 done
 
+proc=1
+
+echo have NEST $NEST
+
+if [ $NEST = "conus" ]
+then
+proc=2
+else
+proc=1
+fi
+
 echo "#!/bin/ksh -l" > jobsub_prdgen.${fhruse}
 echo "#BSUB -J prdgen_f${fhruse}_${cyc}" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -W 00:05" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -n 1" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -W 00:09" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -n $proc" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -q "dev"" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -R "span[ptile=8]"" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -x" >> jobsub_prdgen.${fhruse}

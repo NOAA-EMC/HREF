@@ -133,11 +133,11 @@ do
 #  suf=.tm00
 #elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
 #then
-  cp ${COMGFS}/gfs.t${cyc}z.pgrbf${whr} $DATA/run_ungrib/.
+  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
   err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
   mod=gfs
-  type=pgrbf
+  type=pgrb2f
   suf=""
 #else
 #  cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
