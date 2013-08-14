@@ -1,0 +1,26 @@
+#
+# Resource file Dust parameters. 
+#
+
+number_dust_bins: 5
+
+ginoux_dust_source_filename: ExtData/AeroCom/sfc/gocart.dust_source.v5a_1x1inp.x360_y181.nc
+
+particle_radius: 0.73 1.4 2.4 4.5 8.0
+
+radius_lower: 0.1 1.0 1.8 3.0 6.0
+
+radius_upper: 1.0 1.8 3.0 6.0 10.0
+
+source_fraction: 0.1 0.25 0.25 0.25 0.25
+
+soil_density: 2500. 2650. 2650. 2650. 2650.
+
+# Scavenging efficiency per bin [km-1]
+
+fscav: 0.2  0.2  0.2  0.2  0.2   #    
+
+rhFlag: 0
+
+# CARMA services requested
+# CARMA_Services: :CARMA_Sedimentation:

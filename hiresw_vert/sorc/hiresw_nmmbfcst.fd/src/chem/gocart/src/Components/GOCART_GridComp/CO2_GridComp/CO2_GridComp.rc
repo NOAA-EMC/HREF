@@ -1,0 +1,42 @@
+#
+# Resource file for CO2 parameters. 
+#
+
+number_CO2_bins:      1 
+CO2_regions:          ExtData/g5chem/sfc/colarco.regions_mask.x288_y144.nc
+CO2_regions_indices: -1 1 2 5
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+# For biomass burning emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+# Climatology - emission file provides kg CO2 m-2 s-1
+# CO2_biomass_emission_filename: /share/dasilva/fvInput/fvchem/c/bian_co2_20000112.nc
+# CO2_biomass_emission_factor: 1.
+
+# Near real-time QFED: emission file provides kg CO2 m-2 s-1
+# ----------------------------------------------------------
+CO2_biomass_emission_filename: ExtData/g5chem/sfc/QFED/qfed_rr.emis_co2.sfc.%y4%m2.nc
+CO2_biomass_emission_factor: 1.
+
+#GFED (v.1) or Martin/Duncan climatology - emission file provides kg DM m-2 s-1; convert to CO2
+#CO2_biomass_emission_filename: /share/dasilva/fvInput/fvchem/c/gfed.biomass_src.sfc.v2.nc
+#CO2_biomass_emission_factor: 1.600
+
+#GFED (v.2) - emission file provides kg CO2 m-2 s-1
+#CO2_biomass_emission_filename: ExtData/g5chem/sfc/gfed_v2.co2_bioburn.x288_y181_t96.19970115_12z-20041215_12z.nc
+#CO2_biomass_emission_factor: 1.
+
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+CO2_emissions_filename: ExtData/g5chem/sfc/bian.co2.x288_y181_t12.2001.nc
+

@@ -1,0 +1,491 @@
+#!/bin/ksh
+set -x
+#export MP_PULSE=0
+#export MP_TIMEOUT=600
+#
+export list=$listvar
+#export MP_POLLING_INTERVAL=2000000
+######## Added for cirrus  ############
+export MP_BINDPROC=yes
+export SAVE_ALL_TASKS=no
+export MEMORY_AFFINIY=MCM
+export MP_SYNC_QP=yes
+#export MP_COREFILE_FORMAT="core.txt"
+export LAPI_DEBUG_SLOT_ATT_THRESH=5000000
+######## Added for cirrus  ############
+
+export MP_STDOUTMODE=ordered
+export NUMTHRD=${NUMTHRD:-1}
+export NTHSTACK=${NTHSTACK:-4096000000}
+#export XLSMPOPTS="parthds=$NUMTHRD:spins=0:yields=0:stack=512000000"
+export XLSMPOPTS="parthds=$NUMTHRD:stack=$NTHSTACK"
+export MP_EAGER_LIMIT=32768
+#export SPINLOOPTIME=500
+#export YIELDLOOPTIME=500
+#export AIXTHREAD_SCOPE=S
+#export MALLOCMULTIHEAP=true
+#export MP_SHARED_MEMORY=no
+export MP_SHARED_MEMORY=yes
+#######export MP_STDOUTMODE=ordered
+export MP_LABELIO=yes
+export LDR_CNTRL=TEXTPSIZE=4K@STACKPSIZE=64K@DATAPSIZE=64K
+#export LDR_CNTRL=TEXTPSIZE=64K@STACKPSIZE=64K@DATAPSIZE=64K
+export NDATE=${NDATE:-/nwprod/util/exec/ndate}
+#
+echo $NMTVR
+echo $FNALBC
+echo $CHGQ0
+echo $IAER
+echo $mdir
+echo $ADIAB
+echo $sub
+#export list=$listvar
+export sub=${sub:-/u/wx23sm/bin/sub_vapor}
+export ENS_NUM=${ENS_NUM:-1}
+export MEMBER_NAMES=${MEMBER_NAMES:-''}
+if [[ ! -d $RUNDIR ]] ; then
+  mkdir -p $RUNDIR
+fi
+#
+echo 'group='$group
+echo 'class='$class
+cd $RUNDIR
+#
+export acc=${acc:-GFS-T2O}
+export group=${group:-dev}
+export JCAP=$wave
+export LEVS=$lm
+export LONB=$im
+export LATB=$jm
+export LSOIL=$lsoil
+export VERBOSE=YES
+export cold_sfc=${cold_sfc:-NO}
+export dir_save=${dir_save:-/global/save}
+export IDVM=${IDVM:-1}
+export IDSL=${IDSL:-1}
+export THERMODYN_ID=${THERMODYN_ID:-0}
+export CHGQ0=${CHGQ0:-0}
+export NEWDATE=${NEWDATE:-$CDATE}
+if [ $NEWDATE != $CDATE ] ; then
+ iyrn=$(echo $NEWDATE | cut -c1-4)
+ imnn=$(echo $NEWDATE | cut -c5-6)
+ idyn=$(echo $NEWDATE | cut -c7-8)
+ ihrn=$(echo $NEWDATE | cut -c9-10)
+ export NEWIDATE="iyrn=$iyrn,imnn=$imnn,idyn=$idyn,ihrn=$ihrn,"
+fi
+#
+#cp /nfsuser/g01/wx23sm/gsm/sfccyc/aeros_data/aeropac3a* $RUNDIR
+#
+if [[ $nhourb -eq 0 ]] ; then
+# export NTHREADS=1
+  export NTHREADS=${CHGRES_THREADS:-32}
+# export NTHREADS=32
+# export XLSMPOPTS="parthds=$NTHREADS:spins=0:yields=0:stack=$NTHSTACK"
+  export XLSMPOPTS="parthds=$NTHREADS:stack=$NTHSTACK"
+  export SIGTYP=${SIGTYP:-0}
+#     For one member case i.e. control
+  if [[ $ENS_NUM -le 1 ]] ; then
+    export SIGINP=${SIGINP:-$datic/${sig_fname}}
+    export SFCINP=${SFCINP:-$datic/${sfc_fname}}
+#
+    if [ $cold_sfc = YES ] ; then
+      export SFCI=$SFCINP
+      export SFCO=$RUNDIR/${sfc_fname}
+      $dir_save/wx23sm/gsm/f2005/coldstart.fd/cnv_osu_noah.sh
+      export SFCINP=$SFCO
+    fi
+    
+#
+    export SIGOUT=$RUNDIR/siganl.$NEWDATE
+    export SFCOUT=$RUNDIR/sfcanl.$NEWDATE
+    if [ $NEMSIO_IN = .true. ] ; then
+      export GFSOUT=$RUNDIR/gfsanl.$NEWDATE
+      export SFNOUT=$RUNDIR/sfnanl.$NEWDATE
+    fi
+#
+    if [[ ${change_res} = YES ]] ; then
+#     if [[ $lm -le 99 ]] ; then
+      export opr_chgres=${opr_chgres:-YES}
+      export default_ivs=${default_ivs:-YES}
+      if [[ $opr_chgres = YES ]] ; then
+        export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,IVS=$IVS"
+      else
+        if [ $default_ivs = YES ] ; then
+          if [ $hybrid = YES ] ; then
+            export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,NVCOORD=$nvcoord,IVSSFC=$ivssfc,"
+          elif [ $GEN_COORD_HYBRID = YES ] ; then 
+            export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,NVCOORD=$nvcoord,IVSSFC=$ivssfc,idvm=$IDVM,idsl=$IDSL,ivssig=$ivssig,latch=$LATCH,"
+            if [ $THERMODYN_ID -gt 2 ] ; then
+              export CHGRESVARS=$CHGRESVARS"RI=$RIlist,CPI=$CPIlist"
+            fi
+          else
+            export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,"
+          fi
+        else
+          if [ $GEN_COORD_HYBRID = YES ] ; then
+            export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,NVCOORD=$nvcoord,IVSSFC=$ivssfc,idvm=$IDVM,idsl=$IDSL,ivssig=$ivssig,latch=$LATCH,"
+            if [ $THERMODYN_ID -gt 2 ] ; then
+              export CHGRESVARS=$CHGRESVARS"RI=$RIlist,CPI=$CPIlist"
+            fi
+          else
+            export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,IVSSIG=$ivssig,NVCOORD=$nvcoord,IVSSFC=$ivssfc,"
+          fi
+        fi
+      fi
+      if [ $ialb -eq 0 -o $ialb -eq 1 ] ; then
+        export CHGRESVARS="IALB=$ialb,$CHGRESVARS"
+      fi
+      if [ $CHGQ0 -eq 1 ] ; then
+       export CHGRESVARS="CHGQ0=$CHGQ0,$CHGRESVARS"
+      fi
+      export SIGLEVEL=${SIGLEVEL:-/nwprod/fix/global_siglevel.l$lm.txt}
+      export LONSPERLAT=$dir_save/wx20mi/newres/global_lonsperlat.t$JCAP.txt
+#     if [[ $lm -eq 64 ]] ; then
+#       export SIGLEVEL=/nfsuser/g01/wx20mi/newres/global_siglevel.l64.txt
+#       export SIGLEVEL=/nfsuser/g01/wx20mi/t254l64/global_siglevel.l64.txt
+#       export SIGLEVEL=/nwprod/fix/global_siglevel.l64.txt
+#     fi
+#     /nfsuser/g01/wx20mi/scripts/global_chgres.sh
+#     /nfsuser/g01/wx20mi/jif/t254/ush/global_chgres.sh
+
+      export NEWIDATE=${NEWIDATE:-""}
+      export CHGRESVARS="${CHGRESVARS}$NEWIDATE"
+
+      export CHGRESSH=${CHGRESSH:-/nwprod/ush/global_chgres.sh}
+      export CHGRESEXEC=${CHGRESEXEC:-/nwprod/exec/global_chgres}
+      if [ $ADIAB = .true. ] ; then export SFCINP="" ; fi
+      $CHGRESSH
+#      echo "test: chgres"
+#      exit 0
+    else
+      ${NCP:-cp} $SIGINP $SIGOUT
+      ${NCP:-cp} $SFCINP $SFCOUT
+        if [ $NEMSIO_IN = .true. ] ; then
+          ${NCP:-cp} $SIGINP $GFSOUT
+          ${NCP:-cp} $SFCINP $SFNOUT
+        fi
+    fi
+#
+    export SIGI=$SIGOUT
+    export SFCI=$SFCOUT
+    if [ $NEMSIO_IN = .true. ] ; then
+      export SIGI=$GFSOUT
+      export GRDI=$GFSOUT
+      export SFCI=$SFNOUT
+    fi
+  else
+#   For Ensemble runs (members > 1)
+    for MN in $MEMBER_NAMES ; do
+      export SIGINP=$datic/${sig_fname}
+      export SFCINP=$datic/${sfc_fname}
+#     export SIGINP=$datic/${sig_fname}$MN
+#     export SFCINP=$datic/${sfc_fname}$MN
+#
+      if [ $cold_sfc = YES ] ; then
+        export SFCI=$SFCINP
+        export SFCO=$RUNDIR/${sfc_fname}
+        $dir_save/wx23sm/gsm/f2005/coldstart.fd/cnv_osu_noah.sh
+        export SFCINP=$SFCO
+      fi
+    
+#
+      IMN=`echo $MN|cut -c2-3`
+      IMN=$((IMN+0))
+      if [ $IMN -eq 0 ] ; then IMN=$ENS_NUM ; fi
+      if [ $IMN -lt 10 ] ; then IMN=0$IMN ; fi
+      if [ ${USESUBDIR:-NO} = YES ] ; then
+        if [ $IMN -eq $ENS_NUM ] ; then LOCD=/c00 ; else LOCD=/p$IMN ; fi
+      else
+        LOCD=""
+      fi
+      mkdir -p ${RUNDIR}$LOCD
+      export SIGOUT=${RUNDIR}$LOCD/siganl.${NEWDATE}$MN
+      export SFCOUT=${RUNDIR}$LOCD/sfcanl.${NEWDATE}$MN
+      if [ $NEMSIO_IN = .true. ] ; then
+        export GFSOUT=${RUNDIR}$LOCD/gfsanl.${NEWDATE}$MN
+        export SFNOUT=${RUNDIR}$LOCD/sfnanl.${NEWDATE}$MN
+      fi
+#
+      if [[ ${change_res} = YES ]] ; then
+#       if [[ $lm -le 99 ]] ; then
+        export opr_chgres=${opr_chgres:-YES}
+        export default_ivs=${default_ivs:-YES}
+        if [[ $opr_chgres = YES ]] ; then
+          export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,IVS=$IVS"
+        else
+          if [ $default_ivs = YES ] ; then
+            if [ $hybrid = YES ] ; then
+              export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,NVCOORD=$nvcoord,IVSSFC=$ivssfc,"
+            else
+              export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,"
+            fi
+          else
+            export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,IVSSIG=$ivssig,NVCOORD=$nvcoord,IVSSFC=$ivssfc,"
+          fi
+        fi
+        export SIGLEVEL=${SIGLEVEL:-/nwprod/fix/global_siglevel.l$lm.txt}
+        export LONSPERLAT=$dir_save/wx20mi/newres/global_lonsperlat.t$JCAP.txt
+#       if [[ $lm -eq 64 ]] ; then
+#         export SIGLEVEL=/nfsuser/g01/wx20mi/newres/global_siglevel.l64.txt
+#         export SIGLEVEL=/nfsuser/g01/wx20mi/t254l64/global_siglevel.l64.txt
+#         export SIGLEVEL=/nwprod/fix/global_siglevel.l64.txt
+#       fi
+#       /nfsuser/g01/wx20mi/scripts/global_chgres.sh
+#       /nfsuser/g01/wx20mi/jif/t254/ush/global_chgres.sh
+        export CHGRESSH=${CHGRESSH:-/nwprod/ush/global_chgres.sh}
+        if [ $adiab = .true. ] ; then export SFCINP="" ; fi
+        $CHGRESSH
+#        echo "test: chgres"
+#        exit 0
+      else
+        ${NCP:-cp} $SIGINP $SIGOUT
+        ${NCP:-cp} $SFCINP $SFCOUT
+        if [ $NEMSIO_IN = .true. ] ; then
+          ${NCP:-cp} $SIGINP $GFSOUT
+          ${NCP:-cp} $SFCINP $SFNOUT
+        fi
+
+      fi
+    done
+#
+#   export SIGI=$RUNDIR/siganl.${CDATE}
+#   export SFCI=$RUNDIR/sfcanl.${CDATE}
+#
+    ca=$(echo $FM | wc -c)
+    cb=$(echo $SIGOUT | wc -c)
+    cc=$(echo $SFCOUT | wc -c)
+    export SIGI=$(echo $SIGOUT | cut -c1-$((cb-ca)))
+    export SFCI=$(echo $SFCOUT | cut -c1-$((cc-ca)))
+    if [ $NEMSIO_IN = .true. ] ; then
+      export SIGI=$(echo $GFSOUT | cut -c1-$((cb-ca)))
+      export GRDI=$(echo $GFSOUT | cut -c1-$((cb-ca)))
+      export SFCI=$(echo $SFNOUT | cut -c1-$((cb-ca)))
+    fi
+  fi
+  ls -l $SIGI
+  ls -l $SFCI
+  export FHINI=0$nhourb
+fi
+if [[ $nhourb -lt $nhours ]] ; then
+  if [[ $nhourb -gt 0 ]] ; then
+#     For one member case i.e. control
+    if [[ $NEMSIO_IN = .true. ]] ; then
+     if [[ $ENS_NUM -le 1 ]] ; then
+#     For one member case i.e. control
+      export SIGI=sigf$($NDATE $nhourb $CDATE)
+      export SFCI=sfcf$($NDATE $nhourb $CDATE)
+     else
+#   For Ensemble runs (members > 1)
+      IMN=`echo $MN|cut -c2-3`
+      IMN=$((IMN+0))
+      if [ $IMN -eq 0 ] ; then IMN=$ENS_NUM ; fi
+      if [ $IMN -lt 10 ] ; then IMN=0$IMN ; fi
+      if [ ${USESUBDIR:-NO} = YES ] ; then
+        if [ $IMN -eq $ENS_NUM ] ; then LOCD=/c00 ; else LOCD=/p$IMN ; fi
+      else
+        LOCD=""
+      fi
+      for MN in $MEMBER_NAMES ; do
+        export SIGI$MN='${RUNDIR}${LOCD}sigf$($NDATE $nhourb $CDATE)$MN'
+        export SFCI$MN='${RUNDIR}${LOCD}sfcf$($NDATE $nhourb $CDATE)$MN'
+      done
+     fi
+    else
+#     For one member case i.e. control
+     if [[ $ENS_NUM -le 1 ]] ; then
+      ${NCP:-cp} sigr1 sigr1a
+      ${NCP:-cp} sigr2 sigr2a
+      ${NCP:-cp} sfcr  sfcra
+      ${NCP:-cp} nstr  nstra
+      export SIGI=$RUNDIR/sigr1a
+      export SIGI2=$RUNDIR/sigr2a
+      export SFCI=$RUNDIR/sfcra
+      export NSTI=$RUNDIR/nstra
+     else
+#   For Ensemble runs (members > 1)
+      for MN in $MEMBER_NAMES ; do
+        IMN=`echo $MN|cut -c2-3`
+        IMN=$((IMN+0))
+        if [ $IMN -eq 0 ] ; then IMN=$ENS_NUM ; fi
+        if [ $IMN -lt 10 ] ; then IMN=0$IMN ; fi
+        if [ ${USESUBDIR:-NO} = YES ] ; then
+          if [ $IMN -eq $ENS_NUM ] ; then LOCD=/c00 ; else LOCD=/p$IMN ; fi
+        else
+          LOCD=""
+        fi
+        export ENS_SPS=${ENS_SPS:-.false.}
+        if [ $ENS_SPS = .true. ] ; then
+          rcha='s'
+        else
+          rcha='r'
+        fi
+        ${NCP:-cp} ${RUNDIR}$LOCD/sig${rcha}1$MN  ${RUNDIR}$LOCD/sig${rcha}1a$MN
+        ${NCP:-cp} ${RUNDIR}$LOCD/sig${rcha}2$MN  ${RUNDIR}$LOCD/sig${rcha}2a$MN
+        ${NCP:-cp} ${RUNDIR}$LOCD/sfc${rcha}$MN   ${RUNDIR}$LOCD/sfc${rcha}a$MN
+        ${NCP:-cp} ${RUNDIR}$LOCD/nst${rcha}$MN  ${RUNDIR}$LOCD/nst${rcha}a$MN
+      done
+      ca=$(echo $FM | wc -c)
+      cb=$(echo sig${rcha}1a$FM | wc -c)
+      cc=$(echo sig${rcha}2a$FM | wc -c)
+      cd=$(echo sfc${rcha}a$FM | wc -c)
+      ce=$(echo nst${rcha}a$FM | wc -c)
+      export SIGI=${RUNDIR}$LOCD/$(echo sig${rcha}1a$FM | cut -c1-$((cb-ca)))
+      export SIGI2=${RUNDIR}$LOCD/$(echo sig${rcha}2a$FM | cut -c1-$((cc-ca)))
+      export SFCI=${RUNDIR}$LOCD/$(echo sfc${rcha}a$FM | cut -c1-$((cd-ca)))
+      export NSTI=${RUNDIR}$LOCD/$(echo nst${rcha}a$FM | cut -c1-$((ce-ca)))
+     fi
+    fi
+    export FHINI=$nhourb
+  fi
+  echo $SIGI
+  echo $SFCI
+#
+  export FCSTEXEC=$fname
+# export FCSTEXEC="pedb  $fname"
+# export FCSTEXEC="xldb  $fname"
+# export FCSTEXEC="hpmcount -s2  $fname"
+# export FCSTEXEC="totalview poe -a  $fname"
+# if [[ $ENS_NUM -le 1 ]] ; then
+    export SIGO='${RUNDIR}${LOCD}/sigf$($NDATE $FH $NEWDATE)$MN'
+    export SFCO='${RUNDIR}${LOCD}/sfcf$($NDATE $FH $NEWDATE)$MN'
+    export FLXO='${RUNDIR}${LOCD}/flxf$($NDATE $FH $NEWDATE)$MN'
+    export LOGO='${RUNDIR}${LOCD}/logf$($NDATE $FH $NEWDATE)$MN'
+    export D3DO='${RUNDIR}${LOCD}/d3df$($NDATE $FH $NEWDATE)$MN'
+    export NSTO='${RUNDIR}${LOCD}/nstf$($NDATE $FH $NEWDATE)$MN'
+    export G3DO='${RUNDIR}${LOCD}/g3df$($NDATE $FH $NEWDATE)$MN'
+# fi
+# export FIXGLOBAL=/nwprod/fix
+  export FIXGLOBAL=$fixdir
+#
+  if [[ $cyclebc = YES ]] ; then
+# sst, ice and/or snow analyses file for cycle
+    if [ $FNTSFA = NONE ] ; then
+      FNTSFA=
+    else
+      export FNTSFA=${FNTSFA:-$SFCANADIR/sstgrb.$cycle_date}
+      export FTSFS=${FTSFS:-0.0}
+    fi
+    if [ $FNACNA = NONE ] ; then
+      export FNACNA=
+    else
+      export FNACNA=${FNACNA:-$SFCANADIR/icegrb.$cycle_date}
+      export FAISS=${FAISS:-0.0}
+    fi
+#   export FSNOL=0.0
+  else
+#
+    export FNTSFA=
+    export FNACNA=
+  fi
+#
+export XLSMPOPTS="parthds=$NUMTHRD:stack=$NTHSTACK"
+#
+# export CYCLVARS='GAUSM=.FALSE.,BLNMSK=0.25,BLTMSK=89.75,'
+  export FNMSKH=/nwprod/fix/seaice_newland.grb
+# export EXECGLOBAL=$RUNDIR
+  export FHOUT=$fout
+  export FHZER=$fzer
+  export FHCYC=$fcyc
+  export FHDFI=$fdfi
+  export FHLWR=${FHLWR:-3}
+  export FHSWR=${FHSWR:-1}
+  export FHMAX=$nhours
+# export FHMAX=$((45*24))
+# export SIGR1=$RUNDIR/sigr1
+# export SIGR2=$RUNDIR/sigr2
+# export SFCR=$RUNDIR/sfcr
+# export NSTR=$RUNDIR/nstr
+
+# if [ $ENS_SPS = .true. ] ; then
+#   export SIGS1=$RUNDIR/sigs1
+#   export SIGS2=$RUNDIR/sigs2
+#   export SFCS=$RUNDIR/sfcs
+# fi
+
+# export FHRES=$((12))
+# export FHRES=$((1*24))
+# export FHRES=$FHMAX
+  export FHRES=${FHRES:-$FHMAX}
+  export FHROT=${FHROT:-0}
+  export FHOUT_HF=${fout_hf:-1}
+  export FHMAX_HF=${fmax_hf:-0}
+#
+# export CYCLVARS='FALBL=0.0,FALBS=0.0,'
+#
+  export FCSTSCRIPT=${FCSTSCRIPT:-/nwprod/scripts/exglobal_fcst.sh.sms}
+  $FCSTSCRIPT
+#
+#  prof -s -m mon.out.? mon.out.?? > tem
+#  link files if necessary
+#
+  
+  if [ ${LINK_FILES:-NO} = YES ] ; then
+    OUTDIR=${OUTDIR:-$RUNDIR}
+    ENS_MEMBERS=$MEMBER_NAMES
+    if [ $ENS_NUM -eq 1 ] ; then ENS_MEMBERS=_01 ; fi
+    for MN in $ENS_MEMBERS ; do
+      IMN=`echo $MN|cut -c2-3`
+      IMN=$((IMN+0))
+      if [ $IMN -eq 0 ] ; then IMN=$ENS_NUM ; fi
+      if [ $IMN -lt 10 ] ; then IMN=0$IMN ; fi
+      if [ ${USESUBDIR:-NO} = YES ] ; then
+        if [ $IMN -eq $ENS_NUM ] ; then LOCD=/c00 ; else LOCD=/p$IMN ; fi
+      else
+        LOCD=""
+      fi
+      MNS=$MN
+      if [ $ENS_NUM -eq 1 ] ; then  MNS="" ; LOCD="" ; fi
+#     FILES_TO_LINK=${FILES_TO_LINK:-'sig sfc flx d3d g3d'}
+      FILES_TO_LINK=${FILES_TO_LINK:-'flx'}
+      CDUMP=${CDUMP:-gfs}
+      SUFIX=${SUFIX:-.$CDUMP.$CDATE}
+      for file in $FILES_TO_LINK ; do
+        if [ $file = sig -o $file = sfc -o $file = flx -o $file = d3d ] ; then
+          FH=$FHINI
+          if [[ $FHINI -eq 0 ]] ; then FH=-$FHOUT ; fi
+          until [[ $((FH=10#$FH+10#$FHOUT)) -gt $FHMAX ]] ; do
+            [[ $FH -lt 10 ]]&&FH=0$FH
+            ln -fs ${RUNDIR}$LOCD/${file}f$($NDATE $FH $CDATE)$MNS $OUTDIR/${file}f${FH}${SUFIX}$MNS
+          done
+        fi
+      done
+    done
+  fi
+
+fi
+#
+post=${post:-NO}
+NCEPPOST=${NCEPPOST:-NO}
+if [[ $post = YES ]] ; then
+ nodes_p=${nodes_p:-1}
+ tasks_p=${tasks_p:-32}
+ rcpu_p=${rcpu_p:-1}
+ rmem_p=${rmem_p:-$((105000*rcpu_p/64))}
+ if [ $NCEPPOST = YES ] ; then
+  export LONB=${LONB:-${iop:-LONF}}
+  export LATB=${LATB:-${jop:-LATG}}
+  if [ $ENS_NUM -eq 1 ] ; then
+    echo "#@ group = $group" | $sub -i -a $acc -e $listvar,LONB,LATB -q $class -p $tasks_p/$nodes_p/N -r $rmem_p/$rcpu_p  -t $chp:$cmp:$csp -o $RUNDIR/post.$NEWDATE.out $SCRIPTS/global_unipost
+#    echo "#@ group = $group" | $sub -i -a $acc -e $listvar,LONB,LATB -q $class -p 32/1/N -r $rmem/1  -t $chp:$cmp:$csp -o $RUNDIR/post.$NEWDATE.out $SCRIPTS/ncep_post.sh
+  else
+#                  For Ensemble runs (members > 1)
+    for MN in $MEMBER_NAMES ; do
+      export MN
+      IMN=`echo $MN|cut -c2-3`
+      IMN=$((IMN+0))
+      if [ $IMN -eq 0 ] ; then IMN=$ENS_NUM ; fi
+      if [ $IMN -lt 10 ] ; then IMN=0$IMN ; fi
+      if [ ${USESUBDIR:-NO} = YES ] ; then
+        if [ $IMN -eq $ENS_NUM ] ; then LOCD=/c00 ; else LOCD=/p$IMN ; fi
+      else
+        LOCD=""
+      fi
+      export COMOUT=${RUNDIR}$LOCD
+      echo "#@ group = $group" | $sub -i -a $acc -e $listvar,MN,LONB,LATB -q $class -p $tasks_p/$nodes_p/N -r $rmem_p/$rcpu_p  -t $chp:$cmp:$csp -o $COMOUT/post.$NEWDATE.out $SCRIPTS/ncep_post.sh
+    done
+  fi
+ else
+  echo "#@ group = $group" | $sub -i -a $acc -e $listvar -q $class -p $tasks_p/$nodes_p/N -r $rmem_p/$rcpu_p  -t $chp:$cmp:$csp -o $RUNDIR/post.$NEWDATE.out $SCRIPTS/global_post
+# sub -e $listvar -q dev -p 4/1 -t 1:30:00 -o $RUNDIR/post.$NEWDATE.out $SCRIPTS/global_post
+ fi
+fi

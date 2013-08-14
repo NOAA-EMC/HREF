@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#BSUB -oo out
+#BSUB -eo err
+#BSUB -J _JBNME_
+#BSUB -n _TASKS_
+#BSUB -x
+#BSUB -R span[ptile=_TPN_]
+#BSUB -W 00:_WLCLK_
+#BSUB -q "_ACCNR_"
+#BSUB -a poe
+
+. /usrx/local/Modules/3.2.9/init/bash
+ module load ibmpe ics
+ export KMP_STACKSIZE=1024m
+ export OMP_NUM_THREADS=_THRD_
+ export MP_MPILIB=mpich2
+ export MP_EUILIB=us
+ export MP_TASK_AFFINITY=core:_THRD_
+ export MP_LABELIO=yes
+ export MP_STDOUTMODE=unordered
+#export LSB_PJL_TASK_GEOMETRY="`/u/James.A.Abeles/bin/mktjv 1536/16 12/4 768/16`"
+ export LD_PRELOAD=/u/James.A.Abeles/mpi_trace_linux_x86_64/shared/libmpitrace.so
+
+set -x
+
+echo "Model started:  " `date`
+
+mpirun.lsf ./NEMS.x
+
+echo "Model ended:    " `date`
+
+exit

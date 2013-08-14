@@ -1,0 +1,56 @@
+README
+
+PRC - Mar. 20, 2008
+Some further modification of the SLOD and inclusion of a new test:
+CLDICE: if selected, coagulation of two groups of core/shell, where the
+cores of each group are the same composition and the shells are the same
+composition.
+Significant fix in coagp.F90: previously, coremasses were generated from
+pure group PC elements regardless of composition.  Now, check pure group
+PC element composition against target core mass composition.  If they are
+not the same, no growth allowed.
+
+
+PRC - Mar. 11, 2008
+Considerable modification of the SLOD.  Basically, I hope it is somewhat more
+readable by moving the various tests to subroutines contained in the main
+program.  Text of setup is moved to end of SLOD: SLOD_initatm_,
+SLOD_initcoagtest_, SLOD_initfalltest_, SLOD_allocateparticles_, and
+SLOD_deallocateparticles_.  This makes the code somewhat clear, as well as
+making it easier to setup new cases where you change the groups, elements, and
+bins.  As an example, new test is BCOC that tries to coagulate two groups and
+come up with a mixed group (idea: pure BC and OC selfcoagulate and coagulate
+with each other to make a mixed particle of OC shell with BC core).  See
+SLOD_initbctest_ (and read_bcoctest.pro).
+I also changed how the text files for the coagtest (and new bcoctest) are 
+written, and so I modify the relevant IDL code.
+This is still flaky: we still don't know at the SLOD level how things are
+going to be mapped internally to CARMA (i.e., which elements are number
+concentrations vs. core mass).  So at present my IDL code only works right
+if all groups have the same bin spacing and density.  Should be straightforward
+to fix (?).
+Final note: in promoting the vertadv.F90 routine to internal arrays defined
+double precision I adopted a scheme like in carma_precision now.
+
+
+PRC/JAS - Oct. 4, 2007
+Initial committment to repository
+
+CARMA implementation in GEOS-4/5 based on CARMA_2.2
+
+Plan is to link to GEOS via a component called CARMA_GridComp.  However,
+the standalone SLOD still works!
+
+To run CARMA as a standalone program, compile with the included Makefile:
+
+gmake -f Makefile
+
+If all goes well, you end up with
+
+SLOD.exe
+
+and can run this!  See the Makefile for some simple little tests you can
+run with this.
+
+SLOD = Stupid Little Offline Driver
+

@@ -1,0 +1,82 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: OC
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+<OC::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl|# Sub|          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  OCMASS   | kg/kg      | xyz | C |    |   |   |     | Organic Carbon Mass Mixing Ratio             __ENSEMBLE__
+# .........|............|.....|...|....|...|...|.....|..................................
+  OCEM001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 001              __ENSEMBLE__     
+  OCEM002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 002              __ENSEMBLE__    
+  OCDP001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 001        __ENSEMBLE__    
+  OCDP002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 002        __ENSEMBLE__    
+  OCWT001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 001        __ENSEMBLE__    
+  OCWT002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 002        __ENSEMBLE__    
+# OCSV001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 001 __ENSEMBLE__    
+# OCSV002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 002 __ENSEMBLE__    
+  OCHYPHIL | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Hydrophobic to Hydrophilic    __ENSEMBLE__  
+  OCEMAN   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Anthropogenic Emissions       __ENSEMBLE__
+  OCEMBB   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biomass Burning Emissions     __ENSEMBLE__
+  OCEMBF   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biofuel Emissions             __ENSEMBLE__
+  OCEMBG   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biogenic Emissions            __ENSEMBLE__
+  OCSMASS  | kg m-3     | xy  |   |    |   |   |     | Organic Carbon Surface Mass Concentration    __ENSEMBLE__ 
+  OCCMASS  | kg m-2     | xy  |   |    |   |   |     | Organic Carbon Column Mass Density           __ENSEMBLE__ 
+  OCEXTTAU |      1     | xy  |   |    |   |   |     | Organic Carbon Extinction AOT [550 nm]       __ENSEMBLE__
+  OCSCATAU |      1     | xy  |   |    |   |   |     | Organic Carbon Scattering AOT [550 nm]       __ENSEMBLE__  
+# .........|............|.....|...|....|...|...|.....|..................................
+  OCMASSbbbo   | kg/kg      | xyz | C |    |   |   |     | Organic Carbon Mass Mixing Ratio          (Boreal Biomass Burning)
+# .............|............|.....|...|....|...|...|.....|..................................
+  OCEM001bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 001           (Boreal Biomass Burning)    
+  OCEM002bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 002           (Boreal Biomass Burning)   
+  OCDP001bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 001     (Boreal Biomass Burning)    
+  OCDP002bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 002     (Boreal Biomass Burning)   
+  OCWT001bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 001     (Boreal Biomass Burning)   
+  OCWT002bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 002     (Boreal Biomass Burning)   
+# OCSV001bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 001 (Boreal Biomass Burning)    
+# OCSV002bbbo  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 002 (Boreal Biomass Burning)    
+  OCHYPHILbbbo | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Hydrophobic to Hydrophilic    (Boreal Biomass Burning)  
+  OCEMANbbbo   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Anthropogenic Emissions    (Boreal Biomass Burning)
+  OCEMBBbbbo   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biomass Burning Emissions  (Boreal Biomass Burning)
+  OCEMBFbbbo   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biofuel Emissions          (Boreal Biomass Burning)
+  OCEMBGbbbo   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biogenic Emissions         (Boreal Biomass Burning)
+  OCSMASSbbbo  | kg m-3     | xy  |   |    |   |   |     | Organic Carbon Surface Mass Concentration (Boreal Biomass Burning) 
+  OCCMASSbbbo  | kg m-2     | xy  |   |    |   |   |     | Organic Carbon Column Mass Density        (Boreal Biomass Burning)
+  OCEXTTAUbbbo |      1     | xy  |   |    |   |   |     | Organic Carbon Extinction AOT [550 nm]    (Boreal Biomass Burning)
+  OCSCATAUbbbo |      1     | xy  |   |    |   |   |     | Organic Carbon Scattering AOT [550 nm]    (Boreal Biomass Burning)
+# .............|............|.....|...|....|...|...|.....|..................................
+  OCMASSbbnb   | kg/kg      | xyz | C |    |   |   |     | Organic Carbon Mass Mixing Ratio          (Non-Boreal Biomass Burning)
+# .............|............|.....|...|....|...|...|.....|..................................
+  OCEM001bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 001           (Non-Boreal Biomass Burning)    
+  OCEM002bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 002           (Non-Boreal Biomass Burning)   
+  OCDP001bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 001     (Non-Boreal Biomass Burning)    
+  OCDP002bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 002     (Non-Boreal Biomass Burning)   
+  OCWT001bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 001     (Non-Boreal Biomass Burning)   
+  OCWT002bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 002     (Non-Boreal Biomass Burning)   
+# OCSV001bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 001 (Non-Boreal Biomass Burning)    
+# OCSV002bbnb  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 002 (Non-Boreal Biomass Burning)    
+  OCHYPHILbbnb | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Hydrophobic to Hydrophilic    (Non-Boreal Biomass Burning)  
+  OCEMANbbnb   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Anthropogenic Emissions    (Non-Boreal Biomass Burning)
+  OCEMBBbbnb   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biomass Burning Emissions  (Non-Boreal Biomass Burning)
+  OCEMBFbbnb   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biofuel Emissions          (Non-Boreal Biomass Burning)
+  OCEMBGbbnb   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biogenic Emissions         (Non-Boreal Biomass Burning)
+  OCSMASSbbnb  | kg m-3     | xy  |   |    |   |   |     | Organic Carbon Surface Mass Concentration (Non-Boreal Biomass Burning) 
+  OCCMASSbbnb  | kg m-2     | xy  |   |    |   |   |     | Organic Carbon Column Mass Density        (Non-Boreal Biomass Burning)
+  OCEXTTAUbbnb |      1     | xy  |   |    |   |   |     | Organic Carbon Extinction AOT [550 nm]    (Non-Boreal Biomass Burning)
+  OCSCATAUbbnb |      1     | xy  |   |    |   |   |     | Organic Carbon Scattering AOT [550 nm]    (Non-Boreal Biomass Burning)
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+</OC::ExportSpec>
