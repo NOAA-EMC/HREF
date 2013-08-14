@@ -1,0 +1,602 @@
+! $Id: MAPL_sun_uc.P90,v 1.3 2008/08/28 20:37:44 trayanov Exp $
+
+#include "MAPL_ErrLog.h"
+
+module MAPL_SunMod
+
+!BOP
+
+! !MODULE: MAPL_SunMod
+
+!  !DESCRIPTION:   
+
+!  This class is intended to manage the sun`s position and provide
+!  the insolation at the top of the atmosphere.  The main method
+!  is GEOS\_SunGetInsolation, which depends on an Orbit object.
+!  The Orbit object defines this class and has public opaque type {\tt  GEOS\_SunOrbit}.
+!  Methods are provided for creating it, destroying it, and making various queries.
+!  \newline
+
+! !USES:
+
+  use ESMF_Mod
+  use MAPL_ConstantsMod
+  use MAPL_BaseMod
+
+  implicit none
+  private
+
+! !PUBLIC MEMBER FUNCTIONS:
+
+  public MAPL_SunOrbitCreate
+  public MAPL_SunOrbitCreated
+  public MAPL_SunOrbitDestroy
+  public MAPL_SunOrbitQuery
+  public MAPL_SunGetInsolation
+
+! !PUBLIC TYPES:
+
+  public MAPL_SunOrbit
+
+!EOP
+
+  integer, public, parameter :: MAPL_SunAutumnalEquinox = 1 
+  integer, public, parameter :: MAPL_SunWinterSolstice  = 2 
+  integer, public, parameter :: MAPL_SunVernalEquinox   = 3 
+  integer, public, parameter :: MAPL_SunSummerSolstice  = 4 
+  integer, public, parameter :: MAPL_SunDailyMean       = 5 
+  integer, public, parameter :: MAPL_SunAnnualMean      = 6 
+
+
+  interface MAPL_SunGetInsolation
+     module procedure SOLAR_1D
+     module procedure SOLAR_2D
+     module procedure SOLAR_ARR_INT
+  end interface
+
+
+  type MAPL_SunOrbit
+     private
+     type(ESMF_Clock)                 :: CLOCK
+     real                             :: OB, ECC, PER, YEARLEN
+     integer                          :: EQNX, YEARS_PER_CYCLE, DAYS_PER_CYCLE
+     real, pointer, dimension(:)      :: ZC => null()
+     real, pointer, dimension(:)      :: ZS => null()
+     real, pointer, dimension(:)      :: PP => null()
+     real, pointer, dimension(:)      :: TH => null()
+  end type MAPL_SunOrbit
+
+contains
+
+!==========================================================================
+
+!BOPI
+
+! !IROUTINE:  MAPL_SunOrbitCreate
+
+! !DESCRIPTION:
+
+!  Integrates the earth`s orbit and stores the necessary
+!  parameters to easily compute the earth`s position for each day
+!  of the full (usually 4-year) intercalation cycle. 
+!  The orbital parameters are passed as arguments.
+!  The full calendar intercalation cycle is obtained from the 
+!  ESMF clock passed as an argument. This becomes the orbit`s
+!  attached clock. Currently we assume a single intercalation.
+!
+!% \begin{itemize}
+!%   \item[]
+!\makebox[2in][l]{\bf \em CLOCK}
+!                   \parbox[t]{4in}{The orbit will depend on the calendar in this clock
+!                   This is used for the length of year, to set intercalation cycle}
+!%   \item[]
+!
+!\makebox[2in][l]{\bf \em ECCENTRICITY}
+!                   \parbox[t]{4in}{Eccentricity of the Earth`s orbit}
+!%   \item[]
+!
+!\makebox[2in][l]{\bf \em PERIHELION}
+!                   \parbox[t]{4in}{Longitude of perihelion, measured in degrees from 
+!                   autumnal equinox in the direction of the Earth`s motion.}
+!%   \item[]
+!
+!\makebox[2in][l]{\bf \em OBLIQUITY} 
+!                   \parbox[t]{4in}{Tilt of the Earth`s rotation axis from a 
+!                   normal to the plane of the orbit. In degrees.}
+!
+!%   \item[]
+!\makebox[2in][l]{\bf \em EQUINOX}
+!                   \parbox[t]{4in}{Day of year of vernal equinox.
+!                   Equinox is assumed to occur at 0Z on this day
+!                   on the first year of the cycle.}
+!% \end{itemize}
+!
+
+! !INTERFACE:
+
+type(MAPL_SunOrbit) function MAPL_SunOrbitCreate(CLOCK,       &
+                                                 ECCENTRICITY,&
+                                                 OBLIQUITY,   &
+                                                 PERIHELION,  &
+                                                 EQUINOX,     &
+                                                           RC )
+
+! !ARGUMENTS:
+
+ type(ESMF_Clock)  , intent(IN ) :: CLOCK
+ real              , intent(IN ) :: ECCENTRICITY
+ real              , intent(IN ) :: OBLIQUITY
+ real              , intent(IN ) :: PERIHELION
+ integer           , intent(IN ) :: EQUINOX
+ integer, optional , intent(OUT) :: RC
+
+!EOPI
+
+! Locals
+
+      character(len=ESMF_MAXSTR), parameter :: IAm = "SunOrbitCreate"
+
+      integer :: YEARS_PER_CYCLE, DAYS_PER_CYCLE
+      integer :: KM, K, KP
+      real*8  :: T1, T2, T3, T4, FUN, Y, SOB, OMG, PRH, TT
+      real*8  :: YEARLEN
+      integer :: STATUS
+      type(MAPL_SunOrbit) :: ORBIT
+
+!  STATEMENT FUNCTION
+
+      FUN(Y) = OMG*(1.0-ECCENTRICITY*cos(Y-PRH))**2
+
+!MJS:  This needs to come from the calendar when the time manager works right.
+
+      YEARLEN = 365.25
+
+!  Factors involving the orbital parameters
+!------------------------------------------
+
+      OMG  = (2.0*MAPL_PI/YEARLEN) / (sqrt(1.-ECCENTRICITY**2)**3)
+      PRH  = PERIHELION*(MAPL_PI/180.)
+      SOB  = sin(OBLIQUITY*(MAPL_PI/180.))
+
+!  Compute length of leap cycle
+!------------------------------
+
+      if(YEARLEN-int(YEARLEN) > 0.) then
+       YEARS_PER_CYCLE = nint(1./(YEARLEN-int(YEARLEN)))
+      else
+       YEARS_PER_CYCLE = 1
+      endif
+
+      DAYS_PER_CYCLE=nint(YEARLEN*YEARS_PER_CYCLE)
+
+      if(associated(ORBIT%TH)) deallocate(ORBIT%TH)
+      allocate(ORBIT%TH(DAYS_PER_CYCLE), stat=status)
+      VERIFY_(STATUS)
+ 
+      if(associated(ORBIT%ZC)) deallocate(ORBIT%ZC)
+      allocate(ORBIT%ZC(DAYS_PER_CYCLE), stat=status)
+      VERIFY_(STATUS)
+
+      if(associated(ORBIT%ZS)) deallocate(ORBIT%ZS)
+      allocate(ORBIT%ZS(DAYS_PER_CYCLE), stat=status)
+      VERIFY_(STATUS)
+
+      if(associated(ORBIT%PP)) deallocate(ORBIT%PP)
+      allocate(ORBIT%PP(DAYS_PER_CYCLE), stat=status)
+      VERIFY_(STATUS)
+
+      ORBIT%CLOCK           = CLOCK
+      ORBIT%OB              = OBLIQUITY
+      ORBIT%ECC             = ECCENTRICITY
+      ORBIT%PER             = PERIHELION
+      ORBIT%EQNX            = EQUINOX
+      ORBIT%YEARLEN         = YEARLEN
+      ORBIT%YEARS_PER_CYCLE = YEARS_PER_CYCLE
+      ORBIT%DAYS_PER_CYCLE  = DAYS_PER_CYCLE
+
+!   TH:   Orbit anomaly (radians)
+!   ZS:   Sine of declination
+!   ZC:   Cosine of declination
+!   PP:   Inverse of square of earth-sun distance (1/(au**2))
+
+!  Begin integration at vernal equinox
+
+      KP           = EQUINOX
+      TT           = 0.0
+      ORBIT%ZS(KP) = sin(TT)*SOB
+      ORBIT%ZC(KP) = sqrt(1.0-ORBIT%ZS(KP)**2)
+      ORBIT%PP(KP) = ( ( 1.0-ECCENTRICITY*cos(TT-PRH) ) &
+                     / ( 1.0-ECCENTRICITY**2          ) )**2
+      ORBIT%TH(KP) = TT
+
+!  Integrate orbit for entire leap cycle using Runge-Kutta
+
+      do K=2,DAYS_PER_CYCLE
+       T1 = FUN(TT       )
+       T2 = FUN(TT+T1*0.5)
+       T3 = FUN(TT+T2*0.5)
+       T4 = FUN(TT+T3    )
+       KP  = mod(KP,DAYS_PER_CYCLE) + 1
+       TT  = TT + (T1 + 2.0*(T2 + T3) + T4) / 6.0
+       ORBIT%ZS(KP) = sin(TT)*SOB
+       ORBIT%ZC(KP) = sqrt(1.0-ORBIT%ZS(KP)**2)
+       ORBIT%PP(KP) = ( ( 1.0-ECCENTRICITY*cos(TT-PRH) ) &
+                      / ( 1.0-ECCENTRICITY**2          ) )**2
+       ORBIT%TH(KP) = TT
+      enddo
+
+      MAPL_SunOrbitCreate = ORBIT
+
+      RETURN_(ESMF_SUCCESS)
+
+    end function MAPL_SunOrbitCreate
+
+!==========================================================================
+
+!BOP
+
+! !IROUTINE:  MAPL_SunOrbitDestroy
+
+! !DESCRIPTION:
+! Destroys a {\tt GEOS\_SunOrbit} object, deallocating the space used to save the ephemeris.
+
+! !INTERFACE:
+
+    subroutine MAPL_SunOrbitDestroy(ORBIT, RC)
+
+! !ARGUMENTS:
+
+       type(MAPL_SunOrbit),    intent(INOUT) :: ORBIT
+       integer, optional,      intent(  OUT) :: RC
+!EOP
+
+       character(len=ESMF_MAXSTR), parameter :: IAm = "SunOrbitDestroy"
+       integer :: STATUS
+
+       if(associated(ORBIT%TH)) deallocate(ORBIT%TH)
+       if(associated(ORBIT%ZC)) deallocate(ORBIT%ZC)
+       if(associated(ORBIT%ZS)) deallocate(ORBIT%ZS)
+       if(associated(ORBIT%PP)) deallocate(ORBIT%PP)
+
+       RETURN_(ESMF_SUCCESS)
+
+     end subroutine MAPL_SunOrbitDestroy
+
+
+
+!==========================================================================
+
+!BOPI
+
+! !IROUTINE:  MAPL_SunOrbitCreated
+
+! !DESCRIPTION:
+
+!  Returns {\tt .true.} if the given orbit object has been initilized.
+
+! !INTERFACE:
+
+       logical function  MAPL_SunOrbitCreated(ORBIT, RC)
+
+! !ARGUMENTS:
+
+       type(MAPL_SunOrbit),    intent(IN ) :: ORBIT
+       integer, optional,      intent(OUT) :: RC
+
+!EOPI
+
+       character(len=ESMF_MAXSTR), parameter :: IAm = "SunOrbitCreated"
+       integer :: STATUS
+
+       MAPL_SunOrbitCreated = associated(ORBIT%TH)
+       RETURN_(ESMF_SUCCESS)
+       return
+
+     end function MAPL_SunOrbitCreated
+
+!==========================================================================
+
+!BOPI
+
+! !IROUTINE:  MAPL_SunOrbitQuery
+
+! !DESCRIPTION:
+!   Query for quantities in an orbit object.
+!   Optionally returns the parameters of the orbit and its
+!   associated {\tt ESMF\_Clock}. It fails
+!   if the orbit has not been created.
+
+! !INTERFACE:
+
+subroutine  MAPL_SunOrbitQuery(ORBIT,           &
+                               ECCENTRICITY,    &
+                               OBLIQUITY,       &
+                               PERIHELION,      &
+                               EQUINOX,         &
+                               YEAR_LENGTH,     &
+                               YEARS_PER_CYCLE, &
+                               DAYS_PER_CYCLE,  &
+                               CLOCK,           & 
+                                             RC )
+
+! !ARGUMENTS:
+
+       type(MAPL_SunOrbit),           intent(IN ) :: ORBIT
+       real,                optional, intent(OUT) :: OBLIQUITY
+       real,                optional, intent(OUT) :: ECCENTRICITY
+       real,                optional, intent(OUT) :: PERIHELION
+       real,                optional, intent(OUT) :: YEAR_LENGTH
+       integer,             optional, intent(OUT) :: EQUINOX
+       integer,             optional, intent(OUT) :: YEARS_PER_CYCLE
+       integer,             optional, intent(OUT) :: DAYS_PER_CYCLE
+       type(ESMF_Clock   ), optional, intent(OUT) :: CLOCK
+       integer,             optional, intent(OUT) :: RC
+
+!EOPI
+
+
+       character(len=ESMF_MAXSTR), parameter :: IAm = "SunOrbitQuery"
+       integer :: STATUS
+
+       ASSERT_(MAPL_SunOrbitCreated(ORBIT,RC=STATUS))
+
+       if(present(CLOCK          )) CLOCK           = ORBIT%CLOCK
+       if(present(OBLIQUITY      )) OBLIQUITY       = ORBIT%OB
+       if(present(ECCENTRICITY   )) ECCENTRICITY    = ORBIT%ECC
+       if(present(PERIHELION     )) PERIHELION      = ORBIT%PER
+       if(present(EQUINOX        )) EQUINOX         = ORBIT%EQNX
+       if(present(YEAR_LENGTH    )) YEAR_LENGTH     = ORBIT%YEARLEN
+       if(present(DAYS_PER_CYCLE )) DAYS_PER_CYCLE  = ORBIT%DAYS_PER_CYCLE
+       if(present(YEARS_PER_CYCLE)) YEARS_PER_CYCLE = ORBIT%YEARS_PER_CYCLE
+
+       RETURN_(ESMF_SUCCESS)
+
+     end subroutine MAPL_SunOrbitQuery
+
+!==========================================================================
+
+!BOPI
+
+! !IROUTINE:  MAPL_SunGetInsolation
+
+! !DESCRIPTION:  
+
+! GEOS\_SunGetInsolation returns the cosine of
+! the solar zenith angle and the 
+! insolation at the top of the atmosphere for the given reference time, latitudes, 
+! longitudes, and orbit.  It is overloaded to accept either 1d or 2d
+! FORTRAN arrays or ESMF arrays of lats and lons and to produce the
+! corresponding outputs.
+!
+! The reference time is obtained as follows. If CurrTime is specified, it is set to that;
+! otherwise, if the optional clock is specified, it is set to the time
+! on that clock. If neither currTime nor clock are given, the time on the attached clock is used.
+!
+! If the optional time interval is specified, the return values are averages
+! over that interval following the reference time. In this case, the cosine of
+! the solar zenith angle is an insolation-weighted average. The straight average
+! of the zenith angle, and the average over the daylight part of the
+! interval are also optionally available.
+!
+! If the interval is not specified, the values are instantaneous values valid at the reference time.
+! 
+!
+! The optional {\tt TIME} argument is used to return some specialized
+! insolations. For example, the orbit at any of four Equinox or Solstice
+! positions. If {\tt TIME} is present, only the time of day is used from the clock, and a time
+! interval, if specified, must be less than 24 hours. It can also be used to 
+! return daily-mean insolation for the date on the clock, or annual mean
+! insolation for the year on the clock.
+! The {\tt TIME} argument can be any of the following:
+!\begin{verbatim}
+!      MAPL_SunAutumnalEquinox 
+!      MAPL_SunWinterSolstice  
+!      MAPL_SunVernalEquinox   
+!      MAPL_SunSummerSolstice  
+!      MAPL_SunDailyMean       
+!      MAPL_SunAnnualMean      
+!\end{verbatim}
+
+! !INTERFACE:
+
+!   subroutine MAPL_SunGetInsolation(LONS, LATS, ORBIT,ZTH,SLR,INTV,CLOCK, &
+!                                    TIME,currTime,DIST,ZTHB,ZTHD, RC)
+
+! !ARGUMENTS:
+
+!      type (MAPL_SunOrbit),               intent(IN ) :: ORBIT
+!      TYPE             ,                  intent(IN ) :: LATS
+!      TYPE             ,                  intent(IN ) :: LONS
+!      TYPE             ,                  intent(OUT) :: ZTH
+!      TYPE             ,                  intent(OUT) :: SLR
+!      type (ESMF_TimeInterval), optional, intent(IN ) :: INTV
+!      type (ESMF_Clock),        optional, intent(IN ) :: CLOCK
+!      integer,                  optional, intent(IN ) :: TIME
+!      type (ESMF_Time),         optional, intent(IN ) :: currTime
+!      real,                     optional, intent(OUT) :: DIST
+!      TYPE             ,        optional, intent(OUT) :: ZTHB
+!      TYPE             ,        optional, intent(OUT) :: ZTHD
+!      integer,                  optional, intent(OUT) :: RC
+!\end{verbatim}
+! where we currently support three overloads for {\tt TYPE} : 
+!\begin{verbatim}
+!  type (ESMF_Array)
+!  real, dimension(:)
+!  real, dimension(:,:)
+!EOPI
+
+#undef  DIMENSIONS
+#define DIMENSIONS (:)
+#define THE_SIZE   (size(LONS,1))
+      recursive subroutine SOLAR_1D(LONS, LATS, ORBIT,ZTH,SLR,INTV,CLOCK, &
+                                    TIME,currTime,DIST,ZTHB,ZTHD,RC)
+#include "sun.H"
+      end subroutine SOLAR_1D
+
+!==========================================================================
+
+#undef  DIMENSIONS
+#undef  THE_SIZE
+#define DIMENSIONS (:,:)
+#define THE_SIZE   (size(LONS,1),size(LONS,2))
+      recursive subroutine SOLAR_2D(LONS, LATS, ORBIT,ZTH,SLR,INTV,CLOCK, &
+                                    TIME,currTime,DIST,ZTHB,ZTHD,RC)
+#include "sun.H"
+      end subroutine SOLAR_2D
+#undef  DIMENSIONS
+#undef  THE_SIZE
+
+!BOP
+
+
+
+!EOP
+
+
+!==========================================================================
+
+      subroutine SOLAR_ARR_INT(LONS, LATS, ORBIT, ZTH, SLR, INTV, CLOCK,  &
+                               TIME, currTime, DIST, ZTHB, ZTHD,  RC)
+
+      type (MAPL_SunOrbit),               intent(IN ) :: ORBIT
+      type (ESMF_Array),                  intent(IN ) :: LATS
+      type (ESMF_Array),                  intent(IN ) :: LONS
+      type (ESMF_Array),                  intent(OUT) :: ZTH
+      type (ESMF_Array),                  intent(OUT) :: SLR
+      type (ESMF_TimeInterval), optional, intent(INout) :: INTV
+      type (ESMF_Clock),        optional, intent(IN ) :: CLOCK
+      type (ESMF_Time),         optional, intent(IN ) :: currTime
+      integer,                  optional, intent(IN ) :: TIME
+      real,                     optional, intent(OUT) :: DIST
+      type (ESMF_Array),        optional, intent(OUT) :: ZTHB
+      type (ESMF_Array),        optional, intent(OUT) :: ZTHD
+      integer,                  optional, intent(OUT) :: RC
+
+!   Locals
+
+      
+      character(len=ESMF_MAXSTR)      :: IAm = "SunGetInsolationArr"
+      integer                         :: STATUS
+
+      real, pointer, dimension (:  )  :: LONS1, LATS1, ZTH1, SLR1, ZTHB1, ZTHD1
+      real, pointer, dimension (:,:)  :: LONS2, LATS2, ZTH2, SLR2, ZTHB2, ZTHD2
+
+      integer                         :: RANK
+
+!   Begin
+
+      call ESMF_ArrayGet(LONS, RANK=RANK, RC=STATUS)
+      VERIFY_(STATUS)
+
+      select case(RANK)
+
+      case(1)
+         call ESMF_ArrayGet(LATS, localDE=0, farrayptr=LATS1, RC=STATUS)
+         VERIFY_(STATUS)
+         call ESMF_ArrayGet(LONS,localDE=0, farrayptr=LONS1, RC=STATUS)
+         VERIFY_(STATUS)
+         call ESMF_ArrayGet(ZTH ,localDE=0, farrayptr=ZTH1, RC=STATUS)
+         VERIFY_(STATUS)
+         call ESMF_ArrayGet(SLR ,localDE=0, farrayptr=SLR1, RC=STATUS)
+         VERIFY_(STATUS)
+
+         if(present(ZTHB) .and. present(ZTHD)) then
+            call ESMF_ArrayGet(ZTHB ,localDE=0, farrayptr=ZTHB1 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call ESMF_ArrayGet(ZTHD ,localDE=0, farrayptr=ZTHD1 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call MAPL_SunGetInsolation(LONS1,LATS1,ORBIT,ZTH1,SLR1,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,ZTHB=ZTHB1,ZTHD=ZTHD1,RC=STATUS)
+         elseif(present(ZTHB)) then
+            call ESMF_ArrayGet(ZTHB ,localDE=0, farrayptr=ZTHB1 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call MAPL_SunGetInsolation(LONS1,LATS1,ORBIT,ZTH1,SLR1,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,ZTHB=ZTHB1,RC=STATUS)
+         elseif(present(ZTHD)) then
+            call ESMF_ArrayGet(ZTHD ,localDE=0, farrayptr=ZTHD1 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call MAPL_SunGetInsolation(LONS1,LATS1,ORBIT,ZTH1,SLR1,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,ZTHD=ZTHD1,RC=STATUS)
+         else
+            call MAPL_SunGetInsolation(LONS1,LATS1,ORBIT,ZTH1,SLR1,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,RC=STATUS)
+         endif
+         VERIFY_(STATUS)
+
+      case(2)
+         call ESMF_ArrayGet(LATS,localDE=0, farrayptr=LATS2,RC=STATUS)
+         VERIFY_(STATUS)
+         call ESMF_ArrayGet(LONS,localDE=0, farrayptr=LONS2,RC=STATUS)
+         VERIFY_(STATUS)
+         call ESMF_ArrayGet(ZTH ,localDE=0, farrayptr=ZTH2 ,RC=STATUS)
+         VERIFY_(STATUS)
+         call ESMF_ArrayGet(SLR ,localDE=0, farrayptr=SLR2 ,RC=STATUS)
+         VERIFY_(STATUS)
+
+         if(present(ZTHB) .and. present(ZTHD)) then
+            call ESMF_ArrayGet(ZTHB ,localDE=0, farrayptr=ZTHB2 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call ESMF_ArrayGet(ZTHD ,localDE=0, farrayptr=ZTHD2 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call MAPL_SunGetInsolation(LONS2,LATS2,ORBIT,ZTH2,SLR2,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,ZTHB=ZTHB2,ZTHD=ZTHD2,RC=STATUS)
+         elseif(present(ZTHB)) then
+            call ESMF_ArrayGet(ZTHB ,localDE=0, farrayptr=ZTHB2 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call MAPL_SunGetInsolation(LONS2,LATS2,ORBIT,ZTH2,SLR2,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,ZTHB=ZTHB2,RC=STATUS)
+         elseif(present(ZTHD)) then
+            call ESMF_ArrayGet(ZTHD ,localDE=0, farrayptr=ZTHD2 ,RC=STATUS)
+            VERIFY_(STATUS)
+            call MAPL_SunGetInsolation(LONS2,LATS2,ORBIT,ZTH2,SLR2,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,ZTHD=ZTHD2,RC=STATUS)
+         else
+            call MAPL_SunGetInsolation(LONS2,LATS2,ORBIT,ZTH2,SLR2,INTV,CLOCK,&
+                 TIME,currTime,DIST=DIST,RC=STATUS)
+         endif
+         VERIFY_(STATUS)
+
+      case default
+         RETURN_(ESMF_FAILURE)
+
+      end select
+
+      RETURN_(ESMF_SUCCESS)
+
+    end subroutine SOLAR_ARR_INT
+
+    subroutine GETIDAY(IDAY,TIME,ORBIT,RC)
+      integer,              intent(OUT) :: IDAY
+      integer,              intent(IN ) :: TIME
+      type(MAPL_SunORBIT),  intent(IN ) :: ORBIT
+      integer, optional,    intent(OUT) :: RC
+
+      character(len=ESMF_MAXSTR)      :: IAm = "GetIDAY"
+      integer                         :: STATUS
+
+      real :: ANOMALY
+
+      select case(TIME)
+      case (MAPL_SunAutumnalEquinox)
+         ANOMALY = MAPL_PI
+      case (MAPL_SunWinterSolstice )
+         ANOMALY = (MAPL_PI*3.0)/2.0
+      case (MAPL_SunVernalEquinox  )
+         ANOMALY = 0.0
+      case (MAPL_SunSummerSolstice )
+         ANOMALY = MAPL_PI/2.0
+      case  default
+         RETURN_(ESMF_FAILURE)
+      end select
+
+      do IDAY=1,ORBIT%DAYS_PER_CYCLE-1
+         if(ORBIT%TH(IDAY)<=ANOMALY .and. ORBIT%TH(IDAY+1)>ANOMALY) then
+            RETURN_(ESMF_SUCCESS)
+         end if
+      end do
+
+      RETURN_(ESMF_FAILURE)
+    end subroutine GETIDAY
+!==========================================================================
+
+end module MAPL_SunMod

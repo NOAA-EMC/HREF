@@ -1,0 +1,5 @@
+gfio.o:  gfio.h
+diffdate.o:
+getdate.o:
+timesubs.o:
+gfioutil.o:  gfio.h

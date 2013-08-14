@@ -1,0 +1,59 @@
+#!/bin/ksh
+#
+#@ output = out
+#@ error = err
+#@ job_type = parallel
+#@ job_name = NEMS_NMMB_GLOBAL
+#@ task_affinity = core(1)
+#@ node_usage = not_shared
+#@ tasks_per_node = 32
+#@ node = 1
+#@ node_resources= ConsumableMemory(110GB)
+#@ class = dev
+#@ group = dev
+#@ wall_clock_limit = 00:15:00
+#@ parallel_threads = 1
+#@ preferences = Feature == "dev"
+#@ network.MPI = sn_all,not_shared,us
+#@ account_no=NAM-T2O
+#@ queue
+#
+set -x
+#
+export MP_EAGER_LIMIT=65536
+export MP_SHARED_MEMORY=yes
+export MP_LABELIO=yes
+export MP_STDOUTMODE=ordered
+export MP_COREFILE_FORMAT=core.txt
+export XLSMPOPTS=stack=128000000
+export AIXTHREAD_SCOPE=S
+
+RUNDIR=/ptmp/${LOGIN}/test
+SRCDIR=/meso/save/${LOGIN}/trunk
+
+mkdir -p $RUNDIR
+cd $RUNDIR
+rm -rf $RUNDIR/*
+
+cp /meso/noscrub/wx20rv/REGRESSION_TEST/NMMB_glob/test_input_nmmb_global         input_domain_01
+cp /meso/noscrub/wx20rv/REGRESSION_TEST/NMMB_glob/GWD_bin_01 .
+cp /meso/noscrub/wx20rv/REGRESSION_TEST/data/* .
+
+cp $SRCDIR/job/regression_tests/atmos.configure_nmm  atmos.configure
+cp $SRCDIR/job/configfile_global_new configure_file
+cp configure_file configure_file_01
+
+ln -sf /nwprod/fix/global_o3prdlos.f77 fort.28
+ln -sf /nwprod/fix/global_o3clim.txt fort.48
+
+cp $SRCDIR/job/regression_tests/dyn_state.txt .
+cp $SRCDIR/job/regression_tests/phy_state.txt .
+
+echo "Model started:  " `date`
+
+LDR_CNTRL=DATAPSIZE=64K@TEXTPSIZE=64K@STACKPSIZE=64K \
+poe $SRCDIR/exe/NEMS.x
+
+echo "Model ended:    " `date`
+
+exit

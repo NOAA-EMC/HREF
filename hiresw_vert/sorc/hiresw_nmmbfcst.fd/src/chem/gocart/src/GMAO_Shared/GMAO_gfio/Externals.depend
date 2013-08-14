@@ -1,0 +1,7 @@
+#
+#  External dependencies. Utility 'fdp' uses this file to resolve
+#  each external dependency. 
+#
+netcdf.inc : IGNORE
+
+

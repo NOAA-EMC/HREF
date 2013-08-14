@@ -1,0 +1,44 @@
+#
+# Resource file for SU parameters. 
+#
+
+number_su_classes:  4
+
+
+# For biomass burning emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+bb_srcfilen: ExtData/AeroCom/sfc/AeroCom.SO2_bioburn.x360_y181_t14.%y4.nc
+biomass_burning_emission_factor: 1.
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+sanl1_srcfilen:    ExtData/AeroCom/sfc/AeroCom.noship_sulfur_src.sfc.x360_y181_t31.19780703_12z_20070703_12z.nc
+sanl2_srcfilen:    /dev/null
+so2_ship_srcfilen: ExtData/AeroCom/sfc/AeroCom.ship_SO2_src.sfc.x360_y181_t31.19780703_12z_20080703_12z.nc
+so4_ship_srcfilen: ExtData/AeroCom/sfc/AeroCom.ship_SO4_src.sfc.x360_y181_t31.19780703_12z_20080703_12z.nc
+aircraft_fuel_srcfilen: ExtData/AeroCom/L72/AeroCom.aircraft_fuel.eta.x288_y181_z72_t14.19981215_12z_20000115_12z.nc
+dmso_concfilen:    ExtData/AeroCom/sfc/kettle_chin.dms_sfcconcentration.x360_y181_t12.1971.nc
+volcnon_srcfilen:  ExtData/AeroCom/sfc/volcanic/Aerocom.so2_volcanic.%y4%m2%d2.rc
+oh_concfilen:      ExtData/AeroCom/L72/gmi_oh_ch4_h2o2_no3.x144_y91_z72_t12.2006.nc
+no3_mrfilen:       ExtData/AeroCom/L72/gmi_oh_ch4_h2o2_no3.x144_y91_z72_t12.2006.nc
+h2o2_mrfilen:      ExtData/AeroCom/L72/gmi_oh_ch4_h2o2_no3.x144_y91_z72_t12.2006.nc
+
+
+so4_anthropogenic_fraction: 0.03
+
+# aircraft emission factor: go from kg fuel to kg SO2
+  aircraft_fuel_emission_factor: 0.0008
+
+# Scavenging efficiency per bin [km-1]
+
+fscav: 0.0  0.4  0.4  0.4   #    

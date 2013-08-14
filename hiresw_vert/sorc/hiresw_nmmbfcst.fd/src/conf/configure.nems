@@ -1,0 +1,86 @@
+SHELL       = /bin/sh
+
+include /usrx/local/esmf-3.1.0rp5/lib/libO/Linux.intel.64.intelmpi.default/esmf.mk
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+##NETCDF_LIB  = /usrx/local/netcdf-4.2.1.1/lib/libnetcdf.a
+NETCDF_LIB  = /usrx/local/NetCDF/3.6.3/lib/libnetcdf_c++.a  /usrx/local/NetCDF/3.6.3/lib/libnetcdf.a
+
+NEMSIO_INC  = -I/nwprod/lib/incmod/nemsio
+NEMSIO_LIB  = -L/nwprod/lib -lnemsio
+
+W3_LIB      = -L/nwprod/lib -lw3nco_4 -lw3emc_4
+BACIO_LIB   = -L/nwprod/lib -lbacio_4
+SP_LIB      = -L/nwprod/lib -lsp_4
+SYS_LIB     =
+
+POSTDIR     = /global/save/Hui-Ya.Chuang/lib
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L/nwprod/lib -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L/nwprod/lib -lcrtm_v2.0.6
+G2_LIB      = -L/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz
+XML_LIB     = -L/nwprod/lib -lxmlparse
+SIGIO_LIB   =  /global/save/Hui-Ya.Chuang/lib/libsigio_big_4.a	  
+SFCIO_LIB   = /nwprod/lib/libsfcio_4.a
+
+##FC          = mpiifort -g -traceback
+
+
+EXTLIBS     = $(NEMSIO_LIB) \
+              $(W3_LIB) \
+              $(BACIO_LIB) \
+              $(SP_LIB) \
+              $(ESMF_LIB) \
+              $(NETCDF_LIB) \
+              $(SYS_LIB)
+
+
+EXTLIBS_POST = $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(POST_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+##FC          = mpiifort -g -traceback
+FC          = mpiifort -g -traceback -openmp  -mkl=sequential
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC)
+TRAPS       =
+
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model precise -xAVX
+
+OPTS_NMM    = -O2
+OPTS_GFS    = -O2
+OPTS_GEN    = -O2
+OPTS_FIM    = -O2
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    =
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm
