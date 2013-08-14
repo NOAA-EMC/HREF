@@ -440,7 +440,7 @@ C
       VcoordName='sfc'
       l=1
 
-	write(0,*) 'call getnemsandplace'
+	write(0,*) 'call getnemsandplace for SM'
 	write(0,*) 'IHINDX, JHINDX(1): ', IHINDX(1),JHINDX(1)
 
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
@@ -452,6 +452,7 @@ C
       VarName='SICE'
       VcoordName='sfc'
       l=1
+	write(0,*) 'call getnemsandplace for SICE'
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
      &        l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SICE) 
 
@@ -460,6 +461,7 @@ C
       VarName='dpres'
       VcoordName='hybrid sig lev'
       l=1
+	write(0,*) 'call getnemsandplace for dpres'
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
      &        l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PD) 
 
@@ -471,7 +473,7 @@ C
       VarName='hgt'
       VcoordName='sfc'
       l=1
-	write(0,*) 'calling for hgt'
+	write(0,*) 'calling getnemsandplace for hgt'
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,FIS) 
 
@@ -492,6 +494,7 @@ C
 
       VarName='tmp'
       VcoordName='mid layer'
+	write(0,*) 'calling getnemsandplace for tmp'
       do L=1,LM
       call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,T) 
@@ -501,6 +504,7 @@ C
 
       VarName='spfh'
       VcoordName='mid layer'
+	write(0,*) 'calling getnemsandplace for spfh'
       do L=1,LM
       call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q) 
@@ -1329,8 +1333,8 @@ C***
 
 !	write(6,*) 'filename later in PROF: ', trim(filename), '_END'
 !        filename_alt="test_filename.27"
-        len=lnblnk(filename)
-        write(0,*) 'len: ', len
+!        len=lnblnk(filename)
+!        write(0,*) 'len: ', len
 
 !!! problem is with the contents of filenme down here.  How corrupted?
 
@@ -1939,8 +1943,12 @@ C--------------------------------------------------------------------------
       OPEN(UNIT=LCLAS1,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
 C--------------------------------------------------------------------------
 	write(6,*) 'RECORD LENGTH = ', LRECPR
+	write(0,*) 'RECORD LENGTH = ', LRECPR
+
+        write(0,*) 'NUMSTA: ', NUMSTA
 
       DO 1000 N=1,NUMSTA
+        write(0,*) 'working N: ', N
 C
 C***  ZERO OUTPUT ARRAY.
 C
@@ -1979,6 +1987,7 @@ C
       ISTAT    = IDSTN(N)
       CISTAT   = CIDSTN(N)
 C
+        write(0,*) 'DTR here: ', DTR
       FPACK(1) = STNLAT(N)/DTR
       FPACK(2) = -STNLON(N)/DTR
 !CHANGEDFORNMM      FPACK(2) = STNLON(N)/DTR
@@ -2016,6 +2025,7 @@ C***  SCALE RAIN, SHORT WAVE RADIATION, LONG WAVE RADIATION,
 C***  AND CLOUD FRACTION.
 C------------------------------------------------------------------
 C
+        write(0,*) 'here a'
       DO LV=1,LMHK
         LVL=LMHK-LV+1
 !        PRODAT(LVL)      = PDSL1(N)*AETA(LV)+PT
@@ -2063,6 +2073,9 @@ C
         ENDIF
       ENDDO
 
+        write(0,*) 'here b'
+        write(0,*) 'is NHEAT zero? : ', NHEAT
+
 C
 C***  MODIFY ACCUMLATIONS SO AS TO REPRESENT ACCUMULATED
 C***  CHANGE SINCE LAST PROFILE OUTPUT TIME.
@@ -2081,11 +2094,14 @@ C
          DHCNVC(LVL,N) = PRODAT(NWORD7+LL)
          DHRAIN(LVL,N) = PRODAT(NWORD8+LL)
 C
+        if (NHEAT .ne. 0) then
        IF(MOD(NTSD,NHEAT).LT.NCNVC)THEN
           DHCNVC(LVL,N) = 0.
           DHRAIN(LVL,N) = 0.
        ENDIF
+        endif
       ENDDO
+        write(0,*) 'here c'
 C
 C***  EXTRACT SINGLE LEVEL DATA.   EGRID2 IS SURFACE TEMPERATURE.
 C
@@ -2094,7 +2110,7 @@ C
       PRODAT(NWORD15+3)  = EGRID2(N)
       PRODAT(NWORD15+4)  = TLMIN (N)
       PRODAT(NWORD15+5)  = TLMAX (N)
-c     print *,'tlmax, tlmin ',n,tlmax(n),tlmin(n)
+      print *,'tlmax, tlmin ',n,tlmax(n),tlmin(n)
       PRODAT(NWORD15+6)  = SMSTAV(N)*100.
       PRODAT(NWORD15+7)  = ACPREC(N)*1000.
       PRODAT(NWORD15+8)  = CUPREC(N)*1000.
@@ -2169,6 +2185,7 @@ C
 !      PRODAT(NWORD15+25)  = BGROFF(N)*1000.
       PRODAT(NWORD15+25)  = BGROFF(N)
       PRODAT(NWORD15+26)  = SOILTB(N)
+        write(0,*) 'here d'
 C
 C***  ACCUMULATED CHANGE SINCE LAST PROFILE OUTPUT TIME.
 C
@@ -2268,6 +2285,7 @@ C
           FPACK(9+NWORD7+LL) = 0.
           FPACK(9+NWORD8+LL) = 0.
         ENDDO
+        write(0,*) 'here e'
 C
         FPACK(9+NWORD15+7)  = 0.
         FPACK(9+NWORD15+8)  = 0.
@@ -2287,6 +2305,7 @@ C
         FPACK(9+NWORD15+24) = 0.
         FPACK(9+NWORD15+25) = 0.
       ENDIF
+        write(0,*) 'here f'
 C---------------------------------------------------------------------
 C***
 C***  WRITE PROFILE DATA
