@@ -240,7 +240,7 @@ land_surface:  noah         # Land surface schemes
                                 # liss--> Janjic LSM
 
 ucmcall: 0                  # Use (1) or do not use (0) the Urban Canopy Model
-igbp: 0                     # Use (1) or do not use (0) IGBP types
+igbp: 1                     # Use (1) or do not use (0) IGBP types
 
 #---------------------------------
 

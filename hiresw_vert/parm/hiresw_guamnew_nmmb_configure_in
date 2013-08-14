@@ -201,7 +201,7 @@ co2tf:  1                       # co2tf--> Read (0) or generate internally (1)
                                 #          the GFDL CO2 transmission functions
 
 #---------------------------------
-convection:   none        # Convection scheme
+convection:   bmj        # Convection scheme
                                 # bmj    --> Betts-Miller-Janjic
                                 # bmj_dev--> BMJ (development)
                                 #  kf    --> Kain-Fritsch
@@ -251,7 +251,7 @@ gfs:  false                # Select entire GFS physics suite
 #####  Shallow Convection Switches  ####
 ########################################
 
-fres:     0.20               # resolution factor for dsp's (default)
+fres:     0.50               # resolution factor for dsp's (default)
 fr:       1.00               # land factor for dsp's (dafault)
 fsl:      0.85               # reduction factor for "slow" dsp's over land (dafault)
 fss:      0.85               # reduction factor for "slow" dsp's over water (dafault)

@@ -33,7 +33,7 @@
  ncep_proc_domain_type = 'bgrid'
  do_gwd = .false.
  just_last = .false.
- use_igbp = .false.
+ use_igbp = .true.
 /
 
 &ungrib
@@ -58,7 +58,7 @@
  direct_temp = .true.
  global = .false.
  do_clouds = .false.
- grib_src = 'GFS'
+ grib_src = 'NAM'
  boundary_flux = .true.
  lnsh = 5
  lnsv = 5

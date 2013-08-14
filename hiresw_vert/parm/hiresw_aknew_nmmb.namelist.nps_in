@@ -33,7 +33,7 @@
  ncep_proc_domain_type = 'bgrid'
  do_gwd = .false.
  just_last = .false.
- use_igbp = .false.
+ use_igbp = .true.
 /
 
 &ungrib
