@@ -92,9 +92,9 @@ echo have NEST $NEST
 
 if [ $NEST = "conus" ]
 then
-proc=2
+proc=4
 else
-proc=1
+proc=2
 fi
 
 echo "#!/bin/ksh -l" > jobsub_prdgen.${fhruse}
