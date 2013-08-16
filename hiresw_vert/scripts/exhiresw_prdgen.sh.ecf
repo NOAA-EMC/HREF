@@ -43,7 +43,11 @@ echo "$USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DA
 
 if [ $NEST = "conus" ]
 then
-echo "$USHhiresw/hiresw_prdgen_5km_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid.sh     $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid.sh_west $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid.sh_east $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+else
+echo "$USHhiresw/hiresw_prdgen_oldgrid.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
 fi
 
 chmod 775 $DATA/poescript_${fhr}

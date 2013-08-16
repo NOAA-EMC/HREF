@@ -117,13 +117,13 @@ fi
 while [ $whr -le $last ]
 do
 
-# if [ $NEST = "pr"  -o $NEST = "prnew" -o $NEST = "conus" ] 
-# then 
-#   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
-#   err1=$?
-#   mod=nam
-#   type=awip32
-#   suf=.tm00
+ if [ $NEST = "pr"  ] 
+ then 
+   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
+   err1=$?
+   mod=nam
+   type=awip32
+   suf=.tm00
 # elif [ $NEST = "hi" -o $NEST = "hinew" ]
 # then
 #  cp ${COMNAM}/nam.t${cyc}z.awiphi${whr}.tm00 $DATA/run_ungrib/.
@@ -131,21 +131,22 @@ do
 #  mod=nam
 #  type=awiphi
 #  suf=.tm00
-#elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
-#then
+# elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
+else
   cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
   err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
   mod=gfs
   type=pgrb2f
   suf=""
-#else
+# else
 #  cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
 #  err1=$?
 #  mod=nam
 #  type=awip3d
 #  suf=.tm00
-#fi
+
+fi
 
 if [ $err1 -ne 0 ] 
 then
