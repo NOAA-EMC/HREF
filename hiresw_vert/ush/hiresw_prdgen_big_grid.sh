@@ -76,8 +76,8 @@ elif [ $DOMIN = "aknewnmmb" ]
 then
   filenamthree="wrf.AK04"
   DOMIN_bucket="general"
-  IM=1175
-  JM=906
+  IM=1217
+  JM=948
 elif [ $DOMIN = "guamnewnmmb" ]
 then
   filenamthree="wrf.GU04"
@@ -114,8 +114,8 @@ elif [ $DOMIN = "aknewarw" ]
 then
   filenamthree="wrf.EMAK04"
   DOMIN_bucket="general"
-  IM=1175
-  JM=906
+  IM=1217
+  JM=948
 elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR04"
