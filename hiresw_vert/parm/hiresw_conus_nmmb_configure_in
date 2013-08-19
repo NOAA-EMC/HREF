@@ -9,23 +9,23 @@ core: nmm                   # Introduce ourselves to the NEMS
 #####  Grid Specifications  #####
 #################################
 
-im:  1900                   # I gridpoints
-jm:  1157                    # J gridpoints
+im:  1875                   # I gridpoints
+jm:  1170                    # J gridpoints
 lm:  40                     # Number of atmospheric layers
 
 tph0d:   40.0               # Central geographic latitude of grid (degrees)
 tlm0d: -98.0               # Central geographic longitude of grid (degrees, positive east)
 
-wbd:  -26.586                 # Grid's western boundary (rotated degrees)
-sbd:  -16.184                # Grid's southern boundary (rotated degrees)
+wbd:  -29.047                 # Grid's western boundary (rotated degrees)
+sbd:  -17.535                # Grid's southern boundary (rotated degrees)
 
 
 ################################
 #####  Grid Decomposition  #####
 ################################
 
-inpes:  17             # Number of compute tasks in the I direction
-jnpes:  50             # Number of compute tasks in the J direction
+inpes:  16             # Number of compute tasks in the I direction
+jnpes:  48            # Number of compute tasks in the J direction
 
 
 #################################
@@ -36,16 +36,16 @@ quilting:              true    # Do you want asynchronous quilting/history write
 read_groups:           0
 read_tasks_per_group:  0
 write_groups:          1
-write_tasks_per_group: 25 
+write_tasks_per_group: 24 
 
 
 ############################################
 #####  Fundamental Timestep (seconds)  #####
 ############################################
 
-dt_int:  6                 # Integer seconds
-dt_num:  0                  # Numerator of fractional second
-dt_den:  1                  # Denominator of fractional second
+dt_int:  7                 # Integer seconds
+dt_num:  1                  # Numerator of fractional second
+dt_den:  5                  # Denominator of fractional second
 
 filt_dt_int: 5            # Integer seconds
 filt_dt_num: 5             # Numerator of fractional second
@@ -272,8 +272,8 @@ nodeep:     .false.         # All deep convection diverted to shallow swap algor
 #####  Physics Timesteps  #####
 ###############################
 
-nrads:     300               # Number of dynamics timesteps between calls to shortwave
-nradl:     300               # Number of dynamics timesteps  between calls to longwave
+nrads:     100               # Number of dynamics timesteps between calls to shortwave
+nradl:     100               # Number of dynamics timesteps  between calls to longwave
 
 nphs:       6               # Number of dynamics timesteps between calls to landsurface and turbulence
 
