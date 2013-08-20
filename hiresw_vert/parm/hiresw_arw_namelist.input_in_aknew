@@ -52,19 +52,19 @@
  /
 
  &domains
- time_step                           = 18,
- time_step_fract_num                 = 0,
- time_step_fract_den                 = 1,
+ time_step                           = 20,
+ time_step_fract_num                 = 5,
+ time_step_fract_den                 = 11,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 1189,    
+ e_we                                = 1125,    
  s_sn                                = 1,     
- e_sn                                = 931,    
+ e_sn                                = 970,    
  s_vert                              = 1,     
  e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3000, 
- dy                                  = 3000, 
+ dx                                  = 3500, 
+ dy                                  = 3500, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
