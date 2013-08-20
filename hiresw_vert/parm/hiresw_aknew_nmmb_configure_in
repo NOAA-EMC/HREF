@@ -9,23 +9,23 @@ core: nmm                   # Introduce ourselves to the NEMS
 #####  Grid Specifications  #####
 #################################
 
-im:  1520                    # I gridpoints
-jm:  1200                    # J gridpoints
+im:  1350                    # I gridpoints
+jm:  1110                    # J gridpoints
 lm:  40                     # Number of atmospheric layers
 
-tph0d:  62.0               # Central geographic latitude of grid (degrees)
+tph0d:  61.0               # Central geographic latitude of grid (degrees)
 tlm0d: -153.0               # Central geographic longitude of grid (degrees, positive east)
 
-wbd:  -15.949                 # Grid's western boundary (rotated degrees)
-sbd:  -12.589                # Grid's southern boundary (rotated degrees)
+wbd:  -18.886                 # Grid's western boundary (rotated degrees)
+sbd:  -14.971                # Grid's southern boundary (rotated degrees)
 
 
 ################################
 #####  Grid Decomposition  #####
 ################################
 
-inpes:  14             # Number of compute tasks in the I direction
-jnpes:  45             # Number of compute tasks in the J direction
+inpes:  13             # Number of compute tasks in the I direction
+jnpes:  44             # Number of compute tasks in the J direction
 
 
 #################################
@@ -36,16 +36,16 @@ quilting:              true    # Do you want asynchronous quilting/history write
 read_groups:           0
 read_tasks_per_group:  0
 write_groups:          1
-write_tasks_per_group: 9
+write_tasks_per_group: 22 
 
 
 ############################################
 #####  Fundamental Timestep (seconds)  #####
 ############################################
 
-dt_int:  4                 # Integer seconds
-dt_num:  4                  # Numerator of fractional second
-dt_den:  5                  # Denominator of fractional second
+dt_int:  6                 # Integer seconds
+dt_num:  2                  # Numerator of fractional second
+dt_den:  33                  # Denominator of fractional second
 
 filt_dt_int: 4            # Integer seconds
 filt_dt_num: 1             # Numerator of fractional second
@@ -240,7 +240,7 @@ land_surface:  noah         # Land surface schemes
                                 # liss--> Janjic LSM
 
 ucmcall: 0                  # Use (1) or do not use (0) the Urban Canopy Model
-igbp: 1                     # Use (1) or do not use (0) IGBP types
+ivegsrc: 1                  # Vegetation map identifier, 0--> USGS, 1--> IGBP
 
 #---------------------------------
 
@@ -272,12 +272,12 @@ nodeep:     .false.         # All deep convection diverted to shallow swap algor
 #####  Physics Timesteps  #####
 ###############################
 
-nrads:     375               # Number of dynamics timesteps between calls to shortwave
-nradl:     375               # Number of dynamics timesteps  between calls to longwave
+nrads:     198               # Number of dynamics timesteps between calls to shortwave
+nradl:     198               # Number of dynamics timesteps  between calls to longwave
 
-nphs:       8               # Number of dynamics timesteps between calls to landsurface and turbulence
+nphs:       6               # Number of dynamics timesteps between calls to landsurface and turbulence
 
-nprecip:    8               # Number of dynamics timesteps between calls to convection and microphysics
+nprecip:    6               # Number of dynamics timesteps between calls to convection and microphysics
 
 ####
 #### NOTE:  User must set nhrs_udef to .TRUE. and set the emptying frequencies (nhrs_*) to the desired values

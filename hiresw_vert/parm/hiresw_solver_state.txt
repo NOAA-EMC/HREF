@@ -220,7 +220,7 @@
 'W'          H       R       O      -      -   T  'Vertical velocity at midlayers  (m s-1)'
 'W_TOT'      H       -       O      -      X   -  'Total Vertical velocity at midlayers  (m s-1)'
 'OMGALF'     H       R       O      -      -   -  'Omega-alpha  (K)'
-'O3'         H       R       O      -      -   T  'Ozone'
+'O3'         -       R       O      -      -   T  'Ozone'
 'DIV'        -       R       O      -      -   -  'Horizontal mass divergence'
 'RTOP'       -       R       O      -      -   -  'RT/P, specific volume  (m3 kg-1)'
 'TCU'        -       R       O      -      -   -  'Time change of T (K s-1)'
@@ -242,7 +242,7 @@
 'RLWTT'      H       R       O      -      -   T  'Radiative T tendency, longwave  (K s-1)'
 'RSWTT'      H       R       O      -      -   T  'Radiative T tendency, shortwave (K s-1)'
 'PINT'       H       R       O      I      X   T  'Nonhydrostatic interface pressure (Pa)'
-'DWDT'       H       R       O      I      X   T  'Vertical acceleration, correction factor  (m s-2)'
+'DWDT'       -       R       O      I      X   T  'Vertical acceleration, correction factor  (m s-2)'
 'T'          H       R       O      I      X   T  'Sensible temperature  (K)'
 'TCUCN'      H       R       O      -      -   -  'Accumulated convective T tendency  (K s-1)'
 'TRAIN'      H       R       O      -      -   -  'Accumulated stratiform T tendency  (K s-1)'
@@ -260,5 +260,5 @@
 
 'TRACERS_PREV'  -    R       -      -      -   -  'Previous step tracers'
 'TRACERS'       -    R       -      -      X   -  'All tracer variables'
-'MPRATES'       H    -       O      -      -   -  'MICROPHYSICS SOURCE AND SINK TERMS'
+'MPRATES'       -    -       O      -      -   -  'MICROPHYSICS SOURCE AND SINK TERMS'
 #EOF
