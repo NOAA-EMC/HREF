@@ -70,14 +70,14 @@ elif [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS04"
   DOMIN_bucket="general"
-  IM=1719
-  JM=1044
+  IM=1577
+  JM=959
 elif [ $DOMIN = "aknewnmmb" ]
 then
   filenamthree="wrf.AK04"
   DOMIN_bucket="general"
-  IM=1217
-  JM=948
+  IM=1131
+  JM=929
 elif [ $DOMIN = "guamnewnmmb" ]
 then
   filenamthree="wrf.GU04"
@@ -114,8 +114,8 @@ elif [ $DOMIN = "aknewarw" ]
 then
   filenamthree="wrf.EMAK04"
   DOMIN_bucket="general"
-  IM=1217
-  JM=948
+  IM=1131
+  JM=929
 elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR04"
@@ -132,8 +132,8 @@ elif [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS04"
   DOMIN_bucket="general"
-  IM=1719
-  JM=1044
+  IM=1577
+  JM=959
 elif [ $DOMIN = "guamnewarw" ]
 then
   filenamthree="wrf.EMGU04"
