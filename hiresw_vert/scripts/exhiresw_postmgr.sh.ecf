@@ -138,6 +138,7 @@ echo "#BSUB -R affinity[core(1)]" >> jobsub_nmmb_post.${fhruse}
 fi
 
 echo "#BSUB -q "dev"" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -P HRW-T2O" >> jobsub_nmmb_post.${fhruse}
 
 # if [ $NEST == "conus" -o $NEST == "aknew" ]
 # then
@@ -220,6 +221,7 @@ echo "#BSUB -R rusage[mem=5000]" >> jobsub_arw_post.${fhruse}
 echo "#BSUB -R affinity[core(1)]" >> jobsub_arw_post.${fhruse}
 fi
 echo "#BSUB -q "dev"" >> jobsub_arw_post.${fhr}
+echo "#BSUB -P HRW-T2O" >> jobsub_arw_post.${fhruse}
 echo "#BSUB -a poe" >> jobsub_arw_post.${fhr}
 echo "export MP_EUILIB=us" >> jobsub_arw_post.${fhr}
 echo "export MP_EUIDEVICE=sn_all" >> jobsub_arw_post.${fhr}
