@@ -3,12 +3,15 @@
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.err__DOM___CORE___CYC_
 #BSUB -q "dev"
 #BSUB -W 0:29
+#BSUB -R affinity[core(1)]
 #BSUB -R "span[ptile=3]"
+#BSUB -P HRW-T2O
 #BSUB -a poe
 #BSUB -n 9
 
 module load ics
 module load ibmpe
+module load NetCDF/4.2/serial
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes

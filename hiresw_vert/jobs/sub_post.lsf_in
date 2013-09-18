@@ -5,6 +5,7 @@
 #BSUB -x
 #BSUB -q "dev"
 #BSUB -n _NPROC_
+#BSUB -P HRW-T2O
 #BSUB -W 1:19
 #BSUB -a poe
 #

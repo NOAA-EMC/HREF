@@ -3,6 +3,7 @@
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_fore.err__DOM__CORE__CYC_
 #BSUB -R span[ptile=16]
 #BSUB -q "dev"
+#BSUB -P HRW-T2O
 #BSUB -n _NPROC_
 #BSUB -W 1:15
 #BSUB -a poe

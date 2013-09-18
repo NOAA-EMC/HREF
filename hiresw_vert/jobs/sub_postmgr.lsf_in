@@ -1,10 +1,11 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_postmgr.out
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_postmgr.err
-#BSUB -R span[ptile=16]
 #BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
 #BSUB -q "dev"
 #BSUB -n 1
+#BSUB -P HRW-T2O
 #BSUB -W 1:19
 #BSUB -a poe
 #

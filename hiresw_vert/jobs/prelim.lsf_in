@@ -5,6 +5,7 @@
 #BSUB -R "span[ptile=_SPAN_]"
 #BSUB -W 0:59
 #BSUB -a poe
+#BSUB -P HRW-T2O
 #BSUB -n 9
 
 module load ics
