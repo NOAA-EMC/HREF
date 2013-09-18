@@ -5,6 +5,7 @@
 #BSUB -n 1
 #BSUB -q "dev"
 #BSUB -a poe
+#BSUB -P HRW-T2O
 #BSUB -W 1:19
 
 module load ics

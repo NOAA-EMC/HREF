@@ -3,9 +3,10 @@
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prdgenmgr.err__DOM__CORE__CYC_
 #BSUB -q "dev"
 #BSUB -a poe
-#BSUB -R span[ptile=16]
+#BSUB -R affinity[core(1)]
 #BSUB -R rusage[mem=500]
 #BSUB -n 1
+#BSUB -P HRW-T2O
 #BSUB -W 1:09
 
 export MP_EUILIB=us

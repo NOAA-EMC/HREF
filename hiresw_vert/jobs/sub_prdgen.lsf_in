@@ -4,6 +4,7 @@
 #BSUB -q "dev"
 #BSUB -a poe
 #BSUB -n _NPROC_
+#BSUB -P HRW-T2O
 #BSUB -W 1:09
 
 export MP_EUILIB=us
