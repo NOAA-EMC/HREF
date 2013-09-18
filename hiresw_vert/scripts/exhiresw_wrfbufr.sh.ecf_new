@@ -293,11 +293,16 @@ export err=$?;./err_chk
 fi
 
 ############### put into gempak (eliminate when RFC)
+
+/nwprod/ush/cwordsh unblk class1.bufr class1.bufr.unb
+/nwprod/ush/cwordsh block class1.bufr.unb class1.bufr.wcoss
+
 ############### end put into gempak (eliminate when RFC)
 
 if [ $SENDCOM == "YES" ]
 then
 cp $DATA/class1.bufr $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}
+cp $DATA/class1.bufr.wcoss $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}.wcoss
 cp $DATA/profilm.c1.${tmmark} ${COMOUT}/${RUN}.t${cyc}z.profilm.c1.${tmmark}
 fi
 
