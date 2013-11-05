@@ -176,7 +176,7 @@ done
 
   rm PCP1HR${fhr}.tm00
   rm input.card
-  echo "$DATA/prdgen_5km" > input.card
+  echo "$DATA/prdgen_5km_east" > input.card
   echo $filenamthree >> input.card
   echo $onehrprev >> input.card
   echo $fhr >> input.card
@@ -200,7 +200,7 @@ done
 
   rm PCP3HR${fhr}.tm00
   rm input.card
-  echo "$DATA/prdgen_5km" > input.card
+  echo "$DATA/prdgen_5km_east" > input.card
   echo $filenamthree >> input.card
   echo $threehrprev >> input.card
   echo $fhr >> input.card

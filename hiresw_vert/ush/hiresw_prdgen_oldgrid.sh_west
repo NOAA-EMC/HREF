@@ -152,7 +152,7 @@ echo "inside f00 test"
 
   if test $SENDCOM = 'YES'
   then
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmwestt${fhr}.tm00
+      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmwest${fhr}.tm00
       $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmwest${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmwesti${fhr}.tm00
       $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmwest${fhr}.tm00.grib2
       $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5kmwest${fhr}.tm00.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5kmwest${fhr}.tm00.grib2.idx
