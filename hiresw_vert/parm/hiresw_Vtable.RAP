@@ -27,6 +27,7 @@ Param| Type |Level1|Level2| Name     |  Units  | Description                    
  144 | 111  |  30  |      | SOILM030 | fraction| Soil Moist  30 cm below ground          |  2  |  0  | 192 | 106 |
  144 | 111  |  40  |      | SOILM040 | fraction| Soil Moist  40 cm below ground          |  2  |  0  | 192 | 106 |
  144 | 111  |  60  |      | SOILM060 | fraction| Soil Moist  60 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  | 100  |      | SOILM100 | fraction| Soil Moist 100 cm below ground          |  2  |  0  | 192 | 106 |
  144 | 111  | 160  |      | SOILM160 | fraction| Soil Moist 160 cm below ground          |  2  |  0  | 192 | 106 |
  144 | 111  | 300  |      | SOILM300 | fraction| Soil Moist 300 cm below ground          |  2  |  0  | 192 | 106 |
   85 |   1  |   0  |      | SOILT000 | K       | Soil Temp    0 cm below ground          |  2  |  0  |  2  |   1 |
@@ -38,6 +39,7 @@ Param| Type |Level1|Level2| Name     |  Units  | Description                    
   85 | 111  |  30  |      | SOILT030 | K       | Soil Temp   30 cm below ground          |  2  |  0  |  2  | 106 |
   85 | 111  |  40  |      | SOILT040 | K       | Soil Temp   40 cm below ground          |  2  |  0  |  2  | 106 |
   85 | 111  |  60  |      | SOILT060 | K       | Soil Temp   60 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  | 100  |      | SOILT100 | K       | Soil Temp  100 cm below ground          |  2  |  0  |  2  | 106 |
   85 | 111  | 160  |      | SOILT160 | K       | Soil Temp  160 cm below ground          |  2  |  0  |  2  | 106 |
   85 | 111  | 300  |      | SOILT300 | K       | Soil Temp  300 cm below ground          |  2  |  0  |  2  | 106 |
   91 |   1  |   0  |      | SEAICE   |         | Ice flag                                | 10  |  2  |  0  |   1 |
