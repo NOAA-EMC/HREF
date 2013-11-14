@@ -1,7 +1,8 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_post.out
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_post.err
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_post.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_post.err
 #BSUB -R span[ptile=16]
+#BSUB -J HIRESW_POST
 #BSUB -x
 #BSUB -q "dev"
 #BSUB -n _NPROC_

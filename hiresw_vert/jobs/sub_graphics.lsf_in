@@ -1,0 +1,42 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_graphics.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_graphics.err
+#BSUB -R span[ptile=16]
+#BSUB -x
+#BSUB -q "dev"
+#BSUB -n 49
+#BSUB -W 0:15
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+rm -rf poescript
+
+hireswscript=/meso/save/Matthew.Pyle/hiresw_vert/scripts
+
+echo "$hireswscript/degrib_process__DOM_compare.scr_part  _CYC_ 00 00 _CORE_ _TYPE_ " > poescript
+
+hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+for hr in $hrs
+do
+echo "$hireswscript/degrib_process__DOM_compare.scr_part  _CYC_ $hr $hr _CORE_ _TYPE_ " >> poescript
+done
+
+chmod 775 $DATA/poescript
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=poescript
+export MP_LABELIO=YES
+export MP_INFOLEVEL=3
+export MP_STDOUTMODE=ordered
+
+mpirun.lsf
+
+##later bsub < /meso/save/Matthew.Pyle/spcprodlike/jobs/transfer_graphics__CYC_

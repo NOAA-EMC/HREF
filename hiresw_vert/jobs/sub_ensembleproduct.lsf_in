@@ -1,6 +1,6 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ensprod.out
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ensprod.err
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_ensprod.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_ensprod.err
 #BSUB -q "dev"
 #BSUB -W 1:19
 
