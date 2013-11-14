@@ -92,6 +92,9 @@
  nproc_y = 38
  /
 
+ nproc_x = 14
+ nproc_y = 38
+
  &physics
  mp_physics                          = 6,  
  ra_lw_physics                       = 1,  
