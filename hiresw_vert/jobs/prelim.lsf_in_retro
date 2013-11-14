@@ -1,7 +1,9 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.out__DOM___CORE___CYC_
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.err__DOM___CORE___CYC_
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.err__DOM___CORE___CYC_
 #BSUB -q "dev"
+#BSUB -J HIRESW_PREP_RETRO
+#BSUB -P HRW-T2O
 #BSUB -R "span[ptile=_SPAN_]"
 #BSUB -W 0:59
 #BSUB -a poe
