@@ -59,9 +59,11 @@ cp hiresw_micro_lookup.dat eta_micro_lookup.dat
 # OUTTYP=binarympiio
 OUTTYP=binary
 
+
 if [ $MODEL = "nmmb" ]
 then
-OUTTYP=binarynemsio
+# OUTTYP=binarynemsio
+OUTTYP=binarynemsiompiio
 fi
 
 # echo $MODEL > lower
@@ -199,9 +201,10 @@ echo to run executable at $datestr
 if [ $MODEL != "nmmb" ]
 then
 #was  mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
-mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
+mpirun.lsf $EXEChiresw/ncep_post_nems_mpiio < itag  > $pgmout 2>errfile
 else
-mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
+mpirun.lsf $EXEChiresw/ncep_post_nems_mpiio < itag  > $pgmout 2>errfile
+# mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
 fi
 
 datestr=`date`

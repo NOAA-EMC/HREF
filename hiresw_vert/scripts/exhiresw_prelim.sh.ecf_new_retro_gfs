@@ -106,12 +106,12 @@ do
 #if [ $NEST = "pr"  -o $NEST = "prnew" -o $NEST = "conus" ] 
 # then 
 
-   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
-  err1=$?
-  mod=nam
-  GRIBSRC=NAM
-  type=awip32
-  suf=.tm00
+#   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
+#  err1=$?
+#  mod=nam
+#  GRIBSRC=NAM
+#  type=awip32
+#  suf=.tm00
 #
 #elif [ $NEST = "hi" -o $NEST = "hinew" ]
 #then
@@ -123,13 +123,13 @@ do
 # elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
 # then
 
-#  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
-#  err1=$?
-#  cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
-#  mod=gfs
-#  GRIBSRC=GFS
-#  type=pgrb2f
-#  suf=""
+  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
+  err1=$?
+  cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
+  mod=gfs
+  GRIBSRC=GFS
+  type=pgrb2f
+  suf=""
 
 # else
 #   cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
@@ -407,7 +407,7 @@ fi
 # NUMLEVS=43
 # elif [ $NEST = "ak" -o $NEST = "aknew" -o $NEST = "guam" -o $NEST = "guamnew" ] ; then
 
-NUMLEVS=43
+NUMLEVS=27
 
 # fi
 
@@ -515,7 +515,7 @@ echo err from hiresw_nemsinterp $err
 
 ### fix
 
-if [ $NEST = "guamnew" ]
+if [ $NEST != "guamnew" ]
 then
 
 cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_precoldstart
@@ -525,8 +525,14 @@ cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsi
 
 namcyc=`echo $PDY | cut -c1-8`
 gespath=$COMNAM
-# INPUT_FILE="$gespath/namx.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+
+if [ $namcyc -eq 20110427 ]
+then
+INPUT_FILE="$gespath/namx.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+else
 INPUT_FILE="$gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+fi
+
 INPUT_FILE_TYPE="nems"
 
 # file with the 14 GWD spaces

@@ -85,13 +85,7 @@ do
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.boco.00${hr} boco.00${hr}
 err1=$?
 done
-
-if [ $NEST = "conus" ]
-then
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap input_domain_01_nemsio
-else
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio input_domain_01_nemsio
-fi
 err2=$?
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.configure_file configure_file
 err3=$?
@@ -106,15 +100,7 @@ fi
 cp configure_file                               model_configure
 cp configure_file                               configure_file_01
 cp $PARMhiresw/hiresw_ocean.configure           ocean.configure
-
-####
-#
-# cp $PARMhiresw/hiresw_solver_state.txt_alt          solver_state.txt
 cp $PARMhiresw/hiresw_solver_state.txt          solver_state.txt
-#
-####
-
-
 cp $PARMhiresw/hiresw_filt_vars.txt             filt_vars.txt
 cp $PARMhiresw/hiresw_moving_nest_shift.txt     moving_nest_shift.txt
 cp $PARMhiresw/hiresw_atmos.configure_nmm       atmos.configure
@@ -130,18 +116,17 @@ cp $PARMhiresw/hiresw_nmmb_ETAMPNEW_DATA.expanded_rain ETAMPNEW_DATA.expanded_ra
 cp $PARMhiresw/hiresw_nmmb_GENPARM.TBL GENPARM.TBL
 cp $PARMhiresw/hiresw_nmmb_IGBP_LANDUSE.TBL IGBP_LANDUSE.TBL
 cp $PARMhiresw/hiresw_nmmb_IGBP_VEGPARM.TBL IGBP_VEGPARM.TBL
-
-cp $PARMhiresw/hiresw_nmmb_IGBP_LANDUSE.TBL LANDUSE.TBL
-cp $PARMhiresw/hiresw_nmmb_IGBP_VEGPARM.TBL VEGPARM.TBL
-
-# cp $PARMhiresw/hiresw_nmmb_LANDUSE.TBL LANDUSE.TBL
+cp $PARMhiresw/hiresw_nmmb_LANDUSE.TBL LANDUSE.TBL
 cp $PARMhiresw/hiresw_nmmb_RRTM_DATA RRTM_DATA
 cp $PARMhiresw/hiresw_nmmb_SOILPARM.TBL SOILPARM.TBL
-# cp $PARMhiresw/hiresw_nmmb_VEGPARM.TBL VEGPARM.TBL
+cp $PARMhiresw/hiresw_nmmb_VEGPARM.TBL VEGPARM.TBL
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
 cp $FIXhiresw/hiresw_tr49t85 tr49t85
 cp $FIXhiresw/hiresw_tr67t85 tr67t85
 cp $FIXhiresw/global_co2historical* .
+
+cp $PARMhiresw/hiresw_nmmb_IGBP_LANDUSE.TBL LANDUSE.TBL
+cp $PARMhiresw/hiresw_nmmb_IGBP_VEGPARM.TBL VEGPARM.TBL
 
 # cp global_co2historicaldata_2011.txt co2historicaldata_2011.txt
 # cp global_co2historicaldata_2012.txt co2historicaldata_2012.txt
@@ -167,9 +152,6 @@ if [ $MODEL = "nmmb" ]
 then
 
 mpirun.lsf $EXEChiresw/hiresw_nmmbfcst
-
-# cp $PARMhiresw/hiresw_solver_state.txt_alt          solver_state.txt
-# mpirun.lsf /meso/save/Matthew.Pyle/jacob_r31328/exe/NEMS.x
 
 
 else

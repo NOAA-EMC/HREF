@@ -99,20 +99,6 @@ mkdir -p $DATA/run_ungrib
 
 cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib/Vtable 
 
-if [ $MODEL != "nmmb" ]
-then
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc: > $DATA/run_ungrib/namelist.wps
-
-else
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc: > $DATA/run_ungrib/namelist.nps
-
-fi
 
 while [ $whr -le $last ]
 do
@@ -135,25 +121,15 @@ do
 
 # elif [ ($NEST = "conus" -o $NEST = "prnew") -a $MODEL = "arw" ]
 
-elif [ $NEST = "prnew" -a $MODEL = "arw" ]
-then
+# elif [ $NEST = "conus" -a $MODEL = "arw" ]
+# then
 
- cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
- cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
- err1=$?
- mod=rap
- type=awip32f	
- suf=""
-
-elif [ $NEST = "conus" -a $MODEL = "arw" ]
-then
-
- cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
- cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
- err1=$?
- mod=rap
- type=awip32f	
- suf=""
+#  cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
+#  cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
+#  err1=$?
+#  mod=rap
+# type=awip32f	
+# suf=""
 
 else
 
@@ -172,6 +148,38 @@ else
 #  suf=.tm00
 
 fi
+
+
+if [ $mod = "rap" ]
+then
+GRIBSRC=RAP
+elif [ $mod = "gfs" ]
+then
+GRIBSRC=GFS
+elif [ $mod = "nam" ]
+then
+GRIBSRC=NAM
+fi
+
+
+if [ $MODEL != "nmmb" ]
+then
+
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+ | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
+ | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc: > $DATA/run_ungrib/namelist.wps
+
+else
+
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+ | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
+ | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc:  | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/run_ungrib/namelist.nps
+
+fi
+
+
+
+
 
 if [ $err1 -ne 0 ] 
 then
@@ -657,6 +665,7 @@ export err=$?;err_chk
 
 fi
 
+cd $DATA
 
 hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45"
 for hr in $hrs
