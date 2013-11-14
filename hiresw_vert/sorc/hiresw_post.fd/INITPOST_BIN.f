@@ -83,7 +83,7 @@
 !     DECLARE VARIABLES.
 !     
       REAL SLDPTH2(NSOIL)
-      REAL RINC(5),DUM0D
+      REAL RINC(5),DUM0D,FACT
       REAL DUM1D (LM+1)
       REAL DUMMY ( IM, JM )
       REAL DUMMY2 ( IM, JM ),MSFT(IM,JM)
@@ -780,7 +780,6 @@
         deallocate(pvapor)
         deallocate(pvapor_orig)
 
-
 !!!!!!!!!!!!!
 
 ! reading cloud water mixing ratio
@@ -1473,6 +1472,7 @@
        do j = jsta_2l, jend_2u
         do i = 1, im
             FIS ( i, j ) = dummy ( i, j ) * G
+
 !            if(i.eq.80.and.j.eq.42)print*,'Debug: sample fis,zint='
 !     1,dummy( i, j ),zint(i,j,lm+1)
         end do
@@ -1516,6 +1516,77 @@
          ENDDO
 !      print*,'PSFC at ',ii,jj,' = ',PINT (ii,jj,lm+1)
 !      print*,'THS at ',ii,jj,' = ',THS(ii,jj)
+
+
+
+! MOVE RAP STUFF DOWN HERE
+
+! Put RAPR thing here?
+
+!tst      IF(MODELNAME == 'RAPR')THEN
+!integrate heights hydrostatically
+       do j = js, je
+        do i = 1, im
+            ZINT(I,J,LM+1)=FIS(I,J)/G
+            DUMMY(I,J)=FIS(I,J)
+         if(i.eq.im/2.and.j.eq.(jsta+jend)/2) &
+        print*,'i,j,L,ZINT from unipost= ',i,j,LM+1,ZINT(I,J,LM+1) &
+              , ALPINT(I,J,LM+1),ALPINT(I,J,LM)
+        end do
+       end do
+      DO L=LM,1,-1
+       do j = js, je
+        do i = 1, im
+         DUMMY2(I,J)=HTM(I,J,L)*T(I,J,L)*(Q(I,J,L)*D608+1.0)*RD* &
+                   (ALPINT(I,J,L+1)-ALPINT(I,J,L))+DUMMY(I,J)
+! compute difference between model and unipost heights:
+         DUM3D(I,J,L)=ZINT(I,J,L)-DUMMY2(I,J)/g
+! now replace model heights with unipost heights
+         ZINT(I,J,L)=DUMMY2(I,J)/G
+         if(i.eq.im/2.and.j.eq.(jsta+jend)/2) &
+        print*,'i,j,L,ZINT from unipost= ',i,j,l,ZINT(I,J,L)
+         DUMMY(I,J)=DUMMY2(I,J)
+        ENDDO
+       ENDDO
+      END DO
+      DO L=LM,1,-1
+       do j = js, je
+        do i = 1, im
+         if(i.eq.im/2.and.j.eq.(jsta+jend)/2) then
+        print*,'DIFF heights model-unipost= ', &
+         i,j,l,DUM3D(I,J,L)
+         endif
+        ENDDO
+       ENDDO
+      END DO
+
+      print*,'finish deriving geopotential in ARW'
+
+      DO L=1,LM-1
+        DO I=1,IM
+         DO J=JS,JE
+          FACT=(ALOG(PMID(I,J,L))-ALPINT(I,J,L))/ &
+               max(1.e-6,(ALPINT(I,J,L+1)-ALPINT(I,J,L)))
+          ZMID(I,J,L)=ZINT(I,J,L)+(ZINT(I,J,L+1)-ZINT(I,J,L))*FACT
+          dummy(i,j)=ZMID(I,J,L)
+         if((ALPINT(I,J,L+1)-ALPINT(I,J,L)) .lt. 1.e-6) print*, &
+                 'P(K+1) and P(K) are too close, i,j,L,', &
+                 'ALPINT(I,J,L+1),ALPINT(I,J,L),ZMID = ', &
+                  i,j,l,ALPINT(I,J,L+1),ALPINT(I,J,L),ZMID(I,J,L)
+         ENDDO
+        ENDDO
+       print*,'max/min ZMID= ',l,maxval(dummy),minval(dummy)
+       ENDDO
+
+        DO I=1,IM
+         DO J=JS,JE
+          ZMID(I,J,LM)=(ZINT(I,J,LM+1)+ZINT(I,J,LM))*0.5 ! ave of z
+          dummy(i,j)=ZMID(I,J,LM)
+         ENDDO
+        ENDDO
+       print*,'max/min ZMID= ',lm,maxval(dummy),minval(dummy)
+
+!!! end RAP thing
 
       VarName='T00'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
