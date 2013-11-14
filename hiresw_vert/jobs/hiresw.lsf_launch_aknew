@@ -2,20 +2,23 @@ cycle=${1}
 
 cd /meso/save/Matthew.Pyle/hiresw_vert/jobs/
 
-if [ $cycle -eq 06 ]
-
-then
-
-# AK ARW 06
+# AKNEW ARW 
 
 DOM=aknew
 CORE=arw
-CYC=$cycle
-NPROC_MODEL=608
-NPROC_SPAN_MODEL=12
+CYC=${cycle}
+NPROC_MODEL=540
+NPROC_SPAN_MODEL=16
 NPROC_POST=16
-NPROC_PRDGEN=1
-cat prelim.lsf_big_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+NPROC_PRDGEN=2
+
+cat ungrib.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+cat metgrid.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_metgrid.lsf_${DOM}_${CORE}_${CYC}
+
+cat prelimfinal.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_prelimfinal.lsf_${DOM}_${CORE}_${CYC}
+
+# cat prelim.lsf_big_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
 
 cat sub_model.lsf_in_new | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
 sed s:_NPROC_:${NPROC_MODEL}:g | sed s:_SPAN_:${NPROC_SPAN_MODEL}:g  > sub_model.lsf_${DOM}_${CORE}_${CYC}
@@ -29,28 +32,35 @@ sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgenmgr.lsf_${DOM}_${CORE}_${CYC}
 cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
 > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
 
-bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 
-fi
+rm sub_ungrib.lsf_${DOM}_${CORE}_${CYC} 
 
-exit
+# exit
 
-if [ $cycle -eq 06 ]
-
-then
 
 DOM=aknew
 CORE=nmmb
-CYC=$cycle
-NPROC_MODEL=639
-NPROC_SPAN_MODEL=12
-# NPROC_MODEL=875
+CYC=${cycle}
+NPROC_MODEL=594
 NPROC_POST=16
-NPROC_PRDGEN=1
-cat prelim.lsf_big_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+NPROC_SPAN_MODEL=16
+NPROC_PRDGEN=2
+
+# cat prelim.lsf_big_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat ungrib.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+cat metgrid.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_metgrid.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_nemsinterp_1.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_1.lsf_${DOM}_${CORE}_${CYC}
+cat sub_nemsinterp_2.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_2.lsf_${DOM}_${CORE}_${CYC}
+cat sub_nemsinterp_3.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_3.lsf_${DOM}_${CORE}_${CYC}
+cat sub_nemsinterp_4.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_4.lsf_${DOM}_${CORE}_${CYC}
+
 
 cat sub_model.lsf_in_new | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_NPROC_:${NPROC_MODEL}:g | sed s:_SPAN_:${NPROC_SPAN_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+sed s:_NPROC_:${NPROC_MODEL}:g | sed s:_SPAN_:${NPROC_SPAN_MODEL}:g  > sub_model.lsf_${DOM}_${CORE}_${CYC}
 
 cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
 sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
@@ -61,6 +71,8 @@ sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgenmgr.lsf_${DOM}_${CORE}_${CYC}
 cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
 > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
 
-bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+# bsub < sub.lsf_${DOM}_${CORE}_${CYC}
 
-fi
+bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+rm sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
