@@ -1,9 +1,9 @@
-
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_postmgr.out
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_postmgr.err
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_postmgr.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_postmgr.err__DOM__CORE__CYC_
 #BSUB -R rusage[mem=500]
 #BSUB -R affinity[core(1)]
-#BSUB -q "dev"
+#BSUB -q "dev_shared"
+#BSUB -J HIRESW_POSTMGR__DOM__CORE_
 #BSUB -n 1
 #BSUB -P HRW-T2O
 #BSUB -W 1:19

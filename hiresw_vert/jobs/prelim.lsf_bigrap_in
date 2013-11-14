@@ -1,27 +1,25 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.out__DOM___CORE___CYC_
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.err__DOM___CORE___CYC_
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.err__DOM___CORE___CYC_
 #BSUB -q "dev"
-#BSUB -J HIRESW_PREP
-#BSUB -R "span[ptile=_SPAN_]"
-#BSUB -W 0:59
-#BSUB -a poe
+#BSUB -J HIRESW_PREP_RAP
+#BSUB -W 0:15
+#BSUB -R affinity[core(1)]
+#BSUB -R "span[ptile=3]"
 #BSUB -P HRW-T2O
-#BSUB -x
+#BSUB -a poe
 #BSUB -n 9
 
 module load ics
 module load ibmpe
+module load NetCDF/4.2/serial
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
 
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_new _DOM_ _CORE_ _CYC_
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_newrap _DOM_ _CORE_ _CYC_
 
-bsub < sub_model.lsf__DOM___CORE___CYC_
-
-# leave post jobs to be submitted when model job submits
-
+# bsub < sub_model.lsf__DOM___CORE___CYC_
 # bsub < sub_postmgr.lsf__DOM___CORE___CYC_
 # bsub < sub_prdgenmgr.lsf__DOM___CORE___CYC_
 # bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_

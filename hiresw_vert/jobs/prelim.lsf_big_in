@@ -1,7 +1,8 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.out__DOM___CORE___CYC_
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_prelim.err__DOM___CORE___CYC_
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.err__DOM___CORE___CYC_
 #BSUB -q "dev"
+#BSUB -J HIRESW_PREP
 #BSUB -W 0:29
 #BSUB -R affinity[core(1)]
 #BSUB -R "span[ptile=3]"
@@ -19,9 +20,12 @@ export MP_LABELIO=yes
 /meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_new _DOM_ _CORE_ _CYC_
 
 bsub < sub_model.lsf__DOM___CORE___CYC_
-bsub < sub_postmgr.lsf__DOM___CORE___CYC_
-bsub < sub_prdgenmgr.lsf__DOM___CORE___CYC_
-bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
+
+## leave these post jobs to be submitted by model
+# bsub < sub_postmgr.lsf__DOM___CORE___CYC_
+# bsub < sub_prdgenmgr.lsf__DOM___CORE___CYC_
+# bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
+
 # bsub < sub_hybridensemble.lsf__DOM___CORE___CYC_
 # bsub < sub_ensembleproduct.lsf__DOM___CORE___CYC_
 

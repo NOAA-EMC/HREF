@@ -1,11 +1,12 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_fore.out__DOM__CORE__CYC_
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_fore.err__DOM__CORE__CYC_
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.err__DOM__CORE__CYC_
 #BSUB -R span[ptile=16]
 #BSUB -q "dev"
+#BSUB -J HIRESW_FORE
 #BSUB -P HRW-T2O
 #BSUB -n _NPROC_
-#BSUB -W 1:15
+#BSUB -W 1:59
 #BSUB -a poe
 #
 
