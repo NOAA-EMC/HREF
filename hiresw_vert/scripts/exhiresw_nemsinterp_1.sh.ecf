@@ -2,9 +2,8 @@
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
-# Script name:         exhiresw_prelim.sh.sms
-# Script description:  Runs WRF Preprocessing System (WPS) and REAL code for the WRF-NMM and 
-#                      WRF-ARW model
+# Script name:         exhiresw_nemsinterp.sh.sms
+# Script description:  Runs nemsinterp for NMMB
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
 #
@@ -19,6 +18,7 @@
 # 2007-04-09  Matthew Pyle - Modified to run WPS rather than wrfsi
 # 2009-09-24  Shawna Cokley - Streamlines way script obtains date information -
 #                             pulls from $PDY rather than copying a file to the working directory
+# 2013-10-30  Matthew Pyle - Breaks out last piece from old prelim script 
 
 set -x
 
@@ -45,6 +45,33 @@ echo start $start
 # NDATE=/u/Matthew.Pyle/ndate
 NDATE=/nwprod/util/exec/ndate
 
+
+int1=`$NDATE +12 $start`
+yyint1=`echo $int1 | cut -c1-4`
+mmint1=`echo $int1 | cut -c5-6`
+ddint1=`echo $int1 | cut -c7-8`
+hhint1=`echo $int1 | cut -c9-10`
+
+int2=`$NDATE +12 $int1`
+yyint2=`echo $int2 | cut -c1-4`
+mmint2=`echo $int2 | cut -c5-6`
+ddint2=`echo $int2 | cut -c7-8`
+hhint2=`echo $int2 | cut -c9-10`
+
+int3=`$NDATE +12 $int2`
+yyint3=`echo $int3 | cut -c1-4`
+mmint3=`echo $int3 | cut -c5-6`
+ddint3=`echo $int3 | cut -c7-8`
+hhint3=`echo $int3 | cut -c9-10`
+
+int4=`$NDATE +12 $int3`
+yyint4=`echo $int4 | cut -c1-4`
+mmint4=`echo $int4 | cut -c5-6`
+ddint4=`echo $int4 | cut -c7-8`
+hhint4=`echo $int4 | cut -c9-10`
+
+echo $int1 $int2 $int3 $int4
+
 end=`$NDATE $LENGTH $start`
 
 echo end $end
@@ -67,244 +94,12 @@ filt_he=$cyc
 
 echo filt_start $filt_start
 
-whr=00
-count=0
-last=$LENGTH
-incr=3
-
-#
-# Check to see how many storms are being run by the GFDL hurricane model.
-# If number is >= 2, do not make any hiresw runs.
-# If number is 1, cancel job if this is a WRF-EM run.
-#
-#if [ "$NEST" != "pr" -a "$NEST" != "hi" -a "$NEST" != "guam" ] ; then
-  $USHhiresw/hiresw_chkhur.sh $MODEL
-  err=$?
-  if [ $err -eq 99 ] ; then
-    exit
-  fi
-  echo "export NEST=$NEST" > $COMOUT/${RUN}.t${cyc}z.envir.sh
-  echo "export MODEL=$MODEL" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
-#fi
-
 export CYCLE=$PDY$cyc
 echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
 
-# Puerto Rico : Use grid #221 (awip32)
-# Hawaii : Use grid #243 (awiphi)
-# East & West : Use grid #212 (awip3d)
-# Alaska & Guam : Use GFS (1 degree pgrb)
-
-mkdir -p $DATA/run_ungrib
-
-cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib/Vtable 
-
-
-while [ $whr -le $last ]
-do
-
-#if [ $NEST = "pr"  -o $NEST = "prnew" -o $NEST = "conus" ] 
-# then 
-
-   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
-  err1=$?
-  mod=nam
-  GRIBSRC=NAM
-  type=awip32
-  suf=.tm00
-#
-#elif [ $NEST = "hi" -o $NEST = "hinew" ]
-#then
-#  cp ${COMNAM}/nam.t${cyc}z.awiphi${whr}.tm00 $DATA/run_ungrib/.
-#  err1=$?
-#  mod=nam
-#  type=awiphi
-#  suf=.tm00
-# elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
-# then
-
-#  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
-#  err1=$?
-#  cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
-#  mod=gfs
-#  GRIBSRC=GFS
-#  type=pgrb2f
-#  suf=""
-
-# else
-#   cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
-#   err1=$?
-#   mod=nam
-#   type=awip3d
-#  suf=.tm00
-# fi
-
-if [ $err1 -ne 0 ] 
-then
-  ./err_exit "$whr input GRIB file from GFS not found.  FATAL ERROR"
-fi
-
-if [ $MODEL != "nmmb" ]
-then
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc: > $DATA/run_ungrib/namelist.wps
-
-else
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$cyc: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/run_ungrib/namelist.nps
-
-fi
-
-whr=`expr $whr + $incr`
-
-if [ $whr -lt 10 ]
-then
-whr=0$whr
-fi
-
-done
-
-cd $DATA/run_ungrib
-
-mv ${mod}.t${cyc}z.${type}00${suf} GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}03${suf} GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}06${suf} GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}09${suf} GRIBFILE.AAD
-mv ${mod}.t${cyc}z.${type}12${suf} GRIBFILE.AAE
-mv ${mod}.t${cyc}z.${type}15${suf} GRIBFILE.AAF
-mv ${mod}.t${cyc}z.${type}18${suf} GRIBFILE.AAG
-mv ${mod}.t${cyc}z.${type}21${suf} GRIBFILE.AAH
-mv ${mod}.t${cyc}z.${type}24${suf} GRIBFILE.AAI
-mv ${mod}.t${cyc}z.${type}27${suf} GRIBFILE.AAJ
-mv ${mod}.t${cyc}z.${type}30${suf} GRIBFILE.AAK
-mv ${mod}.t${cyc}z.${type}33${suf} GRIBFILE.AAL
-mv ${mod}.t${cyc}z.${type}36${suf} GRIBFILE.AAM
-mv ${mod}.t${cyc}z.${type}39${suf} GRIBFILE.AAN
-mv ${mod}.t${cyc}z.${type}42${suf} GRIBFILE.AAO
-mv ${mod}.t${cyc}z.${type}45${suf} GRIBFILE.AAP
-mv ${mod}.t${cyc}z.${type}48${suf} GRIBFILE.AAQ
-
-pwd
-
-### run_ungrib
-
-cd $DATA/run_ungrib/
-
-if [ $MODEL != "nmmb" ]
-then
-cp $EXEChiresw/hiresw_ungrib_new ungrib.exe
-
-./ungrib.exe >> $pgmout 2>errfile
-else
-cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
-mpirun.lsf ./ungrib.exe
-fi
-
-
 #########################################################
-# RUN MULTIPLE METGRID STEPS USING POE
-#########################################################
-
-# Create a script to be poe'd
-cd $DATA
-rm -rf poescript
-
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 03 1 $MODEL" > poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 06 09 2 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 12 15 3 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 18 21 4 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 24 27 5 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 30 33 6 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 36 39 7 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 42 45 8 $MODEL" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 48 48 9 $MODEL" >> poescript
-
- 
-chmod 775 $DATA/poescript
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=poescript
-export MP_LABELIO=YES
-export MP_INFOLEVEL=3
-export MP_STDOUTMODE=ordered
-
-# mpirun.lsf
-
-NOMPI=0
-
-if [ $NOMPI -eq 1 ]
-then
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 03 1 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 06 09 2 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 12 15 3 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 18 21 4 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 24 27 5 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 30 33 6 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 36 39 7 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 42 45 8 $MODEL  &
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 48 48 9 $MODEL
-
-else
-
-mpirun.lsf 
-err=$?
-echo "err from metgrid poe job: " $err
-
-fi
-
-# wait for all 9 WPS codes to finish to proceed
-
-ic=0
-
-while [ $ic -lt 1000 ] ; do
-
- icntb=1
- itest=1
- while [ $icntb -le 9 ] ; do
-  ls -l $DATA/wpsdone.$icntb
-  err1=$?
-  if [ $err1 -eq 0 ] ; then
-   let "itest=itest+1"
-  fi
-  let "icntb=icntb+1"
- done
- 
- if [ $itest -eq 10 ] ; then
-   break
- else
-   let "ic=ic+1"
-   sleep 10
- fi
- 
- if [ $ic -ge 1000 ] ; then
-  exit 1
- fi
- 
-done
-
-#### this block seems redundant with the checks on wpsdone above
-
-count=`ls $DATA/met*.bin $DATA/met*.dio | wc -l`
-
-echo INITIAL count is $count
-
-while [ $count -lt 17 ]
-do
-sleep 20
-count=`ls $DATA/met*.bin $DATA/met*.dio | wc -l`
-echo $count now
-done
-
-## bonus sleep to make sure file is completely copied to the $DATA dir
-sleep 5
-
-cat $DATA/metgrid.log.0000_* > $COMOUT/${NEST}${MODEL}.t${cyc}z.metgrid.log
-
-#########################################################
-# RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES
+# RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)
+# RUN NSMSINTERP PROGRAM to generate input/boco files (NMMB)
 #########################################################
 
 cd $DATA
@@ -399,45 +194,11 @@ else
 fi
 
 
-### number of input levels depends on source model data
-
-# if [ $NEST = "hi" -o $NEST = "hinew" -o $NEST = "east" -o $NEST = "eastnew"  -o $NEST = "west" ] ; then
-# NUMLEVS=40
-# elif [ $NEST = "pr"  -o $NEST = "conus"  -o $NEST = "prnew" ] ; then
-# NUMLEVS=43
-# elif [ $NEST = "ak" -o $NEST = "aknew" -o $NEST = "guam" -o $NEST = "guamnew" ] ; then
-
-NUMLEVS=43
-
-# fi
-
-if [ $MODEL = "nmmb" ]
-then
 
 cat  configure_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: > configure_file_01
 
 cp configure_file_01 configure_file
-
-else
-
-cat namelist.input_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
- | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
- | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
- | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
- | sed s:NUMLEV:$NUMLEVS: > namelist.input
-
-cat namelist.input_in_model | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
- | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
- | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
- | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
- | sed s:NUMLEV:$NUMLEVS: > namelist.input_model
-
-fi
 
 
 rm fort.*
@@ -456,54 +217,78 @@ cp $FIXhiresw/hiresw_tr49t67 tr49t67
 cp $FIXhiresw/hiresw_tr49t85 tr49t85
 cp $FIXhiresw/hiresw_tr67t85 tr67t85
 
-if [ $MODEL != nmmb ]
-then
-
-export pgm=hiresw_${MODEL}_real
-. ./prep_step
-
-if [ $MODEL = nmm ] ; then
-export FORT14="co2.35_hybrid_50mbtop"
-fi
-
-./startmsg
-
-export MP_PGMMODEL=spmd
-unset MP_CMDFILE
-
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real_new > $pgmout 2>&1
-
-export err=$?
-
-if [ $err -ne 0 ]; then
-   echo EXIT FROM REAL with err $err
-   mv $DATA $COMOUT/.
-   ./err_chk
-fi
-
-# Copy 3 files needed to run WRF forecast to COM
-
-cp wrfbdy_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01
-cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01
-cp namelist.input_model $COMOUT/${NEST}${MODEL}.t${cyc}z.namelist.input
-
-if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
-   mv $DATA $COMOUT/.
-   ./err_exit "WRF initial or boundary condition files missing"
-fi
-
-# Cat REAL log files and send to COM
-# cat $DATA/TASKOUTPUT/0000/rsl.error.0000 $DATA/TASKOUTPUT/0000/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
-cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
-
-else # nmmb case
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
 echo NEED TO RUN NEMSINTERP
 # mpirun.lsf $EXEChiresw/hiresw_nemsinterp
-cp $DATA/run_ungrib/namelist.nps .
+# cp $DATA/run_ungrib/namelist.nps .
+
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+ | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yyint1: \
+ | sed s:MEND:$mmint1:     | sed s:DEND:$ddint1: | sed s:HEND:$hhint1: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.1
+
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint1: | sed s:MSTART:$mmint1: \
+ | sed s:DSTART:$ddint1: | sed s:HSTART:$hhint1: | sed s:YEND:$yyint2: \
+ | sed s:MEND:$mmint2:     | sed s:DEND:$ddint2: | sed s:HEND:$hhint2: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.2
+
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint2: | sed s:MSTART:$mmint2: \
+ | sed s:DSTART:$ddint2: | sed s:HSTART:$hhint2: | sed s:YEND:$yyint3: \
+ | sed s:MEND:$mmint3:     | sed s:DEND:$ddint3: | sed s:HEND:$hhint3: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.3
+
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint3: | sed s:MSTART:$mmint3: \
+ | sed s:DSTART:$ddint3: | sed s:HSTART:$hhint3: | sed s:YEND:$yyint4: \
+ | sed s:MEND:$mmint4:     | sed s:DEND:$ddint4: | sed s:HEND:$hhint4: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.4
+
+mkdir -p $DATA/run_nemsinterp_1
+
+cd $DATA/run_nemsinterp_1
+cp ../namelist.nps.1 namelist.nps
+
+yy1=`echo $cycstart | cut -c1-4`
+mm1=`echo $cycstart | cut -c5-6`
+dd1=`echo $cycstart | cut -c7-8`
+hh1=`echo $cycstart | cut -c9-10`
+
+cp ../met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio .
+
+t2=`$NDATE +3 $cycstart`
+
+yy2=`echo $t2 | cut -c1-4`
+mm2=`echo $t2 | cut -c5-6`
+dd2=`echo $t2 | cut -c7-8`
+hh2=`echo $t2 | cut -c9-10`
+
+cp ../met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio .
+
+t3=`$NDATE +3 $t2`
+
+yy3=`echo $t3 | cut -c1-4`
+mm3=`echo $t3 | cut -c5-6`
+dd3=`echo $t3 | cut -c7-8`
+hh3=`echo $t3 | cut -c9-10`
+
+cp ../met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio .
+
+t4=`$NDATE +3 $t3`
+
+yy4=`echo $t4 | cut -c1-4`
+mm4=`echo $t4 | cut -c5-6`
+dd4=`echo $t4 | cut -c7-8`
+hh4=`echo $t4 | cut -c9-10`
+
+cp ../met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio .
+
+t5=`$NDATE +3 $t4`
+
+yy5=`echo $t5 | cut -c1-4`
+mm5=`echo $t5 | cut -c5-6`
+dd5=`echo $t5 | cut -c7-8`
+hh5=`echo $t5 | cut -c9-10`
+
+cp ../met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio .
+
 
 cp $EXEChiresw/hiresw_nemsinterp .
 mpirun.lsf ./hiresw_nemsinterp
@@ -513,19 +298,16 @@ err=$?
 echo err from hiresw_nemsinterp $err
 
 
-### fix
-
-if [ $NEST = "guamnew" ]
+if [ $NEST != "guamnew" -a $NEST != "conus" ]
 then
 
 cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_precoldstart
 
 
-# nmmb file with the land states you want
+# NAM nmmb file with the land states you want
 
 namcyc=`echo $PDY | cut -c1-8`
-gespath=$COMNAM
-# INPUT_FILE="$gespath/namx.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+gespath=/nwges/prod/nam.${namcyc}
 INPUT_FILE="$gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 INPUT_FILE_TYPE="nems"
 
@@ -538,9 +320,10 @@ DYN_CORE="nems"
 # your working directory
 FIXDIR=$FIXhiresw
 
-WORK_DIR=$DATA
-cd $WORK_DIR
 
+WORK_DIR=$DATA/run_nemsinterp_1
+
+cd $WORK_DIR
 
 #----------------------------------------------------------------
 # don't touch fort.81 namelist settings.
@@ -632,25 +415,24 @@ export err=$?;err_chk
 
 fi
 
-cd $DATA
+# cd $DATA
 
-hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45"
-for hr in $hrs
-do
-cp boco.00${hr} $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.00${hr}
-done
+cp boco.* ../
+
+if [ $NEST != "conus" ]
+then
 cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio
-cp configure_file $COMOUT/${NEST}${MODEL}.t${cyc}z.configure_file
 err=$?
 
 if [ $err -ne 0 ]
 then
 ls -ltr
-./err_exit "didnt copy over configure file"
+./err_exit "didnt copy over NMMB model input file"
 fi
 
-
 fi
 
-msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
+echo "DONE" > ../nemsinterpdone1
+
+msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"
