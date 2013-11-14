@@ -130,7 +130,7 @@
 !
       use gfsio_module, only: gfsio_gfile, gfsio_init, gfsio_open, gfsio_getfilehead
       use nemsio_module, only: nemsio_getheadvar, nemsio_gfile, nemsio_init, nemsio_open, &
-              nemsio_getfilehead
+              nemsio_getfilehead,nemsio_close
       use CTLBLK_mod, only: filenameaer, me, num_procs, num_servers, mpi_comm_comp, datestr,&
               mpi_comm_inter, filename, ioform, grib, idat, filenameflux, filenamed3d, gdsdegr,&
               spldef, modelname, ihrst, lsmdef,vtimeunits, tprec, pthresh, datahandle, im, jm, lm,&
@@ -494,7 +494,8 @@
  
         END IF
 ! NEMSIO format
-      ELSE IF(TRIM(IOFORM) == 'binarynemsio' )THEN
+      ELSE IF(TRIM(IOFORM) == 'binarynemsio' .or. &
+       TRIM(IOFORM) == 'binarynemsiompiio' )THEN
       
            IF(ME == 0)THEN
 	     call nemsio_init(iret=status)
@@ -644,8 +645,6 @@
       print*,'jsta,jend,jsta_m,jend_m,jsta_2l,jend_2u=',jsta,        &
               jend,jsta_m,jend_m, jsta_2l,jend_2u
       CALL ALLOCATE_ALL()	      
-        write(0,*) 'past allocate_all'
-        write(6,*) 'past allocate_all'
      
 !
 !     INITIALIZE POST COMMON BLOCKS 
@@ -675,7 +674,6 @@
 ! Reading model output for different models and IO format     
  
       IF(TRIM(IOFORM) .EQ. 'netcdf')THEN
-
        IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME.EQ.'RAPR')THEN
         print*,'CALLING INITPOST TO PROCESS NCAR NETCDF OUTPUT'
         CALL INITPOST
@@ -686,9 +684,7 @@
         PRINT*,'POST does not have netcdf option for this model, STOPPING'
         STOP 9998
        END IF
-
       ELSE IF(TRIM(IOFORM) .EQ. 'binarympiio')THEN 
-
        IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME.EQ.'RAPR')THEN
          print*,'CALLING INITPOST_BIN_MPIIO TO PROCESS ARW BINARY OUTPUT'
          CALL INITPOST_BIN_MPIIO
@@ -704,19 +700,17 @@
         PRINT*,'POST does not have mpiio option for this model, STOPPING'
         STOP 9998
        END IF
+       ELSE IF(TRIM(IOFORM) .EQ. 'binary')THEN
+        IF(MODELNAME .EQ. 'NCAR')THEN
+          print*,'CALLING INITPOST_BIN TO PROCESS ARW BINARY OUTPUT'
+          CALL INITPOST_BIN
+        ENDIF
+
       ELSE IF(TRIM(IOFORM) == 'grib')THEN 
        IF(MODELNAME == 'GFS') THEN
         CALL INITPOST_GFS(NREC,iunit,iostatusFlux,iunitd3d,iostatusD3D,gfile)
        END IF
-
-      ELSE IF(TRIM(IOFORM) .EQ. 'binary')THEN 
-       IF(MODELNAME .EQ. 'NCAR')THEN
-         print*,'CALLING INITPOST_BIN TO PROCESS ARW BINARY OUTPUT'
-         CALL INITPOST_BIN
-       ENDIF
-
       ELSE IF(TRIM(IOFORM) == 'binarynemsio')THEN 
-
        IF(MODELNAME == 'NMM') THEN
         CALL INITPOST_NEMS(NREC,nfile)
        ELSE IF(MODELNAME == 'GFS') THEN
@@ -726,9 +720,20 @@
        ELSE
         PRINT*,'POST does not have nemsio option for model,',MODELNAME,' STOPPING,'
 	STOP 9998		
-       END IF
        
-       ELSE IF(TRIM(IOFORM) == 'sigio')THEN 
+       END IF
+      ELSE IF(TRIM(IOFORM) == 'binarynemsiompiio')THEN
+       IF(MODELNAME == 'NMM') THEN
+! close nemsio file for serial read 
+        call nemsio_close(nfile,iret=status)
+        CALL INITPOST_NEMS_MPIIO()
+       ELSE
+        PRINT*,'POST does not have nemsio mpi option for model,',MODELNAME, &
+         'STOPPING,'
+        STOP 9999
+
+       END IF 
+      ELSE IF(TRIM(IOFORM) == 'sigio')THEN 
        IF(MODELNAME == 'GFS') THEN
         CALL INITPOST_GFS_SIGIO(lusig,iunit,iostatusFlux,iostatusD3D,idrt,sighead)
        ELSE
@@ -824,13 +829,10 @@
       IF(ME.EQ.0)THEN
         WRITE(6,*)' '
         WRITE(6,*)'ALL GRIDS PROCESSED.'
-        WRITE(0,*)'ALL GRIDS PROCESSED.'
         WRITE(6,*)' '
       ENDIF
 !
-        write(0,*) 'to DE_ALLOCATE call'
       call DE_ALLOCATE
-        write(0,*) 'past DE_ALLOCATE call'
 !      if(IOFORM .EQ. 'netcdf')THEN
 !       call ext_ncd_ioclose ( DataHandle, Status )
 !      else
