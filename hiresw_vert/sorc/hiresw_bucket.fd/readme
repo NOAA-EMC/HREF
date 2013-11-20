@@ -1,6 +1,5 @@
 Run the "compile" script 
 
-It will build hiresw_pcpbucket_full5km, hiresw_pcpbucket_ak5km, 
-hiresw_pcpbucket_hipr5km, and hiresw_pcpbucket_haitipr5km executables
-in the ../../exec/ directory relative to the source.
+It will build hiresw_pcpbucket_general executable 
+and copy it to the ../../exec/ directory relative to the source.
 
