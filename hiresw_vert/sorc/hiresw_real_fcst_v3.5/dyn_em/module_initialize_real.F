@@ -974,11 +974,17 @@ integer::oops1,oops2
                    ( .NOT. config_flags%sfcp_to_sfcp ) ) THEN
             WRITE(a_message,FMT='(A)') 'Using sfcprs3 to compute psfc'
             CALL wrf_message ( a_message )
+
+        write(0,*) 'maxval(grid%pslv_gc): ', maxval(grid%pslv_gc)
+!        write(0,*) 'maxval(grid%psfc): ', maxval(grid%psfc)
+        write(0,*) 'maxval(grid%ht): ', maxval(grid%ht)
             CALL sfcprs3(grid%ght_gc, grid%p_gc, grid%ht, &
                          grid%pslv_gc, grid%psfc, &
                          ids , ide , jds , jde , 1   , num_metgrid_levels , &
                          ims , ime , jms , jme , 1   , num_metgrid_levels , &
                          its , ite , jts , jte , 1   , num_metgrid_levels )
+        write(0,*) 'return sfcprs3'
+        write(0,*) 'maxval(grid%psfc): ', maxval(grid%psfc)
          ELSE IF ( ( flag_psfc    .EQ. 1 ) .AND. &
                    ( flag_soilhgt .EQ. 1 ) .AND. &
                    ( config_flags%sfcp_to_sfcp ) ) THEN
@@ -1020,10 +1026,13 @@ integer::oops1,oops2
 
          !  Integrate the mixing ratio to get the vapor pressure.
 
+        write(0,*) 'to integ_moist'
+
          CALL integ_moist ( grid%qv_gc , grid%p_gc , grid%pd_gc , grid%t_gc , grid%ght_gc , grid%intq_gc , &
                             ids , ide , jds , jde , 1   , num_metgrid_levels , &
                             ims , ime , jms , jme , 1   , num_metgrid_levels , &
                             its , ite , jts , jte , 1   , num_metgrid_levels )
+        write(0,*) 'past integ_moist'
 
          !  If this is UM data, the same moisture removed from the "theta" level pressure data can 
          !  be removed from the "rho" level pressures.  This is an approximation.  We'll revisit to
@@ -1049,6 +1058,7 @@ integer::oops1,oops2
                       ids , ide , jds , jde , 1   , num_metgrid_levels , &
                       ims , ime , jms , jme , 1   , num_metgrid_levels , &
                       its , ite , jts , jte , 1   , num_metgrid_levels )
+        write(0,*) 'past p_dts'
 
          !  Compute the dry, hydrostatic surface pressure.
 
@@ -1056,6 +1066,7 @@ integer::oops1,oops2
                       ids , ide , jds , jde , kds , kde , &
                       ims , ime , jms , jme , kms , kme , &
                       its , ite , jts , jte , kts , kte )
+        write(0,*) 'past p_dns'
 
          !  Compute the eta levels if not defined already.
 
@@ -1070,6 +1081,7 @@ integer::oops1,oops2
                                ids , ide , jds , jde , kds , kde , &
                                ims , ime , jms , jme , kms , kme , &
                                its , ite , jts , jte , kts , kte )
+        write(0,*) 'past compute_eta'
          END IF
 
          IF ( config_flags%interp_theta ) THEN
@@ -1082,17 +1094,21 @@ integer::oops1,oops2
                               its , ite , jts , jte , 1   , num_metgrid_levels )
          END IF
 
+        write(0,*) 'to here with flag_slP: ', flag_slp
+
          IF ( flag_slp .EQ. 1 ) THEN
 
             !  On the eta surfaces, compute the dry pressure = mu eta, stored in
             !  grid%pb, since it is a pressure, and we don't need another kms:kme 3d
             !  array floating around.  The grid%pb array is re-computed as the base pressure
             !  later after the vertical interpolations are complete.
+        write(0,*) 'call p_dry'
 
             CALL p_dry ( grid%mu0 , grid%znw , grid%p_top , grid%pb , want_full_levels , &
                          ids , ide , jds , jde , kds , kde , &
                          ims , ime , jms , jme , kms , kme , &
                          its , ite , jts , jte , kts , kte )
+        write(0,*) 'past p_dry'
 
             !  All of the vertical interpolations are done in dry-pressure space.  The
             !  input data has had the moisture removed (grid%pd_gc).  The target levels (grid%pb)
@@ -1122,6 +1138,7 @@ integer::oops1,oops2
                END DO
             END DO
 
+        write(0,*) 'call vert_interp for height'
             CALL vert_interp ( grid%ght_gc , grid%pd_gc , grid%ph0 , grid%pb , &
                                num_metgrid_levels , 'Z' , &
                                interp_type , lagrange_order , extrap_type , &
@@ -1130,6 +1147,8 @@ integer::oops1,oops2
                                ids , ide , jds , jde , kds , kde , &
                                ims , ime , jms , jme , kms , kme , &
                                its , ite , jts , jte , kts , kte )
+
+        write(0,*) 'past vert_interp for height'
 
             !  Put things back to normal.
 
@@ -1163,6 +1182,7 @@ integer::oops1,oops2
          !  Interpolate RH, diagnose Qv later when have temp and pressure.  Temporarily
          !  store this in the u_1 space, for later diagnosis into Qv and stored into moist.
 
+        write(0,*) 'to vert_interp for RH'
          CALL vert_interp ( grid%rh_gc , grid%pd_gc , grid%u_1 , grid%pb , &
                             num_metgrid_levels , 'Q' , &
                             interp_type , lagrange_order , extrap_type , &
@@ -4934,6 +4954,7 @@ print *,'p target= ',target_x
 
       !  Get a surface value, always the first level of a 3d field.
 
+        write(0,*) 'minval(q_in), maxval(q_in): ', minval(q_in), maxval(q_in)
       DO j = jts , MIN ( jde-1 , jte )
          DO i = its , MIN (ide-1 , ite )
             IF ( skip_middle_points_t ( ids , ide , jds , jde , i , j , em_width , hold_ups ) ) CYCLE 
