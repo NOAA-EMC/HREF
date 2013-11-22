@@ -2654,7 +2654,7 @@ real(kind=kfpt),dimension(ims:ime,jms:jme):: &
         facdif=1.0
       else
         defm=9999.
-        facdif=1.0   !bsf: was 4.0 in 10/18/2011 NAM implementation
+        facdif=1.0
       endif
 !-----------------------------------------------------------------------
 !
@@ -2795,6 +2795,7 @@ real(kind=kfpt),dimension(ims:ime,jms:jme):: &
         if(l.gt.lpt2.and..not.hydro) then
           do j=jts_b1,jte_h2
             do i=its_b1,ite_h2
+        
               cilinx=sice(i-1,j).ne.sice(i,j) &
                  .or.sm  (i-1,j).ne.sm  (i,j)
               ciliny=sice(i,j-1).ne.sice(i,j) &
@@ -2814,11 +2815,17 @@ real(kind=kfpt),dimension(ims:ime,jms:jme):: &
                 fmly(i,j)=0.
               endif
 !
+!        if (I .eq. 5 .and. J .eq. 5 .and. mod(L,5) .eq. 0) then
+!        write(0,*) 'checked slopes for L : ', L, z(i,j,l)
+!        endif
             enddo
           enddo
         else
           do j=jts_b1,jte_h2
             do i=its_b1,ite_h2
+!        if (I .eq. 5 .and. J .eq. 5 .and. mod(L,5) .eq. 0) then
+!        write(0,*) 'set diff switches to one for L : ', L, z(i,j,l)
+!        endif
               fmlx(i,j)=1.
               fmly(i,j)=1.
             enddo
@@ -2885,7 +2892,7 @@ real(kind=kfpt),dimension(ims:ime,jms:jme):: &
           do j=jts_b1,jte_b1
             do i=its_b1,ite_b1
               t (i,j,l)=t (i,j,l)+tdif (i,j)
-!-- Enhanced diffusion for Q & CWM if facdif>1    !bsf:
+!-- Enhanced diffusion for Q & CWM (doubling smag2 = 4X diffusion)
               q (i,j,l)=q (i,j,l)+facdif*qdif (i,j)
               cw(i,j,l)=cw(i,j,l)+facdif*cdif (i,j)
               q2(i,j,l)=q2(i,j,l)+q2dif(i,j)
