@@ -15,7 +15,7 @@ TARGDIR=../../exec
 
 ./compile em_real > compile_arw.sc.log 2>&1
 
-cp ./main/real.exe $TARGDIR/hiresw_arw_real_new3.5
-cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst_new3.5
+cp ./main/real.exe $TARGDIR/hiresw_arw_real_new
+cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst_new
 
 exit
