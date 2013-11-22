@@ -161,6 +161,7 @@ module output_module
          endif
 #endif
 #ifdef IO_NETCDF
+         if (io_form_output == NETCDF) output_fname_bin = trim(opt_output_from_geogrid_path)//'geo_em.d  .bin'          
          if (io_form_output == NETCDF) output_fname = trim(opt_output_from_geogrid_path)//'geo_em.d  .nc'
 #endif
 #ifdef IO_GRIB1
@@ -216,6 +217,7 @@ module output_module
 #ifdef IO_NETCDF
          if (io_form_output == NETCDF) then
             output_fname = trim(opt_output_from_metgrid_path)//'met_em.d  .'//trim(datestr)//'.nc'
+            output_fname_bin = trim(opt_output_from_geogrid_path)//'geo_em.d  .bin'          
          end if
 #endif
 #ifdef IO_GRIB1
@@ -1040,6 +1042,11 @@ module output_module
         write(0,*) 'not training, writing ' , trim(fields(i)%fieldname), &
                                                ed(1),ed(2),ed(3)
         write(0,*) 'size(real_dom_array): ', size(real_dom_array,dim=1), &
+               size(real_dom_array,dim=2), size(real_dom_array,dim=3)
+
+        write(6,*) 'not training, writing ' , trim(fields(i)%fieldname), &
+                                               ed(1),ed(2),ed(3)
+        write(6,*) 'size(real_dom_array): ', size(real_dom_array,dim=1), &
                size(real_dom_array,dim=2), size(real_dom_array,dim=3)
         write(47) real_dom_array
         write(0,*) 'val(50,50,1): ', real_dom_array(50,50,1)
