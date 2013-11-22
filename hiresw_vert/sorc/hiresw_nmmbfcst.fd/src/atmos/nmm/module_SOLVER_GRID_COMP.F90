@@ -5816,6 +5816,20 @@
             LOC_PCPFLG=.FALSE.
           ENDIF
 !
+        
+!        if (ITS .le. 959 .and. ITE .ge. 959 .and. & 
+!            JTS .le. 439 .and. JTE .ge. 439) then
+!            write(0,*) 'T,Q,THS into TURBL: ', int_state%T(959,439,LM), & 
+!                                               int_state%Q(959,439,LM), & 
+!                                          int_state%THS(959,439)
+!        write(0,*) 'VEGFRC,Z0: ', int_state%VEGFRC(959,439), &
+!                                  int_state%Z0(959,439)
+!        write(0,*) 'STC: ', int_state%STC(959,439,1:4)
+!        write(0,*) 'SMC: ', int_state%SMC(959,439,1:4)
+!        endif
+
+        
+
           CALL TURBL(NTIMESTEP,int_state%DT,int_state%NPHS              &
                     ,int_state%NUM_WATER,NUM_SOIL_LAYERS,SLDPTH,DZSOIL  &
                     ,DSG2,SGML2,SG2,PDSG1,PSGML1,PSG1,PT                &
@@ -5888,6 +5902,13 @@
                     ,ITS,ITE,JTS,JTE)
 !
           td%turbl_tim=td%turbl_tim+(timef()-btim)
+
+!        if (ITS .le. 959 .and. ITE .ge. 959 .and. & 
+!            JTS .le. 439 .and. JTE .ge. 439) then
+!            write(0,*) 'T,Q,THS out of TURBL: ', int_state%T(959,439,LM), & 
+!                                               int_state%Q(959,439,LM), & 
+!                                          int_state%THS(959,439)
+!        endif
 !
 !-----------------------------------------------------------------------
 !***  Exchange wind tendencies.
