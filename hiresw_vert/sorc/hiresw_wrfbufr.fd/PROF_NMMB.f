@@ -16,6 +16,7 @@ C                          COMPUTATIONS - SEE COMMENTS BELOW
 C   03-04-01  M PYLE - BEGAN CONVERTING FOR WRF
 C   04-05-26  M PYLE - MADE CHANGES FOR WRF-NMM
 C   08-09-11  M PYLE - NMMB VERSION READING NEMSIO
+C   13-11-07  M PYLE - fold in parallel NEMSIO read from post
 C
 C USAGE:  CALL PROF FROM PROGRAM POST0
 C
@@ -37,7 +38,8 @@ c      use vrbls2d
 c      use soil
 c      use masks
        use kinds, only             : i_llong
-       use nemsio_module
+!       use nemsio_module
+       use nemsio_module_mpi
 C
       include 'wrf_io_flags.h'
       include 'mpif.h'
@@ -76,6 +78,8 @@ C------------------------------------------------------------------------
       character*8,allocatable:: recname(:)
       character*16,allocatable  :: reclevtyp(:)
       integer,allocatable:: reclev(:)
+      real, allocatable:: tmp(:)
+
 
                              R E A L
      & STNLAT(NSTAT),STNLON(NSTAT)
@@ -143,7 +147,7 @@ C
 
 
                              I N T E G E R
-     & IDAT(3),IDAT0(3),GDS(200)
+     & IDAT(3),IDAT0(3),GDS(200),fldsize,tmpsize
        DATA SPVAL/-9999./
 C
 C------------------------------------------------------------------------
@@ -165,7 +169,6 @@ C	new stuff
       character(len=2):: hrpiece
       character(len=8):: minpiece
       character(len=2):: IMINLAB
-
 
 	real:: rinc(5)
 	integer:: IDATE(8),JDATE(8),IDATENEW(8)
@@ -211,17 +214,24 @@ c	endif
       call mpi_comm_size(MPI_COMM_WORLD,npes,ierr)
 
 
-       call nemsio_init(iret=status)
-       call nemsio_open(nfile,trim(filename),'read',iret=status)
+       call nemsio_init()
+       call nemsio_open(nfile,trim(filename),'read',
+     &                  MPI_COMM_WORLD,iret=status)
 
 	write(6,*) 'filename after open: ', filename
+
+       call nemsio_getfilehead(nfile,iret=status,nrec=nrec)
+
        allocate(recname(nrec),reclevtyp(nrec),reclev(nrec))
+        print*, 'what is nrec: ', nrec
 
 
        call nemsio_getfilehead(nfile,iret=iret                           &
      &   ,idate=idate(1:7),nfhour=nfhour,recname=recname                 &
      &   ,reclevtyp=reclevtyp,reclev=reclev,nframe=nframe                &
      &   ,dimx=im,dimy=jm,dimz=lm)
+
+        print*, 'what is nrec: ', nrec
 
 	impf=im+nframe
 	jmpf=jm+nframe
@@ -279,9 +289,21 @@ C
 
         write(6,*) 'to big allocate block'
 
+
+!! do parallel instead?
+
+      call para_range(1,jm,npes,mype,  
+     &  jsta,jend)
+
+      jsta_2l = max(jsta - 2,  1 )
+      jend_2u = min(jend + 2, jm )
+
+        write(0,*) 'jsta, jend: ', jsta, jend
+
 !  The end j row is going to be jend_2u for all variables except for V.
-	JSTA_2L=1
-	JEND_2U=JM
+!	JSTA_2L=1
+!	JEND_2U=JM
+
       JS=JSTA_2L
       JE=JEND_2U
       IF (JEND_2U.EQ.JM) THEN
@@ -383,25 +405,68 @@ C
 
 
        HBM2=1.0
-	write(6,*) 'filename after randomly: ', filename
+	write(6,*) 'filename here: ', filename
 
 	allocate(glon1d(impf*jmpf))
 	allocate(glat1d(impf*jmpf))
+
+
+! start reading nemsio files using parallel read
+      fldsize=(jend-jsta+1)*im
+      tmpsize=fldsize*nrec
+        write(0,*) 'fldsize, nrec, tmpsize: ', fldsize, nrec, tmpsize
+      allocate(tmp(tmpsize))
+      print*,'allocate tmp successfully'
+      tmp=0.
+        write(0,*) 'call nemsio_denseread'
+
+        write(0,*) 'im, jsta, jend: ', im, jsta, jend
+        write(0,*) 'size(tmp): ', size(tmp)
+
+       call nemsio_denseread(nfile,1,im,jsta,jend,tmp,iret=iret)
+
+!        write(0,*) 'min,max of tmp: ', minval(tmp),maxval(tmp)
+
+      if(iret/=0)then
+        print*,"fail to read nemsio file using mpi io read, stopping"
+        print*, 'iret: ', iret
+        stop
+      end if
+
 !
       varname='glat'
       VcoordName='sfc'
-      l=1
-        call nemsio_readrecv(nfile,trim(varname),trim(vcoordname),
-     &                       L,glat1D,nframe=nframe,iret=iret)
-	write(0,*) 'iret from nemsio read of glat: ', iret
-         do j=1,jm
-            do i=1,im
-              dummy(i,j)=glat1d((j-1)*impf+i+nframed2)
-            enddo
-          enddo
+      L=1
+
+
+        write(0,*) 'call assignnemsiovar for glat'
+
+        write(0,*) 'have VarName: ', VarName
+
+      call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u 
+     & ,L,nrec,fldsize,spval,tmp 
+     & ,recname,reclevtyp,reclev,VarName,VcoordName 
+     & ,gdlat)
+        
+              write(0,*) 'return assignnemsiovar'
+        write(0,*) 'minval(gdlat): ', minval(gdlat)/dtr
+        write(0,*) 'maxval(gdlat): ', maxval(gdlat)/dtr
+
+!      call collect_loc(gdlat,dummy)
+
+!        call nemsio_readrecv(nfile,trim(varname),trim(vcoordname),
+!     &                       L,glat1D,nframe=nframe,iret=iret)
+!	write(0,*) 'iret from nemsio read of glat: ', iret
+!         do j=1,jm
+!            do i=1,im
+!              dummy(i,j)=glat1d((j-1)*impf+i+nframed2)
+!            enddo
+!          enddo
 
         ii=(1+im)/2
         jj=(1+jm)/2
+
+        dummy=gdlat
 
         if(mod(im,2)==0)then
           cenlat=nint((dummy(ii,jj)+dummy(ii+1,jj)+
@@ -410,27 +475,42 @@ C
           cenlat=nint(dummy(ii,jj)*1000.)
         end if
 
+        cenlat=cenlat/dtr
+
+        write(0,*) 'cenlat: ', cenlat
+
+
       varname='glon'
       VcoordName='sfc'
       l=1
-        call nemsio_readrecv(nfile,trim(varname),trim(vcoordname),
-     &                       L,glon1D,nframe=nframe,iret=iret)
 
-          do j=1,jm
-            do i=1,im
-              dummy(i,j)=glon1d((j-1)*impf+i+nframed2)
-            enddo
-          enddo
+!        call nemsio_readrecv(nfile,trim(varname),trim(vcoordname),
+!     &                       L,glon1D,nframe=nframe,iret=iret)
+
+      call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u 
+     & ,L,nrec,fldsize,spval,tmp 
+     & ,recname,reclevtyp,reclev,VarName,VcoordName 
+     & ,gdlon)
+
+!          do j=1,jm
+!            do i=1,im
+!              dummy(i,j)=glon1d((j-1)*impf+i+nframed2)
+!            enddo
+!          enddo
 
         if(mod(im,2)==0)then
-          cenlon=nint((dummy(ii,jj)+dummy(ii+1,jj)+
-     &                 dummy(ii+1,jj+1)+dummy(ii,jj+1))/4.0*1000.)
+          cenlon=nint((gdlon(ii,jj)+gdlon(ii+1,jj)+
+     &                 gdlon(ii+1,jj+1)+gdlon(ii,jj+1))/4.0*1000.)
         else
-          cenlon=nint(dummy(ii,jj)*1000.)
+          cenlon=nint(gdlon(ii,jj)*1000.)
         end if
+
+        cenlon=cenlon/dtr
 
 	TLM0D=cenlon/1000.
 	TPH0D=cenlat/1000.
+
+        write(0,*) 'tph0d, tlm0d: ', tph0d, tlm0d
 
 	deallocate(glat1d,glon1d)
 
@@ -443,9 +523,11 @@ C
 	write(0,*) 'call getnemsandplace for SM'
 	write(0,*) 'IHINDX, JHINDX(1): ', IHINDX(1),JHINDX(1)
 
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,
+     &                    reclev,nrec,spval,VarName,VcoordName, 
      &                    l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SM) 
 	write(0,*) 'return getnemsandplace'
+
 
 !-------------------------------------------------------------------
 
@@ -453,7 +535,8 @@ C
       VcoordName='sfc'
       l=1
 	write(0,*) 'call getnemsandplace for SICE'
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,
+     &        reclev,nrec,spval,VarName,VcoordName, 
      &        l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SICE) 
 
 !-------------------------------------------------------------------
@@ -462,7 +545,8 @@ C
       VcoordName='hybrid sig lev'
       l=1
 	write(0,*) 'call getnemsandplace for dpres'
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,
+     &        reclev,nrec,spval,VarName,VcoordName, 
      &        l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PD) 
 
 
@@ -474,7 +558,8 @@ C
       VcoordName='sfc'
       l=1
 	write(0,*) 'calling getnemsandplace for hgt'
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,
+     &               reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,FIS) 
 
       do N=1,NUMSTA
@@ -496,8 +581,13 @@ C
       VcoordName='mid layer'
 	write(0,*) 'calling getnemsandplace for tmp'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+        write(0,*) 'L, varname, vcoorname: ', L, varname, vcoordname
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,
+     &               reclevtyp,
+     &               reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,T) 
+
+        write(0,*) 'return getnemsandplace_3d'
       enddo
 
 !-------------------------------------------------------------------
@@ -506,16 +596,21 @@ C
       VcoordName='mid layer'
 	write(0,*) 'calling getnemsandplace for spfh'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,
+     &               reclevtyp,
+     &               reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q) 
       enddo
 
 !-------------------------------------------------------------------
 
+
+
       VarName='ugrd'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,
+     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IVINDX,JVINDX,U) 
       enddo
 
@@ -524,13 +619,16 @@ C
       VarName='vgrd'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,
+     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IVINDX,JVINDX,V) 
 	write(0,*) 'T,Q,U,V(163,L):',T(163,L),Q(163,L),
      &                               U(163,L),V(163,L)
       enddo
 
 !-------------------------------------------------------------------
+
+        STOP
 
 
 ! hardwired nemsio value may be garbage
@@ -550,7 +648,7 @@ C
       varname='zorl'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Z0) 
 
 !-------------------------------------------------------------------
@@ -558,7 +656,7 @@ C
       varname='THS'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,THS) 
 
 !-------------------------------------------------------------------
@@ -566,7 +664,7 @@ C
       varname='ACPREC' ! accum total precip
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACPREC) 
 
 !-------------------------------------------------------------------
@@ -574,7 +672,7 @@ C
       varname='CUPREC' ! accum cumulus precip
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CUPREC) 
 
 !-------------------------------------------------------------------
@@ -582,7 +680,7 @@ C
       varname='TH10'
       VcoordName='10 m above gnd'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TH10) 
 
 !-------------------------------------------------------------------
@@ -590,7 +688,7 @@ C
       varname='Q10'
       VcoordName='10 m above gnd'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q10) 
 
 !-------------------------------------------------------------------
@@ -598,7 +696,7 @@ C
       varname='PSHLTR'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PSHLTR) 
 
 !-------------------------------------------------------------------
@@ -606,7 +704,7 @@ C
       varname='TSHLTR'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &          l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TSHLTR_hold) 
 
 !-------------------------------------------------------------------
@@ -614,7 +712,7 @@ C
       varname='QSHLTR'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMTA,IHINDX,JHINDX,QSHLTR) 
 
       DO N=1,NUMSTA
@@ -641,7 +739,7 @@ C
       VarName='CNVBOT'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,HBOT) 
 
       DO N=1,NUMSTA
@@ -653,7 +751,7 @@ C
       VarName='Q2'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q2) 
       enddo
 
@@ -662,7 +760,7 @@ C
       varname='CZEN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CZEN) 
 
 !-------------------------------------------------------------------
@@ -670,7 +768,7 @@ C
       varname='CZMEAN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CZMEAN) 
 
 !-------------------------------------------------------------------
@@ -678,7 +776,7 @@ C
       varname='clwmr'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CWM) 
       enddo
 
@@ -687,7 +785,7 @@ C
       varname='F_ICE'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_ICE) 
       enddo
 
@@ -696,7 +794,7 @@ C
       varname='F_RAIN'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_RAIN) 
       enddo
 
@@ -705,7 +803,7 @@ C
       varname='F_RIMEF'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_RIMEF) 
       enddo
 
@@ -714,7 +812,7 @@ C
       varname='CLDFRA'
       VcoordName='mid layer'
       do L=1,LM
-      call getnemsandplace_3d(nfile,im,jm,lm,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,lm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CLDFRA) 
       enddo
 
@@ -723,7 +821,7 @@ C
       varname='SR'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SR) 
 
 !-------------------------------------------------------------------
@@ -731,7 +829,7 @@ C
       varname='CFRACH'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACH) 
 
 !-------------------------------------------------------------------
@@ -739,7 +837,7 @@ C
       varname='CFRACL'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACL) 
 
 !-------------------------------------------------------------------
@@ -747,7 +845,7 @@ C
       varname='CFRACM'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACL) 
 
 !-------------------------------------------------------------------
@@ -755,7 +853,7 @@ C
       VarName='CMC'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CMC) 
 
 !-------------------------------------------------------------------
@@ -763,7 +861,7 @@ C
       varname='SOILTB'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SOILTB) 
 
 !-------------------------------------------------------------------
@@ -771,7 +869,7 @@ C
       varname='VEGFRC'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,VEGFRC) 
 
 !-------------------------------------------------------------------
@@ -780,7 +878,7 @@ C
       VcoordName='soil layer'
 !      do L=1,NSOIL
 	do L=1,NSOIL
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &      L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SH2O(:,L)) 
       enddo
 
@@ -789,7 +887,7 @@ C
       VarName='SMC'
       VcoordName='soil layer'
       do L=1,NSOIL
-      call getnemsandplace_3d(nfile,im,jm,nsoil,spval,VarName, 
+      call getnemsandplace_3d(nfile,im,jm,nsoil,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName, 
      &       VcoordName,l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SMC) 
       enddo
 
@@ -798,7 +896,7 @@ C
       VarName='STC'
       VcoordName='soil layer'
       do L=1,NSOIL
-      call getnemsandplace_3d(nfile,im,jm,nsoil,spval,VarName, 
+      call getnemsandplace_3d(nfile,im,jm,nsoil,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName, 
      &      VcoordName,l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,STC) 
       enddo
 
@@ -809,7 +907,7 @@ C
       VarName='pres'
       VcoordName='layer'
       do L=1,LP1
-      call getnemsandplace_3d(nfile,im,jm,LM+1,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM+1,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PINT) 
       enddo
 
@@ -855,7 +953,7 @@ C
       VarName='vvel'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,WH) 
       enddo
 
@@ -864,7 +962,7 @@ C
       VarName='SSROFF'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SSROFF) 
 
 !-------------------------------------------------------------------
@@ -872,7 +970,7 @@ C
       VarName='BGROFF'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,BGROFF) 
 
 !-------------------------------------------------------------------
@@ -880,7 +978,7 @@ C
       VarName='ALWIN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWIN) 
 
 !-------------------------------------------------------------------
@@ -888,7 +986,7 @@ C
       VarName='ALWOUT'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWOUT) 
 	write(0,*) 'ALWOUT(100): ', ALWOUT(100)
 
@@ -897,7 +995,7 @@ C
       VarName='ALWTOA'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWTOA) 
 
 !-------------------------------------------------------------------
@@ -905,7 +1003,7 @@ C
       VarName='ASWIN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWIN) 
 	write(0,*) 'ASWIN(100): ', ASWIN(100)
 
@@ -914,7 +1012,7 @@ C
       VarName='ASWOUT'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWOUT) 
 
 !-------------------------------------------------------------------
@@ -922,7 +1020,7 @@ C
       VarName='ASWTOA'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWTOA) 
 
 !-------------------------------------------------------------------
@@ -930,7 +1028,7 @@ C
       VarName='SFCSHX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX) 
 
 !-------------------------------------------------------------------
@@ -938,7 +1036,7 @@ C
       VarName='SFCLHX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCLHX) 
 
 !-------------------------------------------------------------------
@@ -946,7 +1044,7 @@ C
       VarName='SUBSHX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &              l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SUBSHX) 
 
 !-------------------------------------------------------------------
@@ -954,7 +1052,7 @@ C
       VarName='SNOPCX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SNOPCX) 
 
 !-------------------------------------------------------------------
@@ -962,7 +1060,7 @@ C
       VarName='POTFLX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,POTFLX) 
 
 !-------------------------------------------------------------------
@@ -970,7 +1068,7 @@ C
       VarName='TLMIN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TLMIN) 
 
 !-------------------------------------------------------------------
@@ -978,7 +1076,7 @@ C
       VarName='TLMAX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TLMAX) 
 
 !-------------------------------------------------------------------
@@ -986,7 +1084,7 @@ C
       varname='RLWTT'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,RLWTT) 
       enddo
 
@@ -995,7 +1093,7 @@ C
       varname='RSWTT'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,RSWTT) 
       enddo
 
@@ -1004,7 +1102,7 @@ C
       varname='TCUCN'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TCUCN) 
       enddo
 
@@ -1013,7 +1111,7 @@ C
       varname='TRAIN'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TRAIN) 
       enddo
 
@@ -1022,7 +1120,7 @@ C
       VarName='AVRAIN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,AVRAIN) 
 
 !-------------------------------------------------------------------
@@ -1106,7 +1204,7 @@ C
       VarName='U10'
       VcoordName='10 m above gnd'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,U10) 
 
 !-------------------------------------------------------------------
@@ -1115,7 +1213,7 @@ C
       VarName='V10'
       VcoordName='10 m above gnd'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,V10) 
 
 !-------------------------------------------------------------------
@@ -1123,7 +1221,7 @@ C
       VarName='SMSTAV'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SMSTAV) 
 
 !-------------------------------------------------------------------
@@ -1131,7 +1229,7 @@ C
       VarName='SMSTOT'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SMSTOT) 
 
 !-------------------------------------------------------------------
@@ -1139,7 +1237,7 @@ C
       VarName='vegfrc'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,VEGFRA)
 
 !-------------------------------------------------------------------
@@ -1147,7 +1245,7 @@ C
       VarName='SFCEXC'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCEXC)
 
 !-------------------------------------------------------------------
@@ -1155,7 +1253,7 @@ C
       VarName='ACSNOW'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOW)
 
 !-------------------------------------------------------------------
@@ -1163,7 +1261,7 @@ C
       VarName='ACSNOM'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOM)
 
 !-------------------------------------------------------------------
@@ -1171,7 +1269,7 @@ C
       VarName='SNO'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SNO)
 
 !-------------------------------------------------------------------
@@ -1179,7 +1277,7 @@ C
       VarName='CPRATE'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &              l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CPRATE)
 
 !-------------------------------------------------------------------
@@ -1357,7 +1455,7 @@ C
       varname='ACPREC' ! accum total precip
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACPREC0) 
 
 !-------------------------------------------------------------------
@@ -1365,7 +1463,7 @@ C
       varname='CUPREC' ! accum cumulus precip
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CUPREC0) 
 
 !-------------------------------------------------------------------
@@ -1373,7 +1471,7 @@ C
       VarName='SSROFF'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SSROFF0) 
 
 !-------------------------------------------------------------------
@@ -1381,7 +1479,7 @@ C
       VarName='BGROFF'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,BGROFF0) 
 
 !-------------------------------------------------------------------
@@ -1389,7 +1487,7 @@ C
       VarName='ALWIN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWIN0) 
 
 !-------------------------------------------------------------------
@@ -1397,7 +1495,7 @@ C
       VarName='ALWOUT'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWOUT0) 
 	write(0,*) 'ALWOUT0(100): ', ALWOUT0(100)
 
@@ -1406,7 +1504,7 @@ C
       VarName='ALWTOA'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWTOA0) 
 
 !-------------------------------------------------------------------
@@ -1414,7 +1512,7 @@ C
       VarName='ASWIN'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWIN0) 
 
 !-------------------------------------------------------------------
@@ -1422,7 +1520,7 @@ C
       VarName='ASWOUT'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWOUT0) 
 
 !-------------------------------------------------------------------
@@ -1430,7 +1528,7 @@ C
       VarName='ASWTOA'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWTOA0) 
 
 !-------------------------------------------------------------------
@@ -1438,7 +1536,7 @@ C
       VarName='SFCSHX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
 
 !-------------------------------------------------------------------
@@ -1446,7 +1544,7 @@ C
       VarName='SFCLHX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCLHX0) 
 
 !-------------------------------------------------------------------
@@ -1454,7 +1552,7 @@ C
       VarName='SUBSHX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
 
 !-------------------------------------------------------------------
@@ -1462,7 +1560,7 @@ C
       VarName='SNOPCX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SNOPCX0) 
 
 !-------------------------------------------------------------------
@@ -1470,7 +1568,7 @@ C
       VarName='POTFLX'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,POTFLX0) 
 
 !-------------------------------------------------------------------
@@ -1478,7 +1576,7 @@ C
       varname='TCUCN'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TCUCN0) 
       enddo
 
@@ -1487,7 +1585,7 @@ C
       varname='TRAIN'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d(nfile,im,jm,LM,spval,VarName,VcoordName, 
+      call getnemsandplace_3d(nfile,im,jm,LM,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TRAIN0) 
       enddo
 
@@ -1503,7 +1601,7 @@ C
       VarName='ACSNOW'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOW0) 
 
 !-------------------------------------------------------------------
@@ -1511,7 +1609,7 @@ C
       VarName='ACSNOM'
       VcoordName='sfc'
       l=1
-      call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName, 
+      call getnemsandplace(nfile,im,jm,tmp,fldsize,recname,reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOM0) 
 
 !-------------------------------------------------------------------
@@ -2311,7 +2409,7 @@ C***
 C***  WRITE PROFILE DATA
 C***
       
-!      NREC=(IFHR/INCR)*NUMSTA+N
+!      eREC=(IFHR/INCR)*NUMSTA+N
       NREC=N
 !      write(6,*) 'NREC,IHRST,IDAT: ', NREC,IHRST,IDAT,IFCST
 

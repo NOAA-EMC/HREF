@@ -32,7 +32,7 @@
 #
 # Define the name of the executable
 #
-TARGET = ../../exec/hiresw_wrfbufr_src
+TARGET = ../../exec/hiresw_wrfbufr_para
 #
 # CPP, Compiler, and Linker Options
 #
@@ -86,7 +86,8 @@ LIBS     = $(ESSL) $(MASS) $(SEARCH) $(WRFLIB) \
 OBJST= module_internal_header_util.o getIVariableB.o getIVariable.o getVariableB.o getVariable.o \
         kinds_mod.o \
         count_recs_wrf_binary_file.o inventory_wrf_binary_file.o \
-        next_buf.o retrieve_index.o GETNEMSANDPLACE.o
+        next_buf.o retrieve_index.o GETNEMSANDPLACE.o PARA_RANGE.o ASSIGNNEMSIOVAR.o
+
 
 #
 # fixed-format object files
@@ -105,7 +106,7 @@ INCLUDES= parmsoil
 #
 COMMS=
 
-DEPS= $(COMMS) $(INCLUDES) $(SRCS)
+DEPS= $(COMMS) $(INCLUDES)
 
 .SUFFIXES:	.F .f .o
 
