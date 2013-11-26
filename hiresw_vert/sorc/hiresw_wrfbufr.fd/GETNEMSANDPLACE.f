@@ -88,18 +88,18 @@
 
         ll=L
 
-        write(0,*) 'call getrecn with nrec, varname', nrec, varname
+!        write(0,*) 'call getrecn with nrec, varname', nrec, varname
 
         call getrecn(recnameloc,reclevtyp,reclev,nrec,varname,VcoordName,ll,recn)
 
-        write(0,*) 'recn,recnameloc: ', recn,recnameloc(recn)
+!        write(0,*) 'recn,recnameloc: ', recn,recnameloc(recn)
 
         jsta=1
         jend=jm
 
         if(recn/=0) then
           fldst=(recn-1)*fldsize
-        write(0,*) 'fldst: ', fldst
+!        write(0,*) 'fldst: ', fldst
           do j=jsta,jend
             js=(j-jsta)*im
             do i=1,im
