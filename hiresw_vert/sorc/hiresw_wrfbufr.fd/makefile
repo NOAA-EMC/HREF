@@ -45,12 +45,12 @@ ARCH     =
 CPPFLAGS = 
 # OPTS     = -O0 -assume byterecl
 # OPTS     = -O3 -assume byterecl -convert big_endian
-OPTS     = -O3 -convert big_endian -assume noold_ldout_format
+OPTS     = -O2 -g -check -traceback -convert big_endian -assume noold_ldout_format
 LIST     = 
 FREE     = -FR
 TRAPS    = 
 PROFILE  = 
-DEBUG    = # -g # -traceback -fpe0 -ftrapuv # -check all 
+DEBUG    = -g # -traceback -fpe0 -ftrapuv # -check all 
 MEM      =
 MAP      =
 ESSL     =
@@ -120,7 +120,7 @@ $(OBJS):	$(DEPS)
 	$(FC) -c $(FFLAGS) $(@:.o=.f)
 
 $(OBJST):	$(DEPS)
-	$(FC) -c $(FFLAGST) $(@:.o=.f)
+	$(FC) -c $(FFLAGST) $(@:.o=.f90)
 
 clean:	
 	/bin/rm -f  *.lst *.o *.mod
