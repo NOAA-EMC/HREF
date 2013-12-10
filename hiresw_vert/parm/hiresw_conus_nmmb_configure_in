@@ -9,15 +9,18 @@ core: nmm                   # Introduce ourselves to the NEMS
 #####  Grid Specifications  #####
 #################################
 
-im:  1818                   # I gridpoints
-jm:  1132                    # J gridpoints
+im:  1765                   # I gridpoints
+jm:  1100                    # J gridpoints
 lm:  40                     # Number of atmospheric layers
 
 tph0d:   40.0               # Central geographic latitude of grid (degrees)
 tlm0d: -98.0               # Central geographic longitude of grid (degrees, positive east)
 
-wbd:  -29.072                 # Grid's western boundary (rotated degrees)
-sbd:  -17.531                # Grid's southern boundary (rotated degrees)
+# wbd:  -29.072                 # Grid's western boundary (rotated degrees)
+# sbd:  -17.531                # Grid's southern boundary (rotated degrees)
+
+wbd:  -29.106                 # Grid's western boundary (rotated degrees)
+sbd:  -17.584                # Grid's southern boundary (rotated degrees)
 
 
 ################################
@@ -27,10 +30,13 @@ sbd:  -17.531                # Grid's southern boundary (rotated degrees)
 # prod maybe
 # inpes:  15             # Number of compute tasks in the I direction
 # jnpes:  46            # Number of compute tasks in the J direction
+#
+inpes:  13             # Number of compute tasks in the I direction
+jnpes:  44            # Number of compute tasks in the J direction
 
 #retro
-inpes:  14             # Number of compute tasks in the I direction
-jnpes:  32            # Number of compute tasks in the J direction
+# inpes:  14             # Number of compute tasks in the I direction
+# jnpes:  32            # Number of compute tasks in the J direction
 
 #################################
 ####  Specify the I/O tasks  ####
@@ -40,7 +46,7 @@ quilting:              true    # Do you want asynchronous quilting/history write
 read_groups:           0
 read_tasks_per_group:  0
 write_groups:          1
-write_tasks_per_group: 16
+write_tasks_per_group: 22
 #prodmaybe write_tasks_per_group: 23
 
 
@@ -49,8 +55,8 @@ write_tasks_per_group: 16
 ############################################
 
 dt_int:  7                 # Integer seconds
-dt_num:  1                  # Numerator of fractional second
-dt_den:  5                  # Denominator of fractional second
+dt_num:  11                  # Numerator of fractional second
+dt_den:  27                  # Denominator of fractional second
 
 filt_dt_int: 5            # Integer seconds
 filt_dt_num: 5             # Numerator of fractional second
@@ -277,8 +283,8 @@ nodeep:     .false.         # All deep convection diverted to shallow swap algor
 #####  Physics Timesteps  #####
 ###############################
 
-nrads:     250               # Number of dynamics timesteps between calls to shortwave
-nradl:     250               # Number of dynamics timesteps  between calls to longwave
+nrads:     243               # Number of dynamics timesteps between calls to shortwave
+nradl:     243               # Number of dynamics timesteps  between calls to longwave
 
 nphs:       5               # Number of dynamics timesteps between calls to landsurface and turbulence
 
