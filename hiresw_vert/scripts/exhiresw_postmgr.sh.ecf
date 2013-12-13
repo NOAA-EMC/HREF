@@ -124,14 +124,24 @@ echo "#!/bin/ksh -l" > jobsub_nmmb_post.${fhruse}
 echo "#BSUB -J hiresw_nmmb_post_f${fhruse}_${cyc}" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
-echo "#BSUB -W 00:15" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -W 00:09" >> jobsub_nmmb_post.${fhruse}
 
 if [ $NEST == "conus" -o $NEST == "aknew" ]
 then
-echo "#BSUB -n 40" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -R "span[ptile=8]"" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -x" >> jobsub_nmmb_post.${fhruse}
-echo "#BSUB -q "dev"" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -q "devhigh"" >> jobsub_nmmb_post.${fhruse}
+
+if [ $NEST == "conus" ]
+then
+echo "#BSUB -n 40" >> jobsub_nmmb_post.${fhruse}
+fi
+
+if [ $NEST == "aknew" ]
+then
+echo "#BSUB -n 32" >> jobsub_nmmb_post.${fhruse}
+fi
+
 elif [ $NEST == "prnew" ]
 then
 echo "#BSUB -n 1" >> jobsub_nmmb_post.${fhruse}
@@ -217,13 +227,13 @@ echo "#!/bin/ksh -l" > jobsub_arw_post.${fhr}
 echo "#BSUB -J arw_post_f${fhr}_${cyc}" >> jobsub_arw_post.${fhr}
 echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
 echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
-echo "#BSUB -W 00:15" >> jobsub_arw_post.${fhr}
+echo "#BSUB -W 00:09" >> jobsub_arw_post.${fhr}
 
 if [ $NEST == "conus" -o $NEST == "aknew" ]
 then
 echo "#BSUB -n 16" >> jobsub_arw_post.${fhr}
 echo "#BSUB -R "span[ptile=8]"" >> jobsub_arw_post.${fhr}
-echo "#BSUB -q "dev"" >> jobsub_arw_post.${fhr}
+echo "#BSUB -q "devhigh"" >> jobsub_arw_post.${fhr}
 echo "#BSUB -x" >> jobsub_arw_post.${fhr}
 elif [ $NEST == "prnew" ]
 then

@@ -101,14 +101,14 @@ echo "#!/bin/ksh -l" > jobsub_prdgen.${fhruse}
 echo "#BSUB -J prdgen_f${fhruse}_${cyc}" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -W 00:09" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -W 00:13" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -n $proc" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -q "dev_shared"" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -q "devhigh"" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -J PRDGEN_${fhruse}" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -P HRW-T2O" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -R affinity[core(1)]" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -R span[ptile=${proc}]" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -R rusage[mem=5000]" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -R rusage[mem=6000]" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -x" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -a poe" >> jobsub_prdgen.${fhruse}
 echo "set -x" >> jobsub_prdgen.${fhruse}

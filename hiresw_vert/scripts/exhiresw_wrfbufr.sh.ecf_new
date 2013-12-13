@@ -227,7 +227,7 @@ echo about to run program at $datestr
 # mpirun.lsf $EXEChiresw/hiresw_wrfbufr  >> $pgmout 2>errfile 
 
 # $EXEChiresw/hiresw_wrfbufr_v3.5  > pgmout.log_${fhr} 2>&1 
-$EXEChiresw/hiresw_wrfbufr_src  > pgmout.log_${fhr} 2>&1 
+$EXEChiresw/hiresw_wrfbufr_srcmod  > pgmout.log_${fhr} 2>&1 
 
 # /nwprod/hiresw.v1.0.0/exec/hiresw_wrfbufr   > pgmout.log_${fhr} 2>&1
 

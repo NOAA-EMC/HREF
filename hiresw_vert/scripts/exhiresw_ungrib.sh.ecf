@@ -129,6 +129,11 @@ do
 # suf=""
 
 
+while [ ! -e ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} ]
+do
+sleep 10
+done
+
   cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/.
   err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_1/Vtable 
