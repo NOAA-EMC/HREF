@@ -47,9 +47,9 @@ dt_int:  6                 # Integer seconds
 dt_num:  0                  # Numerator of fractional second
 dt_den:  1                  # Denominator of fractional second
 
-filt_dt_int: 5            # Integer seconds
-filt_dt_num: 5             # Numerator of fractional second
-filt_dt_den: 9             # Denominator of fractional second
+filt_dt_int: 6            # Integer seconds
+filt_dt_num: 0             # Numerator of fractional second
+filt_dt_den: 1             # Denominator of fractional second
 
 #################################
 #####  Forecast Start Time  #####
@@ -143,13 +143,13 @@ lnsv:  5                    # Number of boundary blending rows for V points
 #####  Digital Filtering Options  ####
 ######################################
 
-filter_method: 0            # 0--->none ; 1--->DFL ; 2---> DDFI ; 3--->TDFI
+filter_method: 3            # 0--->none ; 1--->DFL ; 2---> DDFI ; 3--->TDFI
 
 nsecs_dfl: 1800             # HALF foward filter window (s)          (DFL)
 nsecs_bckddfi: 1800         # HALF backward integration duration (s) (DDFI)
 nsecs_fwdddfi: 3600         # HALF foward filter window (s)          (DDFI)
-nsecs_bcktdfi: 900         # HALF backward filter window (s)        (TDFI)
-nsecs_fwdtdfi: 900         # HALF forward filter window (s)         (TDFI)
+nsecs_bcktdfi: 180         # HALF backward filter window (s)        (TDFI)
+nsecs_fwdtdfi: 180         # HALF forward filter window (s)         (TDFI)
 
 
 #############################
