@@ -135,13 +135,28 @@ then
 elif [ $NEST = "conus"  ]
 then
 
+if [ -e ${COMRAP}/rap.t${cyc}z.awip32f${whr}df ]
+then
+ cp ${COMRAP}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
+ suf="df"
+ NUMLEVS=40
+	echo "SET NUMLEVS TO 40"
+else
  cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
+ suf=""
+ NUMLEVS=39
+	echo "SET NUMLEVS TO 39 "
+
+fi
+
+ err1=$?
+
  cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
  err1=$?
  mod=rap
  GRIBSRC=RAP
  type=awip32f	
- suf=""
+#  suf=""
 
 else
 
@@ -179,7 +194,7 @@ else
 fi
 if [ $err1 -ne 0 ] 
 then
-  ./err_exit "$whr input GRIB file from GFS not found.  FATAL ERROR"
+  ./err_exit "$whr input GRIB file from RAP not found.  FATAL ERROR"
 fi
 
 whr=`expr $whr + $incr`
@@ -387,11 +402,12 @@ fi
 # elif [ $NEST = "pr"  -o $NEST = "conus"  -o $NEST = "prnew" ] ; then
 # NUMLEVS=43
 # elif [ $NEST = "ak" -o $NEST = "aknew" -o $NEST = "guam" -o $NEST = "guamnew" ] ; then
-NUMLEVS=27
-if [ $mod = "rap" ]
-then
-NUMLEVS=39
-fi
+# NUMLEVS=27
+
+# if [ $mod = "rap" ]
+# then
+# NUMLEVS=39
+# fi
 
 # fi
 

@@ -197,10 +197,11 @@ fi
 ### number of input levels depends on source model data
 
 NUMLEVS=27
-if [ $mod = "rap" ]
-then
-NUMLEVS=40
-fi
+
+# if [ $mod = "rap" ]
+# then
+# NUMLEVS=40
+# fi
 
 # fi
 
@@ -255,7 +256,7 @@ unset MP_CMDFILE
 
 echo NEED TO RUN NEMSINTERP
 # mpirun.lsf $EXEChiresw/hiresw_nemsinterp
-cp $DATA/run_ungrib/namelist.nps .
+# cp $DATA/run_ungrib/namelist.nps .
 
   cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yyint1: \
