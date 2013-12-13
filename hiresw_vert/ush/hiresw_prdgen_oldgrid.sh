@@ -148,8 +148,9 @@ rm fort.*
 
 export pgm=hiresw_prdgen  ;. ./prep_step
 
-# export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255_5km"
+## export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255_5km"
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.${wgt}5km"
+
 export FORT10="master${fhr}.ctl"
 
 echo EXECUTING hiresw_prdgen  for 5 km

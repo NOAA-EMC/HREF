@@ -39,8 +39,10 @@ elif [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS05"
   DOMIN_bucket="general"
-  IM=1166
-  JM=708
+#  IM=1166
+#  JM=708
+  IM=1473
+  JM=1025
 elif [ $DOMIN = "westnmm" ]
 then
   filenamthree="wrf.WEST04"
@@ -59,8 +61,10 @@ elif [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS05"
   DOMIN_bucket="general"
-  IM=1166
-  JM=708
+#  IM=1166
+#  JM=708
+  IM=1473
+  JM=1025
 elif [ $DOMIN = "westarw" ]
 then
   filenamthree="wrf.EMWST04"
@@ -90,7 +94,12 @@ export tmmark=tm00
 
 ls -l $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km
 
+if [ $DOMIN_SMALL = "conus" ]
+then
+cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km_g227 master${fhr}.ctl
+else
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
+fi
 
 cat >input${fhr}.prd <<EOF5
 $DATA/post_${fhr}/WRFPRS${fhr}.tm00
@@ -100,7 +109,14 @@ rm fort.*
 
 export pgm=hiresw_prdgen  ;. ./prep_step
 
+
+if [ $DOMIN_SMALL = "conus" ]
+then
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g227"
+else
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255_5km"
+fi
+
 export FORT10="master${fhr}.ctl"
 
 echo EXECUTING hiresw_prdgen  for 5 km

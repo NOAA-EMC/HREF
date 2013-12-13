@@ -70,32 +70,36 @@ elif [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS04"
   DOMIN_bucket="general"
-  IM=1577
-  JM=959
+#  IM=1577
+#  JM=959
+  IM=2145
+  JM=1377
 elif [ $DOMIN = "aknewnmmb" ]
 then
   filenamthree="wrf.AK04"
   DOMIN_bucket="general"
-  IM=1131
-  JM=929
+  IM=1649
+  JM=1105
 elif [ $DOMIN = "guamnewnmmb" ]
 then
   filenamthree="wrf.GU04"
   DOMIN_bucket="general"
-  IM=287
-  JM=219
+#  IM=287
+#  JM=219
+  IM=193
+  JM=193
 elif [ $DOMIN = "hinewnmmb" ]
 then
   filenamthree="wrf.HI04"
   DOMIN_bucket="general"
-  IM=287
-  JM=219
+  IM=321
+  JM=225
 elif [ $DOMIN = "prnewnmmb" ]
 then
   filenamthree="wrf.PR04"
   DOMIN_bucket="general"
-  IM=440
-  JM=269
+  IM=177
+  JM=129
 fi
 
 if [ $DOMIN = "eastarw" ]
@@ -114,8 +118,8 @@ elif [ $DOMIN = "aknewarw" ]
 then
   filenamthree="wrf.EMAK04"
   DOMIN_bucket="general"
-  IM=1131
-  JM=929
+  IM=1649
+  JM=1105
 elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR04"
@@ -132,26 +136,34 @@ elif [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS04"
   DOMIN_bucket="general"
-  IM=1577
-  JM=959
+#  IM=1577
+#  JM=959
+  IM=2145
+  JM=1377
 elif [ $DOMIN = "guamnewarw" ]
 then
   filenamthree="wrf.EMGU04"
   DOMIN_bucket="general"
-  IM=287
-  JM=219
+#  IM=287
+#  JM=219
+  IM=193
+  JM=193
 elif [ $DOMIN = "hinewarw" ]
 then
   filenamthree="wrf.EMHI04"
   DOMIN_bucket="general"
-  IM=287
-  JM=219
+#  IM=287
+#  JM=219
+  IM=321
+  JM=225
 elif [ $DOMIN = "prnewarw" ]
 then
   filenamthree="wrf.EMPR04"
   DOMIN_bucket="general"
-  IM=440
-  JM=269
+#  IM=440
+#  JM=269
+  IM=177
+  JM=129
 fi
 
 
@@ -184,8 +196,27 @@ rm fort.*
 
 export pgm=hiresw_prdgen # ;. ./prep_step
 
+if [ $DOMIN_SMALL = "conus" ]
+then
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g184"
+elif [ $DOMIN_SMALL = "aknew" ]
+then
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g91"
+elif [ $DOMIN_SMALL = "prnew" ]
+then
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g195"
+elif [ $DOMIN_SMALL = "hinew" ]
+then
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g196"
+elif [ $DOMIN_SMALL = "guamnew" ]
+then
+export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g199"
+else
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
+fi
+
 export FORT10="master${fhr}.ctl"
+
 export FORT11="input${fhr}.prd"
 
 # if [ $model = "nmmb" ]
