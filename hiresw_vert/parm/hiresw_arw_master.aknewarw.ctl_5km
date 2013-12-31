@@ -24,13 +24,13 @@
 116/255/X/-3.0/wrf.EMAK05/0/0                      
    65   1   0   0   4 2 1  ACM SNOWFALL
 116/255/X/-3.0/wrf.EMAK05/0/0
-  143   1   0   0   0   INSTANT PRECIP TYPE       
+  143   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/255/X/1.0/wrf.EMAK05/0/0                      
-  142   1   0   0   0   INSTANT PRECIP TYPE       
+  142   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/255/X/1.0/wrf.EMAK05/0/0                      
-  141   1   0   0   0   INSTANT PRECIP TYPE       
+  141   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/255/X/1.0/wrf.EMAK05/0/0                      
-  140   1   0   0   0   INSTANT PRECIP TYPE       
+  140   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/255/X/1.0/wrf.EMAK05/0/0                      
   157   1   0   0   0 2 1  CNVCT AVBL POT ENRGY      
 116/255/X/2.7/wrf.EMAK05/0/0                      
@@ -559,6 +559,4 @@
    33 220   0   0   0   2   1   TRANSPORT U WIND
 116/255/X/-4.0/wrf.EMAK05/0/0
    34 220   0   0   0   2   1   TRANSPORT V WIND
-116/255/X/-4.0/wrf.EMAK05/0/0
-  239 200   0   0   0 129   1   MAX VERT INTEG GRAUP
 116/255/X/-4.0/wrf.EMAK05/0/0
