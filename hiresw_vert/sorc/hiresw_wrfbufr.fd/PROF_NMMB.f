@@ -122,19 +122,16 @@ C------------------------------------------------------------------------
      &,ASWOUT0(:),ALWIN0(:),ALWOUT0(:),ALWTOA0(:)
      &,ASWTOA0(:),ACSNOW0(:),ACSNOM0(:),SSROFF0(:)
      &,BGROFF0(:)
-     &,TCUCN0(:,:),TRAIN0(:,:), glat1d(:),glon1d(:),icnt(:),idsp(:)
-C
-!     & DUMSOIL(NSOIL)
-!     &,DUM3D(IM+1,LM+1,JM+1),DUM3D2(IM+1,LM+1,JM+1)
-!     &,DUM3D3(IM+1,LM+1,JM+1),DUMMY2(IM,JM),DUMMY(IM,JM)
-!     &,PD(:),PDS(:),GDLAT(IM,JM),GDLON(IM,JM)
-!       REAL:: PMID(NSTAT,LM),PINT(NSTAT,LM+1),LATSTART,LONSTART
-!       REAL:: W(NSTAT,LM+1),WH(NSTAT,LM),PDTOP,PT
+     &,TCUCN0(:,:),TRAIN0(:,:), glat1d(:),glon1d(:)
 
+!        integer, allocatable:: icnt(:),idsp(:)
+       integer :: icnt(0:127),idsp(0:127)
+C
         real, allocatable:: DUMSOIL(:),DUMSOIL3(:,:,:)
      &,DUM3D(:,:,:),DUM3D2(:,:,:),DUM3DIKJ(:,:,:)
      &,DUM3D3(:,:,:),DUMMY2(:,:),DUMMY(:,:)
      &,PD(:),PDS(:),GDLAT(:,:),GDLON(:,:)
+     &,GDLAT2(:,:),GDLON2(:,:)
      &,PMID(:,:),PINT(:,:)
      &,W(:,:),WH(:,:)
 	
@@ -185,8 +182,8 @@ C***
 C***  READ IN THE INFORMATION FILE ABOUT THE SOUNDINGS
 C***
 
-	write(6,*) 'filename at top ', filename
-c	write(6,*) 'startedate= ', startdate
+	write(0,*) 'filename at top ', filename
+c	write(0,*) 'startedate= ', startdate
 
 	datestr=startdate
 
@@ -194,10 +191,10 @@ c	write(6,*) 'startedate= ', startdate
 C
       READ(19)NUMSTA,IDSTN,STNLAT,STNLON
      1,       IHINDX,JHINDX,IVINDX,JVINDX,CIDSTN
-      WRITE(6,20)NUMSTA
+      WRITE(0,20)NUMSTA
    20 FORMAT('INIT:  NUMBER OF PROFILE STATIONS ',I5)
 	if (ITAG .eq. 0) then
-      WRITE(6,30)(IDSTN(N),STNLAT(N)/DTR,STNLON(N)/DTR
+      WRITE(0,30)(IDSTN(N),STNLAT(N)/DTR,STNLON(N)/DTR
      1,               IHINDX(N),JHINDX(N),IVINDX(N),JVINDX(N)
      2,               CIDSTN(N),N=1,NUMSTA)
 	endif
@@ -213,9 +210,6 @@ c	endif
       call mpi_comm_rank(MPI_COMM_WORLD,mype,ierr)
       call mpi_comm_size(MPI_COMM_WORLD,npes,ierr)
         
-        allocate(icnt(0:npes-1))
-        allocate(idsp(0:npes-1))
-
 
        call nemsio_init()
        call nemsio_open(nfile,trim(filename),'read',
@@ -233,14 +227,14 @@ c	endif
      &   ,reclevtyp=reclevtyp,reclev=reclev,nframe=nframe                &
      &   ,dimx=im,dimy=jm,dimz=lm)
 
-        print*, 'what is nrec: ', nrec
+        write(0,*) 'what is nrec: ', nrec
 
 	impf=im+nframe
 	jmpf=jm+nframe
 	nframed2=nframe/2
 
 	do I=1,7
-	print*, 'I,IDATE(I): ', I, IDATE(I)
+	write(0,*) 'I,IDATE(I): ', I, IDATE(I)
 	enddo
 
 
@@ -286,16 +280,28 @@ C
 !          ihrst=IDATE(5)
           ihrst=IDATE(4)
 C
+
 !        endif
 
 
-        write(6,*) 'to big allocate block'
+        write(0,*) 'to big allocate block'
 
 
 !! do parallel instead?
 
       call para_range(1,jm,npes,mype,  
      &  jsta,jend)
+
+      do i = 0, npes - 1
+         call para_range(1,jm,npes,i,jsx,jex)
+         icnt(i) = (jex-jsx+1)*im
+         idsp(i) = (jsx-1)*im
+         if ( mype .eq. 0 ) then
+           write(0,*) ' i, icnt(i),idsp(i) = ',i,icnt(i),
+     &      idsp(i)
+         end if
+      end do
+
 
 ! force each task to do full range
 ! this gets everyone past the barrier
@@ -323,17 +329,17 @@ C
 !        call ext_int_get_dom_ti_real(DataHandle,'DX',tmp
 !     + ,1,ioutcount,istatus)
 !        dxval=nint(tmp*1000.) ! E-grid dlamda in degree
-!        write(6,*) 'dxval= ', dxval
+!        write(0,*) 'dxval= ', dxval
 
 !        call ext_int_get_dom_ti_real(DataHandle,'DY',tmp
 !     + ,1,ioutcount,istatus)
 !        dyval=nint(1000.*tmp)
-!        write(6,*) 'dyval= ', dyval
+!        write(0,*) 'dyval= ', dyval
 
 !        call ext_int_get_dom_ti_real(DataHandle,'DT',tmp
 !     + ,1,ioutcount,istatus)
 !        DT=tmp
-!        write(6,*) 'DT= ', DT
+!        write(0,*) 'DT= ', DT
 
 	me=0
       VarName='dt'
@@ -345,22 +351,34 @@ C
         else
          dt=garb
         end if
+
+        NTSD=INT(0.5+ITAG*3600./dt)
+        
+
+        if (NPES .gt. 1) then
+        call mpi_bcast(NTSD,1,MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
+        endif
+        write(0,*) 'NTSD: ', NTSD
+
       end if
 
 ! former parameter statements
-	write(6,*) 'LM: ', LM
+	write(0,*) 'LM: ', LM
         NWORDM=(LCL1ML+1)*LM+2*LCL1SL
         LRECPR=4*(8+9+LCL1ML*LM+LCL1SL)
 
-        write(6,*) 'NWORDM, LRECPR: ', NWORDM, LRECPR
+        write(0,*) 'NWORDM, LRECPR: ', NWORDM, LRECPR
+
 ! former parameter statements
 
        ALLOCATE( DETA(LM),RDETA(LM),AETA(LM),UL(2*LM)
      &,RES(NUMSTA),FIS(NUMSTA),THS(NUMSTA),HBOT(NUMSTA)
      &,CFRACL(NUMSTA),CFRACM(NUMSTA),CFRACH(NUMSTA),SNO(NUMSTA)
      &,SOILTB(NUMSTA),SFCEXC(NUMSTA),SMSTAV(NUMSTA),SMSTOT(NUMSTA)
-     &,Z0(NUMSTA),CZEN(NUMSTA),CZMEAN(NUMSTA),SR(NUMSTA)
-     &,ACPREC(NUMSTA),CUPREC(NUMSTA),ACSNOW(NUMSTA),ACSNOM(NUMSTA)
+     &,Z0(NUMSTA),CZEN(NUMSTA),CZMEAN(NUMSTA),SR(NUMSTA))
+
+       ALLOCATE (ACPREC(NUMSTA),CUPREC(NUMSTA)
+     &,ACSNOW(NUMSTA),ACSNOM(NUMSTA)
      &,SSROFF(NUMSTA),BGROFF(NUMSTA),SFCSHX(NUMSTA),SFCLHX(NUMSTA)
      &,SUBSHX(NUMSTA),SNOPCX(NUMSTA),ASWIN(NUMSTA),ASWOUT(NUMSTA)
      &,ASWTOA(NUMSTA),ALWIN(NUMSTA),ALWOUT(NUMSTA),ALWTOA(NUMSTA)
@@ -370,8 +388,9 @@ C
      &,SMC(NUMSTA,NSOIL),CMC(NUMSTA),STC(NUMSTA,NSOIL)
      &,SH2O(NUMSTA,NSOIL)
      &,VEGFRC(NUMSTA),POTFLX(NUMSTA),PSLP(NUMSTA),PDSL1(NUMSTA)
-     &,EGRID2(NUMSTA),SM(NUMSTA),SICE(NUMSTA)
-     &,HBM2(NUMSTA),FACTR(NUMSTA)
+     &,EGRID2(NUMSTA),SM(NUMSTA),SICE(NUMSTA))
+
+       ALLOCATE(HBM2(NUMSTA),FACTR(NUMSTA)
      &,PTBL(ITB,JTB),TTBL(JTB,ITB),VEGFRA(NUMSTA)
      &,T(NUMSTA,LM),Q(NUMSTA,LM),U(NUMSTA,LM),V(NUMSTA,LM)
      &,Q2(NUMSTA,LM)
@@ -396,6 +415,8 @@ C
      &,BGROFF0(NUMSTA)
      &,TCUCN0(NUMSTA,LM),TRAIN0(NUMSTA,LM))
 
+        write(0,*) 'past alloc 1'
+
        ALLOCATE ( DUMSOIL(NSOIL),DUMSOIL3(IM,NSOIL,JM)
      &,DUM3D(IM,JM,LM),DUM3D2(IM,JM,LM+1),DUM3DIKJ(IM,LM,JM)
      &,DUM3D3(IM,JM,LM+1),DUMMY2(IM,JM),DUMMY(IM,JM)
@@ -403,10 +424,21 @@ C
      &,PMID(NUMSTA,LM),PINT(NUMSTA,LM+1)
      &,W(NUMSTA,LM+1),WH(NUMSTA,LM) )
 
+        write(0,*) 'past alloc 2'
+
         ALLOCATE(GDLAT(IM,JSTA_2L:JEND_2U))
         ALLOCATE(GDLON(IM,JSTA_2L:JEND_2U))
 
+        write(0,*) 'past alloc 3'
+
+        ALLOCATE(GDLAT2(IM,JSTA:JEND))
+        ALLOCATE(GDLON2(IM,JSTA:JEND))
+
+        write(0,*) 'past alloc 4'
+
       ALLOCATE(IDUM(IM,JM),LMH(IM,JM),IDUMMY(IM,JM))
+
+        write(0,*) 'past allocated'
 
 	if (ITAG .eq. 0) then
 	    PRINT_DIAG=.TRUE.
@@ -414,74 +446,86 @@ C
 	    PRINT_DIAG=.FALSE.
 	endif
 
+        write(0,*) 'allocated'
 
        HBM2=1.0
-	write(6,*) 'filename here: ', filename
-
-!	allocate(glon1d(impf*jmpf))
-!	allocate(glat1d(impf*jmpf))
+	write(0,*) 'filename here: ', filename
 
 
 ! start reading nemsio files using parallel read
       fldsize=(jend-jsta+1)*im
-        icnt(mype)=fldsize
-        idsp(mype)=(jsta-1)*im
       tmpsize=fldsize*nrec
-        write(0,*) 'fldsize, nrec, tmpsize: ', fldsize, nrec, tmpsize
-        write(0,*) 'icnt,idsp: ', icnt(mype),idsp(mype)
       allocate(tmp(tmpsize))
-      print*,'allocate tmp successfully'
-      tmp=0.
+
+       tmp=0.
+
+!        write(0,*) 'shape(tmp): ', shape(tmp)
+
+
         write(0,*) 'call nemsio_denseread'
 
-        write(0,*) 'im, jsta, jend: ', im, jsta, jend
-        write(0,*) 'size(tmp): ', size(tmp)
+        call nemsio_denseread(nfile,1,im,jsta,jend,tmp,iret=iret)
 
-       call nemsio_denseread(nfile,1,im,jsta,jend,tmp,iret=iret)
 
-!        write(0,*) 'min,max of tmp: ', minval(tmp),maxval(tmp)
+        write(0,*) 'past nemsio_denseread'
 
       if(iret/=0)then
-        print*,"fail to read nemsio file using mpi io read, stopping"
-        print*, 'iret: ', iret
+        write(0,*) 'failure using mpi io read, stopping'
+        write(0,*) 'iret: ', iret
         stop
       end if
 
-!        goto 981
 
-!
       varname='glat'
       VcoordName='sfc'
       L=1
 
-
         write(0,*) 'call assignnemsiovar for glat'
 
-        write(0,*) 'have VarName: ', VarName
+        write(0,*) 'size(tmp): ', size(tmp)
+        write(0,*) 'fldsize*nrec: ', fldsize*nrec
 
+        write(0,*) 'call assignnemsiovar'
       call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u 
      & ,L,nrec,fldsize,spval,tmp 
      & ,recname,reclevtyp,reclev,VarName,VcoordName 
      & ,gdlat)
-        
-              write(0,*) 'return assignnemsiovar for gdlat'
 
-        write(0,*) 'maxval(gdlat): ', maxval(gdlat)
+        write(0,*) 'return assignnemsiovar'
+
+        do J=JSTA,JEND
+        do I=1,IM
+        GDLAT2(I,J)=GDLAT(I,J)
+        enddo
+        enddo
+
+
+! fldsize based on jsta,jend
+! gdlat dimensioned jsta_2l,jend_2u
+        
+        write(0,*) 'maxval(gdlat): ', maxval(gdlat)/dtr
 
         ii=(1+im)/2
         jj=(1+jm)/2
 
-        write(0,*) 'ii, jj: ', ii, jj
-
         dummy=0.75
 
         if (NPES .gt. 1) then
+
         write(0,*) 'call gatherv'
-         call mpi_gatherv(gdlat(1,jsta),fldsize,MPI_REAL,   
+        write(0,*) 'jsta, gdlat(1,jsta): ', jsta,gdlat(1,jsta)
+        write(0,*) 'fldsize, icnt(mype): ', fldsize, icnt(mype)
+
+         call mpi_gatherv(gdlat2,icnt(mype),MPI_REAL,   
      &    dummy,icnt,idsp,MPI_REAL,0,MPI_COMM_WORLD, ierr )
+
         write(0,*) 'ierr for gdlat mpi_gatherv: ', ierr
+        write(0,*) 'dummy(1,jsta): ', dummy(1,jsta)
+        
         else
-        dummy=gdlat
+
+        dummy=gdlat2
+
         endif
 
 
@@ -506,11 +550,12 @@ C
         cenlat=cenlat/dtr
 	TPH0D=cenlat/1000.
 
-        write(0,*) 'bcast TPH0D: ', tph0d
+        endif
 
+        if (NPES .gt. 1) then
+        write(0,*) 'everybody calling mpi_bcast for tph0d?'
         call mpi_bcast(tph0d,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
         write(0,*) 'ierr from bcast: ', ierr
-
         endif
 
 
@@ -523,16 +568,22 @@ C
      & ,recname,reclevtyp,reclev,VarName,VcoordName 
      & ,gdlon)
 
+        do J=JSTA,JEND
+        do I=1,IM
+        GDLON2(I,J)=GDLON(I,J)
+        enddo
+        enddo
+
         if (NPES .gt. 1) then
-         call mpi_gatherv(gdlon(1,jsta),fldsize,MPI_REAL,   
+         call mpi_gatherv(gdlon2(1,jsta),icnt(MYPE),MPI_REAL,   
      &    dummy,icnt,idsp,MPI_REAL,0,MPI_COMM_WORLD, ierr )
 
         write(0,*) 'ierr for mpi_gatherv: ', ierr
         else
-        dummy=gdlon
+        dummy=gdlon2
         endif
 
-        if (MYPE .eq. 0) then
+        IF (MYPE .eq. 0) THEN
 
         if(mod(im,2)==0)then
           cenlon=nint((dummy(ii,jj)+dummy(ii+1,jj)+
@@ -548,21 +599,18 @@ C
 	TLM0D=cenlon/1000.
 
         write(0,*) 'tlm0d to bcast: ', tlm0d
+
+        ENDIF
+
+        if (NPES .gt. 1) then
         call mpi_bcast(tlm0d,1,MPI_REAL,0,MPI_COMM_WORLD,ierr)
-
-        write(0,*) 'tph0d, tlm0d: ', tph0d, tlm0d
         endif
-
-
-!        endif
 
         write(0,*) 'everybody tph0d, tlm0d: ', tph0d, tlm0d
 
+
   981   continue
 
-        call mpi_barrier(mpi_comm_world, ierr)
-
-        STOP
 
 !-------------------------------------------------------------------
 
@@ -576,18 +624,13 @@ C
         write(0,*) 'have NUMSTA into getnemsandplace_para: ', NUMSTA
 
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &                    tmp,fldsize,recname,reclevtyp,
      &                    reclev,nrec,spval,VarName,VcoordName, 
      &                    l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SM) 
 
         
-	write(0,*) 'return getnemsandplace_para'
-!        write(0,*) 'SM(1:20): ', SM(1:20)
-
-        call mpi_barrier(mpi_comm_world, ierr)
-
         write(0,*) 'SM(1:20): ', SM(1:20)
-        write(0,*) 'all past barrier I hope'
 
 
 
@@ -599,6 +642,7 @@ C
 	write(0,*) 'call getnemsandplace_para for SICE'
 
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,reclevtyp,
      &               reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SICE) 
@@ -612,30 +656,35 @@ C
       l=1
 	write(0,*) 'call getnemsandplace for dpres'
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &        tmp,fldsize,recname,reclevtyp,
      &        reclev,nrec,spval,VarName,VcoordName, 
      &        l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PD) 
 
 
-	write(6,*) 'PD(20) (a): ', PD(20)
+        if (MYPE .eq. 0) then
+	write(0,*) 'PD(1:20) : ', PD(1:20)
+        endif
 
 !-------------------------------------------------------------------
 
       VarName='hgt'
       VcoordName='sfc'
       l=1
-	write(0,*) 'calling getnemsandplace for hgt'
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &        tmp,fldsize,recname,reclevtyp,
      &        reclev,nrec,spval,VarName,VcoordName, 
      &        l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,FIS) 
 
+        if (MYPE .eq. 0) then
       do N=1,NUMSTA
 	if (mod(N,5) .eq. 0) then
 	write(0,*) 'N, hgt(N) before grav mult: ', N, FIS(N)
 	endif
         FIS(N)=FIS(N)*g
       enddo
+        endif
 
 !-------------------------------------------------------------------
 
@@ -643,10 +692,6 @@ C
 	   RES(N)=1.0
           END DO
 
-
-!        call mpi_barrier(mpi_comm_world, ierr)
-
-!        STOP
 
 !-------------------------------------------------------------------
 
@@ -656,29 +701,29 @@ C
 	write(0,*) 'calling getnemsandplace for tmp'
       do L=1,LM
 
-        write(0,*) 'im,jsta,jend,jsta_2l,jend_2u : ', 
-     &              im,jsta,jend,jsta_2l,jend_2u
-        write(0,*) 'lm, size(tmp),fldsize, size(recname): ', 
-     &              lm, size(tmp),fldsize, size(recname)
-        write(0,*) 'size(reclevtyp,reclev): ', size(reclevtyp), 
-     &            size(reclev)
-        write(0,*) 'nrec, spval: ', nrec, spval
-        write(0,*) 'L, varname, vcoordname: ', L, varname, vcoordname
-        write(0,*) 'NUMSTA: ', NUMSTA
-        write(0,*) 'shape(t): ', shape(T)
-        write(0,*) '------------------- '
+!        write(0,*) 'im,jsta,jend,jsta_2l,jend_2u : ', 
+!     &              im,jsta,jend,jsta_2l,jend_2u
+!        write(0,*) 'lm, size(tmp),fldsize, size(recname): ', 
+!     &              lm, size(tmp),fldsize, size(recname)
+!        write(0,*) 'size(reclevtyp,reclev): ', size(reclevtyp), 
+!     &            size(reclev)
+!        write(0,*) 'nrec, spval: ', nrec, spval
+!        write(0,*) 'L, varname, vcoordname: ', L, varname, vcoordname
+!        write(0,*) 'NUMSTA: ', NUMSTA
+!        write(0,*) 'shape(t): ', shape(T)
+!        write(0,*) '------------------- '
 
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,
      &               reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,T) 
 
+        if (MYPE .eq. 0) then
+        write(0,*) 'L, T(1,L): ', L, T(1,L)
+        endif
+
       enddo
-
-!        call mpi_barrier(mpi_comm_world, ierr)
-
-!        STOP
 
 !-------------------------------------------------------------------
 
@@ -687,7 +732,7 @@ C
 	write(0,*) 'calling getnemsandplace for spfh'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,
      &               reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q) 
@@ -701,7 +746,7 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,
      &               reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IVINDX,JVINDX,U) 
@@ -713,12 +758,14 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,
      &               reclev,nrec,spval,VarName,VcoordName, 
      &               L,impf,jmpf,nframed2,NUMSTA,IVINDX,JVINDX,V) 
+        if (MYPE .eq. 0) then
 	write(0,*) 'L,T,Q,U,V(13,L):',L,T(13,L),Q(13,L),
      &                               U(13,L),V(13,L)
+        endif
       enddo
 
 !-------------------------------------------------------------------
@@ -742,6 +789,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Z0) 
@@ -752,6 +800,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,THS) 
@@ -762,6 +811,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACPREC) 
@@ -772,6 +822,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CUPREC) 
@@ -782,6 +833,7 @@ C
       VcoordName='10 m above gnd'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TH10) 
@@ -792,6 +844,7 @@ C
       VcoordName='10 m above gnd'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q10) 
@@ -802,6 +855,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PSHLTR) 
@@ -812,6 +866,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &          reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &          l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TSHLTR_hold) 
@@ -822,15 +877,19 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
-     &               l,impf,jmpf,nframed2,NUMTA,IHINDX,JHINDX,QSHLTR) 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,QSHLTR) 
 
+        if (MYPE .eq. 0) then
       DO N=1,NUMSTA
 !           write(0,*) 'N, TSHLTR_hold(N),PSHLTR(N):',N,TSHLTR_hold(N),
 !     &			PSHLTR(N)
 	   QSHLTR(N) = QSHLTR(N) / (1.0 + QSHLTR(N))
       ENDDO
+        endif
+
 
 !-------------------------------------------------------------------
 !
@@ -851,6 +910,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,HBOT) 
@@ -865,7 +925,7 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,Q2) 
       enddo
@@ -876,6 +936,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CZEN) 
@@ -886,6 +947,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CZMEAN) 
@@ -896,7 +958,7 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CWM) 
       enddo
@@ -907,7 +969,7 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_ICE) 
       enddo
@@ -918,7 +980,7 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_RAIN) 
       enddo
@@ -929,7 +991,7 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_RIMEF) 
       enddo
@@ -940,15 +1002,15 @@ C
       VcoordName='mid layer'
       do L=1,LM
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               lm,tmp,fldsize,recname,
+     &               lm,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CLDFRA) 
       enddo
         write(0,*) 'past cldfra'
 
 
-        call mpi_barrier(mpi_comm_world, ierr)
-        write(0,*) 'past post-cldfra barrier'
+!        call mpi_barrier(mpi_comm_world, ierr)
+!        write(0,*) 'past post-cldfra barrier'
 
 !        STOP
 
@@ -958,12 +1020,13 @@ C
       VcoordName='sfc'
       L=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SR) 
 
-        call mpi_barrier(mpi_comm_world, ierr)
-        write(0,*) 'past post-sr barrier'
+!        call mpi_barrier(mpi_comm_world, ierr)
+!        write(0,*) 'past post-sr barrier'
 
 !-------------------------------------------------------------------
 
@@ -971,12 +1034,13 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACH) 
 
-        call mpi_barrier(mpi_comm_world, ierr)
-        write(0,*) 'past post-cfrach barrier'
+!        call mpi_barrier(mpi_comm_world, ierr)
+!        write(0,*) 'past post-cfrach barrier'
 
 !-------------------------------------------------------------------
 
@@ -984,11 +1048,12 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACL) 
-        call mpi_barrier(mpi_comm_world, ierr)
-        write(0,*) 'past post-cfracl barrier'
+!        call mpi_barrier(mpi_comm_world, ierr)
+!        write(0,*) 'past post-cfracl barrier'
 
 !-------------------------------------------------------------------
 
@@ -998,12 +1063,13 @@ C
         write(0,*) 'work CFRACM'
         write(0,*) 'NUMSTA: ', NUMSTA
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName,
      &          l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACM) 
 
-        call mpi_barrier(mpi_comm_world, ierr)
-        write(0,*) 'past post-cfracm barrier'
+!        call mpi_barrier(mpi_comm_world, ierr)
+!        write(0,*) 'past post-cfracm barrier'
 
 !-------------------------------------------------------------------
 
@@ -1011,6 +1077,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CMC) 
@@ -1021,6 +1088,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SOILTB) 
@@ -1031,6 +1099,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,VEGFRC) 
@@ -1039,13 +1108,20 @@ C
 
       VarName='sh2o'
       VcoordName='soil layer'
-!      do L=1,NSOIL
+        write(0,*) 'work to NSOIL'
 	do L=1,NSOIL
+
+!      call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+!     &               lm,icnt,idsp,tmp,fldsize,recname,
+!     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
+!     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,F_RIMEF) 
+
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               nsoil,tmp,fldsize,recname,
+     &               nsoil,icnt,idsp,tmp,fldsize,recname,
      &      reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
-     &      L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SH2O(:,L)) 
+     &      L,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SH2O) 
       enddo
+
 
 !-------------------------------------------------------------------
 
@@ -1053,55 +1129,75 @@ C
       VcoordName='soil layer'
       do L=1,NSOIL
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               nsoil,tmp,fldsize,recname,
+     &               nsoil,icnt,idsp,tmp,fldsize,recname,
      &       reclevtyp,reclev,nrec,spval,VarName, 
      &       VcoordName,l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SMC) 
       enddo
 
+        if (MYPE .eq. 0) then
+        write(0,*) 'SMC(1:10,1): ', SMC(1:10,1)
+        endif
 !-------------------------------------------------------------------
 
       VarName='stc'
       VcoordName='soil layer'
       do L=1,NSOIL
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               nsoil,tmp,fldsize,recname,
+     &               nsoil,icnt,idsp,tmp,fldsize,recname,
      &      reclevtyp,reclev,nrec,spval,VarName, 
      &      VcoordName,l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,STC) 
       enddo
 
 !-------------------------------------------------------------------
 
+        write(0,*) 'past STC'
+
+        if (MYPE .eq. 0) then
+        write(0,*) 'STC(1:10,1): ', STC(1:10,1)
+        endif
+
 	LP1=LM+1
+
 
       VarName='pres'
       VcoordName='layer'
       do L=1,LP1
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM+1,tmp,fldsize,recname,
+     &               LM+1,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,PINT) 
       enddo
 
 !-------------------------------------------------------------------
 
+        if (MYPE .eq. 0) then
         DO L=2,LP1
          DO N=1,NUMSTA
            PMID(N,L-1)=(PINT(N,L-1)+PINT(N,L))*0.5
            if (n.eq.10) then
-             print *,n,l,PMID(N,L-1),PINT(N,L),PINT(N,L-1)
+             write(0,*) n,l,PMID(N,L-1),PINT(N,L),PINT(N,L-1)
            endif
 
         IF (N .eq. 1 .and. L .eq. LP1) then
 	PDTOP=PINT(N,L)-PD(N)-PT
+        if (MYPE .eq. 0) then
+        write(0,*) 'PINT(N,LP1): ', PINT(N,LP1)
+        write(0,*) 'PD(N): ', PD(N)
+        write(0,*) 'PT: ', PT
         write(0,*) 'computed PDTOP of: ', PDTOP
+        endif
 	ENDIF
 
          end do
         end do
 
+        endif
+
 !-------------------------------------------------------------------
 
 !!!!! CONSTRAIN Q TO A PARTICULAR RH VALUE, FOLLOWING CALRH OF WRFPOST
+        if (MYPE .eq. 0) then
+
         do N=1,NUMSTA
          do L=1,LM
            QC= (PQ0/PMID(N,L)) *EXP(A2*(T(N,L)-A3)/(T(N,L)-A4))
@@ -1111,6 +1207,8 @@ C
            ENDIF
          enddo
         enddo
+
+        endif
 !!!!! END RH CONSTRAIN
 
 !-------------------------------------------------------------------
@@ -1122,7 +1220,7 @@ C
       VcoordName='mid layer'
       do l=1,lm
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,WH) 
       enddo
@@ -1133,6 +1231,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SSROFF) 
@@ -1143,6 +1242,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,BGROFF) 
@@ -1153,6 +1253,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWIN) 
@@ -1163,10 +1264,12 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               tmp,fldsize,recname,
+     &               icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWOUT) 
+        if (MYPE .eq. 0) then
 	write(0,*) 'ALWOUT(10): ', ALWOUT(10)
+        endif
 
 !-------------------------------------------------------------------
 
@@ -1174,6 +1277,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWTOA) 
@@ -1184,10 +1288,13 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWIN) 
+        if (MYPE .eq. 0) then
 	write(0,*) 'ASWIN(10): ', ASWIN(10)
+        endif
 
 !-------------------------------------------------------------------
 
@@ -1195,6 +1302,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWOUT) 
@@ -1205,6 +1313,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWTOA) 
@@ -1215,6 +1324,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX) 
@@ -1225,6 +1335,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCLHX) 
@@ -1235,6 +1346,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &              reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &              l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SUBSHX) 
@@ -1245,6 +1357,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SNOPCX) 
@@ -1255,6 +1368,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &              reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,POTFLX) 
@@ -1265,6 +1379,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TLMIN) 
@@ -1275,6 +1390,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TLMAX) 
@@ -1287,7 +1403,7 @@ C
       VcoordName='mid layer'
       do l=1,lm
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,RLWTT) 
       enddo
@@ -1299,7 +1415,7 @@ C
       VcoordName='mid layer'
       do l=1,lm
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,RSWTT) 
       enddo
@@ -1310,7 +1426,7 @@ C
       VcoordName='mid layer'
       do l=1,lm
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TCUCN) 
       enddo
@@ -1321,20 +1437,21 @@ C
       VcoordName='mid layer'
       do l=1,lm
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TRAIN) 
       enddo
 
 !-------------------------------------------------------------------
 
-      VarName='avrain'
-      VcoordName='sfc'
-      l=1
-      call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
-     &               tmp,fldsize,recname,
-     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
-     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,AVRAIN) 
+!      VarName='avrain'
+!      VcoordName='sfc'
+!      l=1
+!      call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+!     &                    icnt,idsp,
+!     &               tmp,fldsize,recname,
+!     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
+!     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,AVRAIN) 
 
 !-------------------------------------------------------------------
 
@@ -1344,7 +1461,19 @@ C
           print*,VarName," not found in file-Assigned zero"
         end if
 
-      write(6,*) 'NPREC= ', NPREC
+      write(0,*) 'NPREC= ', NPREC
+
+!-------------------------------------------------------------------
+
+      NPHS=0
+
+      VarName='nphs'
+        call nemsio_getheadvar(nfile,trim(varname),nphs,iret)
+        if (iret /= 0) then
+          print*,VarName," not found in file-Assigned zero"
+        end if
+
+      write(0,*) 'NPHS= ', NPHS
 
 !-------------------------------------------------------------------
 
@@ -1353,7 +1482,7 @@ C
         if (iret /= 0) then
           print*,VarName," not found in file-Assigned zero"
         end if
-      write(6,*) 'NCLOD= ', NCLOD
+      write(0,*) 'NCLOD= ', NCLOD
 
 !-------------------------------------------------------------------
 
@@ -1362,7 +1491,7 @@ C
         if (iret /= 0) then
           print*,VarName," not found in file-Assigned zero"
         end if
-      write(6,*) 'NHEAT= ', NHEAT
+      write(0,*) 'NHEAT= ', NHEAT
 
 !-------------------------------------------------------------------
                                                                                              
@@ -1371,7 +1500,7 @@ C
         if (iret /= 0) then
           print*,VarName," not found in file-Assigned zero"
         end if
-      write(6,*) 'NRDLW= ', NRDLW
+      write(0,*) 'NRDLW= ', NRDLW
 
 
 !-------------------------------------------------------------------
@@ -1381,7 +1510,7 @@ C
         if (iret /= 0) then
           print*,VarName," not found in file-Assigned zero"
         end if
-      write(6,*) 'NRDSW= ', NRDSW
+      write(0,*) 'NRDSW= ', NRDSW
 
 !-------------------------------------------------------------------
 
@@ -1390,13 +1519,13 @@ C
         if (iret /= 0) then
           print*,VarName," not found in file-Assigned zero"
         end if
-      write(6,*) 'NSRFC= ', NSRFC
+      write(0,*) 'NSRFC= ', NSRFC
 
 !-------------------------------------------------------------------
 
 !      VarName='ACUTIM'
 !          ACUTIM=DUMMY2(1,1)
-!      write(6,*) 'ACUTIM= ', ACUTIM
+!      write(0,*) 'ACUTIM= ', ACUTIM
 
 !-------------------------------------------------------------------
 
@@ -1409,8 +1538,13 @@ C
 
 
 
-      VarName='APHTIM'
       APHTIM=0
+      APHTIM0=0
+      ACUTIM=0
+      ACUTIM0=0
+      NCNVC=0
+
+       
 !          APHTIM=DUMMY2(1,1)
 
 !-------------------------------------------------------------------
@@ -1419,6 +1553,7 @@ C
       VcoordName='10 m above gnd'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,U10) 
@@ -1430,6 +1565,7 @@ C
       VcoordName='10 m above gnd'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,V10) 
@@ -1440,6 +1576,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SMSTAV) 
@@ -1450,6 +1587,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SMSTOT) 
@@ -1460,6 +1598,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,VEGFRA)
@@ -1470,6 +1609,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCEXC)
@@ -1480,6 +1620,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOW)
@@ -1490,6 +1631,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOM)
@@ -1500,6 +1642,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SNO)
@@ -1510,6 +1653,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &              reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &              l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CPRATE)
@@ -1553,11 +1697,11 @@ C***
 !!!!!!!!!!!!  Made modifications down to about here.
 !!!!!!!!!!!!
 
-!	write(6,*) 'TLM0D, TPH0D: ', TLM0D, TPH0D
+!	write(0,*) 'TLM0D, TPH0D: ', TLM0D, TPH0D
 
       NTSPH=INT(3600./DT+0.50)
 
-	write(6,*) 'rot angles defined, and ntsph= ', ntsph
+	write(0,*) 'rot angles defined, and ntsph= ', ntsph
 C
 C------------------------------------------------------------------------
 C***
@@ -1644,10 +1788,12 @@ C***
 C***  THE FORECAST HOUR
 C***  
 c     IFHR=NTSD/NTSPH
-	write(6,*) 'past block of code'
+	write(0,*) 'past block of code'
 	IFHR=ITAG
-	write(6,*) 'IFHR: ', IFHR
+	write(0,*) 'IFHR: ', IFHR
 C------------------------------------------------------------------------
+!        goto 1001
+
       IF(ITAG.GT.0)THEN
 C***
 C***  GENERATE THE NAME OF THE PRECEDING RESTRT FILE
@@ -1668,20 +1814,20 @@ C***
         write(0,*) 'produced ITAGLAB: ', itaglab
  302	format(I3.3)
 
-!	write(6,*) 'filename later in PROF: ', trim(filename), '_END'
+!	write(0,*) 'filename later in PROF: ', trim(filename), '_END'
 !        filename_alt="test_filename.27"
-!        len=lnblnk(filename)
-!        write(0,*) 'len: ', len
+         len=lnblnk(filename)
+         write(0,*) 'len: ', len
 
 !!! problem is with the contents of filenme down here.  How corrupted?
 
 	write(0,*) 'filename later in PROF: ', trim(filename), '_END'
-	write(0,*) 'LEN= ', LEN
+!	write(0,*) 'LEN= ', LEN
         write(0,*) 'carried over part: ', filename(1:len-15)
 
         filename=filename(1:len-15)//ITAGLAB//hrpiece//IMINLAB//minpiece
 
-        write(6,*) 'new filename is ', trim(filename)
+        write(0,*) 'new filename is ', trim(filename)
 
        call nemsio_open(nfile_old,trim(filename),'read',
      &                  MPI_COMM_WORLD,iret=status)
@@ -1693,19 +1839,16 @@ C***
        allocate(recname(nrec),reclevtyp(nrec),reclev(nrec))
 
 
-       call nemsio_getfilehead(nfile,iret=iret                           &
+       call nemsio_getfilehead(nfile_old,iret=iret                           &
      &   ,idate=idate(1:7),nfhour=nfhour,recname=recname                 &
      &   ,reclevtyp=reclevtyp,reclev=reclev,nframe=nframe                &
      &   ,dimx=im,dimy=jm,dimz=lm)
 
-        print*, 'what is nrec: ', nrec
+        write(0,*) 'what is nrec: ', nrec
 
 ! start reading nemsio files using parallel read
       fldsize=(jend-jsta+1)*im
       tmpsize=fldsize*nrec
-!        write(0,*) 'fldsize, nrec, tmpsize: ', fldsize, nrec, tmpsize
-!      allocate(tmp(tmpsize))
-!      print*,'allocate tmp successfully'
       tmp=0.
         write(0,*) 'call nemsio_denseread'
 
@@ -1717,8 +1860,8 @@ C***
 !        write(0,*) 'min,max of tmp: ', minval(tmp),maxval(tmp)
 
       if(iret/=0)then
-        print*,"fail to read nemsio file using mpi io read, stopping"
-        print*, 'iret: ', iret
+        write(0,*) 'fail using mpi io read, stopping'
+        write(0,*) 'iret: ', iret
         stop
       end if
 
@@ -1727,13 +1870,14 @@ C***  READ THE PREVIOUS RESTRT FILE
 C***
 C
 
-	write(6,*) 'FROM EARLIER FILE'
+	write(0,*) 'FROM EARLIER FILE'
 ! -----------
 
       varname='acprec' ! accum total precip
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACPREC0) 
@@ -1744,6 +1888,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CUPREC0) 
@@ -1754,6 +1899,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SSROFF0) 
@@ -1764,6 +1910,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,BGROFF0) 
@@ -1774,6 +1921,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWIN0) 
@@ -1784,6 +1932,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWOUT0) 
@@ -1795,6 +1944,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ALWTOA0) 
@@ -1805,6 +1955,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWIN0) 
@@ -1815,6 +1966,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWOUT0) 
@@ -1825,6 +1977,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ASWTOA0) 
@@ -1835,6 +1988,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
@@ -1845,6 +1999,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCLHX0) 
@@ -1855,6 +2010,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
@@ -1865,6 +2021,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SNOPCX0) 
@@ -1875,6 +2032,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,POTFLX0) 
@@ -1884,10 +2042,13 @@ C
       varname='tcucn'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+      call getnemsandplace_3d_para(nfile_old,im,
+     &               jsta,jend,jsta_2l,jend_2u,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TCUCN0) 
+
+
       enddo
 
 !-------------------------------------------------------------------
@@ -1895,8 +2056,9 @@ C
       varname='train'
       VcoordName='mid layer'
       do l=1,lm
-      call getnemsandplace_3d_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
-     &               LM,tmp,fldsize,recname,
+      call getnemsandplace_3d_para(nfile_old,
+     &               im,jsta,jend,jsta_2l,jend_2u,
+     &               LM,icnt,idsp,tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,TRAIN0) 
       enddo
@@ -1904,16 +2066,17 @@ C
 !-------------------------------------------------------------------
 
 !          ACUTIM0=DUMMY2(1,1)
-!      write(6,*) 'ACUTIM0= ', ACUTIM0
+!      write(0,*) 'ACUTIM0= ', ACUTIM0
 
       VarName='APHTIM'
 !          APHTIM0=DUMMY2(1,1)
-!      write(6,*) 'APHTIM0 now : ', APHTIM0
+!      write(0,*) 'APHTIM0 now : ', APHTIM0
 
       VarName='acsnow'
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOW0) 
@@ -1924,6 +2087,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace_para(nfile_old,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACSNOM0) 
@@ -1967,7 +2131,7 @@ C
            TLMIN(N)=T(N,LM)
            TLMAX(N)=T(N,LM)
          ENDDO
-	write(6,*) 'here (2)...should only see once'
+	write(0,*) 'here (2)...should only see once'
 C
 C what would appropriate if test be here?
 C
@@ -2021,7 +2185,9 @@ c     TIME=(NTSD-1)*DT
 
 !!!!!!!!!!!!!! pull NPHS from file
 
-	write(6,*) 'hardwired NPHS'
+        if (NPHS .eq. 0) then
+
+	write(0,*) 'hardwired NPHS'
 
 	if (DT .eq. 18) then
 	NPHS=10
@@ -2031,13 +2197,23 @@ c     TIME=(NTSD-1)*DT
         NPHS=6
 	elseif (DT .ge. 8.9 .and. DT .le. 11) then 
         NPHS=12
+        elseif (DT .ge. 7.0 .and. DT .le. 7.5) then
+! CONUSNMMB
+        NPHS=5
+        elseif (DT .le. 6.25) then
+! OTHER NMMB DOMAINS
+        NPHS=6
+        else
+        NPHS=6
 	endif
+
+        endif
 
         IFCST=3600*ITAG
 	TIME=IFCST
 	NTSD=(TIME/DT)+1
 
-	write(6,*) 'TIME, DT, NTSD: ', TIME, DT, NTSD
+	write(0,*) 'TIME, DT, NTSD: ', TIME, DT, NTSD
 
       RESET0=TIME-(NTSD/NPREC)*NPREC*DT
       RESET1=(NPHS-1)*DT+3600.
@@ -2045,13 +2221,13 @@ c     TIME=(NTSD-1)*DT
 C
 !?      IF(MOD(NTSD,NPREC).GE.NPHS.AND.RESET0.LE.RESET1)THEN
 
-	write(6,*) 'RESET0, RESET1 for PREC: ', RESET0, RESET1
-	write(6,*) 'NTSD, NPREC, NPHS: ', NTSD, NPREC, NPHS
-	write(6,*) 'RESET0 < RESET1 for precip? : ', RESET0, RESET1
-	write(6,*) 'MOD < NPHS for precip? : ', mod(NTSD,NPREC),NPHS
+	write(0,*) 'RESET0, RESET1 for PREC: ', RESET0, RESET1
+	write(0,*) 'NTSD, NPREC, NPHS: ', NTSD, NPREC, NPHS
+	write(0,*) 'RESET0 < RESET1 for precip? : ', RESET0, RESET1
+	write(0,*) 'MOD < NPHS for precip? : ', mod(NTSD,NPREC),NPHS
 
       IF(MOD(NTSD,NPREC).GE.NPHS.AND.RESET0.LE.RESET1)THEN
-	write(6,*) 'settin STATPR, etc. to zero'
+	write(0,*) 'resetting STATPR, etc. to zero'
         DO N=1,NUMSTA
           STATPR(N)=0.
           STACPR(N)=0.
@@ -2061,7 +2237,7 @@ C
           STABRF(N)=0.
         ENDDO
       ELSE
-	write(6,*) 'NOT resetting PRECIP accumulators'
+	write(0,*) 'NOT resetting PRECIP accumulators'
         DO N=1,NUMSTA
           STATPR(N)=ACPREC0(N)*1.E3
           STACPR(N)=CUPREC0(N)*1.E3
@@ -2078,20 +2254,20 @@ C
 C
       RESET0=TIME-(NTSD/NRDSW)*NRDSW*DT
 	
-	write(6,*) 'TIME, DT: ', TIME, DT
-	write(6,*) 'RESET0 < RESET1? : ', RESET0, RESET1
-	write(6,*) 'MOD < NPHS?: ', MOD(NTSD,NRDSW),NPHS
+	write(0,*) 'TIME, DT: ', TIME, DT
+	write(0,*) 'RESET0 < RESET1? : ', RESET0, RESET1
+	write(0,*) 'MOD < NPHS?: ', MOD(NTSD,NRDSW),NPHS
 	
       IF( MOD(NTSD,NRDSW) .GE. NPHS .AND. RESET0 .LE. RESET1)THEN
 !      IF( MOD(NTSD,NRDSW) .LE. NPHS .AND. RESET0 .LE. RESET1)THEN
-	write(6,*) 'resetting SW accumulators'
+	write(0,*) 'resetting SW accumulators to zero'
        DO N=1,NUMSTA
          STASWI(N)=0.
          STASWO(N)=0.
          STASWT(N)=0.
        ENDDO
       ELSE
-	write(6,*) 'NOT resetting SW accumulators'
+	write(0,*) 'NOT resetting SW accumulators'
         DO N=1,NUMSTA
           STASWI(N)=ASWIN0(N)
           STASWO(N)=ASWOUT0(N)
@@ -2099,22 +2275,22 @@ C
         ENDDO
       ENDIF
 
-!	write(6,*) 'STASWI(90): ', STASWI(90)
+!	write(0,*) 'STASWI(90): ', STASWI(90)
 C
       RESET0=TIME-(NTSD/NRDLW)*NRDLW*DT
-!	write(6,*) 'TIME, DT: ', TIME, DT
-!	write(6,*) 'RESET0, RESET1 : ', RESET0, RESET1
-!	write(6,*) 'NTSD, NRDLW, NPHS: ', NTSD, NRDLW, NPHS
+!	write(0,*) 'TIME, DT: ', TIME, DT
+!	write(0,*) 'RESET0, RESET1 : ', RESET0, RESET1
+!	write(0,*) 'NTSD, NRDLW, NPHS: ', NTSD, NRDLW, NPHS
       IF(MOD(NTSD,NRDLW).GE.NPHS.AND.RESET0.LE.RESET1)THEN
 !      IF(MOD(NTSD,NRDLW).LE.NPHS.AND.RESET0.LE.RESET1)THEN
-	write(6,*) 'resetting STALWI'
+	write(0,*) 'resetting STALWI to zero'
        DO N=1,NUMSTA
          STALWI(N)=0.
          STALWO(N)=0.
          STALWT(N)=0.
        ENDDO
       ELSE
-	write(6,*) 'setting STALWI to ALWIN0'
+	write(0,*) 'setting STALWI to ALWIN0'
         DO N=1,NUMSTA
           STALWI(N)=ALWIN0(N)
           STALWO(N)=ALWOUT0(N)
@@ -2143,7 +2319,13 @@ C
       ENDIF
 C
       RESET0=TIME-(NTSD/NHEAT)*NHEAT*DT
-      IF(MOD(NTSD,NHEAT).GE.NCNVC.AND.RESET0.LE.RESET1)THEN
+
+        write(0,*) 'RESET0, RESET1: ',RESET0,RESET1
+        write(0,*) 'NTSD, NHEAT: ', NTSD, NHEAT
+        write(0,*) 'NCNVC: ', NCNVC
+!mptest      IF(MOD(NTSD,NHEAT).GE.NCNVC.AND.RESET0.LE.RESET1)THEN
+      IF(MOD(NTSD,NHEAT).GE.NPHS.AND.RESET0.LE.RESET1)THEN
+        write(0,*) 'resetting DHCNVC, DHRAIN to zero'
        DO N=1,NUMSTA
          DO L=1,LM
            DHCNVC(L,N)=0.
@@ -2151,6 +2333,7 @@ C
          ENDDO
        ENDDO
       ELSE
+        write(0,*) 'NOT RESET set DHCNVC, DHRAIN to old values'
        DO N=1,NUMSTA
          DO L=1,LM
             DHCNVC(L,N)=TCUCN0(N,L)
@@ -2193,6 +2376,8 @@ C
 C
 C***  COMPUTE RTOP
 C
+       bigif:     if (MYPE .eq. 0) then
+
 !$OMP parallel do
       DO L=1,LM
         DO N=1,NUMSTA
@@ -2202,7 +2387,7 @@ C
         ENDDO
       ENDDO
 
-	write(0,*) 'PD(20) (dd): ', PD(20)
+!	write(0,*) 'PD(20) (dd): ', PD(20)
 
 C
 C***  PDS IS SURFACE PRESSURE.
@@ -2210,8 +2395,8 @@ C
 !$OMP parallel do 
 	DO N=1,NUMSTA
         PDS(N)=PD(N)+PDTOP+PT
-	if (PDS(N) .lt. 50000.) then
-	write(6,*) 'N,PD,PDTOP,PDS: ', N,PD(N),PDTOP,PDS(N)
+	if (MYPE .eq. 0 .and. PDS(N) .lt. 50000.) then
+	write(0,*) 'N,PD,PDTOP,PDS: ', N,PD(N),PDTOP,PDS(N)
 	endif
 	ENDDO
 	write(0,*) 'trial a'
@@ -2221,14 +2406,15 @@ C
 !$OMP parallel do 
       DO N=1,NUMSTA
 	if (PSHLTR(N) .gt. 1.) then 
+
 	TSHLTR(N)= TSHLTR_hold(N)*(PDS(N)*1.E-5)**CAPA
-	if (mod(N,25) .eq. 0) then
+	if (mod(N,5) .eq. 0) then
 	write(0,*) 'N, TSHLTR(N),PSHLTR(N): ', N, TSHLTR(N),PSHLTR(N)
 	endif
         EGRID2(N)= THS(N)*(PDS(N)*1.E-5)**CAPA
 
 	if (EGRID2(N) .lt. 200.) then
-	write(6,*) 'THETA, PDS, CAPA, TSK: ', N,THS(N),
+	write(0,*) 'THETA, PDS, CAPA, TSK: ', N,THS(N),
      &           PDS(N),CAPA,EGRID2(N)
 	endif
 
@@ -2240,7 +2426,7 @@ C
            QC=(PQ0/PSHLTR(N))*EXP(A2*(TSHLTR(N)-A3)/(TSHLTR(N)-A4))
            RH=QSHLTR(N)/QC
            IF (RH .gt. RHCRIT) THEN
-c          write(6,*) 'reducing surface RH from: ', RH, ' at N: ', N
+c          write(0,*) 'reducing surface RH from: ', RH, ' at N: ', N
            QSHLTR(N)=0.999*RHCRIT*QC
 	   ENDIF
 
@@ -2305,11 +2491,11 @@ c      IFCST=(NTSD-1)*DT
 !      IFCST=NTSPH*ITAG
       IFCST=3600*ITAG
 	IHR=ITAG
-	write(6,*) 'IFCST: ', IFCST
+	write(0,*) 'IFCST: ', IFCST
 C
-      WRITE(6,*)' POST PROFILE FOR ',
+      WRITE(0,*)' POST PROFILE FOR ',
      1                       IYR,IMNTH,IDAY,IHR
-	write(6,*) 'IHRST= ', IHRST
+	write(0,*) 'IHRST= ', IHRST
 C
 C***  SET RTSPH,RTSCU,RTSRA TO 1. OVER THE NUMBER OF TIMES THE
 C***  VARIOUS PHYSICS ROUTINES HAVE BEEN
@@ -2321,7 +2507,7 @@ C
       ELSE
         RTSPH=1.
       ENDIF
-	write(6,*) 'APHTIM, RTSPH: ', APHTIM, APHTIM-APHTIM0, RTSPH
+	write(0,*) 'APHTIM, RTSPH: ', APHTIM, APHTIM-APHTIM0, RTSPH
 C
 C  Counter AVRAIN is reset every 6 or 3-h in WRF-NMM, so for stable
 c  precip heating rate use counter for convection (ACUTIM)
@@ -2336,14 +2522,14 @@ C
         RTSCU=1.
         RTSRA=1.
       ENDIF
-	write(6,*) 'ACUTIM, RTSCU: ', ACUTIM, ACUTIM-ACUTIM0, RTSCU
+	write(0,*) 'ACUTIM, RTSCU: ', ACUTIM, ACUTIM-ACUTIM0, RTSCU
 C
 c     IF(AVRAIN.GT.0.)THEN
 c       RTSRA=1./(AVRAIN-AVRAIN0)
 c     ELSE
 c       RTSRA=1.
 c     ENDIF
-c      write(6,*) 'AVRAIN, RTSRA: ', AVRAIN, AVRAIN-AVRAIN0, RTSRA
+c      write(0,*) 'AVRAIN, RTSRA: ', AVRAIN, AVRAIN-AVRAIN0, RTSRA
 C
 C--------------------------------------------------------------------------
 C--------------------------------------------------------------------------
@@ -2352,20 +2538,30 @@ C***  OUTPUT PROFILE DATA.  THE FOLLOWING LOOP IS OVER ALL PROFILE SITES.
 C***
 C--------------------------------------------------------------------------
 	LCLAS1=79
+        
+        write(0,*) 'LCLAS1 defined: ', LCLAS1
+
 	write(0,*) 'trial e'
+        write(0,*) 'LRECPR: ', LRECPR
+        OPEN(UNIT=LCLAS1,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
+!        CALL FLUSH(LCLAS1)
+!        CALL FLUSH(0)
 
-      OPEN(UNIT=LCLAS1,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
+!        IER=0
+
+         write(0,*) 'opened LCLAS1 IER:', IER
+
+!        write(0,*) 'am I still okay'
+
 C--------------------------------------------------------------------------
-	write(6,*) 'RECORD LENGTH = ', LRECPR
 	write(0,*) 'RECORD LENGTH = ', LRECPR
-
         write(0,*) 'NUMSTA: ', NUMSTA
 
+! the station data is collected onto task 0, so limit this portion to that task
 
-! need all collected so seen on root domain
 
       DO 1000 N=1,NUMSTA
-        write(0,*) 'working N: ', N
+!        write(0,*) 'working N: ', N
 C
 C***  ZERO OUTPUT ARRAY.
 C
@@ -2382,7 +2578,7 @@ C***  LEVEL PARAMETERS, NUMBER OF SINGLE LEVEL PARAMETERS, TOTAL LENGTH
 C***  (IN WORDS) OF MULTI- AND SINGLE LEVEL DATA, PROFILE CLASS FLAG,
 C***  AND A DUMMY WORD FOR FUTURE USE.
 C
-	if (N .eq. 20) write(6,*) 'PD(20) (e): ', PD(20)
+!	if (N .eq. 20) write(0,*) 'PD(20) (e): ', PD(20)
 
       IH=IHINDX(N)
       JH=JHINDX(N)
@@ -2404,7 +2600,7 @@ C
       ISTAT    = IDSTN(N)
       CISTAT   = CIDSTN(N)
 C
-        write(0,*) 'DTR here: ', DTR
+!        write(0,*) 'DTR here: ', DTR
       FPACK(1) = STNLAT(N)/DTR
       FPACK(2) = -STNLON(N)/DTR
 !CHANGEDFORNMM      FPACK(2) = STNLON(N)/DTR
@@ -2442,7 +2638,6 @@ C***  SCALE RAIN, SHORT WAVE RADIATION, LONG WAVE RADIATION,
 C***  AND CLOUD FRACTION.
 C------------------------------------------------------------------
 C
-        write(0,*) 'here a'
       DO LV=1,LMHK
         LVL=LMHK-LV+1
 !        PRODAT(LVL)      = PDSL1(N)*AETA(LV)+PT
@@ -2490,8 +2685,8 @@ C
         ENDIF
       ENDDO
 
-        write(0,*) 'here b'
-        write(0,*) 'is NHEAT zero? : ', NHEAT
+!        write(0,*) 'here b'
+!        write(0,*) 'is NHEAT zero? : ', NHEAT
 
 C
 C***  MODIFY ACCUMLATIONS SO AS TO REPRESENT ACCUMULATED
@@ -2507,18 +2702,29 @@ C
         LVL=LMHK-LL+1
          STADHC(LL) = PRODAT(NWORD7+LL) - DHCNVC(LVL,N)
          STADHR(LL) = PRODAT(NWORD8+LL) - DHRAIN(LVL,N)
+
+        if (mod(N,10) .eq. 0) then
+        write(0,*) 'PRODAT, DHCNVC, STADHC: ', PRODAT(NWORD7+LL), 
+     &       DHCNVC(LVL,N), STADHC(LL)
+        endif
 C
          DHCNVC(LVL,N) = PRODAT(NWORD7+LL)
          DHRAIN(LVL,N) = PRODAT(NWORD8+LL)
 C
         if (NHEAT .ne. 0) then
        IF(MOD(NTSD,NHEAT).LT.NCNVC)THEN
+
+        if (mod(N,10) .eq. 0) then
+        write(0,*) 'NTSD, NHEAT, NCNVC: ', NTSD, NHEAT, NCNVC
+        write(0,*) 'setting DHCNVC to zero'
+        endif
+
           DHCNVC(LVL,N) = 0.
           DHRAIN(LVL,N) = 0.
        ENDIF
         endif
       ENDDO
-        write(0,*) 'here c'
+!        write(0,*) 'here c'
 C
 C***  EXTRACT SINGLE LEVEL DATA.   EGRID2 IS SURFACE TEMPERATURE.
 C
@@ -2527,7 +2733,6 @@ C
       PRODAT(NWORD15+3)  = EGRID2(N)
       PRODAT(NWORD15+4)  = TLMIN (N)
       PRODAT(NWORD15+5)  = TLMAX (N)
-      print *,'tlmax, tlmin ',n,tlmax(n),tlmin(n)
       PRODAT(NWORD15+6)  = SMSTAV(N)*100.
       PRODAT(NWORD15+7)  = ACPREC(N)*1000.
       PRODAT(NWORD15+8)  = CUPREC(N)*1000.
@@ -2535,12 +2740,12 @@ C
 C
       STAPRX=PRODAT(NWORD15+7)-STATPR(N)
 	if (IDSTN(N) .eq. 724050) then
-	write(6,*) 'STAPRX at DCA: ', STAPRX
+	write(0,*) 'STAPRX at DCA: ', STAPRX
 	endif
       STACRX=PRODAT(NWORD15+8)-STACPR(N)
 
 !	if (STAPRX .gt. 0) then
-!	write(6,*) '1hr precip: ',  N,STAPRX
+!	write(0,*) '1hr precip: ',  N,STAPRX
 !	endif
 C
 C***  ROTATE WINDS
@@ -2602,7 +2807,7 @@ C
 !      PRODAT(NWORD15+25)  = BGROFF(N)*1000.
       PRODAT(NWORD15+25)  = BGROFF(N)
       PRODAT(NWORD15+26)  = SOILTB(N)
-        write(0,*) 'here d'
+!        write(0,*) 'here d'
 C
 C***  ACCUMULATED CHANGE SINCE LAST PROFILE OUTPUT TIME.
 C
@@ -2612,12 +2817,12 @@ C
       PSFCSUB  = PRODAT(NWORD15+12) - STASUB(N)
       PSNOPCX  = PRODAT(NWORD15+13) - STAPCX(N)
       PRSWIN   = PRODAT(NWORD15+14) - STASWI(N)
-!       write(6,*) 'N, SUBSHX(N),STASUB(N),PSFCSUB ', N,
+!       write(0,*) 'N, SUBSHX(N),STASUB(N),PSFCSUB ', N,
 !    &     SUBSHX(N), STASUB(N), PSFCSUB
       PRSWOUT  = PRODAT(NWORD15+15) - STASWO(N)
       PRLWIN   = PRODAT(NWORD15+16) - STALWI(N)
 !	if (N .eq. 90) then
-!	write(6,*) 'N, PRODAT(NWORD15+16) , STALWI(N), PRLWIN: ', N,
+!	write(0,*) 'N, PRODAT(NWORD15+16) , STALWI(N), PRLWIN: ', N,
 !     &     PRODAT(NWORD15+16), STALWI(N), PRLWIN
 !	endif
       PRLWOUT  = PRODAT(NWORD15+17) - STALWO(N)
@@ -2633,15 +2838,15 @@ C
       PACSNOM  = PRODAT(NWORD15+23) - STASNM(N)
       PSSROFF  = PRODAT(NWORD15+24) - STASRF(N)
       PBGROFF  = PRODAT(NWORD15+25) - STABRF(N)
-!	write(6,*) 'N, PACSNOW: ', N, PACSNOW
+!	write(0,*) 'N, PACSNOW: ', N, PACSNOW
 C***
 C***  TRANSFER STATION PROFILE DATA TO "PACKED" OUTPUT ARRAY.
 C***
       NN   = 0
       NLEN = FPACK(7)
-C	write(6,*) 'NWORD15+41,NWORD15+32 ', NWORD15+41,NWORD15+32
-C	write(6,*) 'SOIL TEMP ', PRODAT(NWORD13+41)
-C        write(6,*) 'SHELT TEMP ', PRODAT(NWORD13+32) 
+C	write(0,*) 'NWORD15+41,NWORD15+32 ', NWORD15+41,NWORD15+32
+C	write(0,*) 'SOIL TEMP ', PRODAT(NWORD13+41)
+C        write(0,*) 'SHELT TEMP ', PRODAT(NWORD13+32) 
 C
       DO NL = 10,NLEN
         NN = NL-9
@@ -2662,29 +2867,29 @@ C
       ENDDO
 C
       FPACK(9+NWORD15+7)  = STAPRX
-!	write(6,*) 'precip written to FPACK element: ', 9+NWORD13+7
+!	write(0,*) 'precip written to FPACK element: ', 9+NWORD13+7
       FPACK(9+NWORD15+8)  = STACRX
       FPACK(9+NWORD15+9)  = PSFCEVP * RTSPH
       FPACK(9+NWORD15+10) = PPOTEVP * RTSPH
 
 !	if (IDSTN(N) .eq. 724050) then
-!	write(6,*) 'PPOTEVP, RTSPH: ', PPOTEVP, RTSPH
-!	write(6,*) 'packing PPOTEVP*RTSPH= ', FPACK(9+NWORD13+10)
+!	write(0,*) 'PPOTEVP, RTSPH: ', PPOTEVP, RTSPH
+!	write(0,*) 'packing PPOTEVP*RTSPH= ', FPACK(9+NWORD13+10)
 !	endif
 
       FPACK(9+NWORD15+11) = PSFCSHX * RTSPH
       FPACK(9+NWORD15+12) = PSFCSUB * RTSPH
-!       write(6,*) 'N, SUBSHX(N),STASUB(N),PSFCSUB,FPACK ', N,
+!       write(0,*) 'N, SUBSHX(N),STASUB(N),PSFCSUB,FPACK ', N,
 !    &     SUBSHX(N), STASUB(N), PSFCSUB, FPACK(9+NWORD15+12)
 !      FPACK(9+NWORD15+12) =-PSFCSUB * RTSPH
       FPACK(9+NWORD15+13) = PSNOPCX * RTSPH
       FPACK(9+NWORD15+14) = PRSWIN  * RTSPH
 	if (N .eq. 90) then
-	write(6,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
+	write(0,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
 	endif
 
 !	if (mod(N,NUMSTA/5) .eq. 0) then
-!	write(6,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
+!	write(0,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
 !	endif
       FPACK(9+NWORD15+15) = PRSWOUT * RTSPH
       FPACK(9+NWORD15+16) = PRLWIN  * RTSPH
@@ -2702,7 +2907,7 @@ C
           FPACK(9+NWORD7+LL) = 0.
           FPACK(9+NWORD8+LL) = 0.
         ENDDO
-        write(0,*) 'here e'
+!        write(0,*) 'here e'
 C
         FPACK(9+NWORD15+7)  = 0.
         FPACK(9+NWORD15+8)  = 0.
@@ -2722,36 +2927,41 @@ C
         FPACK(9+NWORD15+24) = 0.
         FPACK(9+NWORD15+25) = 0.
       ENDIF
-        write(0,*) 'here f'
+!        write(0,*) 'here f'
 C---------------------------------------------------------------------
 C***
 C***  WRITE PROFILE DATA
 C***
-      
-!      eREC=(IFHR/INCR)*NUMSTA+N
-      NREC=N
-!      write(6,*) 'NREC,IHRST,IDAT: ', NREC,IHRST,IDAT,IFCST
 
-!        if (mod(NREC,10) .eq. 0) then
-!        write(6,*) 'IDAT, IFCST, ISTAT, CISTAT: ',
-!     &  IDAT, IFCST, ISTAT, CISTAT
-!        endif
+      
+      NREC=N
 
       WRITE(LCLAS1,REC=NREC)IHRST,IDAT,IFCST,ISTAT,CISTAT
      1,                    (FPACK(NL),NL=1,NLEN)
+
       if(nrec.le.5) then
-        write(6,*)'IHRST,IDAT,IFCST,ISTAT,CISTAT,NLEN ',
+        write(0,*)'IHRST,IDAT,IFCST,ISTAT,CISTAT,NLEN ',
      1     IHRST,IDAT,IFCST,ISTAT,CISTAT,NLEN
       endif
 
+!        endif
+
 C---------------------------------------------------------------------
  1000 CONTINUE
+        write(0,*) 'to close of LCLAS1'
       CLOSE(LCLAS1)
+
+        endif bigif
+
+
+ 1001   continue
+
 C
 C***  END OF PROFILE SITE LOOP
 C
 C***  END PROFILE POSTING CODE.
 C---------------------------------------------------------------------
+        write(0,*) 'to deallocate block'
         DEALLOCATE( DETA,RDETA,AETA,UL
      &,RES,FIS,THS,HBOT
      &,CFRACL,CFRACM,CFRACH,SNO
@@ -2786,9 +2996,10 @@ C---------------------------------------------------------------------
      &,ASWOUT0,ALWIN0,ALWOUT0,ALWTOA0
      &,ASWTOA0,ACSNOW0,ACSNOM0,SSROFF0
      &,BGROFF0)
-   
-      print *," deallocate 1"
+        write(0,*) 'past deallocate block'
 
+        deallocate(tmp) ! icnt,idsp)
+   
 !      call mpi_file_close(iunit,ierr)
 !      call mpi_finalize(mpi_comm_world, ierr)
 
