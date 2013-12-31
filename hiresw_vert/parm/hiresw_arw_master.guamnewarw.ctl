@@ -146,13 +146,13 @@
 116/199/X/-3.0/wrf.EMGU04/0/0                      
    65   1   0   0   4 2 1  ACM SNOWFALL
 116/199/X/-3.0/wrf.EMGU04/0/0
-  143   1   0   0   0   INSTANT PRECIP TYPE       
+  143   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/199/X/1.0/wrf.EMGU04/0/0                      
-  142   1   0   0   0   INSTANT PRECIP TYPE       
+  142   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/199/X/1.0/wrf.EMGU04/0/0                      
-  141   1   0   0   0   INSTANT PRECIP TYPE       
+  141   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/199/X/1.0/wrf.EMGU04/0/0                      
-  140   1   0   0   0   INSTANT PRECIP TYPE       
+  140   1   0   0   0 2 2  INSTANT PRECIP TYPE       
 116/199/X/1.0/wrf.EMGU04/0/0                      
   157   1   0   0   0 2 1  CNVCT AVBL POT ENRGY      
 116/199/X/2.7/wrf.EMGU04/0/0                      
