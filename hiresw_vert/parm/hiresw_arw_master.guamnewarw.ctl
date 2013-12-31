@@ -1,3 +1,125 @@
+    1 109   0   1   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   1   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   1   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   1   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   1   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   1   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   2   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   2   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   2   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   2   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   2   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   2   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   3   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   3   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   3   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   3   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   3   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   3   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   4   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   4   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   4   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   4   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   4   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   4   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   5   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   5   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   5   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   5   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   5   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   5   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   6   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   6   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   6   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   6   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   6   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   6   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   7   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   7   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   7   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   7   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   7   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   7   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   8   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   8   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   8   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   8   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   8   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   8   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   9   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   9   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   9   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   9   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   9   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   9   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+    1 109   0   10   0   2   1   PRESS ON MDL SFCS
+116/199/X/5.0/wrf.EMGU05/0/0
+    7 109   0   10   0   2   1   HEIGHT ON MDL SFCS
+116/199/X/-3.0/wrf.EMGU05/0/0                      
+   11 109   0   10   0   2   1   TEMP ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   51 109   0   10   0   2   1   SPEC HUM ON MDL SFCS
+116/199/X/3.0/wrf.EMGU05/0/0
+   33 109   0   10   0   2   1   U WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+   34 109   0   10   0   2   1   V WIND ON MDL SFCS
+116/199/X/-4.0/wrf.EMGU05/0/0
+  180   1   0    0   0   2  1   SFC WIND GUST
+116/199/X/-4.0/wrf.EMGU05/0/0
   130 102   0   0   0 2 1   MESINGER MEAN SLP         
 116/199/X/-0.1/wrf.EMGU04/0/0                      
     2 102   0   0   0 2 1  SHUELL MEAN SLP           
