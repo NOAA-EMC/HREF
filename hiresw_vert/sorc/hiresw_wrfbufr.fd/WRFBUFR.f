@@ -73,20 +73,20 @@ C**************************************************************************
 C
 C     START PROGRAM WRFBUFR.
 C
-	write(0,*) 'to read statements'
+!	write(0,*) 'to read statements'
        read(11,111) fileName
-	write(0,*) 'initial filename= ', filename
+!	write(0,*) 'initial filename= ', filename
        read(11,113) model
-	write(0,*) 'model type= ', model
+!	write(0,*) 'model type= ', model
        read(11,113) IOFORM
-	write(0,*) 'ioform= ', ioform
+!	write(0,*) 'ioform= ', ioform
        read(11,112) DateStr
-	write(0,*) 'datestr= ', datestr
+!	write(0,*) 'datestr= ', datestr
        read(11,*) NFILES
        read(11,*) INCR
        read(11,*) IHR
        read(11,111) prefileName
-        write(0,*) 'previous filename= ', prefilename
+!        write(0,*) 'previous filename= ', prefilename
 
 !!!! CHANGE THIS ASSUMPTION???
 
@@ -142,11 +142,11 @@ c20080707	filename=filename(1:len-19)//DateStr
  301  format(i4,'-',i2.2,'-',i2.2,'T',i2.2,':00:00')
  302  format(i4,'-',i2.2,'-',i2.2,'_',i2.2,':00:00')
 
-	write(0,*) 'calling prof.... '
-	write(0,*) 'datestr: ', datestr
-	write(0,*) 'fileName ', fileName
-	write(0,*) 'IHR: ', IHR
-	write(0,*) '--------------------------------'
+!	write(0,*) 'calling prof.... '
+!	write(0,*) 'datestr: ', datestr
+!	write(0,*) 'fileName ', fileName
+!	write(0,*) 'IHR: ', IHR
+!	write(0,*) '--------------------------------'
 
 	
 	if (ioform(1:6) .eq. 'binary') then 
