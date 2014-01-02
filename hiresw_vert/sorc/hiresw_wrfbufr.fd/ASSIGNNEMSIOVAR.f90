@@ -15,14 +15,14 @@
       real,intent(out) :: buf(im,jsta_2l:jend_2u)
       integer :: fldst,recn,js,j,i 
       
-        write(0,*) 'inside assignnemsiovar'
-        write(0,*) 'im,jsta,jend,jsta_2l,jend_2u: ', &
-                    im,jsta,jend,jsta_2l,jend_2u
-        write(0,*) 'L,nrec,fldsize,spval: ', L,nrec,fldsize,spval
-        write(0,*) 'size(tmp,recname,reclevtyp,reclev: ', & 
-                size(tmp),size(recname),size(reclevtyp),size(reclev)
-        write(0,*) 'varname, vcoordname: ', varname, vcoordname
-        write(0,*) 'size(buf): ', size(buf)
+!        write(0,*) 'inside assignnemsiovar'
+!        write(0,*) 'varname, vcoordname: ', varname, vcoordname
+!        write(0,*) 'im,jsta,jend,jsta_2l,jend_2u: ', &
+!                    im,jsta,jend,jsta_2l,jend_2u
+!        write(0,*) 'L,nrec,fldsize: ', L,nrec,fldsize
+!        write(0,*) 'size(tmp,recname,reclevtyp,reclev: ', & 
+!                size(tmp),size(recname),size(reclevtyp),size(reclev)
+!        write(0,*) 'size(buf): ', size(buf)
 
 !        write(0,*) 'varname(1:8) into getrecn: ', varname(1:8)
 !        write(0,*) 'recname: ', recname(1:5)
