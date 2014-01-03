@@ -158,7 +158,8 @@
 !--- set default quantities for new version of progcld2
 
       real (kind=kind_phys), parameter :: cclimit = 0.01, cclimit2=0.05
-      real (kind=kind_phys), parameter :: recwat_def = 5.0    ! default liq radius to 5 microns
+!tst      real (kind=kind_phys), parameter :: recwat_def = 5.0    ! default liq radius to 5 microns
+      real (kind=kind_phys), parameter :: recwat_def = 15.0   ! default liq radius to 5 microns
       real (kind=kind_phys), parameter :: recice_def = 50.0   ! default ice radius to 10 microns
       real (kind=kind_phys), parameter :: rerain_def = 100.0  ! default rain radius to 100 microns
       real (kind=kind_phys), parameter :: resnow_def = 100.0  ! default snow radius to 100 microns
