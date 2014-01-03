@@ -98,7 +98,7 @@ C------------------------------------------------------------------------
      &,ASWTOA(:),ALWIN(:),ALWOUT(:),ALWTOA(:)
      &,TSHLTR(:),TSHLTR_hold(:),QSHLTR(:),PSHLTR(:)
      &,TH10(:),Q10(:),U10(:),V10(:)
-     &,TLMIN(:),TLMAX(:)
+     &,TLMIN(:),TLMAX(:),AVRAIN(:),APHTIM(:),ACUTIM(:)
      &,SMC(:,:),CMC(:),STC(:,:),SH2O(:,:)
      &,VEGFRC(:),POTFLX(:),PSLP(:),PDSL1(:)
      &,EGRID2(:),SM(:),SICE(:)
@@ -121,7 +121,7 @@ C------------------------------------------------------------------------
      &,SFCSHX0(:),SUBSHX0(:),SNOPCX0(:),ASWIN0(:)
      &,ASWOUT0(:),ALWIN0(:),ALWOUT0(:),ALWTOA0(:)
      &,ASWTOA0(:),ACSNOW0(:),ACSNOM0(:),SSROFF0(:)
-     &,BGROFF0(:)
+     &,BGROFF0(:),AVRAIN0(:),APHTIM0(:),ACUTIM0(:)
      &,TCUCN0(:,:),TRAIN0(:,:), glat1d(:),glon1d(:)
 
 !        integer, allocatable:: icnt(:),idsp(:)
@@ -435,7 +435,8 @@ C
      &,ASWTOA(NUMSTA),ALWIN(NUMSTA),ALWOUT(NUMSTA),ALWTOA(NUMSTA)
      &,TSHLTR(NUMSTA),TSHLTR_hold(NUMSTA),QSHLTR(NUMSTA),PSHLTR(NUMSTA)
      &,TH10(NUMSTA),Q10(NUMSTA),U10(NUMSTA),V10(NUMSTA)
-     &,TLMIN(NUMSTA),TLMAX(NUMSTA)
+     &,TLMIN(NUMSTA),TLMAX(NUMSTA),AVRAIN(NUMSTA),APHTIM(NUMSTA)
+     &,ACUTIM(NUMSTA)
      &,SMC(NUMSTA,NSOIL),CMC(NUMSTA),STC(NUMSTA,NSOIL)
      &,SH2O(NUMSTA,NSOIL)
      &,VEGFRC(NUMSTA),POTFLX(NUMSTA),PSLP(NUMSTA),PDSL1(NUMSTA)
@@ -463,7 +464,7 @@ C
      &,SFCSHX0(NUMSTA),SUBSHX0(NUMSTA),SNOPCX0(NUMSTA),ASWIN0(NUMSTA)
      &,ASWOUT0(NUMSTA),ALWIN0(NUMSTA),ALWOUT0(NUMSTA),ALWTOA0(NUMSTA)
      &,ASWTOA0(NUMSTA),ACSNOW0(NUMSTA),ACSNOM0(NUMSTA),SSROFF0(NUMSTA)
-     &,BGROFF0(NUMSTA)
+     &,BGROFF0(NUMSTA),AVRAIN0(NUMSTA),APHTIM0(NUMSTA),ACUTIM0(NUMSTA)
      &,TCUCN0(NUMSTA,LM),TRAIN0(NUMSTA,LM))
 
 !        write(0,*) 'past alloc 1'
@@ -1389,6 +1390,10 @@ C
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX) 
 
+        if (MYPE .eq. 0) then
+        write(0,*) 'read SFCSHX(674): ', SFCSHX(674)
+        endif
+
 !-------------------------------------------------------------------
 
       VarName='sfclhx'
@@ -1585,11 +1590,6 @@ C
 
 !-------------------------------------------------------------------
 
-!      VarName='ACUTIM'
-!          ACUTIM=DUMMY2(1,1)
-!      write(0,*) 'ACUTIM= ', ACUTIM
-
-!-------------------------------------------------------------------
         if (MYPE .eq. 0) then
 
       write(0,*) 'NPHS= ', NPHS
@@ -1610,10 +1610,10 @@ C
 
 
 
-      APHTIM=0
-      APHTIM0=0
-      ACUTIM=0
-      ACUTIM0=0
+!      APHTIM=0
+!      APHTIM0=0
+!      ACUTIM=0
+!      ACUTIM0=0
       NCNVC=0
 
        
@@ -1685,6 +1685,29 @@ C
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCEXC)
+
+!-------------------------------------------------------------------
+
+      VarName='aphtim'
+      VcoordName='sfc'
+      l=1
+
+      call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
+     &               tmp,fldsize,recname,
+     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,APHTIM) 
+
+      VarName='acutim'
+      VcoordName='sfc'
+      l=1
+
+      call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
+     &               tmp,fldsize,recname,
+     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACUTIM) 
+
 
 !-------------------------------------------------------------------
 
@@ -1889,11 +1912,11 @@ C***
  301    format(i4,'-',i2.2,'-',i2.2,'_',i2.2,':00:00')
 
 !!! not getting to previous hour?
-        ITAG=ITAG-INCR
+        ITAGPREV=ITAG-INCR
 !
 !        write(0,*) 'now have ITAG: ', itag
 
-        write(ITAGLAB,302) ITAG
+        write(ITAGLAB,302) ITAGPREV
         if (MYPE .eq. 0) then
         write(0,*) 'produced ITAGLAB: ', itaglab
         endif
@@ -1913,7 +1936,8 @@ C***
      &               hrp//IMINLAB//minp
 
         if (MYPE .eq. 0) then
-        write(0,*) 'new filename is ', trim(filename_prev)
+!        write(0,*) 'new filename is ', trim(filename_prev)
+        write(0,*) 'filename_prev: ', filename_prev(len-16:len)
         endif
 
         iret=27
@@ -2111,7 +2135,11 @@ C
      &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
-     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
+     &              l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
+
+        if (MYPE .eq. 0) then
+        write(0,*) 'read SFCSHX0(674): ', SFCSHX0(674)
+        endif
 
 !-------------------------------------------------------------------
 
@@ -2133,7 +2161,7 @@ C
      &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
-     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0) 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SUBSHX0) 
 
 !-------------------------------------------------------------------
 
@@ -2185,12 +2213,34 @@ C
 
 !-------------------------------------------------------------------
 
-!          ACUTIM0=DUMMY2(1,1)
-!      write(0,*) 'ACUTIM0= ', ACUTIM0
 
-      VarName='APHTIM'
+      VarName='aphtim'
+      VcoordName='sfc'
+      l=1
+
+      call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
+     &               tmp,fldsize,recname,
+     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,APHTIM0) 
+
 !          APHTIM0=DUMMY2(1,1)
 !      write(0,*) 'APHTIM0 now : ', APHTIM0
+
+
+!-----------------------------------------------------------------
+      VarName='acutim'
+      VcoordName='sfc'
+      l=1
+
+      call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
+     &                    icnt,idsp,
+     &               tmp,fldsize,recname,
+     &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,ACUTIM0) 
+
+
+!------------------------------
 
       VarName='acsnow'
       VcoordName='sfc'
@@ -2402,6 +2452,9 @@ C
         DO N=1,NUMSTA
           STASWI(N)=ASWIN0(N)
           STASWO(N)=ASWOUT0(N)
+        if (N .eq. 1) write(0,*) 'STASWI, STASWO: ', 
+     &  STASWI(N),STASWO(N)
+
           STASWT(N)=ASWTOA0(N)
         ENDDO
       ENDIF
@@ -2638,12 +2691,19 @@ C***  VARIOUS PHYSICS ROUTINES HAVE BEEN
 C***  CALLED SINCE LAST OUTPUT OF PROFILER DATA.  NECESSARY FOR
 C***  CORRECT AVERAGING OF VARIABLES.
 C
-      IF(APHTIM.GT.0.)THEN
-        RTSPH=1./(APHTIM-APHTIM0)
+!      IF(APHTIM.GT.0.)THEN
+!        RTSPH=1./(APHTIM-APHTIM0)
+!      ELSE
+!        RTSPH=1.
+!      ENDIF
+
+      IF(APHTIM(1).GT.0.)THEN
+        RTSPH=1./(APHTIM(1)-APHTIM0(1))
       ELSE
         RTSPH=1.
       ENDIF
-	write(0,*) 'APHTIM, RTSPH: ', APHTIM, APHTIM-APHTIM0, RTSPH
+
+	write(0,*) 'APHTIM, RTSPH: ', APHTIM(1), APHTIM(1)-APHTIM0(1), RTSPH
 C
 C  Counter AVRAIN is reset every 6 or 3-h in WRF-NMM, so for stable
 c  precip heating rate use counter for convection (ACUTIM)
@@ -2651,14 +2711,15 @@ c  since in the WRF-NMM microphysics (for stable precip physics)
 c  is called at the same time as the convection.
 C
 	write(0,*) 'trial d'
-      IF(ACUTIM.GT.0.)THEN
-        RTSCU=1./(ACUTIM-ACUTIM0)
-        RTSRA=1./(ACUTIM-ACUTIM0)
+      IF(ACUTIM(1).GT.0.)THEN
+        RTSCU=1./(ACUTIM(1)-ACUTIM0(1))
+        RTSRA=1./(ACUTIM(1)-ACUTIM0(1))
       ELSE
         RTSCU=1.
         RTSRA=1.
       ENDIF
-	write(0,*) 'ACUTIM, RTSCU: ', ACUTIM, ACUTIM-ACUTIM0, RTSCU
+	write(0,*) 'ACUTIM, RTSCU: ', ACUTIM(1), ACUTIM(1)-ACUTIM0(1), 
+     &       RTSCU
 C
 c     IF(AVRAIN.GT.0.)THEN
 c       RTSRA=1./(AVRAIN-AVRAIN0)
@@ -2839,10 +2900,10 @@ C
          STADHC(LL) = PRODAT(NWORD7+LL) - DHCNVC(LVL,N)
          STADHR(LL) = PRODAT(NWORD8+LL) - DHRAIN(LVL,N)
 
-        if (mod(N,10) .eq. 0) then
-        write(0,*) 'PRODAT, DHCNVC, STADHC: ', PRODAT(NWORD7+LL), 
-     &       DHCNVC(LVL,N), STADHC(LL)
-        endif
+!        if (mod(N,10) .eq. 0) then
+!        write(0,*) 'PRODAT, DHCNVC, STADHC: ', PRODAT(NWORD7+LL), 
+!     &       DHCNVC(LVL,N), STADHC(LL)
+!        endif
 C
          DHCNVC(LVL,N) = PRODAT(NWORD7+LL)
          DHRAIN(LVL,N) = PRODAT(NWORD8+LL)
@@ -2850,10 +2911,10 @@ C
         if (NHEAT .ne. 0) then
        IF(MOD(NTSD,NHEAT).LT.NCNVC)THEN
 
-        if (mod(N,10) .eq. 0) then
-        write(0,*) 'NTSD, NHEAT, NCNVC: ', NTSD, NHEAT, NCNVC
-        write(0,*) 'setting DHCNVC to zero'
-        endif
+!        if (mod(N,10) .eq. 0) then
+!        write(0,*) 'NTSD, NHEAT, NCNVC: ', NTSD, NHEAT, NCNVC
+!        write(0,*) 'setting DHCNVC to zero'
+!        endif
 
           DHCNVC(LVL,N) = 0.
           DHRAIN(LVL,N) = 0.
@@ -2964,6 +3025,20 @@ C
       PSFCSUB  = PRODAT(NWORD15+12) - STASUB(N)
       PSNOPCX  = PRODAT(NWORD15+13) - STAPCX(N)
       PRSWIN   = PRODAT(NWORD15+14) - STASWI(N)
+
+	if (IDSTN(N) .eq. 724050) then
+        write(0,*) 'N, PRODAT(NWORD15+11), STASHX(N): ', 
+     &     N, PRODAT(NWORD15+11), STASHX(N)
+        write(0,*) 'difference for PSFCSHX: ', PSFCSHX
+        endif
+
+
+        if (N .eq. 1) then
+        write(0,*) 'PRODAT(NWORD15+14), STASWI(N): ', 
+     &              PRODAT(NWORD15+14), STASWI(N)
+        write(0,*) 'N, PRSWIN(a): ', N, PRSWIN
+        endif
+
 !       write(0,*) 'N, SUBSHX(N),STASUB(N),PSFCSUB ', N,
 !    &     SUBSHX(N), STASUB(N), PSFCSUB
       PRSWOUT  = PRODAT(NWORD15+15) - STASWO(N)
@@ -2974,7 +3049,7 @@ C
 !	endif
       PRLWOUT  = PRODAT(NWORD15+17) - STALWO(N)
 
-	if (N .eq. 100) then
+	if (N .eq. 1) then
 	write(0,*) 'PRODAT(NWORD15+17), STALWO(N), PRLOWOUT: ', 
      &      PRODAT(NWORD15+17), STALWO(N), PRLOWOUT
 	endif
@@ -3026,18 +3101,19 @@ C
 
       FPACK(9+NWORD15+11) = PSFCSHX * RTSPH
       FPACK(9+NWORD15+12) = PSFCSUB * RTSPH
+
 !       write(0,*) 'N, SUBSHX(N),STASUB(N),PSFCSUB,FPACK ', N,
 !    &     SUBSHX(N), STASUB(N), PSFCSUB, FPACK(9+NWORD15+12)
 !      FPACK(9+NWORD15+12) =-PSFCSUB * RTSPH
+
       FPACK(9+NWORD15+13) = PSNOPCX * RTSPH
       FPACK(9+NWORD15+14) = PRSWIN  * RTSPH
-	if (N .eq. 90) then
-	write(0,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
+
+	if (N .eq. 1) then
+        write(0,*) 'N, PRSWIN(b): ', N, PRSWIN
+	write(0,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD15+14)
 	endif
 
-!	if (mod(N,NUMSTA/5) .eq. 0) then
-!	write(0,*) 'N, RTSPH, SWRD: ', N, RTSPH, FPACK(9+NWORD13+14)
-!	endif
       FPACK(9+NWORD15+15) = PRSWOUT * RTSPH
       FPACK(9+NWORD15+16) = PRLWIN  * RTSPH
       FPACK(9+NWORD15+17) = PRLWOUT * RTSPH
