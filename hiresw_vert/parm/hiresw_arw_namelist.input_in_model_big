@@ -55,8 +55,8 @@
 
  &domains
  time_step                           = 24,
- time_step_fract_num                 = 12,
- time_step_fract_den                 = 37,
+ time_step_fract_num                 = 0,
+ time_step_fract_den                 = 1,
  max_dom                             = 1,
  s_we                                = 1,     
  e_we                                = 1545,    
