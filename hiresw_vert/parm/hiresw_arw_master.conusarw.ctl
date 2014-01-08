@@ -44,16 +44,16 @@
 116/184/X/2.7/wrf.EMCONUS04/0/0                      
   156 116 180   0   0 2 1  CNVCT INHIBITION          
 116/184/X/2.7/wrf.EMCONUS04/0/0                      
-   33 103   0  80   0 2 1  U WIND AT FD HEIGHTS
+   33 105   0  80   0 2 1  U WIND AT FD HEIGHTS
 116/184/X/-3.0/wrf.EMCONUS04/0/0                      
-   34 103   0  80   0 2 1  V WIND AT FD HEIGHTS
+   34 105   0  80   0 2 1  V WIND AT FD HEIGHTS
 116/184/X/-3.0/wrf.EMCONUS04/0/0                      
-   11 103   0  80   0 2 1  TEMP AT FD HEIGHTS
+   11 105   0  80   0 2 1  TEMP AT FD HEIGHTS
 116/184/X/-3.0/wrf.EMCONUS04/0/0                      
-    1 103   0  80   0 2 1  PRESS AT FD HEIGHTS
-116/184/X/-3.0/wrf.EMCONUS04/0/0                      
-   51 103   0  80   0 2 1  SPEC HUM AT FD HEIGHTS
-116/184/X/-3.0/wrf.EMCONUS04/0/0                      
+    1 105   0  80   0 2 1  PRESS AT FD HEIGHTS
+116/184/X/5.0/wrf.EMCONUS04/0/0                      
+   51 105   0  80   0 2 1  SPEC HUM AT FD HEIGHTS
+116/184/X/3.0/wrf.EMCONUS04/0/0                      
    85 111   1  44   0 2 2  BOTTOM SOIL TEMP
   205   1   0   0   3 2 1  AVE INCMG SFC LW RAD
   211   1   0   0   3 2 1  AVE OUTGO SFC SW RAD
@@ -108,16 +108,6 @@
 116/184/X/-4.0/wrf.EMCONUS04/0/0
   241 220   0   0   0 129 1  VENTILATION RATE
 116/184/X/-2.0/wrf.EMCONUS04/0/0
-   33 105   0   80  0 2 1 U WIND AT 80M AGL
-116/184/X/-4.0/wrf.EMCONUS04/0/0
-   34 105   0   80  0 2 1  V WIND AT 80M AGL
-116/184/X/-4.0/wrf.EMCONUS04/0/0
-   11 105   0   80  0 2 1  TEMP AT 80M AGL
-116/184/X/-4.0/wrf.EMCONUS04/0/0
-   51 105   0   80  0 2 1  SPEC HUM AT 80M AGL
-116/184/X/3.0/wrf.EMCONUS04/0/0
-    1 105   0   80  0 2 1  PRES AT 80M AGL
-116/184/X/5.0/wrf.EMCONUS04/0/0
    33 220   0   0   0 2 1  TRANSPORT U WIND
 116/184/X/-4.0/wrf.EMCONUS04/0/0
    34 220   0   0   0 2 1  TRANSPORT V WIND
