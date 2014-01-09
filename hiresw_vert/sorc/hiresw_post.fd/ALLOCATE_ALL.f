@@ -92,6 +92,7 @@
       allocate(QQNR(im,jsta_2l:jend_2u,lm))
       allocate(EXTCOF55(im,jsta_2l:jend_2u,lm))
       allocate(CFR(im,jsta_2l:jend_2u,lm))
+      allocate(REFL_MDL(im,jsta_2l:jend_2u,lm))
       allocate(DBZ(im,jsta_2l:jend_2u,lm))
       allocate(DBZR(im,jsta_2l:jend_2u,lm))
       allocate(DBZI(im,jsta_2l:jend_2u,lm))

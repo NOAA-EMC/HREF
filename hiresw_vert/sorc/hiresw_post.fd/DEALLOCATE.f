@@ -99,6 +99,7 @@
       deallocate(EXTCOF55)
         write(0,*) 'dealloc through 5'
       deallocate(CFR)
+      deallocate(REFL_MDL)
       deallocate(DBZ)
       deallocate(DBZR)
       deallocate(DBZI)
