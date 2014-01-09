@@ -20,13 +20,4 @@ export MP_LABELIO=yes
 
 bsub < sub_model.lsf__DOM___CORE___CYC_
 
-# leave post jobs to be submitted when model job submits
-
-# bsub < sub_postmgr.lsf__DOM___CORE___CYC_
-# bsub < sub_prdgenmgr.lsf__DOM___CORE___CYC_
-# bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
-# bsub < sub_hybridensemble.lsf__DOM___CORE___CYC_
-# bsub < sub_ensembleproduct.lsf__DOM___CORE___CYC_
-
-# rm sub_model.lsf__DOM___CORE___CYC_ sub_post.lsf__DOM___CORE___CYC_ sub_prdgen.lsf__DOM___CORE___CYC_
-# rm sub_wrfbufrsnd.lsf__DOM___CORE___CYC_ sub_hybridensemble.lsf__DOM___CORE___CYC_ sub_ensembleproduct.lsf__DOM___CORE___CYC_
+rm sub_model.lsf__DOM___CORE___CYC_
