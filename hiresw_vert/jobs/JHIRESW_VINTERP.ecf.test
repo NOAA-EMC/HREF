@@ -99,13 +99,6 @@ sh $utilscript/setpdy.sh
 #export COM=/com/${NET}/${envir}
 #export COMIN=/com/${NET}/${envir}/hiresw.${PDY}
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/${NET}/${envir}/hiresw.${PDY}
-# export COMNAM=/com/nam/prod/nam.${PDY}
-
-export COMNAM=/com/nam/prod/nam.${PDY}
-# export COMNAM=/meso/noscrub/Matthew.Pyle/com/nam/prod/nam.${PDY}
-export COMGFS=/com/gfs/prod/gfs.${PDY}
-export COMRAP=/com/rap/prod/rap.${PDY}
-export COMRAP=/ptmp/Geoffrey.Manikin/com/rap/prod/rap.${PDY}
 
 #export GESDIR=/nwges/prod/nam.${PDY}
 
