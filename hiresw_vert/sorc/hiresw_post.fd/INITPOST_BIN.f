@@ -484,6 +484,7 @@
 
         end do
        end do
+        write(0,*) 'L, PMID(L): ', L, PMID(IM/2,JSTA_2l+5,L)
       end do
       DO L=2,LM
          DO I=1,IM
@@ -1727,6 +1728,15 @@
       VarName='REFL_10CM'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
+
+      do l = 1, lm
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            REFL_MDL ( i, j, l ) = dum3d ( i, j, l )
+        end do
+       end do
+        write(0,*) 'max(REFL_MDL(:,:,L)): ', L, maxval(REFL_MDL(:,:,L))
+      end do
 
       VarName='CLDFRA'
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &

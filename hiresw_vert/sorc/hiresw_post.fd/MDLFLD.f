@@ -72,7 +72,7 @@
       use vrbls3d, only: zmid, t, pmid, q, cwm, f_ice, f_rain, f_rimef, qqw, qqi,&
               qqr, qqs, cfr, dbz, dbzr, dbzi, dbzc, qqw, nlice, qqg, zint, qqni,&
               qqnr, uh, vh, mcvg, omga, wh, q2, ttnd, rswtt, rlwtt, train, tcucn,&
-              o3, rhomid, dpres, el_pbl, pint, icing_gfip
+              o3, rhomid, dpres, el_pbl, pint, icing_gfip, refl_mdl
       use vrbls2d, only: slp, hbot, htop, cnvcfr, cprate, cnvcfr, echotop, vil,&
               radarvil, sr, prec, vis, czen, pblh, u10, v10, avgprec, avgcprate
       use masks, only: lmh, gdlat, gdlon
@@ -512,7 +512,18 @@
 !               IF(L.EQ.27.and.QQR(I,J,L).gt.1.e-4)print*,
 !     &'sample QQR DEN,DBZ= ',QQR(I,J,L),DENS,DBZ(I,J,L)
             ENDIF
-            IF (DBZ(I,J,L).GT.0.) DBZ(I,J,L)=10.0*LOG10(DBZ(I,J,L)) ! DBZ
+
+
+!!! use model produced
+            DBZ(I,J,L)=REFL_MDL(I,J,L)
+        if (mod(I,5) .eq. 0 .and. mod(J,5) .eq. 0 .and. &
+              DBZ(I,J,L) .gt. 40.) then
+        write(0,*) 'used REFL_MDL: ', I,J,L,DBZ(I,J,L)
+        endif
+
+! use computed
+!            IF (DBZ(I,J,L).GT.0.) DBZ(I,J,L)=10.0*LOG10(DBZ(I,J,L)) ! DBZ
+
             IF (DBZR(I,J,L).GT.0.)DBZR(I,J,L)=10.0*LOG10(DBZR(I,J,L)) ! DBZ
             IF (DBZI(I,J,L).GT.0.)      &
      &         DBZI(I,J,L)=10.0*LOG10(DBZI(I,J,L)) ! DBZ
@@ -944,6 +955,8 @@
                  GRID1(I,J)=DBZ(I,J,LL)
                ENDDO
                ENDDO
+        write(0,*) 'LL, max(dbz): ', LL, maxval(grid1)
+
                CALL BOUND(GRID1,DBZmin,DBZmax)
                if(grib=="grib1" )then
                  ID(1:25) = 0
