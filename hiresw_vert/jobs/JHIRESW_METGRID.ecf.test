@@ -1,0 +1,126 @@
+#!/bin/sh 
+
+#
+
+#BSUB -eo test.err
+#BSUB -x 
+
+export NEST=$1
+export MODEL=$2
+export cyc=$3
+
+export MEMBER=ctl
+export envir=prod
+
+########################################
+# Preliminary data setup step
+########################################
+
+#MP $SMSBIN/smsinit $LOADL_STEP_ID
+
+set -xa
+# #### 07/30/2004 ###################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + ' 
+date
+
+########################################################### 
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+#MP export DATA=/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
+# export DATA=/scratch2/portfolios/NCEPDEV/meso/scrub/Matthew.Pyle/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
+export DATA=/ptmpd1/Matthew.Pyle/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
+
+mkdir -p $DATA
+cd $DATA 
+####################################
+# File To Log Msgs
+####################################
+#MP export jlogfile=/com/logs/jlogfile
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t${cyc}z 
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=hiresw
+export RUN=${NEST}${MODEL}
+
+##################################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDSMS  - Flag Events on SMS
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+# RERUN    - Rerun fcst from beginning (default no)
+##################################################
+export SENDCOM=YES
+export SENDDBN=NO
+export SENDSMS=NO
+
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw_vert
+export EXEChiresw=$HOMEhiresw/exec
+export FIXhiresw=$HOMEhiresw/fix
+export PARMhiresw=$HOMEhiresw/parm
+export USHhiresw=$HOMEhiresw/ush
+
+export HOMEnam=/nwprod
+export EXECnam=$HOMEnam/exec
+export FIXnam=$HOMEnam/fix
+export PARMnam=$HOMEnam/parm
+export USHnam=$HOMEnam/ush
+
+
+###################################
+# Set up the UTILITIES
+###################################
+
+export utilscript=/nwprod/util/ush
+export utilexec=/nwprod/util/exec
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+# Run setpdy and initialize PDY variables
+sh $utilscript/setpdy.sh
+. PDY
+
+# export PDY=20121022
+# export PDY=20130428
+
+
+#export COM=/com/${NET}/${envir}
+#export COMIN=/com/${NET}/${envir}/hiresw.${PDY}
+export COMOUT=/meso/noscrub/Matthew.Pyle/com/${NET}/${envir}/hiresw.${PDY}
+# export COMNAM=/com/nam/prod/nam.${PDY}
+
+export COMNAM=/com/nam/prod/nam.${PDY}
+# export COMNAM=/meso/noscrub/Matthew.Pyle/com/nam/prod/nam.${PDY}
+export COMGFS=/com/gfs/prod/gfs.${PDY}
+export COMRAP=/com/rap/prod/rap.${PDY}
+export COMRAP=/ptmp/Geoffrey.Manikin/com/rap/prod/rap.${PDY}
+
+#export GESDIR=/nwges/prod/nam.${PDY}
+
+mkdir -p -m 775 $COMOUT
+ 
+#export PATH=${PATH}:/usrx/local/netcdf3.5/lib:/usrx/local/netcdf3.5/bin
+
+########################################################
+# Execute the script.
+# ${HOMEhiresw}/scripts/exhiresw_prelim.sh.ecf_new
+${HOMEhiresw}/scripts/exhiresw_metgrid.sh.ecf
+########################################################
+
+cd /tmpnwprd
+
+date
+
+#MP $SMSBIN/smscomplete

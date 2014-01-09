@@ -36,8 +36,6 @@ bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 
 rm sub_ungrib.lsf_${DOM}_${CORE}_${CYC} 
 
-exit
-
 
 DOM=prnew
 CORE=nmmb

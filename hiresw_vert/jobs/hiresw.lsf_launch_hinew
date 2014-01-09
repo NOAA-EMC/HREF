@@ -7,7 +7,7 @@ cd /meso/save/Matthew.Pyle/hiresw_vert/jobs/
 DOM=hinew
 CORE=arw
 CYC=${cycle}
-NPROC_MODEL=32
+NPROC_MODEL=29
 NPROC_SPAN_MODEL=16
 NPROC_POST=2
 NPROC_PRDGEN=2
