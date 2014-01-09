@@ -99,8 +99,8 @@ fi
 
 echo "#!/bin/ksh -l" > jobsub_prdgen.${fhruse}
 echo "#BSUB -J prdgen_f${fhruse}_${cyc}" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
-echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -oo /ptmpd1/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
+echo "#BSUB -eo /ptmpd1/Matthew.Pyle/output_para/hiresw_prdgen.${NEST}.f${fhruse}.out${cyc}z" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -W 00:13" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -n $proc" >> jobsub_prdgen.${fhruse}
 echo "#BSUB -q "devhigh"" >> jobsub_prdgen.${fhruse}
