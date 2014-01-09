@@ -1,10 +1,10 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelim.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_PREP_RETRO
 #BSUB -P HRW-T2O
-#BSUB -W 0:39
+#BSUB -W 0:45
 #BSUB -R "span[ptile=3]"
 #BSUB -a poe
 #BSUB -n 9
@@ -20,7 +20,10 @@ echo start job at:: $dates
 
 /meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_new_retro _DOM_ _CORE_ _CYC_ _DATE_
 
+if [ _DOM_ = "conus" ]
+then
 /meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREP.sms.test_newrap_retro _DOM_ _CORE_ _CYC_ _DATE_
+fi
 
 
 datef=`date`

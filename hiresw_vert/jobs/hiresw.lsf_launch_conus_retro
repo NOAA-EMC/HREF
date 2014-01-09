@@ -15,8 +15,9 @@ cd /meso/save/Matthew.Pyle/hiresw_vert/jobs/
 DOM=conus
 CORE=arw
 CYC=$cycle
-NPROC_MODEL=456
-NPROC_SPAN_MODEL=15
+# NPROC_MODEL=456
+NPROC_MODEL=600
+NPROC_SPAN_MODEL=16
 NPROC_POST=16
 NPROC_PRDGEN=1
 

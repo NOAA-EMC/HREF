@@ -8,7 +8,7 @@
 #BSUB -R rusage[mem=500]
 #BSUB -n 1
 #BSUB -P HRW-T2O
-#BSUB -W 1:19
+#BSUB -W 1:59
 
 export MP_EUILIB=us
 
@@ -16,3 +16,11 @@ module load ics
 module load ibmpe
 
 /meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PRDGENMGR.sms.test _DOM_ _CORE_ _CYC_
+
+
+### below doesnt get reached as sndpostdone48 file not available in PRDGEN job
+
+if [ _DOM_ = "conus" ]
+then
+/meso/save/Matthew.Pyle/hiresw_vert/scripts/grib2_extract.scr _CYC_
+fi

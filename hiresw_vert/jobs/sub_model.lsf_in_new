@@ -2,11 +2,11 @@
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.out__DOM__CORE__CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.err__DOM__CORE__CYC_
 #BSUB -R span[ptile=_SPAN_]
-#BSUB -q "dev"
-#BSUB -J HIRESW_FCST_RETRO
-#BSUB -n _NPROC_
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_FORECAST__DOM___CORE___CYC_
 #BSUB -P HRW-T2O
-#BSUB -W 1:25
+#BSUB -n _NPROC_
+#BSUB -W 1:19
 #BSUB -a poe
 #
 
@@ -22,11 +22,6 @@ module load NetCDF/4.2/serial
 
 echo START MODEL `date`
 
-if [ _DOM_ -eq "conus" ]
-then
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test_new_retro_rap _DOM_ _CORE_ _CYC_  _DATE_
-else
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test_new_retro _DOM_ _CORE_ _CYC_  _DATE_
- fi
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test_new _DOM_ _CORE_ _CYC_ 
 
 echo FINISH MODEL `date`

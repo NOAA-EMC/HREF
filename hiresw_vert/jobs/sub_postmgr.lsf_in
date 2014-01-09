@@ -6,7 +6,7 @@
 #BSUB -J HIRESW_POSTMGR__DOM__CORE_
 #BSUB -n 1
 #BSUB -P HRW-T2O
-#BSUB -W 1:19
+#BSUB -W 1:59
 #BSUB -a poe
 #
 
