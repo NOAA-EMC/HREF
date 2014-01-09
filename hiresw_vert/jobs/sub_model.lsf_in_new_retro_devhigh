@@ -1,0 +1,32 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.err__DOM__CORE__CYC_
+#BSUB -R span[ptile=_SPAN_]
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_FCST_RETRO
+#BSUB -n _NPROC_
+#BSUB -P HRW-T2O
+#BSUB -W 1:25
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+module load NetCDF/4.2/serial
+
+echo START MODEL `date`
+
+if [ _DOM_ -eq "conus" ]
+then
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test_new_retro_rap _DOM_ _CORE_ _CYC_  _DATE_
+else
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test_new_retro _DOM_ _CORE_ _CYC_  _DATE_
+ fi
+
+echo FINISH MODEL `date`
