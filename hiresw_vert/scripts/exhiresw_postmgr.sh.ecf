@@ -122,8 +122,8 @@ done
 
 echo "#!/bin/ksh -l" > jobsub_nmmb_post.${fhruse}
 echo "#BSUB -J hiresw_nmmb_post_f${fhruse}_${cyc}" >> jobsub_nmmb_post.${fhruse}
-echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
-echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -oo /ptmpd1/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
+echo "#BSUB -eo /ptmpd1/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -W 00:09" >> jobsub_nmmb_post.${fhruse}
 
 if [ $NEST == "conus" -o $NEST == "aknew" ]
@@ -225,8 +225,8 @@ fhruse=`printf '%02d' $fhr`
 
 echo "#!/bin/ksh -l" > jobsub_arw_post.${fhr}
 echo "#BSUB -J arw_post_f${fhr}_${cyc}" >> jobsub_arw_post.${fhr}
-echo "#BSUB -oo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
-echo "#BSUB -eo /ptmp/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
+echo "#BSUB -oo /ptmpd1/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
+echo "#BSUB -eo /ptmpd1/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
 echo "#BSUB -W 00:09" >> jobsub_arw_post.${fhr}
 
 if [ $NEST == "conus" -o $NEST == "aknew" ]
