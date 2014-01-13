@@ -88,8 +88,6 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x=3
- nproc_y=9
  /
 
  &physics
@@ -101,7 +99,7 @@
  sf_surface_physics                  = 2,  
  bl_pbl_physics                      = 1,  
  bldt                                = 0,   
- cu_physics                          = 1,     
+ cu_physics                          = 0,     
  cudt                                = 5,     
  isfflx                              = 1,
  ifsnow                              = 1,
@@ -149,6 +147,6 @@
  /
 
  &namelist_quilt
- nio_tasks_per_group = 2,
+ nio_tasks_per_group = 1,
  nio_groups = 1,
  /
