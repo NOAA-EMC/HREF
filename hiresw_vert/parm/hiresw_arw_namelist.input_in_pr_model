@@ -59,9 +59,9 @@
  time_step_fract_den                 = 2,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 305,    
+ e_we                                = 456,    
  s_sn                                = 1,     
- e_sn                                = 270,    
+ e_sn                                = 302,    
  s_vert                              = 1,     
  e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
@@ -81,6 +81,7 @@
                                          .5039, .4548, .4088, .3669, .3295, .2965, .2675, .2413, .2169,
                                          .1937, .1712, .1496, .1290, .1094, .0912, .0743, .0588, .0448,
                                          .0325, .0218, .0128, .0055, 0.
+
  interp_type                         = 1
  lowest_lev_from_sfc                 = .false.
  lagrange_order                      = 1
@@ -88,8 +89,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x=3
- nproc_y=9
+ nproc_x=5
+ nproc_y=11
  /
 
  &physics
@@ -149,6 +150,6 @@
  /
 
  &namelist_quilt
- nio_tasks_per_group = 2,
+ nio_tasks_per_group = 1,
  nio_groups = 1,
  /

@@ -59,9 +59,9 @@
  time_step_fract_den                 = 2,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 305,    
+ e_we                                = 316,    
  s_sn                                = 1,     
- e_sn                                = 270,    
+ e_sn                                = 253,    
  s_vert                              = 1,     
  e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
@@ -88,8 +88,6 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x=3
- nproc_y=9
  /
 
  &physics
@@ -149,6 +147,6 @@
  /
 
  &namelist_quilt
- nio_tasks_per_group = 2,
+ nio_tasks_per_group = 1,
  nio_groups = 1,
  /
