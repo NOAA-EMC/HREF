@@ -126,7 +126,7 @@ echo "#BSUB -oo /ptmpd1/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out
 echo "#BSUB -eo /ptmpd1/Matthew.Pyle/output_para/hiresw_nmmb_post.f${fhruse}.out${cyc}z" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -W 00:09" >> jobsub_nmmb_post.${fhruse}
 
-if [ $NEST == "conus" -o $NEST == "aknew" ]
+if [ $NEST == "conus" -o $NEST == "ak" ]
 then
 echo "#BSUB -R "span[ptile=8]"" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -x" >> jobsub_nmmb_post.${fhruse}
@@ -137,12 +137,12 @@ then
 echo "#BSUB -n 40" >> jobsub_nmmb_post.${fhruse}
 fi
 
-if [ $NEST == "aknew" ]
+if [ $NEST == "ak" ]
 then
 echo "#BSUB -n 32" >> jobsub_nmmb_post.${fhruse}
 fi
 
-elif [ $NEST == "prnew" ]
+elif [ $NEST == "pr" ]
 then
 echo "#BSUB -n 1" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -R rusage[mem=18000]" >> jobsub_nmmb_post.${fhruse}
@@ -158,7 +158,7 @@ fi
 echo "#BSUB -J HIRESW_POST_NMMB_${fhruse}" >> jobsub_nmmb_post.${fhruse}
 echo "#BSUB -P HRW-T2O" >> jobsub_nmmb_post.${fhruse}
 
-# if [ $NEST == "conus" -o $NEST == "aknew" ]
+# if [ $NEST == "conus" -o $NEST == "ak" ]
 # then
 # echo "#BSUB -R "span[ptile=8]"" >> jobsub_nmmb_post.${fhruse}
 # else
@@ -229,13 +229,13 @@ echo "#BSUB -oo /ptmpd1/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out$
 echo "#BSUB -eo /ptmpd1/Matthew.Pyle/output_para/hiresw_arw_post.f${fhruse}.out${cyc}z" >> jobsub_arw_post.${fhr}
 echo "#BSUB -W 00:09" >> jobsub_arw_post.${fhr}
 
-if [ $NEST == "conus" -o $NEST == "aknew" ]
+if [ $NEST == "conus" -o $NEST == "ak" ]
 then
 echo "#BSUB -n 16" >> jobsub_arw_post.${fhr}
 echo "#BSUB -R "span[ptile=8]"" >> jobsub_arw_post.${fhr}
 echo "#BSUB -q "devhigh"" >> jobsub_arw_post.${fhr}
 echo "#BSUB -x" >> jobsub_arw_post.${fhr}
-elif [ $NEST == "prnew" ]
+elif [ $NEST == "pr" ]
 then
 echo "#BSUB -n 1" >> jobsub_arw_post.${fhruse}
 echo "#BSUB -R rusage[mem=18000]" >> jobsub_arw_post.${fhruse}
