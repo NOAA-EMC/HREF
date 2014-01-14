@@ -22,13 +22,6 @@ sh $utilscript/setup.sh
 #cd $DATA
 DOMIN=${DOMIN_SMALL}${model}
 
-###
-### current definition of modelout will create GRIB files
-### with filenames such as westarw.t06z.awpreg00.tm00, while
-### they are currently westem.t06z.awpreg00.tm00.  Change
-### modelout to "em" if maintaining filenames is required.
-###
-
 modelout=$model
 
 if [ $model = "arw" ]
@@ -41,127 +34,76 @@ DOMOUT=${DOMIN_SMALL}${modelout}
 DOMOUTtwo="cent"${modelout}
 
 
-if [ $DOMIN = "eastnmm" ]
-then
-  filenamthree="wrf.EAST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "westnmm" ]
-then
-  filenamthree="wrf.WEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "aknmm" ]
-then
-  filenamthree="wrf.AK04"
-  DOMIN_bucket="ak5km"
-elif [ $DOMIN = "prnmm" ]
-then
-  filenamthree="wrf.PR04"
-  #DOMIN_bucket="hipr5km"
-  DOMIN_bucket="haitipr5km"
-elif [ $DOMIN = "hinmm" ]
-then
-  filenamthree="wrf.HI04"
-  DOMIN_bucket="hipr5km"
-elif [ $DOMIN = "guamnmm" ]
-then
-  filenamthree="wrf.GU04"
-  DOMIN_bucket="hipr5km"
-elif [ $DOMIN = "conusnmmb" ]
+if [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS04"
   DOMIN_bucket="general"
-#  IM=1577
-#  JM=959
+  gres="2p5"
   IM=2145
   JM=1377
-elif [ $DOMIN = "aknewnmmb" ]
+elif [ $DOMIN = "aknmmb" ]
 then
   filenamthree="wrf.AK04"
   DOMIN_bucket="general"
+  gres="3km"
   IM=1649
   JM=1105
-elif [ $DOMIN = "guamnewnmmb" ]
+elif [ $DOMIN = "guamnmmb" ]
 then
   filenamthree="wrf.GU04"
   DOMIN_bucket="general"
-#  IM=287
-#  JM=219
+  gres="2p5"
   IM=193
   JM=193
-elif [ $DOMIN = "hinewnmmb" ]
+elif [ $DOMIN = "hinmmb" ]
 then
   filenamthree="wrf.HI04"
   DOMIN_bucket="general"
+  gres="2p5"
   IM=321
   JM=225
-elif [ $DOMIN = "prnewnmmb" ]
+elif [ $DOMIN = "prnmmb" ]
 then
   filenamthree="wrf.PR04"
   DOMIN_bucket="general"
+  gres="2p5"
   IM=177
   JM=129
 fi
 
-if [ $DOMIN = "eastarw" ]
-then
-  filenamthree="wrf.EMEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "westarw" ]
-then
-  filenamthree="wrf.EMWST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "akarw" ]
-then
-  filenamthree="wrf.EMAK04"
-  DOMIN_bucket="ak5km"
-elif [ $DOMIN = "aknewarw" ]
+if [ $DOMIN = "akarw" ]
 then
   filenamthree="wrf.EMAK04"
   DOMIN_bucket="general"
+  gres="3km"
   IM=1649
   JM=1105
-elif [ $DOMIN = "prarw" ]
-then
-  filenamthree="wrf.EMPR04"
-  DOMIN_bucket="haitipr5km"
-elif [ $DOMIN = "hiarw" ]
-then
-  filenamthree="wrf.EMHI04"
-  DOMIN_bucket="hipr5km"
-elif [ $DOMIN = "guamarw" ]
-then
-  filenamthree="wrf.EMGU04"
-  DOMIN_bucket="hipr5km"
 elif [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS04"
   DOMIN_bucket="general"
-#  IM=1577
-#  JM=959
+  gres="2p5"
   IM=2145
   JM=1377
-elif [ $DOMIN = "guamnewarw" ]
+elif [ $DOMIN = "guamarw" ]
 then
   filenamthree="wrf.EMGU04"
   DOMIN_bucket="general"
-#  IM=287
-#  JM=219
+  gres="2p5"
   IM=193
   JM=193
-elif [ $DOMIN = "hinewarw" ]
+elif [ $DOMIN = "hiarw" ]
 then
   filenamthree="wrf.EMHI04"
   DOMIN_bucket="general"
-#  IM=287
-#  JM=219
+  gres="2p5"
   IM=321
   JM=225
-elif [ $DOMIN = "prnewarw" ]
+elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR04"
   DOMIN_bucket="general"
-#  IM=440
-#  JM=269
+  gres="2p5"
   IM=177
   JM=129
 fi
@@ -199,16 +141,16 @@ export pgm=hiresw_prdgen # ;. ./prep_step
 if [ $DOMIN_SMALL = "conus" ]
 then
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g184"
-elif [ $DOMIN_SMALL = "aknew" ]
+elif [ $DOMIN_SMALL = "ak" ]
 then
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g91"
-elif [ $DOMIN_SMALL = "prnew" ]
+elif [ $DOMIN_SMALL = "pr" ]
 then
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g195"
-elif [ $DOMIN_SMALL = "hinew" ]
+elif [ $DOMIN_SMALL = "hi" ]
 then
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g196"
-elif [ $DOMIN_SMALL = "guamnew" ]
+elif [ $DOMIN_SMALL = "guam" ]
 then
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g199"
 else
@@ -233,7 +175,8 @@ $EXEChiresw/hiresw_nmmb_prdgen > prdgen.out${fhr} 2>&1
 
 export err=$?;./err_chk
 
-cp $DATA/post_${fhr}/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
+#### being done multiple times?????  Make so only a single prdgen job does this copy
+cp $DATA/post_${fhr}/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
 
 ###############################################################
 ###############################################################
@@ -265,14 +208,14 @@ then
 
   if test $SENDCOM = 'YES'
   then
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00
-      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregi${fhr}.tm00
-      $CNVGRIB -g12 -p40 -nv ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00.grib2
-      $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00.grib2.idx
+      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}if${fhr}
+      $CNVGRIB -g12 -p40 -nv ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2
+      $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2.idx
 
       if [ $SENDDBN_GB2 = YES ]; then
-        $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awpreg${fhr}.tm00.grib2
-        $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awpreg${fhr}.tm00.grib2.idx
+        $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.ndfd${gres}f${fhr}.grib2
+        $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.ndfd${gres}f${fhr}.rib2.idx
       fi
   fi
 	
@@ -329,13 +272,13 @@ done
 
      fi
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpreg${fhr}.tm00
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
    else
 
 ## model = "nmm"
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpreg${fhr}.tm00
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
   fi  # arw/nmm break
 
@@ -343,14 +286,14 @@ done
 
   if test $SENDCOM = 'YES'
   then
-    cp $DOMOUT.t${CYC}z.awpreg${fhr}.tm00 $COMOUT/.
-    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregi${fhr}.tm00
-    $CNVGRIB -g12 -p40 -nv $DOMOUT.t${CYC}z.awpreg${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00.grib2
-    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpreg${fhr}.tm00.grib2.idx
+    cp $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} $COMOUT/.
+    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}if${fhr}
+    $CNVGRIB -g12 -p40 -nv $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2
+    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2.idx
 
     if [ $SENDDBN_GB2 = YES ]; then
-      $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awpreg${fhr}.tm00.grib2
-      $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awpreg${fhr}.tm00.grib2.idx
+      $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.ndfd${gres}f${fhr}.grib2
+      $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.ndfd${gres}f${fhr}.grib2.idx
     fi
   fi
 
