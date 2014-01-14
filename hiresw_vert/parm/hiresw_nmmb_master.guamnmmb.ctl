@@ -174,6 +174,8 @@
 112/199/X/2.7/wrf.GU04/0/0                      
   131 101  50 100   0 2 1  LIFTED INDEX--SURFCE      
 112/199/X/2.7/wrf.GU04/0/0                      
+  132 116 180   0   0 2 1  LIFTED INDEX--BEST
+112/199/X/2.7/wrf.GU04/0/0
    11   1   0   0   0 2 1  SFC (SKIN) TEMPRATUR      
 112/199/X/-3.0/wrf.GU04/0/0                      
   121   1   0   0   0 2 1  INST SFC LATHEAT FX       
