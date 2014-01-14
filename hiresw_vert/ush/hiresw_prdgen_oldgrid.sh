@@ -185,13 +185,13 @@ echo "inside f00 test"
 
   if test $SENDCOM = 'YES'
   then
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00
-      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmi${fhr}.tm00
-      $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00.grib2
-      $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00.grib2.idx
+      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}
+      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregif${fhr}
+      $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2
+      $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2.idx
       if [ $SENDDBN_GB2 = YES ]; then
-         $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awp5km${fhr}.tm00.grib2
-         $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awp5km${fhr}.tm00.grib2.idx
+         $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
+         $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
       fi
   fi
 
@@ -244,12 +244,12 @@ done
 
   fi
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awp5km${fhr}.tm00
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awpregf${fhr}
 
   else
 
 ## model = "nmm"
-   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5km${fhr}.tm00
+   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpregf${fhr}
 
   fi
 
@@ -257,13 +257,13 @@ done
 
   if test $SENDCOM = 'YES'
   then
-    cp $DOMOUT.t${CYC}z.awp5km${fhr}.tm00 $COMOUT/.
-    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmi${fhr}.tm00
-    $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awp5km${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00.grib2
-    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5km${fhr}.tm00.grib2.idx
+    cp $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/.
+    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregif${fhr}
+    $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2
+    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2.idx
     if [ $SENDDBN_GB2 = YES ]; then
-       $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awp5km${fhr}.tm00.grib2
-       $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awp5km${fhr}.tm00.grib2.idx
+       $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
+       $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
     fi
   fi
 fi
