@@ -138,10 +138,10 @@ fi
 elif [ $NEST = "guam" ] ; then
 
 if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guamnew namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guamnew_model namelist.input_in_model
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam_model namelist.input_in_model
 elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_guamnew_${MODEL}_configure_in configure_in
+  cp $PARMhiresw/hiresw_guam_${MODEL}_configure_in configure_in
 fi
 
 elif [ $NEST = "ak" ] ; then
