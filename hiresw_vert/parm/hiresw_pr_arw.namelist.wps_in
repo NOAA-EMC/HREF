@@ -14,17 +14,17 @@
  i_parent_start =      1, 31
  j_parent_start =      1, 17
  s_we           = 1, 1,
- e_we           = 330,112,
+ e_we           = 456,112,
  s_sn           = 1, 1,
- e_sn           = 215,97,
+ e_sn           = 302,97,
  geog_data_res  = '2m','2m',
- dx = 5150.,
- dy = 5150.,
+ dx = 3800.,
+ dy = 3800.,
  map_proj = 'lambert',
- ref_lat   = 18.25
+ ref_lat   = 18.0
  ref_lon   = -69.0
- truelat1  =  18.25,
- truelat2  =  18.25,
+ truelat1  =  18.0,
+ truelat2  =  18,
  stand_lon = -69.0
  geog_data_path = '/meso/noscrub/wx20py/geog'
 /
@@ -41,4 +41,5 @@
  io_form_metgrid = 1, 
  opt_output_from_metgrid_path = './',
  opt_metgrid_tbl_path         = './',
+ constants_name = './TAVGSFC'
 /

@@ -14,17 +14,17 @@
  i_parent_start =      1, 31
  j_parent_start =      1, 17
  s_we           = 1, 1,
- e_we           = 214,112,
+ e_we           = 305,112,
  s_sn           = 1, 1,
- e_sn           = 171,97,
+ e_sn           = 270,97,
  geog_data_res  = '2m','2m',
- dx = 5150.,
- dy = 5150.,
+ dx = 3800.,
+ dy = 3800.,
  map_proj = 'lambert',
- ref_lat   = 15.5
+ ref_lat   = 15.0
  ref_lon   = 146.0
- truelat1  =  15.5,
- truelat2  =  15.5,
+ truelat1  =  15.0,
+ truelat2  =  15.0,
  stand_lon = 146.0
  geog_data_path = '/meso/noscrub/wx20py/geog'
 /

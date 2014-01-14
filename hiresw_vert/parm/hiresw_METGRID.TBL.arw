@@ -1,40 +1,50 @@
 ========================================
 name=ST
-	z_dim_name=num_st_levels
+	z_dim_name=num_st_layers
         derived=yes
 # IF
-        fill_lev = 1 : ST000010(200100)
-        fill_lev = 2 : ST010040(200100)
-        fill_lev = 3 : ST040100(200100)
-        fill_lev = 4 : ST100200(200100)
+        fill_lev =  10 : ST000010(200100)
+        fill_lev =  40 : ST010040(200100)
+        fill_lev = 100 : ST040100(200100)
+        fill_lev = 200 : ST100200(200100)
 # ELSE IF
-        fill_lev = 1 : ST000010(200100)
-        fill_lev = 2 : ST010200(200100)
+        fill_lev =  10 : ST000010(200100)
+        fill_lev =  35 : ST010035(200100)
+        fill_lev = 100 : ST035100(200100)
+        fill_lev = 255 : ST100255(200100)
+# ELSE IF
+        fill_lev =  10 : ST000010(200100)
+        fill_lev = 200 : ST010200(200100)
 # ELSE
-        fill_lev = 1 : ST000007(200100)
-        fill_lev = 2 : ST007028(200100)
-        fill_lev = 3 : ST028100(200100)
-        fill_lev = 4 : ST100255(200100)
+        fill_lev =   7 : ST000007(200100)
+        fill_lev =  28 : ST007028(200100)
+        fill_lev = 100 : ST028100(200100)
+        fill_lev = 255 : ST100255(200100)
 ========================================
 name=SM
-        z_dim_name=num_sm_levels
+        z_dim_name=num_sm_layers
         derived=yes
 # IF
-        fill_lev = 1 : SM000010(200100)
-        fill_lev = 2 : SM010040(200100)
-        fill_lev = 3 : SM040100(200100)
-        fill_lev = 4 : SM100200(200100)
+        fill_lev =  10 : SM000010(200100)
+        fill_lev =  40 : SM010040(200100)
+        fill_lev = 100 : SM040100(200100)
+        fill_lev = 200 : SM100200(200100)
 # ELSE IF
-        fill_lev = 1 : SM000010(200100)
-        fill_lev = 2 : SM010200(200100)
+        fill_lev =  10 : SM000010(200100)
+        fill_lev =  35 : SM010035(200100)
+        fill_lev = 100 : SM035100(200100)
+        fill_lev = 255 : SM100255(200100)
+# ELSE IF
+        fill_lev =  10: SM000010(200100)
+        fill_lev = 200 : SM010200(200100)
 # ELSE
-        fill_lev = 1 : SM000007(200100)
-        fill_lev = 2 : SM007028(200100)
-        fill_lev = 3 : SM028100(200100)
-        fill_lev = 4 : SM100255(200100)
+        fill_lev =   7 : SM000007(200100)
+        fill_lev =  28 : SM007028(200100)
+        fill_lev = 100 : SM028100(200100)
+        fill_lev = 255 : SM100255(200100)
 ========================================
 name=SW
-        z_dim_name=num_sw_levels
+        z_dim_name=num_sw_layers
         derived=yes
 # IF
         fill_lev = 1 : SW000010(200100)
@@ -45,25 +55,49 @@ name=SW
         fill_lev = 1 : SW000010(200100)
         fill_lev = 2 : SW010200(200100)
 ========================================
+name=SOIL_LAYERS
+        derived=yes
+        z_dim_name=num_st_layers
+        flag_in_output=FLAG_SOIL_LAYERS
+        fill_lev=all:vertical_index; level_template=ST
+========================================
 name=SOILM
         z_dim_name=num_soilm_levels
         derived=yes
-        fill_lev = 1 : SOILM000(200100)      
-        fill_lev = 2 : SOILM005(200100)      
-        fill_lev = 3 : SOILM020(200100)      
-        fill_lev = 4 : SOILM040(200100)      
-        fill_lev = 5 : SOILM160(200100)      
-        fill_lev = 6 : SOILM300(200100)      
+        fill_lev =   0 : SOILM000(200100)      
+        fill_lev =   1 : SOILM001(200100)      
+        fill_lev =   4 : SOILM004(200100)      
+        fill_lev =   5 : SOILM005(200100)      
+        fill_lev =  10 : SOILM010(200100)      
+        fill_lev =  20 : SOILM020(200100)      
+        fill_lev =  30 : SOILM030(200100)      
+        fill_lev =  40 : SOILM040(200100)      
+        fill_lev =  60 : SOILM060(200100)      
+        fill_lev = 100 : SOILM100(200100)      
+        fill_lev = 160 : SOILM160(200100)      
+        fill_lev = 300 : SOILM300(200100)      
 ========================================
 name=SOILT
         z_dim_name=num_soilt_levels
         derived=yes
-        fill_lev = 1 : SOILT000(200100)      
-        fill_lev = 2 : SOILT005(200100)      
-        fill_lev = 3 : SOILT020(200100)      
-        fill_lev = 4 : SOILT040(200100)      
-        fill_lev = 5 : SOILT160(200100)      
-        fill_lev = 6 : SOILT300(200100)      
+        fill_lev =   0 : SOILT000(200100)      
+        fill_lev =   1 : SOILT001(200100)      
+        fill_lev =   4 : SOILT004(200100)      
+        fill_lev =   5 : SOILT005(200100)      
+        fill_lev =  10 : SOILT010(200100)      
+        fill_lev =  20 : SOILT020(200100)      
+        fill_lev =  30 : SOILT030(200100)      
+        fill_lev =  40 : SOILT040(200100)      
+        fill_lev =  60 : SOILT060(200100)      
+        fill_lev = 100 : SOILT100(200100)      
+        fill_lev = 160 : SOILT160(200100)      
+        fill_lev = 300 : SOILT300(200100)      
+========================================
+name=SOIL_LEVELS
+        derived=yes
+        z_dim_name=num_soilt_levels
+        flag_in_output=FLAG_SOIL_LEVELS
+        fill_lev=all:vertical_index; level_template=SOILT
 ========================================
 name=PRES
         z_dim_name=num_metgrid_levels
@@ -78,22 +112,21 @@ name=LANDSEA
         fill_missing=-1.
         fill_lev=200100:LANDMASK(1)
 ========================================
+name=XICE ; output_name=SEAICE  # If we get XICE, use entry from SEAICE and
+                                #   write the field out as SEAICE
+========================================
 name=SEAICE 
         interp_option=four_pt+average_4pt
         interp_mask=LANDSEA(1) 
         masked=land
-        fill_missing=0.
-========================================
-name=H0ML 
-        interp_option=four_pt+average_4pt
-        interp_mask=LANDSEA(1) 
-        masked=land
+        missing_value=-1.E30
         fill_missing=0.
 ========================================
 name=SNOW
         interp_option=four_pt+average_4pt
         masked=water 
         fill_missing=0.
+        flag_in_output=FLAG_SNOW
 ========================================
 name=SKINTEMP
         interp_option=sixteen_pt+four_pt+wt_average_4pt+wt_average_16pt+search
@@ -110,19 +143,22 @@ name=PSFC
 name=VEGCAT
         interp_option=nearest_neighbor
         fill_missing=0.
+        flag_in_output=FLAG_VEGCAT
 ========================================
 name=CANWAT
         interp_option=four_pt
         fill_missing=0.
 ========================================
-name=SOIL_CAT
+name=SOILCAT
         interp_option=nearest_neighbor
         fill_missing=0.
+        flag_in_output=FLAG_SOILCAT
 ========================================
 name=SW000010
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SW000010
 ========================================
@@ -130,6 +166,7 @@ name=SW010040
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SW010040
 ========================================
@@ -137,6 +174,7 @@ name=SW040100
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SW040100
 ========================================
@@ -144,6 +182,7 @@ name=SW100200
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SW100200
 ========================================
@@ -151,6 +190,7 @@ name=SW010200
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SW010200
 ========================================
@@ -158,20 +198,39 @@ name=SM000010
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SM000010
+========================================
+name=SM010035
+        interp_option=sixteen_pt+four_pt+average_4pt+search
+        masked=water
+        interp_mask=LANDSEA(0)
+        missing_value=-1.E30
+        fill_missing=1.
+        flag_in_output=FLAG_SM010035
 ========================================
 name=SM010040
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SM010040
+========================================
+name=SM035100
+        interp_option=sixteen_pt+four_pt+average_4pt+search
+        masked=water
+        interp_mask=LANDSEA(0)
+        missing_value=-1.E30
+        fill_missing=1.
+        flag_in_output=FLAG_SM035100
 ========================================
 name=SM040100
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SM040100
 ========================================
@@ -179,6 +238,7 @@ name=SM100200
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SM100200
 ========================================
@@ -186,6 +246,7 @@ name=SM010200
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SM010200
 ========================================
@@ -193,20 +254,39 @@ name=ST000010
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=285.
         flag_in_output=FLAG_ST000010
+========================================
+name=ST010035
+        interp_option=sixteen_pt+four_pt+average_4pt+search
+        masked=water
+        interp_mask=LANDSEA(0)
+        missing_value=-1.E30
+        fill_missing=285.
+        flag_in_output=FLAG_ST010035
 ========================================
 name=ST010040
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=285.
         flag_in_output=FLAG_ST010040
+========================================
+name=ST035100
+        interp_option=sixteen_pt+four_pt+average_4pt+search
+        masked=water
+        interp_mask=LANDSEA(0)
+        missing_value=-1.E30
+        fill_missing=285.
+        flag_in_output=FLAG_ST035100
 ========================================
 name=ST040100
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=285.
         flag_in_output=FLAG_ST040100
 ========================================
@@ -214,6 +294,7 @@ name=ST100200
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=285.
         flag_in_output=FLAG_ST100200
 ========================================
@@ -221,6 +302,7 @@ name=ST010200
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=285.
         flag_in_output=FLAG_ST010200
 ========================================
@@ -249,6 +331,7 @@ name=SM100255
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=1.
         flag_in_output=FLAG_SM100255
 ========================================
@@ -277,6 +360,7 @@ name=ST100255
         interp_option=sixteen_pt+four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=-1.E30
         fill_missing=285.
         flag_in_output=FLAG_ST100255
 ========================================
@@ -364,13 +448,28 @@ name=SOILT300
         fill_missing=285.
         flag_in_output=FLAG_SOILT300
 ========================================
+name=SOILT050
+        interp_option=sixteen_pt+four_pt+average_4pt+search
+        masked=water
+        interp_mask=LANDSEA(0)
+        fill_missing=285.
+        flag_in_output=FLAG_SOILT050
+========================================
 name=PMSL
         interp_option=sixteen_pt+four_pt+average_4pt
+        flag_in_output=FLAG_SLP
 ========================================
 name=RH
         interp_option=sixteen_pt+four_pt+average_4pt
         fill_missing=0.
-        fill_lev=200100:const(0.)
+        fill_lev=200100:const(-1.E30)
+========================================
+name=SPECHUMD
+        interp_option=sixteen_pt+four_pt+average_4pt
+        fill_missing=0.
+        missing_value=-1.E30
+        fill_lev=200100:const(-1)
+        flag_in_output=FLAG_SH
 ========================================
 name=TAVGSFC
         interp_option=four_pt
@@ -383,8 +482,9 @@ name=T ; output_name=TT  # If we get T, use entry from TT and
 ========================================
 name=TT
         mandatory=yes    # MUST HAVE THIS FIELD
-        interp_option=four_pt+average_4pt
+        interp_option=sixteen_pt+four_pt+average_4pt
         fill_missing=0.
+        fill_lev=200100:const(-1.E30)
 ========================================
 name=U ; output_name=UU  # If we get U, use entry from UU and
                          #   write the field out as UU
@@ -395,6 +495,7 @@ name=UU
         is_u_field=yes
         output_stagger=U
         fill_missing=0.
+        fill_lev=200100:const(-1.E30)
 ========================================
 name=V ; output_name=VV  # If we get V, use entry from VV and
                          #   write the field out as VV
@@ -405,10 +506,12 @@ name=VV
         is_v_field=yes
         output_stagger=V
         fill_missing=0.
+        fill_lev=200100:const(-1.E30)
 ========================================
 name=SST
         interp_option=sixteen_pt+four_pt
-        fill_missing=0. 
+        fill_missing=0.
+        missing_value=-1.E30
         flag_in_output=FLAG_SST
 ========================================
 name=QV
@@ -439,12 +542,19 @@ name=QS
         interp_option=four_pt+average_4pt
         fill_missing=0.
         fill_lev=200100:const(0.)
+        flag_in_output=FLAG_QS
 ========================================
 name=QG
         interp_option=four_pt+average_4pt
         fill_missing=0.
         fill_lev=200100:const(0.)
         flag_in_output=FLAG_QG
+========================================
+name=QNI
+        interp_option=four_pt+average_4pt
+        fill_missing=0.
+        fill_lev=200100:const(0.)
+        flag_in_output=FLAG_QNI
 ========================================
 name=VPTMP
         interp_option=sixteen_pt+four_pt+average_4pt
@@ -466,12 +576,34 @@ name=HGTT
         output=no
         interp_option=nearest_neighbor
 ========================================
-name=WEASD
+name=SNOWH
         interp_option=four_pt+average_4pt
         masked=water 
         fill_missing=0.
+        flag_in_output=FLAG_SNOWH
 ========================================
 name=SOILHGT
         interp_option=four_pt+average_4pt
         flag_in_output=FLAG_SOILHGT
+========================================
+name=H0ML 
+        interp_option=four_pt+average_4pt
+        interp_mask=LANDSEA(1) 
+        masked=land
+        fill_missing=0.
+========================================
+name=TMOML
+        interp_option=nearest_neighbor
+#       interp_option=sixteen_pt+four_pt+wt_average_4pt+search
+        masked=land
+        interp_mask=landmask(1)
+        missing_value=200.
+        fill_missing=-20.
+========================================
+name=T0 
+        interp_option=four_pt+average_4pt+search
+        masked=land
+        interp_mask=landmask(1)
+        missing_value=200.
+        fill_missing=-20.
 ========================================
