@@ -256,9 +256,12 @@ pwd
 
 cd $DATA
 
+
+### are these executables used, or overwritten by the hiresw_wps_ungrib_gen.sh script?
+
 if [ $MODEL != "nmmb" ]
 then
-cp $EXEChiresw/hiresw_ungrib_new ungrib.exe
+cp $EXEChiresw/hiresw_ungrib_3.5_src ungrib.exe
 else
 cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
 fi
