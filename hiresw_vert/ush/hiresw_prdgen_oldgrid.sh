@@ -31,42 +31,34 @@ fi
 
 DOMOUT=${DOMIN_SMALL}${modelout}
 
-if [ $DOMIN = "eastnmm" ]
-then
-  filenamthree="wrf.EAST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "conusnmmb" ]
+if [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.EAST05"
   DOMIN_bucket="general"
   IM=884
   JM=614
-elif [ $DOMIN = "westnmm" ]
-then
-  filenamthree="wrf.WEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "aknewnmmb" ]
+elif [ $DOMIN = "aknmmb" ]
 then
   filenamthree="wrf.AK05"
   DOMIN_bucket="general"
   IM=825
   JM=603
   wgt=ak
-elif [ $DOMIN = "hinewnmmb" ]
+elif [ $DOMIN = "hinmmb" ]
 then
   filenamthree="wrf.HI05"
   DOMIN_bucket="general"
   IM=223
   JM=170
   wgt=hi
-elif [ $DOMIN = "prnewnmmb" ]
+elif [ $DOMIN = "prnmmb" ]
 then
   filenamthree="wrf.PR05"
   DOMIN_bucket="general"
   IM=340
   JM=208
   wgt=pr
-elif [ $DOMIN = "guamnewnmmb" ]
+elif [ $DOMIN = "guamnmmb" ]
 then
   filenamthree="wrf.GU05"
   DOMIN_bucket="general"
@@ -75,42 +67,34 @@ then
   wgt=guam
 fi
 
-if [ $DOMIN = "eastarw" ]
-then
-  filenamthree="wrf.EMEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "conusarw" ]
+if [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMEAST05"
   DOMIN_bucket="general"
   IM=884
   JM=614
-elif [ $DOMIN = "westarw" ]
-then
-  filenamthree="wrf.EMWST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "aknewarw" ]
+elif [ $DOMIN = "akarw" ]
 then
   filenamthree="wrf.EMAK05"
   DOMIN_bucket="general"
   IM=825
   JM=603
   wgt=ak
-elif [ $DOMIN = "hinewarw" ]
+elif [ $DOMIN = "hiarw" ]
 then
   filenamthree="wrf.EMHI05"
   DOMIN_bucket="general"
   IM=223
   JM=170
   wgt=hi
-elif [ $DOMIN = "prnewarw" ]
+elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR05"
   DOMIN_bucket="general"
   IM=340
   JM=208
   wgt=pr
-elif [ $DOMIN = "guamnewarw" ]
+elif [ $DOMIN = "guamarw" ]
 then
   filenamthree="wrf.EMGU05"
   DOMIN_bucket="general"
