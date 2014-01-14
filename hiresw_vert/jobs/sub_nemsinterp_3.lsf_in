@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_nemsinterp_3.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_nemsinterp_3.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_NEMSINTERP_3
 #BSUB -R "span[ptile=4]"
 #BSUB -W 0:12

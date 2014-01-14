@@ -22,4 +22,4 @@ export MP_MPILIB=mpich2
 
 # export MP_IOAGENT_CNT=all
 
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_WRFBUFRSND.sms.test_para _DOM_ _CORE_ _CYC_
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_WRFBUFRSND.sms.test _DOM_ _CORE_ _CYC_

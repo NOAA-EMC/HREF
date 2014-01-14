@@ -29,6 +29,11 @@ do
 montage -geometry 550x412 today_3h_f${hr}.gif opshiresw_3h_f${hr}.gif combined_3h_f${hr}.gif
 done
 
+if [ _DOMLOC_ != "conus" ] 
+then
+TARGDIR=/home/www/emc/htdocs/mmb/mpyle/hiresw/_DOMLOC_new_CORELOC_/_CYCLOC_
+else
 TARGDIR=/home/www/emc/htdocs/mmb/mpyle/hiresw/_DOMLOC__CORELOC_/_CYCLOC_
+fi
 
 scp *.gif *.html mpyle@emcrzdm.ncep.noaa.gov:${TARGDIR}/
