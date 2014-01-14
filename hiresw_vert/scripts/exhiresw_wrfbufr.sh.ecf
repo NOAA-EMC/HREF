@@ -34,11 +34,18 @@ cp $FIXhiresw/hiresw_${RUN}_profdat hiresw_profdat
 
 OUTTYP=binary
 
-if [ $MODEL == "nmm" ]
+# if [ $MODEL == "nmmb" ]
+# then
+# model=NMMB
+# else
+# model=NCAR
+# fi
+
+if [ $MODEL == "arw" ]
 then
-model=NCEP
-else
 model=NCAR
+else
+model=$MODEL
 fi
 
 echo here with model $model
@@ -121,6 +128,9 @@ ohr=`echo $dateold | cut -c9-10`
 timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
 timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}":00:00"
 
+if [ $model == "NCAR" ]
+then
+
 OUTFIL=$DATA/wrfout_d01_${timeform}
 OLDOUTFIL=$DATA/wrfout_d01_${timeformold}
 
@@ -142,6 +152,34 @@ then
     err_exit $msg
 fi
 done
+
+
+else
+
+OUTFIL=$DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+OLDOUTFIL=$DATA/nmmb_hst_01_nio_00${fhrold}h_00m_00.00s
+
+icnt=1
+
+# wait for model restart file
+while [ $icnt -lt 1000 ]
+do
+   if [ -s $DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
+   then
+      break
+   else
+      icnt=$((icnt + 1))
+      sleep 9
+   fi
+if [ $icnt -ge 200 ]
+then
+    msg="ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    err_exit $msg
+fi
+done
+
+fi
+
 datestr=`date`
 echo past wait at $datestr
 
@@ -188,7 +226,11 @@ echo about to run program at $datestr
 
 # mpirun.lsf $EXEChiresw/hiresw_wrfbufr  >> $pgmout 2>errfile 
 
-$EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
+# $EXEChiresw/hiresw_wrfbufr_v3.5  > pgmout.log_${fhr} 2>&1 
+$EXEChiresw/hiresw_wrfbufr_para  > pgmout.log_${fhr} 2>&1 
+
+# /nwprod/hiresw.v1.0.0/exec/hiresw_wrfbufr   > pgmout.log_${fhr} 2>&1
+
 
 if [ -e err_chk ]
 then
@@ -232,11 +274,6 @@ fi
 cp $PARMhiresw/hiresw_sndp.parm.mono $DATA/hiresw_sndp.parm.mono
 cp $PARMhiresw/hiresw_bufr.tbl $DATA/hiresw_bufr.tbl
 
-# export XLFUNIT_11=$DATA/hiresw_sndp.parm.mono
-# export XLFUNIT_32=$DATA/hiresw_bufr.tbl
-# export XLFUNIT_66=$DATA/profilm.c1.${tmmark}
-# export XLFUNIT_78=$DATA/class1.bufr
-
 export FORT11="$DATA/hiresw_sndp.parm.mono"
 export FORT32="$DATA/hiresw_bufr.tbl"
 export FORT66="$DATA/profilm.c1.${tmmark}"
@@ -251,11 +288,16 @@ export err=$?;./err_chk
 fi
 
 ############### put into gempak (eliminate when RFC)
+
+/nwprod/ush/cwordsh unblk class1.bufr class1.bufr.unb
+/nwprod/ush/cwordsh block class1.bufr.unb class1.bufr.wcoss
+
 ############### end put into gempak (eliminate when RFC)
 
 if [ $SENDCOM == "YES" ]
 then
 cp $DATA/class1.bufr $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}
+cp $DATA/class1.bufr.wcoss $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}.wcoss
 cp $DATA/profilm.c1.${tmmark} ${COMOUT}/${RUN}.t${cyc}z.profilm.c1.${tmmark}
 fi
 

@@ -254,15 +254,15 @@ cd $DATA
 rm -rf poescript
 
 
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 1 $MODEL"  > poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 2 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 3 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 4 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 5 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 6 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 7 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 8 $MODEL"  >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 9 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL"  > poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 2 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 3 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 4 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 5 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 6 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 7 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 8 $MODEL"  >> poescript
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 9 $MODEL"  >> poescript
 
 chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
