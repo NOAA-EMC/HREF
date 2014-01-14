@@ -104,35 +104,16 @@ cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib/Vtable
 while [ $whr -le $last ]
 do
 
- if [ $NEST = "pr"  ] 
- then 
-   cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
-   err1=$?
-   mod=nam
-   type=awip32
-   suf=.tm00
-# elif [ $NEST = "hi" -o $NEST = "hinew" ]
-# then
-#  cp ${COMNAM}/nam.t${cyc}z.awiphi${whr}.tm00 $DATA/run_ungrib/.
-#  err1=$?
-#  mod=nam
-#  type=awiphi
-#  suf=.tm00
-# elif [ $NEST = "ak" -o $NEST = "aknew" -o  $NEST = "guam" -o $NEST = "guamnew" ]
+#  if [ $NEST = "pr"  ] 
+#  then 
+#    cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
+#    err1=$?
+#    mod=nam
+#    type=awip32
+#    suf=.tm00
 
-# elif [ ($NEST = "conus" -o $NEST = "prnew") -a $MODEL = "arw" ]
 
-elif [ $NEST = "prnew" -a $MODEL = "arw" ]
-then
-
- cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
- cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
- err1=$?
- mod=rap
- type=awip32f	
- suf=""
-
-elif [ $NEST = "conus"  ]
+if [ $NEST = "conus"  ]
 then
 
 # grab post-digital filter analysis file if available
@@ -166,13 +147,6 @@ else
   GRIBSRC=GFS
   type=pgrb2f
   suf=""
-
-# else
-#  cp ${COMNAM}/nam.t${cyc}z.awip3d${whr}.tm00 $DATA/run_ungrib/.
-#  err1=$?
-#  mod=nam
-#  type=awip3d
-#  suf=.tm00
 
 fi
 
@@ -217,7 +191,7 @@ cd $DATA/run_ungrib/
 
 if [ $MODEL != "nmmb" ]
 then
-cp $EXEChiresw/hiresw_ungrib_new ungrib.exe
+cp $EXEChiresw/hiresw_ungrib_3.5_src ungrib.exe
 
 ./ungrib.exe >> $pgmout 2>errfile
 else
@@ -233,7 +207,7 @@ fi
 # Create a script to be poe'd
 cd $DATA
 
-$USHhiresw/hiresw_wps_metgrid_gen.sh_new $NEST $cyc 00 00 1 $MODEL 
+$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL 
 
 #### this block seems redundant with the checks on wpsdone above
 
@@ -277,55 +251,7 @@ mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 hend=`echo $end | cut -c9-10`
 
-## for large domains, special namelist.input files are required for the model
-## for small domains, use the same namelist for both real and the model
-
-if [ $NEST = "hi" -o $NEST = "guam" ] ; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_small namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_small namelist.input_in_model
-elif [ $NEST = "pr" ] ; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_newpr namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_newpr namelist.input_in_model
-elif [ $NEST = "prnew" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_prnew namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_prnew namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_prnew_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "hinew" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hinew namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hinew namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_hinew_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "guamnew" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guamnew namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guamnew namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_guamnew_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "aknew" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_aknew namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_aknew namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_aknew_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR AKNEW DOMAIN
-  exit 99
-fi
-
-elif [ $NEST = "conus" ] ; then
+if [ $NEST = "conus" ] ; then
 
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
@@ -334,35 +260,28 @@ elif [ $MODEL = "nmmb" ]; then
   cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
 else
   echo BAD MODEL CHOICE FOR CONUS DOMAIN
-  exit 99
+  err=99
 fi
 
-elif [ $NEST = "eastnew" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_newbig namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_newbig_model namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_eastnew_${MODEL}_configure_in configure_in
 else
-  echo BAD MODEL CHOICE FOR EAST DOMAIN
-  exit 99
+
+  echo RAP processing only available for CONUS domain
+  echo do not use for domain $NEST
+
+  err=99
+
 fi
 
 
-else
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model namelist.input_in_model
+if [ $err -ne 0 ]; then
+   echo EXIT FROM RAP prelim job with err $err
+   mv $DATA $COMOUT/.
+   ./err_chk
 fi
 
 
 ### number of input levels depends on source model data
 
-# if [ $NEST = "hi" -o $NEST = "hinew" -o $NEST = "east" -o $NEST = "eastnew"  -o $NEST = "west" ] ; then
-# NUMLEVS=40
-# elif [ $NEST = "pr"  -o $NEST = "conus"  -o $NEST = "prnew" ] ; then
-# NUMLEVS=43
-# elif [ $NEST = "ak" -o $NEST = "aknew" -o $NEST = "guam" -o $NEST = "guamnew" ] ; then
 NUMLEVS=27
 
 if [ $mod = "rap" ]
