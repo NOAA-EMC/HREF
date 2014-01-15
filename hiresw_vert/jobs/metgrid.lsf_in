@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_metgrid.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_metgrid.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_METGRID
 #BSUB -R "span[ptile=5]"
 #BSUB -W 0:12

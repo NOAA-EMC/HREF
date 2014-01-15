@@ -22,6 +22,6 @@ module load NetCDF/4.2/serial
 
 echo START MODEL `date`
 
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test_new _DOM_ _CORE_ _CYC_ 
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test _DOM_ _CORE_ _CYC_ 
 
 echo FINISH MODEL `date`
