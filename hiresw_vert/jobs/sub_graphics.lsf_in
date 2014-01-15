@@ -34,7 +34,7 @@ rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/*.gif
 
 echo "$hireswscript/degrib_process_conus4km.scr_part_spcprodlike  _CYC_ 00 00 _CORE_ " > poescript__CORE_
 
-elif [ _DOM_ = "aknew" ]
+elif [ _DOM_ = "ak" ]
 then
 
 rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/WRFP*
@@ -52,7 +52,7 @@ do
 if [ _DOM_ = "conus" ]
 then
 echo "$hireswscript/degrib_process_conus4km.scr_part_spcprodlike  _CYC_ $hr $hr _CORE_ " >> poescript__CORE_
-elif [ _DOM_ = "aknew" ]
+elif [ _DOM_ = "ak" ]
 then
 echo "$hireswscript/degrib_process_akhiresw.scr_part_spcprodlike  _CYC_ $hr $hr _CORE_ " >> poescript__CORE_
 fi
