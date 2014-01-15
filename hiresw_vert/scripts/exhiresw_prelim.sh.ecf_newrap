@@ -191,7 +191,7 @@ cd $DATA/run_ungrib/
 
 if [ $MODEL != "nmmb" ]
 then
-cp $EXEChiresw/hiresw_ungrib_3.5_src ungrib.exe
+cp $EXEChiresw/hiresw_ungrib ungrib.exe
 
 ./ungrib.exe >> $pgmout 2>errfile
 else
@@ -351,7 +351,7 @@ fi
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real_new > $pgmout 2>&1
+mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
 export err=$?
 

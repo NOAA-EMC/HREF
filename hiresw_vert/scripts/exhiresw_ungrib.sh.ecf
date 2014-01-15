@@ -256,18 +256,7 @@ pwd
 
 cd $DATA
 
-
-### are these executables used, or overwritten by the hiresw_wps_ungrib_gen.sh script?
-
-if [ $MODEL != "nmmb" ]
-then
-cp $EXEChiresw/hiresw_ungrib_3.5_src ungrib.exe
-else
-cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
-fi
-
 rm -rf poescript
-
 
 echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 2"  > poescript
 echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 1" >> poescript
@@ -316,20 +305,7 @@ ls FILE*
 
 # done
 
-
-
 # cd $DATA/run_ungrib/
-
-# if [ $MODEL != "nmmb" ]
-# then
-# cp $EXEChiresw/hiresw_ungrib_new ungrib.exe
-
-# ./ungrib.exe >> $pgmout 2>errfile
-# else
-# cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
-# mpirun.lsf ./ungrib.exe
-# fi
-
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"
