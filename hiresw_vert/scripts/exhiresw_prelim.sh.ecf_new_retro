@@ -471,7 +471,7 @@ fi
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real_new > $pgmout 2>&1
+mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
 export err=$?
 

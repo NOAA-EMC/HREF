@@ -28,7 +28,15 @@ cd $DATA
 echo $CYCLE > fcstdate
 
 PDY=`cat fcstdate | cut -c1-8`
+DATE=`cat fcstdate | cut -c5-8`
 CYC=`cat fcstdate | cut -c9-10`
+
+year=`echo $PDY | cut -c1-4`
+ym1=`expr $year - 1`
+
+
+echo year $year
+echo ym1 $ym1
 
 # export OMP_MAX_THREADS=1
 # export XLSMPOPTS="parthds=1:spins=0:yields=0:stack=128000000:schedule=static"
@@ -40,7 +48,14 @@ if [ $MODEL != "nmmb" ]
 then
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 wrfbdy_d01
 err1=$?
+
+if [ $NEST = "conus" ]
+then
+cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap wrfinput_d01
+else
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 wrfinput_d01
+fi
+
 err2=$?
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.namelist.input namelist.input
 err3=$?
@@ -74,7 +89,13 @@ do
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.boco.00${hr} boco.00${hr}
 err1=$?
 done
+
+if [ $NEST = "conus" ]
+then
+cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap input_domain_01_nemsio
+else
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio input_domain_01_nemsio
+fi
 err2=$?
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.configure_file configure_file
 err3=$?
@@ -89,7 +110,14 @@ fi
 cp configure_file                               model_configure
 cp configure_file                               configure_file_01
 cp $PARMhiresw/hiresw_ocean.configure           ocean.configure
+
+####
+#
 cp $PARMhiresw/hiresw_solver_state.txt          solver_state.txt
+#
+####
+
+
 cp $PARMhiresw/hiresw_filt_vars.txt             filt_vars.txt
 cp $PARMhiresw/hiresw_moving_nest_shift.txt     moving_nest_shift.txt
 cp $PARMhiresw/hiresw_atmos.configure_nmm       atmos.configure
@@ -105,19 +133,42 @@ cp $PARMhiresw/hiresw_nmmb_ETAMPNEW_DATA.expanded_rain ETAMPNEW_DATA.expanded_ra
 cp $PARMhiresw/hiresw_nmmb_GENPARM.TBL GENPARM.TBL
 cp $PARMhiresw/hiresw_nmmb_IGBP_LANDUSE.TBL IGBP_LANDUSE.TBL
 cp $PARMhiresw/hiresw_nmmb_IGBP_VEGPARM.TBL IGBP_VEGPARM.TBL
-cp $PARMhiresw/hiresw_nmmb_LANDUSE.TBL LANDUSE.TBL
+
+cp $PARMhiresw/hiresw_nmmb_IGBP_LANDUSE.TBL LANDUSE.TBL
+cp $PARMhiresw/hiresw_nmmb_IGBP_VEGPARM.TBL VEGPARM.TBL
+
+# cp $PARMhiresw/hiresw_nmmb_LANDUSE.TBL LANDUSE.TBL
 cp $PARMhiresw/hiresw_nmmb_RRTM_DATA RRTM_DATA
 cp $PARMhiresw/hiresw_nmmb_SOILPARM.TBL SOILPARM.TBL
-cp $PARMhiresw/hiresw_nmmb_VEGPARM.TBL VEGPARM.TBL
+# cp $PARMhiresw/hiresw_nmmb_VEGPARM.TBL VEGPARM.TBL
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
 cp $FIXhiresw/hiresw_tr49t85 tr49t85
 cp $FIXhiresw/hiresw_tr67t85 tr67t85
 cp $FIXhiresw/global_co2historical* .
 
-cp global_co2historicaldata_2012.txt co2historicaldata_2012.txt
-cp global_co2historicaldata_2013.txt co2historicaldata_2013.txt
 
-cp co2historicaldata_2013.txt co2historicaldata_glob.txt
+if [ -e global_co2historicaldata_${year}.txt ]
+then
+cp global_co2historicaldata_${year}.txt co2historicaldata_${year}.txt
+cp co2historicaldata_${year}.txt co2historicaldata_glob.txt
+else
+echo "CURRENT YEAR CO2 file not found.  Use previous year version."
+echo "CURRENT YEAR CO2 file not found.  Use previous year version."
+echo "CURRENT YEAR CO2 file not found.  Use previous year version."
+cp global_co2historicaldata_${ym1}.txt  co2historicaldata_glob.txt
+cp global_co2historicaldata_${ym1}.txt  co2historicaldata_${ym1}.txt
+fi
+
+##
+# Special provision for first cycle of the year (filtering takes it 
+# into the preceding year).
+
+if [ $DATE$CYC -eq 010100 ]
+then
+cp global_co2historicaldata_${ym1}.txt  co2historicaldata_glob.txt
+cp global_co2historicaldata_${ym1}.txt  co2historicaldata_${ym1}.txt
+fi
+##
 
 fi
 
@@ -139,6 +190,7 @@ mpirun.lsf $EXEChiresw/hiresw_nmmbfcst
 
 else
 
+# mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst_new3.5
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst
 
 export err=$?;./err_chk
