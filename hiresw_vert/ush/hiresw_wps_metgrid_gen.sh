@@ -89,9 +89,9 @@ cd  ./run_metgrid_${ICOUNT}
 
 if [ $MODEL != nmmb ]
 then
-cp $EXEChiresw/hiresw_metgrid  .
+cp $EXEChiresw/hiresw_metgrid  ./metgrid.exe
 else
-cp $EXEChiresw/hiresw_nps_metgrid  .
+cp $EXEChiresw/hiresw_nps_metgrid  ./metgrid.exe
 fi
 
 cp $PARMhiresw/hiresw_METGRID.TBL.${MODEL} METGRID.TBL
@@ -113,20 +113,25 @@ mm=`echo $time | cut -c5-6`
 dd=`echo $time | cut -c7-8`
 hh=`echo $time | cut -c9-10`
 cp $DATA/run_ungrib/FILE:${yy}-${mm}-${dd}_${hh} .
+err=$?
+
+if [ $err -ne 0 ]
+then
+echo "MISSING UNGRIB FILE - ABORT"
+fi
+
+$DATA/err_chk
+
 FHR=`expr $FHR + $INT`
 done
 
-if [ $MODEL != nmmb ] ; then
-./hiresw_metgrid
-else
-./hiresw_nps_metgrid
-fi
+./metgrid.exe
 
 export err=$?; $DATA/err_chk
 
 echo "DONE" > wpsdone.${ICOUNT}
 
-mv met*.int met*.bin met*.dio  $DATA/.
+mv met*.nc met*.bin met*.dio  $DATA/.
 mv wpsdone.${ICOUNT} ../
 
 cp metgrid.log $DATA/metgrid.log.0000_${ICOUNT}
