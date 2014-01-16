@@ -1,5 +1,10 @@
 #! /bin/ksh
 
+### USH SCRIPT FOR THE HIGHEST RESOLUTION 
+### OUTPUT GRID IN EACH DOMAIN.  THEY ARE
+### NDFD GRIDS AND GET LABELED AS SUCH IN
+### THE /COM OUTPUT
+
 set -x
 
 utilexec=/nwprod/util/exec
