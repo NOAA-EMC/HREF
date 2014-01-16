@@ -31,45 +31,21 @@ fi
 
 DOMOUT=${DOMIN_SMALL}${modelout}
 
-if [ $DOMIN = "eastnmm" ]
-then
-  filenamthree="wrf.EAST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "conusnmmb" ]
+lif [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS05"
   DOMIN_bucket="general"
   IM=884
   JM=614
-elif [ $DOMIN = "westnmm" ]
-then
-  filenamthree="wrf.WEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "aknmm" ]
-then
-  filenamthree="wrf.AK04"
-  DOMIN_bucket="ak4km"
-fi
-
-if [ $DOMIN = "eastarw" ]
-then
-  filenamthree="wrf.EMEST04"
-  DOMIN_bucket="full5km"
 elif [ $DOMIN = "conusarw" ]
 then
-  filenamthree="wrf.EMEAST05"
   filenamthree="wrf.EMCONUS05"
   DOMIN_bucket="general"
   IM=884
   JM=614
-elif [ $DOMIN = "westarw" ]
-then
-  filenamthree="wrf.EMWST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "akarw" ]
-then
-  filenamthree="wrf.EMAK04"
-  DOMIN_bucket="ak4km"
+else
+echo "Improperly used for " $DOMIN " domain"
+err_exit "hlresw_prdgen_oldgrid.sh_east only for CONUS DOMAIN"
 fi
 
 #echo $model > lower
@@ -113,8 +89,6 @@ $EXEChiresw/hiresw_nmmb_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
 
 export err=$?;./err_chk
 
-### cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
-
 ###############################################################
 ###############################################################
 ###############################################################
@@ -123,17 +97,11 @@ export err=$?;./err_chk
 # compute precip buckets
 
 threehrprev=`expr $fhr - 3`
-sixhrprev=`expr $fhr - 6`
 onehrprev=`expr $fhr - 1`
 
 if [ $threehrprev -lt 10 ]
 then
 threehrprev=0$threehrprev
-fi
-
-if [ $sixhrprev -lt 10 ]
-then
-sixhrprev=0$sixhrprev
 fi
 
 if [ $onehrprev -lt 10 ]
@@ -212,7 +180,7 @@ done
 
   fi
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awpregeastf${fhr}
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpregeastf${fhr}
 
   else
 
