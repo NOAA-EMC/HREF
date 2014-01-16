@@ -118,7 +118,6 @@ mkdir -p -m 775 $COMOUT
 
 ########################################################
 # Execute the script.
-# ${HOMEhiresw}/scripts/exhiresw_prelim.sh.ecf_new
 ${HOMEhiresw}/scripts/exhiresw_ungrib.sh.ecf
 ########################################################
 
