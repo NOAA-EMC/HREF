@@ -1186,13 +1186,18 @@ c
      +  IM,1,JM,1,IM,JS,JE,1)
 
       VarName='RAINNC'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
 
 
       DO N=1,NUMSTA
         ACPREC(N)= DUMMY(IHINDX(N),JHINDX(N))*0.001 + CUPREC(N)
+
+        if (IDSTN(N) .eq. 727470) then
+        write(0,*) 'N, INL ACPREC: ', N, ACPREC(N)
+        endif
+
       ENDDO
 
         write(0,*) 'max of ACPREC: ', maxval(ACPREC)
@@ -2549,13 +2554,17 @@ c
 
 
       VarName='RAINNC'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
       DO N=1,NUMSTA
         ACPREC0(N)=( DUMMY(IHINDX(N),JHINDX(N))+
      &               DUMMY2(IHINDX(N),JHINDX(N)) )*.001
         ACPREC0(N)= DUMMY(IHINDX(N),JHINDX(N))*0.001 + CUPREC0(N)
+
+        if (IDSTN(N) .eq. 727470) then
+        write(0,*) 'N, INL ACPREC0: ', N, ACPREC0(N)
+        endif
 
       ENDDO
 
