@@ -224,12 +224,7 @@ echo about to run program at $datestr
 ### big overhead at times from call of mpirun.lsf??  program itself seems to run quickly
 ### 
 
-# mpirun.lsf $EXEChiresw/hiresw_wrfbufr  >> $pgmout 2>errfile 
-
-# $EXEChiresw/hiresw_wrfbufr_v3.5  > pgmout.log_${fhr} 2>&1 
-$EXEChiresw/hiresw_wrfbufr_para  > pgmout.log_${fhr} 2>&1 
-
-# /nwprod/hiresw.v1.0.0/exec/hiresw_wrfbufr   > pgmout.log_${fhr} 2>&1
+$EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
 
 
 if [ -e err_chk ]
@@ -296,9 +291,9 @@ fi
 
 if [ $SENDCOM == "YES" ]
 then
-cp $DATA/class1.bufr $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}
-cp $DATA/class1.bufr.wcoss $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}.wcoss
-cp $DATA/profilm.c1.${tmmark} ${COMOUT}/${RUN}.t${cyc}z.profilm.c1.${tmmark}
+cp $DATA/class1.bufr $COMOUT/${RUN}.t${cyc}z.class1.bufr
+cp $DATA/class1.bufr.wcoss $COMOUT/${RUN}.t${cyc}z.class1.bufr.wcoss
+cp $DATA/profilm.c1.${tmmark} ${COMOUT}/${RUN}.t${cyc}z.profilm.c1
 fi
 
 # Make an upper case version of the ${RUN} variable for the alert

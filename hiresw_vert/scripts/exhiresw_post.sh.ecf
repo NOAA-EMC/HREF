@@ -190,22 +190,7 @@ echo RUNNING PROGRAM
 datestr=`date`
 echo to run executable at $datestr
 
-# multiple calls to mpirun.lsf in same job makes slow
-#
-# methodology used with wrfbufr code does not work for post
-#
-# due to post running with multiple tasks?
-# seems like yes.  Single PE job runs fast
-# 
-
-if [ $MODEL != "nmmb" ]
-then
-#was  mpirun.lsf $EXEChiresw/hiresw_post < itag > $pgmout 2>errfile
-mpirun.lsf $EXEChiresw/ncep_post_nems_mpiio < itag  > $pgmout 2>errfile
-else
-mpirun.lsf $EXEChiresw/ncep_post_nems_mpiio < itag  > $pgmout 2>errfile
-# mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
-fi
+mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
 
 datestr=`date`
 echo done running executable at $datestr
