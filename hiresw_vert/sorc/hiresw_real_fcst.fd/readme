@@ -1,5 +1,0 @@
-
-Use the ./compile_both.sc script in this directory.  
-
-It will build four executables (hiresw_arw_real, hiresw_arw_fcst, 
-hiresw_nmm_real, hiresw_nmm_fcst) and copy them to ../../exec/.
