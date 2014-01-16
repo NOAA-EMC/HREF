@@ -32,7 +32,7 @@
 #
 # Define the name of the executable
 #
-TARGET = ../../exec/hiresw_wrfbufr_para
+TARGET = ../../exec/hiresw_wrfbufr
 #
 # CPP, Compiler, and Linker Options
 #
@@ -45,7 +45,8 @@ ARCH     =
 CPPFLAGS = 
 # OPTS     = -O0 -assume byterecl
 # OPTS     = -O3 -assume byterecl -convert big_endian
-OPTS     = -O2 -g -check -traceback -convert big_endian -assume noold_ldout_format
+# OPTS     = -O0   -ftrapuv -check bounds -check format -check output_conversion -check pointers -check uninit -fp-stack-check -convert big_endian -assume noold_ldout_format
+OPTS     = -O2   -convert big_endian -assume noold_ldout_format
 LIST     = 
 FREE     = -FR
 TRAPS    = 
@@ -56,7 +57,10 @@ MAP      =
 ESSL     =
 MASS     =
 W3FLAGS = -I/nwprod/lib
-NEMSIOFLAG = -I/nwprod/lib/incmod/nemsio
+
+NEMSIO_INC = -I/nwprod/lib/incmod/nemsio
+NEMSIO_LIB = -L/nwprod/lib -lnemsio
+
 WRFLIB    = ./wrflibs/libwrflib.a  \
             ./wrflibs/pack_utils.o  \
             ./wrflibs/libfftpack.a \
@@ -71,13 +75,12 @@ SEARCH   =
 #
 # Assemble Options
 #
-FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) $(W3FLAGS) $(NEMSIOFLAG)
-FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) $(W3FLAGS) $(NEMSIOFLAG)
+FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) $(W3FLAGS) $(NEMSIO_INC)
+FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) $(W3FLAGS) $(NEMSIO_INC)
 LDFLAGS  = $(MEM) $(MAP) $(SMP) $(PROFILE)
 LIBS     = $(ESSL) $(MASS) $(SEARCH) $(WRFLIB) \
-           -L/nwprod/lib/nemsio -lnemsio \
-           -L/nwprod/lib \
-           -lw3emc_4 -lw3nco_4 -lbacio_4 \
+           $(NEMSIO_LIB) \
+           -L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4 \
            -L${NETLIB} -lnetcdf
 #
 #
