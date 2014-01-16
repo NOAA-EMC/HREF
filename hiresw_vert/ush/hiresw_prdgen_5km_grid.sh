@@ -1,4 +1,4 @@
-in/ksh
+#!/bin/ksh
 
 set -x
 
@@ -135,7 +135,6 @@ export err=$?;./err_chk
 # compute precip buckets
 
 threehrprev=`expr $fhr - 3`
-sixhrprev=`expr $fhr - 6`
 onehrprev=`expr $fhr - 1`
 
 if [ $threehrprev -lt 10 ]
@@ -143,10 +142,6 @@ then
 threehrprev=0$threehrprev
 fi
 
-if [ $sixhrprev -lt 10 ]
-then
-sixhrprev=0$sixhrprev
-fi
 
 if [ $onehrprev -lt 10 ]
 then
@@ -203,6 +198,8 @@ done
   if [ $fhr%3 -eq 0 ]
   then
 
+echo "3 hourly, do 3H precip bucket"
+
 while [ ! -e $DATA/prdgen_5km_${threehrprev}/$filenamthree$threehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_5km_${threehrprev}/$filenamthree$threehrprev.tm00
@@ -224,7 +221,11 @@ done
 
   fi
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+ls -l PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00
+ls -l ${filenamthree}${fhr}.tm00
+
+#  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
 
   else
 
