@@ -1,0 +1,352 @@
+ 
+**** Compiling ungrib ****
+ 
+( cd src/ngl ; make -i -r DEV_TOP="/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd" CC="icc" FC="ifort" RANLIB="echo" all )
+make[1]: Entering directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src/ngl'
+( cd w3 ; make -i -r DEV_TOP="/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd" all ; echo libw3.a )
+make[2]: Entering directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src/ngl/w3'
+Makefile:44: warning: overriding commands for target `.f.o'
+/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/configure.wps:99: warning: ignoring old commands for target `.f.o'
+Makefile:48: warning: overriding commands for target `.c.o'
+/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/configure.wps:95: warning: ignoring old commands for target `.c.o'
+/bin/rm -f bacio_module.o
+ifort -FI -convert big_endian -c bacio_module.f 
+/bin/rm -f getgb.o
+ifort -FI -convert big_endian -c getgb.f 
+/bin/rm -f getgbmh.o
+ifort -FI -convert big_endian -c getgbmh.f 
+/bin/rm -f putgbex.o
+ifort -FI -convert big_endian -c putgbex.f 
+/bin/rm -f w3fi73.o
+ifort -FI -convert big_endian -c w3fi73.f 
+/bin/rm -f getgb1r.o
+ifort -FI -convert big_endian -c getgb1r.f 
+/bin/rm -f getgbmp.o
+ifort -FI -convert big_endian -c getgbmp.f 
+/bin/rm -f putgbn.o
+ifort -FI -convert big_endian -c putgbn.f 
+/bin/rm -f w3fi74.o
+ifort -FI -convert big_endian -c w3fi74.f 
+/bin/rm -f getgb1re.o
+ifort -FI -convert big_endian -c getgb1re.f 
+/bin/rm -f getgbp.o
+ifort -FI -convert big_endian -c getgbp.f 
+/bin/rm -f r63w72.o
+ifort -FI -convert big_endian -c r63w72.f 
+/bin/rm -f w3fi75.o
+ifort -FI -convert big_endian -c w3fi75.f 
+/bin/rm -f getgb1s.o
+ifort -FI -convert big_endian -c getgb1s.f 
+/bin/rm -f getgi.o
+ifort -FI -convert big_endian -c getgi.f 
+/bin/rm -f sbyte.o
+ifort -FI -convert big_endian -c sbyte.f 
+/bin/rm -f w3fi76.o
+ifort -FI -convert big_endian -c w3fi76.f 
+/bin/rm -f getgbe.o
+ifort -FI -convert big_endian -c getgbe.f 
+/bin/rm -f getgir.o
+ifort -FI -convert big_endian -c getgir.f 
+/bin/rm -f sbytes.o
+ifort -FI -convert big_endian -c sbytes.f 
+/bin/rm -f w3fi82.o
+ifort -FI -convert big_endian -c w3fi82.f 
+/bin/rm -f getgbeh.o
+ifort -FI -convert big_endian -c getgbeh.f 
+/bin/rm -f idsdef.o
+ifort -FI -convert big_endian -c idsdef.f 
+/bin/rm -f w3fi83.o
+ifort -FI -convert big_endian -c w3fi83.f 
+/bin/rm -f getgbem.o
+ifort -FI -convert big_endian -c getgbem.f 
+/bin/rm -f iw3jdn.o
+ifort -FI -convert big_endian -c iw3jdn.f 
+/bin/rm -f w3difdat.o
+ifort -FI -convert big_endian -c w3difdat.f 
+/bin/rm -f w3fs26.o
+ifort -FI -convert big_endian -c w3fs26.f 
+/bin/rm -f getgbemh.o
+ifort -FI -convert big_endian -c getgbemh.f 
+/bin/rm -f ixgb.o
+ifort -FI -convert big_endian -c ixgb.f 
+/bin/rm -f w3doxdat.o
+ifort -FI -convert big_endian -c w3doxdat.f 
+/bin/rm -f w3log.o
+ifort -FI -convert big_endian -c w3log.f 
+/bin/rm -f getgbemp.o
+ifort -FI -convert big_endian -c getgbemp.f 
+/bin/rm -f lengds.o
+ifort -FI -convert big_endian -c lengds.f 
+/bin/rm -f w3fi01.o
+ifort -FI -convert big_endian -c w3fi01.f 
+/bin/rm -f w3movdat.o
+ifort -FI -convert big_endian -c w3movdat.f 
+/bin/rm -f getgbens.o
+ifort -FI -convert big_endian -c getgbens.f 
+/bin/rm -f pdsens.o
+ifort -FI -convert big_endian -c pdsens.f 
+/bin/rm -f w3fi58.o
+ifort -FI -convert big_endian -c w3fi58.f 
+/bin/rm -f w3reddat.o
+ifort -FI -convert big_endian -c w3reddat.f 
+/bin/rm -f getgbep.o
+ifort -FI -convert big_endian -c getgbep.f 
+/bin/rm -f pdseup.o
+ifort -FI -convert big_endian -c pdseup.f 
+/bin/rm -f w3fi59.o
+ifort -FI -convert big_endian -c w3fi59.f 
+/bin/rm -f w3tagb.o
+ifort -FI -convert big_endian -c w3tagb.f 
+/bin/rm -f errmsg.o
+ifort -FI -convert big_endian -c errmsg.f 
+/bin/rm -f getgbex.o
+ifort -FI -convert big_endian -c getgbex.f 
+/bin/rm -f putgb.o
+ifort -FI -convert big_endian -c putgb.f 
+/bin/rm -f w3fi63.o
+ifort -FI -convert big_endian -c w3fi63.f 
+/bin/rm -f gbytes.o
+ifort -FI -convert big_endian -c gbytes.f 
+/bin/rm -f getgbexm.o
+ifort -FI -convert big_endian -c getgbexm.f 
+/bin/rm -f putgbe.o
+ifort -FI -convert big_endian -c putgbe.f 
+/bin/rm -f w3fi68.o
+ifort -FI -convert big_endian -c w3fi68.f 
+/bin/rm -f gbytes_char.o
+ifort -FI -convert big_endian -c gbytes_char.f 
+/bin/rm -f getgbh.o
+ifort -FI -convert big_endian -c getgbh.f 
+/bin/rm -f putgben.o
+ifort -FI -convert big_endian -c putgben.f 
+/bin/rm -f getbit.o
+ifort -FI -convert big_endian -c getbit.f 
+/bin/rm -f getgbm.o
+ifort -FI -convert big_endian -c getgbm.f 
+/bin/rm -f putgbens.o
+ifort -FI -convert big_endian -c putgbens.f 
+/bin/rm -f w3fi72.o
+ifort -FI -convert big_endian -c w3fi72.f 
+/bin/rm -f fparsei.o
+ifort -FI -convert big_endian -c fparsei.f 
+/bin/rm -f fparser.o
+ifort -FI -convert big_endian -c fparser.f 
+/bin/rm -f instrument.o
+ifort -FI -convert big_endian -c instrument.f 
+/bin/rm -f start.o
+ifort -FI -convert big_endian -c start.f 
+/bin/rm -f summary.o
+ifort -FI -convert big_endian -c summary.f 
+/bin/rm -f w3utcdat.o
+ifort -FI -convert big_endian -c w3utcdat.f 
+/bin/rm -f w3fs21.o
+ifort -FI -convert big_endian -c w3fs21.f 
+/bin/rm -f w3locdat.o
+ifort -FI -convert big_endian -c w3locdat.f 
+/bin/rm -f w3fi71.o
+ifort -FI -convert big_endian -c w3fi71.f 
+/bin/rm -f baciof.o
+ifort -FI -convert big_endian -c baciof.f 
+/bin/rm -f bacio.v1.3.o
+icc -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -c bacio.v1.3.c 
+/bin/rm -f errexit.o
+icc -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -c errexit.c 
+ar ru  libw3.a bacio_module.o getgb.o     getgbmh.o   putgbex.o   w3fi73.o getgb1r.o   getgbmp.o   putgbn.o    w3fi74.o getgb1re.o  getgbp.o    r63w72.o    w3fi75.o getgb1s.o   getgi.o     sbyte.o     w3fi76.o getgbe.o    getgir.o    sbytes.o    w3fi82.o getgbeh.o   idsdef.o                w3fi83.o getgbem.o   iw3jdn.o    w3difdat.o  w3fs26.o getgbemh.o  ixgb.o      w3doxdat.o  w3log.o getgbemp.o  lengds.o    w3fi01.o    w3movdat.o getgbens.o  pdsens.o    w3fi58.o    w3reddat.o getgbep.o   pdseup.o    w3fi59.o    w3tagb.o errmsg.o    getgbex.o   putgb.o     w3fi63.o gbytes.o    getgbexm.o  putgbe.o    w3fi68.o gbytes_char.o           getgbh.o    putgben.o getbit.o    getgbm.o    putgbens.o  w3fi72.o fparsei.o   fparser.o   instrument.o start.o     summary.o   w3utcdat.o  w3fs21.o w3locdat.o  w3fi71.o    baciof.o bacio.v1.3.o errexit.o
+ar: creating libw3.a
+echo libw3.a
+libw3.a
+make[2]: Leaving directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src/ngl/w3'
+libw3.a
+ln -sf w3/libw3.a .
+( cd g2 ; make -i -r DEV_TOP="/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd" all ; echo libg2_4.a )
+make[2]: Entering directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src/ngl/g2'
+Makefile:67: warning: overriding commands for target `.F.o'
+/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/configure.wps:103: warning: ignoring old commands for target `.F.o'
+Makefile:72: warning: overriding commands for target `.f.o'
+/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/configure.wps:99: warning: ignoring old commands for target `.f.o'
+Makefile:75: warning: overriding commands for target `.c.o'
+/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/configure.wps:95: warning: ignoring old commands for target `.c.o'
+ifort -c -FI -convert big_endian gridtemplates.f
+ifort -c -FI -convert big_endian pdstemplates.f
+ifort -c -FI -convert big_endian drstemplates.f
+ifort -c -FI -convert big_endian gribmod.f
+ifort -c -FI -convert big_endian realloc.f
+/lib/cpp -C -P -traditional -DUSE_JPEG2000 -DUSE_PNG addfield.F > addfield.f90
+ifort -c -FI -convert big_endian addfield.f90
+/bin/rm -f addfield.f90
+ifort -c -FI -convert big_endian addgrid.f
+ifort -c -FI -convert big_endian addlocal.f
+ifort -c -FI -convert big_endian getfield.f
+ifort -c -FI -convert big_endian gb_info.f
+ifort -c -FI -convert big_endian gf_getfld.f
+ifort -c -FI -convert big_endian gf_free.f
+ifort -c -FI -convert big_endian gf_unpack1.f
+ifort -c -FI -convert big_endian gf_unpack2.f
+ifort -c -FI -convert big_endian gf_unpack3.f
+ifort -c -FI -convert big_endian gf_unpack4.f
+ifort -c -FI -convert big_endian gf_unpack5.f
+ifort -c -FI -convert big_endian gf_unpack6.f
+/lib/cpp -C -P -traditional -DUSE_JPEG2000 -DUSE_PNG gf_unpack7.F > gf_unpack7.f90
+ifort -c -FI -convert big_endian gf_unpack7.f90
+/bin/rm -f gf_unpack7.f90
+ifort -c -FI -convert big_endian gettemplates.f
+ifort -c -FI -convert big_endian getlocal.f
+ifort -c -FI -convert big_endian getdim.f
+ifort -c -FI -convert big_endian getpoly.f
+ifort -c -FI -convert big_endian gribcreate.f
+ifort -c -FI -convert big_endian gribend.f
+ifort -c -FI -convert big_endian gribinfo.f
+ifort -c -FI -convert big_endian mkieee.f
+ifort -c -FI -convert big_endian rdieee.f
+ifort -c -FI -convert big_endian simpack.f
+ifort -c -FI -convert big_endian simunpack.f
+ifort -c -FI -convert big_endian cmplxpack.f
+ifort -c -FI -convert big_endian compack.f
+ifort -c -FI -convert big_endian misspack.f
+ifort -c -FI -convert big_endian pack_gp.f
+ifort -c -FI -convert big_endian reduce.f
+ifort -c -FI -convert big_endian comunpack.f
+ifort -c -FI -convert big_endian specpack.f
+ifort -c -FI -convert big_endian specunpack.f
+/lib/cpp -C -P -traditional -DUSE_JPEG2000 -DUSE_PNG jpcpack.F > jpcpack.f90
+ifort -c -FI -convert big_endian jpcpack.f90
+/bin/rm -f jpcpack.f90
+/lib/cpp -C -P -traditional -DUSE_JPEG2000 -DUSE_PNG jpcunpack.F > jpcunpack.f90
+ifort -c -FI -convert big_endian jpcunpack.f90
+/bin/rm -f jpcunpack.f90
+icc -c -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -I/nwprod/lib/sorc/libpng-1.2.44/include -I /nwprod/lib/sorc/zlib-1.2.6/include -I/nwprod/lib/sorc/jasper-1.900.1/include/jasper  -DUSE_JPEG2000 -DUSE_PNG -D__64BIT__ enc_jpeg2000.c
+icc -c -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -I/nwprod/lib/sorc/libpng-1.2.44/include -I /nwprod/lib/sorc/zlib-1.2.6/include -I/nwprod/lib/sorc/jasper-1.900.1/include/jasper  -DUSE_JPEG2000 -DUSE_PNG -D__64BIT__ dec_jpeg2000.c
+/lib/cpp -C -P -traditional -DUSE_JPEG2000 -DUSE_PNG pngpack.F > pngpack.f90
+ifort -c -FI -convert big_endian pngpack.f90
+/bin/rm -f pngpack.f90
+/lib/cpp -C -P -traditional -DUSE_JPEG2000 -DUSE_PNG pngunpack.F > pngunpack.f90
+ifort -c -FI -convert big_endian pngunpack.f90
+/bin/rm -f pngunpack.f90
+icc -c -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -I/nwprod/lib/sorc/libpng-1.2.44/include -I /nwprod/lib/sorc/zlib-1.2.6/include -I/nwprod/lib/sorc/jasper-1.900.1/include/jasper  -DUSE_JPEG2000 -DUSE_PNG -D__64BIT__ enc_png.c
+icc -c -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -I/nwprod/lib/sorc/libpng-1.2.44/include -I /nwprod/lib/sorc/zlib-1.2.6/include -I/nwprod/lib/sorc/jasper-1.900.1/include/jasper  -DUSE_JPEG2000 -DUSE_PNG -D__64BIT__ dec_png.c
+ifort -c -FI -convert big_endian gbytesc.f
+ifort -c -FI -convert big_endian skgb.f
+ifort -c -FI -convert big_endian ixgb2.f
+ifort -c -FI -convert big_endian getidx.f
+ifort -c -FI -convert big_endian getg2i.f
+ifort -c -FI -convert big_endian getg2ir.f
+ifort -c -FI -convert big_endian getgb2s.f
+ifort -c -FI -convert big_endian getgb2r.f
+ifort -c -FI -convert big_endian getgb2l.f
+ifort -c -FI -convert big_endian getgb2.f
+ifort -c -FI -convert big_endian getgb2p.f
+ifort -c -FI -convert big_endian getgb2rp.f
+ifort -c -FI -convert big_endian putgb2.f
+ifort -c -FI -convert big_endian g2grids.f
+ifort -c -FI -convert big_endian gdt2gds.f
+ifort -c -FI -convert big_endian params.f
+ifort -c -FI -convert big_endian params_ecmwf.f
+icc -c -w -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -I/nwprod/lib/sorc/libpng-1.2.44/include -I /nwprod/lib/sorc/zlib-1.2.6/include -I/nwprod/lib/sorc/jasper-1.900.1/include/jasper  -DUSE_JPEG2000 -DUSE_PNG -D__64BIT__ mova2i.c
+/bin/rm -f libg2_4.a
+ar ru  libg2_4.a gridtemplates.o pdstemplates.o drstemplates.o gribmod.o realloc.o addfield.o addgrid.o addlocal.o getfield.o gb_info.o gf_getfld.o gf_free.o gf_unpack1.o gf_unpack2.o gf_unpack3.o gf_unpack4.o gf_unpack5.o gf_unpack6.o gf_unpack7.o gettemplates.o getlocal.o getdim.o getpoly.o gribcreate.o gribend.o gribinfo.o mkieee.o rdieee.o simpack.o simunpack.o cmplxpack.o compack.o misspack.o pack_gp.o reduce.o comunpack.o specpack.o specunpack.o jpcpack.o jpcunpack.o enc_jpeg2000.o dec_jpeg2000.o pngpack.o pngunpack.o enc_png.o dec_png.o gbytesc.o skgb.o ixgb2.o getidx.o getg2i.o getg2ir.o getgb2s.o getgb2r.o getgb2l.o getgb2.o getgb2p.o getgb2rp.o putgb2.o g2grids.o gdt2gds.o params.o params_ecmwf.o mova2i.o
+ar: creating libg2_4.a
+echo libg2_4.a
+libg2_4.a
+make[2]: Leaving directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src/ngl/g2'
+libg2_4.a
+ln -sf g2/libg2_4.a .
+make[1]: Leaving directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src/ngl'
+( cd src ; \
+        if [ "" = yes ] ; then \
+          WRF_DIR2=/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_real_fcst_v3.5 ; \
+        else \
+          WRF_DIR2=/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_real_fcst_v3.5 ; \
+        fi ; \
+	make -i -r ungrib.exe \
+		WRF_DIR="$WRF_DIR2" \
+		FC="ifort" \
+		CC="cc" \
+		CPP="/lib/cpp -C -P -traditional" \
+		FFLAGS="-FR -convert big_endian" \
+		CFLAGS="-w" \
+		LDFLAGS="" \
+		CPPFLAGS="-D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB" )
+make[1]: Entering directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src'
+Makefile:90: warning: overriding commands for target `.F.o'
+../../configure.wps:103: warning: ignoring old commands for target `.F.o'
+Makefile:95: warning: overriding commands for target `.c.o'
+../../configure.wps:95: warning: ignoring old commands for target `.c.o'
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG misc_definitions_module.F > misc_definitions_module.f90
+ifort -c -FR -convert big_endian misc_definitions_module.f90
+/bin/rm -f debug_cio.o
+cc -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -w -c debug_cio.c
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG module_debug.F > module_debug.f90
+ifort -c -FR -convert big_endian module_debug.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG module_stringutil.F > module_stringutil.f90
+ifort -c -FR -convert big_endian module_stringutil.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG table.F > table.f90
+ifort -c -FR -convert big_endian table.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG module_datarray.F > module_datarray.f90
+ifort -c -FR -convert big_endian module_datarray.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG gridinfo.F > gridinfo.f90
+ifort -c -FR -convert big_endian gridinfo.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG new_storage.F > new_storage.f90
+ifort -c -FR -convert big_endian new_storage.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG filelist.F > filelist.f90
+ifort -c -FR -convert big_endian filelist.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG ungrib.F > ungrib.f90
+ifort -c -FR -convert big_endian ungrib.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG output.F > output.f90
+ifort -c -FR -convert big_endian output.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG rrpr.F > rrpr.f90
+ifort -c -FR -convert big_endian rrpr.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG rd_grib1.F > rd_grib1.f90
+ifort -c -FR -convert big_endian rd_grib1.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG file_delete.F > file_delete.f90
+ifort -c -FR -convert big_endian file_delete.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG datint.F > datint.f90
+ifort -c -FR -convert big_endian datint.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB rd_grib2.F > rd_grib2.f90
+ifort -c -FI -convert big_endian  rd_grib2.f90 -I. -I./ngl/g2
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG build_hdate.F > build_hdate.f90
+ifort -c -FR -convert big_endian build_hdate.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG geth_newdate.F > geth_newdate.f90
+ifort -c -FR -convert big_endian geth_newdate.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG geth_idts.F > geth_idts.f90
+ifort -c -FR -convert big_endian geth_idts.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG swap.F > swap.f90
+ifort -c -FR -convert big_endian swap.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG parse_table.F > parse_table.f90
+ifort -c -FR -convert big_endian parse_table.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG gbytesys.F > gbytesys.f90
+ifort -c -FR -convert big_endian gbytesys.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG gribcode.F > gribcode.f90
+ifort -c -FR -convert big_endian gribcode.f90
+/lib/cpp -C -P -traditional -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -DUSE_JPEG2000 -DUSE_PNG read_namelist.F > read_namelist.f90
+ifort -c -FR -convert big_endian read_namelist.f90
+/bin/rm -f cio.o
+cc -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32  -D_UNGRIB -w -c cio.c
+/bin/rm -f libpgu.a
+ar ru libpgu.a build_hdate.o geth_newdate.o geth_idts.o swap.o table.o parse_table.o gbytesys.o gribcode.o read_namelist.o cio.o
+ar: creating libpgu.a
+echo libpgu.a
+libpgu.a
+/bin/rm -f ungrib.exe
+if [ -z  ] ; then \
+			  ifort -o ungrib.exe  misc_definitions_module.o debug_cio.o module_debug.o module_stringutil.o table.o module_datarray.o gridinfo.o new_storage.o filelist.o ungrib.o output.o rrpr.o rd_grib1.o file_delete.o datint.o rd_grib2.o  \
+				-L./ngl -lw3 -lg2_4 \
+				-L/nwprod/lib -ljasper -lpng -lz \
+				-L. -lpgu ; \
+                        else \
+			  ifort -o ungrib.exe  misc_definitions_module.o debug_cio.o module_debug.o module_stringutil.o table.o module_datarray.o gridinfo.o new_storage.o filelist.o ungrib.o output.o rrpr.o rd_grib1.o file_delete.o datint.o rd_grib2.o  \
+				./ngl/w3/libw3.a ./ngl/g2/libg2_4.a \
+				-L/nwprod/lib -ljasper -lpng -lz \
+				libpgu.a ; \
+                        fi
+/nwprod/lib/libjasper.a(jas_stream.o): In function `jas_stream_tmpfile':
+/nwprod/lib/sorc/jasper-1.900.1/src/libjasper/base/jas_stream.c:368: warning: the use of `tmpnam' is dangerous, better use `mkstemp'
+make[1]: Leaving directory `/gpfs/gd1/emc/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd/ungrib/src'
+if [ -h ungrib.exe ] ; then \
+	        /bin/rm -f ungrib.exe ; \
+	fi ; \
+	if [ -h ../ungrib.exe ] ; then \
+		/bin/rm -f ../ungrib.exe ; \
+	fi ; \
+	if [ -e src/ungrib.exe ] ; then \
+		ln -sf src/ungrib.exe . ; \
+	fi
