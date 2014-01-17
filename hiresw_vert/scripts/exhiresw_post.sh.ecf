@@ -112,12 +112,18 @@ wdate=$wyr$wmn$wdy$whr
 
 timeform=$STARTDATE
 
-if [ $MODEL = nmm ] ; then
-   cp $PARMhiresw/hiresw_nmm_cntrl.parm wrf_cntrl.parm
-elif [ $MODEL = nmmb ] ; then
+if [ $MODEL = nmmb ] ; then
    cp $PARMhiresw/hiresw_nmmb_cntrl.parm wrf_cntrl.parm
 else
    cp $PARMhiresw/hiresw_arw_cntrl.parm wrf_cntrl.parm
+fi
+
+if [ $RUN = guamarw ] ; then
+   cp $PARMhiresw/hiresw_arw_cntrl.parm_guam wrf_cntrl.parm
+fi
+
+if [ $RUN = guamnmmb ] ; then
+   cp $PARMhiresw/hiresw_nmmb_cntrl.parm_guam wrf_cntrl.parm
 fi
 
 export fhr=${post_times}

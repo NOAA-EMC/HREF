@@ -2180,7 +2180,7 @@
 !     COMPUTE VIL (radar derived vertically integrated liquid water in each column)
 !     Per Mei Xu, VIL is radar derived vertically integrated liquid water based
 !     on emprical conversion factors (0.00344) 
-      IF (IGET(581).GT.0) THEN
+      IF (IGET(581).GT.0  .and. IMP_PHYSICS .NE. 5) THEN
 	write(0,*) 'here with max DBZ(c): ', maxval(DBZ(:,:,:))
         DO J=JSTA,JEND
           DO I=1,IM
@@ -2939,6 +2939,37 @@
          datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
         endif
       ENDIF	    
+
+! do VIL here as well - taking what is done in SPCPROD run (B. Ferrier
+! suggestion)
+
+      IF (IGET(581).GT.0 .and. IMP_PHYSICS .EQ. 5) THEN
+
+       CALL CALPW(QS1,5)
+       CALL CALPW(QR1,4)
+
+        DO J=JSTA,JEND
+          DO I=1,IM
+          GRID1(I,J)=QS1(I,J)+QR1(I,J)
+          ENDDO
+        ENDDO
+
+        write(0,*) 'maxval of VIL: ', maxval(GRID1)
+
+!!! NEW VIL
+
+        ID(1:25) = 0
+        ID(02)=130
+        if(grib=="grib1") then
+           CALL GRIBIT(IGET(581),LM,GRID1,IM,JM)
+        else if(grib=="grib2")then
+           cfld=cfld+1
+           fld_info(cfld)%ifld=IAVBLFLD(IGET(581))
+           datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+        endif
+
+      ENDIF
+
 !     
 !
 ! COMPUTE NCAR FIP
