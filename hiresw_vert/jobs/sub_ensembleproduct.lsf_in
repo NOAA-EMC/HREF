@@ -1,9 +1,0 @@
-
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_ensprod.out
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_ensprod.err
-#BSUB -q "dev"
-#BSUB -W 1:19
-
-
-module load ics
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_ENSEMBLEPRODUCT_ALL.sms.test _DOM_ _CORE_ _CYC_
