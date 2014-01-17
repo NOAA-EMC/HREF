@@ -1,0 +1,25 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_wrfbufrsnd.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_wrfbufrsnd.err
+#BSUB -R span[ptile=_PTILEBUFR_]
+#BSUB -R affinity[core(1)]
+#BSUB -n _NPROCBUFR_
+#BSUB -x 
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_BUFR
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -W 1:59
+
+module load ics
+module load ibmpe
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+# export MP_IOAGENT_CNT=all
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_WRFBUFRSND.sms.test _DOM_ _CORE_ _CYC_

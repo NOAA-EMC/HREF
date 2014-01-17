@@ -1,0 +1,30 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.err__DOM___CORE___CYC_
+#BSUB -q "dev"
+#BSUB -J HIRESW_PREP_RAP
+#BSUB -W 0:15
+#BSUB -R affinity[core(1)]
+#BSUB -R "span[ptile=3]"
+#BSUB -P HRW-T2O
+#BSUB -a poe
+#BSUB -n 9
+
+module load ics
+module load ibmpe
+module load NetCDF/4.2/serial
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREPRAP.sms.test _DOM_ _CORE_ _CYC_
+
+# bsub < sub_model.lsf__DOM___CORE___CYC_
+# bsub < sub_postmgr.lsf__DOM___CORE___CYC_
+# bsub < sub_prdgenmgr.lsf__DOM___CORE___CYC_
+# bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
+# bsub < sub_hybridensemble.lsf__DOM___CORE___CYC_
+# bsub < sub_ensembleproduct.lsf__DOM___CORE___CYC_
+
+# rm sub_model.lsf__DOM___CORE___CYC_ sub_post.lsf__DOM___CORE___CYC_ sub_prdgen.lsf__DOM___CORE___CYC_
+# rm sub_wrfbufrsnd.lsf__DOM___CORE___CYC_ sub_hybridensemble.lsf__DOM___CORE___CYC_ sub_ensembleproduct.lsf__DOM___CORE___CYC_

@@ -1,0 +1,23 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_post.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_post.err
+#BSUB -R span[ptile=16]
+#BSUB -J HIRESW_POST
+#BSUB -x
+#BSUB -q "dev"
+#BSUB -n _NPROC_
+#BSUB -P HRW-T2O
+#BSUB -W 1:19
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test _DOM_ _CORE_ _CYC_

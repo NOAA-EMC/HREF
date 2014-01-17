@@ -1,0 +1,26 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_fore.err__DOM__CORE__CYC_
+#BSUB -R span[ptile=16]
+#BSUB -q "dev"
+#BSUB -J HIRESW_FORE
+#BSUB -P HRW-T2O
+#BSUB -n _NPROC_
+#BSUB -W 1:59
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+echo START MODEL `date`
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_FORECAST.sms.test _DOM_ _CORE_ _CYC_ 
+
+echo FINISH MODEL `date`

@@ -1,0 +1,22 @@
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_postmgr.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_postmgr.err__DOM__CORE__CYC_
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "dev_shared"
+#BSUB -J HIRESW_POSTMGR__DOM__CORE_
+#BSUB -n 1
+#BSUB -P HRW-T2O
+#BSUB -W 1:59
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POSTMGR.sms.test _DOM_ _CORE_ _CYC_
