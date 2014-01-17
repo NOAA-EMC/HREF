@@ -1,7 +1,7 @@
 #
 # Define the name of the executable
 #
-TARGET   = ../../exec/ncep_post_nems_mpiio
+TARGET   = ../../exec/hiresw_post
 
 #
 # CPP, Compiler, and Linker Options
