@@ -1,0 +1,40 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_metgrid.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_metgrid.err__DOM___CORE___CYC_
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_METGRID
+#BSUB -R "span[ptile=5]"
+#BSUB -W 0:12
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -x
+#BSUB -n 9
+
+module load ics
+module load ibmpe
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_METGRID.ecf.test _DOM_ _CORE_ _CYC_
+
+if [ _CORE_ == "arw" ]
+then
+
+bsub < sub_prelimfinal.lsf__DOM___CORE___CYC_
+
+rm sub_prelimfinal.lsf__DOM___CORE___CYC_
+
+else
+
+bsub < sub_nemsinterp_1.lsf__DOM___CORE___CYC_
+bsub < sub_nemsinterp_2.lsf__DOM___CORE___CYC_
+bsub < sub_nemsinterp_3.lsf__DOM___CORE___CYC_
+bsub < sub_nemsinterp_4.lsf__DOM___CORE___CYC_
+
+rm sub_nemsinterp_1.lsf__DOM___CORE___CYC_
+rm sub_nemsinterp_2.lsf__DOM___CORE___CYC_
+rm sub_nemsinterp_3.lsf__DOM___CORE___CYC_
+rm sub_nemsinterp_4.lsf__DOM___CORE___CYC_
+
+fi

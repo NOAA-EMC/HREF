@@ -1,0 +1,467 @@
+cycle=${1}
+
+cd /meso/save/Matthew.Pyle/hiresw_vert/launch/
+
+if [ $cycle -eq 00 ]
+
+then
+
+# HI NMM 00
+
+DOM=hi
+CORE=nmm
+CYC=00
+NPROC_MODEL=7
+NPROC_POST=1
+NPROC_PRDGEN=1
+NPROC_ENSEMBLE=17
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# HI ARW 00
+
+DOM=hi
+CORE=arw
+CYC=00
+NPROC_MODEL=4
+NPROC_POST=1
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+fi
+
+if [ $cycle -eq 06 ]
+
+then
+
+# WEST NMM 06
+DOM=west
+CORE=nmm
+CYC=06
+NPROC_MODEL=144
+NPROC_POST=16
+NPROC_PRDGEN=1
+NPROC_ENSEMBLE=41
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# WEST ARW 06
+
+DOM=west
+CORE=arw
+CYC=06
+NPROC_MODEL=108
+NPROC_POST=16
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# PR NMM 06
+
+DOM=pr
+CORE=nmm
+CYC=06
+NPROC_MODEL=19
+NPROC_POST=4
+NPROC_PRDGEN=1
+NPROC_ENSEMBLE=17
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# PR ARW 06
+
+DOM=pr
+CORE=arw
+CYC=06
+NPROC_MODEL=13
+NPROC_POST=2
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+fi
+
+if [ $cycle -eq 12 ]
+
+then
+
+# EAST NMM 12
+
+DOM=east
+CORE=nmm
+CYC=12
+NPROC_MODEL=144
+NPROC_POST=16
+NPROC_PRDGEN=2
+NPROC_ENSEMBLE=41
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# EAST ARW 12
+
+DOM=east
+CORE=arw
+CYC=12
+NPROC_MODEL=108
+NPROC_POST=16
+NPROC_PRDGEN=2
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# HI NMM 12
+
+DOM=hi
+CORE=nmm
+CYC=12
+NPROC_MODEL=10
+NPROC_POST=1
+NPROC_PRDGEN=1
+NPROC_ENSEMBLE=17
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# HI ARW 12
+
+DOM=hi
+CORE=arw
+CYC=12
+NPROC_MODEL=6
+NPROC_POST=1
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# GUAM NMM 12
+
+DOM=guam
+CORE=nmm
+CYC=12
+NPROC_MODEL=10
+NPROC_POST=1
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# GUAM ARW 12
+
+DOM=guam
+CORE=arw
+CYC=12
+NPROC_MODEL=6
+NPROC_POST=1
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+
+fi
+
+if [ $cycle -eq 18 ]
+
+then
+
+# AK NMM 18
+
+DOM=ak
+CORE=nmm
+CYC=18
+NPROC_MODEL=144
+NPROC_POST=16
+NPROC_PRDGEN=1
+NPROC_ENSEMBLE=17
+
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# AK ARW 18
+
+DOM=ak
+CORE=arw
+CYC=18
+NPROC_MODEL=108
+NPROC_POST=16
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# PR NMM 18
+
+DOM=pr
+CORE=nmm
+CYC=18
+NPROC_MODEL=19
+NPROC_POST=4
+NPROC_PRDGEN=1
+NPROC_ENSEMBLE=17
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_hybridensemble.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_ENSEMBLE}:g > sub_hybridensemble.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_ensembleproduct.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g  \
+ > sub_ensembleproduct.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+# PR ARW 18
+
+DOM=pr
+CORE=arw
+CYC=18
+NPROC_MODEL=13
+NPROC_POST=2
+NPROC_PRDGEN=1
+cat prelim.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_model.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_MODEL}:g > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postmgr.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_POST}:g > sub_postmgr.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_NPROC_:${NPROC_PRDGEN}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsnd.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g \
+> sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+bsub < sub.lsf_${DOM}_${CORE}_${CYC}
+
+
+fi

@@ -1,0 +1,45 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prdgenmgr.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prdgenmgr.err__DOM__CORE__CYC_
+#BSUB -q "dev_shared"
+#BSUB -J HIRESW_PRDGENMGR_RETRO
+#BSUB -P HRW-T2O
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -n 1
+#BSUB -W 2:49
+
+export MP_EUILIB=us
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PRDGENMGR.sms.test_retro _DOM_ _CORE_ _CYC_ _DATE_
+
+# if [ _DATE_ -eq 20130213 -a _CYC_ -eq 12 ]
+# then
+# NEWDATECYC=2013060900
+# else
+#
+#
+
+if [ _DOM_ = "conus" ]
+then
+NEWDATECYC=`/nwprod/util/exec/ndate +36 _DATE__CYC_`
+else
+NEWDATECYC=`/nwprod/util/exec/ndate +12 _DATE__CYC_`
+fi
+
+# fi
+
+NEWDATE=`echo $NEWDATECYC | cut -c1-8`
+CYC=`echo $NEWDATECYC | cut -c9-10`
+
+mail -s "DONE _DOM_ _CORE_ _DATE_ _CYC_ " Matthew.Pyle@noaa.gov
+
+if [ _CORE_ = "arw" ]
+then
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/hiresw.lsf_launch_ak_retro_arw $NEWDATE $CYC
+else
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/hiresw.lsf_launch_ak_retro_nmmb $NEWDATE $CYC
+fi
