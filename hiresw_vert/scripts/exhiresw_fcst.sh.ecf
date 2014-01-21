@@ -88,6 +88,13 @@ for hr in $hrs
 do
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.boco.00${hr} boco.00${hr}
 err1=$?
+
+if [ $err1 -ne 0 ]
+then
+msg="FATAL ERROR: NMMB MODEL is missing needed boco file for ${hr}"
+./err_exit $msg
+fi
+
 done
 
 if [ $NEST = "conus" ]

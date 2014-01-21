@@ -161,7 +161,7 @@ echo "inside f00 test"
   if test $SENDCOM = 'YES'
   then
       cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}
-      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmfif${fhr}
+      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmif${fhr}
       $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2
       $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2.idx
       if [ $SENDDBN_GB2 = YES ]; then
@@ -239,7 +239,7 @@ ls -l ${filenamthree}${fhr}.tm00
   if test $SENDCOM = 'YES'
   then
     cp $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/.
-    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmfif${fhr}
+    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmif${fhr}
     $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2
     $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2.idx
     if [ $SENDDBN_GB2 = YES ]; then
