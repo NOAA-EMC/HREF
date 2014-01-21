@@ -1,4 +1,4 @@
-WRFDIR=../hiresw_real_fcst.fd
+WRFDIR=../hiresw_wrfarwfcst.fd
 
 mkdir wrflibs
 
@@ -9,4 +9,5 @@ cp $WRFDIR/external/io_grib1/libio_grib1.a            ./wrflibs/
 cp $WRFDIR/external/io_grib_share/libio_grib_share.a  ./wrflibs/
 cp $WRFDIR/external/io_int/libwrfio_int.a             ./wrflibs/
 cp $WRFDIR/external/io_netcdf/libwrfio_nf.a           ./wrflibs/
+cp $WRFDIR/external/fftpack/fftpack5/libfftpack.a     ./wrflibs/
 cp $WRFDIR/main/libwrflib.a                           ./wrflibs/
