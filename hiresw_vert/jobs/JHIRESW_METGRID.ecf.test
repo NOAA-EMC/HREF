@@ -92,22 +92,13 @@ sh $utilscript/setup.sh
 sh $utilscript/setpdy.sh
 . PDY
 
-# export PDY=20121022
-# export PDY=20130428
-
-
 #export COM=/com/${NET}/${envir}
 #export COMIN=/com/${NET}/${envir}/hiresw.${PDY}
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/${NET}/${envir}/hiresw.${PDY}
 # export COMNAM=/com/nam/prod/nam.${PDY}
 
-
-#export GESDIR=/nwges/prod/nam.${PDY}
-
 mkdir -p -m 775 $COMOUT
  
-#export PATH=${PATH}:/usrx/local/netcdf3.5/lib:/usrx/local/netcdf3.5/bin
-
 ########################################################
 # Execute the script.
 ${HOMEhiresw}/scripts/exhiresw_metgrid.sh.ecf
