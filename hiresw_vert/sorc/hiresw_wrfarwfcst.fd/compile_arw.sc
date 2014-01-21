@@ -16,7 +16,7 @@ cp configure.wrf_wcoss configure.wrf
 
 ./compile em_real > compile_arw.sc.log 2>&1
 
-cp ./main/real.exe $TARGDIR/hiresw_arw_real_new
-cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst_new
+cp ./main/real.exe $TARGDIR/hiresw_arw_real
+cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
 
 exit

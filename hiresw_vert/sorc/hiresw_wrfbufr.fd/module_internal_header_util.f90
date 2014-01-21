@@ -122,7 +122,40 @@ SUBROUTINE int_gen_write_field_header ( hdrbuf, hdrbufsize, itypesize, ftypesize
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER,       INTENT(INOUT)  ::  hdrbuf(*)
   INTEGER,       INTENT(INOUT)  ::  hdrbufsize
   INTEGER,       INTENT(INOUT)  ::  itypesize, ftypesize
@@ -192,7 +225,40 @@ SUBROUTINE int_get_write_field_header ( hdrbuf, hdrbufsize, itypesize, ftypesize
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER,       INTENT(INOUT)  ::  hdrbuf(*)
   INTEGER,       INTENT(OUT)    ::  hdrbufsize
   INTEGER,       INTENT(INOUT)  ::  itypesize, ftypesize
@@ -281,7 +347,40 @@ SUBROUTINE int_gen_ofr_header( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER,       INTENT(INOUT) ::  hdrbuf(*)
   INTEGER,       INTENT(OUT)   ::  hdrbufsize
   INTEGER,       INTENT(INOUT) ::  itypesize
@@ -313,7 +412,40 @@ SUBROUTINE int_get_ofr_header( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER,       INTENT(INOUT) ::  hdrbuf(*)
   INTEGER,       INTENT(OUT)   ::  hdrbufsize
   INTEGER,       INTENT(INOUT) ::  itypesize
@@ -369,7 +501,40 @@ SUBROUTINE int_gen_ofwb_header( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER,       INTENT(INOUT) :: hdrbuf(*)
   INTEGER,       INTENT(OUT)   :: hdrbufsize
   INTEGER,       INTENT(INOUT) :: itypesize
@@ -407,7 +572,40 @@ SUBROUTINE int_get_ofwb_header( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER,       INTENT(INOUT)  :: hdrbuf(*)
   INTEGER,       INTENT(OUT)    :: hdrbufsize
   INTEGER,       INTENT(INOUT)  :: itypesize
@@ -466,7 +664,40 @@ SUBROUTINE int_gen_handle_header( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT) ::  hdrbuf(*)
   INTEGER, INTENT(OUT)   ::  hdrbufsize
   INTEGER, INTENT(INOUT) ::  itypesize
@@ -492,7 +723,40 @@ SUBROUTINE int_get_handle_header( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT) ::  hdrbuf(*)
   INTEGER, INTENT(OUT)   ::  hdrbufsize
   INTEGER, INTENT(INOUT) ::  itypesize
@@ -542,7 +806,40 @@ SUBROUTINE int_gen_ti_header_integer( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -562,6 +859,97 @@ SUBROUTINE int_gen_ti_header_integer( hdrbuf, hdrbufsize, itypesize, typesize, &
   RETURN
 END SUBROUTINE int_gen_ti_header_integer
 
+SUBROUTINE int_gen_ti_header_integer_varna( hdrbuf, hdrbufsize, itypesize, typesize, &
+                                      DataHandle, Element, VarName, Data, Count, code )
+!<DESCRIPTION>
+!<PRE>
+! Items and their starting locations within a "time-independent integer"
+! data header.  Assume that the data header is stored in integer vector
+! "hdrbuf":
+!  hdrbuf(1) = hdrbufsize
+!  hdrbuf(2) = headerTag
+!  hdrbuf(3) = DataHandle
+!  hdrbuf(4) = typesize
+!  hdrbuf(5) = Count
+!  hdrbuf(6:6+n1) = Data              ! n1 = (Count * typesize / itypesize) + 1
+!  hdrbuf(7+n1) = LEN(TRIM(Element))
+!  hdrbuf(8+n1:7+n1+n2) = Element     ! n2 = LEN(TRIM(Element)) + 1
+!  hdrbuf(8+n1+n2) = LEN(TRIM(VarName)) = n3
+!  hderbuf(9+n1+n2:8+n1+n2+n3) = TRIM(VarName)
+!
+! Further details for some items:
+!  hdrbufsize:  Size of this data header in bytes.
+!  headerTag:   "Header tag" that tells the I/O quilt servers what kind of
+!               header this is.  For an "time-independent integer" header it must be
+!               set to int_dom_ti_integer.  See file intio_tags.h for a complete
+!               list of these tags.
+!  DataHandle:  Descriptor for an open data set.
+!  typesize:    Size in bytes of each element of Data.
+!  Count:       Number of elements in Data.
+!  Data:        Data to write to file.
+!  Element:     Name of the data.
+!  VarName:     Variable name.  Used for *_<get|put>_var_ti_char but not for
+!               *_<get|put>_dom_ti_char.
+!  Other items are described in detail in the "WRF I/O and Model Coupling API
+!  Specification".
+!
+!</PRE>
+!</DESCRIPTION>
+  IMPLICIT NONE
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
+  INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
+  INTEGER, INTENT(OUT)         ::  hdrbufsize
+  INTEGER, INTENT(IN)          ::  itypesize, typesize
+  CHARACTER*(*), INTENT(IN)    ::  Element, VarName
+  INTEGER, INTENT(IN)          ::  Data(*)
+  INTEGER, INTENT(IN)          ::  DataHandle, Count, code
+!Local
+  INTEGER i, n
+!
+  CALL int_gen_ti_header_c ( hdrbuf, hdrbufsize, itypesize, typesize, &
+                             DataHandle, Data, Count, code )
+  i = hdrbufsize/itypesize + 1 ;
+!write(0,*)'int_gen_ti_header_integer ',TRIM(Element)
+  CALL int_pack_string ( Element, hdrbuf( i ), n ) ; i = i + n
+  CALL int_pack_string ( VarName, hdrbuf( i ), n ) ; i = i + n
+  hdrbufsize = i * itypesize + hdrbufsize ! return the number in bytes
+  hdrbuf(1) = hdrbufsize
+  RETURN
+END SUBROUTINE int_gen_ti_header_integer_varna
+
 SUBROUTINE int_gen_ti_header_real( hdrbuf, hdrbufsize, itypesize, typesize, &
                                    DataHandle, Element, Data, Count, code )
 !<DESCRIPTION>
@@ -570,7 +958,40 @@ SUBROUTINE int_gen_ti_header_real( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -590,6 +1011,70 @@ SUBROUTINE int_gen_ti_header_real( hdrbuf, hdrbufsize, itypesize, typesize, &
   RETURN
 END SUBROUTINE int_gen_ti_header_real
 
+SUBROUTINE int_get_ti_header_integer_varna( hdrbuf, hdrbufsize, itypesize, typesize, &
+                              DataHandle, Element, VarName, Data, Count, code)
+!<DESCRIPTION>
+!<PRE>
+! Same as int_gen_ti_header_integer except that Data is read from
+! the file.
+!</PRE>
+!</DESCRIPTION>
+  IMPLICIT NONE
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
+  INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
+  INTEGER, INTENT(OUT)         ::  hdrbufsize
+  INTEGER, INTENT(IN)          ::  itypesize, typesize
+  CHARACTER*(*), INTENT(INOUT) ::  Element, VarName
+  INTEGER, INTENT(OUT)         ::  Data(*)
+  INTEGER, INTENT(OUT)         ::  DataHandle, Count, code
+!Local
+  INTEGER i, n
+!
+
+  CALL int_get_ti_header_c ( hdrbuf, hdrbufsize, n, itypesize, typesize, &
+                           DataHandle, Data, Count, code )
+  i = n/itypesize + 1
+  CALL int_unpack_string ( Element, hdrbuf( i ), n ) ; i=i+n;
+  CALL int_unpack_string ( VarName, hdrbuf( i ), n ) ; i = i + n
+! write(0,*)'int_get_ti_header_integer_varna "', &
+!      TRIM(Element),'" "', TRIM(VarName),'" data(1)=',Data(1)
+  hdrbufsize = hdrbuf(1)
+  RETURN
+END SUBROUTINE int_get_ti_header_integer_varna
+
 SUBROUTINE int_get_ti_header_integer( hdrbuf, hdrbufsize, itypesize, typesize, &
                               DataHandle, Element, Data, Count, code )
 !<DESCRIPTION>
@@ -599,7 +1084,40 @@ SUBROUTINE int_get_ti_header_integer( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -628,7 +1146,40 @@ SUBROUTINE int_get_ti_header_real( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -686,7 +1237,40 @@ SUBROUTINE int_gen_ti_header_char( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize
@@ -717,7 +1301,40 @@ SUBROUTINE int_get_ti_header_char( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize
@@ -726,7 +1343,6 @@ SUBROUTINE int_get_ti_header_char( hdrbuf, hdrbufsize, itypesize, &
 !Local
   INTEGER i, n, DummyCount, typesize
   CHARACTER * 132  dummyData
-  logical, external :: debug_foo
 !
   CALL int_get_ti_header_c ( hdrbuf, hdrbufsize, n, itypesize, typesize, &
                            DataHandle, dummyData, DummyCount, code )
@@ -776,7 +1392,40 @@ SUBROUTINE int_gen_td_header_char( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize
@@ -807,7 +1456,40 @@ SUBROUTINE int_get_td_header_char( hdrbuf, hdrbufsize, itypesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize
@@ -862,7 +1544,40 @@ SUBROUTINE int_gen_td_header_integer( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -891,7 +1606,40 @@ SUBROUTINE int_gen_td_header_real( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -921,7 +1669,40 @@ SUBROUTINE int_get_td_header_integer( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -950,7 +1731,40 @@ SUBROUTINE int_get_td_header_real( hdrbuf, hdrbufsize, itypesize, typesize, &
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT)       ::  hdrbuf(*)
   INTEGER, INTENT(OUT)         ::  hdrbufsize
   INTEGER, INTENT(IN)          ::  itypesize, typesize
@@ -991,7 +1805,40 @@ SUBROUTINE int_gen_noop_header ( hdrbuf, hdrbufsize, itypesize )
 !
 !</PRE>
 !</DESCRIPTION>
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT) ::  hdrbuf(*)
   INTEGER, INTENT(OUT)   ::  hdrbufsize
   INTEGER, INTENT(INOUT) ::  itypesize
@@ -1014,7 +1861,40 @@ SUBROUTINE int_get_noop_header( hdrbuf, hdrbufsize, itypesize )
 !</PRE>
 !</DESCRIPTION>
   IMPLICIT NONE
-  INCLUDE 'intio_tags.h'
+  INTEGER, PARAMETER ::  int_ioexit			=  	     10
+  INTEGER, PARAMETER ::  int_open_for_write_begin	=  	     20
+  INTEGER, PARAMETER ::  int_open_for_write_commit	=  	     30
+  INTEGER, PARAMETER ::  int_open_for_read 		=  	     40
+  INTEGER, PARAMETER ::  int_inquire_opened 		=  	     60
+  INTEGER, PARAMETER ::  int_inquire_filename 		=  	     70
+  INTEGER, PARAMETER ::  int_iosync 			=  	     80
+  INTEGER, PARAMETER ::  int_ioclose 			=  	     90
+  INTEGER, PARAMETER ::  int_next_time 			=  	    100
+  INTEGER, PARAMETER ::  int_set_time 			=  	    110
+  INTEGER, PARAMETER ::  int_next_var 			=  	    120
+  INTEGER, PARAMETER ::  int_dom_ti_real 		=  	    140
+  INTEGER, PARAMETER ::  int_dom_ti_double 		=  	    160
+  INTEGER, PARAMETER ::  int_dom_ti_integer 		=  	    180
+  INTEGER, PARAMETER ::  int_dom_ti_logical 		=  	    200
+  INTEGER, PARAMETER ::  int_dom_ti_char 		=  	    220
+  INTEGER, PARAMETER ::  int_dom_td_real 		=  	    240
+  INTEGER, PARAMETER ::  int_dom_td_double 		=  	    260
+  INTEGER, PARAMETER ::  int_dom_td_integer 		=  	    280
+  INTEGER, PARAMETER ::  int_dom_td_logical 		=  	    300
+  INTEGER, PARAMETER ::  int_dom_td_char 		=  	    320
+  INTEGER, PARAMETER ::  int_var_ti_real 		=  	    340
+  INTEGER, PARAMETER ::  int_var_ti_double 		=  	    360
+  INTEGER, PARAMETER ::  int_var_ti_integer 		=  	    380
+  INTEGER, PARAMETER ::  int_var_ti_logical 		=  	    400
+  INTEGER, PARAMETER ::  int_var_ti_char 		=  	    420
+  INTEGER, PARAMETER ::  int_var_td_real 		=  	    440
+  INTEGER, PARAMETER ::  int_var_td_double 		=  	    460
+  INTEGER, PARAMETER ::  int_var_td_integer 		=  	    480
+  INTEGER, PARAMETER ::  int_var_td_logical 		=  	    500
+  INTEGER, PARAMETER ::  int_var_td_char 		=  	    520
+  INTEGER, PARAMETER ::  int_field 			=  	    530
+  INTEGER, PARAMETER ::  int_var_info 			=  	    540
+  INTEGER, PARAMETER ::  int_noop 			=  	    550
   INTEGER, INTENT(INOUT) ::  hdrbuf(*)
   INTEGER, INTENT(OUT)   ::  hdrbufsize
   INTEGER, INTENT(INOUT) ::  itypesize
