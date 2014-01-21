@@ -22,5 +22,5 @@ module load ibmpe
 
 if [ _DOM_ = "conus" ]
 then
-/meso/save/Matthew.Pyle/hiresw_vert/scripts/grib2_extract.scr _CYC_
+/meso/save/Matthew.Pyle/hiresw_vert/scripts/grib2_extract.scr _CYC_ _CORE_
 fi

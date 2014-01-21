@@ -31,7 +31,7 @@ fi
 
 DOMOUT=${DOMIN_SMALL}${modelout}
 
-lif [ $DOMIN = "conusnmmb" ]
+if [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS05"
   DOMIN_bucket="general"
