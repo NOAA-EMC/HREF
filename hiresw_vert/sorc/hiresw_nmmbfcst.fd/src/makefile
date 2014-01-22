@@ -429,7 +429,7 @@ clean:
 	cd atmos               && gmake clean
 	cd ENS_Cpl             && gmake clean
 	cd chem                && gmake clean GOCART_MODE=full
-	$(RM) -f *.f90 *.lst *.o *.mod lm map $(TARGET)
+	$(RM) -f *.f90 *.lst *.o *.mod lm map
 
 .SUFFIXES:
 .SUFFIXES: .F90 .f90 .o
