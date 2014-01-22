@@ -1,6 +1,0 @@
-Issue a "make" command to build the hiresw_prdgen executable.
-
-It will be built in ../../exec/hiresw_prdgen as currently defined
-in the makefile.
-
-"make clean" will clean out a previous build.
