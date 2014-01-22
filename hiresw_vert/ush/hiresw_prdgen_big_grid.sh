@@ -172,7 +172,7 @@ export FORT11="input${fhr}.prd"
 # can both use this now?
 
 export FORT621="input${fhr}.prd"
-$EXEChiresw/hiresw_nmmb_prdgen > prdgen.out${fhr} 2>&1
+$EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
 
 # else
 # $EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
