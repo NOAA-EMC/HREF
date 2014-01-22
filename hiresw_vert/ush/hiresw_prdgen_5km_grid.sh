@@ -121,7 +121,7 @@ echo EXECUTING hiresw_prdgen  for 5 km
 
 export FORT11="input${fhr}.prd"
 export FORT621="input${fhr}.prd"
-$EXEChiresw/hiresw_nmmb_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
+$EXEChiresw/hiresw_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
 
 export err=$?;./err_chk
 
