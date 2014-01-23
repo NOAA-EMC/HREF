@@ -46,9 +46,9 @@
 112/195/X/2.7/wrf.PR04/0/0                      
   197 106  60   0   0 2 1  V COMP STORM MOTION       
 112/195/X/2.7/wrf.PR04/0/0                      
-  157 1_16 180   0   0 2 1  CNVCT AVBL POT ENRGY      
+  157 116 180   0   0 2 1  CNVCT AVBL POT ENRGY      
 112/195/X/2.7/wrf.PR04/0/0                      
-  156 1_16 180   0   0 2 1  CNVCT INHIBITION          
+  156 116 180   0   0 2 1  CNVCT INHIBITION          
 112/195/X/2.7/wrf.PR04/0/0                      
   131 101  50 100   0 2 1  LIFTED INDEX--SURFCE      
 112/195/X/2.7/wrf.PR04/0/0                      
@@ -68,9 +68,9 @@
 112/195/X/2.7/wrf.PR04/0/0
     7   2   0   0   0 2 1  CLOUD BOTTOM HEIGHT
 112/195/X/-2.0/wrf.PR04/0/0                      
-  157 1_16  90   0   0 2 1  CNVCT AVBL POT ENRGY
+  157 116  90   0   0 2 1  CNVCT AVBL POT ENRGY
 112/195/X/2.7/wrf.PR04/0/0
-  156 1_16  90   0   0 2 1  CNVCT INHIBITION
+  156 116  90   0   0 2 1  CNVCT INHIBITION
 112/195/X/2.7/wrf.PR04/0/0
   190 106  10   0   0 2 1  STORM REL HELICITY
 112/195/X/2.7/wrf.PR04/0/0
@@ -118,3 +118,5 @@
 112/195/X/6.0/wrf.PR04/0/0
   250   1   0   0   0 129   2   HAINES INDEX
 112/195/X/1.0/wrf.PR04/0/0
+   7  220   0   0   0 2   1  RICH NO PBL HEIGHT
+112/195/X/-3.0/wrf.PR04/0/0
