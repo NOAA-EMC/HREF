@@ -99,10 +99,35 @@ done
 
 if [ $NEST = "conus" ]
 then
+
+### CONUS input based on RAP produced by different job than the boundary files
+### allow to sleep in case RAP job is running late (but should be done before
+### boundaries are built
+
+icnt=0
+
+if [ ! -e $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap ]
+then
+
+while [ $icnt -lt 10 ]
+do
+if [ ! -e $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap ]
+then
+echo "$COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap still not available"
+sleep 45
+fi
+let icnt=icnt+1
+done
+
+fi
+
+
+
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap input_domain_01_nemsio
 else
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio input_domain_01_nemsio
 fi
+
 err2=$?
 cp $COMIN/${NEST}${MODEL}.t${cyc}z.configure_file configure_file
 err3=$?

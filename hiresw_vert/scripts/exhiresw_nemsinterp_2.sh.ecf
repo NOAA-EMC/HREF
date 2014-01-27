@@ -115,67 +115,6 @@ mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 hend=`echo $end | cut -c9-10`
 
-## for large domains, special namelist.input files are required for the model
-## for small domains, use the same namelist for both real and the model
-
-if [ $NEST = "pr" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_pr_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "hi" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_hi_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "guam" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_guam_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "ak" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_ak namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_ak_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR AKNEW DOMAIN
-  exit 99
-fi
-
-elif [ $NEST = "conus" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_big namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR CONUS DOMAIN
-  exit 99
-fi
-
-
-else
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model namelist.input_in_model
-fi
-
-
 ### number of input levels depends on source model data
 
 NUMLEVS=27
@@ -187,51 +126,8 @@ NUMLEVS=27
 
 # fi
 
-if [ $MODEL = "nmmb" ]
-then
-
-cat  configure_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: > configure_file_01
-
-cp configure_file_01 configure_file
-
-else
-
-cat namelist.input_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
- | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
- | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
- | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
- | sed s:NUMLEV:$NUMLEVS: > namelist.input
-
-cat namelist.input_in_model | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
- | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
- | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
- | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
- | sed s:NUMLEV:$NUMLEVS: > namelist.input_model
-
-fi
-
 
 rm fort.*
-
-cp $PARMhiresw/hiresw_LANDUSE.TBL LANDUSE.TBL
-cp $PARMhiresw/hiresw_ETAMPNEW_DATA ETAMPNEW_DATA
-cp $PARMhiresw/hiresw_ETAMPNEW_DATA micro_lookup.dat
-cp $PARMhiresw/hiresw_VEGPARM.TBL VEGPARM.TBL
-cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
-cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2.35_hybrid_50mbtop
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2_trans
-
-cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
-cp $FIXhiresw/hiresw_tr49t67 tr49t67
-cp $FIXhiresw/hiresw_tr49t85 tr49t85
-cp $FIXhiresw/hiresw_tr67t85 tr67t85
-
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
