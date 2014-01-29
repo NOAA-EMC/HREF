@@ -101,7 +101,7 @@
  sf_surface_physics                  = 2,  
  bl_pbl_physics                      = 1,  
  bldt                                = 0,   
- cu_physics                          = 1,     
+ cu_physics                          = 0,     
  cudt                                = 5,     
  isfflx                              = 1,
  ifsnow                              = 1,
