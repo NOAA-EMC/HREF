@@ -104,8 +104,6 @@ esac
 # srefcyc and gefscyc set in parent job (JNAM_SMINIT)
 typeset -Z2 srefcyc gefscyc pcphrl
 
-echo where am I
-pwd
 
 #======================================================================
 #  Configure input met grib, land-sea mask and topo file names
@@ -132,7 +130,7 @@ then
 rgprdgen=AK
 elif [ $rg = "guam" ]
 then
-rgprdgen=GUAM
+rgprdgen=GU
 fi
 echo set rgprdgen to $rgprdgen
 
@@ -180,6 +178,8 @@ grdext=" 0 64 25000 25000"
    topopre=hiresw_smarttopo${rg}
    ext=grb
    case $RUNTYP in
+     guamnmmb|guamarw)          sgrb=999;ogrd=199
+      grid="255 1 193 193 12350 143687 128 16794 148280 20000  $grdext";;
      hiarw)            sgrb=243;ogrd=196
       grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdext";;
      hinmmb)            sgrb=243;ogrd=196
@@ -216,6 +216,10 @@ echo BEGIN SMARTINIT PROCESSING FOR FFHR $ffhr  CYCLE $cyc
 echo RUNTYP:  $RUNTYP $mdlgrd  $rg
 echo INTERP GRID: $grid
 echo OUTPUT GRID: $ogrd $outreg
+
+datestr=`date`
+echo starting at $datestr
+
 echo "============================================================"
 echo 
 
@@ -231,7 +235,7 @@ let pcphr3=pcphr-3
 #======================================================================
 
 # fhr should be gt 0 since precip is not available at initial time
-if [ $ffhr -gt 0 ]; then
+if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
 
 # get the sref precip fields that we need
   cp $COMIN_SREF/sref.t${srefcyc}z.pgrb${sgrb}.prob_3hrly SREFPROB
@@ -296,11 +300,17 @@ hours="${ffhr}"
 if [ $ffhr -ge 3 ];then hours="${ffhr2} ${ffhr1} ${ffhr}";fi
 
 
+datestr=`date`
+echo PAST WGRIB of SREF, START PREC BUCKETS $datestr
 
 #===========================================================
 #  CREATE Accum precip buckets if necessary 
 #===========================================================
 for fhr in $hours; do
+
+datestr=`date`
+echo TOP OF LOOP for $fhr AT $datestr
+
   rm -f *out${fhr}
   mk3p=0;mk6p=0;mk12p=0
   let check=fhr%3
@@ -434,6 +444,8 @@ cp $PARMhiresw/hiresw_${MODEL}_mastersmart.${RUNTYP}.ctl  master${fhr}.ctl
 
 #    fi;;
   esac 
+datestr=`date`
+echo TO SMARTPRECIP $datestr
 
   echo MKPCP Flags: MK3P $mk3p   MK6P $mk6p   MK12P $mk12p
   for MKPCP in $mk3p $mk6p $mk12p;do
@@ -583,6 +595,9 @@ export err=$?; err_chk
     fi #MKPCP>0
   done #MKPCP loop
 
+datestr=`date`
+echo PAST SMARTPRECIP $datestr
+
 # exit
 
 
@@ -634,6 +649,9 @@ ls -l  $prdgfl
   fi
   $utilexec/grbindex meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
+datestr=`date`
+echo PAST PRODUCT GENERATOR $datestr
+
 #=================================================================
 #   DECLARE INPUTS and RUN SMARTINIT 
 #=================================================================
@@ -652,8 +670,11 @@ ls -l  $prdgfl
 
   mksmart=1
   if [ $check -eq 0 -a $fhr -ne 00 ];then 
+
+	if [ $sgrb -ne 999 ] ; then
     cp srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCP
     cp srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCPi
+        fi
     cp MAXMIN${fhr2}.tm00 MAXMIN2
     cp MAXMIN${fhr1}.tm00 MAXMIN1
     $utilexec/grbindex MAXMIN1 MAXMIN1i
@@ -684,8 +705,10 @@ ls -l  $prdgfl
 
 	ls -l meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
+	if [ $sgrb -ne 999 ]; then
   ln -sf "SREFPCP"                  fort.13
   ln -sf "SREFPCPi"                 fort.14
+	fi
   ln -sf "${freq}precip"            fort.15
   ln -sf "${freq}precipi"           fort.16
 
@@ -806,10 +829,15 @@ ls -l fort.??
 
 	echo end linked files into hiresw_smartinit
 
+datestr=`date`
+echo TO SMARTINIT RUN $datestr
+
 	echo RGIN into smartinit $RGIN
   export pgm=nam_smartinit;. prep_step
   $EXEChiresw/hiresw_smartinit $cyc $fhr $ogrd $RGIN $inest $MODEL >smartinit.out${fhr}
   export err=$?; err_chk
+datestr=`date`
+echo PAST SMARTINIT RUN $datestr
 
 # Save smartinit output for RTMA 1st guess for AK, HI(nest), PR(nest) 03-13-13
 # But do not perform nco post-processing on in between hours for these downscaled nests except fhr=00
@@ -831,6 +859,16 @@ ls -l fort.??
    export fhr=$fhr
    export ogrd 
    ${USHhiresw}/hiresw_ncoproc.sh
+datestr=`date`
+echo PAST NCOPROC $datestr
+echo "- - - - - - - - - - - - - - - - -     " $datestr
+
+else
+
+datestr=`date`
+echo "- - - - - INTERMEDIATE TIME FINISH - - - - - - - - - - -     " $datestr
+
+
   fi
   echo
 done  #fhr loop
