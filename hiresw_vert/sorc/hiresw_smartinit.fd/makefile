@@ -31,4 +31,4 @@ $(CMD):		$(OBJS1) $(OBJS2)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o $(@) $(OBJS1) $(OBJS2) $(LIBS)
 
 clean:
-	-rm -f $(OBJS1) $(OBJS2)
+	-rm -f $(OBJS1) $(OBJS2) *.mod
