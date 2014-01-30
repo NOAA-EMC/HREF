@@ -1,6 +1,7 @@
    SUBROUTINE GETGRIB(ISNOW,IZR,IIP,IRAIN,VEG,WETFRZ,  &
    P03M,P06M,P12M,SN03,SN06,S3REF01,S3REF10,S3REF50,S6REF01,  &
-   S6REF10,S6REF50,S12REF01,S12REF10,S12REF50, THOLD,DHOLD,GDIN,VALIDPT)
+   S6REF10,S6REF50,S12REF01,S12REF10,S12REF50, THOLD,DHOLD,GDIN,&
+   VALIDPT,HAVESREF)
 
     use grddef
     use aset3d
@@ -36,7 +37,7 @@
 
       TYPE (GINFO) :: GDIN
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
-      INTEGER YEAR,MON,DAY,IHR,DATE,IFHR
+      INTEGER YEAR,MON,DAY,IHR,DATE,IFHR,HAVESREF
 
       PARAMETER(MBUF=2000000)
       CHARACTER CBUF(MBUF)
@@ -112,7 +113,7 @@
 !     Set full, sref and special precip file unit numbers
       LUGB=11; LUGI=12   !DEFAULT MODEL FULL GRIB FILE UNITS
       LUGB2=13; LUGI2=14 !DEFAULT SREF POP GRIB FILE UNITS
-      if (.not.lanl) then
+      if (.not.lanl ) then
        LUGP3=11;  LUGP3i=12
        LUGS3=11;  LUGS3i=12
        LUGP6=11;  LUGP6i=12
@@ -230,8 +231,12 @@
         write(0,*) 'here d - past RDHDRS'
 
       if (lfull) then
+
+        if (HAVESREF .eq. 1) then
       print *, ' READING SREF HDRS',LUGB2,LUGI2
       CALL RDHDRS(LUGB2,LUGI2,IGDNUM2,GDIN,NUMVAL2)
+        endif
+
         write(0,*) 'here e - past RDHDRS'
 
 ! GSM  READ 3-HR PRECIP AND SNOW FILES WHICH ARE NEEDED
@@ -728,6 +733,9 @@
 !        JPDS(6) = 234
 !        CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,HCLD,IRET,ISTAT)
        endif 
+
+        if (HAVESREF .eq. 1) then
+
 !  READ SREF precip
       print*; print *,'READ SREF Precip Probs', LUGB2
 
@@ -813,6 +821,10 @@
       J = J+2
       CALL SETVAR(LUGB2,LUGI2,NUMVAL2,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,S12REF50,IRET,ISTAT)
 
+        else
+        write(6,*) 'SKIPPED SREF READS'
+
+        endif
 
       RETURN 
       END SUBROUTINE getgrib
