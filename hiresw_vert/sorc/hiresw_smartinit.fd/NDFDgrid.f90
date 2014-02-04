@@ -351,7 +351,7 @@
          if(rough_mod(i,j).gt. rghlim) then
           if(any(rough_mod(im1:ip1,jm1:jp1).lt.rghlim)) then 
              if(validpt(i,j)) then
-        write(0,*) 'I,J,rough_mod(i,j) was(1): ', I,J,rough_mod(i,j)
+!        write(0,*) 'I,J,rough_mod(i,j) was(1): ', I,J,rough_mod(i,j)
               rough_mod(i,j) = 0.0
               nmod(1) = nmod(1) + 1
              endif
@@ -361,7 +361,7 @@
           if(rough_mod(i,j).lt.rghlim) then
            if(any(rough_mod(im1:ip1,jm1:jp1).gt.rghlim)) then
             if (validpt(i,j)) then      ! Added 03-13-13
-        write(0,*) 'I,J,rough_mod(i,j) was(2): ', I,J,rough_mod(i,j)
+!        write(0,*) 'I,J,rough_mod(i,j) was(2): ', I,J,rough_mod(i,j)
              rough_mod(i,j) = 0.1*scale
              nmod(2) = nmod(2) + 1
             endif

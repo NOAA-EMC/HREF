@@ -12,8 +12,11 @@ LIBS = -L/usr/local/lib   \
 	-L/nwprod/lib  -lip_4 -lw3nco_4 -lw3emc_4 -lbacio_4
 NCEP_LIB_DIR = 
 
-FFLAGS = -O -fp-model strict -list 
-LDFLAGS =-FR -assume byterecl -check all -debug all -warn nounused  
+# FFLAGS = -O -fp-model strict -list 
+# LDFLAGS =-FR -assume byterecl -check all -debug all -warn nounused  
+
+FFLAGS = -O -list # -fp-model strict -list 
+LDFLAGS =-FR -assume byterecl # -check all -debug all -warn nounused  
 
 CMD =	../../exec/hiresw_smartinit
 

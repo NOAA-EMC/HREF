@@ -540,22 +540,29 @@
       print *, 'Reading max/min for previous 2 hours',LUGT1,LUGT2,IGDNUMT
       JPDS=-1;J=0;JPDS(3) = IGDNUMT
       JPDS(5) = 11
-      JPDS(6) = 001
+      JPDS(6) = 105
+      JPDS(7) = 2
       CALL SETVAR(LUGT1,LUGT1I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,THOLD(:,:,2),IRET,ISTAT)
 
       JPDS=-1;J=0;JPDS(3) = IGDNUMT
       JPDS(5) = 17
       JPDS(6) = 001
+      JPDS(6) = 105
+      JPDS(7) = 2
       CALL SETVAR(LUGT1,LUGT1I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,DHOLD(:,:,2),IRET,ISTAT)
 
       JPDS=-1;J=0;JPDS(3) = IGDNUMT
       JPDS(5) = 11
       JPDS(6) = 001
+      JPDS(6) = 105
+      JPDS(7) = 2
       CALL SETVAR(LUGT2,LUGT2I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,THOLD(:,:,3),IRET,ISTAT)
 
       JPDS=-1;J=0;JPDS(3) = IGDNUMT
       JPDS(5) = 17
       JPDS(6) = 001
+      JPDS(6) = 105
+      JPDS(7) = 2
       CALL SETVAR(LUGT2,LUGT2I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,DHOLD(:,:,3),IRET,ISTAT)
 
 ! Get min/max temperature values for full 12-hr period for F12,24...
@@ -579,6 +586,8 @@
          JPDS(3) = IGDNUMT
          JPDS(5) = 11 
          JPDS(6) = 001
+      JPDS(6) = 105
+      JPDS(7) = 2
          JPDS(14) = IIH   
          print *, 'READING TEMP for hr', IIH, LUGTA,LUGTB,KT
          CALL SETVAR(LUGTA,LUGTB,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,THOLD(:,:,KT),IRET,ISTAT)
@@ -586,6 +595,8 @@
          JPDS(3) = IGDNUMT
          JPDS(5) = 17 
          JPDS(6) = 001
+      JPDS(6) = 105
+      JPDS(7) = 2
          JPDS(14) = IIH   
          print *, 'READING  DPT for hr', IIH, LUGTA,LUGTB,KT 
          CALL SETVAR(LUGTA,LUGTB,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,DHOLD(:,:,KT),IRET,ISTAT)
