@@ -347,30 +347,48 @@
 !       where (downq .gt. 1) validpt=.false.
 
         print *, 'OUTPUT  main 3-hr block'
+!!
+! MODIFY HERE to write as proper level?
+
+!! "2 m" fields
+!
+       ID(9)=105
+       ID(11)=2
+!
        RITEHD = .TRUE.
        ID(1:25) = 0
-       ID(8)=11;ID(9)=1
+       ID(8)=11
+       ID(9)=105
+       ID(11)=2
        DEC=-2.0
        CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,70,DEC)
 
        ID(1:25) = 0
-       ID(8)=17;ID(9)=1
+       ID(8)=17
+       ID(9)=105
+       ID(11)=2
        DEC=-2.0
        CALL GRIBIT(ID,RITEHD,DOWNDEW,GDIN,70,DEC)
 
        ID(1:25) = 0
-       ID(8)=51;ID(9)=1
+       ID(8)=51
+       ID(9)=105
+       ID(11)=2
        DEC=3.0
        CALL GRIBIT(ID,RITEHD,DOWNQ,GDIN,70,DEC)
 
 
        ID(1:25) = 0
-       ID(8)=33;ID(9)=1
+       ID(8)=33
+       ID(9)=105
+       ID(11)=10
        DEC=-2.0
        CALL GRIBIT(ID,RITEHD,DOWNU,GDIN,70,DEC)
 
        ID(1:25) = 0
-       ID(8)=34;ID(9)=1
+       ID(8)=34
+       ID(9)=105
+       ID(11)=10
        DEC=-2.0
        CALL GRIBIT(ID,RITEHD,DOWNV,GDIN,70,DEC)
        print *, 'DOWNU',minval(downu),maxval(downu)
@@ -804,12 +822,16 @@
       print *, 'going to write minmax ', fhr
       RITEHD = .TRUE.
       ID(1:25) = 0
-      ID(8)=11;ID(9)=1
+      ID(8)=11
+        ID(9)=105
+        ID(11)=2
       DEC=-2.0
       CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,71,DEC)
  
       ID(1:25) = 0
-      ID(8)=17;ID(9)=1
+      ID(8)=17
+        ID(9)=105
+        ID(11)=2
       DEC=-2.0
       CALL GRIBIT(ID,RITEHD,DOWNDEW,GDIN,71,DEC)
     ENDIF
@@ -830,7 +852,9 @@
             DEC=-2.0
             TEMP1=SPVAL;TEMP2=SPVAL
             IF(ivarb.eq.1) then
-              ID(8)=11;ID(9)=1
+              ID(8)=11
+        ID(9)=105
+        ID(11)=2
               where (VALIDPT) 
                 TEMP1=THOLD(:,:,2)
                 TEMP2=THOLD(:,:,3)
@@ -841,7 +865,9 @@
 !                where (temp2.le.10) TEMP2=SPVAL
               end where
             else
-              ID(8)=17;ID(9)=1
+              ID(8)=17
+        ID(9)=105
+        ID(11)=2
               where (VALIDPT) 
                 TEMP1=DHOLD(:,:,2)
                 TEMP2=DHOLD(:,:,3)
@@ -907,25 +933,33 @@
        CALL BOUND(RHMIN3,0.,100.)
  
        ID(1:25) = 0
-       ID(8)=15;ID(9)=1
+       ID(8)=15
+       ID(9)=105
+       ID(11)=2
        ID(18)=FHR3;ID(19)=FHR
        ID(20)=4
        DEC=-2.0
        CALL GRIBIT(ID,RITEHD,TMAX3,GDIN,70,DEC)
 
-       ID(8)=16;ID(9)=1
+       ID(8)=16
+       ID(9)=105
+       ID(11)=2
        where(tmin3.eq.0)tmin3=spval
        CALL GRIBIT(ID,RITEHD,TMIN3,GDIN,70,DEC)
 
        ID(1:25) = 0
        ID(2)=129
-       ID(8)=218;ID(9)=1
+       ID(8)=218
+       ID(9)=105
+       ID(11)=2
        ID(18)=FHR3;ID(19)=FHR
        ID(20)=4
        DEC=3.0
        CALL GRIBIT(ID,RITEHD,RHMAX3,GDIN,70,DEC)
 
-       ID(8)=217;ID(9)=1
+       ID(8)=217
+       ID(9)=105
+       ID(11)=2
        CALL GRIBIT(ID,RITEHD,RHMIN3,GDIN,70,DEC)
       ENDIF
 
@@ -959,22 +993,30 @@
         CALL BOUND(RHMIN12,0.,100.)
 
          ID(1:25) = 0
-         ID(8)=15;ID(9)=1
+         ID(8)=15
+       ID(9)=105
+       ID(11)=2
          ID(18)=FHR12;ID(19)=FHR
          ID(20)=4
          DEC=-2.0
          CALL GRIBIT(ID,RITEHD,TMAX12,GDIN,70,DEC)
-         ID(8)=16;ID(9)=1
+         ID(8)=16
+       ID(9)=105
+       ID(11)=2
 
 !        1-28-13 JTM : check for incorrect tmin even for validpt=true 
          where(tmin12.le.10)tmin12=spval
          CALL GRIBIT(ID,RITEHD,TMIN12,GDIN,70,DEC)
 
          ID(2)=129
-         ID(8)=218;ID(9)=1
+         ID(8)=218
+       ID(9)=105
+       ID(11)=2
          DEC=3.0
          CALL GRIBIT(ID,RITEHD,RHMAX12,GDIN,70,DEC)
-         ID(8)=217;ID(9)=1
+         ID(8)=217
+       ID(9)=105
+       ID(11)=2
          CALL GRIBIT(ID,RITEHD,RHMIN12,GDIN,70,DEC)
        ENDIF
 
@@ -1251,6 +1293,8 @@
        TYPE (GINFO) :: GDIN
 
     INCLUDE 'DEFGRIBINT.INC'   ! interface statements for gribit subroutines
+
+!! modify here??
 
        print *,'OUTPUT LIMITED GRIB FILE at FHR ',GDIN%FHR,' for REGION ',GDIN%REGION
        RITEHD = .TRUE.
