@@ -74,12 +74,7 @@ export USHhiresw=$HOMEhiresw/ush
 export utilscript=/nwprod/util/ush
 export utilexec=/nwprod/util/exec
 
-hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
-for hr in $hrs
-do
-mkdir -p $DATA/smartinit_${hr}
-cd $DATA/smartinit_${hr}
-rm $DATA/smartinit_${hr}/*
+cd $DATA/smartinit
 
 # Run setup to initialize working directory and utility scripts
 sh $utilscript/setup.sh
@@ -87,8 +82,6 @@ sh $utilscript/setup.sh
 # Run setpdy and initialize PDY variables
 sh $utilscript/setpdy.sh
 . PDY
-
-done
 
 export COMROOT=/com
 export com=/com/${NET}/${envir}
@@ -130,7 +123,7 @@ export COMIN_GEFS=$COM_SREF/sref.${GEFS_PDY}/ensprod_gefs
 
 ########################################################
 # Execute the script.
-$HOMEhiresw/scripts/exhiresw_smartinit.sh.ecf
+$HOMEhiresw/scripts/exhiresw_smartinit.sh.ecf_whole
 ########################################################
 
 date
