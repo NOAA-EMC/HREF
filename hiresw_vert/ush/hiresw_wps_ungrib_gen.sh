@@ -7,8 +7,6 @@ cyc=${3}
 envir=${4}
 stream=${5}
 
-### DATA should not be defined here
-export DATA=/ptmpd1/Matthew.Pyle/tmpnwprd/hiresw_${NEST}_${MODEL}_ctl_${cyc}_${envir}
 echo DATA $DATA
 
 cd $DATA/run_ungrib_${stream}/
