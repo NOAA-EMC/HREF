@@ -21,6 +21,8 @@
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200),ID(25)
       INTEGER IMAX,JMAX,KMAX,FHR,CYC,DATE,HOUR,ITOT,OGRD,HAVESREF
 
+      REAL :: DX
+
       LOGICAL RITEHD,LCYCON,LHR3,LHR12,LNEST
       CHARACTER*4 CTMP,REGION,CORE
 
@@ -47,7 +49,7 @@
 
 !  USED in MAIN only
    REAL,    ALLOCATABLE :: DIRTRANS(:,:),MGTRANS(:,:),LAL(:,:),HAINES(:,:),MIXHGT(:,:)
-   REAL,    ALLOCATABLE :: TEMP1(:,:),TEMP2(:,:)
+   REAL,    ALLOCATABLE :: TEMP1(:,:),TEMP2(:,:),HLVL(:,:)
 
    LOGICAL, ALLOCATABLE :: VALIDPT(:,:)
 !
@@ -132,16 +134,17 @@
    END SUBROUTINE makestring 
 
   subroutine NDFDgrid(veg_nam_ndfd,tnew,dewnew,unew,vnew, &
-      qnew,topo_ndfd,veg_ndfd,gdin,validpt,core)
+      qnew,pnew,topo_ndfd,veg_ndfd,gdin,validpt,core,dx)
     use constants
     use grddef
     use aset2d
     use aset3d
     use rdgrib
 
-    REAL, INTENT(INOUT) :: TNEW(:,:),DEWNEW(:,:),UNEW(:,:),VNEW(:,:)
+    REAL, INTENT(INOUT) :: TNEW(:,:),DEWNEW(:,:),UNEW(:,:),VNEW(:,:),PNEW(:,:)
     REAL, INTENT(INOUT) :: QNEW(:,:)
     REAL, INTENT(INOUT) :: VEG_NAM_NDFD(:,:),TOPO_NDFD(:,:),VEG_NDFD(:,:)
+    REAL, INTENT(IN)    :: DX
     TYPE (GINFO)        :: GDIN
 
     character(len=4) :: core
@@ -149,7 +152,7 @@
     REAL, ALLOCATABLE   :: EXN(:,:)
     REAL, ALLOCATABLE   :: ROUGH_MOD(:,:)
     REAL, ALLOCATABLE   :: TTMP(:,:),DTMP(:,:),UTMP(:,:),VTMP(:,:) 
-    REAL, ALLOCATABLE   :: PNEW(:,:),SFCHTNEW(:,:)
+    REAL, ALLOCATABLE   :: SFCHTNEW(:,:)
     LOGICAL, INTENT(IN)  :: VALIDPT(:,:)
      real exn0,exn1, wsp
      integer nmod(2)
@@ -171,6 +174,14 @@
        TYPE (GINFO) :: GDIN
        INCLUDE 'DEFGRIBINT.INC'   ! interface statements for gribit subroutines
    END SUBROUTINE griblimited
+
+    SUBROUTINE HINDEX (IM,JM,HAINES,HLVL,VALIDPT)
+       use aset2d
+       use asetdown
+       LOGICAL, INTENT(IN)   :: VALIDPT(:,:)
+       REAL, INTENT(INOUT)    :: HAINES(:,:),HLVL(:,:)
+    END SUBROUTINE hindex
+
 
    FUNCTION CalcQ(ptmp,ttmp)
       use constants
@@ -214,6 +225,12 @@
          HAVESREF=0
         else
          HAVESREF=1
+        endif
+
+        if  (GDIN%REGION .eq. 'AK' .or.  GDIN%REGION .eq. 'ak') then
+          dx=3000.
+        else
+          dx=2500.
         endif
         
         write(0,*) 'GDIN%REGION, HAVESREF: ', GDIN%REGION, HAVESREF
@@ -335,11 +352,12 @@
        ALLOCATE (DOWNT(IM,JM),DOWNDEW(IM,JM),STAT=kret)
        ALLOCATE (DOWNU(IM,JM),DOWNV(IM,JM),STAT=kret)
        ALLOCATE (DOWNQ(IM,JM),TOPO(IM,JM),STAT=kret)
+       ALLOCATE (DOWNP(IM,JM),             STAT=kret)
        ALLOCATE (WGUST(IM,JM),PBLMARK(IM,JM),STAT=kret)
        ALLOCATE (TEMP1(IM,JM),TEMP2(IM,JM),STAT=kret)
 
-       CALL NDFDgrid(VEG,DOWNT,DOWNDEW,DOWNU,DOWNV,DOWNQ,TOPO,VEG_NDFD, &
-                     gdin,VALIDPT,core)
+       CALL NDFDgrid(VEG,DOWNT,DOWNDEW,DOWNU,DOWNV,DOWNQ,DOWNP,TOPO,VEG_NDFD, &
+                     gdin,VALIDPT,core,dx)
 
       IF (MOD(FHR,3).EQ.0) THEN 
 !       Find inconsistent valid points  JTM 1-28-2013
@@ -394,6 +412,27 @@
        print *, 'DOWNU',minval(downu),maxval(downu)
        print *, 'DOWNV',minval(downv),maxval(downv)
 
+       ID(1:25) = 0
+       ID(8)=1;ID(9)=1
+       DEC=3.0
+       CALL GRIBIT(ID,RITEHD,PSFC,GDIN,70,DEC)
+
+!      Output high res topo,land for nests ??
+!      Output topo for all grids 03-07-13
+         ID(1:25) = 0
+         ID(8)=7    !EQ 8 in ndfd ???????
+         ID(9)=1
+         DEC=-2.0
+         CALL GRIBIT(ID,RITEHD,TOPO,GDIN,70,DEC)
+        write(0,*) 'region here where doing GRIBIT: ', REGION
+       IF (REGION .NE. 'CS' .and. REGION .NE.'CS2P' )THEN
+         ID(1:25) = 0
+         ID(8)=81
+         ID(9)=1
+         DEC=1.0
+         CALL GRIBIT(ID,RITEHD,VEG_NDFD,GDIN,70,DEC)
+       ENDIF
+
        WGUST=SPVAL;TEMP1=SPVAL
        where(validpt)
          TEMP1=SQRT(DOWNU*DOWNU+DOWNV*DOWNV)
@@ -410,8 +449,7 @@
        ID(1:25) = 0
        ID(8)=1;ID(9)=1
        DEC=3.0
-       CALL GRIBIT(ID,RITEHD,PSFC,GDIN,70,DEC)
-
+       CALL GRIBIT(ID,RITEHD,DOWNP,GDIN,70,DEC)
 
 !      Output high res topo,land for nests ??
 !      Output topo for all grids 03-07-13
@@ -815,8 +853,10 @@
       ID(8)=132;ID(9)=1
       DEC=2.0     ! HI DEC=3.0 ????
       CALL GRIBIT(ID,RITEHD,LAL,GDIN,70,DEC)
+        print*, 'past LAL write'
     ENDIF  ! 3 hour writes
 
+        print*, 'here checking LCYCON'
     IF(LCYCON .AND. .NOT.LHR12 .OR.             &
       .NOT.LCYCON.AND.MOD(FHR-6,12).NE.0) THEN 
       print *, 'going to write minmax ', fhr
@@ -843,6 +883,7 @@
         IF(.not.LHR3 .AND. FHR.LT.9) CALL GRIBLIMITED(70,GDIN)
       ENDIF
 
+        write(6,*) 'to write of older T'
 !  write older T/Td data for max/min to grib file
       ALLOCATE (TEMP1(IM,JM),TEMP2(IM,JM),STAT=kret)
       IF (FHR.NE.0. .AND. LHR3) THEN
@@ -885,7 +926,9 @@
           ENDDO 
         ENDIF
       ENDIF
+        write(6,*) 'past write of older T'
       DEALLOCATE (TEMP1,TEMP2,STAT=kret)
+        write(6,*) 'past dealloc of TEMP1, TEMP2'
 
 !  compute max/min temps for 3,6,9,12.....
      ALLOCATE(TMAX3(IM,JM),RHMAX3(IM,JM),STAT=kret)
@@ -939,12 +982,14 @@
        ID(18)=FHR3;ID(19)=FHR
        ID(20)=4
        DEC=-2.0
+        print*, 'calling GRIBIT for MAX3'
        CALL GRIBIT(ID,RITEHD,TMAX3,GDIN,70,DEC)
 
        ID(8)=16
        ID(9)=105
        ID(11)=2
        where(tmin3.eq.0)tmin3=spval
+        print*, 'calling GRIBIT for MIN3'
        CALL GRIBIT(ID,RITEHD,TMIN3,GDIN,70,DEC)
 
        ID(1:25) = 0
@@ -955,11 +1000,13 @@
        ID(18)=FHR3;ID(19)=FHR
        ID(20)=4
        DEC=3.0
+        print*, 'calling GRIBIT for RHMAX3'
        CALL GRIBIT(ID,RITEHD,RHMAX3,GDIN,70,DEC)
 
        ID(8)=217
        ID(9)=105
        ID(11)=2
+        print*, 'calling GRIBIT for RHMIN3'
        CALL GRIBIT(ID,RITEHD,RHMIN3,GDIN,70,DEC)
       ENDIF
 
@@ -1019,6 +1066,28 @@
        ID(11)=2
          CALL GRIBIT(ID,RITEHD,RHMIN12,GDIN,70,DEC)
        ENDIF
+
+!      Compute Haines Index
+!        goto 993
+
+      ALLOCATE (HAINES(IM,JM),HLVL(IM,JM),STAT=kret)
+
+        print*, 'call HINDEX'
+      CALL HINDEX(IM,JM,HAINES,HLVL,VALIDPT)
+        print*, 'return with min/max: ', minval(HAINES),maxval(HAINES)
+      ID(1:25) = 0
+      ID(2)=129
+      ID(8)=250;ID(9)=1
+      DEC=3.0
+        print*, 'calling GRIBIT for HAINES'
+      CALL GRIBIT(ID,RITEHD,HAINES,GDIN,70,DEC)
+      ID(2)=2
+      ID(8)=209;ID(9)=1
+      DEC=1.0
+
+  993 continue
+!jtm not needed      CALL GRIBIT(ID,RITEHD,HLVL,GDIN,70,DEC)
+
 
        print *, 'completed main'
       STOP
@@ -1378,59 +1447,65 @@
       calCW=(factor*100.0)+dpop
    END FUNCTION calcw      
 
-!     SUBROUTINE HINDEX
+     SUBROUTINE HINDEX (IM,JM,HAINES,HLVL,VALIDPT)
 !=======================================================================
 !  Calculate Haines Index
 !  type is "LOW", "MEDIUM", "HIGH"
 !  NOTE, the default haines index calcaulation is defined by:
 !  self.whichHainesIndex, which can be set to "LOW", "MEDIUM", "HIGH".
+!  11-05-2013 J.T. McQueen
+!  11-15-2013 Using standard elevatios for P950, P850
 !=======================================================================
-!      DO J=1,JM
-!      DO I=1,IM
-!       IF(PSFC(I,J).GT.95000.) THEN
-!        HAT=T950(I,J)-T850(I,J)
-!        TMOIS=T850(I,J)-273.15
-!        RHMOIS=RH850(I,J)
-!        ST1=8
-!        ST2=3
-!        MT1=10
-!        MT2=5
-!       ELSE IF(PSFC(I,J).GT.85000.) THEN
-!        HAT=T850(I,J)-T700(I,J)
-!        TMOIS=T850(I,J)-273.15
-!        RHMOIS=RH850(I,J)
-!        ST1=11
-!       ST2=5
-!        MT1=13
-!        MT2=5
-!       ELSE
-!        HAT=T700(I,J)-T500(I,J)
-!        TMOIS=T700(I,J)-273.15
-!        RHMOIS=RH700(I,J)
-!        ST1=22
-!        ST2=17
-!        MT1=21
-!        MT2=14
-!       ENDIF
-!       TERM=log10(RHMOIS) / 7.5 + (TMOIS / (TMOIS + 237.3))
-!       DPMOIS=(TERM * 237.3) / (1.0 - TERM)
-!       HAINESM=TMOIS-DPMOIS 
-!       SLOPET=1/(ST1-ST2)
-!       INTT=1.5-(ST2-0.5)*SLOPET
-!       HAINEST=(SLOPET*HAT)+INTT
-!       SLOPEM=1/(MT1-MT2)
-!       INTM=1.5-(MT2-0.5)*SLOPEM
-!       HAINESM=(SLOPEM*DPMOIS)+INTM
-!       HAINES(I,J)=HAINEST+HAINESM
-!      ENDDO
-!      ENDDO
-!      ID(1:25) = 0
-!      ID(2)=130
-!      ID(8)=241
-!      ID(9)=1
-!      DEC=3.0
-!      CALL GRIBIT(ID,RITEHD,HAINES,GDIN,70,DEC)
-!      ENDIF 
-!      RETURN
-!      END     
+      use aset2d
+      use asetdown
+      LOGICAL, INTENT(IN)   :: VALIDPT(:,:)
+      REAL, INTENT(INOUT)    :: HAINES(:,:),HLVL(:,:)
 
+      DO J=1,JM
+      DO I=1,IM
+       if (validpt(i,j)) then
+!       IF(DOWNP(I,J).GT.95000.) THEN
+       IF(TOPO(I,J).LT.540.) THEN
+        HAT=T950(I,J)-T850(I,J)
+        TMOIS=T850(I,J)-273.15
+        RHMOIS=RH850(I,J)
+        ST1=8
+        ST2=3
+        MT1=10
+        MT2=5
+        HLVL(I,J)=1
+!       ELSE IF(DOWNP(I,J).GT.85000.) THEN
+       ELSE IF(TOPO(I,J).LT. 1456.) THEN
+        HAT=T850(I,J)-T700(I,J)
+        TMOIS=T850(I,J)-273.15
+        RHMOIS=RH850(I,J)
+        ST1=11
+        ST2=5
+        MT1=13
+        MT2=5
+        HLVL(I,J)=2
+       ELSE
+        HAT=T700(I,J)-T500(I,J)
+        TMOIS=T700(I,J)-273.15
+        RHMOIS=RH700(I,J)
+        ST1=22
+        ST2=17
+        MT1=21
+        MT2=14
+        HLVL(I,J)=3
+       ENDIF
+       TERM=log10(RHMOIS) / 7.5 + (TMOIS / (TMOIS + 237.3))
+       DPMOIS=(TERM * 237.3) / (1.0 - TERM)
+       HAINESM=TMOIS-DPMOIS
+       SLOPET=1/(ST1-ST2)
+       INTT=1.5-(ST2-0.5)*SLOPET
+       HAINEST=(SLOPET*HAT)+INTT
+       SLOPEM=1/(MT1-MT2)
+       INTM=1.5-(MT2-0.5)*SLOPEM
+       HAINESM=(SLOPEM*DPMOIS)+INTM
+       HAINES(I,J)=HAINEST+HAINESM
+      endif
+      ENDDO
+      ENDDO
+      RETURN
+      END SUBROUTINE HINDEX
