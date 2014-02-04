@@ -12,7 +12,7 @@ SHELL=/bin/sh
 
 include makefile.conf
 
-EXE = hiresw_coldstart
+EXE = ../../exec/hiresw_coldstart
 
 OBJS = program_setup.o \
        coldstart_wrf.o \
@@ -48,4 +48,4 @@ write_data.o: interp_data.o program_setup.o write_data.f
 	${FCOMP} ${FFLAGS} -c write_data.f
 
 clean:
-	rm -f *.o *.mod surface_chgres.i ${EXE}
+	rm -f *.o *.mod surface_chgres.i 
