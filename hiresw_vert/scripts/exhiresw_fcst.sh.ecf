@@ -109,7 +109,7 @@ icnt=0
 if [ ! -e $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap ]
 then
 
-while [ $icnt -lt 10 ]
+while [ $icnt -lt 30 ]
 do
 if [ ! -e $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap ]
 then
