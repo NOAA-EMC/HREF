@@ -1,10 +1,10 @@
 SHELL=/bin/sh
 #
 #SRCS=    aset3d.f aset2d.f grddef.f constants.f asetdown.f rdgrib.f     \
-GETGRIB.f90 MAIN.f90 BOUND.f90 GRIBIT.f90 GET_BITS.f90  MAKESTRING.f90 NDFDgrid.f90 
+GETGRIB.f90 MAIN.f90 BOUND.f90 GRIBIT.f90 GET_BITS.f90  MAKESTRING.f90 NDFDgrid.f90 VADJUST.f90
 
 OBJS1= aset3d.o aset2d.o grddef.o constants.o asetdown.o rdgrib.o 
-OBJS2= GETGRIB.o MAIN.o BOUND.o GRIBIT.o GET_BITS.o MAKESTRING.o NDFDgrid.o 
+OBJS2= GETGRIB.o MAIN.o BOUND.o GRIBIT.o GET_BITS.o MAKESTRING.o NDFDgrid.o VADJUST.o
 
 FC =   ifort -convert big_endian -g -traceback -assume noold_ldout_format	
 

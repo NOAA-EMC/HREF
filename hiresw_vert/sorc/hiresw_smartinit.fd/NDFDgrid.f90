@@ -1,12 +1,12 @@
       subroutine NDFDgrid(veg_nam_ndfd,tnew,dewnew,unew,vnew, &
-      qnew,topo_ndfd,veg_ndfd,gdin,VALIDPT,core)
+      qnew,pnew,topo_ndfd,veg_ndfd,gdin,VALIDPT,core,dx)
     use constants
     use grddef
     use aset2d
     use aset3d 
     use rdgrib
     
-    REAL, INTENT(INOUT) :: TNEW(:,:),DEWNEW(:,:),UNEW(:,:),VNEW(:,:)
+    REAL, INTENT(INOUT) :: TNEW(:,:),DEWNEW(:,:),UNEW(:,:),VNEW(:,:),PNEW(:,:)
     REAL, INTENT(INOUT) :: QNEW(:,:)
     REAL, INTENT(INOUT) :: VEG_NAM_NDFD(:,:),TOPO_NDFD(:,:),VEG_NDFD(:,:)
     LOGICAL, INTENT(IN) :: VALIDPT(:,:)
@@ -17,7 +17,7 @@
     REAL, ALLOCATABLE   :: EXN(:,:) 
     REAL, ALLOCATABLE   :: ROUGH_MOD(:,:)
     REAL, ALLOCATABLE   :: TTMP(:,:),DTMP(:,:),UTMP(:,:),VTMP(:,:)
-    REAL, ALLOCATABLE   :: PNEW(:,:),SFCHTNEW(:,:)
+    REAL, ALLOCATABLE   :: SFCHTNEW(:,:)
 
 !    LOGICAL*1,   ALLOCATABLE   :: MASK(:)
 !    REAL,        ALLOCATABLE   :: GRID(:)
@@ -33,6 +33,27 @@
       real tmean,dz,theta1,theta6
       logical ladjland,lconus,lnest
 
+ INTERFACE
+    SUBROUTINE vadjust(VALIDPT,U,V,HTOPO,DX,DY,IM,JM)
+
+    use constants
+    use grddef
+    use aset2d
+    use aset3d
+
+    LOGICAL, INTENT(IN) :: VALIDPT(:,:)
+    REAL, INTENT(INOUT) :: U(:,:),V(:,:)
+    REAL, INTENT(IN) :: HTOPO(:,:),DX,DY
+    TYPE (GINFO)        :: GDIN
+    REAL, ALLOCATABLE   :: UB(:,:),VB(:,:)
+    REAL, ALLOCATABLE   :: PHI(:,:,:)
+    real HBAR,DXI,DYI,FX,FY,HTOIM1,HTOJM1,HTOIP1,HTOJP1,DHDX,DHDY, &
+         DXSQ,DYSQ,DSQ,FACT,ERROR,ERR,EPSI,OVREL,XX,YY
+    integer itmax,ii,jj,kk,idir,it
+    END SUBROUTINE vadjust
+ END INTERFACE
+
+
 
       print *, '***********************************'
       print *, 'Into NDFDgrid'
@@ -47,7 +68,6 @@
       ALLOCATE (EXN(IM,JM),ROUGH_MOD(IM,JM),STAT=kret)
       ALLOCATE (TTMP(IM,JM),DTMP(IM,JM),STAT=kret)
       ALLOCATE (UTMP(IM,JM),VTMP(IM,JM),STAT=kret)
-      ALLOCATE (PNEW(IM,JM),STAT=kret)
 
 !  read in 5 km topography
 !  changed name for consistency with non-conus region names
@@ -131,6 +151,7 @@
         sfchtnew = topo_ndfd
         tnew=spval;qnew=spval
         dewnew=spval;unew=spval;vnew=spval
+        pnew=spval
 
         do 120 j=1,jm
         do 120 i=1,im
@@ -287,17 +308,27 @@
 ! -- 0.7 factor is a wag at surface effects on wind speed
 !     when interpolating from the free atmosphere to
 !     the NDFD topo.
-          speedc = 0.7*sqrt(uc*uc+vc*vc)
-          speed = sqrt(uwnd(i,j,1)**2 + vwnd(i,j,1)**2)
-          ratio = max(1.,speedc/(max(0.001,speed)) )
-          unew(i,j) = ratio*(uwnd(i,j,1))
-          vnew(i,j) = ratio*(vwnd(i,j,1))
+!          speedc = 0.7*sqrt(uc*uc+vc*vc)
+!          speed = sqrt(uwnd(i,j,1)**2 + vwnd(i,j,1)**2)
+!          ratio = max(1.,speedc/(max(0.001,speed)) )
+!          unew(i,j) = ratio*(uwnd(i,j,1))
+!          vnew(i,j) = ratio*(vwnd(i,j,1))
+
+          unew(i,j) = uc
+          vnew(i,j) = vc
 
 !============================================
         END IF
 !============================================
 
 120     continue
+
+!       Adjust winds to topography
+        dy=dx   ! dx should be passed in from MAIN
+
+
+        call vadjust(validpt,unew,vnew,topo_ndfd,dx,dy,im,jm)
+
 
 !============================================
 ! -- use land mask to get better temps/dewpoint/winds
