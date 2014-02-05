@@ -151,6 +151,13 @@
  &grib2
  /
 
+
+ &logging
+  compute_slaves_silent=.true.   ! all compute ranks except 0 are silent
+  io_servers_silent=.true.    ! all I/O server ranks are silent
+  stderr_logging=0   ! disable output to stderr except for error messages
+ /
+
  &namelist_quilt
  nio_tasks_per_group = 8,
  nio_groups = 1,

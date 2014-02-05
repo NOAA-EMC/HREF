@@ -145,6 +145,12 @@
  nested                              = .false., .true., .true.,
  /
 
+ &logging
+  compute_slaves_silent=.true.   
+  io_servers_silent=.true.    
+  stderr_logging=0  
+ /
+
  &grib2
  /
 
