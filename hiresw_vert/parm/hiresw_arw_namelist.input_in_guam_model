@@ -148,6 +148,13 @@
  &grib2
  /
 
+ &logging
+  compute_slaves_silent=.true.
+  io_servers_silent=.true.
+  stderr_logging=0
+ /
+
+
  &namelist_quilt
  nio_tasks_per_group = 2,
  nio_groups = 1,

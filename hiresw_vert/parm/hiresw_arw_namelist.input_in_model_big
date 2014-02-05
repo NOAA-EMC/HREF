@@ -149,6 +149,13 @@ do_radar_ref                        = 1,
  &grib2
  /
 
+ &logging
+  compute_slaves_silent=.true.
+  io_servers_silent=.true.
+  stderr_logging=0
+ /
+
+
  &namelist_quilt
  nio_tasks_per_group = 15,
  nio_groups = 1,
