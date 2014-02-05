@@ -52,7 +52,7 @@ EXTLIBS_POST = $(POST_LIB) \
                $(NETCDF_LIB) \
                $(SYS_LIB)
 
-FC          = mpiifort -g -openmp  -mkl=sequential
+FC          = mpiifort -g   -mkl=sequential
 CC          = mpcc
 FREE        = -free
 FIXED       = -fixed
@@ -77,7 +77,7 @@ FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
 FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
 
 CPP         = /lib/cpp -P -traditional
-CPPFLAGS    = -DENABLE_SMP
+CPPFLAGS    = 
 
 AR          = ar
 ARFLAGS     = -r
