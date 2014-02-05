@@ -330,7 +330,7 @@
  116  continue
 ! set PTHRESH for different models
       if(MODELNAME == 'NMM')then
-       PTHRESH=0.000004
+       PTHRESH=0.0000005
       else
        PTHRESH=0.000000
       end if  
