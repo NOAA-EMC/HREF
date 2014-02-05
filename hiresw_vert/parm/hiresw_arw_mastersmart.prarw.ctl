@@ -620,3 +620,5 @@
 116/195/X/-3.0/wrf.EMPR04/0/0
   180   1   0    0   0   2  1   SFC WIND GUST
 116/195/X/-3.0/wrf.EMPR04/0/0
+   81   1   0   0   0   2   1   LAND-SEA MASK
+116/195/X/1.0/wrf.EMPR04/0/0
