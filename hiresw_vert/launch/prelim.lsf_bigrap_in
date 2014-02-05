@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_PREP_RAP
 #BSUB -W 0:15
 #BSUB -R affinity[core(1)]

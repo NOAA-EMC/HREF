@@ -1,0 +1,27 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_smartinit.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_smartinit.err__DOM__CORE__CYC_
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_SMARTINIT
+#BSUB -P HRW-T2O
+#BSUB -R "span[ptile=2]"
+#BSUB -R rusage[mem=5000]
+#BSUB -n 2
+###BSUB -x
+#BSUB -W 2:29
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+
+module load ics
+module load ibmpe
+
+echo START `date`
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_SMARTINIT.ecf.test _DOM_ _CORE_ _CYC_ 
+
+echo FINISH `date`
