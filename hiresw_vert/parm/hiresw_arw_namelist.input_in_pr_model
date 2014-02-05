@@ -90,7 +90,7 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x=5
- nproc_y=11
+ nproc_y=9
  /
 
  &physics
@@ -148,6 +148,13 @@
 
  &grib2
  /
+
+ &logging
+  compute_slaves_silent=.true.
+  io_servers_silent=.true.
+  stderr_logging=0
+ /
+
 
  &namelist_quilt
  nio_tasks_per_group = 1,

@@ -74,7 +74,7 @@ minutes_history:  60       # Frequency of history output (minutes)
 nhours_dfini:       0
 
 restart:          false   # True--> A restarted run
-minutes_restart:  1440       # Frequency of restart output (minutes)
+minutes_restart:  4320       # Frequency of restart output (minutes)
 
 avg_max_length: 3600        # Time in seconds when averaged fields are reset
 
