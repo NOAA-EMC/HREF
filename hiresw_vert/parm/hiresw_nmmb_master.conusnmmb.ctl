@@ -1,7 +1,6 @@
   130 102   0   0   0 2 1   MESINGER MEAN SLP         
 112/184/X/-0.1/wrf.CONUS04/0/0                      
     2 102   0   0   0 2 1  SHUELL MEAN SLP           
-112/184/X/-0.1/wrf.CONUS04/0/0                      
    20   1   0   0   0 2 1  VISIBILITY
 112/184/X/2.7/wrf.CONUS04/0/0                      
     1   1   0   0   0 2 1  SURFACE PRESSURE          
@@ -122,5 +121,3 @@
 112/184/X/6.0/wrf.CONUS04/0/0
   250   1   0   0   0 129   2   HAINES INDEX
 112/184/X/1.0/wrf.CONUS04/0/0
-   7  220   0   0   0 2   1  RICH NO PBL HEIGHT
-112/184/X/-3.0/wrf.CONUS04/0/0

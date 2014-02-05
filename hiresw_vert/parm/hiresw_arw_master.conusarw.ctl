@@ -1,7 +1,6 @@
   130 102   0   0   0 2 1   MESINGER MEAN SLP         
 116/184/X/-0.1/wrf.EMCONUS04/0/0                      
     2 102   0   0   0 2 1  SHUELL MEAN SLP           
-116/184/X/-0.1/wrf.EMCONUS04/0/0                      
    20   1   0   0   0 2 1  VISIBILITY
 116/184/X/2.7/wrf.EMCONUS04/0/0                      
     1   1   0   0   0 2 1  SURFACE PRESSURE          
@@ -39,7 +38,6 @@
    54 200   0   0   0 2 1  PRECIPITABLE WATER        
 116/184/X/2.7/wrf.EMCONUS04/0/0                      
   132 116 180   0   0 2 1  LIFTED INDEX--BEST        
-116/184/X/2.7/wrf.EMCONUS04/0/0                      
   157 116 180   0   0 2 1  CNVCT AVBL POT ENRGY      
 116/184/X/2.7/wrf.EMCONUS04/0/0                      
   156 116 180   0   0 2 1  CNVCT INHIBITION          
@@ -116,5 +114,3 @@
 116/184/X/6.0/wrf.EMCONUS04/0/0
   250   1   0   0   0 129   2   HAINES INDEX
 116/184/X/1.0/wrf.EMCONUS04/0/0
-   7  220   0   0   0 2   1  RICH NO PBL HEIGHT
-116/184/X/-3.0/wrf.EMCONUS04/0/0
