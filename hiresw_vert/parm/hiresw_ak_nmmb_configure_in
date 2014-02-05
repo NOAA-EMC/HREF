@@ -25,7 +25,7 @@ sbd:  -14.971                # Grid's southern boundary (rotated degrees)
 ################################
 
 inpes:  12             # Number of compute tasks in the I direction
-jnpes:  44             # Number of compute tasks in the J direction
+jnpes:  40             # Number of compute tasks in the J direction
 #
 
 
@@ -42,7 +42,7 @@ quilting:              true    # Do you want asynchronous quilting/history write
 read_groups:           0
 read_tasks_per_group:  0
 write_groups:          1
-write_tasks_per_group: 22
+write_tasks_per_group: 20
 
 
 ############################################
@@ -80,7 +80,7 @@ minutes_history:  60       # Frequency of history output (minutes)
 nhours_dfini:       0
 
 restart:          false   # True--> A restarted run
-minutes_restart:  1440       # Frequency of restart output (minutes)
+minutes_restart:  4320       # Frequency of restart output (minutes)
 
 avg_max_length: 3600        # Time in seconds when averaged fields are reset
 
