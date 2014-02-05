@@ -1,7 +1,4 @@
-  180   1   0    0   0   2  1   SFC WIND GUST
-112/199/X/-4.0/wrf.GU04/0/0
   130 102   0   0   0 2 1   MESINGER MEAN SLP         
-112/199/X/-0.1/wrf.GU04/0/0                      
     2 102   0   0   0 2 1  SHUELL MEAN SLP           
 112/199/X/-0.1/wrf.GU04/0/0                      
    20   1   0   0   0 2 1  VISIBILITY
@@ -53,25 +50,14 @@
   156 116 180   0   0 2 1  CNVCT INHIBITION          
 112/199/X/2.7/wrf.GU04/0/0                      
   131 101  50 100   0 2 1  LIFTED INDEX--SURFCE      
-112/199/X/2.7/wrf.GU04/0/0                      
-  132 116 180   0   0 2 1  LIFTED INDEX--BEST
-112/199/X/2.7/wrf.GU04/0/0
    11   1   0   0   0 2 1  SFC (SKIN) TEMPRATUR      
-112/199/X/-3.0/wrf.GU04/0/0                      
   121   1   0   0   0 2 1  INST SFC LATHEAT FX       
-112/199/X/-3.0/wrf.GU04/0/0                      
   122   1   0   0   0 2 1  INST SFC SENHEAT FX       
-112/199/X/-3.0/wrf.GU04/0/0                      
   121   1   0   0   3 2 1  AVE SFC LATHEAT FX        
-112/199/X/-3.0/wrf.GU04/0/0                      
   122   1   0   0   3 2 1  AVE SFC SENHEAT FX        
-112/199/X/-3.0/wrf.GU04/0/0                      
    85 112   0  10   0 2 1  SOIL TEMPERATURE
-112/199/X/2.7/wrf.GU04/0/0
   144 112   0  10   0 2 1  SOIL MOISTURE
-112/199/X/2.7/wrf.GU04/0/0
     7   2   0   0   0 2 1  CLOUD BOTTOM HEIGHT
-112/199/X/-2.0/wrf.GU04/0/0                      
   157 116  90   0   0 2 1  CNVCT AVBL POT ENRGY
 112/199/X/2.7/wrf.GU04/0/0
   156 116  90   0   0 2 1  CNVCT INHIBITION
@@ -81,7 +67,6 @@
   212 200   0   0   0 129 1  COMPOSITE RADAR REFL
 112/199/X/-3.0/wrf.GU04/0/0
   211 109   0   1   0 129 1  RADAR REFL MDL SFCS
-112/199/X/-3.0/wrf.GU04/0/0
   211 105   0 1000  0 129 1  RADAR REFL AGL
 112/199/X/-3.0/wrf.GU04/0/0
   211 105   0 4000  0 129 1  RADAR REFL AGL
@@ -118,7 +103,17 @@
 112/199/X/-4.0/wrf.GU04/0/0
   241 220   0   0   0 129 1  VENTILATION RATE
 112/199/X/-2.0/wrf.GU04/0/0
+  206 200   0   0   0  130  1  RADAR DERIVED VIL
+112/199/X/6.0/wrf.GU04/0/0
   250   1   0   0   0 129   2   HAINES INDEX
 112/199/X/1.0/wrf.GU04/0/0
-   7  220   0   0   0 2   1  RICH NO PBL HEIGHT
+   33 105   0  80   0 2 1  U WIND AT FD HEIGHTS
 112/199/X/-3.0/wrf.GU04/0/0
+   34 105   0  80   0 2 1  V WIND AT FD HEIGHTS
+112/199/X/-3.0/wrf.GU04/0/0
+   11 105   0  80   0 2 1  TEMP AT FD HEIGHTS
+112/199/X/-3.0/wrf.GU04/0/0
+    1 105   0  80   0 2 1  PRESS AT FD HEIGHTS
+112/199/X/5.0/wrf.GU04/0/0
+   51 105   0  80   0 2 1  SPEC HUM AT FD HEIGHTS
+112/199/X/3.0/wrf.GU04/0/0
