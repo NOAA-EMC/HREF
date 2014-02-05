@@ -118,14 +118,6 @@ else
    cp $PARMhiresw/hiresw_arw_cntrl.parm wrf_cntrl.parm
 fi
 
-if [ $RUN = guamarw ] ; then
-   cp $PARMhiresw/hiresw_arw_cntrl.parm_guam wrf_cntrl.parm
-fi
-
-if [ $RUN = guamnmmb ] ; then
-   cp $PARMhiresw/hiresw_nmmb_cntrl.parm_guam wrf_cntrl.parm
-fi
-
 export fhr=${post_times}
 
 # while [ $wdate -le $edate ]
