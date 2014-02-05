@@ -329,11 +329,14 @@
  115  format(f7.1)
  116  continue
 ! set PTHRESH for different models
-      if(MODELNAME == 'NMM')then
-       PTHRESH=0.0000005
-      else
+!      if(MODELNAME == 'NMM')then
+!       PTHRESH=0.0000005
+!      else
+
+! retain PTHRESH=0 for both models in HiresW
+
        PTHRESH=0.000000
-      end if  
+!      end if  
 !Chuang: add dynamical allocation
       if(TRIM(IOFORM) .EQ. 'netcdf')THEN
         call ext_ncd_ioinit(SysDepInfo,Status)
