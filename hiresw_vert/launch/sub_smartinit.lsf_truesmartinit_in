@@ -22,6 +22,6 @@ module load ibmpe
 
 echo START `date`
 
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_SMARTINIT.ecf.test_smartinit _DOM_ _CORE_ _CYC_ 
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_SMARTINITB.ecf.test _DOM_ _CORE_ _CYC_ 
 
 echo FINISH `date`
