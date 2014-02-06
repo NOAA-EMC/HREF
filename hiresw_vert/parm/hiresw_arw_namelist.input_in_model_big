@@ -89,7 +89,7 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x = 13
- nproc_y = 45
+ nproc_y = 44
  /
 
  &physics
@@ -157,6 +157,6 @@ do_radar_ref                        = 1,
 
 
  &namelist_quilt
- nio_tasks_per_group = 15,
+ nio_tasks_per_group = 20,
  nio_groups = 1,
  /
