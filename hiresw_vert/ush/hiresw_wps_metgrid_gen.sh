@@ -62,9 +62,7 @@ cd $DATA
 
 mkdir -p ./run_metgrid_${ICOUNT}
 
-if [ $MODEL = nmm ] ; then
-  cp $FIXhiresw/hiresw_wps_static_${DOMNAM}_${MODEL} $DATA/run_metgrid_${ICOUNT}/geo_nmm.d01.int
-elif [ $MODEL = arw ] ; then
+if [ $MODEL = arw ] ; then
   cp $FIXhiresw/hiresw_wps_static_${DOMNAM}_${MODEL} $DATA/run_metgrid_${ICOUNT}/geo_em.d01.int
 elif [ $MODEL = nmmb ] ; then
   cp $FIXhiresw/hiresw_nps_static_${DOMNAM}_${MODEL} $DATA/run_metgrid_${ICOUNT}/geo_nmb.d01.dio
