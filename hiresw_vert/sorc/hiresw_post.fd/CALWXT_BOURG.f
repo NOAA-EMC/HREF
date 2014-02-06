@@ -98,7 +98,11 @@
       enddo
       enddo
 !
-      call random_number(rn,iseed)
+!      call random_number(rn,iseed)
+
+!   set to a rain-favoring value to check bit-reproduceability 
+        rn(1:2*im*jm)=0.51
+
 !
 !$omp  parallel do
 !$omp& private(a,lmhk,tlmhk,iwrml,psfck,lhiwrm,pintk1,pintk2,area1,
