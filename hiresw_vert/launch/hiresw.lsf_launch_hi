@@ -41,7 +41,7 @@ cat sub_wrfbufrsnd.lsf_para_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g 
 
 cat sub_smartinit.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_smartinit.lsf_truesmartinit_in  |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
+cat sub_smartinitb.lsf_in  |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 
 
 bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
@@ -54,7 +54,7 @@ rm sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 DOM=hi
 CORE=nmmb
 CYC=${cycle}
-NPROC_MODEL=32
+NPROC_MODEL=28
 NPROC_POST=2
 NPROC_SPAN_MODEL=16
 NPROC_PRDGEN=2
@@ -92,7 +92,7 @@ cat sub_wrfbufrsnd.lsf_para_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g 
 
 cat sub_smartinit.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_smartinit.lsf_truesmartinit_in  |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
+cat sub_smartinitb.lsf_in  |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 
 # bsub < sub.lsf_${DOM}_${CORE}_${CYC}
 
