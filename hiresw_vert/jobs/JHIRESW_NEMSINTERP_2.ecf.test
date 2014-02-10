@@ -1,10 +1,5 @@
 #!/bin/sh 
 
-#
-
-#BSUB -eo test.err
-#BSUB -x 
-
 export NEST=$1
 export MODEL=$2
 export cyc=$3

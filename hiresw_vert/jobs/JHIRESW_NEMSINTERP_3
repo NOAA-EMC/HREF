@@ -1,22 +1,13 @@
 #!/bin/sh 
 
-export NEST=$1
-export MODEL=$2
-export cyc=$3
-
-export MEMBER=ctl
-export envir=prod
-
 ########################################
 # Preliminary data setup step
 ########################################
 
-#MP $SMSBIN/smsinit $LOADL_STEP_ID
-
 set -xa
-# #### 07/30/2004 ###################
-# SET SHELL PROCESSING VARIABLES
-# ###################################
+
+ecflow_client -init=${ECF_RID}
+
 export PS4='$SECONDS + ' 
 date
 
@@ -24,16 +15,17 @@ date
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-#MP export DATA=/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
-# export DATA=/scratch2/portfolios/NCEPDEV/meso/scrub/Matthew.Pyle/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
-export DATA=/ptmpd1/Matthew.Pyle/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
+export DATA=/tmpnwprd/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
 
-mkdir -p $DATA/run_nemsinterp_1
-cd $DATA/run_nemsinterp_1 
+mkdir -p $DATA/run_nemsinterp_3
+cd $DATA/run_nemsinterp_3 
+
+rm $DATA/run_nemsinterp_3/*
+
 ####################################
 # File To Log Msgs
 ####################################
-#MP export jlogfile=/com/logs/jlogfile
+export jlogfile=/com/logs/jlogfile
 
 ####################################
 # Determine Job Output Name on System
@@ -51,28 +43,18 @@ export NET=hiresw
 export RUN=${NEST}${MODEL}
 
 ##################################################
-# SAVEGES  - Copy Files From TMPDIR to $GESdir
-# SENDSMS  - Flag Events on SMS
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
 # RERUN    - Rerun fcst from beginning (default no)
 ##################################################
 export SENDCOM=YES
 export SENDDBN=NO
-export SENDSMS=NO
 
-export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw_vert
+export HOMEhiresw=/nw${envir}/hiresw_v6.0.0
 export EXEChiresw=$HOMEhiresw/exec
 export FIXhiresw=$HOMEhiresw/fix
 export PARMhiresw=$HOMEhiresw/parm
 export USHhiresw=$HOMEhiresw/ush
-
-export HOMEnam=/nwprod
-export EXECnam=$HOMEnam/exec
-export FIXnam=$HOMEnam/fix
-export PARMnam=$HOMEnam/parm
-export USHnam=$HOMEnam/ush
-
 
 ###################################
 # Set up the UTILITIES
@@ -87,24 +69,20 @@ sh $utilscript/setup.sh
 sh $utilscript/setpdy.sh
 . PDY
 
-#export COM=/com/${NET}/${envir}
-#export COMIN=/com/${NET}/${envir}/hiresw.${PDY}
-export COMOUT=/meso/noscrub/Matthew.Pyle/com/${NET}/${envir}/hiresw.${PDY}
-# export COMNAM=/com/nam/prod/nam.${PDY}
-
-#export GESDIR=/nwges/prod/nam.${PDY}
+export COMOUT=/com/${NET}/${envir}/hiresw.${PDY}
 
 mkdir -p -m 775 $COMOUT
- 
-#export PATH=${PATH}:/usrx/local/netcdf3.5/lib:/usrx/local/netcdf3.5/bin
 
 ########################################################
 # Execute the script.
-${HOMEhiresw}/scripts/exhiresw_nemsinterp_1.sh.ecf
+${HOMEhiresw}/scripts/exhiresw_nemsinterp_3.sh.ecf
 ########################################################
+
+msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
 
 cd /tmpnwprd
 
-date
 
-#MP $SMSBIN/smscomplete
+ecflow_client --complete
+
