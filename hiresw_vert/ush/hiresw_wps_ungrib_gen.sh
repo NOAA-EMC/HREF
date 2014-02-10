@@ -1,5 +1,28 @@
 #! /bin/sh
 
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         hiresw_wps_ungrib_gen.sh
+# Script description:  Runs the WPS/NPS ungrib executable to process
+#                      GRIB data
+#
+#
+# Author:        Matthew Pyle       Org: NP22         Date: 2014-02-10
+#
+# Abstract: Runs the WPS/NPS program ungrib, which brings information
+#           out of GRIB and writes to an intermediate binary file
+#           that gets read by the next executable (metgrid).
+#
+#           For better parallel
+#           performance, this script  is run in simultaneous threads
+#           to process all 48-h of GFS input.  Input variable "stream", 
+#           tells this script which set of forecast GRIB files to process
+#
+# Script history log:
+# 2013-11-01  Matthew Pyle - Original script for parallel
+# 2014-02-10  Matthew Pyle - Added this documentation block 
+
 
 NEST=${1}
 MODEL=${2}
