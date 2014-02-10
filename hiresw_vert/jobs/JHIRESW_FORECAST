@@ -62,17 +62,11 @@ export SENDECF=YES
 ###################################
 export RERUN=NO
 
-export HOMEhiresw=/nw${envir}
+export HOMEhiresw=/nw${envir}/hiresw_v6.0.0
 export EXEChiresw=$HOMEhiresw/exec
 export FIXhiresw=$HOMEhiresw/fix
 export PARMhiresw=$HOMEhiresw/parm
 export USHhiresw=$HOMEhiresw/ush
-
-export HOMEnam=/nwprod
-export EXECnam=$HOMEnam/exec
-export FIXnam=$HOMEnam/fix
-export PARMnam=$HOMEnam/parm
-export USHnam=$HOMEnam/ush
 
 ###################################
 # Set up the UTILITIES
@@ -107,7 +101,7 @@ env
 ###################################################
 # Execute the Script
 #
-/nw${envir}/scripts/exhiresw_fcst.sh.ecf
+/${HOMEhiresw}/scripts/exhiresw_fcst.sh.ecf
 #
 ###################################################
 
