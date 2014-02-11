@@ -130,8 +130,8 @@ if [ $MODEL = "nmmb" ]; then
    cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
  else
    echo "bad NEST selection in nemsinterp_4 $NEST"
-   ./err_exit ""bad NEST selection in nemsinterp_4"
-fi
+   ./err_exit "bad NEST selection in nemsinterp_4"
+ fi
 fi
 
 
