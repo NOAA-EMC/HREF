@@ -34,13 +34,6 @@ cp $FIXhiresw/hiresw_${RUN}_profdat hiresw_profdat
 
 OUTTYP=binary
 
-# if [ $MODEL == "nmmb" ]
-# then
-# model=NMMB
-# else
-# model=NCAR
-# fi
-
 if [ $MODEL == "arw" ]
 then
 model=NCAR
@@ -282,12 +275,10 @@ then
 export err=$?;./err_chk
 fi
 
-############### put into gempak (eliminate when RFC)
+############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS
 
 /nwprod/ush/cwordsh unblk class1.bufr class1.bufr.unb
 /nwprod/ush/cwordsh block class1.bufr.unb class1.bufr.wcoss
-
-############### end put into gempak (eliminate when RFC)
 
 if [ $SENDCOM == "YES" ]
 then
@@ -301,7 +292,7 @@ export DBN_NEST=`echo ${RUN} | tr '[a-z]' '[A-Z]'`
 
 if [ $SENDDBN == "YES" ]
 then
-  $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_BUFR $job $COMOUT/${RUN}.t${cyc}z.class1.bufr.${tmmark}
+  $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_BUFR $job $COMOUT/${RUN}.t${cyc}z.class1.bufr
 fi
 
 echo EXITING $0 with return code $err

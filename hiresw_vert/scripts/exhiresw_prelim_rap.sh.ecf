@@ -2,15 +2,16 @@
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
-# Script name:         exhiresw_prelim.sh.sms
-# Script description:  Runs WRF Preprocessing System (WPS) and REAL code for the WRF-NMM and 
-#                      WRF-ARW model
+# Script name:         exhiresw_prelim_rap.sh.ecf
+# Script description:  Runs WRF Preprocessing System (WPS) and REAL code for the WRF-ARW or
+#                      the full NPS suite for NMMB.
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
 #
-# Abstract: The scripts gets all the input files needed for the WRF-NMM and WRF-ARW hiresw run
-#           and runs the WRF WPS and REAL codes which interpolate the operational Nam initial conditions
-#           to the nested WRF-NMM domain and create lateral boundary conditions
+# Abstract: The scripts gets all the input files needed for the NMMB and WRF-ARW hiresw run
+#           and runs the WPS/REAL codes (WRF-ARW) or NPS codes (NMMB)  which interpolate the 
+#           operational RAP initial conditions to the NMMB or WRF-ARW domain
+#           and create lateral boundary conditions
 #
 # Script history log:
 # 2003-11-01  Matt Pyle - Original script for parallel
@@ -19,6 +20,7 @@
 # 2007-04-09  Matthew Pyle - Modified to run WPS rather than wrfsi
 # 2009-09-24  Shawna Cokley - Streamlines way script obtains date information -
 #                             pulls from $PDY rather than copying a file to the working directory
+# 2013-09-01  Matthew Pyle -  Modified to process a single RAP file as input to the CONUS HIresW domain.
 
 set -x
 
@@ -104,19 +106,11 @@ cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib/Vtable
 while [ $whr -le $last ]
 do
 
-#  if [ $NEST = "pr"  ] 
-#  then 
-#    cp ${COMNAM}/nam.t${cyc}z.awip32${whr}.tm00 $DATA/run_ungrib/.
-#    err1=$?
-#    mod=nam
-#    type=awip32
-#    suf=.tm00
-
-
 if [ $NEST = "conus"  ]
 then
 
 # grab post-digital filter analysis file if available
+
 	if [ -e  ${COMRAP}/rap.t${cyc}z.awip32f${whr}df ]
 	then
 
@@ -361,20 +355,16 @@ if [ $err -ne 0 ]; then
    ./err_chk
 fi
 
-# Copy 3 files needed to run WRF forecast to COM
+# Copy input file needed to make model forecast to COM
 
-# cp wrfbdy_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01
 cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap
-# cp namelist.input_model $COMOUT/${NEST}${MODEL}.t${cyc}z.namelist.input
 
-# if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
 if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap ]; then
    mv $DATA $COMOUT/.
    ./err_exit "WRF initial or boundary condition files missing"
 fi
 
 # Cat REAL log files and send to COM
-# cat $DATA/TASKOUTPUT/0000/rsl.error.0000 $DATA/TASKOUTPUT/0000/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
 cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
 
 else # nmmb case
@@ -383,7 +373,6 @@ export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
 echo NEED TO RUN NEMSINTERP
-# mpirun.lsf $EXEChiresw/hiresw_nemsinterp
 cp $DATA/run_ungrib/namelist.nps .
 
 cp $EXEChiresw/hiresw_nemsinterp .
@@ -509,12 +498,6 @@ export err=$?;err_chk
 
 fi
 
-
-# hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45"
-# for hr in $hrs
-# do
-# cp boco.00${hr} $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.00${hr}
-# done
 
 cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap
 cp configure_file $COMOUT/${NEST}${MODEL}.t${cyc}z.configure_file

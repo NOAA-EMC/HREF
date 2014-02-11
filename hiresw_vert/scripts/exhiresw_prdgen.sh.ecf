@@ -17,6 +17,7 @@
 # 2008-05-06  Chris Magee - Add prdgendone file for gempak step to key on.
 # 2009-09-24  Shawna Cokley - Eliminates copy of date file to working directory
 # 2012-12-13  Matthew Pyle - Small changes for WCOSS machine
+# 2013-09-01  Matthew Pyle - Changes to be run from prdgenmgr (works on the $post_times hour passed in)
 #
 
 set -x

@@ -4,7 +4,7 @@
 ####  UNIX Script Documentation Block
 #                      .                                             .
 # Script name:         exhiresw_post.sh.sms
-# Script description:  Runs WRF-NMM or WRF-EM post-processor
+# Script description:  Runs NMMB or WRF-ARW post-processor
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-07
 #
@@ -26,6 +26,9 @@
 #
 #                            Also, cleaned out some unused items related to prdgen to
 #                            streamline and prevent confusion.
+#
+# 2013-09-01  Pyle          - Modified to be run from postmgr, working on $post_times
+#                             passed into the script
 
 set -x
 export MEMBER=ctl

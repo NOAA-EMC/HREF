@@ -3,7 +3,7 @@
 ####  UNIX Script Documentation Block
 #                      .                                             .
 # Script name:         exhiresw_prepfinal.sh.sms
-# Script description:  Runs WRF REAL code for the WRF-ARW and nemsinterp/coldstart for NMMB
+# Script description:  Runs WRF REAL code for the WRF-ARW 
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
 #
@@ -18,7 +18,7 @@
 # 2007-04-09  Matthew Pyle - Modified to run WPS rather than wrfsi
 # 2009-09-24  Shawna Cokley - Streamlines way script obtains date information -
 #                             pulls from $PDY rather than copying a file to the working directory
-# 2013-10-30  Matthew Pyle - Breaks out last piece from old prelim script 
+# 2013-10-30  Matthew Pyle - Breaks out last piece from old prelim script  to run real, just for WRF-ARW
 
 set -x
 
@@ -99,7 +99,6 @@ echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
 
 #########################################################
 # RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)
-# RUN NSMSINTERP PROGRAM to generate input/boco files (NMMB)
 #########################################################
 
 cd $DATA
@@ -115,15 +114,13 @@ mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 hend=`echo $end | cut -c9-10`
 
-## for most domains now, special namelist.input files are required for the model
+## for all domains now, special namelist.input files are required for the model
 
 if [ $NEST = "pr" ] ; then
 
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr_model namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_pr_${MODEL}_configure_in configure_in
 fi
 
 elif [ $NEST = "hi" ] ; then
@@ -131,8 +128,6 @@ elif [ $NEST = "hi" ] ; then
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi_model namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_hi_${MODEL}_configure_in configure_in
 fi
 
 elif [ $NEST = "guam" ] ; then
@@ -140,8 +135,6 @@ elif [ $NEST = "guam" ] ; then
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam_model namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_guam_${MODEL}_configure_in configure_in
 fi
 
 elif [ $NEST = "ak" ] ; then
@@ -149,11 +142,6 @@ elif [ $NEST = "ak" ] ; then
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak namelist.input_in
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_ak namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_ak_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR AKNEW DOMAIN
-  exit 99
 fi
 
 elif [ $NEST = "conus" ] ; then
@@ -161,27 +149,24 @@ elif [ $NEST = "conus" ] ; then
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_big namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR CONUS DOMAIN
-  exit 99
 fi
 
 
 else
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model namelist.input_in_model
+
+echo "invalid NEST choice $NEST in prepfinal, exiting"
+./err_exit "improper NEST value passed into prepfinal"
 fi
 
 
 ### number of input levels depends on source model data
 
 NUMLEVS=27
-if [ $mod = "rap" ]
-then
-NUMLEVS=40
-fi
+
+# if [ $mod = "rap" ]
+# then
+# NUMLEVS=40
+# fi
 
 # fi
 

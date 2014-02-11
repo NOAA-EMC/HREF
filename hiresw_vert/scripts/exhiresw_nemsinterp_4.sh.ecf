@@ -7,9 +7,9 @@
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
 #
-# Abstract: The scripts gets all the input files needed for the WRF-NMM and WRF-ARW hiresw run
-#           and runs the WRF WPS and REAL codes which interpolate the operational Nam initial conditions
-#           to the nested WRF-NMM domain and create lateral boundary conditions
+# Abstract: The scripts runs the final pieces of the NMMB prelim job, with nemsinterp run to generate
+#           model initial and boundary conditions.  Non-Guam domains have their land states updated
+#           from the NAM using the coldstart program
 #
 # Script history log:
 # 2003-11-01  Matt Pyle - Original script for parallel
@@ -98,8 +98,7 @@ export CYCLE=$PDY$cyc
 echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
 
 #########################################################
-# RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)
-# RUN NSMSINTERP PROGRAM to generate input/boco files (NMMB)
+# RUN NEMSINTERP PROGRAM to generate input/boco files (NMMB)
 #########################################################
 
 cd $DATA
@@ -118,73 +117,27 @@ hend=`echo $end | cut -c9-10`
 ## for large domains, special namelist.input files are required for the model
 ## for small domains, use the same namelist for both real and the model
 
-if [ $NEST = "pr" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_pr_${MODEL}_configure_in configure_in
+if [ $MODEL = "nmmb" ]; then
+ if [ $NEST = "pr" ] ; then
+   cp $PARMhiresw/hiresw_pr_${MODEL}_configure_in configure_in
+ elif [ $NEST = "hi" ] ; then
+   cp $PARMhiresw/hiresw_hi_${MODEL}_configure_in configure_in
+ elif [ $NEST = "guam" ] ; then
+   cp $PARMhiresw/hiresw_guam_${MODEL}_configure_in configure_in
+ elif [ $NEST = "ak" ] ; then
+   cp $PARMhiresw/hiresw_ak_${MODEL}_configure_in configure_in
+ elif [ $NEST = "conus" ] ; then
+   cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
+ else
+   echo "bad NEST selection in nemsinterp_4 $NEST"
+   ./err_exit ""bad NEST selection in nemsinterp_4"
 fi
-
-elif [ $NEST = "hi" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_hi_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "guam" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_guam_${MODEL}_configure_in configure_in
-fi
-
-elif [ $NEST = "ak" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_ak namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_ak_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR AKNEW DOMAIN
-  exit 99
-fi
-
-elif [ $NEST = "conus" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_big namelist.input_in_model
-elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
-else
-  echo BAD MODEL CHOICE FOR CONUS DOMAIN
-  exit 99
-fi
-
-else
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model namelist.input_in_model
 fi
 
 
 ### number of input levels depends on source model data
 
 NUMLEVS=27
-
-# if [ $mod = "rap" ]
-# then
-# NUMLEVS=40
-# fi
-
-# fi
 
 if [ $MODEL = "nmmb" ]
 then
@@ -335,6 +288,15 @@ hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45"
 for hr in $hrs
 do
 cp boco.00${hr} $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.00${hr}
+err1=$?
+
+if [ $err1 -ne 0 ]
+then
+echo "failed copy of boco.00${hr}"
+ls -l
+./err_exit "missing a critical file for the model"
+fi
+
 done
 cp configure_file $COMOUT/${NEST}${MODEL}.t${cyc}z.configure_file
 err=$?

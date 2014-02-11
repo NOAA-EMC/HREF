@@ -4,7 +4,7 @@
 ####  UNIX Script Documentation Block
 #                      .                                             .
 # Script name:         exhiresw_postmgr.sh.ecf
-# Script description:  Runs WRF-NMM or WRF-EM post-processor managing job
+# Script description:  Runs NMMB or WRF-ARW post-processor managing job
 #
 # Author:        Matthew.Pyle       Org: NP22         Date: 2004-07-07
 #
@@ -26,6 +26,10 @@
 #
 #                            Also, cleaned out some unused items related to prdgen to
 #                            streamline and prevent confusion.
+#
+# 2013-09-01  Pyle         - Adopted the "postmgr" approach used by the NAM to spawn
+#                            separate jobs for individual hours.  Needed for large
+#                            domains to be able to keep up with speed of model
 
 set -x
 export MEMBER=ctl
@@ -37,9 +41,6 @@ postmsg "$jlogfile" "$msg"
 ######
 NDATE=/nwprod/util/exec/ndate
 ######
-
-# mkdir -p $DATA/post
-# cd $DATA/post
 
 rm OUTPUT* errfil*
 
@@ -106,13 +107,11 @@ do
 sleep 10
 icnt=$((icnt + 1))
 
-# elim for testing
-
-#      if [ $icnt -ge 1080 ]
-#      then
-#        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
-#        err_exit $msg
-#      fi
+      if [ $icnt -ge 1080 ]
+      then
+        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
+        err_exit $msg
+      fi
 
 done
 
@@ -214,11 +213,11 @@ fhruse=`printf '%02d' $fhr`
 
 # remove for testing
 #
-#      if [ $icnt -ge 1080 ]
-#      then
-#        msg="ABORTING after 3.0 hours of waiting for Hiresw NMMB FCST hours $postjobs."
-#        err_exit $msg
-#      fi
+      if [ $icnt -ge 1080 ]
+      then
+        msg="ABORTING after 3.0 hours of waiting for Hiresw ARW FCST hours $postjobs."
+        err_exit $msg
+      fi
 
    done
 
