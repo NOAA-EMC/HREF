@@ -1,9 +1,21 @@
 #! /bin/ksh
 
-### USH SCRIPT FOR THE HIGHEST RESOLUTION 
-### OUTPUT GRID IN EACH DOMAIN.  THEY ARE
-### NDFD GRIDS AND GET LABELED AS SUCH IN
-### THE /COM OUTPUT
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:           hiresw_prdgen_big_grid.sh
+# Script description:    Runs prdgen for the highest resolution NDFD output from HIRESW
+#
+#
+# Author:        Matthew Pyle       Org: NP22         Date: 2014-02-11
+#
+# Abstract:            Runs prdgen to horizontally interpolate a limited number
+#                      of fields onto the 2.5 or 3 km NDFD grid associated with
+#                      a specific region.
+#
+# Script history log:
+# 2013-11-01  Matthew Pyle - Original script for parallel
+# 2014-02-11  Matthew Pyle - documentation block
 
 set -x
 
