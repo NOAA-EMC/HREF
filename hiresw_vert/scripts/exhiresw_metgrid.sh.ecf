@@ -97,11 +97,6 @@ echo INITIAL count is $count
 
 COUNTLIM=17
 
-# if [ $mod = "rap" ]
-# then
-# COUNTLIM=7
-# fi
-
 while [ $count -lt $COUNTLIM ]
 do
 sleep 20

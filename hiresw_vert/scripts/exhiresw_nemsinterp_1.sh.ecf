@@ -7,9 +7,9 @@
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
 #
-# Abstract: The scripts gets all the input files needed for the WRF-NMM and WRF-ARW hiresw run
-#           and runs the WRF WPS and REAL codes which interpolate the operational Nam initial conditions
-#           to the nested WRF-NMM domain and create lateral boundary conditions
+# Abstract: The scripts runs the final pieces of the NMMB prelim job, with nemsinterp run to generate
+#           model initial and boundary conditions.  Non-Guam domains have their land states updated
+#           from the NAM using the coldstart program
 #
 # Script history log:
 # 2003-11-01  Matt Pyle - Original script for parallel
@@ -98,8 +98,7 @@ export CYCLE=$PDY$cyc
 echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
 
 #########################################################
-# RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)
-# RUN NSMSINTERP PROGRAM to generate input/boco files (NMMB)
+# RUN NEMSINTERP PROGRAM to generate input/boco files (NMMB)
 #########################################################
 
 cd $DATA
@@ -200,6 +199,9 @@ err=$?
 
 echo err from hiresw_nemsinterp $err
 
+
+### avoided for Guam as not in NAM domain
+### avoided for CONUS as is applied to the RAP-generated initial conditons from a separate job
 
 if [ $NEST != "guam" -a $NEST != "conus" ]
 then

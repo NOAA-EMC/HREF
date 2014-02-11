@@ -3,7 +3,7 @@
 ####  UNIX Script Documentation Block
 #                      .                                             .
 # Script name:         exhiresw_fcst.sh.sms
-# Script description:  Runs WRF-NMM or WRF-EM forecast model
+# Script description:  Runs NMMB or WRF-ARW forecast model
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-07
 #
