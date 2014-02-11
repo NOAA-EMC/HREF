@@ -73,8 +73,6 @@ cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
 cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
 cp $PARMhiresw/hiresw_MPTABLE.TBL MPTABLE.TBL
 cp $PARMhiresw/hiresw_URBPARM.TBL URBPARM.TBL
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2.35_hybrid_50mbtop
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2_trans
 cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
 cp $FIXhiresw/hiresw_tr49t85 tr49t85
@@ -208,10 +206,6 @@ fi
 export pgm=hiresw_${MODEL}_fcst
 . ./prep_step
 
-if [ $MODEL = nmm ] ; then
-export FORT14="co2.35_hybrid_50mbtop"
-fi
-
 ./startmsg
 
 if [ $MODEL = "nmmb" ]
@@ -219,11 +213,13 @@ then
 
 mpirun.lsf $EXEChiresw/hiresw_nmmbfcst
 
-
 else
 
-# mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst_new3.5
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_fcst
+# cp $EXEChiresw/hiresw_${MODEL}_fcst_traps .
+# mpirun.lsf ./hiresw_${MODEL}_fcst_traps
+
+cp $EXEChiresw/hiresw_${MODEL}_fcst .
+mpirun.lsf ./hiresw_${MODEL}_fcst
 
 export err=$?;./err_chk
 

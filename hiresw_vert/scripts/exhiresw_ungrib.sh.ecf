@@ -19,7 +19,7 @@
 # 2007-04-09  Matthew Pyle - Modified to run WPS rather than wrfsi
 # 2009-09-24  Shawna Cokley - Streamlines way script obtains date information -
 #                             pulls from $PDY rather than copying a file to the working directory
-# 2013-09-30  Matthew Pyle - Broken out from prelim job (prelim job now in three distinct pieces)
+# 2013-09-30  Matthew Pyle - Broken out from prelim job (non-RAP prelim job now in three distinct pieces)
 
 set -x
 
@@ -118,17 +118,6 @@ mkdir -p $DATA/run_ungrib_4
 while [ $whr -le $last ]
 do
 
-# elif [ $NEST = "conus" -a $MODEL = "arw" ]
-# then
-
-#  cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
-#  cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
-#  err1=$?
-#  mod=rap
-# type=awip32f	
-# suf=""
-
-
 while [ ! -e ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} ]
 do
 sleep 10
@@ -195,10 +184,6 @@ else
 
 fi
 
-
-
-
-
 if [ $err1 -ne 0 ] 
 then
   ./err_exit "$whr input GRIB file from $GRIBSRC not found.  FATAL ERROR"
@@ -213,7 +198,8 @@ fi
 
 done
 
-# cd $DATA/run_ungrib
+
+### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
 if [ $GRIBSRC != "RAP" ]
 then
