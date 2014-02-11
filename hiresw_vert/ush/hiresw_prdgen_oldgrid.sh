@@ -1,5 +1,22 @@
 #! /bin/ksh
 
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:            hiresw_prdgen_oldgrid.sh
+# Script description:     Runs prdgen for the legacy (old) grid distributed to AWIPS
+#
+#
+# Author:        Matthew Pyle       Org: NP22         Date: 2014-02-11
+#
+# Abstract:      Runs prdgen for a specific hour, domain, and model, horizontally interpolating
+#                native GRIB output onto the legacy 5 km grids
+#
+# Script history log:
+# 2013-08-01  Matthew Pyle - Original script for parallel
+# 2014-02-11  Matthew Pyle - Added brief docblock
+
+
 set -x
 
 utilexec=/nwprod/util/exec

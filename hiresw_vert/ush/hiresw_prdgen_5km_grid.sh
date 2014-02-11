@@ -1,4 +1,21 @@
 #!/bin/ksh
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:          hiresw_prdgen_5km_grid.sh
+# Script description:   Interpolates CONUS domain output to grid 227
+#
+#
+# Author:        Matthew Pyle       Org: NP22         Date: 2014-02-11
+#
+# Abstract:             Only run for the CONUS domain, it provides full CONUS
+#                       output of a large set of fields at 5 km.
+#
+# Script history log:
+# 2013-11-01  Matthew Pyle - Original script for parallel
+# 2014-02-11  Matthew Pyle - documentation block and cleanup
+
+
 
 set -x
 
@@ -31,46 +48,20 @@ fi
 
 DOMOUT=${DOMIN_SMALL}${modelout}
 
-if [ $DOMIN = "eastnmm" ]
-then
-  filenamthree="wrf.EAST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "conusnmmb" ]
+if [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS05"
   DOMIN_bucket="general"
   IM=1473
   JM=1025
-elif [ $DOMIN = "westnmm" ]
-then
-  filenamthree="wrf.WEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "aknmm" ]
-then
-  filenamthree="wrf.AK04"
-  DOMIN_bucket="ak4km"
 fi
 
-if [ $DOMIN = "eastarw" ]
-then
-  filenamthree="wrf.EMEST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "conusarw" ]
+if [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS05"
   DOMIN_bucket="general"
-#  IM=1166
-#  JM=708
   IM=1473
   JM=1025
-elif [ $DOMIN = "westarw" ]
-then
-  filenamthree="wrf.EMWST04"
-  DOMIN_bucket="full5km"
-elif [ $DOMIN = "akarw" ]
-then
-  filenamthree="wrf.EMAK04"
-  DOMIN_bucket="ak4km"
 fi
 
 #echo $model > lower
