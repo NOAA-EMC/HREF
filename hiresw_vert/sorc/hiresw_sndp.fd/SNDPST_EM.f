@@ -130,9 +130,10 @@ C
 cwas  REAL(8) PRODAT(NSTAT,NPNT,NWORD),RISTAT 
       REAL(8) FRODAT(NWORD),WORKK(NWORD)
       DIMENSION P(LM),T(LM),U(LM),V(LM),Q(LM),PINT(LM+1),ZINT(LM+1)
+      DIMENSION PFL(LM),TFL(LM),QFL(LM)
       REAL CWTR(LM),IMXR(LM)
       INTEGER IDATE(3),NP1(8),LLMH(NSTAT),NLVL(2)
-      INTEGER NSTAT_TRUE
+      INTEGER NSTAT_TRUE,NALG
       EQUIVALENCE (CISTAT,RISTAT)
 C--------------------------------------------------------------------     
 C
@@ -255,6 +256,7 @@ c      end if
 
 
         DO 25 L=1,LMH
+! wrong?
 C   REVERSE ORDER SO THAT P(1) IS THE TOP AND P(LMH) IS THE BOTTOM
          LV=LMH-L+1
          P(LV)=FPACK(L+9)
@@ -314,31 +316,60 @@ C
          PPT  =FPACK(13*LMH+16)    !total rain
 C     COMPUTE PINT,ZINT
 C
+        
+C       Flip P, T, and Q
+        DO L=1,LMH
+        TFL(L)=T(LMH-L+1)
+        QFL(L)=Q(LMH-L+1)
+        PFL(L)=P(LMH-L+1)
+        ENDDO
+
         PINT(1)=PTOP
         DO L=1,LMH
-          DP1=P(L)-PINT(L)
-          PINT(L+1)=P(L)+DP1
+          DP1=PFL(L)-PINT(L)
+          PINT(L+1)=PFL(L)+DP1
         ENDDO
         ZINT(LMH+1)=FPACK(3)
         DO L=LMH,1,-1
-         TV2=T(L)*(1.0+0.608*Q(L))
+         TV2=TFL(L)*(1.0+0.608*QFL(L))
          ZZ=ROG*TV2*ALOG(PINT(L+1)/PINT(L))
          ZINT(L)=ZINT(L+1)+ZZ
         ENDDO
 C
 C     CALL PRECIP TYPE SUBROUTINE.
 C
-      CALL CALWXT(T,Q,P,PINT,LMH,LM,PPT,IWX)
+C!        if (PPT .gt. 0) then
+C!        write(0,*) 'T,Q,P,PINT,LMH,LM,PPT: ', 
+C!     &  T(LMH/2),Q(LMH/2),P(LMH/2),PINT(LMH/2),
+C!     &  LMH,LM,PPT 
+C!        endif
+
+      CALL CALWXT(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX)
+
+      CALL CALWXT_RAMER(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX2)
+      CALL CALWXT_BOURG(TFL,QFL,PINT,LMH,LM,PPT,ZINT,IWX3)
+      CALL CALWXT_REVISED(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX4)
+C!      CALL CALWXT_EXPLICIT(LMH,TSKIN,PPT,SR,RIME,IWX5)
+       IWX5=0
+!       NALG=4
+      CALL CALWXT_DOMINANT(PPT,IWX1,IWX2,IWX3,IWX4,IWX5,
+     *                     CSNO,CICE,CFZR,CRAI)
+
 C     
 C     DECOMPOSE IWX
 C
         CSNO=MOD(IWX,2)
-C
+
         CICE=MOD(IWX,4)/2
-C
+
         CFZR=MOD(IWX,8)/4
-C
+
         CRAI=IWX/8
+
+        if (PPT .gt. 0) then
+        write(0,*) 'CSNO, CICE, CFZR, CRAI: ', CSNO, CICE, CFZR, CRAI
+        endif
+
 C
 C
 C   COMPUTE HELICITY AND STORM MOTION
