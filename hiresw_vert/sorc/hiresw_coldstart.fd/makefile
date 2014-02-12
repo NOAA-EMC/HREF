@@ -48,4 +48,7 @@ write_data.o: interp_data.o program_setup.o write_data.f
 	${FCOMP} ${FFLAGS} -c write_data.f
 
 clean:
-	rm -f *.o *.mod surface_chgres.i 
+	rm -f *.o *.mod surface_chgres.i
+
+clobber:
+	rm -f *.o *.mod surface_chgres.i ${EXE}

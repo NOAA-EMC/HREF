@@ -10,7 +10,7 @@ LIBS = -L/usr/local/lib   \
 NCEP_LIB_DIR = 
 
 FFLAGS = -O -fp-model strict -list
-LDFLAGS =-FR -assume byterecl -check all -debug all -warn nounused 
+LDFLAGS =-FR -assume byterecl
 
 CMD =	../../exec/hiresw_smartprecip    
 PROFLIB =	-lprof
