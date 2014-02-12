@@ -1,0 +1,48 @@
+1) Start with hiresw_wrfarwfcst.fd:  
+
+Run the "compile_arw.sc" script in the main 
+directory.  This WRF software build is used by
+some other pieces, so should be done first.
+It also is the most time consuming compilation, but
+will build four executables and place them into the TARGDIR
+of ../../exec/
+
+
+2) hiresw_bucket.fd: Run the "compile" script to build the 
+hiresw_pcpbucket_general executable that is placed in ../../exec/
+
+3) hiresw_wrfbufr.fd: Run "make" to build hiresw_wrfbufr in ../../exec/
+
+4) hiresw_post.fd: Run "make" to build hiresw_post in ../../exec/
+
+5) hiresw_nmmbfcst.fd: Go to hiresw_nmmbfcst.fd/src/, and run the 
+build.scr script.  The makefile run by this script should build
+../../../exec/hiresw_nmmbfcst.
+
+6) hiresw_nps.fd: Use the "build.scr" script in the hiresw_nps.fd/NPS/ directory.  
+It will copy and properly rename the executables to a defined ${TARGDIR}
+directory that should correspond to the exec directory within this 
+vertical structure directory tree.  The hiresw_nps_ungrib and hiresw_nps_metgrid 
+executables are built serial, while hiresw_nemsinterp is build as a parallel
+executable.
+
+7) hiresw_prdgen.fd: Run "make" to build hiresw_prdgen in the same 
+../../exec/ directory
+
+8) hiresw_sndp.fd: Run "make_all" to build  hiresw_sndp_arw and hiresw_sndp_nmmb 
+in the ../../exec/ directory
+
+9) hiresw_coldstart.fd: Run "make" to build hiresw_coldstart in the ../../exec/
+directory
+
+10) hiresw_smartinit.fd: Run "make" to build hiresw_smartinit in the ../../exec/
+directory
+
+11) hiresw_smartprecip.fd: Run "make" to build hiresw_smartprecip in the
+../../exec/ directory
+
+12) hiresw_wps.fd: Running the "build.scr" script should create the hiresw_ungrib and
+hiresw_metgrid executables in ../../exec/  The configure.wps_serial defines where 
+the need WRF model items are located.  It is specified as ../hiresw_wrfarwfcst.fd/, 
+which should work properly in the provided directory tree.
+
