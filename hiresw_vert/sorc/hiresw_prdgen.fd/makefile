@@ -51,7 +51,7 @@ $(CMD).prof:	$(OBJS)
 	$(FC) $(LDFLAGS) -o $(@) $(OBJS) $(PROFLIB) $(LIBS)
 
 clean:
-	-rm -f $(OBJS) $(CMD)
+	-rm -f $(OBJS)
 
 clobber:	clean
 	-rm -f $(CMD) $(CMD).prof
