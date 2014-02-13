@@ -313,6 +313,7 @@ C
 
 C  GET PPT FOR CALWXT
 C
+        write(0,*) 'pull PPT from FPACK(): ', 13*LMH+16
          PPT  =FPACK(13*LMH+16)    !total rain
 C     COMPUTE PINT,ZINT
 C
@@ -350,25 +351,21 @@ C!        endif
       CALL CALWXT_BOURG(TFL,QFL,PINT,LMH,LM,PPT,ZINT,IWX3)
       CALL CALWXT_REVISED(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX4)
 C!      CALL CALWXT_EXPLICIT(LMH,TSKIN,PPT,SR,RIME,IWX5)
-       IWX5=0
-!       NALG=4
+      IWX5=0
       CALL CALWXT_DOMINANT(PPT,IWX1,IWX2,IWX3,IWX4,IWX5,
      *                     CSNO,CICE,CFZR,CRAI)
 
 C     
 C     DECOMPOSE IWX
 C
-        CSNO=MOD(IWX,2)
-
-        CICE=MOD(IWX,4)/2
-
-        CFZR=MOD(IWX,8)/4
-
-        CRAI=IWX/8
-
-        if (PPT .gt. 0) then
-        write(0,*) 'CSNO, CICE, CFZR, CRAI: ', CSNO, CICE, CFZR, CRAI
-        endif
+C        CSNO=MOD(IWX,2)
+C        CICE=MOD(IWX,4)/2
+C        CFZR=MOD(IWX,8)/4
+C        CRAI=IWX/8
+C
+C        if (PPT .gt. 0) then
+C        write(0,*) 'CSNO, CICE, CFZR, CRAI: ', CSNO, CICE, CFZR, CRAI
+C        endif
 
 C
 C
