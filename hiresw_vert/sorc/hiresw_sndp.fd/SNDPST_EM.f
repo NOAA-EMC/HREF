@@ -256,7 +256,6 @@ c      end if
 
 
         DO 25 L=1,LMH
-! wrong?
 C   REVERSE ORDER SO THAT P(1) IS THE TOP AND P(LMH) IS THE BOTTOM
          LV=LMH-L+1
          P(LV)=FPACK(L+9)
@@ -313,7 +312,6 @@ C
 
 C  GET PPT FOR CALWXT
 C
-        write(0,*) 'pull PPT from FPACK(): ', 13*LMH+16
          PPT  =FPACK(13*LMH+16)    !total rain
 C     COMPUTE PINT,ZINT
 C
@@ -339,33 +337,19 @@ C       Flip P, T, and Q
 C
 C     CALL PRECIP TYPE SUBROUTINE.
 C
-C!        if (PPT .gt. 0) then
-C!        write(0,*) 'T,Q,P,PINT,LMH,LM,PPT: ', 
-C!     &  T(LMH/2),Q(LMH/2),P(LMH/2),PINT(LMH/2),
-C!     &  LMH,LM,PPT 
-C!        endif
 
       CALL CALWXT(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX)
 
       CALL CALWXT_RAMER(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX2)
       CALL CALWXT_BOURG(TFL,QFL,PINT,LMH,LM,PPT,ZINT,IWX3)
       CALL CALWXT_REVISED(TFL,QFL,PFL,PINT,LMH,LM,PPT,IWX4)
+
+! not possible for ARWs microphysics
 C!      CALL CALWXT_EXPLICIT(LMH,TSKIN,PPT,SR,RIME,IWX5)
       IWX5=0
+
       CALL CALWXT_DOMINANT(PPT,IWX1,IWX2,IWX3,IWX4,IWX5,
      *                     CSNO,CICE,CFZR,CRAI)
-
-C     
-C     DECOMPOSE IWX
-C
-C        CSNO=MOD(IWX,2)
-C        CICE=MOD(IWX,4)/2
-C        CFZR=MOD(IWX,8)/4
-C        CRAI=IWX/8
-C
-C        if (PPT .gt. 0) then
-C        write(0,*) 'CSNO, CICE, CFZR, CRAI: ', CSNO, CICE, CFZR, CRAI
-C        endif
 
 C
 C
