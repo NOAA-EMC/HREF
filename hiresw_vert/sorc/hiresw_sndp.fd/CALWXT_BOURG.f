@@ -65,8 +65,10 @@ C     INSTANTANEOUS WEATHER TYPE ON RETURN.
       REAL T(LM),Q(LM),PINT(LM+1),ZINT(LM)
       INTEGER PTYPE 
 C      PARAMETER(PTHRES=0.02,G=9.80665)
-      PARAMETER(PTHRES=0.01,G=9.80665)
+      PARAMETER(PTHRES=0.02,G=9.80665)
 C
+      r1=0.51  ! for bit reproduceability elim random
+
       PTYPE=0
       IF (PPT.LE.PTHRES) RETURN
 
@@ -157,7 +159,7 @@ C             PICKING A RANDOM NUMBER, IF <=0.5 SNOW
               t2=rtc() 
               ta=t2-t1
               call srand(ta)
-              r1 = rand()
+!              r1 = rand()
               IF (r1.le.0.5) THEN
 C                 SNOW = 1
                   PTYPE = 1
@@ -193,7 +195,7 @@ C                 PICKING A RANDOM NUMBER, IF <=0.5 IP
                   t2=rtc()
                   ta=t2-t1
                   call srand(ta)
-                  r1 = rand()
+!                  r1 = rand()
                   IF (r1.le.0.5) THEN
 C                     ICE PELLETS = 2
                       PTYPE = 2
@@ -222,7 +224,7 @@ C             PICKING A RANDOM NUMBER, IF <=0.5 IP
               t2=rtc()
               ta=t2-t1
               call srand(ta)
-              r1 = rand()
+!              r1 = rand()
               IF (r1.le.0.5) THEN
 C                 STILL NEED TO CHECK POSITIVE ENERGY
 C                 JUST ABOVE THE SURFACE TO MELT IP VS. RAIN

@@ -26,8 +26,7 @@ C      D608,ROG,H1,D00
 
 CGSM  PTHRES changed from 0.0 to 0.02  2/18/97
 
-C       PARAMETER(PTHRES=0.02)
-       PARAMETER(PTHRES=0.01)
+       PARAMETER(PTHRES=0.02)
 C
 C    INPUT:
 C      T,Q,P,PINT,LMH
