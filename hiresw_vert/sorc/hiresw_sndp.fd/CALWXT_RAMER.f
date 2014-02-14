@@ -22,8 +22,7 @@ C                                               6=IP     JC  9/16/99
       PARAMETER (G=9.80665,CP=1004.686,RCP=0.2857141,LECP=1572.5)
       PARAMETER (twice=266.55,rhprcp=0.80,deltag=1.02,prcpmin=0.3,
      *             emelt=0.045,rlim=0.04,slim=0.85)
-C      PARAMETER (twmelt=273.15,tz=273.15,efac=1.0,PTHRES=0.02)
-      PARAMETER (twmelt=273.15,tz=273.15,efac=1.0,PTHRES=0.01)
+      PARAMETER (twmelt=273.15,tz=273.15,efac=1.0,PTHRES=0.02)
 C
       INTEGER*4 i, k1, lll, k2, toodry, iflag, nq
 C
