@@ -120,7 +120,7 @@ SUBROUTINE solve_em ( grid , config_flags  &
    LOGICAL                        :: tenddec
    
    ! Flag for producing diagnostic fields (e.g., radar reflectivity)
-   LOGICAL                        :: diag_flag
+   LOGICAL                        :: diag_flag, diag_flag_alt
    
 #ifdef WRF_CHEM
    ! Index cross-referencing array for tendency accumulation
@@ -281,9 +281,17 @@ SUBROUTINE solve_em ( grid , config_flags  &
 ! Set diagnostic flag value history output time
 !-----------------------------------------------------------------------------
 !  if ( Is_alarm_tstep(grid_clock, grid_alarms(HISTORY_ALARM)) ) then
+
    diag_flag = .false.
+   diag_flag_alt = .false.
+
    if ( Is_alarm_tstep(grid%domain_clock, grid%alarms(HISTORY_ALARM)) ) then
       diag_flag = .true.
+   elseif (mod(grid%itimestep,5) .eq. 0) then
+      diag_flag_alt = .true.
+   else
+      diag_flag = .false.
+      diag_flag_alt = .false.
    endif
 
    grid%itimestep = grid%itimestep + 1
@@ -3393,6 +3401,7 @@ BENCH_START(micro_driver_tim)
 ! RI_CURR INPUT
       &        , RI_CURR=grid%rimi                                          &
       &        , diagflag=diag_flag, do_radar_ref=config_flags%do_radar_ref &
+      &        , diagflagalt=diag_flag_alt                                  &
                                                                           )
 BENCH_END(micro_driver_tim)
 

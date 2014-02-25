@@ -67,7 +67,7 @@ CONTAINS
                  ,rain, rainncv                                    &
                  ,snow, snowncv                                    &
                  ,sr                                               &
-                 ,refl_10cm, diagflag, do_radar_ref                &
+                 ,refl_10cm, diagflag, diagflagalt, do_radar_ref   &
                  ,graupel, graupelncv                              &
                  ,ids,ide, jds,jde, kds,kde                        &
                  ,ims,ime, jms,jme, kms,kme                        &
@@ -132,11 +132,13 @@ CONTAINS
   REAL, DIMENSION( its:ite , kts:kte ) ::   t
   REAL, DIMENSION( its:ite , kts:kte, 2 ) ::   qci
   REAL, DIMENSION( its:ite , kts:kte, 3 ) ::   qrs
-  INTEGER ::               i,j,k
+  REAL :: TCOND
+  INTEGER ::               i,j,k, lim_alt
 
 !+---+-----------------------------------------------------------------+
       REAL, DIMENSION(kts:kte):: qv1d, t1d, p1d, qr1d, qs1d, qg1d, dBZ
       LOGICAL, OPTIONAL, INTENT(IN) :: diagflag
+      LOGICAL, OPTIONAL, INTENT(IN) :: diagflagalt
       INTEGER, OPTIONAL, INTENT(IN) :: do_radar_ref
 !+---+-----------------------------------------------------------------+
 
@@ -182,8 +184,10 @@ CONTAINS
 
 !+---+-----------------------------------------------------------------+
          IF ( PRESENT (diagflag) ) THEN
-         if (diagflag .and. do_radar_ref == 1) then
+
+         if ( ( diagflag .or. diagflagalt ).and. do_radar_ref == 1) then
             DO I=its,ite
+               TCOND=0.
                DO K=kts,kte
                   t1d(k)=th(i,k,j)*pii(i,k,j)
                   p1d(k)=p(i,k,j)
@@ -191,14 +195,49 @@ CONTAINS
                   qr1d(k)=qr(i,k,j)
                   qs1d(k)=qs(i,k,j)
                   qg1d(k)=qg(i,k,j)
+                  TCOND=TCOND+qv1d(k)+qr1d(k)+qs1d(k)+qg1d(k)
                ENDDO
+
+! add something to avoid calling if no hydrometeors in column?
+
+        IF (TCOND .ge. 1.e-12) THEN
+
+          if (diagflag) then
                call refl10cm_wsm6 (qv1d, qr1d, qs1d, qg1d,              &
                        t1d, p1d, dBZ, kts, kte, i, j)
                do k = kts, kte
                   refl_10cm(i,k,j) = MAX(-35., dBZ(k))
                enddo
+          elseif (diagflagalt) then
+
+! consider doing from lim_alt:lim_alt, but need the max code to key 
+! on the same level
+
+               lim_alt=10
+               call refl10cm_wsm6 (qv1d(lim_alt:lim_alt), qr1d(lim_alt:lim_alt), &
+                      qs1d(lim_alt:lim_alt), qg1d(lim_alt:lim_alt),              &
+                       t1d(lim_alt:lim_alt), p1d(lim_alt:lim_alt),               &
+                       dBZ(lim_alt:lim_alt), lim_alt, lim_alt, i, j)
+               do k = kts, kte
+                  refl_10cm(i,k,j) = -35.
+               enddo
+               refl_10cm(i,lim_alt,j)=max(-35., dbz(lim_alt))
+          else
+               do k = kts, kte
+               refl_10cm(i,k,j) = -35.
+               enddo
+          endif
+
+        ELSE
+               do k = kts, kte
+               refl_10cm(i,k,j) = -35.
+               enddo
+        ENDIF
+
             ENDDO
-         endif
+
+         endif   ! if diagflag and do_radar_ref
+
          ENDIF
 !+---+-----------------------------------------------------------------+
 
