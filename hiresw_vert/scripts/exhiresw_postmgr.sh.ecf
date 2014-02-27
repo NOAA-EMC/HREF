@@ -173,7 +173,7 @@ echo "export MP_LABELIO=yes" >> jobsub_nmmb_post.${fhruse}
 echo "export MP_TASK_AFFINITY=core" >> jobsub_nmmb_post.${fhruse}
 echo "export cyc=${cyc} ; export envir=para ; export job=hiresw_nmmb_post_f${fhruse}_${cyc}" >> jobsub_nmmb_post.${fhruse} 
 echo "export tmmark=tm00 ; export post_times=${fhruse} ; export RUN_ENVIR=para" >> jobsub_nmmb_post.${fhruse}
-echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_nmmb_post.${fhruse}
+echo "${HOMEhiresw}/jobs/JHIRESW_POST.sms.test" >> jobsub_nmmb_post.${fhruse}
 
 	echo submitted post for $fhruse
       bsub < jobsub_nmmb_post.${fhruse}
@@ -257,7 +257,7 @@ echo "export MP_STDOUTMODE=unordered" >> jobsub_arw_post.${fhr}
 echo "export MP_LABELIO=yes" >> jobsub_arw_post.${fhr}
 echo "export MP_TASK_AFFINITY=core" >> jobsub_arw_post.${fhr}
 echo "export MODEL=${MODEL}; export cyc=${cyc} ; export NEST=${NEST};  export envir=para ; export job=hiresw_arw_post_f${fhr}_${cyc} ; export tmmark=tm00 ; export post_times=${fhruse} ; export RUN_ENVIR=para" >> jobsub_arw_post.${fhr}
-echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_POST.sms.test" >> jobsub_arw_post.${fhr}
+echo "${HOMEhiresw}/jobs/JHIRESW_POST.sms.test" >> jobsub_arw_post.${fhr}
 
 cat jobsub_arw_post.${fhr}
 
