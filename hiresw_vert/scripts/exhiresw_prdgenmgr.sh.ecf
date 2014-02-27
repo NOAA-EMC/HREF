@@ -121,7 +121,7 @@ echo "export MP_STDOUTMODE=unordered" >> jobsub_prdgen.${fhruse}
 echo "export MP_LABELIO=yes" >> jobsub_prdgen.${fhruse}
 echo "export MP_TASK_AFFINITY=core" >> jobsub_prdgen.${fhruse}
 echo "export MODEL=${MODEL}; export cyc=${cyc} ; export NEST=${NEST};  export envir=para ; export job=hiresw_prdgen_f${fhruse}_${cyc} ; export tmmark=tm00 ; export post_times=${fhruse} ; export RUN_ENVIR=para" >> jobsub_prdgen.${fhruse}
-echo "/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PRDGEN.sms.test" >> jobsub_prdgen.${fhruse}
+echo "${HOMEhiresw}/jobs/JHIRESW_PRDGEN.sms.test" >> jobsub_prdgen.${fhruse}
 
 cat jobsub_prdgen.${fhruse}
 
