@@ -29,6 +29,7 @@
 #
 # 2013-09-01  Pyle          - Modified to be run from postmgr, working on $post_times
 #                             passed into the script
+# 2014-02-27  Pyle          - Modified to loop through forecast hours (reverting to old style)
 
 set -x
 export MEMBER=ctl
@@ -43,10 +44,8 @@ NDATE=/nwprod/util/exec/ndate
 ######
 
 # also done in J-JOB
-echo post_times $post_times
 
-mkdir -p $DATA/post_${post_times}
-cd $DATA/post_${post_times}
+cd $DATA/post
 
 rm OUTPUT* errfil*
 
@@ -121,10 +120,10 @@ else
    cp $PARMhiresw/hiresw_arw_cntrl.parm wrf_cntrl.parm
 fi
 
-export fhr=${post_times}
+export fhr=00
 
-# while [ $wdate -le $edate ]
-# do
+while [ $wdate -le $edate ]
+do
 
 date=`$NDATE $fhr $CYCLE`
 
@@ -152,6 +151,11 @@ elif [ $MODEL = arw ] ; then
 
 export POSTMOD=NCAR
 
+while [ ! -e $filedir/fcstdone${fhr}.${tmmark} ]
+do
+sleep 6
+done
+
 cat > itag <<EOF
 $filedir/wrfout_d01_${timeform}
 $OUTTYP
@@ -163,15 +167,17 @@ else
 
 export POSTMOD=NMM
 
+while [ ! -e $filedir/fcstdone.01.00${fhr}h_00m_00.00s ]
+do
+sleep 6
+done
+
 cat > itag <<EOF
 $filedir/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
 $OUTTYP
 $timeform
 $POSTMOD
 EOF
-
-
-
 
 fi
 #-----------------------------------------------------------------------
@@ -213,7 +219,7 @@ fi
 
 wdate=`$NDATE ${fhr} $CYCLE`
 
-# done
+done
 
 echo EXITING $0
 exit
