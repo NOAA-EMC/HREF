@@ -76,7 +76,7 @@ export COMNAM=/com/nam/prod/nam.${PDY}
 export COMGFS=/com/gfs/prod/gfs.${PDY}
 
 ### needs to become prod once RAP V2 implemented
-export COMRAP=/com/rap/para/rap.${PDY}
+export COMRAP=/com/rap/prod/rap.${PDY}
 
 mkdir -p -m 775 $COMOUT
  
