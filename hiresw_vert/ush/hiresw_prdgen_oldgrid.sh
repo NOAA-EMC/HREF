@@ -32,8 +32,8 @@ MEMBER=$5
 
 reflag=1
 
-mkdir ${DATA}/prdgen_5km_${fhr}
-cd ${DATA}/prdgen_5km_${fhr}/
+mkdir ${DATA}/prdgen_5km
+cd ${DATA}/prdgen_5km/
 sh $utilscript/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
@@ -141,8 +141,14 @@ ls -l $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
 
+while [ ! -e $DATA/postdone${fhr} ]
+do
+sleep 6
+done
+
+
 cat >input${fhr}.prd <<EOF5
-$DATA/post_${fhr}/WRFPRS${fhr}.tm00
+$DATA/post/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*
@@ -162,12 +168,8 @@ $EXEChiresw/hiresw_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
 
 export err=$?;./err_chk
 
-### cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
-
 ###############################################################
 ###############################################################
-###############################################################
-
 
 # compute precip buckets
 
@@ -216,9 +218,9 @@ else
 
 ### do precip buckets if model is ARW
 
-while [ ! -e $DATA/prdgen_5km_${onehrprev}/$filenamthree$onehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_5km/$filenamthree$onehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_5km_${onehrprev}/$filenamthree$onehrprev.tm00
+echo waiting for $DATA/prdgen_5km/$filenamthree$onehrprev.tm00
 sleep 10
 done
 
@@ -240,9 +242,9 @@ done
   if [ $fhr%3 -eq 0 ]
   then
 
-while [ ! -e $DATA/prdgen_5km_${threehrprev}/$filenamthree$threehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_5km/$filenamthree$threehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_5km_${threehrprev}/$filenamthree$threehrprev.tm00
+echo waiting for $DATA/prdgen_5km/$filenamthree$threehrprev.tm00
 sleep 10
 done
 
