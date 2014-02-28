@@ -32,8 +32,8 @@ MEMBER=$5
 
 reflag=1
 
-mkdir ${DATA}/prdgen_5km_${fhr}
-cd ${DATA}/prdgen_5km_${fhr}/
+mkdir ${DATA}/prdgen_5km
+cd ${DATA}/prdgen_5km/
 sh $utilscript/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
@@ -90,8 +90,14 @@ else
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
 fi
 
+
+while [ ! -e $DATA/postdone${fhr} ]
+do
+sleep 6
+done
+
 cat >input${fhr}.prd <<EOF5
-$DATA/post_${fhr}/WRFPRS${fhr}.tm00
+$DATA/post/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*
@@ -116,7 +122,6 @@ $EXEChiresw/hiresw_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
 
 export err=$?;./err_chk
 
-### cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}.tm00
 
 ###############################################################
 ###############################################################
@@ -153,8 +158,12 @@ echo "inside f00 test"
   then
       cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}
       $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmif${fhr}
+        datestr=`date`
+        echo BEFORE CNVGRIB in 5KM at $datestr
       $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2
       $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2.idx
+        datestr=`date`
+        echo AFTER CNVGRIB in 5KM at $datestr
       if [ $SENDDBN_GB2 = YES ]; then
          $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awp5kmf${fhr}.grib2
          $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awp5kmf${fhr}.grib2.idx
@@ -165,9 +174,9 @@ else
 
 ### do precip buckets if model is ARW
 
-while [ ! -e $DATA/prdgen_5km_${onehrprev}/$filenamthree$onehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_5km/$filenamthree$onehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_5km_${onehrprev}/$filenamthree$onehrprev.tm00
+echo waiting for $DATA/prdgen_5km/$filenamthree$onehrprev.tm00
 sleep 10
 done
 
@@ -191,9 +200,9 @@ done
 
 echo "3 hourly, do 3H precip bucket"
 
-while [ ! -e $DATA/prdgen_5km_${threehrprev}/$filenamthree$threehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_5km/$filenamthree$threehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_5km_${threehrprev}/$filenamthree$threehrprev.tm00
+echo waiting for $DATA/prdgen_5km/$filenamthree$threehrprev.tm00
 sleep 10
 done
 
@@ -231,8 +240,13 @@ ls -l ${filenamthree}${fhr}.tm00
   then
     cp $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/.
     $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmif${fhr}
+        datestr=`date`
+        echo BEFORE CNVGRIB in 5KM at $datestr
+
     $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2
     $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2.idx
+        datestr=`date`
+        echo AFTER CNVGRIB in 5KM at $datestr
     if [ $SENDDBN_GB2 = YES ]; then
        $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.awp5kmf${fhr}.grib2
        $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2_WIDX $job $COMOUT/$DOMIN.t${CYC}z.awp5kmf${fhr}.grib2.idx

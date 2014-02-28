@@ -32,8 +32,8 @@ MEMBER=$5
 
 reflag=1
 
-# mkdir ${DATA}/prdgen_full
-cd ${DATA}/prdgen_full_${fhr}/
+mkdir ${DATA}/prdgen_full
+cd ${DATA}/prdgen_full/
 sh $utilscript/setup.sh
 
 #cd $DATA
@@ -147,8 +147,14 @@ ls -l $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl master${fhr}.ctl
 
+while [ ! -e $DATA/postdone${fhr} ]
+do
+sleep 6
+done
+
+
 cat >input${fhr}.prd <<EOF5
-$DATA/post_${fhr}/WRFPRS${fhr}.tm00
+$DATA/post/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*
@@ -193,7 +199,7 @@ $EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
 export err=$?;./err_chk
 
 #### being done multiple times?????  Make so only a single prdgen job does this copy
-cp $DATA/post_${fhr}/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
+cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
 
 ###############################################################
 ###############################################################
@@ -227,8 +233,13 @@ then
   then
       cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
       $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}if${fhr}
+        datestr=`date`
+        echo BEFORE CNVGRIB in NDFD at $datestr
+
       $CNVGRIB -g12 -p40 -nv ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2
       $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2.idx
+        datestr=`date`
+        echo AFTER CNVGRIB in NDFD at $datestr
 
       if [ $SENDDBN_GB2 = YES ]; then
         $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.ndfd${gres}f${fhr}.grib2
@@ -254,9 +265,9 @@ else  # (not f00)
   echo $IM $JM >> input.card
 
 
-while [ ! -e $DATA/prdgen_full_${onehrprev}/$filenamthree$onehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_full/$filenamthree$onehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_full_${onehrprev}/$filenamthree$onehrprev.tm00
+echo waiting for $DATA/prdgen_full/$filenamthree$onehrprev.tm00
 sleep 10
 done
 
@@ -270,9 +281,9 @@ done
 
 #       create a 3 h bucket as well
 
-while [ ! -e $DATA/prdgen_full_${threehrprev}/$filenamthree$threehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_full/$filenamthree$threehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_full_${threehrprev}/$filenamthree$threehrprev.tm00
+echo waiting for $DATA/prdgen_full/$filenamthree$threehrprev.tm00
 sleep 10
 done
 
@@ -305,8 +316,13 @@ done
   then
     cp $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} $COMOUT/.
     $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}if${fhr}
+        datestr=`date`
+        echo BEFORE CNVGRIB in NDFD at $datestr
+
     $CNVGRIB -g12 -p40 -nv $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2
     $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}.grib2.idx
+        datestr=`date`
+        echo AFTER CNVGRIB in NDFD at $datestr
 
     if [ $SENDDBN_GB2 = YES ]; then
       $DBNROOT/bin/dbn_alert MODEL NAM_${DBN_NEST}_AWIP_GB2 $job $COMOUT/$DOMIN.t${CYC}z.ndfd${gres}f${fhr}.grib2
