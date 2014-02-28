@@ -7,6 +7,7 @@
 #  Abstract:  This utility script produces the Hiresw for AWIPS
 #
 #  History: April 8, 2008 - Original script from Boi Vuong at NCO
+#           Feb 27, 2014 - Update for HiresW v6 domain changes by Matthew Pyle
 #
 ##################################################################################
 
@@ -28,42 +29,51 @@ then
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregeast_${RUN}f${fhr}
     $EXEChiresw/tocgrib2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
+
     if [ $SENDCOM = "YES" ] ; then
-       cp  grib2.t${cyc}z.awpregeast_${RUN}f${fhr}  $pcom
+       cp  $FORT51  $pcom
     fi
+
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW NAM_${DBN_NEST}_AWIP_GB2 $job $pcom/grib2.t${cyc}z.awpregeast_${RUN}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW NAM_${DBN_NEST}_AWIP_GB2 $job $pcom/$FORT51
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
     fi
+
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregwestf${fhr}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregwest_${RUN}f${fhr}
     $EXEChiresw/tocgrib2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
+
     if [ $SENDCOM = "YES" ] ; then
-       cp  grib2.t${cyc}z.awpregwest_${RUN}f${fhr}  $pcom
+       cp  $FORT51  $pcom
     fi
+
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW NAM_${DBN_NEST}_AWIP_GB2 $job $pcom/grib2.t${cyc}z.awpregwest_${RUN}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW NAM_${DBN_NEST}_AWIP_GB2 $job $pcom/$FORT51
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
     fi
+
 else
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregf${fhr}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpreg_${RUN}f${fhr}
     $EXEChiresw/tocgrib2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
+
     if [ $SENDCOM = "YES" ] ; then
-       cp  grib2.t${cyc}z.awpreg_${RUN}f${fhr}  $pcom
+       cp  $FORT51  $pcom
     fi
+
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW NAM_${DBN_NEST}_AWIP_GB2 $job $pcom/grib2.t${cyc}z.awpreg_${RUN}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW NAM_${DBN_NEST}_AWIP_GB2 $job $pcom/$FORT51
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
     fi
+
 fi
 
 done

@@ -18,6 +18,7 @@
 # 2009-09-24  Shawna Cokley - Eliminates copy of date file to working directory
 # 2012-12-13  Matthew Pyle - Small changes for WCOSS machine
 # 2013-09-01  Matthew Pyle - Changes to be run from prdgenmgr (works on the $post_times hour passed in)
+# 2014-02-27  Matthew Pyle - Undoes changes to be run from prdgenmgr (now loops over time again)
 #
 
 set -x
@@ -35,9 +36,13 @@ filedir=$DATA
 
 export tmmark=tm00
 
-export fhr=${post_times}
+export fhr=00
+export fhrend=48
 
 icnt=1
+
+while [ $fhr -le $fhrend ]
+do
 
 echo "$USHhiresw/hiresw_prdgen_big_grid.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript_${fhr}
 
@@ -63,3 +68,12 @@ export err=$?; ./err_chk
 
 echo "done executing prdgen" > $DATA/prdgendone${fhr}
 postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"
+
+let fhr=fhr+1
+
+if [ $fhr -lt 10 ]
+then
+fhr=0$fhr
+fi
+
+done
