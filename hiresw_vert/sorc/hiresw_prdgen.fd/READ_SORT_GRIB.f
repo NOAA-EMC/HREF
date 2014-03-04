@@ -182,8 +182,8 @@ C
 
          DO N=1,NFLDS
           IF (IPDS5.EQ.JPDS5(N).AND.IPDS6.EQ.JPDS6(N).AND.
-C     &        IPDS7.EQ.JPDS7(N).AND.IPDS16.EQ.JPDS16(N).AND.
-     &        IPDS7.EQ.JPDS7(N) .AND.
+     &        IPDS7.EQ.JPDS7(N).AND.IPDS16.EQ.JPDS16(N).AND.
+C     &        IPDS7.EQ.JPDS7(N) .AND.
      &        IPDS19.EQ.JPDS19(N)) THEN
            RCBYTE(N) = IRCBYTE
            ISTART(N) = I

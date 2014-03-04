@@ -37,9 +37,9 @@ c       read(5,FMT='(A)') cycname
 
 	do I=2,2
 	
-	file1= dirname(1:n)//'_'//HRS(I-1)//'/'//filename(1:m)
+	file1= dirname(1:n)//'/'//filename(1:m)
      +					//HRS(I-1)//'.tm00'
-	file2= dirname(1:n)//'_'//HRS(I)//'/'//filename(1:m)//HRS(I)//'.tm00'
+	file2= dirname(1:n)//'/'//filename(1:m)//HRS(I)//'.tm00'
 
 	read(HRS(I-1), '(I2)' ) ihrs1
 	read(HRS(I)  , '(I2)' ) ihrs2
@@ -47,11 +47,11 @@ c       read(5,FMT='(A)') cycname
 	interv=ihrs2-ihrs1
 	
 	if (interv .eq. 3) then
-	  testout= dirname(1:n)//'_'//HRS(I)//'/PCP3HR'//HRS(I)//'.tm00'
+	  testout= dirname(1:n)//'/PCP3HR'//HRS(I)//'.tm00'
 	elseif (interv .eq. 1) then
-	  testout= dirname(1:n)//'_'//HRS(I)//'/PCP1HR'//HRS(I)//'.tm00'
+	  testout= dirname(1:n)//'/PCP1HR'//HRS(I)//'.tm00'
 	elseif (interv .eq. 6) then
-	  testout= dirname(1:n)//'_'//HRS(I)//'/PCP6HR'//HRS(I)//'.tm00'
+	  testout= dirname(1:n)//'/PCP6HR'//HRS(I)//'.tm00'
 	endif
 
 	mm=index(file1,' ')-1
