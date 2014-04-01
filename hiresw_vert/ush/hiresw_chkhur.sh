@@ -37,7 +37,8 @@ PDY2=`echo $PDY | cut -c3-`
 
 if [ "$PDY2$cyc" = "$stormdate" ] ; then
  if [ $NEST = "pr" -o $NEST = "hi" ]; then  
-  if [ $nstms -gt 4 ] ; then
+  #if [ $nstms -gt 5 ] ; then 
+  if [ $nstms -gt 6 ] ; then  ### changed to 6 to stop HIRESW preemption for hurricane season 2013 only
     #
     # More than four GFDLs running, cancel the two small domain runs pr and hi but keep the guam.
     #
@@ -45,117 +46,62 @@ if [ "$PDY2$cyc" = "$stormdate" ] ; then
     postmsg "$jlogfile" "THE $cyc UTC ${NEST}${MODEL} HIRESW RUN IS CANCELED."
     echo "$nstms GFDL HURRICANE MODELS RUNNING." > /com/hiresw/${envir}/hiresw_status.${cyc}
     echo "The $cyc UTC ${NEST}${MODEL} HIRESW RUN IS CANCELED." >> /com/hiresw/${envir}/hiresw_status.${cyc}
-   if [ "$SENDSMS" = "YES" -a $MODEL = "arw" ] ; then
-      $SMSBIN/smslabel NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
-      SMSPASS=FREE
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_awips_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_gempak_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_prdgen_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_wrfbufr_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_post_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_forecast_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
+   if [ "$SENDECF" = "YES" -a $MODEL = "arw" ] ; then
+      ecflow_client --label NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
+      ECF_PASS=FREE
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_awips_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_gempak_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_prdgen_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_wrfbufr_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_post_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_forecast_${cyc}
       exit 99
-   elif [ "$SENDSMS" = "YES" -a $MODEL = "nmm" ] ; then
-      $SMSBIN/smslabel NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
-      SMSPASS=FREE
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_awips_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_gempak_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_prdgen_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_ensembleproduct_all_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_hybridensemble_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_wrfbufr_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_post_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_forecast_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
+   elif [ "$SENDECF" = "YES" -a $MODEL = "nmm" ] ; then
+      ecflow_client --label NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
+      ECF_PASS=FREE
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_awips_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_gempak_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_prdgen_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_ensembleproduct_all_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_hybridensemble_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_wrfbufr_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_post_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${NEST}${MODEL}_ctl_forecast_${cyc}
       exit 99
    fi
   fi
 else
-  if [ $nstms -ge 3 -a $NEST != "guam" ] ; then
+  #if [ $nstms -ge 4 -a $NEST != "guam" ] ; then
+  if [ $nstms -ge 6 -a $NEST != "guam" ] ; then ### changed to 6 to stop HIRESW preemption for hurricane season 2013 only
     #
-    # If there are three HURRICANE or more runs cancel the HIRESW for the two large domains, MODEL=ARW and MODEL=NMM
+    # If there are four HURRICANE or more runs cancel the HIRESW for the two large domains, MODEL=ARW and MODEL=NMM
     #    but not small domain "guam".
     #
     postmsg "$jlogfile" "${nstms} GFDL HURRICANE MODELS RUNNING."
     postmsg "$jlogfile" "THE $cyc UTC ${NEST}${MODEL} HIRESW RUN IS CANCELED."
     echo "$nstms GFDL HURRICANE MODELS RUNNING." > /com/hiresw/${envir}/hiresw_status.${cyc}
     echo "THE $cyc UTC ${NEST}${MODEL} HIRESW RUN IS CANCELED." >> /com/hiresw/${envir}/hiresw_status.${cyc}
-    if [ "$SENDSMS" = "YES" -a $MODEL = "arw" ] ; then
-      $SMSBIN/smslabel NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
-      SMSPASS=FREE
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_awips_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_gempak_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_prdgen_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_wrfbufr_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_post_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_forecast_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
+    if [ "$SENDECF" = "YES" -a $MODEL = "arw" ] ; then
+      ecflow_client --label NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
+      ECF_PASS=FREE
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_awips_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_gempak_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_prdgen_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_wrfbufr_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_post_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_forecast_${cyc}
       exit 99
-    elif [ "$SENDSMS" = "YES" -a $MODEL = "nmm" ] ; then
-      $SMSBIN/smslabel NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
-      SMSPASS=FREE
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_awips_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_gempak_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_prdgen_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_ensembleproduct_all_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_hybridensemble_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_wrfbufr_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_post_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
-      SMSNAME=/${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_forecast_${cyc}
-      $SMSBIN/smsinit
-      $SMSBIN/endt
+    elif [ "$SENDECF" = "YES" -a $MODEL = "nmm" ] ; then
+      ecflow_client --label NEST "$cyc UTC ${NEST}${MODEL} IS CANCELED"
+      ECF_PASS=FREE
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_awips_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_gempak_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_prdgen_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_ensembleproduct_all_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_hybridensemble_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_wrfbufr_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_post_${cyc}
+      ecflow_client --force=complete /${envir}${prodcyc}/hiresw${cyc}/${MODEL}_ctl/jhiresw_${MODEL}_ctl_forecast_${cyc}
       exit 99
     fi
   fi
@@ -171,8 +117,8 @@ fi
 echo "$nstms GFDL HURRICANE MODELS RUNNING." > /com/hiresw/${envir}/hiresw_status.${cyc}
 echo "THE $cyc UTC $NEST HI-RES WINDOW RUN WILL PROCEED." >> /com/hiresw/${envir}/hiresw_status.${cyc}
 
-if [ "$SENDSMS" = "YES" ] ; then
-  $SMSBIN/smslabel NEST "$NEST"
+if [ "$SENDECF" = "YES" ] ; then
+  ecflow_client --label NEST "$NEST"
 fi
 
 exit 0
