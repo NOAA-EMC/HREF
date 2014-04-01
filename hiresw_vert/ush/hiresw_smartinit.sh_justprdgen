@@ -112,6 +112,7 @@ echo prdgfl $prdgfl
 #          (eg: 197,196,195,184)
 #--------------------------------------------------------------------------
 grdext=" 0 64 25000 25000"
+grdextmerc=" 0 64 2500 2500"
 
 
    maskpre=hiresw_smartmask${rg}
@@ -119,15 +120,15 @@ grdext=" 0 64 25000 25000"
    ext=grb
    case $RUNTYP in
      guamnmmb|guamarw)          sgrb=999;ogrd=199
-      grid="255 1 193 193 12350 143687 128 16794 148280 20000  $grdext";;
+      grid="255 1 193 193 12350 143687 128 16794 148280 20000  $grdextmerc";;
      hiarw)            sgrb=243;ogrd=196
-      grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdext";;
+      grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
      hinmmb)            sgrb=243;ogrd=196
-      grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdext";;
+      grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
      prarw)            sgrb=212;ogrd=195
-      grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdext";;
+      grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
      prnmmb)            sgrb=212;ogrd=195
-      grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdext";;
+      grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
      akarw)  sgrb=216;ogrd=91
       grid="255 5 1649 1105 40530 181429 8 210000 2976 2976 0 64 0 25000 25000";;
      aknmmb)  sgrb=216;ogrd=91
@@ -255,9 +256,19 @@ echo TOP OF LOOP for $fhr AT $datestr
 
   rm -f *out${fhr}
   mk3p=0;mk6p=0;mk12p=0
+
+if [ $fhr -ne 0 ] 
+then
   let check=fhr%3
   let check6=fhr%6
-  let check12=fhr%12
+#  let check12=fhr%12
+else
+  check=9
+  check6=9
+#  check12=9
+fi
+
+   
   let fhr1=fhr-1
   let fhr2=fhr-2
   let fhr3=fhr-3
@@ -595,22 +606,28 @@ cp DATE ../smartinit/
 fi
 
 cp  meso${rg}.NDFDf* meso${rg}.NDFDif* ../smartinit/
-cp  srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} ../smartinit/
-cp  3precip.${fhr} 3snow.${fhr} ../smartinit/
-cp SREFPCP ../smartinit/SREFPCP.${fhr}
+
+if [ ${fhr} -gt 0 ]
+then
+    cp  srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} ../smartinit/
+    if [ $check -eq 0 -a $MODEL = "arw" ]
+    then
+     cp  3precip.${fhr} 3snow.${fhr} ../smartinit/
+    fi
+fi
+
+## cp SREFPCP ../smartinit/SREFPCP.${fhr}
 
     if [ $check6 -eq 0 ];then 
 cp  6precip.${fhr} 6snow.${fhr} ../smartinit/
     fi
 
-    if [ $check12 -eq 0 ];then 
+    if [ $mk12p -eq 12 ];then 
 cp  12precip.${fhr} 12snow.${fhr} ../smartinit/
     fi
 
 cp WRFPRS* ../smartinit/
 
 cp  smartinitprdgendone${fhr} ../smartinit/
-
-# cp * ../smartinit/
 
 exit

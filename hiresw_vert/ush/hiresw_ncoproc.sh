@@ -9,6 +9,9 @@
 #  fhr  :  Forecasts hour
 #  ogrd :  output NDFD grid number (eg: 197,196,195,198...)
 #  outreg  :  output file region name (eg: conus,ak,pr,hi,conus2p5,ak3
+#
+#  Modified 2014-04-01 by M. Pyle - modifications for HiresW system
+#
 #=======================================================================
 
 # case $cyc in 
@@ -21,57 +24,31 @@ echo BEGIN NCO sminit Post-Processing for REG $RGIN $outreg $ogrd CYC $cyc FHR $
 
 RGUSE=`echo $RGIN | cut -c1-4`
 
+if [ $outreg = "ak" ]
+then
+res="3km"
+else
+res="2p5"
+fi
+
+# COMBINE PRDGEN NDFD FILE AND SMARTINIT FILE into SMART output
+
+cat $COMOUT/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}
+rm $COMOUT/${mdl}.t${cyc}z.ndfd${res}f${fhr}
+
 # CREATE GRIB2 FILE
-$utilexec/cnvgrib -g12 -p40 MESO${RGUSE}${fhr}.tm00 ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 
-# Processing grids for AWIPS
-#  pgm=tocgrib2
-#  export pgm; . prep_step
-#  startmsg
-# export FORTREPORTS=unit_vars=yes
-# export FORT11=nam.t${cyc}z.smart${outreg}${fhr}.tm00.grib2 
-# export FORT31="";
-# export FORT51=grib2.t${cyc}z.smart${outreg}f${fhr}
+$utilexec/cnvgrib -g12 -p40 ${mdl}.t${cyc}z.smart${outreg}f${fhr}  ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 
-# Define grib2 awips parm file 
+if [ $SENDCOM = YES ]
+then
+cp ${mdl}.t${cyc}z.smart${outreg}f${fhr} ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 $COMOUT
+$utilexec/grbindex $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr} $COMOUT/${mdl}.t${cyc}z.smart${outreg}if${fhr}
+$utilexec/wgrib2   $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 -s > $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2.idx
+fi
 
-# if [ $outreg = conus2p5 ];then
-#   awpparm=$UTILparm/grib2_awpnamdngconus${cyctp}f${fhr}.${ogrd}
-# elif [ $outreg = ak3 ];then
-#   awpparm=$UTILparm/grib2_awpnamdngak${cyctp}f${fhr}.${ogrd}
-# else
-#   awpparm=$UTILparm/grib2_awpnamsmart${outreg}${cyctp}f${fhr}.${ogrd}
-# fi
-
-# if [ -s "$awpparm" ];then
-#   $utilexec/tocgrib2 < ${awpparm} 1 >> $pgmout 2>> errfile
-#   echo " error from tocgrib="  $err
-# else 
-#   echo AWP PARM FILE not found: $awpparm
-# fi
-
-
-mv MESO${RGUSE}${fhr}.tm00                      $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}
-mv ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-
-# Move grib2 awips file to pcom
-# if [ $outreg = ak3 ];then
-#   mv grib2.t${cyc}z.smart${outreg}f${fhr} $pcom/grib2.awpnamsmart3.ak${fhr}_awips_f${fhr}_${cyc}
-# else
-#   mv grib2.t${cyc}z.smart${outreg}f${fhr} $pcom/grib2.awpnamsmart.${outreg}${fhr}_awips_f${fhr}_${cyc}
-# fi
-
-# if [ -s "$awpparm" ];then
-#   if [ $SENDDBN = YES ];then #bsm 25 feb 2008 - added code for awips alerts
-#     if [ $outreg = ak3 ];then
-#       $DBNROOT/bin/dbn_alert NTC_LOW SMART${REGCP} $job $pcom/grib2.awpnamsmart3.ak${fhr}_awips_f${fhr}_${cyc}
-#     else
-#       $DBNROOT/bin/dbn_alert NTC_LOW SMART${REGCP} $job $pcom/grib2.awpnamsmart.${outreg}${fhr}_awips_f${fhr}_${cyc}
-#     fi
-#   fi
-# fi
-
-# if [ $SENDDBN_GB2 = YES ]
-#  then
-#   $DBNROOT/bin/dbn_alert MODEL NAM_SMART${REGCP}_GB2 $job $COMOUT/nam.t${cyc}z.smart${outreg}${fhr}.tm00.grib2
-# fi
+if [ $SENDDBN_GB2 = YES ]
+then
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_SMART} $job  $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_SMART_WIDX}  $job $COMOUT/${mdl}.t${cyc}z..smart${outreg}f${fhr}.grib2.idx
+fi

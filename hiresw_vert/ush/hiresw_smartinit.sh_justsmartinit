@@ -227,6 +227,13 @@ do
   mk3p=0;mk6p=0;mk12p=0
   let check=fhr%3
   let check6=fhr%6
+
+  if [ $fhr -eq 0 ]
+  then
+    check=9
+    check6=9
+  fi
+
   let fhr1=fhr-1
   let fhr2=fhr-2
   let fhr3=fhr-3
@@ -306,10 +313,19 @@ echo here with  $fhr
 
      cpgbgrd=$grid
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
+
+
+### add a check?
+
+	if [ $check6 -eq 0 ]
+	then
+
      $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
      $utilexec/grbindex ${freq}precip ${freq}precipi
      $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
      $utilexec/grbindex ${freq}snow ${freq}snowi
+
+	fi
 
 	if [ $MODEL = "arw" -a $check -eq 0 ]
 	then
@@ -330,14 +346,19 @@ echo here with  $fhr
 
 	ls -l meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
-	if [ ${fhr} -ne 0 -a $sgrb -ne 999 ]; then
-  ln -sf "SREFPCP"                  fort.13
+        if [ ${fhr} -ne 00 -a $check -eq 0 -a $sgrb -ne 999 ]; then
+        ln -sf "SREFPCP"                  fort.13
 
-rm SREFPCPi
-$utilexec/grbindex SREFPCP SREFPCPi
+	if [ -e SREFPCPi ] 
+        then
+          rm SREFPCPi
+        fi
 
-  ln -sf "SREFPCPi"                 fort.14
-	fi
+        $utilexec/grbindex SREFPCP SREFPCPi
+        ln -sf "SREFPCPi"                 fort.14
+
+	if [ $check6 -eq 0 ]
+	then
 
 ls -l ${freq}precip ${freq}precipi
 
@@ -348,6 +369,9 @@ mv ${freq}precipi ${freq}precipi_was
 $utilexec/grbindex ${freq}precip ${freq}precipi
 
   ln -sf "${freq}precipi"           fort.16
+        fi
+
+	fi
 
 # At 12-hr times, input 12-hr max/min temps and 3 and 6-hr buckets
 
@@ -405,7 +429,7 @@ $utilexec/grbindex ${freq}precip ${freq}precipi
 
     *)   # Not 00/12 UTC valid times
 
-     if [ $check -eq 0 -a $fhr -ne 0 ];then
+     if [ $check -eq 0 -a $fhr -ne 00 ];then
 
 #      READ PRECIP FROM SPECIAL FILES CREATED BY SMARTPRECIP
 #      ON-CYC: All forecast hours divisible by 3 except for (3,15,27....), 

@@ -23,33 +23,39 @@
 # 2013-11-01  Matthew Pyle - Original script for parallel
 # 2014-02-10  Matthew Pyle - Added this documentation block 
 
-
 NEST=${1}
 MODEL=${2}
 cyc=${3}
 envir=${4}
 stream=${5}
 
-echo DATA $DATA
-
 cd $DATA/run_ungrib_${stream}/
-cp ../ungrib.exe .
+${utilscript}/setup.sh
+
 cp $PARMhiresw/hiresw_Vtable.GFS Vtable
 
 if [ $MODEL != "nmmb" ]
 then
-cp ../namelist.wps.${stream} namelist.wps
+cp ${DATA}/namelist.wps.${stream} namelist.wps
 cp $EXEChiresw/hiresw_ungrib ungrib.exe
+export pgm=ungrib
+startmsg
 ./ungrib.exe >> $pgmout 2>errfile
-cp namelist.wps.${stream} ../run_ungrib/
+export err=$?
+err_chk
+cp ${DATA}/namelist.wps.${stream} ../run_ungrib/
 
 
 else
 
-cp ../namelist.nps.${stream} namelist.nps
+cp ${DATA}/namelist.nps.${stream} namelist.nps
 cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
-./ungrib.exe
-cp namelist.nps ../run_ungrib/namelist.nps.${stream}
+export pgm=ungrib
+startmsg
+./ungrib.exe >> $pgmout 2>errfile
+export err=$?
+err_chk
+cp ${DATA}/namelist.nps.${stream} ../run_ungrib/
 
 fi
 

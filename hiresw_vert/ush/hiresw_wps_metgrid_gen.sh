@@ -36,7 +36,7 @@ MULTINUM_IN=$ICOUNT
 
 ### figure out start and end times for this segment
 
-NDATE=/nwprod/util/exec/ndate
+NDATE=${NDATE:-${utilexec}/ndate}
 
 ystart=`echo $PDY | cut -c1-4`
 mstart=`echo $PDY | cut -c5-6`
@@ -111,7 +111,7 @@ mm=`echo $time | cut -c5-6`
 dd=`echo $time | cut -c7-8`
 hh=`echo $time | cut -c9-10`
 cp $DATA/run_ungrib/FILE:${yy}-${mm}-${dd}_${hh} .
-err=$?
+export err=$?
 
 if [ $err -ne 0 ]
 then
@@ -125,15 +125,20 @@ done
 
 ./metgrid.exe
 
-export err=$?; $DATA/err_chk
+export err=$?
+$DATA/err_chk
 
 echo "DONE" > wpsdone.${ICOUNT}
 
-mv met*.nc met*.bin met*.dio  $DATA/.
+if [ $MODEL = arw ] ; then
+mv met*.bin  $DATA/.
+elif [ $MODEL = nmmb ] ; then
+mv met*.dio  $DATA/.
+fi
+
 mv wpsdone.${ICOUNT} ../
 
 cp metgrid.log $DATA/metgrid.log.0000_${ICOUNT}
-#cp metgrid.log.0000 $DATA/metgrid.log.0000_${ICOUNT}
 
 echo EXITING $0
 exit
