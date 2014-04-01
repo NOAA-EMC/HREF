@@ -1001,7 +1001,9 @@
         Cloud_def_p = 0.0000001
         do j = jsta_2l, jend_2u
           do i = 1, im
-            radius = 30000.
+!            radius = 30000.
+! move to more appropriate value for HiresW
+            radius = 10000.
             numr = nint(radius/dxval)
             do k = 1,lm
              LL=LM-k+1
