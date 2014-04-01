@@ -28,8 +28,8 @@ export MEMBER=ctl
 export INCR=01
 ######
 
-NDATE=/nwprod/util/exec/ndate
-NHOUR=/nwprod/util/exec/nhour
+NDATE=${NDATE:-${utilexec}/ndate}
+NHOUR=${NHOUR:-${utilexec}/nhour}
 
 cd $DATA
 filedir=$DATA

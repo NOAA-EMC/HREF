@@ -40,7 +40,7 @@ postmsg "$jlogfile" "$msg"
 
 ######
 export INCR=01
-NDATE=/nwprod/util/exec/ndate
+NDATE=${NDATE:-${utilexec}/ndate}
 ######
 
 # also done in J-JOB

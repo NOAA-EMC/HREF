@@ -7,9 +7,9 @@
 #
 # Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
 #
-# Abstract: The scripts gets all the input files needed for the WRF-NMM and WRF-ARW hiresw run
-#           and runs the WRF WPS and REAL codes which interpolate the operational Nam initial conditions
-#           to the nested WRF-NMM domain and create lateral boundary conditions
+# Abstract: The script runs the final piece of the WRF-ARW hiresw preprocessing.
+#           It runs the WRF "REAL" code which interpolate in the vertical and
+#           generates WRF model initial and lateral boundary conditions
 #
 # Script history log:
 # 2003-11-01  Matt Pyle - Original script for parallel
@@ -40,11 +40,7 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-echo start $start
-
-# NDATE=/u/Matthew.Pyle/ndate
-NDATE=/nwprod/util/exec/ndate
-
+NDATE=${NDATE:-${utilexec}/ndate}
 
 int1=`$NDATE +12 $start`
 yyint1=`echo $int1 | cut -c1-4`
@@ -70,11 +66,7 @@ mmint4=`echo $int4 | cut -c5-6`
 ddint4=`echo $int4 | cut -c7-8`
 hhint4=`echo $int4 | cut -c9-10`
 
-echo $int1 $int2 $int3 $int4
-
 end=`$NDATE $LENGTH $start`
-
-echo end $end
 
 yend=`echo $end | cut -c1-4`
 mend=`echo $end | cut -c5-6`
@@ -91,8 +83,6 @@ filt_ye=$ystart
 filt_me=$mstart
 filt_de=$dstart
 filt_he=$cyc
-
-echo filt_start $filt_start
 
 export CYCLE=$PDY$cyc
 echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
@@ -163,13 +153,6 @@ fi
 
 NUMLEVS=27
 
-# if [ $mod = "rap" ]
-# then
-# NUMLEVS=40
-# fi
-
-# fi
-
 cat namelist.input_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
  | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
@@ -194,8 +177,6 @@ cp $PARMhiresw/hiresw_ETAMPNEW_DATA micro_lookup.dat
 cp $PARMhiresw/hiresw_VEGPARM.TBL VEGPARM.TBL
 cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
 cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2.35_hybrid_50mbtop
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2_trans
 
 cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
@@ -212,15 +193,10 @@ unset MP_CMDFILE
 
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
-export err=$?
+export err=$?; err_chk
 
-if [ $err -ne 0 ]; then
-   echo EXIT FROM REAL with err $err
-   mv $DATA $COMOUT/.
-   ./err_chk
-fi
-
-# Copy 3 files needed to run WRF forecast to COM (only two in case of CONUS domain)
+# Copy 3 files needed to run WRF forecast to COM (two in case of CONUS domain)
+# CONUS domain input file produced by separate JHIRESW_PREPRAP job
 
 cp wrfbdy_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01
 cp namelist.input_model $COMOUT/${NEST}${MODEL}.t${cyc}z.namelist.input
@@ -230,7 +206,6 @@ then
  cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01
 
  if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
-   mv $DATA $COMOUT/.
    ./err_exit "WRF initial or boundary condition files missing"
  fi
 fi

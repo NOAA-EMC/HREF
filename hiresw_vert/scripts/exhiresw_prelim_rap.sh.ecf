@@ -42,14 +42,9 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-echo start $start
-
-# NDATE=/u/Matthew.Pyle/ndate
-NDATE=/nwprod/util/exec/ndate
+NDATE=${NDATE:-${utilexec}/ndate}
 
 end=`$NDATE $LENGTH $start`
-
-echo end $end
 
 yend=`echo $end | cut -c1-4`
 mend=`echo $end | cut -c5-6`
@@ -68,8 +63,6 @@ filt_me=$mstart
 filt_de=$dstart
 filt_he=$cyc
 
-echo filt_start $filt_start
-
 whr=00
 count=0
 last=$LENGTH
@@ -81,11 +74,15 @@ incr=3
 # If number is 1, cancel job if this is a WRF-EM run.
 #
 #if [ "$NEST" != "pr" -a "$NEST" != "hi" -a "$NEST" != "guam" ] ; then
-  $USHhiresw/hiresw_chkhur.sh $MODEL
-  err=$?
-  if [ $err -eq 99 ] ; then
-    exit
-  fi
+
+###############
+# Turn off hurricane check; No pre-emption as of 2014 implementation
+###############
+  #$USHhiresw/hiresw_chkhur.sh $MODEL
+  #err=$?
+  #if [ $err -eq 99 ] ; then
+  #  exit
+  #fi
   echo "export NEST=$NEST" > $COMOUT/${RUN}.t${cyc}z.envir.sh
   echo "export MODEL=$MODEL" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
 #fi
@@ -120,10 +117,15 @@ then
  
         else
 
+# cp /meso/noscrub/Matthew.Pyle/rap.t12z.awip32f00df $DATA/run_ungrib/.
+# suf="df"
+# NUMLEVS=41
+
 # old retro cases with v1
- cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
- NUMLEVS=40
- suf=""
+
+cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
+NUMLEVS=40
+suf=""
         fi
 
  cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
@@ -187,10 +189,14 @@ if [ $MODEL != "nmmb" ]
 then
 cp $EXEChiresw/hiresw_ungrib ungrib.exe
 
+export pgm=ungrib
 ./ungrib.exe >> $pgmout 2>errfile
+export err=$?; $DATA/err_chk
 else
 cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
+export pgm=ungrib
 ./ungrib.exe
+export err=$?; $DATA/err_chk
 fi
 
 
@@ -203,13 +209,19 @@ cd $DATA
 
 $USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL 
 
-#### this block seems redundant with the checks on wpsdone above
+if [ $MODEL = "arw" ]
+then
+count=`ls $DATA/met*.bin  | wc -l`
+elif [ $MODEL = "nmmb" ]
+then
+count=`ls $DATA/met*.dio | wc -l`
+else
+echo BAD MODEL CHOICE of $MODEL
+exit 99
+fi
 
-count=`ls $DATA/met*.int $DATA/met*.dio | wc -l`
 
 echo INITIAL count is $count
-
-COUNTLIM=17
 
 if [ $mod = "rap" ]
 then
@@ -219,7 +231,15 @@ fi
 while [ $count -lt $COUNTLIM ]
 do
 sleep 20
-count=`ls $DATA/met*.bin $DATA/met*.nc $DATA/met*.dio | wc -l`
+
+if [ $MODEL = "arw" ]
+then
+count=`ls $DATA/met*.bin  | wc -l`
+elif [ $MODEL = "nmmb" ]
+then
+count=`ls $DATA/met*.dio | wc -l`
+fi
+
 echo $count now
 done
 
@@ -269,7 +289,6 @@ fi
 
 if [ $err -ne 0 ]; then
    echo EXIT FROM RAP prelim job with err $err
-   mv $DATA $COMOUT/.
    ./err_chk
 fi
 
@@ -322,8 +341,6 @@ cp $PARMhiresw/hiresw_ETAMPNEW_DATA micro_lookup.dat
 cp $PARMhiresw/hiresw_VEGPARM.TBL VEGPARM.TBL
 cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
 cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2.35_hybrid_50mbtop
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2_trans
 
 cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
@@ -336,10 +353,6 @@ then
 export pgm=hiresw_${MODEL}_real
 . ./prep_step
 
-if [ $MODEL = nmm ] ; then
-export FORT14="co2.35_hybrid_50mbtop"
-fi
-
 ./startmsg
 
 export MP_PGMMODEL=spmd
@@ -348,19 +361,13 @@ unset MP_CMDFILE
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
 export err=$?
-
-if [ $err -ne 0 ]; then
-   echo EXIT FROM REAL with err $err
-   mv $DATA $COMOUT/.
-   ./err_chk
-fi
+err_chk
 
 # Copy input file needed to make model forecast to COM
 
 cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap
 
 if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap ]; then
-   mv $DATA $COMOUT/.
    ./err_exit "WRF initial or boundary condition files missing"
 fi
 
@@ -368,6 +375,10 @@ fi
 cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
 
 else # nmmb case
+export pgm=hiresw_nemsinterp
+prep_step
+startmsg
+
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
@@ -378,10 +389,9 @@ cp $DATA/run_ungrib/namelist.nps .
 cp $EXEChiresw/hiresw_nemsinterp .
 mpirun.lsf ./hiresw_nemsinterp
 
-err=$?
+export err=$?; err_chk
 
 echo err from hiresw_nemsinterp $err
-
 
 if [ $NEST != "guamnew" ]
 then
@@ -392,7 +402,7 @@ cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsi
 # nmmb file with the land states you want
 
 namcyc=`echo $PDY | cut -c1-8`
-gespath=/nwges/prod/nam.${namcyc}
+gespath=${GESNAM}/nam.${namcyc}
 INPUT_FILE="$gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 INPUT_FILE_TYPE="nems"
 

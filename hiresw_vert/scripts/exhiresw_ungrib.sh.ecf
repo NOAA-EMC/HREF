@@ -41,10 +41,7 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-echo start $start
-
-# NDATE=/u/Matthew.Pyle/ndate
-NDATE=/nwprod/util/exec/ndate
+NDATE=${NDATE:-${utilexec}/ndate}
 
 int1=`$NDATE +12 $start`
 yyint1=`echo $int1 | cut -c1-4`
@@ -91,11 +88,11 @@ incr=3
 # If number is 1, cancel job if this is a WRF-EM run.
 #
 #if [ "$NEST" != "pr" -a "$NEST" != "hi" -a "$NEST" != "guam" ] ; then
-  $USHhiresw/hiresw_chkhur.sh $MODEL
-  err=$?
-  if [ $err -eq 99 ] ; then
-    exit
-  fi
+#  $USHhiresw/hiresw_chkhur.sh $MODEL
+#  err=$?
+#  if [ $err -eq 99 ] ; then
+#    exit
+#  fi
   echo "export NEST=$NEST" > $COMOUT/${RUN}.t${cyc}z.envir.sh
   echo "export MODEL=$MODEL" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
 #fi
@@ -235,7 +232,6 @@ mv ${mod}.t${cyc}z.${type}03${suf} GRIBFILE.AAB
 
 fi
 
-
 pwd
 
 ### run_ungrib
@@ -256,42 +252,9 @@ export MP_LABELIO=YES
 export MP_INFOLEVEL=3
 export MP_STDOUTMODE=ordered
 
+export pgm=hiresw_wps_ungrib_gen.sh
 mpirun.lsf
-err=$?
-echo "err from ungrib poe job: " $err
-
-ls FILE*
-
-
-# ic=0
-
-# while [ $ic -lt 1000 ] ; do
-
-#  icntb=1
-#  itest=1
-#  while [ $icntb -le 4 ] ; do
-#   ls -l $DATA/ungribdone.$icntb
-#   err1=$?
-#   if [ $err1 -eq 0 ] ; then
-#    let "itest=itest+1"
-#   fi
-#   let "icntb=icntb+1"
-#  done
-
-#  if [ $itest -eq 10 ] ; then
-#    break
-#  else
-#    let "ic=ic+1"
-#    sleep 10
-#  fi
-
-#  if [ $ic -ge 1000 ] ; then
-#   exit 1
-# fi
-
-# done
-
-# cd $DATA/run_ungrib/
+export err=$?; $DATA/err_chk
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

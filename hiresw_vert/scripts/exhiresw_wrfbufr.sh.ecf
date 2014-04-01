@@ -21,7 +21,8 @@
 set -x
 
 
-export NDATE=/nwprod/util/exec/ndate
+NDATE=${NDATE:-${utilexec}/ndate}
+NHOUR=${NHOUR:-${utilexec}/nhour}
 mkdir -p $DATA/bufrpost
 cd $DATA/bufrpost
 
@@ -90,7 +91,7 @@ timeform=$STARTDATE
 if [ $wdate -eq $startdate ] ; then
   fhr=00
 else
-  fhr=`/nwprod/util/exec/nhour $wdate $startdate`
+  fhr=`$NHOUR $wdate $startdate`
 fi
 
 export fhr
@@ -214,10 +215,10 @@ export FORT11="itag"
 datestr=`date`
 echo about to run program at $datestr
 
-### big overhead at times from call of mpirun.lsf??  program itself seems to run quickly
-### 
 
-$EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
+# using mpirun.lsf needed after WCOSS SP4.2 upgrade
+
+mpirun.lsf $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
 
 
 if [ -e err_chk ]
