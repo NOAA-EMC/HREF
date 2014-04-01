@@ -42,9 +42,7 @@ start=$ystart$mstart$dstart$cyc
 
 echo start $start
 
-# NDATE=/u/Matthew.Pyle/ndate
-NDATE=/nwprod/util/exec/ndate
-
+NDATE=${NDATE:-${utilexec}/ndate}
 
 int1=`$NDATE +12 $start`
 yyint1=`echo $int1 | cut -c1-4`
@@ -176,8 +174,6 @@ cp $PARMhiresw/hiresw_ETAMPNEW_DATA micro_lookup.dat
 cp $PARMhiresw/hiresw_VEGPARM.TBL VEGPARM.TBL
 cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
 cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2.35_hybrid_50mbtop
-cp $FIXhiresw/hiresw_nmm_co2.35_hybrid_50mbtop co2_trans
 
 cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
@@ -189,31 +185,14 @@ export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
 echo NEED TO RUN NEMSINTERP
-# mpirun.lsf $EXEChiresw/hiresw_nemsinterp
-# cp $DATA/run_ungrib/namelist.nps .
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yyint1: \
- | sed s:MEND:$mmint1:     | sed s:DEND:$ddint1: | sed s:HEND:$hhint1: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.1
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint1: | sed s:MSTART:$mmint1: \
- | sed s:DSTART:$ddint1: | sed s:HSTART:$hhint1: | sed s:YEND:$yyint2: \
- | sed s:MEND:$mmint2:     | sed s:DEND:$ddint2: | sed s:HEND:$hhint2: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.2
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint2: | sed s:MSTART:$mmint2: \
- | sed s:DSTART:$ddint2: | sed s:HSTART:$hhint2: | sed s:YEND:$yyint3: \
- | sed s:MEND:$mmint3:     | sed s:DEND:$ddint3: | sed s:HEND:$hhint3: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.3
-
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint3: | sed s:MSTART:$mmint3: \
- | sed s:DSTART:$ddint3: | sed s:HSTART:$hhint3: | sed s:YEND:$yyint4: \
- | sed s:MEND:$mmint4:     | sed s:DEND:$ddint4: | sed s:HEND:$hhint4: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/namelist.nps.4
 
 mkdir -p $DATA/run_nemsinterp_4
 
 cd $DATA/run_nemsinterp_4
 
-cp ../namelist.nps.4 namelist.nps
-
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.nps_in | sed s:YSTART:$yyint3: | sed s:MSTART:$mmint3: \
+ | sed s:DSTART:$ddint3: | sed s:HSTART:$hhint3: | sed s:YEND:$yyint4: \
+ | sed s:MEND:$mmint4:     | sed s:DEND:$ddint4: | sed s:HEND:$hhint4: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/run_nemsinterp_4/namelist.nps
 
 yy1=`echo $int3 | cut -c1-4`
 mm1=`echo $int3 | cut -c5-6`

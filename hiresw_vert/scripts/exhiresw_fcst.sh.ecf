@@ -153,8 +153,8 @@ cp $PARMhiresw/hiresw_moving_nest_shift.txt     moving_nest_shift.txt
 cp $PARMhiresw/hiresw_atmos.configure_nmm       atmos.configure
 cp $FIXhiresw/hiresw_aerosol.dat                aerosol.dat
 
-ln -sf /nwprod/fix/global_o3prdlos.f77 fort.28
-ln -sf /nwprod/fix/global_o3clim.txt   fort.48
+ln -sf ${FIXprod}/global_o3prdlos.f77 fort.28
+ln -sf ${FIXprod}/global_o3clim.txt   fort.48
 
 # nmmb specific versions
 
@@ -212,11 +212,12 @@ if [ $MODEL = "nmmb" ]
 then
 
 mpirun.lsf $EXEChiresw/hiresw_nmmbfcst
+export err=$?;./err_chk
 
 else
 
-# cp $EXEChiresw/hiresw_${MODEL}_fcst_traps .
-# mpirun.lsf ./hiresw_${MODEL}_fcst_traps
+# cp $EXEChiresw/hiresw_${MODEL}_fcst_precise .
+# mpirun.lsf ./hiresw_${MODEL}_fcst_precise
 
 cp $EXEChiresw/hiresw_${MODEL}_fcst .
 mpirun.lsf ./hiresw_${MODEL}_fcst

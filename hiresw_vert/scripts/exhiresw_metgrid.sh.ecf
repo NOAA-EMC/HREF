@@ -21,7 +21,6 @@
 
 set -x
 
-
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
@@ -56,8 +55,8 @@ export MP_INFOLEVEL=3
 export MP_STDOUTMODE=ordered
 
 mpirun.lsf 
-err=$?
-echo "err from metgrid poe job: " $err
+export err=$?
+${DATA}/err_chk
 
 # wait for all 9 WPS codes to finish to proceed
 
@@ -89,9 +88,17 @@ while [ $ic -lt 1000 ] ; do
  
 done
 
-#### this block seems redundant with the checks on wpsdone above
+if [ $MODEL = "arw" ]
+then
+count=`ls $DATA/met*.bin  | wc -l`
+elif [ $MODEL = "nmmb" ]
+then
+count=`ls $DATA/met*.dio | wc -l`
+else
+echo BAD MODEL CHOICE of $MODEL
+exit 99
+fi
 
-count=`ls $DATA/met*.bin $DATA/met*.dio | wc -l`
 
 echo INITIAL count is $count
 
@@ -100,8 +107,17 @@ COUNTLIM=17
 while [ $count -lt $COUNTLIM ]
 do
 sleep 20
-count=`ls $DATA/met*.bin $DATA/met*.nc $DATA/met*.dio | wc -l`
+
+if [ $MODEL = "arw" ]
+then
+count=`ls $DATA/met*.bin  | wc -l`
+elif [ $MODEL = "nmmb" ]
+then
+count=`ls $DATA/met*.dio | wc -l`
+fi
+
 echo $count now
+
 done
 
 ## bonus sleep to make sure file is completely copied to the $DATA dir
