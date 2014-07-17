@@ -42,36 +42,6 @@ start=$ystart$mstart$dstart$cyc
 
 NDATE=${NDATE:-${utilexec}/ndate}
 
-int1=`$NDATE +12 $start`
-yyint1=`echo $int1 | cut -c1-4`
-mmint1=`echo $int1 | cut -c5-6`
-ddint1=`echo $int1 | cut -c7-8`
-hhint1=`echo $int1 | cut -c9-10`
-
-int2=`$NDATE +12 $int1`
-yyint2=`echo $int2 | cut -c1-4`
-mmint2=`echo $int2 | cut -c5-6`
-ddint2=`echo $int2 | cut -c7-8`
-hhint2=`echo $int2 | cut -c9-10`
-
-int3=`$NDATE +12 $int2`
-yyint3=`echo $int3 | cut -c1-4`
-mmint3=`echo $int3 | cut -c5-6`
-ddint3=`echo $int3 | cut -c7-8`
-hhint3=`echo $int3 | cut -c9-10`
-
-int4=`$NDATE +12 $int3`
-yyint4=`echo $int4 | cut -c1-4`
-mmint4=`echo $int4 | cut -c5-6`
-ddint4=`echo $int4 | cut -c7-8`
-hhint4=`echo $int4 | cut -c9-10`
-
-end=`$NDATE $LENGTH $start`
-
-yend=`echo $end | cut -c1-4`
-mend=`echo $end | cut -c5-6`
-dend=`echo $end | cut -c7-8`
-
 filt_start=`$NDATE -1 $start`
 
 filt_ys=`echo $filt_start | cut -c1-4`
@@ -182,6 +152,21 @@ cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
 cp $FIXhiresw/hiresw_tr49t85 tr49t85
 cp $FIXhiresw/hiresw_tr67t85 tr67t85
+
+
+
+
+
+FHRS="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+for FHR in $FHRS
+do
+newdate=`$NDATE +$FHR $cycstart`
+yy=`echo $newdate | cut -c1-4`
+mm=`echo $newdate | cut -c5-6`
+dd=`echo $newdate | cut -c7-8`
+hh=`echo $newdate | cut -c9-10`
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
+done
 
 export pgm=hiresw_${MODEL}_real
 . ./prep_step

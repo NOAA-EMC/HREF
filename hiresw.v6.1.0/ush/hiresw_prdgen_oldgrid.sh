@@ -135,13 +135,13 @@ export tmmark=tm00
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
 
-while [ ! -e $DATA/postdone${fhr} ]
+while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
 sleep 6
 done
 
 cat >input${fhr}.prd <<EOF5
-$DATA/post/WRFPRS${fhr}.tm00
+$INPUT_DATA/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*

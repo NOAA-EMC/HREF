@@ -110,7 +110,9 @@ yy=`echo $time | cut -c1-4`
 mm=`echo $time | cut -c5-6`
 dd=`echo $time | cut -c7-8`
 hh=`echo $time | cut -c9-10`
-cp $DATA/run_ungrib/FILE:${yy}-${mm}-${dd}_${hh} .
+
+# needs to be made more specific in conjuction with ungrib job
+cp $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
 export err=$?
 
 if [ $err -ne 0 ]
@@ -131,9 +133,25 @@ $DATA/err_chk
 echo "DONE" > wpsdone.${ICOUNT}
 
 if [ $MODEL = arw ] ; then
-mv met*.bin  $DATA/.
+# mv met*.bin  $DATA/.
+# cp met*.bin  $COMOUT/.
+
+files=`ls met*.bin`
+for fl in $files
+do
+cp ${fl} $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.${fl}
+done
+
 elif [ $MODEL = nmmb ] ; then
-mv met*.dio  $DATA/.
+# mv met*.dio  $DATA/.
+# cp met*.dio  $COMOUT/.
+
+files=`ls met*.dio`
+for fl in $files
+do
+cp ${fl} $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.${fl}
+done
+
 fi
 
 mv wpsdone.${ICOUNT} ../

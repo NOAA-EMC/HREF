@@ -141,19 +141,19 @@ fi
 if [ $MODEL != "nmmb" ]
 then
 
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yyint1: \
  | sed s:MEND:$mmint1:     | sed s:DEND:$ddint1: | sed s:HEND:$hhint1: > $DATA/namelist.wps.1
 
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$yyint1: | sed s:MSTART:$mmint1: \
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in | sed s:YSTART:$yyint1: | sed s:MSTART:$mmint1: \
  | sed s:DSTART:$ddint1: | sed s:HSTART:$hhint1: | sed s:YEND:$yyint2: \
  | sed s:MEND:$mmint2:     | sed s:DEND:$ddint2: | sed s:HEND:$hhint2: > $DATA/namelist.wps.2
 
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$yyint2: | sed s:MSTART:$mmint2: \
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in | sed s:YSTART:$yyint2: | sed s:MSTART:$mmint2: \
  | sed s:DSTART:$ddint2: | sed s:HSTART:$hhint2: | sed s:YEND:$yyint3: \
  | sed s:MEND:$mmint3:     | sed s:DEND:$ddint3: | sed s:HEND:$hhint3: > $DATA/namelist.wps.3
 
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$yyint3: | sed s:MSTART:$mmint3: \
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in | sed s:YSTART:$yyint3: | sed s:MSTART:$mmint3: \
  | sed s:DSTART:$ddint3: | sed s:HSTART:$hhint3: | sed s:YEND:$yyint4: \
  | sed s:MEND:$mmint4:     | sed s:DEND:$ddint4: | sed s:HEND:$hhint4: > $DATA/namelist.wps.4
 
@@ -251,6 +251,16 @@ export MP_STDOUTMODE=ordered
 export pgm=hiresw_wps_ungrib_gen.sh
 mpirun.lsf
 export err=$?; $DATA/err_chk
+
+### but all jobs will output these files.  Potentially problematic
+cd run_ungrib/
+
+files=`ls FILE*`
+
+for fl in $files
+do
+cp ${fl} $COMOUT/${NEST}${MODEL}.t${cyc}z.${fl}
+done
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

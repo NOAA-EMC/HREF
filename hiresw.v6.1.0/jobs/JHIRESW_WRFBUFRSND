@@ -33,6 +33,7 @@ fi
 #
 export pid=$$
 export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
 
 if [ -d $DATA/bufrpost ]; then
    rm -f $DATA/bufrpost/

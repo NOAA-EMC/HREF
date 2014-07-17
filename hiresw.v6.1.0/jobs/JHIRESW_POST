@@ -33,8 +33,10 @@ fi
 ############################################################# 
 export pid=$$
 export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
-mkdir -p $DATA/post
-cd $DATA/post 
+export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+mkdir -p $DATA
+cd $DATA
+rm $DATA/*
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -66,11 +68,12 @@ export cycle=${cycle:-t${cyc}z}
 #export DBN_NEST=${nestMODEL}
 export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
                                                                                                              
-export HOMEhiresw=${HOMEhires:-/nw${envir}/hiresw.${model_ver}}
+export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
 export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
 export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
+export PARMhrrr=${PARMhrrr:-/nwtest/hrrr.v1.0.0/parm}
 
 ###################################
 # Set up the UTILITIES

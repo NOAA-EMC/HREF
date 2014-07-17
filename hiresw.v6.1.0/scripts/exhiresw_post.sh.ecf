@@ -45,7 +45,7 @@ NDATE=${NDATE:-${utilexec}/ndate}
 
 # also done in J-JOB
 
-cd $DATA/post
+# cd $DATA/post
 
 rm OUTPUT* errfil*
 
@@ -70,7 +70,6 @@ fi
 
 model=`echo $MODEL | tr '[a-z]' '[A-Z]'`
 
-filedir=$DATA
 
 YYYY=`echo $PDY | cut -c1-4`
 MM=`echo $PDY | cut -c5-6`
@@ -132,13 +131,47 @@ whr=`echo $date | cut -c9-10`
 timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
 
 icnt=1
+
+
+
+### for GRIB2 (from HRRR):
+
+export SPLNUM=47
+export SPL=2.,5.,7.,10.,20.,30.\
+,50.,70.,75.,100.,125.,150.,175.,200.,225.\
+,250.,275.,300.,325.,350.,375.,400.,425.,450.\
+,475.,500.,525.,550.,575.,600.,625.,650.\
+,675.,700.,725.,750.,775.,800.,825.,850.\
+,875.,900.,925.,950.,975.,1000.,1013.2
+
+
+# timestr=`${DATE} +%Y-%m-%d_%H:%M:%S -d "${START_TIME}  ${fhr} hours"`
+
+# cat > itag <<EOF
+# ${FCSTDIR}/wrfout_d01_${timestr}
+# netcdf
+# grib2
+# ${timestr}
+# ${CORE}
+# ${SPLNUM}
+# ${SPL}
+# ${VALIDTIMEUNITS}
+# EOF
+
+# rm -f fort.*
+# ln -s ${PARMhrrr}/hrrr_post_avblflds.xml post_avblflds.xml
+# ln -s ${PARMhrrr}/hrrr_params_grib2_tbl_new params_grib2_tbl_new
+# ln -s ${PARMhrrr}/hrrr_postcntrl.xml postcntrl.xml
+# ln -s ${PARMhrrr}/hrrr_ETAMPNEW_DATA eta_micro_lookup.dat
+
+
                                                                                                                    
 ### assume that ready to process based on postmgr jobhj
 
 if [ $MODEL = nmm ] ; then 
 
 cat > itag <<EOF
-$filedir/wrfout_d01_${timeform}
+$INPUT_DATA/wrfout_d01_${timeform}
 $OUTTYP
 $timeform
 $model
@@ -148,13 +181,13 @@ elif [ $MODEL = arw ] ; then
 
 export POSTMOD=NCAR
 
-while [ ! -e $filedir/fcstdone${fhr}.${tmmark} ]
+while [ ! -e $INPUT_DATA/fcstdone${fhr}.${tmmark} ]
 do
 sleep 6
 done
 
 cat > itag <<EOF
-$filedir/wrfout_d01_${timeform}
+$INPUT_DATA/wrfout_d01_${timeform}
 $OUTTYP
 $timeform
 $POSTMOD
@@ -164,13 +197,13 @@ else
 
 export POSTMOD=NMM
 
-while [ ! -e $filedir/fcstdone.01.00${fhr}h_00m_00.00s ]
+while [ ! -e $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
 do
 sleep 6
 done
 
 cat > itag <<EOF
-$filedir/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+$INPUT_DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
 $OUTTYP
 $timeform
 $POSTMOD

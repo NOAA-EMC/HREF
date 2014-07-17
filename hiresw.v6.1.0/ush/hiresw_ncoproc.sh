@@ -31,12 +31,12 @@ fi
 
 if [ $mksmart -eq 1 ]
 then
-cat $DATA/prdgen_full/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}
+cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}
 else
-cp $DATA/prdgen_full/${mdl}.t${cyc}z.ndfd${res}f${fhr}                               ${mdl}.t${cyc}z.smart${outreg}f${fhr}
+cp $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}                               ${mdl}.t${cyc}z.smart${outreg}f${fhr}
 fi
 
-rm $DATA/prdgen_full/${mdl}.t${cyc}z.ndfd${res}f${fhr}
+rm $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}
 
 # CREATE GRIB2 FILE
 

@@ -504,37 +504,42 @@ done  #fhr loop
 
 rm -f fort.*
 
+
+# how handle this now?
+
 if [ ${fhr} -eq 0 ]
 then
-cp PDY NMCDATE ncepdate startmsg postmsg null break err_exit errexit errchk err_chk prep_step tracer ../smartinit/
-cp DATE ../smartinit/
+# cp PDY NMCDATE ncepdate startmsg postmsg null break err_exit errexit errchk err_chk prep_step tracer ../smartinit/
+cp PDY NMCDATE ncepdate startmsg postmsg null break err_exit errexit errchk err_chk prep_step tracer ../
+# cp DATE ../smartinit/
+cp DATE ../
 fi
 
-cp  meso${rg}.NDFDf* meso${rg}.NDFDif* ../smartinit/
+cp  meso${rg}.NDFDf* meso${rg}.NDFDif* ../
 
 if [ ${fhr} -gt 0 -a $sgrb -ne 999 ]
 then
-    cp  srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} ../smartinit/
+    cp  srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} ../
 fi
 
 if [ ${fhr} -gt 0 ]
 then
     if [ $check -eq 0 -a $MODEL = "arw" ]
     then
-     cp  3precip.${fhr} 3snow.${fhr} ../smartinit/
+     cp  3precip.${fhr} 3snow.${fhr} ../
     fi
 fi
 
     if [ $check6 -eq 0 ];then 
-cp  6precip.${fhr} 6snow.${fhr} ../smartinit/
+cp  6precip.${fhr} 6snow.${fhr} ../
     fi
 
     if [ $mk12p -eq 12 ];then 
-cp  12precip.${fhr} 12snow.${fhr} ../smartinit/
+cp  12precip.${fhr} 12snow.${fhr} ../
     fi
 
-cp WRFPRS* ../smartinit/
+cp WRFPRS* ../
 
-cp  smartinitprdgendone${fhr} ../smartinit/
+cp  smartinitprdgendone${fhr} ../
 
 exit

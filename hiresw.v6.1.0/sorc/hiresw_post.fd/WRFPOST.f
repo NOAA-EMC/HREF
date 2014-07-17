@@ -167,7 +167,7 @@
       real,dimension(komax) :: po,th,pv
       namelist/nampgb/kpo,po,kth,th,kpv,pv,fileNameAER
 
-      character startdate*19,SysDepInfo*80,IOWRFNAME*3,post_fname*80
+      character startdate*19,SysDepInfo*80,IOWRFNAME*3,post_fname*255
       character cgar*1,cdum*4
 !
 !------------------------------------------------------------------------------
@@ -811,6 +811,7 @@
        if(grib=="grib2") then
          call mpi_barrier(mpi_comm_comp,ierr)
 !      if(me==0)call w3tage('bf grb2  ')
+        write(0,*) 'calling gribit2 with post_fname: ', post_fname, '_END'
          call gribit2(post_fname)
          deallocate(datapd)
          deallocate(fld_info)

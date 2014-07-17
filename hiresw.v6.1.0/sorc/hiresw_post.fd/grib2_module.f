@@ -99,7 +99,6 @@
 !
 !--- initialize general grib2 information and 
 !
-    use ctlblk_mod, only:
     implicit none
 !
 !    logical,intent(in) :: first_grbtbl
@@ -176,7 +175,6 @@
 !
 !--- finalize grib2 information and  close file
 !
-    use ctlblk_mod, only:
     implicit none
 !
 !---
@@ -189,7 +187,6 @@
   subroutine gribit2(post_fname)
 !
 !-------
-    use grib2_all_tables_module, only:
     use ctlblk_mod, only : im,jm,im_jm,num_procs,me,jsta,jend,ifhr,sdat,ihrst,imin,    &
                            mpi_comm_comp,ntlfld,fld_info,datapd,icnt,idsp
     implicit none
@@ -197,7 +194,7 @@
     include 'mpif.h'
 !
 !    real,intent(in)      :: data(im,1:jend-jsta+1,ntlfld)
-    character(80),intent(in) :: post_fname
+    character(255),intent(in) :: post_fname
 !
 !------- local variables
     integer i,j,k,n,nm,nprm,nlvl,fldlvl1,fldlvl2,cstart,cgrblen,ierr
@@ -292,10 +289,10 @@
            else
              itblinfo=0
            endif
-!           print *,'i=',i,'nprm=',fld_info(i)%ifld,'pname=',trim(pset%param(nprm)%pname), &
-!            'lev_type=',trim(pset%param(nprm)%fixed_sfc1_type),'itblinfo=',itblinfo,      &
-!            'nlvl=',nlvl,'lvl1=',fldlvl1,'lvl2=',fldlvl2, &
-!            'shortname=',trim(pset%param(nprm)%shortname)
+           print *,'i=',i,'nprm=',fld_info(i)%ifld,'pname=',trim(pset%param(nprm)%pname), &
+            'lev_type=',trim(pset%param(nprm)%fixed_sfc1_type),'itblinfo=',itblinfo,      &
+            'nlvl=',nlvl,'lvl1=',fldlvl1,'lvl2=',fldlvl2, &
+            'shortname=',trim(pset%param(nprm)%shortname)
            call search_for_4dot2_entry(                                &
                 pset%param(nprm)%pname,                 &
                 itblinfo,                               &
@@ -308,7 +305,7 @@
             call gengrb2msg(idisc,icatg, iparm,nprm,nlvl,fldlvl1,fldlvl2,     &
                 fld_info(i)%ntrange,fld_info(i)%tinvstat,datafld(:,i),       &
                 cgrib,clength)
-!            print *,'finished gengrb2msg field=',i,'ntlfld=',ntlfld,'clength=',clength
+            print *,'finished gengrb2msg field=',i,'ntlfld=',ntlfld,'clength=',clength
             call wryte(lunout, clength, cgrib)
            else
             print *,'WRONG, could not find ',trim(pset%param(nprm)%pname), &
@@ -435,8 +432,8 @@
      call mpi_file_write_at(fh,idisp,cgrib,cgrblen,MPI_CHARACTER,status,ierr)
 !
      call mpi_file_close(fh,ierr)
-     !etime=timef()
-!     print *,'the totsl time to write 578 records is : ',etime-stime,             &
+!    etime=timef()
+!    print *,'the totsl time to write 578 records is : ',etime-stime,             &
 !       ' mpi_all2all time=',etime1-stime,' grib mpi write time=',stime2-stime1,   &
 !       ' mpiwrt=',etime-stime2
 !
@@ -670,7 +667,7 @@
          ipdstmpllen=ipdstmp4_8len
          call g2sec4_temp8(icatg,iparm,pset%gen_proc_type,       &
               pset%gen_proc,hrs_obs_cutoff,min_obs_cutoff,     &
-              pset%time_range_unit,ifhr,                       &
+              pset%time_range_unit,ifhr-tinvstat,              &
               pset%param(nprm)%fixed_sfc1_type,                &
               scale_fct_fixed_sfc1,                            &
               scaled_val_fixed_sfc1,                           &
@@ -683,7 +680,7 @@
               pset%time_range_unit, tinvstat,                  &
               stat_unit_time_key_succ,time_inc_betwn_succ_fld, &
               ipdstmpl(1:ipdstmpllen))
-!       print *,'aft g2sec4_temp8,ipdstmpl8=',ipdstmpl(1:ipdstmp4_8len)
+       print *,'aft g2sec4_temp8,ipdstmpl8=',ipdstmpl(1:ipdstmp4_8len)
 
        elseif(trim(pset%param(nprm)%pdstmpl)=='tmpl4_44') then
 !
@@ -741,6 +738,10 @@
 ! idrstmpl array is the output from g2sec5
 !
        call get_g2_sec5packingmethod(pset%packing_method,idrsnum,ierr)
+       if(maxval(datafld1)==minval(datafld1))then
+        idrsnum=0
+        print*,' changing to simple packing for constant fields'
+       end if 
        print *,'aft g2sec5,packingmethod=',pset%packing_method,'idrsnum=',idrsnum, &
          'data=',maxval(datafld1),minval(datafld1)
 !
@@ -870,51 +871,56 @@
 !
       IMPLICIT NONE
 !
-      INTEGER,INTENT(IN) ::  IBM,LEN
+      INTEGER,INTENT(IN)   :: IBM,LEN
       LOGICAL*1,INTENT(IN) :: BMAP(LEN)
-      REAL,INTENT(IN)    :: scl,G(LEN)
-      INTEGER,INTENT(OUT):: IBS,IDS,NBITS
+      REAL,INTENT(IN)      :: scl,G(LEN)
+      INTEGER,INTENT(OUT)  :: IBS,IDS,NBITS
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      INTEGER,PARAMETER :: MXBIT=16
+      INTEGER,PARAMETER    :: MXBIT=16
 !
 !  NATURAL LOGARITHM OF 2 AND 0.5 PLUS NOMINAL SAFE EPSILON
       real,PARAMETER :: ALOG2=0.69314718056,HPEPS=0.500001
 !
 !local vars
       INTEGER :: I,I1,icnt,ipo,le,irange
-      REAL  :: GROUND,GMIN,GMAX,s,rmin,rmax,range,rr,rng2,po,rln2
+      REAL    :: GROUND,GMIN,GMAX,s,rmin,rmax,range,rr,rng2,po,rln2
 !
-       DATA            rln2/0.69314718/
+      DATA       rln2/0.69314718/
 
 
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !  ROUND FIELD AND DETERMINE EXTREMES WHERE BITMAP IS ON
-      IF(IBM.EQ.255) THEN
-        GMAX=G(1)
-        GMIN=G(1)
+      IF(IBM == 255) THEN
+        GMAX = G(1)
+        GMIN = G(1)
         DO I=2,LEN
-          GMAX=MAX(GMAX,G(I))
-          GMIN=MIN(GMIN,G(I))
+          GMAX = MAX(GMAX,G(I))
+          GMIN = MIN(GMIN,G(I))
         ENDDO
       ELSE
-        I1=1
-        DO WHILE(I1.LE.LEN.AND..not.BMAP(I1))
-          I1=I1+1
-        ENDDO
-        IF(I1.LE.LEN) THEN
-          GMAX=G(I1)
-          GMIN=G(I1)
+        do i1=1,len
+          if (bmap(i1)) exit
+        enddo
+!       I1 = 1
+!       DO WHILE(I1 <= LEN .AND. .not. BMAP(I1))
+!         I1=I1+1
+!       ENDDO
+        IF(I1 <= LEN) THEN
+          GMAX = G(I1)
+          GMIN = G(I1)
           DO I=I1+1,LEN
             IF(BMAP(I)) THEN
-              GMAX=MAX(GMAX,G(I))
-              GMIN=MIN(GMIN,G(I))
+              GMAX = MAX(GMAX,G(I))
+              GMIN = MIN(GMIN,G(I))
             ENDIF
           ENDDO
         ELSE
-          GMAX=0.
-          GMIN=0.
+          GMAX = 0.
+          GMIN = 0.
         ENDIF
       ENDIF
+
+!     write(0,*)' GMIN=',GMIN,' GMAX=',GMAX
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !  COMPUTE NUMBER OF BITS
       icnt = 0
@@ -930,7 +936,7 @@
       IF ( scl .eq. 0.0 ) THEN
           nbits = 8
           RETURN
-      ELSE IF ( scl .gt. 0.0 ) THEN
+      ELSE IF ( scl  >  0.0 ) THEN
           ipo = INT (ALOG10 ( range ))
 !jw: if range is smaller than computer precision, set nbits=8
           if(ipo<0.and.ipo+scl<-20) then
@@ -949,62 +955,65 @@
           rng2 = range * 2. ** (-ibs)
           nbits = INT ( ALOG ( rng2 ) / rln2 ) + 1
       END IF
-!      print *,'in g2getnits,ibs=',ibs,'ids=',ids,'nbits=',nbits,'range=',range
+!     write(0,*)'in g2getnits,ibs=',ibs,'ids=',ids,'nbits=',nbits,'range=',range
 !*
-      IF(nbits.le.0) THEN
-        nbits=0
-        IF(ABS(GMIN).GE.1.) THEN
-          ids=-int(alog10(abs(gmin)))
-        ELSE IF (ABS(GMIN).LT.1.0.AND.ABS(GMIN).GT.0.0) THEN
-          ids=-int(alog10(abs(gmin)))+1
+      IF(nbits <= 0) THEN
+        nbits = 0
+        IF(ABS(GMIN) >= 1.) THEN
+          ids = -int(alog10(abs(gmin)))
+        ELSE IF (ABS(GMIN) < 1.0.AND.ABS(GMIN) > 0.0) THEN
+          ids = -int(alog10(abs(gmin)))+1
         ELSE
-          ids=0
+          ids = 0
         ENDIF
       ENDIF
-      nbits=min(nbits,MXBIT)
-!      print *,'in g2getnits ibs=',ibs,'ids=',ids,'nbits=',nbits
+      nbits = min(nbits,MXBIT)
+!     write(0,*)'in g2getnits ibs=',ibs,'ids=',ids,'nbits=',nbits
 !
-      IF ( scl .gt. 0.0 ) THEN 
+      IF ( scl > 0.0 ) THEN 
         s=10.0 ** ids
-        IF(IBM.EQ.255) THEN
-          GROUND=G(1)*s
-          GMAX=GROUND
-          GMIN=GROUND
+        IF(IBM == 255) THEN
+          GROUND = G(1)*s
+          GMAX   = GROUND
+          GMIN   = GROUND
           DO I=2,LEN
-            GMAX=MAX(GMAX,G(I)*s)
-            GMIN=MIN(GMIN,G(I)*s)
+            GMAX = MAX(GMAX,G(I)*s)
+            GMIN = MIN(GMIN,G(I)*s)
           ENDDO
         ELSE
-          I1=1
-          DO WHILE(I1.LE.LEN.AND..not.BMAP(I1))
-            I1=I1+1
-          ENDDO
-          IF(I1.LE.LEN) THEN
-            GROUND=G(I1)*s
-            GMAX=GROUND
-            GMIN=GROUND
+          do i1=1,len
+            if (bmap(i1)) exit
+          enddo
+ !        I1=1
+ !        DO WHILE(I1.LE.LEN.AND..not.BMAP(I1))
+ !          I1=I1+1
+ !        ENDDO
+          IF(I1 <= LEN) THEN
+            GROUND = G(I1)*s
+            GMAX   = GROUND
+            GMIN   = GROUND
             DO I=I1+1,LEN
               IF(BMAP(I)) THEN
-                GMAX=MAX(GMAX,G(I)*S)
-                GMIN=MIN(GMIN,G(I)*S)
+                GMAX = MAX(GMAX,G(I)*S)
+                GMIN = MIN(GMIN,G(I)*S)
               ENDIF
             ENDDO
           ELSE
-            GMAX=0.
-            GMIN=0.
+            GMAX = 0.
+            GMIN = 0.
           ENDIF
         ENDIF
 
-        range=GMAX-GMIN
-        if(GMAX==GMIN) then
-          ibs=0
+        range = GMAX-GMIN
+        if(GMAX == GMIN) then
+          ibs = 0
         else
-          ibs=nint(alog(range/(2.**NBITS-0.5))/ALOG2+HPEPS)
+          ibs = nint(alog(range/(2.**NBITS-0.5))/ALOG2+HPEPS)
         endif
 !
       endif
-!      print *,'in g2getnits,2ibs=',ibs,'ids=',ids,'nbits=',nbits,'range=',range, &
-!       'scl=',scl,'data=',maxval(g),minval(g)
+!     write(0,*)'in g2getnits,2ibs=',ibs,'ids=',ids,'nbits=',nbits,'range=',& 
+!                range, 'scl=',scl,'data=',maxval(g),minval(g)
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       RETURN
       END subroutine g2getbits
@@ -1015,35 +1024,35 @@
 !     
 !***** set up gds kpds to call Boi's code
 !
-      use CTLBLK_mod, only : im,jm
+      use CTLBLK_mod,  only : im,jm
       use gridspec_mod, only: DXVAL,DYVAL,CENLAT,CENLON,LATSTART,LONSTART,LATLAST,     &
      &                        LONLAST,MAPTYPE,STANDLON,latstartv,cenlatv,lonstartv,    &
                               cenlonv,TRUELAT1,TRUELAT2
 !   
       implicit none
 !
-      logical,intent(in)  :: ldfgrd
-      integer(4),intent(in)  :: len3
-      integer(4),intent(out) :: ifield3len
+      logical,   intent(in)    :: ldfgrd
+      integer(4),intent(in)    :: len3
+      integer(4),intent(out)   :: ifield3len
       integer(4),intent(inout) :: ifield3(len3),igds(5)
     
 !      print *,'in getgds, im=',im,'jm=',jm,'latstart=',latstart,'lonsstart=',lonstart,'maptyp=',maptype
 !
 !** set up igds 
-      igds(1)=0      !Source of grid definition (see Code Table 3.0)
-      igds(2)=im*jm  !Number of grid points in the defined grid.
-      igds(3)=0      !Number of octets needed for each additional grid points definition
-      igds(4)=0      !Interpretation of list for optional points definition (Code Table 3.11)
+      igds(1) = 0      !Source of grid definition (see Code Table 3.0)
+      igds(2) = im*jm  !Number of grid points in the defined grid.
+      igds(3) = 0      !Number of octets needed for each additional grid points definition
+      igds(4) = 0      !Interpretation of list for optional points definition (Code Table 3.11)
 !
 !** define grid template 3
-      IF(MAPTYPE.EQ.1)THEN  !LAmbert Conformal
-       igds(5)=30      !Lambert conformal
-       ifield3len=22
-       ifield3=0
+      IF(MAPTYPE == 1) THEN     !LAmbert Conformal
+       igds(5)     = 30         !Lambert conformal
+       ifield3len  = 22
+       ifield3     = 0
 !
-       ifield3(1) = 6           !Earth assumed spherical with radius of 6,371,229.0m
-       ifield3(8) = im          !number of points along the x-axis
-       ifield3(9) = jm          !number of points along the y-axis
+       ifield3(1)  = 6          !Earth assumed spherical with radius of 6,371,229.0m
+       ifield3(8)  = im         !number of points along the x-axis
+       ifield3(9)  = jm         !number of points along the y-axis
        ifield3(10) = latstart   !latitude of first grid point
        ifield3(11) = lonstart   !longitude of first grid point
        ifield3(12) = 8          !Resolution and component flags
@@ -1051,24 +1060,29 @@
        ifield3(14) = STANDLON   !longitude of meridian parallel to y-axis along which latitude increases
        ifield3(15) = DXVAL
        ifield3(16) = DYVAL
+
+        write(0,*) 'im, jm: ', im,jm
+        write(0,*) 'latstart, lonstart: ', latstart, lonstart
+        write(0,*) 'TRUELAT1,STANDLON: ', TRUELAT1,STANDLON
+        write(0,*) 'dxval, dyval: ', dxval, dyval
        IF(TRUELAT1>0)then
         ifield3(17) = 0
        else
-        ifield3(17) =128 !for southern hemisphere
+        ifield3(17) =128        !for southern hemisphere
        end if
        ifield3(18) = 64
        ifield3(19) = TRUELAT1   !first latitude from the pole at which the secant cone cuts the sphere
        ifield3(20) = TRUELAT2   !second latitude from the pole at which the secant cone cuts the sphere
 
 !** Polar stereographic
-     ELSE IF(MAPTYPE.EQ.2)THEN  !Polar stereographic
-       igds(5)=20
-       ifield3len=22
-       ifield3=0
+     ELSE IF(MAPTYPE == 2)THEN  !Polar stereographic
+       igds(5)     = 20
+       ifield3len  = 22
+       ifield3     = 0
 !
-       ifield3(1) = 6           !Earth assumed spherical with radius of 6,371,229.0m
-       ifield3(8) = im          !number of points along the x-axis
-       ifield3(9) = jm          !number of points along the y-axis
+       ifield3(1)  = 6           !Earth assumed spherical with radius of 6,371,229.0m
+       ifield3(8)  = im         !number of points along the x-axis
+       ifield3(9)  = jm         !number of points along the y-axis
        ifield3(10) = latstart   !latitude of first grid point
        ifield3(11) = lonstart   !longitude of first grid point
        ifield3(12) = 8          !Resolution and component flags
@@ -1080,7 +1094,7 @@
        ifield3(18) = 64
 !
 !** Mercator
-      ELSE IF(MAPTYPE.EQ.3)THEN  !Mercator
+      ELSE IF(MAPTYPE.EQ.3)THEN !Mercator
        igds(5)=10
        ifield3len=22
        ifield3=0
@@ -1100,14 +1114,14 @@
        ifield3(19) = DYVAL
 !
 !** ARAKAWA STAGGERED E-GRID
-      ELSE IF(MAPTYPE.EQ.203)THEN  !ARAKAWA STAGGERED E-GRID`
-       igds(5)=32768
-       ifield3len=22
-       ifield3=0
+      ELSE IF(MAPTYPE == 203)THEN  !ARAKAWA STAGGERED E-GRID`
+       igds(5)     = 32768
+       ifield3len  = 22
+       ifield3     = 0
 !
-       ifield3(1) = 6           !Earth assumed spherical with radius of 6,371,229.0m
-       ifield3(8) = im          !number of points along the x-axis
-       ifield3(9) = jm          !number of points along the y-axis
+       ifield3(1)  = 6          !Earth assumed spherical with radius of 6,371,229.0m
+       ifield3(8)  = im         !number of points along the x-axis
+       ifield3(9)  = jm         !number of points along the y-axis
        ifield3(10) = 0          !Basic angle of the initial production domain 
        if(.not.ldfgrd) then
          ifield3(11) = 0          !Subdivisions of basic angle used to define extreme lons & lats:missing 
@@ -1124,19 +1138,19 @@
        ifield3(19) = 64         !Scanning mode
 !
 !** ARAKAWA STAGGERED non-E-GRID
-      ELSE IF(MAPTYPE.EQ.205)THEN  !ARAKAWA STAGGERED E-GRID`
-       igds(5)=32769
-       ifield3len=21
-       ifield3=0
+      ELSE IF(MAPTYPE == 205)THEN  !ARAKAWA STAGGERED E-GRID`
+       igds(5)     = 32769
+       ifield3len  = 21
+       ifield3     = 0
 !
-       ifield3(1) = 6           !Earth assumed spherical with radius of 6,371,229.0m
-       ifield3(8) = im          !number of points along the x-axis
-       ifield3(9) = jm          !number of points along the y-axis
+       ifield3(1)  = 6          !Earth assumed spherical with radius of 6,371,229.0m
+       ifield3(8)  = im         !number of points along the x-axis
+       ifield3(9)  = jm         !number of points along the y-axis
        ifield3(10) = 0          !Basic angle of the initial production domain
        if(.not.ldfgrd) then
-         ifield3(11) = 0          !Subdivisions of basic angle used to define extreme lons & lats:missing
+         ifield3(11) = 0        !Subdivisions of basic angle used to define extreme lons & lats:missing
        else
-         ifield3(11) = 45000000   !Subdivisions of basic angle used to define extreme lons & lats
+         ifield3(11) = 45000000 !Subdivisions of basic angle used to define extreme lons & lats
        endif
        ifield3(12) = latstart   !latitude of first grid point
        ifield3(13) = lonstart   !longitude of first grid point
@@ -1153,14 +1167,14 @@
 
 !
 !** Gaussian grid
-      ELSE IF(MAPTYPE.EQ.4 ) THEN  !Gaussian grid 
-       igds(5)=40
-       ifield3len=19
-       ifield3=0
+      ELSE IF(MAPTYPE == 4 ) THEN  !Gaussian grid 
+       igds(5)     = 40
+       ifield3len  = 19
+       ifield3     = 0
 !
-       ifield3(1) = 6 !Earth assumed spherical with radius of 6,371,229.0m
-       ifield3(8) = im
-       ifield3(9) = jm
+       ifield3(1)  = 6 !Earth assumed spherical with radius of 6,371,229.0m
+       ifield3(8)  = im
+       ifield3(9)  = jm
        ifield3(10) = 0   
        ifield3(11) = 0   
        ifield3(12) = latstart
@@ -1172,14 +1186,14 @@
        ifield3(18) = NINT(JM/2.0)
 !
 !** Latlon grid
-      ELSE IF(MAPTYPE.EQ.0 ) THEN
-       igds(5)=0
-       ifield3len=19
-       ifield3=0
+      ELSE IF(MAPTYPE == 0 ) THEN
+       igds(5)     = 0
+       ifield3len  = 19
+       ifield3     = 0
 !
-       ifield3(1) = 6 !Earth assumed spherical with radius of 6,371,229.0m
-       ifield3(8) = im
-       ifield3(9) = jm
+       ifield3(1)  = 6 !Earth assumed spherical with radius of 6,371,229.0m
+       ifield3(8)  = im
+       ifield3(9)  = jm
        ifield3(10) = 0
        ifield3(11) = 0
        ifield3(12) = latstart
@@ -1187,13 +1201,13 @@
        ifield3(14) = 48     
        ifield3(15) = latlast
        ifield3(16) = lonlast
-       ifield3(17) = dxval
-       ifield3(18) = dyval
-       ifield3(19) = 64
+       ifield3(17) = NINT(180./(JM-1)*1.0E6) 
+       ifield3(18) = NINT(360./(IM)*1.0E6) 
+       ifield3(19) = 0 
 
      ENDIF
 
-!     print *,'igds=',igds,'igdstempl=',ifield3(1:ifield3len)
+    write(0,*)'igds=',igds,'igdstempl=',ifield3(1:ifield3len)
      end subroutine getgds
 !
 !-------------------------------------------------------------------------------------

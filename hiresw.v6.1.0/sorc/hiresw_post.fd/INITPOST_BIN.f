@@ -203,7 +203,12 @@
           ,1,ioutcount,istatus)
         print*, 'istatus from DX get: ', istatus
         print*, 'ioutcount: ', ioutcount
+
+        if (grib=='grib2') then
+        dxval=int(1000.*tmp+0.5)
+        else
         dxval=int(tmp+0.5)
+        endif
 
         write(6,*) 'dxval= ', dxval
 
@@ -212,7 +217,13 @@
 !!!
         call ext_int_get_dom_ti_real(DataHandle,'DY',tmp                 &
           ,1,ioutcount,istatus)
+
+        if (grib=='grib2') then
+        dyval=int(1000.*tmp+0.5)
+        else
         dyval=int(tmp+0.5)
+        endif
+
         write(6,*) 'dyval= ', dyval
 
 
@@ -234,23 +245,23 @@
 
         call ext_int_get_dom_ti_real(DataHandle,'CEN_LAT',tmp            &
           ,1,ioutcount,istatus)
-        cenlat=int(1000.*tmp+0.5)
+        cenlat=int(gdsdegr*tmp+0.5)
         write(6,*) 'cenlat= ', cenlat
         call ext_int_get_dom_ti_real(DataHandle,'CEN_LON',tmp            &
           ,1,ioutcount,istatus)
-        cenlon=int(0.5+1000.*tmp)
+        cenlon=int(0.5+gdsdegr*tmp)
         write(6,*) 'cenlon= ', cenlon
         call ext_int_get_dom_ti_real(DataHandle,'TRUELAT1',tmp           &
           ,1,ioutcount,istatus)
-        truelat1=int(0.5+1000.*tmp)
+        truelat1=int(0.5+gdsdegr*tmp)
         write(6,*) 'truelat1= ', truelat1
         call ext_int_get_dom_ti_real(DataHandle,'TRUELAT2',tmp           &
           ,1,ioutcount,istatus)
-        truelat2=int(0.5+1000.*tmp)
+        truelat2=int(0.5+gdsdegr*tmp)
         write(6,*) 'truelat2= ', truelat2
 	call ext_int_get_dom_ti_real(DataHandle,'STAND_LON',tmp          &
           ,1,ioutcount,istatus)
-        STANDLON=int(0.5+1000.*tmp)
+        STANDLON=int(0.5+gdsdegr*tmp)
         write(6,*) 'STANDLON= ', STANDLON
         call ext_int_get_dom_ti_integer(DataHandle,'MAP_PROJ',itmp       &
           ,1,ioutcount,istatus)
@@ -2283,8 +2294,8 @@
        call collect_loc(gdlat,dummy)
        if(me.eq.0)then
         print*, 'gdlat(1,1): ', gdlat(1,1)
-        latstart=int(0.5+dummy(1,1)*1000.)
-        latlast=int(0.5+dummy(im,jm)*1000.)
+        latstart=int(0.5+dummy(1,1)*gdsdegr)
+        latlast=int(0.5+dummy(im,jm)*gdsdegr)
        end if
        write(6,*) 'laststart,latlast B calling bcast=',latstart,latlast
        call mpi_bcast(latstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
@@ -2292,8 +2303,8 @@
        write(6,*) 'laststart,latlast A calling bcast=',latstart,latlast
        call collect_loc(gdlon,dummy)
        if(me.eq.0)then
-        lonstart=int(0.5+dummy(1,1)*1000.)
-        lonlast=int(0.5+dummy(im,jm)*1000.)
+        lonstart=int(0.5+dummy(1,1)*gdsdegr)
+        lonlast=int(0.5+dummy(im,jm)*gdsdegr)
        end if
        write(6,*)'lonstart,lonlast B calling bcast=',lonstart,lonlast
        call mpi_bcast(lonstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)

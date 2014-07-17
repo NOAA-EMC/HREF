@@ -93,4 +93,5 @@ ${HOMEhiresw}/scripts/exhiresw_ungrib.sh.ecf
 ########################################################
 
 cd /tmpnwprd2
+rm -rf $DATA
 date
