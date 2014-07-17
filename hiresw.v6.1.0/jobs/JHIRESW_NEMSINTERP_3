@@ -93,3 +93,4 @@ msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
 cd /tmpnwprd2
+rm -rf $DATA

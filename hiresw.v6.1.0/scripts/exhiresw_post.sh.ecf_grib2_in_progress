@@ -1,0 +1,325 @@
+#! /bin/ksh
+
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exhiresw_post.sh.sms
+# Script description:  Runs NMMB or WRF-ARW post-processor
+#
+# Author:        Eric Rogers       Org: NP22         Date: 2004-07-07
+#
+# Script history log:
+#
+# 2003-11-01  Matt Pyle - Original script for parallel
+#
+# 2004-07-07  Eric Rogers - Preliminary modifications for production.
+#
+# 2007-04-30  Matthew Pyle - Changed to a "one size fits all" version of the WRF post.
+#                             Eliminated inline call of prdgen job.
+#
+# 2009-09-24  Pyle/Cokley  - Reduces potential for conflict with other jobs by:
+#
+#                            1) doing work in a "post" subdirectory
+#                            2) eliminating write of "lower" file
+#                            3) Extracting date information from PDY rather than
+#                               copying date file
+#
+#                            Also, cleaned out some unused items related to prdgen to
+#                            streamline and prevent confusion.
+#
+# 2013-09-01  Pyle          - Modified to be run from postmgr, working on $post_times
+#                             passed into the script
+# 2014-02-27  Pyle          - Modified to loop through forecast hours (reverting to old style)
+
+set -x
+export MEMBER=ctl
+
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+
+######
+export INCR=01
+NDATE=${NDATE:-${utilexec}/ndate}
+######
+
+# also done in J-JOB
+
+# cd $DATA/post
+
+rm OUTPUT* errfil*
+
+cp $PARMhiresw/hiresw_micro_lookup.dat .
+cp hiresw_micro_lookup.dat eta_micro_lookup.dat
+
+#
+# Get needed variables from exhiresw_prelim.sh.sms
+#
+
+. $COMIN/${RUN}.t${cyc}z.envir.sh
+
+# OUTTYP=binarympiio
+OUTTYP=binary
+
+
+if [ $MODEL = "nmmb" ]
+then
+# OUTTYP=binarynemsio
+OUTTYP=binarynemsiompiio
+fi
+
+model=`echo $MODEL | tr '[a-z]' '[A-Z]'`
+
+
+YYYY=`echo $PDY | cut -c1-4`
+MM=`echo $PDY | cut -c5-6`
+DD=`echo $PDY | cut -c7-8`
+CYCLE=$PDY$cyc
+
+startd=$YYYY$MM$DD
+startdate=$CYCLE
+
+STARTDATE=${YYYY}-${MM}-${DD}_${cyc}:00:00
+
+endtime=`$NDATE 48 $CYCLE`
+
+YYYY=`echo $endtime | cut -c1-4`
+MM=`echo $endtime | cut -c5-6`
+DD=`echo $endtime | cut -c7-8`
+
+FINALDATE=${YYYY}-${MM}-${DD}_${cyc}:00:00
+
+export tmmark=tm00
+
+wyr=`echo $STARTDATE | cut -c1-4`
+wmn=`echo $STARTDATE | cut -c6-7`
+wdy=`echo $STARTDATE | cut -c9-10`
+whr=`echo $STARTDATE | cut -c12-13`
+
+eyr=`echo $FINALDATE | cut -c1-4`
+emn=`echo $FINALDATE | cut -c6-7`
+edy=`echo $FINALDATE | cut -c9-10`
+ehr=`echo $FINALDATE | cut -c12-13`
+
+edate=$eyr$emn$edy$ehr
+
+# If job needs to be restarted due to production failure, reset
+# wdate=valid date of first available WRF restart file
+
+wdate=$wyr$wmn$wdy$whr
+
+timeform=$STARTDATE
+
+ if [ $MODEL = nmmb ] ; then
+    cp $PARMhiresw/hiresw_nmmb_cntrl.parm wrf_cntrl.parm
+    cp $PARMhiresw/hiresw_nmmb_cntrl.parm.xml postcntrl.xml
+ else
+    cp $PARMhiresw/hiresw_arw_cntrl.parm wrf_cntrl.parm
+    cp $PARMhiresw/hiresw_arw_cntrl.parm.xml postcntrl.xml
+ fi
+
+export fhr=00
+
+while [ $wdate -le $edate ]
+do
+
+date=`$NDATE $fhr $CYCLE`
+
+wyr=`echo $date | cut -c1-4`
+wmn=`echo $date | cut -c5-6`
+wdy=`echo $date | cut -c7-8`
+whr=`echo $date | cut -c9-10`
+
+timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
+
+icnt=1
+
+
+
+# hireg="0 6 0 0 0 0 0 0 223 170 0 0 16400000 -162350000 136 24005000 -152360000 45000 45000 64"
+# hindfd="10 6 0 0 0 0 0 0 321 225 18073000 -161525000 136 20000000 23088000 -153869000 64 0 2500000 2500000"
+
+# prreg="0 6 0 0 0 0 0 0 340 208 0 0 13500000 -76590000 136 22815000 -61335000 45000 45000 64"
+# prndfd="10 6 0 0 0 0 0 0 177 129 16829000 -68196000 136 20000000 19747000 -63972000 64 0 2500000 2500000"
+
+# guamreg="0 6 0 0 0 0 0 0 223 170 0 0 11700000 141000000 136 19305000 150990000 45000 45000 64"
+# guamndfd="10 6 0 0 0 0 0 0 193 193 12350000 143687000 136 20000000 16794000 148280000 64 0 2500000 2500000"
+
+# akreg="20 6 0 0 0 0 0 0 825 603 44800000 -174500000 136 60000000 -150000000 5000000 5000000 0 64"
+# akndfd="20 6 0 0 0 0 0 0 1649 1105 40530000 -178571000 136 60000000 -150000000 2976000 2976000 0 64"
+
+# conuswestreg="30 6 0 0 0 0 0 0 884 614 24500000 -129200000 136 40500000 -108000000 5000000 5000000 0 64 40500000 4050000" 
+# conuseastreg="30 6 0 0 0 0 0 0 884 614 22100000 -109800000 136 38000000 -89000000 5000000 5000000 0 64 40500000 40500000"
+#     conus227="30 6 0 0 0 0 0 0 1473 1025 12190000 -133459000 136 25000000 -95000000 5079000 5079000 0 64 25000000 25000000"
+#    conusndfd="30 6 0 0 0 0 0 0 2145 1377 20192000 -121554000 136 25000000 -95000000 2540000 2540000 0 64 25000000 25000000"
+
+
+## will need these files for every output grid.
+## separate out stuff done with NN interpolation and interpolate separately??
+
+
+# Usage: copygb2 [-g "kgdtn [kgdt]"] [-i "ip [ipopts]"]
+#                [-k "kpdtn kpdt"] [-v "uparms"]
+#                [-B mapgrib [-b mapindex] [-A "<> mapthreshold"] [-K "mapkpds"]]
+#                [-M "mask"/mergegrib [-m mergeindex]] [-X] [-a] [-N namelist]
+#        then either:
+#                grib2in index1 grib2out
+#             or:
+#                -x grib2in grib2out
+
+# C   -i "ip [ipopts]"
+# C      Interpolation options.  The default is bilinear
+# C      interpolation (ip=0).  Other interpolation options
+# C      are bicubic (ip=1), neighbor (ip=2), budget (ip=3),
+# C      and spectral (ip=4).  Spectral interpolation is forced
+# C      even if the input and output grids are the same.
+# C      See the documentation for iplib for further details.
+
+
+## near neighbor fields
+
+
+  250   1   0   0   0 129   2   HAINES INDEX
+  143   1   0   0   0 2 2  INSTANT PRECIP TYPE
+  142   1   0   0   0 2 2  INSTANT PRECIP TYPE
+  141   1   0   0   0 2 2  INSTANT PRECIP TYPE
+  140   1   0   0   0 2 2  INSTANT PRECIP TYPE
+   85 112   0  10   0 2 2  SOIL TEMPERATURE
+  144 112   0  10   0 2 2  SOIL MOISTURE
+
+
+
+
+
+# ${WGRIB2} hrrrsfc.1 | grep -F -f hrrr_ndfdparams | ${WGRIB2} -i -grib tmpfile hrrrsfc.1
+# ${WGRIB2} hrrrsfc.1 | grep -F -f pcpsnow.fil | ${WGRIB2} -i -grib tmpfile2 hrrrsfc.1
+
+
+### for GRIB2 (from HRRR):
+
+export SPLNUM=47
+export SPL=2.,5.,7.,10.,20.,30.\
+,50.,70.,75.,100.,125.,150.,175.,200.,225.\
+,250.,275.,300.,325.,350.,375.,400.,425.,450.\
+,475.,500.,525.,550.,575.,600.,625.,650.\
+,675.,700.,725.,750.,775.,800.,825.,850.\
+,875.,900.,925.,950.,975.,1000.,1013.2
+
+
+# timestr=`${DATE} +%Y-%m-%d_%H:%M:%S -d "${START_TIME}  ${fhr} hours"`
+
+cat > itag <<EOF
+$INPUT_DATA/wrfout_d01_${timeform}
+$OUTTYP
+grib2
+${timeform}
+${POSTMOD}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+rm -f fort.*
+ln -s ${PARMhrrr}/hrrr_post_avblflds.xml post_avblflds.xml
+ln -s ${PARMhrrr}/hrrr_params_grib2_tbl_new params_grib2_tbl_new
+# ln -s ${PARMhiresw}/hiresw_postcntrl.xml postcntrl.xml
+
+
+                                                                                                                   
+### assume that ready to process based on postmgr jobhj
+
+if [ $MODEL = nmm ] ; then 
+
+cat > itag <<EOF
+$INPUT_DATA/wrfout_d01_${timeform}
+$OUTTYP
+$timeform
+$model
+EOF
+
+elif [ $MODEL = arw ] ; then
+
+export POSTMOD=NCAR
+
+while [ ! -e $INPUT_DATA/fcstdone${fhr}.${tmmark} ]
+do
+sleep 6
+done
+
+# cat > itag <<EOF
+# $INPUT_DATA/wrfout_d01_${timeform}
+# $OUTTYP
+# $timeform
+# $POSTMOD
+# EOF
+
+cat > itag <<EOF
+$INPUT_DATA/wrfout_d01_${timeform}
+$OUTTYP
+grib2
+${timeform}
+${POSTMOD}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+else
+
+export POSTMOD=NMM
+
+while [ ! -e $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
+do
+sleep 6
+done
+
+# cat > itag <<EOF
+# $INPUT_DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+# $OUTTYP
+# $timeform
+# $POSTMOD
+# EOF
+
+cat > itag <<EOF
+$INPUT_DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+$OUTTYP
+grib2
+${timeform}
+${POSTMOD}
+${SPLNUM}
+${SPL}
+${VALIDTIMEUNITS}
+EOF
+
+fi
+#-----------------------------------------------------------------------
+#   Run wrf post.
+
+export pgm=hiresw_${MODEL}_post
+. ./prep_step
+
+# export FORT14="wrf_cntrl.parm"
+
+mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
+# mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
+export err=$?;./err_chk
+
+cp $pgmout ${pgmout}_${fhr}
+cp errfile errfile_${fhr}
+
+echo "done executing the post" > $DATA/postdone${fhr}
+# postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} POST done for F${fhr}"
+
+fhr=`expr $fhr + $INCR`
+
+if [ $fhr -lt 10 ]
+then
+fhr=0$fhr
+fi
+
+wdate=`$NDATE ${fhr} $CYCLE`
+
+done
+
+echo EXITING $0
+exit

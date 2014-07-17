@@ -43,7 +43,10 @@ export rg=$RUNTYP
 export mdlgrd=$RUNTYP  
 export mdl=$RUNTYP
 
-cd $DATA/smartinit
+# cd $DATA/smartinit
+cd $DATA
+
+cp $INPUT_DATA/DATE .
 
 #SMARTINIT OUTPUT grid filename extension
 outreg=$rg
@@ -260,6 +263,11 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 	if [ $check6 -eq 0 ]
 	then
 
+cp $INPUT_DATA/${freq}precip.${fhr} .
+cp $INPUT_DATA/${freq}snow.${fhr} .
+cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
+
+
      $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
      $utilexec/grbindex ${freq}precip ${freq}precipi
      $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
@@ -298,6 +306,8 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 	if [ $check6 -eq 0 ]
 	then
 
+
+
   ln -sf "${freq}precip"            fort.15
 
 mv ${freq}precipi ${freq}precipi_was
@@ -330,6 +340,10 @@ $utilexec/grbindex ${freq}precip ${freq}precipi
 
      cpgbgrd=$grid
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
+
+cp $INPUT_DATA/12precip.${fhr} .
+cp $INPUT_DATA/6snow.${fhr} .
+
      $utilexec/copygb -g "$cpgbgrd" -i3 -x 12precip.${fhr} 12precip
      $utilexec/grbindex 12precip 12precipi
      $utilexec/copygb -g "$cpgbgrd" -i3 -x 6snow.${fhr} 6snow
@@ -366,6 +380,11 @@ $utilexec/grbindex ${freq}precip ${freq}precipi
           1) echo RUN SMARTINIT for ON-CYC  hrs without 3 hr buckets : $fhr;;
           *) echo RUN SMARTINIT for OFF-CYC hrs without 6 hr buckets : $fhr;;
          esac
+
+if [ ! -e ${freq}snow ]
+then
+cp $INPUT_DATA/${freq}snow .
+fi
 
          ln -fs "${freq}snow"  fort.17
          ln -sf "${freq}snowi" fort.18

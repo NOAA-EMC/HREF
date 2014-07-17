@@ -159,14 +159,14 @@ cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_1h master${fhr}.ctl
 fi
 
 
-while [ ! -e $DATA/postdone${fhr} ]
+while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
 sleep 6
 done
 
 
 cat >input${fhr}.prd <<EOF5
-$DATA/post/WRFPRS${fhr}.tm00
+$INPUT_DATA/WRFPRS${fhr}.tm00
 EOF5
 
 rm fort.*
@@ -198,7 +198,7 @@ export FORT621="input${fhr}.prd"
 $EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
 export err=$?;./err_chk
 
-cp $DATA/post/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
+cp $INPUT_DATA/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
 
 ###############################################################
 ###############################################################

@@ -85,4 +85,5 @@ ${HOMEhiresw}/scripts/exhiresw_prepfinal.sh.ecf
 ########################################################
 
 cd /tmpnwprd2
+rm -rf $DATA
 date

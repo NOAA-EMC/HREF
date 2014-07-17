@@ -117,15 +117,15 @@ timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}":00:00"
 if [ $model == "NCAR" ]
 then
 
-OUTFIL=$DATA/wrfout_d01_${timeform}
-OLDOUTFIL=$DATA/wrfout_d01_${timeformold}
+OUTFIL=$INPUT_DATA/wrfout_d01_${timeform}
+OLDOUTFIL=$INPUT_DATA/wrfout_d01_${timeformold}
 
 icnt=1
 
 # wait for model restart file
 while [ $icnt -lt 1000 ]
 do
-   if [ -s $DATA/fcstdone${fhr}.${tmmark} ]
+   if [ -s $INPUT_DATA/fcstdone${fhr}.${tmmark} ]
    then
       break
    else
@@ -142,15 +142,15 @@ done
 
 else
 
-OUTFIL=$DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
-OLDOUTFIL=$DATA/nmmb_hst_01_nio_00${fhrold}h_00m_00.00s
+OUTFIL=$INPUT_DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+OLDOUTFIL=$INPUT_DATA/nmmb_hst_01_nio_00${fhrold}h_00m_00.00s
 
 icnt=1
 
 # wait for model restart file
 while [ $icnt -lt 1000 ]
 do
-   if [ -s $DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
+   if [ -s $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
    then
       break
    else
@@ -223,7 +223,10 @@ cd $DATA
 
 export pgm=hiresw_sndp_${RUN}
 
+if [ -e prep_step ]
+then
 . ./prep_step
+fi
 
 cp $PARMhiresw/hiresw_sndp.parm.mono $DATA/hiresw_sndp.parm.mono
 cp $PARMhiresw/hiresw_bufr.tbl $DATA/hiresw_bufr.tbl
@@ -248,6 +251,47 @@ cp $DATA/class1.bufr $COMOUT/${RUN}.t${cyc}z.class1.bufr
 cp $DATA/class1.bufr.wcoss $COMOUT/${RUN}.t${cyc}z.class1.bufr.wcoss
 cp $DATA/profilm.c1.${tmmark} ${COMOUT}/${RUN}.t${cyc}z.profilm.c1
 fi
+
+# remove bufr file breakout directory in $COMOUT if it exists
+
+if [ -d ${COMOUT}/bufr.${cyc} ]
+then
+  cd $COMOUT
+  rm -r bufr.${cyc}
+#   rm nam.${cyc}.bufrsnd.tar.gz
+  cd $DATA
+fi
+
+
+rm stnmlist_input
+
+cat <<EOF > stnmlist_input
+1
+$DATA/class1.bufr
+${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr
+EOF
+
+  mkdir -p ${COMOUT}/bufr.${NEST}${MODEL}${cyc}
+
+  export pgm=hiresw_stnmlist
+if [ -e prep_step ]
+then
+  . prep_step
+fi
+
+
+  export FORT20=$DATA/class1.bufr
+  export DIRD=${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr
+
+  startmsg
+  $EXEChiresw/hiresw_stnmlist < stnmlist_input >> $pgmout 2>errfile
+  export err=$?;err_chk
+
+  echo ${COMOUT}/bufr.${NEST}${MODEL}${cyc} > ${COMOUT}/bufr.${NEST}${MODEL}${cyc}/bufrloc
+
+#   cp class1.bufr.tm00 $COMOUT/${RUN}.${cyc}.class1.bufr
+
+
 
 # Make an upper case version of the ${RUN} variable for the alert
 #export DBN_NEST=`echo ${RUN} | tr '[a-z]' '[A-Z]'`

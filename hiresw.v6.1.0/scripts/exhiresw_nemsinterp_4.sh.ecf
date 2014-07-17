@@ -191,7 +191,7 @@ mm1=`echo $int3 | cut -c5-6`
 dd1=`echo $int3 | cut -c7-8`
 hh1=`echo $int3 | cut -c9-10`
 
-cp ../met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio .
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio
 
 t2=`$NDATE +3 $int3`
 
@@ -200,7 +200,7 @@ mm2=`echo $t2 | cut -c5-6`
 dd2=`echo $t2 | cut -c7-8`
 hh2=`echo $t2 | cut -c9-10`
 
-cp ../met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio .
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio
 
 t3=`$NDATE +3 $t2`
 
@@ -209,7 +209,7 @@ mm3=`echo $t3 | cut -c5-6`
 dd3=`echo $t3 | cut -c7-8`
 hh3=`echo $t3 | cut -c9-10`
 
-cp ../met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio .
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio
 
 t4=`$NDATE +3 $t3`
 
@@ -218,7 +218,7 @@ mm4=`echo $t4 | cut -c5-6`
 dd4=`echo $t4 | cut -c7-8`
 hh4=`echo $t4 | cut -c9-10`
 
-cp ../met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio .
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio
 
 t5=`$NDATE +3 $t4`
 
@@ -227,45 +227,51 @@ mm5=`echo $t5 | cut -c5-6`
 dd5=`echo $t5 | cut -c7-8`
 hh5=`echo $t5 | cut -c9-10`
 
-cp ../met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio .
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio
 
 export pgm=hiresw_nemsinterp
 cp $EXEChiresw/hiresw_nemsinterp .
 mpirun.lsf ./hiresw_nemsinterp
 err=$?; err_chk
 
-mv boco.0000 ../boco.0036
-mv boco.0003 ../boco.0039
-mv boco.0006 ../boco.0042
-mv boco.0009 ../boco.0045
+cp boco.0000 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0036
+cp boco.0003 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0039
+cp boco.0006 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0042
+cp boco.0009 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0045
 
 echo "DONE" > ../nemsinterpdone4
 
 cd $DATA
 
-count=`ls nemsinterpdone* | wc -l`
+# count=`ls nemsinterpdone* | wc -l`
 
-while [ $count -lt 4 ]
+count=`ls $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.* | wc -l`
+
+while [ $count -lt 16 ]
 do
 sleep 20
-count=`ls nemsinterpdone* | wc -l`
-echo nemsinterpdone count now $count
+count=`ls $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.* | wc -l`
+echo now see $count boco files in com
 done
 
 
-hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45"
-for hr in $hrs
-do
-cp boco.00${hr} $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.00${hr}
-export err1=$?
+# while [ $count -lt 4 ]
+# do
+# sleep 20
+# count=`ls nemsinterpdone* | wc -l`
+# echo nemsinterpdone count now $count
+# done
 
-if [ $err1 -ne 0 ]
-then
-echo "failed copy of boco.00${hr}"
-./err_exit "missing a critical file for the model"
-fi
 
-done
+# export err1=$?
+# if [ $err1 -ne 0 ]
+# then
+# echo "failed copy of boco.00${hr}"
+# ./err_exit "missing a critical file for the model"
+# fi
+
+##? done
+
 cp configure_file $COMOUT/${NEST}${MODEL}.t${cyc}z.configure_file
 export err=$?; err_chk
 

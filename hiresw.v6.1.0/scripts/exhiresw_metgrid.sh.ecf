@@ -62,6 +62,9 @@ ${DATA}/err_chk
 
 ic=0
 
+
+
+### clean or remove this block
 while [ $ic -lt 1000 ] ; do
 
  icntb=1
@@ -88,35 +91,37 @@ while [ $ic -lt 1000 ] ; do
  
 done
 
-if [ $MODEL = "arw" ]
-then
-count=`ls $DATA/met*.bin  | wc -l`
-elif [ $MODEL = "nmmb" ]
-then
-count=`ls $DATA/met*.dio | wc -l`
-else
-echo BAD MODEL CHOICE of $MODEL
-exit 99
-fi
+# this needs reworking
 
-COUNTLIM=17
+# if [ $MODEL = "arw" ]
+# then
+# count=`ls $DATA/met*.bin  | wc -l`
+# elif [ $MODEL = "nmmb" ]
+# then
+# count=`ls $DATA/met*.dio | wc -l`
+# else
+# echo BAD MODEL CHOICE of $MODEL
+# exit 99
+# fi
 
-while [ $count -lt $COUNTLIM ]
-do
-sleep 20
+# COUNTLIM=17
 
-if [ $MODEL = "arw" ]
-then
-count=`ls $DATA/met*.bin  | wc -l`
-elif [ $MODEL = "nmmb" ]
-then
-count=`ls $DATA/met*.dio | wc -l`
-fi
+# while [ $count -lt $COUNTLIM ]
+# do
+# sleep 20
 
-done
+# if [ $MODEL = "arw" ]
+# then
+# count=`ls $DATA/met*.bin  | wc -l`
+# elif [ $MODEL = "nmmb" ]
+# then
+# count=`ls $DATA/met*.dio | wc -l`
+# fi
+
+# done
 
 ## bonus sleep to make sure file is completely copied to the $DATA dir
-sleep 5
+# sleep 5
 
 cat $DATA/metgrid.log.0000_* > $COMOUT/${NEST}${MODEL}.t${cyc}z.metgrid.log
 

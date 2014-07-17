@@ -39,8 +39,9 @@ fi
 ############################################################# 
 export pid=$$
 export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
-mkdir -p $DATA/prdgen_full
-cd $DATA/prdgen_full
+export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+mkdir -p $DATA
+cd $DATA
 
 ##################################################
 # SENDECF  - Flag Events on ecFlow

@@ -32,11 +32,9 @@ fi
 #
 export pid=$$
 export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
-#if [ -d $DATA/smartinit ]; then
-   #rm -rf $DATA/smartinit/
-#fi
-mkdir -p $DATA/smartinit
-cd $DATA/smartinit
+export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+mkdir -p $DATA
+cd $DATA
 
 ####################################
 # File To Log Msgs
