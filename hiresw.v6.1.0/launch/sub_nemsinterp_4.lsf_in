@@ -35,9 +35,3 @@ export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.nemsinterp_4_${NEST}_${MODEL}_$
 $HOMEhiresw/jobs/JHIRESW_NEMSINTERP_4
 
 bsub < sub_model.lsf__DOM___CORE___CYC_
-bsub < sub_post.lsf__DOM___CORE___CYC_
-bsub < sub_prdgen.lsf__DOM___CORE___CYC_
-bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
-bsub < sub_smartinit.lsf__DOM___CORE___CYC_
-bsub < sub_smartinitb.lsf__DOM___CORE___CYC_
-
