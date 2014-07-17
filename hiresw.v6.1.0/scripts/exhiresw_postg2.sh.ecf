@@ -179,16 +179,13 @@ icnt=1
 ## near neighbor fields
 
 
-  250   1   0   0   0 129   2   HAINES INDEX
-  143   1   0   0   0 2 2  INSTANT PRECIP TYPE
-  142   1   0   0   0 2 2  INSTANT PRECIP TYPE
-  141   1   0   0   0 2 2  INSTANT PRECIP TYPE
-  140   1   0   0   0 2 2  INSTANT PRECIP TYPE
-   85 112   0  10   0 2 2  SOIL TEMPERATURE
-  144 112   0  10   0 2 2  SOIL MOISTURE
-
-
-
+#  250   1   0   0   0 129   2   HAINES INDEX
+#  143   1   0   0   0 2 2  INSTANT PRECIP TYPE
+#  142   1   0   0   0 2 2  INSTANT PRECIP TYPE
+#  141   1   0   0   0 2 2  INSTANT PRECIP TYPE
+#  140   1   0   0   0 2 2  INSTANT PRECIP TYPE
+#   85 112   0  10   0 2 2  SOIL TEMPERATURE
+#  144 112   0  10   0 2 2  SOIL MOISTURE
 
 
 # ${WGRIB2} hrrrsfc.1 | grep -F -f hrrr_ndfdparams | ${WGRIB2} -i -grib tmpfile hrrrsfc.1
@@ -220,9 +217,10 @@ ${VALIDTIMEUNITS}
 EOF
 
 rm -f fort.*
-ln -s ${PARMhrrr}/hrrr_post_avblflds.xml post_avblflds.xml
-ln -s ${PARMhrrr}/hrrr_params_grib2_tbl_new params_grib2_tbl_new
-# ln -s ${PARMhiresw}/hiresw_postcntrl.xml postcntrl.xml
+
+cp ${PARMhiresw}/hiresw_post_avblflds.xml       post_avblflds.xml
+cp ${PARMhiresw}/hiresw_params_grib2_tbl_new    params_grib2_tbl_new
+
 
 
                                                                                                                    
