@@ -1,0 +1,69 @@
+#############################################
+How to run tests:
+#############################################
+
+ - go to ~/trunk/job/regression_tests/ directory
+
+ - run RT.sh script
+
+ - wait about three hours (and growing)
+   progress should appear on the screen
+
+ - look in RegressionTests.log for results
+
+#############################################
+How to create new baselines :
+#############################################
+
+ - use RT.sh script with one argument: nmm, gfs or all
+   ./RT.sh nmm - will create baselines for NMMB
+   ./RT.sh gfs - will create baselines for GFS
+   ./RT.sh post- will create baselines for post
+   ./RT.sh all - will create baselines for both GFS & NMMB
+
+ - results will be stored on /stmp/${LOGIN}/REGRESSION_TEST directory
+   (new /stmp/${LOGIN}/REGRESSION_TEST directory will be ready to
+    replace current REGRESSION_TEST directory)
+
+#############################################
+Tests performed:
+#############################################
+
+    NMMB, global, control version
+    NMMB, global, test NEMSIO input file
+    NMMB, global, test restart
+    NMMB, global, test restart with NEMSIO file
+    NMMB, global, test different decompostition
+    NMMB, global, test threads
+    NMMB, global, test with GFS physics
+
+    NMMB, regional, control version
+    NMMB, regional, test NEMSIO input file
+    NMMB, regional, test restart
+    NMMB, regional, test restart with NEMSIO file
+    NMMB, regional, test different decompostition
+    NMMB, regional, test threads
+    NMMB, regional, test with GFS physics
+    NMMB, regional, test nesting
+    NMMB, regional, test precipitation adjustment
+    NMMB, regional, test writing time series
+
+    GFS, control version (32 processors, 1 thread)
+    GFS, 2-copy option
+    GFS, different decompostition (48 processors, 1 thread)
+    GFS, test threading (16 processors, 2 threads)
+    GFS, test single processor version (1 processor)
+    GFS,  1 proc, 1 thread, no quilt, nsout=1
+    GFS, 16 proc, 2 threads,no quilt, output every 2 time steps
+    GFS, 48 proc, 1 thread, no quilt
+    GFS, 32 proc, 1 thread, no quilt, output every 4 timestep
+    GFS, 32 proc, 1 thread,    quilt, digital filter on reduced grid
+    GFS, 16 proc, 2 thread,    quilt, 2x2 wrt pe, digital filter on reduced grid
+    GFS,  1 proc,           no quilt, digital filter on reduced grid
+    GFS, use the OPAC climo scheme for SW and LW
+    GFS, 32tasks, 2threads, quilt, dfi3hr, reduced grid, NDSL
+    GFS, 16tasks, 2 thread, quilt,2x2 wrt pe, HYB 2loop digital filter on reduced grid
+    GFS, 16tasks, 2 thread, quilt,2x2 wrt pe, HYB 2loop digital filter on reduced grid with nst
+    GFS, 16tasks, 2 thread, quilt,2x2 wrt pe, HYB 1loop digital filter on reduced grid
+    GFS, Concurrency GEFS, stochastic perturbations, 4 members, T190L28
+

@@ -1,0 +1,20 @@
+#
+# AOD Registry Resource File
+#
+
+# First block specifies number and channels to compute AOD over
+# and the input filenames to use.  Be sure that n_channels >=
+# nbins_XX below, which specifies which to write to the bundle file.
+# ----------------------------------------------------
+n_channels: 8
+
+r_channels: .38e-6 .47e-6 .55e-6 .659e-6 .865e-6 1.24e-6 1.64e-6 2.13e-6
+
+filename_optical_properties_DU: ./optics_DU.nc
+filename_optical_properties_SS: ./optics_SS.v2.nc
+filename_optical_properties_OC: ./optics_OC.nc
+filename_optical_properties_BC: ./optics_BC.nc
+filename_optical_properties_SU: ./optics_SU.nc
+
+chem_registry_filename: Chem_MieRegistry.rc  # must be consistent with
+                                             # optical tables

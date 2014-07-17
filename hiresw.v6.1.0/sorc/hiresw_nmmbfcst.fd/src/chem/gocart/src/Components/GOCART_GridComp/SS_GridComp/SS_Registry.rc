@@ -1,0 +1,61 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: SS
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+
+<SS::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl| Sub |          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  SSMASS   | kg kg-1    | xyz | C |    |   |   |     | Sea Salt Mass Mixing Ratio 
+  SSMASS25 | kg kg-1    | xyz | C |    |   |   |     | Sea Salt Mass Mixing Ratio - PM 2.5 
+# .........|............|.....|...|....|...|...|.....|..................................
+  SSEM001  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Emission Bin 001     
+  SSEM002  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Emission Bin 002     
+  SSEM003  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Emission Bin 003     
+  SSEM004  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Emission Bin 004     
+  SSEM005  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Emission Bin 005    
+  SSSD001  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Sedimentation Bin 001     
+  SSSD002  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Sedimentation Bin 002     
+  SSSD003  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Sedimentation Bin 003     
+  SSSD004  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Sedimentation Bin 004     
+  SSSD005  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Sedimentation Bin 005    
+  SSDP001  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Dry Deposition Bin 001     
+  SSDP002  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Dry Deposition Bin 002     
+  SSDP003  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Dry Deposition Bin 003     
+  SSDP004  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Dry Deposition Bin 004     
+  SSDP005  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Dry Deposition Bin 005     
+  SSWT001  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Wet Deposition Bin 001     
+  SSWT002  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Wet Deposition Bin 002     
+  SSWT003  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Wet Deposition Bin 003     
+  SSWT004  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Wet Deposition Bin 004     
+  SSWT005  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Wet Deposition Bin 005     
+# SSSV001  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Convective Scavenging Bin 001     
+# SSSV002  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Convective Scavenging Bin 002     
+# SSSV003  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Convective Scavenging Bin 003     
+# SSSV004  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Convective Scavenging Bin 004     
+# SSSV005  | kg m-2 s-1 | xy  |   |    |   |   |     | Sea Salt Convective Scavenging Bin 005     
+  SSSMASS  | kg m-3     | xy  |   |    |   |   |     | Sea Salt Surface Mass Concentration    
+  SSCMASS  | kg m-2     | xy  |   |    |   |   |     | Sea Salt Column Mass Density    
+  SSEXTTAU |    1       | xy  |   |    |   |   |     | Sea Salt Extinction AOT [550 nm]    
+  SSSCATAU |    1       | xy  |   |    |   |   |     | Sea Salt Scattering AOT [550 nm]    
+  SSSMASS25| kg m-3     | xy  |   |    |   |   |     | Sea Salt Surface Mass Concentration - PM 2.5    
+  SSCMASS25| kg m-2     | xy  |   |    |   |   |     | Sea Salt Column Mass Density - PM 2.5 
+  SSEXTT25 |    1       | xy  |   |    |   |   |     | Sea Salt Extinction AOT [550 nm] - PM 2.5    
+  SSSCAT25 |    1       | xy  |   |    |   |   |     | Sea Salt Scattering AOT [550 nm] - PM 2.5   
+  SSAERIDX |    1       | xy  |   |    |   |   |     | Sea Salt TOMS UV Aerosol Index    
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+</SS::ExportSpec>

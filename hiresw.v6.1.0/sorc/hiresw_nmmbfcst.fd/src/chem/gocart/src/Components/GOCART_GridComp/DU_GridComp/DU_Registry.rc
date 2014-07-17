@@ -1,0 +1,61 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: DU
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+
+<DU::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl| Sub |          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  DUMASS   | kg kg-1    | xyz | C |    |   |   |     | Dust Mass Mixing Ratio 
+  DUMASS25 | kg kg-1    | xyz | C |    |   |   |     | Dust Mass Mixing Ratio - PM 2.5 
+# .........|............|.....|...|....|...|...|.....|..................................
+  DUEM001  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Emission Bin 001     
+  DUEM002  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Emission Bin 002     
+  DUEM003  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Emission Bin 003     
+  DUEM004  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Emission Bin 004     
+  DUEM005  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Emission Bin 005    
+  DUSD001  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Sedimentation Bin 001     
+  DUSD002  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Sedimentation Bin 002     
+  DUSD003  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Sedimentation Bin 003     
+  DUSD004  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Sedimentation Bin 004     
+  DUSD005  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Sedimentation Bin 005    
+  DUDP001  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Dry Deposition Bin 001     
+  DUDP002  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Dry Deposition Bin 002     
+  DUDP003  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Dry Deposition Bin 003     
+  DUDP004  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Dry Deposition Bin 004     
+  DUDP005  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Dry Deposition Bin 005     
+  DUWT001  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Wet Deposition Bin 001     
+  DUWT002  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Wet Deposition Bin 002     
+  DUWT003  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Wet Deposition Bin 003     
+  DUWT004  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Wet Deposition Bin 004     
+  DUWT005  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Wet Deposition Bin 005     
+# DUSV001  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Convective Scavenging Bin 001     
+# DUSV002  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Convective Scavenging Bin 002     
+# DUSV003  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Convective Scavenging Bin 003     
+# DUSV004  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Convective Scavenging Bin 004     
+# DUSV005  | kg m-2 s-1 | xy  |   |    |   |   |     | Dust Convective Scavenging Bin 005     
+  DUSMASS  | kg m-3     | xy  |   |    |   |   |     | Dust Surface Mass Concentration    
+  DUCMASS  | kg m-2     | xy  |   |    |   |   |     | Dust Column Mass Density    
+  DUEXTTAU |    1       | xy  |   |    |   |   |     | Dust Extinction AOT [550 nm]    
+  DUSCATAU |    1       | xy  |   |    |   |   |     | Dust Scattering AOT [550 nm]    
+  DUSMASS25| kg m-3     | xy  |   |    |   |   |     | Dust Surface Mass Concentration - PM 2.5    
+  DUCMASS25| kg m-2     | xy  |   |    |   |   |     | Dust Column Mass Density - PM 2.5 
+  DUEXTT25 |    1       | xy  |   |    |   |   |     | Dust Extinction AOT [550 nm] - PM 2.5    
+  DUSCAT25 |    1       | xy  |   |    |   |   |     | Dust Scattering AOT [550 nm] - PM 2.5   
+  DUAERIDX |    1       | xy  |   |    |   |   |     | Dust TOMS UV Aerosol Index    
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+</DU::ExportSpec>

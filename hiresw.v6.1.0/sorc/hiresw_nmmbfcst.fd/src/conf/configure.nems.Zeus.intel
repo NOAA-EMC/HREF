@@ -1,0 +1,114 @@
+## NEMS configuration file
+##
+## Platform: Zeus
+## Compiler: Intel with MPT
+
+SHELL           = /bin/sh
+
+################################################################################
+## This configuration file leverages the ESMFMKFILE mechanism to switch
+## between different ESMF versions and installations. The only environment
+## variable used by this  mechanism is ESMFMKFILE, which appears below in 
+## the include statment. Systems that use "modules" to manage environments
+## will set ESMFMKFILE as part of loading an "esmf" module. The user can
+## also set ESMFMKFILE manually to target a different ESMF installation.
+
+include         $(ESMFMKFILE)
+ESMF_INC        = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB        = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+################################################################################
+## ATM settings
+## Use GSM as GFS
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+################################################################################
+## OCN settings
+## NUOPC compliant OCN models supply a standard makefile fragment
+
+ocndummy_mk   = /home/Gerhard.Theurich/OCN-INSTALLS/DummyOCN-version-01/ocn.mk
+hycom_mk      = /home/Gerhard.Theurich/OCN-INSTALLS/HYCOM-rtofs0.25cfsr__branches__NUOPC.rev30015/hycom_nuopc.mk
+mom5_mk       = /home/Fei.Liu/OCN-INSTALLS/20130719/mom5.mk
+
+################################################################################
+## Other settings
+
+NETCDF_LIB   = /apps/netcdf/3.6.3/intel/lib/libnetcdf.a
+
+LIBDIR=/contrib/nceplibs/nwprod/lib
+PARADIR=/contrib/nceplibs_ext/lib
+POSTDIR=/scratch2/portfolios/NCEPDEV/global/save/Sarah.Lu/Summer_School_2013/lib
+
+NEMSIO_INC   = -I${LIBDIR}/incmod/nemsio
+NEMSIO_LIB   = -L${LIBDIR} -lnemsio
+BACIO_LIB    = -L${LIBDIR} -lbacio_4
+W3_LIB       = -L${LIBDIR}  -lw3nco_4 -lw3emc_4
+SP_LIB       = -L${LIBDIR} -lsp_d
+SYS_LIB      =
+ 
+EXTLIBS      = $(NEMSIO_LIB) \
+               $(BACIO_LIB) \
+               $(W3_LIB) \
+               $(SP_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+## for the post quilting option
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L${LIBDIR}  -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L${PARADIR} -lcrtm
+G2_LIB      =  -L${LIBDIR} -lg2tmpl -lg2_4  -L${PARADIR} -ljasper -lpng -lz
+XML_LIB     = -L${PARADIR} -lxmlparse
+SIGIO_LIB   = -L${LIBDIR} -lsigio_4
+SFCIO_LIB   = -L${LIBDIR} -lsfcio
+
+EXTLIBS_POST = $(POST_LIB) \
+               $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+###
+FC           = ifort -lmpi -openmp -convert big_endian -assume byterecl -mkl=sequential
+F77          = ifort -lmpi -openmp -convert big_endian -assume byterecl -mkl=sequential
+FREE         = -free
+FIXED        = -fixed
+R8           = -r8
+
+FINCS        = $(ESMF_INC) $(NEMSIO_INC)
+TRAPS        =
+
+FFLAGS       = $(TRAPS) $(FINCS) -fp-model strict
+
+OPTS_NMM     = -O3
+OPTS_GFS     = -O3
+OPTS_GEN     = -O3
+OPTS_FIM     = -O3
+
+FFLAGM_DEBUG = 
+
+FFLAGS_NMM   = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS   = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF  = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN   = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM   = $(OPTS_FIM) $(FFLAGS)
+
+CPP          = /lib/cpp -P -traditional
+CPPFLAGS     =
+
+AR           = ar
+ARFLAGS      = -r
+
+RM           = rm

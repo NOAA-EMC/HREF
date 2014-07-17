@@ -1,0 +1,3278 @@
+
+!  $Id: MAPL_IO.P90,v 1.20 2009/05/01 19:58:51 ltakacs Exp $
+
+#include "MAPL_ErrLog.h"
+
+!BOP
+
+! !MODULE: MAPL_IO -- A Module to do I/O (ASCII+binary) until ESMF fully supports it
+
+
+! !INTERFACE:
+
+module MAPL_IOMod
+
+  use ESMF_Mod
+  use MAPL_BaseMod
+  use MAPL_CommsMod
+  use MAPL_SortMod
+
+  implicit none
+  private
+
+  public GETFILE
+  public FREE_FILE
+  public READ_PARALLEL
+  public WRITE_PARALLEL
+  public MAPL_VarRead
+  public MAPL_VarWrite
+  public MAPL_Skip
+  public MAPL_Backspace
+  public MAPL_Rewind
+  public MAPL_ClimUpdate 
+  public MAPL_DestroyFile
+  public ArrDescr
+  public ArrDescrSet
+
+! Interfaces:
+! -----------
+
+  interface WRITE_PARALLEL
+     module procedure WRITE_PARALLEL_I4_0
+     module procedure WRITE_PARALLEL_I4_1
+     module procedure WRITE_PARALLEL_R4_0
+     module procedure WRITE_PARALLEL_R4_1
+     module procedure WRITE_PARALLEL_R8_0
+     module procedure WRITE_PARALLEL_R8_1
+     module procedure WRITE_PARALLEL_STRING_0
+  end interface
+
+  interface READ_PARALLEL
+     module procedure READ_PARALLEL_STRING_0
+     module procedure READ_PARALLEL_I4_0
+     module procedure READ_PARALLEL_I4_1
+     module procedure READ_PARALLEL_I4_2
+     module procedure READ_PARALLEL_R4_0
+     module procedure READ_PARALLEL_R4_1
+     module procedure READ_PARALLEL_R4_2
+     module procedure READ_PARALLEL_R8_0
+     module procedure READ_PARALLEL_R8_1
+     module procedure READ_PARALLEL_R8_2
+  end interface
+
+! -----------------------------------------
+  interface MAPL_VarRead
+     module procedure MAPL_StateVarRead
+     module procedure MAPL_BundleRead 
+     module procedure MAPL_FieldRead 
+     module procedure MAPL_VarRead_R4_1D
+     module procedure MAPL_VarRead_R4_2D
+     module procedure MAPL_VarRead_R4_3D
+     module procedure MAPL_VarRead_R4_4D
+     module procedure MAPL_VarRead_R8_1D
+     module procedure MAPL_VarRead_R8_2D
+     module procedure MAPL_VarRead_R8_3D
+     module procedure MAPL_VarRead_R8_4D
+  end interface
+
+  interface MAPL_VarWrite
+     module procedure MAPL_StateVarWrite
+     module procedure MAPL_BundleWrite 
+     module procedure MAPL_VarWrite_I4_1D
+     module procedure MAPL_VarWrite_R4_1D
+     module procedure MAPL_VarWrite_R4_2D
+     module procedure MAPL_VarWrite_R4_3D
+     module procedure MAPL_VarWrite_R4_4D
+     module procedure MAPL_VarWrite_R8_1D
+     module procedure MAPL_VarWrite_R8_2D
+     module procedure MAPL_VarWrite_R8_3D
+     module procedure MAPL_VarWrite_R8_4D
+  end interface
+
+  include "mpif.h"
+
+! Global vars:
+! ------------
+
+  integer, parameter :: STD_OUT_UNIT_NUMBER = 6
+  integer, parameter :: LAST_UNIT = 99
+  integer, parameter :: UNDEF = 999
+  logical, save      :: TAKEN(LAST_UNIT)=.FALSE.
+  logical, save      :: MTAKEN(LAST_UNIT)=.FALSE.
+  character(len=ESMF_MAXSTR), save  :: mname(LAST_UNIT)
+
+  integer, parameter :: not_allocated = 0
+  integer, parameter :: r4_2 = 1
+  integer, parameter :: r4_1 = 2
+  integer, parameter :: r8_2 = 3
+  integer, parameter :: r8_1 = 4
+  integer, parameter :: i4_2 = 5
+  integer, parameter :: i4_1 = 6
+
+  type PTR
+   integer :: allocated=not_allocated
+   real(kind=ESMF_KIND_R4)   , pointer :: r4_2(:,:) => null()
+   real(kind=ESMF_KIND_R4)   , pointer :: r4_1(:) => null()
+   real(kind=ESMF_KIND_R4)             :: r4_0
+   real(kind=ESMF_KIND_R8)   , pointer :: r8_2(:,:) => null()
+   real(kind=ESMF_KIND_R8)   , pointer :: r8_1(:) => null()
+   real(kind=ESMF_KIND_R8)             :: r8_0
+   integer(kind=ESMF_KIND_I4), pointer :: I4_2(:,:) => null()
+   integer(kind=ESMF_KIND_I4), pointer :: I4_1(:) => null()
+   integer(kind=ESMF_KIND_I4)          :: I4_0
+  end type PTR
+
+  type memunit
+     integer :: prevrec = 0
+     type (PTR), pointer :: Records(:)=>null()
+  end type MEMUNIT
+
+  type (memunit), target, save :: MEM_UNITS(LAST_UNIT)
+  type (memunit), pointer      :: munit
+  type(PTR), pointer           :: REC(:)
+
+  type ArrDescr
+     integer(kind=MPI_OFFSET_KIND) :: offset
+     integer :: Xcomm, Ycomm
+     integer :: readers_comm, IOscattercomm
+     integer :: writers_comm, IOgathercomm
+     integer, pointer :: i1(:), in(:), j1(:), jn(:)
+     integer :: im_world, jm_world
+     integer :: mpi_filetype_r4, mpi_filetype_r8
+  end type ArrDescr
+
+!#define TIME_MPIIO
+#ifdef TIME_MPIIO
+  real(kind=ESMF_KIND_R8), save :: peak_ioread_bandwidth=0
+  real(kind=ESMF_KIND_R8), save :: mean_ioread_bandwidth=0
+  real(kind=ESMF_KIND_R8), save :: ioread_counter=0
+  real(kind=ESMF_KIND_R8), save :: peak_iowrite_bandwidth=0
+  real(kind=ESMF_KIND_R8), save :: mean_iowrite_bandwidth=0
+  real(kind=ESMF_KIND_R8), save :: iowrite_counter=0
+#endif
+
+  contains
+
+    subroutine ArrDescrSet(ArrDes, offset, &
+         readers_comm, ioscattercomm, &
+         writers_comm, iogathercomm, &
+         i1, in, j1, jn, im_world, jm_world, &
+         mpi_filetype_r4, mpi_filetype_r8)
+
+      type(ArrDescr),                 intent(INOUT) :: ArrDes
+      integer(kind=MPI_OFFSET_KIND), &
+                           optional,  intent(IN   ) :: offset
+      integer, optional,              intent(IN   ) :: readers_comm, ioscattercomm
+      integer, optional,              intent(IN   ) :: writers_comm, iogathercomm
+      integer, optional, pointer                    :: i1(:), in(:), j1(:), jn(:)
+      integer, optional,              intent(IN   ) :: im_world, jm_world
+      integer, optional,              intent(IN   ) :: mpi_filetype_r4, mpi_filetype_r8
+
+      if(present(offset  )) ArrDes%offset   = offset
+      if(present(readers_comm )) ArrDes%readers_comm  = readers_comm
+      if(present(ioscattercomm)) ArrDes%ioscattercomm = ioscattercomm
+      if(present(writers_comm )) ArrDes%writers_comm  = writers_comm
+      if(present(iogathercomm )) ArrDes%iogathercomm  = iogathercomm
+      if(present(i1      )) ArrDes%i1       => i1
+      if(present(in      )) ArrDes%in       => in
+      if(present(j1      )) ArrDes%j1       => j1
+      if(present(jn      )) ArrDes%jn       => jn
+      if(present(im_world)) ArrDes%im_world = im_world
+      if(present(jm_world)) ArrDes%jm_world = jm_world
+      if(present(mpi_filetype_r4)) ArrDes%mpi_filetype_r4 = mpi_filetype_r4
+      if(present(mpi_filetype_r8)) ArrDes%mpi_filetype_r8 = mpi_filetype_r8
+
+    end subroutine ArrDescrSet
+
+  INTEGER FUNCTION GETFILEMEM(name,  RC )
+    IMPLICIT NONE
+    character(LEN=*), intent(in   )           :: Name
+    integer         , intent(  out), OPTIONAL :: RC
+
+    integer :: i
+    logical :: found
+
+    found = .false.
+    do i = 2, last_unit
+       if(name==Mname(i)) then
+          found = .true.
+          exit
+       end if
+    end do
+
+    if (.not. found) then
+       do i = 2,last_unit
+          if(.not.MTAKEN(i)) then
+             found = .true.
+             exit
+          endif
+       enddo
+    end if
+
+    if (.not. found) then
+       if(present(rc)) rc = 1
+       return
+    endif
+
+    mname(i)   = name
+    mtaken(i)  = .true.
+    getfilemem = -i
+
+    if(present(rc)) rc = 0
+    return
+  end function getfilemem
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+  INTEGER FUNCTION GETFILE( NAME, DO_OPEN, FORM, ALL_PES, &
+                             BLOCKSIZE, NUMBUFFERS, RC )
+    IMPLICIT NONE
+
+    character(LEN=*), intent(in   )           :: Name
+    integer         , intent(in   ), OPTIONAL :: DO_OPEN
+    character(LEN=*), intent(in   ), OPTIONAL :: Form
+    logical         , intent(in   ), OPTIONAL :: ALL_PES
+    integer         , intent(in   ), OPTIONAL :: BLOCKSIZE
+    integer         , intent(in   ), OPTIONAL :: NUMBUFFERS
+    integer         , intent(  out), OPTIONAL :: RC
+    
+    INTEGER I
+    integer :: DO_OPEN_
+    logical :: ALL_PES_
+    character(len=ESMF_MAXSTR)     :: Iam="GETFILE"
+    integer          :: status
+    
+    LOGICAL FILEOPEN, UNITOPEN, FOUND 
+
+    if(INDEX(NAME,'*') /= 0) then
+        getfile = getfilemem(name,rc=status)
+	VERIFY_(STATUS)
+        RETURN_(ESMF_SUCCESS) 
+    endif
+
+    if (NAME == "stdout" .or. NAME== "STDOUT") then
+       GETFILE = STD_OUT_UNIT_NUMBER
+       RETURN_(ESMF_SUCCESS) 
+    end if
+
+    if (.not. present(DO_OPEN)) then
+       DO_OPEN_ = 1
+    else
+       DO_OPEN_ = DO_OPEN
+    end if
+    
+    ALL_PES_ = .false.
+    if (present(ALL_PES)) then
+       ALL_PES_ = ALL_PES
+    end if
+      
+    if (.not. MAPL_AM_I_ROOT() .and. .not. ALL_PES_) then
+       GETFILE = UNDEF
+       RETURN_(ESMF_SUCCESS) 
+    end if
+
+!   Check if the file is already open
+
+    INQUIRE ( FILE=NAME, NUMBER=GETFILE, OPENED=FILEOPEN )
+
+!   If the file isnt already open THEN
+
+    IF ( .NOT. FILEOPEN ) THEN
+       I = 20
+       FOUND = .FALSE.
+       DO WHILE ( I.LE.LAST_UNIT .AND. .NOT.FOUND ) 
+          IF ( .NOT. TAKEN(I) ) THEN
+             TAKEN(I) = .TRUE.
+             INQUIRE ( UNIT=I, OPENED=UNITOPEN )
+             IF ( .NOT. UNITOPEN ) THEN
+                
+                status = 0
+                
+                if ( DO_OPEN_ .NE. 0 ) then
+                   call MAPL_open(UNIT=i,FILE=Name,FORM=FORM, &
+                                  BLOCKSIZE= BLOCKSIZE, NUMBUFFERS=NUMBUFFERS, RC=STATUS)
+                endif
+                
+                if ( status /= 0 ) then
+                   write (0,*) 'ERROR opening "',Name,'" using GETFILE'
+                   write (0,*) ' IOSTAT = ',status
+                   RETURN_(ESMF_FAILURE)
+                endif
+               
+                GETFILE = I
+                FOUND = .TRUE.
+             ENDIF
+          ENDIF
+          I = I + 1
+       ENDDO
+!
+!      IF there are no available logical units THEN
+!         Write an error message
+!         Return Error status
+!      ENDIF there are no available logical units
+!  
+       IF ( .NOT. FOUND ) THEN
+          WRITE (0,*) ' COULD NOT FIND ANY AVAILABLE UNITS '
+          RETURN_(ESMF_FAILURE)
+       ENDIF
+
+    ENDIF ! the file isnt already open 
+
+    RETURN_(ESMF_SUCCESS) 
+  END FUNCTION GETFILE
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  SUBROUTINE FREE_FILE(UNIT, RC)
+    implicit none
+    integer         , intent(out), OPTIONAL :: RC
+
+    character(len=ESMF_MAXSTR)     :: Iam="FREE_FILE"
+    integer          :: status
+    integer :: UNIT
+    logical :: ALL_OPEN_
+
+    if(UNIT < 0) then
+
+      ASSERT_(-UNIT<=LAST_UNIT)
+      ASSERT_(MTAKEN(-UNIT))
+      MEM_units(-unit)%PREVREC=0
+
+    ELSE
+
+    if (UNIT == STD_OUT_UNIT_NUMBER) return
+    if (UNIT /= UNDEF) then
+       close(UNIT)
+
+       IF (UNIT.LT.1 .OR. UNIT.GT.LAST_UNIT) THEN
+          WRITE (0,*) ' BAD UNIT NUMBER  ZFILCLR  UNIT = ', UNIT
+          RETURN_(ESMF_FAILURE)
+       ELSE
+          TAKEN(UNIT) = .FALSE.
+       ENDIF
+    end if
+
+    END IF
+
+    RETURN_(ESMF_SUCCESS)
+  END SUBROUTINE FREE_FILE
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  subroutine MAPL_Destroyfile(unit,  RC )
+    IMPLICIT NONE
+    integer         , intent(in   )           :: unit
+    integer         , intent(  out), OPTIONAL :: RC
+
+    integer :: i,k
+
+    if (unit < 0) then
+       i = -unit
+       if (associated(mem_units(i)%records)) then
+          do k=1,size(mem_units(i)%records)
+             call dealloc_(mem_units(i)%records(k))
+          end do
+          deallocate(mem_units(i)%records)
+       end if
+       mtaken(i)  = .false.
+    end if
+
+    if(present(rc)) rc = 0
+    return
+  end subroutine MAPL_Destroyfile
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+  subroutine MAPL_OPEN(UNIT,FILE,FORM,BLOCKSIZE, NUMBUFFERS, RC)
+
+    implicit none
+    integer         , optional, intent(out) :: RC
+
+    integer         ,           intent(in) :: UNIT
+    character(LEN=*),           intent(in) :: FILE
+    character(LEN=*), optional, intent(in) :: FORM
+    integer,          optional, intent(in) :: BLOCKSIZE, NUMBUFFERS
+    character(len=ESMF_MAXSTR)     :: Iam="MAPL_OPEN"
+    integer          :: status
+
+    character(LEN=ESMF_MAXSTR) :: usableFORM
+
+    if(MAPL_AM_I_ROOT()) then
+       if(.not.present(BLOCKSIZE) .and. .not.present(NUMBUFFERS)) then
+          print *, "NOT using buffer I/O for file: ", trim(file)
+       else
+          print *, "Using buffer I/O for file: ", trim(file)
+       endif
+    endif
+        
+    if (present(FORM)) then
+       usableFORM = FORM
+    else
+       usableFORM = "unformatted"
+    end if
+
+    open(UNIT,FILE=FILE,FORM=usableFORM,IOSTAT=STATUS)
+    VERIFY_(STATUS)
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_OPEN
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!--WRITES ------------------
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "write_parallel.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "write_parallel.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 3
+#include "write_parallel.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "write_parallel.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 4
+#include "write_parallel.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "write_parallel.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 0
+#include "write_parallel.H"
+
+
+!-READS --------------------
+
+! Rank 0
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 0
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 3
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 4
+#include "read_parallel.H"
+
+! Rank 1
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "read_parallel.H"
+
+! Rank 2
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 1
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "read_parallel.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "read_parallel.H"
+
+!---------------------------
+! Read routines
+!---------------------------
+
+  subroutine MAPL_StateVarRead(UNIT, STATE, NAME, arrdes, RC)
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_State)           , intent(INOUT) :: STATE
+    character(len=*),   optional, intent(IN   ) :: NAME
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,            optional, intent(  OUT) :: RC
+
+! Local vars
+    type (ESMF_FieldBundle)              :: bundle
+    type (ESMF_Field)                    :: field
+    type (ESMF_Grid)                     :: grid
+    integer                              :: status
+    integer                              :: I, N
+    character(len=ESMF_MAXSTR)           :: IAm='MAPL_StateVarRead'
+    integer                              :: J, ITEMCOUNT
+    type (ESMF_StateItemType), pointer   :: ITEMTYPES(:)
+    character(len=ESMF_MAXSTR ), pointer :: ITEMNAMES(:)
+    logical, pointer                     :: DOIT(:)
+    integer                              :: NR, DIMS
+    integer, pointer                     :: MASK(:)
+    
+    type (ESMF_Array)                  :: array
+    integer                            :: rank
+
+    call ESMF_StateGet(STATE,ITEMCOUNT=ITEMCOUNT,RC=STATUS)
+    VERIFY_(STATUS)
+
+    ASSERT_(ITEMCOUNT>0)
+
+    allocate(ITEMNAMES(ITEMCOUNT),STAT=STATUS)
+    VERIFY_(STATUS)
+    allocate(ITEMTYPES(ITEMCOUNT),STAT=STATUS)
+    VERIFY_(STATUS)
+    allocate(     DOIT(ITEMCOUNT),STAT=STATUS)
+    VERIFY_(STATUS)
+
+    call ESMF_StateGet(STATE,ITEMNAMELIST=ITEMNAMES,&
+                       STATEITEMTYPELIST=ITEMTYPES,RC=STATUS)
+    VERIFY_(STATUS)
+
+    if(present(NAME)) then
+       DOIT = ITEMNAMES==NAME
+       ASSERT_(count(DOIT)/=0)
+    else
+       DOIT = .true.
+    endif
+
+    do I = 1, ITEMCOUNT
+
+       if (DOIT(I)) then
+
+
+#ifdef TIME_MPIIO
+    call write_parallel(itemnames(i))
+#endif
+
+          if (ITEMTYPES(I) == ESMF_StateItem_FieldBundle) then
+             call ESMF_StateGet(state, itemnames(i), bundle, rc=status)
+             VERIFY_(STATUS)
+
+             call ESMF_AttributeGet(bundle, name='NORESTART', value=NR, rc=status)
+             if (status == ESMF_SUCCESS) then
+                if (NR /= 0) cycle
+             end if
+
+             call MAPL_BundleRead(unit, bundle, arrdes=arrdes, rc=status)
+             VERIFY_(STATUS)
+
+          else if (ITEMTYPES(I) == ESMF_StateItem_Field) then
+             call ESMF_StateGet(state, itemnames(i), field, rc=status)
+             VERIFY_(STATUS)
+
+             call ESMF_AttributeGet(field, name='NORESTART', value=NR, rc=status)
+             if (status == ESMF_SUCCESS) then
+                if (NR /= 0) cycle
+             end if
+
+             if(.not.associated(MASK)) then
+                call ESMF_AttributeGet(field, name='DIMS', value=DIMS, rc=status)
+                VERIFY_(STATUS)
+                if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                   call ESMF_FieldGet   (field, grid, rc=status)
+                   VERIFY_(STATUS)
+                   call MAPL_TileMaskGet(grid,  mask, rc=status)
+                   VERIFY_(STATUS)
+                else
+                   allocate(Mask(1))
+                endif
+             endif
+       
+             call MAPL_FieldRead(unit, field, arrdes=arrdes, HomePE=Mask, rc=status)
+             VERIFY_(STATUS)
+
+          else
+             ASSERT_(.false.)
+
+          end if
+
+       end if
+
+    end do
+
+    deallocate(ITEMNAMES)
+    deallocate(ITEMTYPES)
+    deallocate(     DOIT)
+    if(associated(MASK)) deallocate(MASK)
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_StateVarRead
+!---------------------------
+
+
+  subroutine MAPL_BundleRead(UNIT,BUNDLE, ARRDES, RC)
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_FieldBundle)     , intent(INOUT) :: BUNDLE
+    type(ArrDescr),    optional , intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+    integer                            :: status
+    integer                            :: J, N
+    character(len=ESMF_MAXSTR)         :: IAm='MAPL_BundleRead'
+    type (ESMF_Field)                  :: field
+
+    call ESMF_FieldBundleGet   (bundle, fieldCount=N,              rc=STATUS)
+    VERIFY_(STATUS)
+
+    do J = 1, N
+       call ESMF_FieldBundleGet(bundle, fieldIndex=J, field=field, rc=status)
+       VERIFY_(STATUS)
+       call MAPL_FieldRead     (unit, field, arrdes=ARRDES,        rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_BundleRead
+
+
+  subroutine MAPL_FieldRead(UNIT,FIELD, ARRDES, HomePE, RC)
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Field)           , intent(INOUT) :: field
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer, target,   optional , intent(IN   ) :: HomePE(:)
+    integer,           optional , intent(  OUT) :: RC
+
+! Local vars
+    type (ESMF_Array)                  :: array
+    type (ESMF_DELayout)               :: layout
+    type (ESMF_Grid)                   :: GRID
+    integer                            :: rank
+    integer                            :: status
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:)        :: var_1d
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:,:)      :: var_2d
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:,:,:)    :: var_3d
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:,:,:,:)  :: var_4d
+
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:)        :: vr8_1d
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:,:)      :: vr8_2d
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:,:,:)    :: vr8_3d
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:,:,:,:)  :: vr8_4d
+    type(ESMF_TypeKind)                :: tk
+    character(len=ESMF_MAXSTR)         :: FORMATTED
+    integer                            :: count
+    integer                            :: dims
+    integer, pointer                   :: mask(:)
+    character(len=ESMF_MAXSTR)         :: IAm='MAPL_FieldRead'
+    type (ESMF_DistGrid)               :: distGrid
+    
+    if (unit < 0 .or. present(arrdes)) then
+       FORMATTED = "NO"
+    else
+       inquire(unit=UNIT, formatted=FORMATTED)
+    end if
+
+    call ESMF_FieldGet(field, grid, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ESMF_AttributeGet(field, name='DIMS', value=DIMS, rc=status)
+    VERIFY_(STATUS)
+    if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+       if(present(HomePE)) then
+          mask => HomePE
+       else
+          call MAPL_TileMaskGet(grid, mask, rc=status)
+          VERIFY_(STATUS)
+       endif
+    end if
+
+    call ESMF_FieldGet(field, Array=array, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_ArrayGet(array, typekind=tk, rank=rank, rc=status)
+    VERIFY_(STATUS)
+
+    if (rank == 1) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_1d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(var_1d)) then
+             if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                call MAPL_VarRead(unit, grid, var_1d, arrdes=arrdes, mask=mask, rc=status)
+             else if (DIMS == MAPL_DimsVertOnly) then
+                call READ_PARALLEL(layout, var_1d, unit, arrdes=arrdes, rc=status)
+             else 
+                RETURN_(ESMF_FAILURE)
+             endif
+          end if
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_1d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(vr8_1d)) then
+             if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                call MAPL_VarRead(unit, grid, vr8_1d, mask=mask, rc=status)
+             else if (DIMS == MAPL_DimsVertOnly) then
+                call READ_PARALLEL(layout, vr8_1d, unit, arrdes=arrdes, rc=status)
+             else 
+                RETURN_(ESMF_FAILURE)
+             endif
+          end if
+       end if
+    else if (rank == 2) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_2d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(var_2d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call READ_PARALLEL(layout, &
+                     var_2d(lbound(var_3d,1),:), unit, rc=status)
+             else
+                if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                   call MAPL_VarRead(unit, grid, var_2d, arrdes=arrdes, mask=mask, rc=status)
+                else
+                   call MAPL_VarRead(unit, grid, var_2d, arrdes=arrdes, rc=status)
+                end if
+             end if
+          end if
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_2d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(vr8_2d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call READ_PARALLEL(layout, &
+                     vr8_2d(lbound(vr8_3d,1),:), unit, rc=status)
+             else
+                if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                   call MAPL_VarRead(unit, grid, vr8_2d, mask=mask, rc=status)
+                else
+                   call MAPL_VarRead(unit, grid, vr8_2d, arrdes=arrdes, rc=status)
+                end if
+             end if
+          end if
+       endif
+    else if (rank == 3) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_3d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(var_3d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call READ_PARALLEL(layout, &
+                     var_3d(lbound(var_3d,1),lbound(var_3d,2),:), unit)
+             else
+                call MAPL_VarRead(unit, grid, var_3d, arrdes=arrdes, rc=status)
+             endif
+          end if
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_3d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(vr8_3d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call READ_PARALLEL(layout, &
+                     vr8_3d(lbound(vr8_3d,1),lbound(vr8_3d,2),:), unit)
+             else
+                call MAPL_VarRead(unit, grid, vr8_3d, arrdes=arrdes, rc=status)
+             endif
+          end if
+       endif
+    else if (rank == 4) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_4d, rc=status)
+          VERIFY_(STATUS)
+          call MAPL_VarRead(unit, grid, var_4d, rc=status)
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_4d, rc=status)
+          VERIFY_(STATUS)
+          call MAPL_VarRead(unit, grid, vr8_4d, rc=status)
+       end if
+    else
+       print *, "ERROR: unsupported RANK"
+       RETURN_(ESMF_FAILURE)
+    endif
+    VERIFY_(STATUS)
+
+    if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+       if(.not.present(HomePE)) then
+          deallocate(mask)
+       end if
+    end if
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_FieldRead
+
+!---------------------------
+
+  subroutine MAPL_VarRead_R4_1d(UNIT, GRID, A, MASK, arrdes,  RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(  OUT) :: A(:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R4),  allocatable :: VAR(:)
+    integer                               :: IM_WORLD
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distgrid
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R4_1d'
+    integer, allocatable                  :: msk(:), sendcounts(:), displs(:)
+    integer                               :: nrdrs, mype,  npes, recvcount
+    integer                               :: Rsize, first, last
+    integer(KIND=MPI_OFFSET_KIND)         :: offset
+    integer                               :: i, k, n, i1, in
+
+    integer :: numread, mpistatus(MPI_STATUS_SIZE)
+
+
+    if(present(arrdes)) then
+       ASSERT_(present(mask))
+
+       IM_WORLD = arrdes%im_world
+
+       call mpi_comm_size(arrdes%ioscattercomm,npes ,status)
+       VERIFY_(STATUS)
+       if(arrdes%readers_comm /= MPI_COMM_NULL) then
+          call mpi_comm_rank(arrdes%readers_comm,mype ,status)
+          VERIFY_(STATUS)
+          call mpi_comm_size(arrdes%readers_comm,nrdrs,status)
+          VERIFY_(STATUS)
+       endif
+       call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+       VERIFY_(STATUS)
+       call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+       VERIFY_(STATUS)
+       call MAPL_CommsBcast(layout, nrdrs, 1, 0, rc = status)
+
+       Rsize = (im_world-1)/nrdrs + 1
+       first = mype*Rsize
+
+       if(mype >=  mod(im_world,nrdrs)) then
+          Rsize = Rsize - 1
+          first = first - (mype-mod(im_world,nrdrs))
+       endif
+
+       last  = first + Rsize - 1
+
+#ifdef DEBUG_MPIIO
+	if (mype <= nrdrs-1) write(*,'(5i)') mype, IM_WORLD, first, last, Rsize
+#endif
+
+       allocate(VAR(Rsize), stat=status)
+       VERIFY_(STATUS)
+       allocate(msk(Rsize), stat=status)
+       VERIFY_(STATUS)
+       allocate (sendcounts(0:npes-1), displs(0:npes-1), stat=status)
+       VERIFY_(STATUS)
+
+       if(arrdes%readers_comm /= MPI_COMM_NULL) then
+          if(arrdes%offset<=0) then
+             offset = 4 
+          else
+             offset = arrdes%offset 
+          endif
+
+          call MPI_FILE_SET_VIEW(UNIT, offset, MPI_REAL, arrdes%mpi_filetype_r4, &
+                                 "native", MPI_INFO_NULL, STATUS)
+          VERIFY_(STATUS)
+          offset = offset + first*4
+          call MPI_FILE_READ_AT_ALL(UNIT, offset, VAR, Rsize, MPI_REAL, mpistatus, STATUS)
+          VERIFY_(STATUS)
+#ifdef DEBUG_MPIIO
+          call MPI_GET_COUNT( mpistatus, MPI_REAL, numread, STATUS )
+          VERIFY_(STATUS)
+          write(*,'(4i,1f)') IM_WORLD, offset, numread, VAR(1)
+#endif
+
+          ASSERT_( (lbound(mask,1) <= first+1) )
+          ASSERT_( (ubound(mask,1) >= last+1 ) )
+          msk = mask(first+1:last+1)
+          call MAPL_Sort(msk,var)
+
+          arrdes%offset = offset + IM_WORLD*4 + 8
+       endif
+
+       call mpi_comm_rank(arrdes%ioscattercomm,mype ,status)
+       VERIFY_(STATUS)
+       offset = 1
+       do n=0,nrdrs-1
+
+          Rsize = (im_world-1)/nrdrs + 1
+          first = n*Rsize
+          if(n >=  mod(im_world,nrdrs)) then
+             Rsize = Rsize - 1
+             first = first - (n-mod(im_world,nrdrs))
+          endif
+          last  = first + Rsize - 1
+
+          sendcounts = 0
+          do k=1,npes
+             if(last+1 <arrdes%i1(k)) cycle
+             if(first+1>arrdes%in(k)) exit
+             I1 = max(first+1,arrdes%i1(k))
+             IN = min(last+1 ,arrdes%in(k))
+             do i=i1,in
+                sendcounts(mask(i)) = sendcounts(mask(i)) + 1
+             enddo
+          enddo
+
+          displs(0) = 0
+          do i=1,npes-1
+             displs(i) = displs(i-1) + sendcounts(i-1)
+          enddo
+
+          recvcount = sendcounts(mype)
+
+         !call MAPL_CommsScatterV(layout, var, sendcounts, displs, &
+         !                        a(offset:), recvcount, n, status)
+         !VERIFY_(STATUS)
+          call MPI_SCATTERV( var, sendcounts, displs, MPI_REAL, &
+                             a(offset),   recvcount,  MPI_REAL, &
+                             n, arrdes%ioscattercomm,    status )
+          VERIFY_(STATUS)
+
+          offset = offset + recvcount
+
+       enddo
+
+       deallocate(var,msk)
+       deallocate(sendcounts)
+       deallocate(displs)
+
+    elseif(unit < 0) then
+
+       ASSERT_(-UNIT<=LAST_UNIT)
+       munit => MEM_units(-unit)
+       munit%prevrec = munit%prevrec + 1
+       ASSERT_(associated(munit%Records(munit%prevrec)%R4_1))
+       ASSERT_(size(A)==size(munit%Records(munit%prevrec)%R4_1))
+       A = munit%Records(munit%prevrec)%R4_1
+
+    else
+
+       call MAPL_GridGet(grid, globalCellCountPerDim=DIMS, RC=STATUS)
+       VERIFY_(STATUS)
+
+       IM_WORLD = DIMS(1)
+
+       allocate(VAR(IM_WORLD), stat=status)
+       VERIFY_(STATUS)
+
+       call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+       VERIFY_(STATUS)
+       call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+       VERIFY_(STATUS)
+
+       if (MAPL_am_i_root(layout)) then
+          read (UNIT, IOSTAT=status) VAR
+          VERIFY_(STATUS)
+       end if
+
+       call ArrayScatter(A, VAR, grid, mask=mask, rc=status)
+       VERIFY_(STATUS)
+    
+       deallocate(VAR)
+
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R4_1d
+
+!---------------------------
+
+  subroutine MAPL_VarRead_R4_2d(UNIT, GRID, A, MASK, arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(  OUT) :: A(:,:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R4),  allocatable :: VAR(:,:)
+    integer                               :: IM_WORLD
+    integer                               :: JM_WORLD
+    integer                               :: status
+    integer                               :: gridRank
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGRID
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R4_2d'
+
+    real(kind=ESMF_KIND_R4),  allocatable :: buf(:)
+    integer                               :: I,J,N,K,L,myrow,myiorank,ndes_x
+    integer(kind=MPI_OFFSET_KIND)         :: offset
+    integer                               :: jsize, jprev, num_io_rows
+    integer, allocatable                  :: sendcounts(:), displs(:)
+
+    real(kind=ESMF_KIND_R8) :: itime_beg, itime_end, bwidth
+
+    integer :: numread, mpistatus(MPI_STATUS_SIZE)
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_beg = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+#endif
+
+    if(present(arrdes)) then
+
+       if(present(mask)) then
+          JM_WORLD = arrdes%jm_world
+          ASSERT_(JM_WORLD==size(A,2))
+
+          arrdes%offset = 0
+
+          do j=1,jm_world
+             call MAPL_VarRead(Unit, Grid, a(:,j), mask, arrdes, rc=status)
+             arrdes%offset = arrdes%offset - 8
+          enddo
+
+          arrdes%offset = arrdes%offset + 8
+
+       else
+
+       ndes_x = size(arrdes%in)
+
+       IM_WORLD = arrdes%im_world
+       JM_WORLD = arrdes%jm_world
+
+       call mpi_comm_rank(arrdes%ycomm,myrow,status)
+       VERIFY_(STATUS)
+       call mpi_comm_rank(arrdes%ioscattercomm,myiorank,status)
+       VERIFY_(STATUS)
+       call mpi_comm_size(arrdes%ioscattercomm,num_io_rows,status)
+       VERIFY_(STATUS)
+       num_io_rows=num_io_rows/ndes_x
+
+       allocate (sendcounts(ndes_x*num_io_rows), displs(ndes_x*num_io_rows), stat=status)
+       VERIFY_(STATUS)
+
+       do j=1,num_io_rows
+          jsize = arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          sendcounts((j-1)*ndes_x+1:(j-1)*ndes_x+ndes_x) = ( arrdes%IN -  arrdes%I1 + 1) * jsize
+       enddo
+
+       displs(1) = 0
+       do i=2,ndes_x*num_io_rows
+          displs(i) = displs(i-1) + sendcounts(i-1)
+       enddo
+
+       if(myiorank==0) then
+          jsize=0
+          do j=1,num_io_rows
+              jsize = jsize + arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          enddo
+          allocate(VAR(IM_WORLD,jsize), stat=status)
+          VERIFY_(STATUS)
+          allocate(buf(IM_WORLD*jsize), stat=status)
+          VERIFY_(STATUS)
+
+          if(arrdes%offset<=0) then
+             offset = 4 
+          else
+             offset = arrdes%offset 
+          endif
+
+        ! call MPI_FILE_SET_VIEW(UNIT, offset, MPI_REAL, arrdes%mpi_filetype_r4, &
+        !      "native", MPI_INFO_NULL,                  STATUS)
+        ! VERIFY_(STATUS)
+        ! call MPI_FILE_READ_ALL(UNIT, VAR, IM_WORLD*jsize, MPI_REAL, mpistatus, STATUS)
+        ! VERIFY_(STATUS)
+          offset = offset + (arrdes%j1(myrow+1)-1)*IM_WORLD*4
+          call MPI_FILE_READ_AT_ALL(UNIT, offset, VAR, IM_WORLD*jsize, MPI_REAL, mpistatus, STATUS)
+          VERIFY_(STATUS)
+          offset = offset - (arrdes%j1(myrow+1)-1)*IM_WORLD*4
+
+          arrdes%offset = offset + IM_WORLD*JM_WORLD*4 + 8
+
+#ifdef DEBUG_MPIIO
+          call MPI_GET_COUNT( mpistatus, MPI_REAL, numread, STATUS ) 
+          VERIFY_(STATUS)
+          print*, offset, numread, IM_WORLD*jsize, VAR(1,1)
+#endif
+
+          jprev = 0
+          k=1
+          do l=1,num_io_rows
+             jsize = arrdes%jn(myrow+l) - arrdes%j1(myrow+l) + 1
+             do n=1,ndes_x
+                do j=1,jsize
+                   do i=arrdes%i1(n),arrdes%in(n)
+                      buf(k) = VAR(i,jprev+j)
+                      k=k+1
+                   end do
+                end do
+             end do
+             jprev = jprev + jsize
+          end do
+
+       end if
+
+       call mpi_scatterv( buf, sendcounts, displs, MPI_REAL, &
+            a,  size(a),  MPI_REAL, &
+            0, arrdes%ioscattercomm, status )
+       VERIFY_(STATUS)
+
+       if(myiorank==0) then 
+          deallocate(VAR, stat=status)
+          VERIFY_(STATUS)
+          deallocate(buf, stat=status)
+          VERIFY_(STATUS)
+       endif
+       deallocate (sendcounts, displs, stat=status)
+       VERIFY_(STATUS)
+    endif
+    elseif(unit < 0) then
+
+      ASSERT_(-UNIT<=LAST_UNIT)
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      ASSERT_(associated(munit%Records(munit%prevrec)%R4_2))
+      ASSERT_(size(A)==size(munit%Records(munit%prevrec)%R4_2))
+      A = munit%Records(munit%prevrec)%R4_2
+
+    else
+
+    call ESMF_GridGet(GRID, dimCount=gridRank, rc=STATUS)
+    VERIFY_(STATUS)
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+    JM_WORLD = DIMS(2)
+
+    allocate(VAR(IM_WORLD,JM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=status)
+    VERIFY_(STATUS)
+
+    if (MAPL_am_i_root(layout)) then
+       read (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+
+    call ArrayScatter(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    
+    deallocate(VAR)
+
+    END IF
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_end = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+  bwidth = REAL(IM_WORLD*JM_WORLD*4/1024.0/1024.0,kind=8)
+  bwidth = bwidth/(itime_end-itime_beg)
+  if (bwidth > peak_ioread_bandwidth) peak_ioread_bandwidth = bwidth
+  mean_ioread_bandwidth = (mean_ioread_bandwidth + bwidth)
+  ioread_counter=ioread_counter+1
+  if (mod(ioread_counter,72.d0)==0) then
+  if (MAPL_AM_I_Root()) write(*,'(a64,3es11.3)') 'MPIIO Read Bandwidth (MB per second): ', peak_ioread_bandwidth, bwidth, mean_ioread_bandwidth/ioread_counter
+  endif
+#endif
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R4_2d
+
+!---------------------------
+  subroutine MAPL_VarRead_R4_3d(UNIT, GRID, A, Arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(  OUT) :: A(:,:,:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R4_3d'
+
+    integer :: L
+
+    do L = 1, size(A,3)
+       call MAPL_VarRead(UNIT, GRID, A(:,:,L), ARRDES=arrdes, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R4_3d
+  
+!---------------------------
+  subroutine MAPL_VarRead_R4_4d(UNIT, GRID, A, Arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(  OUT) :: A(:,:,:,:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R4_4d'
+
+    integer :: L
+
+    do L = 1, size(A,4)
+       call MAPL_VarRead(UNIT, GRID, A(:,:,:,L), ARRDES=arrdes, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R4_4d
+  
+!---------------------------
+  subroutine MAPL_VarRead_R8_1d(UNIT, GRID, A, MASK, arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(  OUT) :: A(:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R8),  allocatable :: VAR(:)
+    integer                               :: IM_WORLD
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGRID
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R8_1d'
+    integer, allocatable                  :: msk(:), sendcounts(:), displs(:)
+    integer                               :: nrdrs, mype,  npes, recvcount
+    integer                               :: Rsize, first, last, offset
+    integer                               :: i, k, n, i1, in
+
+    if(present(arrdes)) then
+       ASSERT_(present(mask))
+
+       IM_WORLD = arrdes%im_world
+
+       call mpi_comm_rank(arrdes%ioscattercomm,mype ,status)
+       VERIFY_(STATUS)
+       call mpi_comm_size(arrdes%ioscattercomm,npes ,status)
+       VERIFY_(STATUS)
+       call mpi_comm_size(arrdes%readers_comm ,nrdrs,status)
+       VERIFY_(STATUS)
+
+       Rsize = (im_world-1)/nrdrs + 1
+       first = mype*Rsize
+
+       if(mype >=  mod(im_world,nrdrs)) then
+          Rsize = Rsize - 1
+          first = first - (mype-mod(im_world,nrdrs))
+       endif
+
+       last  = first + Rsize - 1
+
+       allocate(VAR(Rsize), stat=status)
+       VERIFY_(STATUS)
+       allocate(msk(Rsize), stat=status)
+       VERIFY_(STATUS)
+       allocate (sendcounts(0:npes-1), displs(0:npes-1), stat=status)
+       VERIFY_(STATUS)
+
+       if(arrdes%readers_comm /= MPI_COMM_NULL) then
+          if(arrdes%offset<=0) then
+             offset = 4 
+          else
+             offset = arrdes%offset 
+          endif
+
+          call MPI_FILE_SET_VIEW(UNIT, offset, MPI_DOUBLE_PRECISION, arrdes%mpi_filetype_r8, &
+                                 "native", MPI_INFO_NULL, STATUS)
+          VERIFY_(STATUS)
+          call MPI_FILE_READ_ALL(UNIT, VAR, Rsize, MPI_DOUBLE_PRECISION, MPI_STATUS_IGNORE, STATUS)
+          VERIFY_(STATUS)
+
+          arrdes%offset = offset + IM_WORLD*8 + 8
+       endif
+
+       offset = 1
+       do n=0,nrdrs-1
+
+          sendcounts = 0
+          do k=1,npes
+             if(last <arrdes%i1(k)) cycle
+             if(first>arrdes%in(k)) exit
+             I1 = max(first,arrdes%i1(k))
+             IN = min(last ,arrdes%in(k))
+             do i=i1,in
+                sendcounts(mask(i)) = sendcounts(mask(i)) + 1
+             enddo
+          enddo
+
+          displs(0) = 0
+          do i=1,npes-1
+             displs(i) = displs(i-1) + sendcounts(i-1)
+          enddo
+
+          recvcount = sendcounts(mype)
+
+          msk = mask(first:last)
+
+          call MAPL_Sort(msk,var)
+
+          call MPI_SCATTERV( var, sendcounts, displs, MPI_DOUBLE_PRECISION, &
+                             a(offset),   recvcount,  MPI_DOUBLE_PRECISION, &
+                             n, arrdes%ioscattercomm,                status )
+          VERIFY_(STATUS)
+
+          offset = offset + recvcount
+
+       enddo
+
+       deallocate(var,msk)
+       deallocate(sendcounts)
+       deallocate(displs)
+
+    elseif(unit < 0) then
+
+       ASSERT_(-UNIT<=LAST_UNIT)
+       munit => MEM_units(-unit)
+       munit%prevrec = munit%prevrec + 1
+       ASSERT_(associated(munit%Records(munit%prevrec)%R8_1))
+       ASSERT_(size(A)==size(munit%Records(munit%prevrec)%R8_1))
+       A = munit%Records(munit%prevrec)%R8_1
+
+    else
+
+
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+
+    allocate(VAR(IM_WORLD), stat=status)
+    VERIFY_(STATUS)
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=status)
+    VERIFY_(STATUS)
+
+    if (MAPL_am_i_root(layout)) then
+       read (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+
+    call ArrayScatter(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    
+    deallocate(VAR)
+
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R8_1d
+
+!---------------------------
+
+
+  subroutine MAPL_VarRead_R8_2d(UNIT, GRID, A, MASK, arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(  OUT) :: A(:,:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R8),  allocatable :: VAR(:,:)
+    integer                               :: IM_WORLD
+    integer                               :: JM_WORLD
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    integer                               :: gridRank
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGRID
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R8_2d'
+
+    real(kind=ESMF_KIND_R8),  allocatable :: buf(:)
+    integer                               :: I,J,N,K,L,myrow,myiorank,ndes_x
+    integer(kind=MPI_OFFSET_KIND)         :: offset
+    integer                               :: jsize, jprev, num_io_rows
+    integer, allocatable                  :: sendcounts(:), displs(:)
+
+    real(kind=ESMF_KIND_R8) :: itime_beg, itime_end, bwidth
+
+    integer :: numread, mpistatus(MPI_STATUS_SIZE)
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_beg = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+#endif
+
+    if(present(arrdes)) then
+
+       if(present(mask)) then
+          JM_WORLD = arrdes%jm_world
+          ASSERT_(JM_WORLD==size(A,2))
+
+          arrdes%offset = 0
+
+          do j=1,jm_world
+             call MAPL_VarRead(Unit, Grid, a(:,j), mask, arrdes, rc=status)
+             arrdes%offset = arrdes%offset - 8
+          enddo
+
+          arrdes%offset = arrdes%offset + 8
+       else
+
+       ndes_x = size(arrdes%in)
+
+       IM_WORLD = arrdes%im_world
+       JM_WORLD = arrdes%jm_world
+
+       call mpi_comm_rank(arrdes%ycomm,myrow,status)
+       VERIFY_(STATUS)
+       call mpi_comm_rank(arrdes%ioscattercomm,myiorank,status)
+       VERIFY_(STATUS)
+       call mpi_comm_size(arrdes%ioscattercomm,num_io_rows,status)
+       VERIFY_(STATUS)
+       num_io_rows=num_io_rows/ndes_x
+
+       allocate (sendcounts(ndes_x*num_io_rows), displs(ndes_x*num_io_rows), stat=status)
+       VERIFY_(STATUS)
+
+       do j=1,num_io_rows
+          jsize = arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          sendcounts((j-1)*ndes_x+1:(j-1)*ndes_x+ndes_x) = ( arrdes%IN -  arrdes%I1 + 1) * jsize
+       enddo
+
+       displs(1) = 0
+       do i=2,ndes_x*num_io_rows
+          displs(i) = displs(i-1) + sendcounts(i-1)
+       enddo
+
+       if(myiorank==0) then
+          jsize=0
+          do j=1,num_io_rows
+              jsize = jsize + arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          enddo
+          allocate(VAR(IM_WORLD,jsize), stat=status)
+          VERIFY_(STATUS)
+          allocate(buf(IM_WORLD*jsize), stat=status)
+          VERIFY_(STATUS)
+
+          if(arrdes%offset<=0) then
+             offset = 4
+          else
+             offset = arrdes%offset
+          endif
+
+         !call MPI_FILE_SET_VIEW(UNIT, offset, MPI_DOUBLE_PRECISION, arrdes%mpi_filetype_r8, &
+         !                       "native", MPI_INFO_NULL, STATUS)
+         !VERIFY_(STATUS)
+         !call MPI_FILE_READ_ALL(UNIT, VAR, IM_WORLD*jsize, MPI_DOUBLE_PRECISION,&
+         !                       mpistatus, STATUS)
+         !VERIFY_(STATUS)
+          offset = offset + (arrdes%j1(myrow+1)-1)*IM_WORLD*8
+          call MPI_FILE_READ_AT_ALL(UNIT, offset, VAR, IM_WORLD*jsize, MPI_DOUBLE_PRECISION, mpistatus, STATUS)
+          VERIFY_(STATUS)
+          offset = offset - (arrdes%j1(myrow+1)-1)*IM_WORLD*8
+
+          arrdes%offset = offset + IM_WORLD*JM_WORLD*8 + 8
+
+#ifdef DEBUG_MPIIO
+         call MPI_GET_COUNT( mpistatus, MPI_DOUBLE_PRECISION, numread, STATUS )
+         VERIFY_(STATUS)
+         print*, offset, numread, VAR(1,1)
+#endif
+
+          jprev = 0
+          k=1
+          do l=1,num_io_rows
+             jsize = arrdes%jn(myrow+l) - arrdes%j1(myrow+l) + 1
+             do n=1,ndes_x
+                do j=1,jsize
+                   do i=arrdes%i1(n),arrdes%in(n)
+                      buf(k) = VAR(i,jprev+j)
+                      k=k+1
+                   end do
+                end do
+             end do
+             jprev = jprev + jsize
+          end do
+
+       end if
+
+       call mpi_scatterv( buf, sendcounts, displs, MPI_DOUBLE_PRECISION, &
+                          a,  size(a),  MPI_DOUBLE_PRECISION, &
+                          0, arrdes%ioscattercomm, status )
+       VERIFY_(STATUS)
+
+       if(myiorank==0) then
+          deallocate(VAR, stat=status)
+          VERIFY_(STATUS)
+          deallocate(buf, stat=status)
+          VERIFY_(STATUS)
+       endif
+       deallocate (sendcounts, displs, stat=status)
+       VERIFY_(STATUS)
+
+       endif
+
+    elseif(unit < 0) then
+
+      ASSERT_(-UNIT<=LAST_UNIT)
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      ASSERT_(associated(munit%Records(munit%prevrec)%R8_2))
+      ASSERT_(size(A)==size(munit%Records(munit%prevrec)%R8_2))
+      A = munit%Records(munit%prevrec)%R8_2
+
+    else
+
+
+    call ESMF_GridGet(GRID, dimCount=gridRank, rc=STATUS)
+    VERIFY_(STATUS)
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+    JM_WORLD = DIMS(2)
+
+    allocate(VAR(IM_WORLD,JM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=status)
+    VERIFY_(STATUS)
+
+    if (MAPL_am_i_root(layout)) then
+       read (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+    call ArrayScatter(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    
+    deallocate(VAR)
+
+    END IF
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_end = MPI_Wtime(STATUS)
+  VERIFY_(STATUS) 
+  bwidth = REAL(IM_WORLD*JM_WORLD*8/1024.0/1024.0,kind=8)
+  bwidth = bwidth/(itime_end-itime_beg)
+  if (bwidth > peak_ioread_bandwidth) peak_ioread_bandwidth = bwidth
+  mean_ioread_bandwidth = (mean_ioread_bandwidth + bwidth)
+  ioread_counter=ioread_counter+1
+  if (mod(ioread_counter,72.d0)==0) then
+  if (MAPL_AM_I_Root()) write(*,'(a64,3es11.3)') 'MPIIO Read Bandwidth (MB per second): ', peak_ioread_bandwidth, bwidth, mean_ioread_bandwidth/ioread_counter
+  endif
+#endif 
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R8_2d
+
+!---------------------------
+  subroutine MAPL_VarRead_R8_3d(UNIT, GRID, A, arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(  OUT) :: A(:,:,:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R8_3d'
+
+    integer :: L
+
+    do L = 1, size(A,3)
+       call MAPL_VarRead(UNIT, GRID, A(:,:,L), ARRDES=arrdes, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R8_3d
+  
+!---------------------------
+  subroutine MAPL_VarRead_R8_4d(UNIT, GRID, A, arrdes, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(  OUT) :: A(:,:,:,:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarRead_R8_4d'
+
+    integer :: L
+
+    do L = 1, size(A,4)
+       call MAPL_VarRead(UNIT, GRID, A(:,:,:,L), ARRDES=arrdes, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarRead_R8_4d
+  
+!---------------------------
+! Write routines
+!---------------------------
+
+  subroutine MAPL_StateVarWrite(UNIT, STATE, NAME, RESOLUTION, ARRDES, RC)
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_State)           , intent(IN   ) :: STATE
+    character(len=*),   optional, intent(IN   ) :: NAME
+    integer,            optional,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,            optional, intent(  OUT) :: RC
+
+! Local vars
+    type (ESMF_FieldBundle)                   :: bundle
+    type (ESMF_Field)                    :: field
+    integer                              :: status
+    integer                              :: I, ITEMCOUNT
+    logical                              :: FOUND
+    type (ESMF_StateItemType), pointer   :: ITEMTYPES(:)
+    character(len=ESMF_MAXSTR ), pointer :: ITEMNAMES(:)
+    logical, pointer                     :: DOIT(:)
+    character(len=ESMF_MAXSTR)           :: IAm='MAPL_StateVarWrite'
+    integer                              :: NR
+    
+    call ESMF_StateGet(STATE,ITEMCOUNT=ITEMCOUNT,RC=STATUS)
+    VERIFY_(STATUS)
+
+    ASSERT_(ITEMCOUNT>0)
+
+    allocate(ITEMNAMES(ITEMCOUNT),STAT=STATUS)
+    VERIFY_(STATUS)
+    allocate(ITEMTYPES(ITEMCOUNT),STAT=STATUS)
+    VERIFY_(STATUS)
+    allocate(DOIT     (ITEMCOUNT),STAT=STATUS)
+    VERIFY_(STATUS)
+
+    call ESMF_StateGet(STATE,ITEMNAMELIST=ITEMNAMES,STATEITEMTYPELIST=ITEMTYPES,RC=STATUS)
+    VERIFY_(STATUS)
+
+    if(present(NAME)) then
+       DOIT = ITEMNAMES==NAME
+       ASSERT_(count(DOIT)/=0)
+    else
+       DOIT = .true.
+    endif
+
+    DO I = 1, ITEMCOUNT
+
+       IF (DOIT     (I)) then
+
+#ifdef TIME_MPIIO
+    call write_parallel(itemnames(i))
+#endif
+
+          IF (ITEMTYPES(I) == ESMF_StateItem_FieldBundle) then
+             call ESMF_StateGet(state, itemnames(i), bundle, rc=status)
+             VERIFY_(STATUS)
+
+             call ESMF_AttributeGet(bundle, name='NORESTART', value=NR, rc=status)
+             if (status == ESMF_SUCCESS) then
+                if (NR /= 0) cycle
+             end if
+
+             call MAPL_BundleWrite(unit, bundle, RESOLUTION=RESOLUTION, arrdes=arrdes, rc=status)
+             VERIFY_(STATUS)
+
+          ELSE IF (ITEMTYPES(I) == ESMF_StateItem_Field) THEN
+             call ESMF_StateGet(state, itemnames(i), field, rc=status)
+             VERIFY_(STATUS)
+
+             call ESMF_AttributeGet(field, name='NORESTART', value=NR, rc=status)
+             if (status == ESMF_SUCCESS) then
+                if (NR /= 0) cycle
+             end if
+
+             call MAPL_FieldWrite(unit, field, RESOLUTION=RESOLUTION, arrdes=arrdes, rc=status)
+             VERIFY_(STATUS)
+          end IF
+       END IF
+
+    END DO
+
+    deallocate(ITEMNAMES)
+    deallocate(ITEMTYPES)
+    deallocate(DOIT     )
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_StateVarWrite
+!---------------------------
+
+
+  subroutine MAPL_BundleWrite(UNIT,BUNDLE, RESOLUTION, ARRDES, RC)
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_FieldBundle)          , intent(INOUT) :: BUNDLE
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),    optional , intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+
+    integer                            :: status
+    integer                            :: J, N
+    character(len=ESMF_MAXSTR)         :: IAm='MAPL_BundleWrite'
+    type (ESMF_Field)                  :: field
+
+    call ESMF_FieldBundleGet(bundle, fieldCount=N,  rc=STATUS)
+    VERIFY_(STATUS)
+
+    DO J = 1, N
+       call ESMF_FieldBundleGet(bundle, fieldIndex=J, field=field, rc=status)
+       VERIFY_(STATUS)
+
+       call MAPL_FieldWrite(unit, field, RESOLUTION=RESOLUTION, arrdes=ARRDES, rc=status)
+       VERIFY_(STATUS)
+
+    END DO
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_BundleWrite
+
+!---------------------------
+
+  subroutine MAPL_FieldWrite(UNIT,FIELD, RESOLUTION, ARRDES, RC)
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Field)           , intent(INOUT) :: field  !ALT: intent(in)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),    optional , intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local vars
+    type (ESMF_Array)                  :: array
+    type (ESMF_DELayout)               :: layout
+    type (ESMF_Grid)                   :: GRID
+    integer                            :: rank
+    integer                            :: status
+    integer                            :: DIMS
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:)        :: var_1d
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:,:)      :: var_2d
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:,:,:)    :: var_3d
+    real(KIND=ESMF_KIND_R4), pointer, dimension(:,:,:,:)  :: var_4d
+
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:)        :: vr8_1d
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:,:)      :: vr8_2d
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:,:,:)    :: vr8_3d
+    real(KIND=ESMF_KIND_R8), pointer, dimension(:,:,:,:)  :: vr8_4d
+    type(ESMF_TypeKind)                :: tk
+    integer, pointer                   :: mask(:)
+    character(len=ESMF_MAXSTR)         :: FORMATTED
+    integer                            :: count
+    character(len=ESMF_MAXSTR)         :: IAm='MAPL_FieldWrite'
+    type (ESMF_DistGrid)               :: distGrid
+    
+    if (unit < 0 .or. present(arrdes)) then
+       FORMATTED = "NO"
+    else
+       inquire(unit=UNIT, formatted=FORMATTED)
+    end if
+
+    call ESMF_FieldGet(field, grid, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ESMF_FieldGet(field, grid, rc=status)
+    VERIFY_(STATUS)
+
+    call ESMF_AttributeGet(field, name='DIMS', value=DIMS, rc=status)
+    VERIFY_(STATUS)
+    if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+       call MAPL_TileMaskGet(grid, mask, rc=status)
+       VERIFY_(STATUS)
+    end if
+
+    call ESMF_FieldGet(field, Array=array, rc=status)
+    VERIFY_(STATUS)
+    call ESMF_ArrayGet(array, typekind=tk, rank=rank, rc=status)
+    VERIFY_(STATUS)
+    if (rank == 1) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_1d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(var_1d)) then 
+             if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                call MAPL_VarWrite(unit, grid, var_1d, mask=mask, rc=status)
+             else if (DIMS == MAPL_DimsVertOnly) then
+                call WRITE_PARALLEL(var_1d, unit, arrdes=arrdes, rc=status)
+             else
+                RETURN_(ESMF_FAILURE)
+             end if
+          end if
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_1d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(vr8_1d)) then
+             if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                call MAPL_VarWrite(unit, grid, vr8_1d, mask=mask, rc=status)
+             else if (DIMS == MAPL_DimsVertOnly) then
+                call WRITE_PARALLEL(vr8_1d, unit, arrdes=arrdes, rc=status)
+             else
+                RETURN_(ESMF_FAILURE)
+             end if
+          end if
+       endif
+    else if (rank == 2) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_2d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(var_2d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call WRITE_PARALLEL( &
+                     var_2d(lbound(var_3d,1),:), unit, rc=status)
+             else
+                if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                   call MAPL_VarWrite(unit, grid, var_2d, mask=mask, resolution=resolution, rc=status)
+                else
+                   call MAPL_VarWrite(unit, grid, var_2d, resolution=resolution, arrdes=arrdes, rc=status)
+                end if
+             end if
+          end if
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_2d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(vr8_2d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call WRITE_PARALLEL( &
+                     vr8_2d(lbound(vr8_3d,1),:), unit, rc=status)
+             else
+                if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+                   call MAPL_VarWrite(unit, grid, vr8_2d, mask=mask, resolution=resolution, rc=status)
+                else
+                   call MAPL_VarWrite(unit, grid, vr8_2d, resolution=resolution, arrdes=arrdes, rc=status)
+                end if
+             end if
+          end if
+       endif
+    else if (rank == 3) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_3d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(var_3d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call WRITE_PARALLEL( &
+                     var_3d(lbound(var_3d,1),lbound(var_3d,2),:), unit)
+             else
+                call MAPL_VarWrite(unit, grid, var_3d, resolution=resolution, arrdes=arrdes, rc=status)
+             endif
+          end if
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_3d, rc=status)
+          VERIFY_(STATUS)
+          if (associated(vr8_3d)) then !ALT: temp kludge
+             if (FORMATTED=="YES") THEN
+                call WRITE_PARALLEL( &
+                     vr8_3d(lbound(vr8_3d,1),lbound(vr8_3d,2),:), unit)
+             else
+                call MAPL_VarWrite(unit, grid, vr8_3d, resolution=resolution, arrdes=arrdes, rc=status)
+             endif
+          end if
+       endif
+    else if (rank == 4) then
+       if (tk == ESMF_TYPEKIND_R4) then
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=var_4d, rc=status)
+          VERIFY_(STATUS)
+          call MAPL_VarWrite(unit, grid, var_4d, resolution=resolution, rc=status)
+       else
+          call ESMF_ArrayGet(array, localDE=0, farrayptr=vr8_4d, rc=status)
+          VERIFY_(STATUS)
+          call MAPL_VarWrite(unit, grid, vr8_4d, resolution=resolution, rc=status)
+       endif
+    else
+       print *, "ERROR: unsupported RANK"
+       RETURN_(ESMF_FAILURE)
+    endif
+    VERIFY_(STATUS)
+
+    if (DIMS == MAPL_DimsTileOnly .or. DIMS == MAPL_DimsTileTile) then
+       deallocate(mask)
+    end if
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_FieldWrite
+
+
+  subroutine alloc_(A,type,im,jm,rc)
+    type (Ptr),        intent(INOUT) :: A
+    integer,           intent(IN)    :: TYPE
+    integer,           intent(IN)    :: IM
+    integer, optional, intent(IN)    :: JM
+    integer, optional, intent(out)   :: rc
+
+    integer :: status
+    character(len=ESMF_MAXSTR)         :: IAm='alloc_'
+
+    call dealloc_(A,RC=STATUS)
+    VERIFY_(STATUS)
+
+    select case (type)
+    case (R4_2)
+       ASSERT_(present(jm))
+       allocate(A%r4_2(IM,JM))
+    case (R4_1)
+       ASSERT_(.not.present(jm))
+       allocate(A%r4_1(IM))
+    case (R8_2) 
+       ASSERT_(present(jm))
+       allocate(A%r8_2(IM,JM))
+    case (R8_1) 
+       ASSERT_(.not.present(jm))
+       allocate(A%r8_1(IM))
+    case (i4_1) 
+       ASSERT_(.not.present(jm))
+       allocate(A%I4_1(IM))
+    case (i4_2) 
+       ASSERT_(present(jm))
+       allocate(A%I4_2(IM,JM))
+    case default
+       ASSERT_(.false.)
+    end select
+
+    a%allocated=type
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine alloc_
+
+
+  subroutine dealloc_(A,RC)
+    type (Ptr), intent(INOUT)        :: A
+    integer, optional, intent(out)   :: rc
+
+    integer :: status
+    character(len=ESMF_MAXSTR)         :: IAm='dealloc_'
+
+    if(a%allocated/=not_allocated) then
+       select case (a%allocated)
+       case (R4_2) 
+          if(associated(A%r4_2)) deallocate(A%r4_2)
+       case (R4_1) 
+          if(associated(A%r4_1)) deallocate(A%r4_1)
+       case (R8_2) 
+          if(associated(A%r8_2)) deallocate(A%r8_2)
+       case (R8_1) 
+          if(associated(A%r8_1)) deallocate(A%r8_1)
+       case (i4_1) 
+          if(associated(A%i4_1)) deallocate(A%i4_1)
+       case (i4_2) 
+          if(associated(A%i4_2)) deallocate(A%i4_2)
+       case default
+          ASSERT_(.false.)
+       end select
+       a%allocated=not_allocated
+    end if
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine dealloc_
+
+!---------------------------
+  subroutine MAPL_VarWrite_I4_1d(UNIT, GRID, A, MASK, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    integer(kind=ESMF_KIND_I4)  , intent(IN   ) :: A(:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    integer(kind=ESMF_KIND_I4),  allocatable :: VAR(:)
+    integer                               :: IM_WORLD
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGrid
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_I4_1d'
+
+    if(unit < 0) then
+
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      if(.not.associated(munit%Records)) then
+         allocate(munit%Records(16),stat=status)
+         VERIFY_(STATUS)
+      elseif(size(munit%Records)< munit%prevrec) then
+         allocate(REC(munit%prevrec*2),stat=status)
+         VERIFY_(STATUS)
+         REC(:munit%prevrec-1) = munit%Records
+         deallocate(munit%Records)
+         munit%Records => REC
+      endif
+      call alloc_(munit%Records(munit%prevrec),i4_1,size(A),rc=status)	
+      VERIFY_(STATUS)
+      munit%Records(munit%prevrec)%I4_1  = A
+
+    else
+
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+
+    allocate(VAR(IM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ArrayGather(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    if (MAPL_am_i_root(layout)) then
+       write (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+    
+    deallocate(VAR)
+
+    endif
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_I4_1d
+
+!---------------------------
+  subroutine MAPL_VarWrite_R4_1d(UNIT, GRID, A, MASK, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(IN   ) :: A(:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R4),  allocatable :: VAR(:)
+    integer                               :: IM_WORLD
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGrid
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R4_1d'
+
+    if(unit < 0) then
+
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      if(.not.associated(munit%Records)) then
+         allocate(munit%Records(16),stat=status)
+         VERIFY_(STATUS)
+      elseif(size(munit%Records)< munit%prevrec) then
+         allocate(REC(munit%prevrec*2),stat=status)
+         VERIFY_(STATUS)
+         REC(:munit%prevrec-1) = munit%Records
+         deallocate(munit%Records)
+         munit%Records => REC
+      endif
+      call alloc_(munit%Records(munit%prevrec),R4_1,size(A),rc=status)	
+      VERIFY_(STATUS)
+      munit%Records(munit%prevrec)%R4_1  = A
+
+    else
+
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+
+    allocate(VAR(IM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ArrayGather(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    if (MAPL_am_i_root(layout)) then
+       write (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+    
+    deallocate(VAR)
+
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R4_1d
+
+!---------------------------
+
+  subroutine MAPL_VarWrite_R4_2d(UNIT, GRID, A, MASK, RESOLUTION, ARRDES, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(IN   ) :: A(:,:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R4),  allocatable :: VAR(:,:)
+    integer                               :: IM_WORLD
+    integer                               :: JM_WORLD
+    real                   ,  allocatable :: VARin(:,:)
+    real                   ,  allocatable :: VARout(:,:)
+    integer                               :: IM0
+    integer                               :: JM0
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    integer                               :: gridRank
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGrid
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R4_2d'
+    character(len=ESMF_MAXSTR)            :: GridTypeAttribute
+
+    real(kind=ESMF_KIND_R4),  allocatable :: buf(:)
+    integer                               :: I,J,N,K,L,myrow,myiorank,ndes_x
+    integer(kind=MPI_OFFSET_KIND)         :: offset
+    integer                               :: jsize, jprev, num_io_rows
+    integer, allocatable                  :: sendcounts(:), displs(:)
+
+    real(kind=ESMF_KIND_R8) :: itime_beg, itime_end, bwidth
+
+    integer :: recl
+    integer :: numread, mpistatus(MPI_STATUS_SIZE)
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_beg = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+#endif
+
+    if(present(arrdes)) then
+
+       if(present(mask)) then
+          JM_WORLD = arrdes%jm_world
+          ASSERT_(JM_WORLD==size(A,2))
+
+          arrdes%offset = 0
+
+          do j=1,jm_world
+             call MAPL_VarWrite(Unit, Grid, a(:,j), mask, rc=status)
+             arrdes%offset = arrdes%offset - 8
+          enddo
+
+          arrdes%offset = arrdes%offset + 8
+
+       else
+
+       ndes_x = size(arrdes%in)
+
+       IM_WORLD = arrdes%im_world
+       JM_WORLD = arrdes%jm_world
+
+       call mpi_comm_rank(arrdes%ycomm,myrow,status)
+       VERIFY_(STATUS)
+       call mpi_comm_rank(arrdes%iogathercomm,myiorank,status)
+       VERIFY_(STATUS)
+       call mpi_comm_size(arrdes%iogathercomm,num_io_rows,status)
+       VERIFY_(STATUS)
+       num_io_rows=num_io_rows/ndes_x
+
+       allocate (sendcounts(ndes_x*num_io_rows), displs(ndes_x*num_io_rows), stat=status)
+       VERIFY_(STATUS)
+
+       do j=1,num_io_rows
+          jsize = arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          sendcounts((j-1)*ndes_x+1:(j-1)*ndes_x+ndes_x) = ( arrdes%IN -  arrdes%I1 + 1) * jsize
+       enddo
+
+       displs(1) = 0
+       do i=2,ndes_x*num_io_rows
+          displs(i) = displs(i-1) + sendcounts(i-1)
+       enddo
+
+       if(myiorank==0) then
+          jsize=0
+          do j=1,num_io_rows
+              jsize = jsize + arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          enddo
+          allocate(VAR(IM_WORLD,jsize), stat=status)
+          VERIFY_(STATUS)
+          allocate(buf(IM_WORLD*jsize), stat=status)
+          VERIFY_(STATUS)
+       end if
+
+       call mpi_gatherv( a, size(a), MPI_REAL, buf, sendcounts, displs, MPI_REAL, &
+            0, arrdes%iogathercomm, status )
+       VERIFY_(STATUS)
+
+       if(myiorank==0) then 
+
+          jprev = 0
+          k=1
+          do l=1,num_io_rows
+             jsize = arrdes%jn(myrow+l) - arrdes%j1(myrow+l) + 1
+             do n=1,ndes_x
+                do j=1,jsize
+                   do i=arrdes%i1(n),arrdes%in(n)
+                      VAR(i,jprev+j) = buf(k)
+                      k=k+1
+                   end do
+                end do
+             end do
+             jprev = jprev + jsize
+          end do
+          jsize=jprev
+
+          if(arrdes%offset<=0) then
+             offset = 0
+          else
+             offset = arrdes%offset
+          endif
+
+          recl = IM_WORLD*JM_WORLD*4
+          if (MAPL_AM_I_ROOT()) then
+#ifdef DEBUG_MPIIO
+                print*, offset, recl, offset + IM_WORLD*JM_WORLD*4 + 8
+#endif
+             call MPI_FILE_SEEK(UNIT, offset, MPI_SEEK_SET, STATUS)
+             VERIFY_(STATUS)
+             call MPI_FILE_WRITE(UNIT, recl, 1, MPI_INTEGER, MPI_STATUS_IGNORE, STATUS)
+             VERIFY_(STATUS)
+          endif
+          offset = offset + 4
+
+         !call MPI_FILE_SET_VIEW(UNIT, offset, MPI_REAL, arrdes%mpi_filetype_r4, &
+         !     "native", MPI_INFO_NULL,                  STATUS)
+         !VERIFY_(STATUS)
+          offset = offset + (arrdes%j1(myrow+1)-1)*IM_WORLD*4
+          call MPI_FILE_WRITE_AT_ALL(UNIT, offset, VAR, IM_WORLD*jsize, MPI_REAL, mpistatus, STATUS)
+          VERIFY_(STATUS)
+          offset = offset - (arrdes%j1(myrow+1)-1)*IM_WORLD*4
+
+          offset = offset + IM_WORLD*JM_WORLD*4
+          if (MAPL_AM_I_ROOT()) then
+             call MPI_FILE_SEEK(UNIT, offset, MPI_SEEK_SET, STATUS)
+             VERIFY_(STATUS)
+             call MPI_FILE_WRITE(UNIT, recl, 1, MPI_INTEGER, MPI_STATUS_IGNORE, STATUS)
+             VERIFY_(STATUS)
+          endif
+
+          arrdes%offset = offset + 4
+
+       end if
+
+       if(myiorank==0) then
+          deallocate(VAR, stat=status)
+          VERIFY_(STATUS)
+          deallocate(buf, stat=status)
+          VERIFY_(STATUS)
+       endif
+       deallocate (sendcounts, displs, stat=status)
+       VERIFY_(STATUS)
+    endif
+
+    elseif(unit < 0) then
+
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      if(.not.associated(munit%Records)) then
+         allocate(munit%Records(16),stat=status)
+         VERIFY_(STATUS)
+      elseif(size(munit%Records)< munit%prevrec) then
+         allocate(REC(munit%prevrec*2),stat=status)
+         VERIFY_(STATUS)
+         REC(:munit%prevrec-1) = munit%Records
+         deallocate(munit%Records)
+         munit%Records => REC
+      endif
+      call alloc_(munit%Records(munit%prevrec),r4_2,size(A,1),size(a,2),rc=status)	
+      VERIFY_(STATUS)
+      munit%Records(munit%prevrec)%R4_2  = A
+
+    else
+
+    call ESMF_GridGet(GRID, dimCount=gridRank, rc=STATUS)
+    VERIFY_(STATUS)
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+    JM_WORLD = DIMS(2)
+
+    allocate(VAR(IM_WORLD,JM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ArrayGather(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    if (MAPL_am_i_root(layout)) then
+
+       if (present(RESOLUTION)) then
+         if (associated(RESOLUTION)) then
+          IM0 = RESOLUTION(1)
+          JM0 = RESOLUTION(2)
+          if (IM_WORLD /= IM0 .or. JM_WORLD /= JM0) then
+          !  call ESMF_AttributeGet(grid, 'GridType', value=GridTypeAttribute, rc=STATUS)
+          !  if (STATUS /= ESMF_SUCCESS) then
+          !     GridTypeAttribute = 'UNKNOWN'
+          !  endif
+             GridTypeAttribute='Cubed-Sphere'
+
+             if (TRIM(GridTypeAttribute) == 'Cubed-Sphere') then
+                allocate(VARin(IM_WORLD,JM_WORLD), stat=status)
+                VERIFY_(STATUS)
+                allocate(VARout(IM0,JM0), stat=status)
+                VERIFY_(STATUS)
+                VARin = VAR
+                call cube2latlon(IM_WORLD, JM_WORLD, IM0, JM0, VARin, VARout)
+                deallocate (VAR)
+                allocate ( VAR(IM0,JM0), stat=status )
+                VERIFY_(STATUS)
+                VAR = VARout
+                deallocate(VARout)
+                deallocate(VARin)
+             else
+                print *, "ERROR: unsupported RESOLUTION Change"
+                RETURN_(ESMF_FAILURE)
+             end if
+          end if
+         end if
+       end if
+
+       write (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+    
+    deallocate(VAR)
+
+    end if
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_end = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+  bwidth = REAL(IM_WORLD*JM_WORLD*4/1024.0/1024.0,kind=8)
+  bwidth = bwidth/(itime_end-itime_beg)
+  if (bwidth > peak_iowrite_bandwidth) peak_iowrite_bandwidth = bwidth
+  mean_iowrite_bandwidth = (mean_iowrite_bandwidth + bwidth)
+  iowrite_counter=iowrite_counter+1
+  if (mod(iowrite_counter,72.d0)==0) then
+  if (MAPL_AM_I_Root()) write(*,'(a64,3es11.3)') 'MPIIO Write Bandwidth (MB per second): ', peak_iowrite_bandwidth, bwidth, mean_iowrite_bandwidth/iowrite_counter
+  endif
+#endif 
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R4_2d
+
+!---------------------------
+  subroutine MAPL_VarWrite_R4_3d(UNIT, GRID, A, RESOLUTION, ARRDES, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(IN   ) :: A(:,:,:)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R4_3d'
+
+    integer :: L
+
+    do L = 1, size(A,3)
+       call MAPL_VarWrite(UNIT, GRID, A(:,:,L), RESOLUTION=RESOLUTION, ARRDES=ARRDES, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R4_3d
+  
+!---------------------------
+  subroutine MAPL_VarWrite_R4_4d(UNIT, GRID, A, RESOLUTION, ARRDES, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R4)     , intent(IN   ) :: A(:,:,:,:)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R4_4d'
+
+    integer :: L
+
+    do L = 1, size(A,4)
+       call MAPL_VarWrite(UNIT, GRID, A(:,:,:,L), RESOLUTION=RESOLUTION, ARRDES=ARRDES, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R4_4d
+  
+!---------------------------
+  subroutine MAPL_VarWrite_R8_1d(UNIT, GRID, A, MASK, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(IN   ) :: A(:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R8),  allocatable :: VAR(:)
+    integer                               :: IM_WORLD
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGrid
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R8_1d'
+
+    if(unit < 0) then
+
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      if(.not.associated(munit%Records)) then
+         allocate(munit%Records(16),stat=status)
+         VERIFY_(STATUS)
+      elseif(size(munit%Records)< munit%prevrec) then
+         allocate(REC(munit%prevrec*2),stat=status)
+         VERIFY_(STATUS)
+         REC(:munit%prevrec-1) = munit%Records
+         deallocate(munit%Records)
+         munit%Records => REC
+      endif
+      call alloc_(munit%Records(munit%prevrec),R8_1,size(A),rc=status)	
+      VERIFY_(STATUS)
+      munit%Records(munit%prevrec)%R8_1  = A
+
+    else
+
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+
+    allocate(VAR(IM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ArrayGather(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    if (MAPL_am_i_root(layout)) then
+       write (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+    
+    deallocate(VAR)
+
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R8_1d
+
+!---------------------------
+
+  subroutine MAPL_VarWrite_R8_2d(UNIT, GRID, A, MASK, RESOLUTION, ARRDES, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(IN   ) :: A(:,:)
+    integer,           optional , intent(IN   ) :: MASK(:)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+    real(kind=ESMF_KIND_R8),  allocatable :: VAR(:,:)
+    integer                               :: IM_WORLD
+    integer                               :: JM_WORLD
+    real                   ,  allocatable :: VARin(:,:)
+    real                   ,  allocatable :: VARout(:,:)
+    integer                               :: IM0
+    integer                               :: JM0
+    integer                               :: status
+    integer                               :: DIMS(ESMF_MAXGRIDDIM)
+    integer                               :: gridRank
+    type (ESMF_DELayout)                  :: layout
+    type (ESMF_DistGrid)                  :: distGrid
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R8_2d'
+    character(len=ESMF_MAXSTR)            :: GridTypeAttribute
+
+    real(kind=ESMF_KIND_R8),  allocatable :: buf(:)
+    integer                               :: I,J,N,K,L,myrow,myiorank,ndes_x
+    integer(kind=MPI_OFFSET_KIND)         :: offset
+    integer                               :: jsize, jprev, num_io_rows
+    integer, allocatable                  :: sendcounts(:), displs(:)
+
+    real(kind=ESMF_KIND_R8) :: itime_beg, itime_end, bwidth
+   
+    integer :: recl 
+    integer :: numread, mpistatus(MPI_STATUS_SIZE)
+    
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_beg = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+#endif
+
+    if(present(arrdes)) then
+
+       if(present(mask)) then
+          JM_WORLD = arrdes%jm_world
+          ASSERT_(JM_WORLD==size(A,2))
+
+          arrdes%offset = 0
+
+          do j=1,jm_world
+             call MAPL_VarWrite(Unit, Grid, a(:,j), mask, rc=status)
+             arrdes%offset = arrdes%offset - 8
+          enddo
+
+          arrdes%offset = arrdes%offset + 8
+
+       else
+
+       ndes_x = size(arrdes%in)
+
+       IM_WORLD = arrdes%im_world
+       JM_WORLD = arrdes%jm_world
+
+       call mpi_comm_rank(arrdes%ycomm,myrow,status)
+       VERIFY_(STATUS)
+       call mpi_comm_rank(arrdes%iogathercomm,myiorank,status)
+       VERIFY_(STATUS)
+       call mpi_comm_size(arrdes%iogathercomm,num_io_rows,status)
+       VERIFY_(STATUS)
+       num_io_rows=num_io_rows/ndes_x
+
+       allocate (sendcounts(ndes_x*num_io_rows), displs(ndes_x*num_io_rows), stat=status)
+       VERIFY_(STATUS)
+
+       do j=1,num_io_rows
+          jsize = arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          sendcounts((j-1)*ndes_x+1:(j-1)*ndes_x+ndes_x) = ( arrdes%IN -  arrdes%I1 + 1) * jsize
+       enddo
+
+       displs(1) = 0
+       do i=2,ndes_x*num_io_rows
+          displs(i) = displs(i-1) + sendcounts(i-1)
+       enddo
+
+       if(myiorank==0) then
+          jsize=0
+          do j=1,num_io_rows
+              jsize = jsize + arrdes%jn(myrow+j) - arrdes%j1(myrow+j) + 1
+          enddo
+          allocate(VAR(IM_WORLD,jsize), stat=status)
+          VERIFY_(STATUS)
+          allocate(buf(IM_WORLD*jsize), stat=status)
+          VERIFY_(STATUS)
+       end if
+
+       call mpi_gatherv( a, size(a), MPI_DOUBLE_PRECISION, buf, sendcounts, displs, MPI_DOUBLE_PRECISION, &
+            0, arrdes%iogathercomm, status )
+       VERIFY_(STATUS)
+
+       if(myiorank==0) then
+
+          jprev = 0
+          k=1
+          do l=1,num_io_rows
+             jsize = arrdes%jn(myrow+l) - arrdes%j1(myrow+l) + 1
+             do n=1,ndes_x
+                do j=1,jsize
+                   do i=arrdes%i1(n),arrdes%in(n)
+                      VAR(i,jprev+j) = buf(k)
+                      k=k+1
+                   end do
+                end do
+             end do
+             jprev = jprev + jsize
+          end do
+          jsize=jprev
+
+          if(arrdes%offset<=0) then
+             offset = 0
+          else
+             offset = arrdes%offset
+          endif
+
+          recl = IM_WORLD*JM_WORLD*8
+          if (MAPL_AM_I_ROOT()) then
+#ifdef DEBUG_MPIIO
+		print*, offset, recl, offset + IM_WORLD*JM_WORLD*8 + 8
+#endif
+             call MPI_FILE_SEEK(UNIT, offset, MPI_SEEK_SET, STATUS)
+             VERIFY_(STATUS)
+             call MPI_FILE_WRITE(UNIT, recl, 1, MPI_INTEGER, MPI_STATUS_IGNORE, STATUS)
+             VERIFY_(STATUS)
+          endif
+          offset = offset + 4
+
+         !call MPI_FILE_SET_VIEW(UNIT, offset, MPI_DOUBLE_PRECISION, arrdes%mpi_filetype_r8, &
+         !     "native", MPI_INFO_NULL,                  STATUS)
+         !VERIFY_(STATUS)
+          offset = offset + (arrdes%j1(myrow+1)-1)*IM_WORLD*8
+          call MPI_FILE_WRITE_AT_ALL(UNIT, offset, VAR, IM_WORLD*jsize, MPI_DOUBLE_PRECISION, mpistatus, STATUS)
+          VERIFY_(STATUS)
+          offset = offset - (arrdes%j1(myrow+1)-1)*IM_WORLD*8 
+
+          offset = offset + IM_WORLD*JM_WORLD*8 
+          if (MAPL_AM_I_ROOT()) then
+             call MPI_FILE_SEEK(UNIT, offset, MPI_SEEK_SET, STATUS)
+             VERIFY_(STATUS)
+             call MPI_FILE_WRITE(UNIT, recl, 1, MPI_INTEGER, MPI_STATUS_IGNORE, STATUS)
+             VERIFY_(STATUS)
+          endif
+
+          arrdes%offset = offset + 4
+
+       end if
+
+       if(myiorank==0) then
+          deallocate(VAR, stat=status)
+          VERIFY_(STATUS)
+          deallocate(buf, stat=status)
+          VERIFY_(STATUS)
+       endif
+       deallocate (sendcounts, displs, stat=status)
+       VERIFY_(STATUS)
+    endif
+
+    elseif(unit < 0) then
+
+      munit => MEM_units(-unit)
+      munit%prevrec = munit%prevrec + 1
+      if(.not.associated(munit%Records)) then
+         allocate(munit%Records(16),stat=status)
+         VERIFY_(STATUS)
+      elseif(size(munit%Records)< munit%prevrec) then
+         allocate(REC(munit%prevrec*2),stat=status)
+         VERIFY_(STATUS)
+         REC(:munit%prevrec-1) = munit%Records
+         deallocate(munit%Records)
+         munit%Records => REC
+      endif
+      call alloc_(munit%Records(munit%prevrec),r8_2,size(A,1),size(a,2),rc=status)	
+      VERIFY_(STATUS)
+      munit%Records(munit%prevrec)%R8_2  = A
+
+    else
+
+
+    call ESMF_GridGet(GRID, dimCount=gridRank, rc=STATUS)
+    VERIFY_(STATUS)
+    call MAPL_GridGet(GRID, globalCellCountPerDim=DIMS, RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM_WORLD = DIMS(1)
+    JM_WORLD = DIMS(2)
+
+    allocate(VAR(IM_WORLD,JM_WORLD), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_GridGet(grid, distGrid=distGrid, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DistGridGet(distGrid, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+
+    call ArrayGather(A, VAR, grid, mask=mask, rc=status)
+    VERIFY_(STATUS)
+    if (MAPL_am_i_root(layout)) then
+
+       if (present(RESOLUTION)) then
+         if (associated(RESOLUTION)) then
+          IM0 = RESOLUTION(1)
+          JM0 = RESOLUTION(2)
+          if (IM_WORLD /= IM0 .or. JM_WORLD /= JM0) then
+          !  call ESMF_AttributeGet(grid, 'GridType', value=GridTypeAttribute, rc=STATUS)
+          !  if (STATUS /= ESMF_SUCCESS) then
+          !     GridTypeAttribute = 'UNKNOWN'
+          !  endif
+             GridTypeAttribute='Cubed-Sphere'
+
+             if (TRIM(GridTypeAttribute) == 'Cubed-Sphere') then
+                allocate(VARin(IM_WORLD,JM_WORLD), stat=status)
+                VERIFY_(STATUS)
+                allocate(VARout(IM0,JM0), stat=status)
+                VERIFY_(STATUS)
+                VARin = VAR
+                call cube2latlon(IM_WORLD, JM_WORLD, IM0, JM0, VARin, VARout)
+                deallocate (VAR)
+                allocate ( VAR(IM0,JM0), stat=status )
+                VERIFY_(STATUS)
+                VAR = VARout
+                deallocate(VARout)
+                deallocate(VARin)
+             else
+                print *, "ERROR: unsupported RESOLUTION Change for flat file IO"
+                RETURN_(ESMF_FAILURE)
+             end if
+          end if
+         end if
+       end if
+
+       write (UNIT, IOSTAT=status) VAR
+       VERIFY_(STATUS)
+    end if
+    
+    deallocate(VAR)
+
+    end if
+
+#ifdef TIME_MPIIO
+  call MPI_BARRIER(MPI_COMM_WORLD,STATUS)
+  VERIFY_(STATUS)
+  itime_end = MPI_Wtime(STATUS)
+  VERIFY_(STATUS)
+  bwidth = REAL(IM_WORLD*JM_WORLD*8/1024.0/1024.0,kind=8)
+  bwidth = bwidth/(itime_end-itime_beg)
+  if (bwidth > peak_iowrite_bandwidth) peak_iowrite_bandwidth = bwidth
+  mean_iowrite_bandwidth = (mean_iowrite_bandwidth + bwidth)
+  iowrite_counter=iowrite_counter+1
+  if (mod(iowrite_counter,72.d0)==0) then
+  if (MAPL_AM_I_Root()) write(*,'(a64,3es11.3)') 'MPIIO Write Bandwidth (MB per second): ', peak_iowrite_bandwidth, bwidth, mean_iowrite_bandwidth/iowrite_counter
+  endif
+#endif 
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R8_2d
+
+!---------------------------
+  subroutine MAPL_VarWrite_R8_3d(UNIT, GRID, A, RESOLUTION, ARRDES, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(IN   ) :: A(:,:,:)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R8_3d'
+
+    integer :: L
+
+    do L = 1, size(A,3)
+       call MAPL_VarWrite(UNIT, GRID, A(:,:,L), RESOLUTION=RESOLUTION, ARRDES=ARRDES, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R8_3d
+  
+!---------------------------
+  subroutine MAPL_VarWrite_R8_4d(UNIT, GRID, A, RESOLUTION, ARRDES, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_Grid)            , intent(INout) :: GRID
+    real(kind=ESMF_KIND_R8)     , intent(IN   ) :: A(:,:,:,:)
+    integer,           optional ,   pointer     :: RESOLUTION(:)
+    type(ArrDescr),     optional, intent(INOUT) :: ARRDES
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_VarWrite_R8_4d'
+
+    integer :: L
+
+    do L = 1, size(A,4)
+       call MAPL_VarWrite(UNIT, GRID, A(:,:,:,L), RESOLUTION=RESOLUTION, ARRDES=ARRDES, rc=status)
+       VERIFY_(STATUS)
+    end do
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_VarWrite_R8_4d
+  
+!---------------------------
+!---------------------------
+!---------------------------
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "arraygather.H"
+
+
+!---------------------------
+!---------------------------
+
+
+    subroutine MAPL_ClimUpdate ( STATE, BEFORE, AFTER, &
+                                 CURRENT_TIME, NAMES, FILE, RC )
+        type(ESMF_State),       intent(INOUT) :: STATE
+        type(ESMF_Time),        intent(  out) :: BEFORE, AFTER
+        type(ESMF_Time),        intent(inout) :: CURRENT_TIME !ALT:intent(in)
+        character(len=*),       intent(in   ) :: NAMES(:)
+        character(len=*),       intent(in   ) :: FILE
+        integer,  optional,     intent(  out) :: RC
+
+        integer :: STATUS
+        character(len=ESMF_MAXSTR) :: IAm = 'MAPL_ClimUpdate'
+
+
+        integer          :: I, M, M1, M2
+        integer          :: NFLD
+        integer          :: UNIT
+        integer          :: DONE
+        real             :: dum(1)
+
+        type (ESMF_Field   ), pointer :: PREV(:)
+        type (ESMF_Field   ), pointer :: NEXT(:)
+        type (ESMF_DELayout)          :: LAYOUT
+        type (ESMF_Grid    )          :: GRID
+        type (ESMF_DistGrid)          :: distGRID
+
+
+    ! --------------------------------------------------------------------------
+    ! Allocate the number of fileds in the file
+    ! --------------------------------------------------------------------------
+
+        NFLD = size(NAMES)
+        ASSERT_(NFLD>0)
+
+        allocate(PREV(NFLD),stat=STATUS)
+        VERIFY_(STATUS)
+        allocate(NEXT(NFLD),stat=STATUS)
+        VERIFY_(STATUS)
+
+    ! --------------------------------------------------------------------------
+    ! get the fields from the state
+    ! --------------------------------------------------------------------------
+
+        do I=1,NFLD
+           call ESMF_StateGet ( STATE, trim(NAMES(I))//'_PREV', PREV(I), RC=STATUS )
+           VERIFY_(STATUS)
+           call ESMF_StateGet ( STATE, trim(NAMES(I))//'_NEXT', NEXT(I), RC=STATUS )
+           VERIFY_(STATUS)
+        end do
+
+        call ESMF_FieldGet(PREV(1), GRID=GRID,    RC=STATUS)
+        VERIFY_(STATUS)
+        call ESMF_GridGet    (GRID,   distGrid=distGrid, rc=STATUS)
+        VERIFY_(STATUS)
+        call ESMF_DistGridGet(distGRID, delayout=layout, rc=STATUS)
+        VERIFY_(STATUS)
+
+    ! --------------------------------------------------------------------------
+    ! Find out the times of next, prev from the field attributes
+    ! --------------------------------------------------------------------------
+
+        call MAPL_FieldGetTime ( PREV(1), BEFORE, RC=STATUS )
+        VERIFY_(STATUS)
+        call MAPL_FieldGetTime ( NEXT(1), AFTER , RC=STATUS )
+        VERIFY_(STATUS)
+
+    ! --------------------------------------------------------------------------
+    ! check to see if albedos need to be refreshed in the
+    ! ESMF Internal State (prev, next need to surround
+    ! the current time)
+    ! --------------------------------------------------------------------------
+
+        call ESMF_TimeGet ( BEFORE, yy=I, rc=STATUS )
+        VERIFY_(STATUS)
+
+        DONE = 0
+        if( I > 0) then
+           if( (BEFORE <= CURRENT_TIME) .and. (AFTER >= CURRENT_TIME)) then
+              DONE = 1
+           end if
+        end if
+
+        if(DONE /= 1) then
+
+    ! --------------------------------------------------------------------------
+    !  Get the midmonth times for the months before and after the current time
+    ! --------------------------------------------------------------------------
+
+           call MAPL_GetClimMonths ( CURRENT_TIME, BEFORE, AFTER,  RC=STATUS )
+           VERIFY_(STATUS)
+
+           call ESMF_TimeGet ( BEFORE, MM=M1, rc=STATUS )
+           VERIFY_(STATUS)
+           call ESMF_TimeGet ( AFTER , MM=M2, rc=STATUS )
+           VERIFY_(STATUS)
+
+    ! --------------------------------------------------------------------------
+    !  Read the albedo climatologies from file
+    ! --------------------------------------------------------------------------
+
+           UNIT = GETFILE(FILE, form="unformatted",  RC=STATUS)
+           VERIFY_(STATUS)
+
+           DONE = 0
+           do M=1,12
+              if    (M==M1) then
+                 do I=1,NFLD
+                    call MAPL_VarRead(UNIT, PREV(I), RC=STATUS)
+                    VERIFY_(STATUS)
+                 end do
+                 if(DONE==1) exit
+                 DONE = DONE + 1
+              elseif(M==M2) then
+                 do I=1,NFLD
+                    call MAPL_VarRead(UNIT, NEXT(I), RC=STATUS)
+                    VERIFY_(STATUS)
+                 end do
+                 if(DONE==1) exit
+                 DONE = DONE + 1
+              else
+                 do I=1,NFLD
+                    call READ_PARALLEL(LAYOUT,DUM,UNIT,rc=status)
+                    VERIFY_(STATUS)
+                 end do
+              end if
+           end do
+
+           call FREE_FILE ( Unit )
+ 
+    ! --------------------------------------------------------------------------
+    !  Reset the time on all fields
+    ! --------------------------------------------------------------------------
+
+           do I=1,NFLD
+              call MAPL_FieldSetTime (  PREV(I), BEFORE, rc=STATUS )
+              VERIFY_(STATUS)
+              call MAPL_FieldSetTime (  NEXT(I), AFTER , rc=STATUS )
+              VERIFY_(STATUS)
+           end do
+   
+        endif
+
+        deallocate(NEXT)
+        deallocate(PREV)
+
+        RETURN_(ESMF_SUCCESS)
+      end subroutine MAPL_ClimUpdate
+
+
+    subroutine MAPL_GetClimMonths ( CURRENT_TIME, BEFORE, AFTER, RC )
+        type(ESMF_Time), intent(inout) :: CURRENT_TIME !ALT: intent(in)
+        type(ESMF_Time), intent(out) :: BEFORE, AFTER
+        integer,optional,intent(out) :: RC
+
+        integer :: STATUS
+        character(len=ESMF_MAXSTR) :: IAm = 'MAPL_GetClimMonths'
+
+        integer                 :: MonthCurr
+        type(ESMF_Time        ) :: midMonth
+        type(ESMF_TimeInterval) :: oneMonth
+
+        call ESMF_TimeIntervalSet(oneMonth, MM = 1, RC=STATUS )
+        VERIFY_(STATUS)
+        call ESMF_TimeGet(CURRENT_TIME, midMonth=midMonth, mm=MonthCurr, RC=STATUS )
+        VERIFY_(STATUS)
+
+        if( CURRENT_TIME < midMonth ) then
+           AFTER    = midMonth
+           midMonth = midMonth - oneMonth
+           call ESMF_TimeGet (midMonth, midMonth=BEFORE, rc=STATUS )
+           VERIFY_(STATUS)
+        else
+           BEFORE   = midMonth
+           midMonth = midMonth + oneMonth
+           call ESMF_TimeGet (midMonth, midMonth=AFTER , rc=STATUS )
+           VERIFY_(STATUS)
+        endif
+
+        RETURN_(ESMF_SUCCESS)
+    end subroutine MAPL_GetClimMonths
+    
+  subroutine MAPL_Skip(UNIT, LAYOUT, COUNT, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_DELayout)        , intent(IN   ) :: LAYOUT
+    integer,           optional , intent(IN   ) :: COUNT
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: STATUS
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_Skip'
+    integer                               :: N, NN
+
+    if(present(COUNT)) then
+       NN=COUNT
+    else
+       NN=1
+    endif
+
+    if (unit < 0) then
+       munit => MEM_units(-unit)
+       munit%prevrec = munit%prevrec + NN
+       RETURN_(ESMF_SUCCESS)
+    endif
+
+    if (MAPL_AM_I_ROOT(LAYOUT)) then
+
+       do N=1,NN
+          read (unit=UNIT, IOSTAT=status)
+          VERIFY_(STATUS)
+       end do
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_Skip
+
+  subroutine MAPL_Backspace(UNIT, LAYOUT, COUNT, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_DELayout)        , intent(IN   ) :: LAYOUT
+    integer,           optional , intent(IN   ) :: COUNT
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: STATUS
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_Backspace'
+    integer                               :: N, NN
+
+    if (MAPL_AM_I_ROOT(LAYOUT)) then
+       if(present(COUNT)) then
+          NN=COUNT
+       else
+          NN=1
+       endif
+
+       do N=1,NN
+          backspace(unit=UNIT, IOSTAT=status)
+          VERIFY_(STATUS)
+       end do
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_Backspace
+
+  subroutine MAPL_Rewind(UNIT, LAYOUT, RC)
+
+    integer                     , intent(IN   ) :: UNIT
+    type (ESMF_DELayout)        , intent(IN   ) :: LAYOUT
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: STATUS
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_Rewind'
+
+    if (MAPL_AM_I_ROOT(LAYOUT)) then
+       rewind(unit=UNIT, IOSTAT=status)
+       VERIFY_(STATUS)
+    end if
+    
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_Rewind
+
+  subroutine MAPL_TileMaskGet(grid, mask, rc)
+    type (ESMF_Grid),             intent(INout) :: GRID
+    integer, pointer                            :: mask(:)
+    integer,           optional , intent(  OUT) :: RC
+
+! Local variables
+
+    integer                               :: STATUS
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_TileMaskGet'
+    integer, pointer                      :: tileIndex(:)
+    integer                               :: gcount(2), lcount(2)
+    integer                               :: gsize, lsize
+    integer                               :: gridRank
+    integer                               :: n
+    type (ESMF_DistGrid)                  :: distGrid
+
+    integer,               allocatable    :: AL(:,:)
+    integer,               allocatable    :: AU(:,:)
+    integer, allocatable, dimension(:)    :: recvcounts, displs
+    integer                               :: de, deId
+    integer                               :: nDEs
+    integer                               :: sendcount
+    
+    integer                               :: I
+    integer                               :: I1, IN
+    integer, allocatable                  :: var(:)
+    integer                               :: deList(1)
+    type (ESMF_DELayout)                  :: layout
+
+
+    call ESMF_GridGet(grid, dimCount=gridRank, distGrid=distGrid, rc=status)
+    VERIFY_(STATUS)
+    ASSERT_(gridRank == 1)
+
+    call MAPL_GridGet(grid, globalCellCountPerDim=gcount, &
+         localCellCountPerDim=lcount, RC=STATUS)
+    VERIFY_(STATUS)
+
+    gsize = gcount(1)
+    lsize = lcount(1)
+
+    allocate(mask(gsize), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_DistGridGet(distgrid, localDe=0, elementCount=n, rc=status)
+    ASSERT_(lsize == n)
+
+    allocate(tileIndex(lsize), stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_DistGridGet(distgrid, localDe=0, seqIndexList=tileIndex, rc=status)
+    VERIFY_(STATUS)
+
+    call ESMF_DistGridGet(distGRID, delayout=layout, rc=STATUS)
+    VERIFY_(STATUS)
+    call ESMF_DELayoutGet(layout, deCount =nDEs, localDeList=deList, rc=status)
+    VERIFY_(STATUS)
+    deId = deList(1)
+
+    allocate (AL(gridRank,0:nDEs-1),  stat=status)
+    VERIFY_(STATUS)
+    allocate (AU(gridRank,0:nDEs-1),  stat=status)
+    VERIFY_(STATUS)
+
+    call ESMF_DistGridGet(distgrid, &
+         minIndexPDimPDe=AL, maxIndexPDimPDe=AU, rc=status)
+    VERIFY_(STATUS)
+
+    allocate (recvcounts(0:nDEs-1), displs(0:nDEs), stat=status)
+    VERIFY_(STATUS)
+
+    allocate(VAR(0:gsize-1), stat=status)
+    VERIFY_(STATUS)
+    
+    displs(0) = 0
+    do I = 0,nDEs-1
+       de = I
+       I1 = AL(1,I)
+       IN = AU(1,I)
+
+       recvcounts(I) = (IN - I1 + 1)
+       if (de == deId) then
+          sendcount = recvcounts(I)      ! Count I will send
+       endif
+
+       displs(I+1) = displs(I) + recvcounts(I)
+    enddo
+
+    call MAPL_CommsAllGatherV(layout, tileindex, sendcount, &
+                              var, recvcounts, displs, status)
+
+    do I = 0,nDEs-1
+       mask(displs(I)+1:displs(I+1)) = I
+    end do
+    call MAPL_SORT(var,MASK)
+
+! clean up
+    
+    deallocate(var)
+    deallocate (recvcounts, displs)
+    deallocate (AU)
+    deallocate (AL)
+    deallocate(tileIndex)
+
+! mask is deallocated in the caller routine
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_TileMaskGet
+end module MAPL_IOMod
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! cube2latlon Stub
+!----------------
+subroutine cube2latlon(npx, npy, nlon, nlat, data_cs, data_ll)
+
+ implicit none
+
+ integer, intent(in) :: npx, npy, nlon, nlat
+ real, dimension(npx , npy ), intent(in ) :: data_cs
+ real, dimension(nlon, nlat), intent(out) :: data_ll
+
+end subroutine cube2latlon
+
+
