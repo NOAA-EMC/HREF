@@ -1,0 +1,78 @@
+#!/bin/ksh
+
+if [[ $1 = 3 ]]; then
+     set -x
+     cp conf/configure.nems.AIX_ESMF_3 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 3.1.0rp2 library"
+elif [[ $1 = 3_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_310rAPI conf/modules.nems.Zeus
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0r series library"
+elif [[ $1 = 3_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 3.1.0rp2 library"
+elif [[ $1 = 4 ]]; then
+     set -x
+     cp conf/configure.nems.AIX_ESMF_4 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_4.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 4.0.0rp2 library"
+elif [[ $1 = 5 ]]; then
+     set -x
+     cp conf/configure.nems.AIX_ESMF_5 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_5.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 5.1.0 library"
+elif [[ $1 = 5.2 ]]; then
+     set -x
+     cp conf/configure.nems.AIX_ESMF_520rp1 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_520rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 5.2.0rp1 library"
+elif [[ $1 = traps_on ]]; then
+     set -x
+     cp conf/configure.nems.AIX_TRAPS_ON conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 3.1.0rp2 library"
+elif [[ $1 = 5.2_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_520rp1 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_520rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use the ESMF 5.2.0rp1 library"
+elif [[ $1 = 5.2.0rAPI_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_520rAPI conf/modules.nems.Zeus
+     cp ESMFVersionDefine_ESMF_520rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 5.2.0r API compatible ESMF library (i.e. ESMF >= 5.2.0r)"
+elif [[ $1 = nuopc_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_NUOPC conf/modules.nems.Zeus
+     cp ESMFVersionDefine_ESMF_NUOPC.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF library with reference NUOPC Layer (currently ESMF 6.2.0)"
+else
+     echo;echo "     Run ./esmf_version with one argument:"
+     echo "When using the ESMF 3.1.0rp2 library on the CCS   machine, enter 'esmf_version 3'"
+     echo "When using an ESMF 3.1.0r series library (i.e. ESMF 3.1.0rp2, 3.1.0rp5) on the ZEUS machine, enter 'esmf_version 3_zeus'"
+     echo "When using the ESMF 3.1.0rp2 library on the WCOSS machine, enter 'esmf_version 3_wcoss'"
+     echo "When using the ESMF 3.1.0rp2 library and turn on traps,   enter 'esmf_version traps_on'"
+     echo "When using the ESMF 4.0.0rp2 library on the CCS   machine, enter 'esmf_version 4'"
+     echo "When using the ESMF 5.1.0    library on the CCS   machine, enter 'esmf_version 5'"
+     echo "When using the ESMF 5.2.0rp1 library on the CCS   machine, enter 'esmf_version 5.2'"
+     echo "When using the ESMF 5.2.0rp1 library on the WCOSS machine, enter 'esmf_version 5.2_wcoss'"
+     echo "When using an ESMF 5.2.0r API compatible library (i.e. ESMF >= 5.2.0r) on the ZEUS machine, enter 'esmf_version 5.2.0rAPI_zeus'"
+     echo "When using an ESMF library with reference NUOPC Layer (currently ESMF 6.2.0) on the ZEUS machine, enter 'esmf_version nuopc_zeus'"
+fi     

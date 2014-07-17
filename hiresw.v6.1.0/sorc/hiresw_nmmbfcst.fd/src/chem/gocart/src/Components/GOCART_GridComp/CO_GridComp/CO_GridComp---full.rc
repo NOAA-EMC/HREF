@@ -1,0 +1,61 @@
+#
+# Resource file for CO parameters. 
+#
+
+number_CO_bins: 1 
+CO_regions:  ExtData/g5chem/sfc/ARCTAS.region_mask.x540_y361.2008.nc
+
+# Indicate regions using a comma-delimited list of integers.
+# To activate all land boxes, use -1, or all or global (not case sensitive)
+# -------------------------------------------------------------------------
+CO_regions_indices: global
+
+# For all land boxes in a latitude range, set doZoneMasking to
+# 1 then specify BOTH the south and north limits in degrees.
+# WARNING: When set, zone masking OVERRIDES regions setting above!
+# ----------------------------------------------------------------
+doZoneMasking: 0
+LatitudeSouth: 45.0
+LatitudeNorth: 90.0
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+# For biomass burning emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+#Harvard - emission file provides molecules CO m-2 s-1 -- converted internally to kg CO
+#CO_biomass_emission_filename: /share/dasilva/fvInput/fvchem/c/harvard.co.eta.2001.nc
+#CO_biomass_emission_factor: 1.
+
+# Near real-time QFED: emission file provides kg CO m-2 s-1
+# ---------------------------------------------------------
+CO_biomass_emission_filename: ExtData/g5chem/sfc/QFED/qfed_rr.emis_co.sfc.%y4%m2.nc
+CO_biomass_emission_factor: 1.
+
+#TRMM - emission file provides kg CO m-2 s-1
+#CO_biomass_emission_filename: /home1/bian/FVGCM/emis/bian_GFED2_COBB_1x125.1997-2004.nc
+#CO_biomass_emission_factor: 1.
+
+#GFED (v.1) or Martin/Duncan climatology - emission file provides kg DM m-2 s-1; convert to CO
+#CO_biomass_emission_filename: /share/dasilva/fvInput/fvchem/c/martin.biomass_src.sfc.1971.nc
+#CO_biomass_emission_factor: .085
+
+#GFED (v.2) - emission file provides kg CO m-2 s-1
+#CO_biomass_emission_filename: ExtData/g5chem/sfc/gfed_v2.co_bioburn.x288_y181_t96.19970115_12z-20041215_12z.nc
+#CO_biomass_emission_factor: 1.
+
+#                               Other External Files
+#                               --------------------
+
+CO_fossilfuel_filename:        ExtData/g5chem/sfc/co_fossilfuel_v2.x360_y181_t12.2001.nc
+CO_biofuel_filename:           ExtData/g5chem/sfc/co_biofuel_v2.x360_y181_t12.2001.nc
+CO_biogenic_filename:          ExtData/g5chem/sfc/co_biogenic.x288_y181_t12.2006.nc
+CH4_concentration_filename:    ExtData/g5chem/L72/gmi_oh_ch4_h2o2_no3.x144_y91_z72_t12.2006.nc
+OH_concentration_filename:     ExtData/g5chem/L72/gmi_oh_ch4_h2o2_no3.x144_y91_z72_t12.2006.nc
+
+#                                      ---

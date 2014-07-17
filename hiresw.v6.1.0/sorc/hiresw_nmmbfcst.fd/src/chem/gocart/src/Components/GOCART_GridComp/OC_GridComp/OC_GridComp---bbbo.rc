@@ -1,0 +1,85 @@
+#
+# Resource file for OC parameters. 
+# Emission factors in kg species / kg emissions (DM or species)
+#
+
+number_oc_classes:  2 
+OC_regions:  ExtData/g5chem/sfc/ARCTAS.region_mask.x540_y361.2008.nc
+
+# Indicate regions using a comma-delimited list of integers.
+# To activate all land boxes, use -1, or all or global (not case sensitive)
+# -------------------------------------------------------------------------
+OC_regions_indices: global
+
+# For all land boxes in a latitude range, set doZoneMasking to
+# 1 then specify BOTH the south and north limits in degrees.
+# WARNING: When set, zone masking OVERRIDES regions setting above!
+# ----------------------------------------------------------------
+doZoneMasking: 1
+LatitudeSouth: 45.0
+LatitudeNorth: 90.0
+
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+
+# For emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+
+# Near real-time QFED: emission file provides kg CO m-2 s-1
+# ---------------------------------------------------------
+bb_srcfilen: ExtData/g5chem/sfc/QFED/qfed_rr.emis_oc.sfc.%y4%m2.nc
+biomass_burning_emission_factor: 1.
+
+#  bb_srcfilen: /share/dasilva/fvInput/fvchem/b/gfed.biomass_src.sfc.v2.nc
+#  biomass_burning_emission_factor: 0.008
+
+#  bb_srcfilen: ExtData/g5chem/sfc/gfed_v2.oc_bioburn.x288_y181_t96.19970115_12z-20041215_12z.nc
+#  biomass_burning_emission_factor: 1.
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+# Duncan -- in terms of DM
+#  bf_srcfilen: /share/dasilva/fvInput/fvchem/c/duncan.biofuel_src.sfc.1971.nc
+#  biofuel_emission_factor: 0.004
+
+# RJP
+  bf_srcfilen: /dev/null
+  biofuel_emission_factor: 1.
+
+# Anthropogenic (FF) emissions -- Cooke as 2 layers, RJP as single
+# Cooke
+#  ebcant1_srcfilen: /share/dasilva/fvInput/fvchem/c/cooke.anteoc_src.l1.1971.nc
+#  ebcant2_srcfilen: /share/dasilva/fvInput/fvchem/c/cooke.anteoc_src.l2.1971.nc
+
+# RJP
+#  eocant1_srcfilen: ExtData/g5chem/sfc/harvard_rjpark.oc_fossilfuel.x360_y181_t12.1971.nc
+#  eocant2_srcfilen: --
+
+# Bond/Streets
+  eocant1_srcfilen: /dev/null
+  eocant2_srcfilen: /dev/null
+
+# EDGAR based ship emissions of OC
+  oc_ship_srcfilen: ExtData/g5chem/sfc/edgar.ship_oc_src.sfc.x360_y181.2007.nc
+
+# Terpene emission
+  terpene_srcfilen: /dev/null
+  terpene_emission_fraction: 0.1
+
+# Ratio of POM/OC -> convert source masses from carbon to POM
+  pom_oc_ratio: 1.4
+
+# Initially hydrophobic portion
+  hydrophobic_fraction: 0.5
+
+# Scavenging efficiency per bin [km-1]
+fscav: 0.0  0.4   #  

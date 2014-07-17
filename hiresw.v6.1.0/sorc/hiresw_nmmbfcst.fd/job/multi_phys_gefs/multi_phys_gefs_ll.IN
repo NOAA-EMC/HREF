@@ -1,0 +1,21 @@
+#!/bin/ksh
+#
+# @ step_name = gefs_runtest
+# @ output = out
+# @ error = err
+# @ job_type = parallel
+# @ job_name = _JBNME_
+# @ node = _NODES_
+# @ total_tasks = _TASKS_
+# @ parallel_threads = _THRDS_
+# @ task_affinity = cpu(_THRDS_)
+# @ node_usage = not_shared
+# @ node_resources = ConsumableMemory (100 GB)
+# @ class = _CLASS_
+# @ group = _GROUP_
+# @ wall_clock_limit = _WALL_CLOCK_HOUR_:_WALL_CLOCK_MINS_:00
+# @ preferences = Feature == "dev"
+# @ network.MPI = sn_all,not_shared,us
+# @ account_no=_ACCNR_
+# @ executable = multi_phys_gefs_run
+# @ queue

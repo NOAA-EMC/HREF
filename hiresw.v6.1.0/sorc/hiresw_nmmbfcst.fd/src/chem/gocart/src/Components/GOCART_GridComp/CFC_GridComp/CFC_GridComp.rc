@@ -1,0 +1,18 @@
+#
+# Resource file for CFC parameters. 
+#
+
+number_CFC_bins: 1
+
+CFC_emission_filename: ExtData/g5chem/sfc/ARCTAS.CFC12.emission.x540_y361.2008.nc
+
+# Where do the rate tables, etc. reside?
+
+directory: .
+
+# Their file names
+
+    O2Jtable: ExtData/g5chem/x/photolysis/ACDB.solar_rad_src.a20_q12_z72_w79.notime.bin_be
+O3&SZAtables: ExtData/g5chem/x/photolysis/ACBD.o3_sza_table.a20_q12_z72.notime.bin_be
+JPLXsections: ExtData/g5chem/x/photolysis/ACDB_JPL2000.abs_xsect.w79_q200_s35.notime.bin_be
+

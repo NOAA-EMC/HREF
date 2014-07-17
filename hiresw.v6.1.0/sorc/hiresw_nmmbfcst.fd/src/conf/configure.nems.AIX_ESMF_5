@@ -1,0 +1,95 @@
+SHELL        = /bin/sh
+
+ESMF_INC     = -I/gpfs/t3/global/save/wx20wy/BASELIBS/esmf_5_1_0_src/AIX/include/esmf/modO
+ESMF_LIB     = /gpfs/t3/global/save/wx20wy/BASELIBS/esmf_5_1_0_src/AIX/lib/libO/libesmf.a -lC_r
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+POSTDIR=/climate/save/wx20wa/unipost/trunk
+POSTMOD=${POSTDIR}/incmod/post_4
+POST_INC=-I${POSTDIR}/incmod/post_4
+POST_LIB=-L${POSTDIR} -lnceppost
+
+NETCDF_LIB   = -L/nwprod/lib -lnetcdf_64
+
+#NEMSIO_INC   = -I/climate/save/wx20wa/gfsio/lib/ibmp6/nemsio/incmod
+#NEMSIO_LIB   = -L/climate/save/wx20wa/gfsio/lib/ibmp6/nemsio -lnemsio
+NEMSIO_INC   = -I/climate/save/wx20wa/gfsio/nemsio/trunk/incmod
+NEMSIO_LIB   = -L/climate/save/wx20wa/gfsio/nemsio/trunk -lnemsio
+#NEMSIO_INC  = -I/climate/save/wx20wa/gfsio/lib/nemsio/incmod
+#NEMSIO_LIB  = -L/climate/save/wx20wa/gfsio/lib/nemsio -lnemsio
+
+W3_LIB       = -L/climate/save/wx20wa/gfsio/w3/sorc_opn -lw3_d
+W3_POST_LIB  = -L/climate/save/wx20wa/lib -lw3_v2.2.3_4
+XML_LIB      = -L/climate/save/wx20wa/lib -lxmlparse
+G2TMPL_LIB   = -L/climate/save/wx20wa/lib -lg2tmpl
+#BACIO_LIB    = -L/nwprod/lib -lbacio_4
+BACIO_LIB    = /climate/save/wx20wa/gfsio/bacio/trunk/lib/libbacio_4.a
+SP_LIB       = -L/nwprod/lib -lsp_d
+G2_LIB       = -L/nco/sib/gribdev/lib -lg2_4 -L/usrx/local/64bit/lib -ljasper -lpng -lz
+SIGIO_LIB    = -L/nwprod/lib -lsigio_4
+SFCIO_LIB    = -L/nwprod/lib -lsfcio_4
+CRTM_LIB     = -L/nwprod/lib -lcrtm_2.0.2
+
+SYS_LIB      = -lessl_r -lmass -lmassvp6
+
+
+EXTLIBS      = $(NEMSIO_LIB) \
+               $(W3_LIB) \
+               $(BACIO_LIB) \
+               $(SP_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+EXTLIBS_POST = $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2TMPL_LIB) \
+               $(POST_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+FC           = mpxlf95_r
+CC           = mpcc
+FREE         = -qfree=f90
+FIXED        = -qfixed
+R8           = -qrealsize=8
+
+SMP          = -qsmp=omp
+MAF          = -qfloat=nomaf
+LIST         = -qsource -qlist
+FINCS        = $(ESMF_INC) $(NEMSIO_INC)
+#TRAPS        = -qinitauto=FF911299 -qflttrap=ov:zero:en -qsigtrap -C
+TRAPS        = 
+
+FFLAGS       = $(TRAPS) $(FINCS)
+
+OPTS_NMM     = -O3 -qstrict -qmaxmem=-1 -qarch=auto -qtune=auto -NS2000
+OPTS_GFS     = -O3 -qstrict -qxlf77=leadzero -qmaxmem=-1 -qnolm -qsmp=noauto -qnosave -NS2048 -qsuffix=cpp=f
+OPTS_GEN     = -O3 -qstrict -qxlf77=leadzero -qmaxmem=-1 -qnolm -qsmp=noauto -qnosave -NS2048 -qsuffix=cpp=f
+OPTS_FIM     = -O3 -qstrict -qmaxmem=-1 -qarch=auto -qtune=auto -NS2048 -qsuffix=cpp=f
+
+FFLAGS_NMM   = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS   = $(OPTS_GFS) $(FFLAGS)
+FFLAGS_GFSF  = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN   = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM   = $(OPTS_FIM) $(FFLAGS)
+
+SUFFIX_FLAG  = -qsuffix=cpp=F
+
+CPP          = /lib/cpp -P
+CPPFLAGS     = -DENABLE_SMP -DIBMP6
+
+AR           = ar
+ARFLAGS      = -r
+
+RM           = rm

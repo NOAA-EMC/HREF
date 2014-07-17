@@ -1,0 +1,2 @@
+module_OCN_GRID_COMP_stub.o : module_OCN_GRID_COMP_stub.F90 module_OCN_INTERNAL_STATE.o  ../ESMFVersionDefine.h ../NUOPC_Switch.h
+module_OCN_INTERNAL_STATE.o : module_OCN_INTERNAL_STATE.F90  ../ESMFVersionDefine.h

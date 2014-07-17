@@ -1,0 +1,18 @@
+v6.0.10 - released June 23, 2014
+ 
+Converts the NAM latitudes and longitudes from radians to degrees (if needed) 
+in the coldstart job.  The coming NAM implementation will require this fix.
+Can be run immediately with current operational NAM.
+
+- Minor code change to one routine in hiresw_coldstart.fd
+
+- Should have no impact on timing, file sizes, etc.
+
+
+Implementation instructions:
+
+This update contains a code modification in sorc/hiresw_coldstart.fd
+
+Rebuild the code with a "make" command in that directory.
+
+New executable hiresw_coldstart will be placed in ../../exec/

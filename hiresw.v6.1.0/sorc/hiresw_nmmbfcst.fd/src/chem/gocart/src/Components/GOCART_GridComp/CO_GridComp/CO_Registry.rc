@@ -1,0 +1,60 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: CO
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+
+<CO::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl|# Sub|          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  COEM     | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission __ENSEMBLE__
+  COEMbbbo | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission (Boreal Biomass Burning)
+  COEMbbnb | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission (Non-Boreal Biomass Burning)
+  COEMffru | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission (Northern Asia Anthropogenic)
+  COEMffas | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission (Southern Asia Anthropogenic)
+  COEMffeu | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission (European Anthropogenic)
+  COEMffna | kg m-2 s-1 | xy  |   |    |   |   |     | CO Emission (North American Anthropogenic)
+  COPD     | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production __ENSEMBLE__
+  COPDbbbo | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production (Boreal Biomass Burning)
+  COPDbbnb | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production (Non-Boreal Biomass Burning)
+  COPDffru | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production (Northern Asia Anthropogenic)
+  COPDffas | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production (Southern Asia Anthropogenic)
+  COPDffeu | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production (European Anthropogenic)
+  COPDffna | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Production (North American Anthropogenic)
+  COLS     | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss __ENSEMBLE__
+  COLSbbbo | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss (Boreal Biomass Burning)
+  COLSbbnb | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss (Non-Boreal Biomass Burning)
+  COLSffru | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss (Northern Asia Anthropogenic)
+  COLSffas | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss (Southern Asia Anthropogenic)
+  COLSffeu | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss (European Anthropogenic)
+  COLSffna | kg m-2 s-1 | xy  |   |    |   |   |     | CO Chemical Loss (North American Anthropogenic)
+  COSC     | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration __ENSEMBLE__
+  COSCbbbo | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration (Boreal Biomass Burning)
+  COSCbbnb | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration (Non-Boreal Biomass Burning)
+  COSCffru | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration (Northern Asia Anthropogenic)
+  COSCffas | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration (Southern Asia Anthropogenic)
+  COSCffeu | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration (European Anthropogenic)
+  COSCffna | ppbv       | xy  |   |    |   |   |     | CO Surface Concentration (North American Anthropogenic)
+  COCL     | kg m-2     | xy  |   |    |   |   |     | CO Column Burden __ENSEMBLE__
+  COCLbbbo | kg m-2     | xy  |   |    |   |   |     | CO Column Burden (Boreal Biomass Burning)
+  COCLbbnb | kg m-2     | xy  |   |    |   |   |     | CO Column Burden (Non-Boreal Biomass Burning)
+  COCLffru | kg m-2     | xy  |   |    |   |   |     | CO Column Burden (Northern Asia Anthropogenic)
+  COCLffas | kg m-2     | xy  |   |    |   |   |     | CO Column Burden (Southern Asia Anthropogenic) 
+  COCLffeu | kg m-2     | xy  |   |    |   |   |     | CO Column Burden (European Anthropogenic)
+  COCLffna | kg m-2     | xy  |   |    |   |   |     | CO Column Burden (North American Anthropogenic) 
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+</CO::ExportSpec>
+
