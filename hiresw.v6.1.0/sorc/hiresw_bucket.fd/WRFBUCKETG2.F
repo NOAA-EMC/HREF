@@ -303,14 +303,12 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 
         gfld%ipdtmpl=PDS_RAIN_HOLD_EARLY
-        write(0,*) ' gfld%ipdtmpl(9) was: ', gfld%ipdtmpl(9)
         gfld%ipdtmpl(9)=ihrs1
-        write(0,*) ' gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
         do J=16,21
         gfld%ipdtmpl(J)=PDS_RAIN_HOLD(J)
-        write(0,*) 'J, dateinfo: ', J, gfld%ipdtmpl(J)
         enddo
 
+        gfld%ipdtmpl(22)=1
         gfld%ipdtmpl(27)=interv
 
         write(0,*) 'interval specified in 27: ', interv
@@ -326,11 +324,14 @@ C    &                  UNPACK,K,GFLD,IRET)
 	call putgb2(13,GFLD,IRET)
         write(0,*) 'IRET from putgb2 for dprecip', IRET
 
+! -------------------------------------------
+
         gfld%ipdtmpl=PDS_SNOW_HOLD_EARLY
         gfld%ipdtmpl(9)=ihrs1
         do J=16,21
         gfld%ipdtmpl(J)=PDS_RAIN_HOLD(J)
         enddo
+        gfld%ipdtmpl(22)=1
         gfld%ipdtmpl(27)=interv
         gfld%fld=sprecip
 	call putgb2(13,GFLD,IRET)
