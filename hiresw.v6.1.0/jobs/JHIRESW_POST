@@ -88,11 +88,6 @@ sh $utilscript/setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
-export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
-
-mkdir -p $COMOUT
- 
-env
 
 ################################################
 # Copy Forecast files from com
@@ -108,33 +103,6 @@ ${HOMEhiresw}/scripts/exhiresw_post.sh.ecf
 ########################################################
 
 postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
-
-#endfhr=48
-#
-#fhr=00
-#fhr=`printf '%02d' $fhrtst`
-#
-#while [ $fhr -le $endfhr ]
-#do
-#  ic=0
-#  while [ $ic -le 600 ]
-#  do
-#    if [ -s $DATA/postdone${fhr} ]
-#    then
-#       break
-#    else
-#       let ic=ic+1
-#       sleep 20
-#    fi
-#
-#    if [ $ic -ge 60 ]
-#    then
-#       err_exit "COULD NOT LOCATE: $DATA/postdone${fhr}"
-#    fi
-#  done
-#  let fhr=fhr+1
-#fhr=`printf '%02d' $fhr`
-#done
 
 cd /tmpnwprd2
 date

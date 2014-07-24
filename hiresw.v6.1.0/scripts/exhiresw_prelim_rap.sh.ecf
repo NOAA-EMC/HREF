@@ -128,13 +128,7 @@ then
 
 else
 
-  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/run_ungrib/.
-  export err1=$?
-  cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib/Vtable 
-  mod=gfs
-  GRIBSRC=GFS
-  type=pgrb2f
-  suf=""
+./err_exit "JHIRESW_PREPRAP attempted to run for non-conus domain.  FATAL ERROR"
 
 fi
 
@@ -389,20 +383,16 @@ cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsi
 
 
 # nmmb file with the land states you want
-
-namcyc=`echo $PDY | cut -c1-8`
-gespath=${GESNAM}/nam.${namcyc}
-
 # make sure 00 h NAM restart file exists; use cold-start input 
 # file if it does not
 
-if [ -e $gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
+if [ -e $GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
 then
-  INPUT_FILE="$gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+  INPUT_FILE="$GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 else
-  if [ -e $gespath/nam.t${cyc}z.input_nemsio.anl.tm00 ]
+  if [ -e $GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00 ]
   then
-    INPUT_FILE="$gespath/nam.t${cyc}z.input_nemsio.anl.tm00"
+    INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
     echo "FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
     ./err_exit
