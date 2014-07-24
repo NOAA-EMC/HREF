@@ -82,9 +82,7 @@ sh $utilscript/setup.sh
 sh $utilscript/setpdy.sh
 . PDY
 
-export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
-
 mkdir -p -m 775 $COMOUT
  
 ########################################################

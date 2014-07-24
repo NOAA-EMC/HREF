@@ -82,9 +82,7 @@ sh $utilscript/setpdy.sh
 
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
 
-export GESNAM=${GESNAM:-/nwges/prod}
-export COMNAM=${COMNAM:-/com/nam/prod/nam.${PDY}}
-export COMGFS=${COMGFS:-/com/gfs/prod/gfs.${PDY}}
+export GESNAM=${GESNAM:-/nwges/prod/nam.${PDY}}
 export COMRAP=${COMRAP:-/com/rap/prod/rap.${PDY}}
 
 mkdir -p -m 775 $COMOUT

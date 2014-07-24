@@ -757,6 +757,7 @@
        <shortname>MCONV_ON_SPEC_PRES_ABOVE_GRND</shortname>
        <pname>MCONV</pname>
        <fixed_sfc1_type>spec_pres_above_grnd</fixed_sfc1_type>
+       <fixed_sfc2_type>spec_pres_above_grnd</fixed_sfc2_type>
        <scale>3.0</scale>
     </param>
 
@@ -774,6 +775,7 @@
        <shortname>VVEL_ON_SPEC_PRES_ABOVE_GRND</shortname>
        <pname>VVEL</pname>
        <fixed_sfc1_type>spec_pres_above_grnd</fixed_sfc1_type>
+       <fixed_sfc2_type>spec_pres_above_grnd</fixed_sfc2_type>
        <scale>5.0</scale>
     </param>
 

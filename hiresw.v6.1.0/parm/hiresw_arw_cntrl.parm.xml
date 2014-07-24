@@ -703,6 +703,8 @@
        <param>
        <shortname>UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
        <pname>UPHL</pname>
+       <level>    5000    </level>
+       <level2>    2000   </level2>
        <table_info>NCEP</table_info>
          <scale>-3.0</scale>
       </param>
@@ -851,10 +853,18 @@
       </param>
 
        <param>
-       <shortname>GRMR_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
-       <pname>GRLE</pname>
-         <scale>3.0</scale>
-      </param>
+       <shortname>TCOLW_ON_ENTIRE_ATMOS</shortname>
+       <pname>TCOLW</pname>
+       <table_info>NCEP</table_info>
+         <scale> 5.0</scale>
+	      </param>
+
+	<param>
+        <shortname>GRMR_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
+        <pname>GRLE</pname>
+         <scale> 5.0</scale>
+	   </param>
+
 
        <param>
        <shortname>VGTYP_ON_SURFACE</shortname>
