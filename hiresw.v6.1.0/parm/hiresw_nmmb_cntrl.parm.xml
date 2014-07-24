@@ -194,6 +194,12 @@
       </param>
 
        <param>
+       <shortname>TMP_ON_SURFACE</shortname>
+       <pname>TMP</pname>
+         <scale>4.0</scale>
+      </param>
+
+       <param>
        <shortname>RH_ON_SURFACE</shortname>
        <pname>RH</pname>
          <scale>4.0</scale>
@@ -247,15 +253,17 @@
       </param>
 
        <param>
-       <shortname>GFS_LFTX_ON_SURFACE</shortname>
+       <shortname>LFTX_ON_ISOBARIC_SFC_500-1000hpa</shortname>
        <pname>LFTX</pname>
        <table_info>NCEP</table_info>
          <scale>3.0</scale>
       </param>
 
        <param>
-       <shortname>GFS_4LFTX_ON_SURFACE</shortname>
+       <shortname>4LFTX_ON_SPEC_PRES_ABOVE_GRND</shortname>
        <pname>4LFTX</pname>
+       <level>    18000</level>
+       <level2>       0</level2>
        <table_info>NCEP</table_info>
          <scale>3.0</scale>
       </param>
@@ -695,15 +703,10 @@
        <param>
        <shortname>UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
        <pname>UPHL</pname>
+       <level>    5000    </level>
+       <level2>    2000   </level2>
        <table_info>NCEP</table_info>
          <scale>-3.0</scale>
-      </param>
-
-       <param>
-       <shortname>RETOP_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
-       <pname>RETOP</pname>
-       <table_info>NCEP</table_info>
-         <scale>-6.0</scale>
       </param>
 
        <param>
@@ -787,13 +790,13 @@
 
        <param>
        <shortname>MAX_RHMAX_ON_SPEC_HGT_LVL_ABOVE_GRND_2m</shortname>
-       <pname>RHMAX</pname>
+       <pname>MAXRH</pname>
          <scale>-2.0</scale>
       </param>
 
        <param>
        <shortname>MIN_RHMIN_ON_SPEC_HGT_LVL_ABOVE_GRND_2m</shortname>
-       <pname>RHMIN</pname>
+       <pname>MINRH</pname>
          <scale>-2.0</scale>
       </param>
 
