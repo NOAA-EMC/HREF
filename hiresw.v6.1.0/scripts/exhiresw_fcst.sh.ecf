@@ -56,7 +56,7 @@ export err3=$?
 
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
 then
-msg="FATAL ERROR: MODEL is missing a key input file such as wrfinput_d01, wrfbdy_d01, or namelist.input"
+msg="FATAL ERROR: ARW MODEL is missing a key input file such as wrfinput_d01, wrfbdy_d01, or namelist.input"
 ./err_exit $msg
 fi
 

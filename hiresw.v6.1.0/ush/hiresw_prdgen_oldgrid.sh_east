@@ -60,8 +60,8 @@ then
   IM=884
   JM=614
 else
-echo "Improperly used for " $DOMIN " domain"
-err_exit "hlresw_prdgen_oldgrid.sh_east only for CONUS DOMAIN"
+msg="FATAL ERROR: Improperly used this conus specific script for the " $DOMIN " domain"
+err_exit $msg
 fi
 
 filedir=$DATA

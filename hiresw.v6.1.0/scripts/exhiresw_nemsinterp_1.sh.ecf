@@ -182,22 +182,19 @@ cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsi
 
 # NAM nmmb file with the land states you want
 
-namcyc=`echo $PDY | cut -c1-8`
-gespath=${gespath:-${GESNAM}/nam.${namcyc}}
-
 # make sure 00 h NAM restart file exists; use cold-start input
 # file if it does not
 
-if [ -e $gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
+if [ -e $GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
 then
-  INPUT_FILE="$gespath/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+  INPUT_FILE="$GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 else
-  if [ -e $gespath/nam.t${cyc}z.input_nemsio.anl.tm00 ]
+  if [ -e $GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00 ]
   then
-    INPUT_FILE="$gespath/nam.t${cyc}z.input_nemsio.anl.tm00"
+    INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
-    echo "FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
-    ./err_exit
+    msg="FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
+    ./err_exit $msg
   fi
 fi
 

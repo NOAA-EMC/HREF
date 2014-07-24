@@ -78,7 +78,7 @@ sh $utilscript/setpdy.sh
 . PDY
 
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
-export GESNAM=${GESNAM:-/nwges/prod}
+export GESNAM=${GESNAM:-/nwges/prod/nam.${PDY}}
 
 mkdir -p -m 775 $COMOUT
 

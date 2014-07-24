@@ -134,7 +134,7 @@ do
    fi
 if [ $icnt -ge 200 ]
 then
-    msg="ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
     err_exit $msg
 fi
 done
@@ -159,7 +159,7 @@ do
    fi
 if [ $icnt -ge 200 ]
 then
-    msg="ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
     err_exit $msg
 fi
 done

@@ -37,7 +37,7 @@ then
     fi
   done
   if [ $icnt -ge $maxtries ]; then
-     msg="ABORTING after 50 minutes of waiting for F$fhr to end."
+     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for awpregeast F$fhr to become available."
      err_exit $msg
   fi
 
@@ -68,7 +68,7 @@ then
     fi
   done
   if [ $icnt -ge $maxtries ]; then
-     msg="ABORTING after 50 minutes of waiting for F$fhr to end."
+     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for awpregwest F$fhr to become available."
      err_exit $msg
   fi
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregwestf${fhr}.grib2
@@ -100,7 +100,7 @@ else
     fi
   done
   if [ $icnt -ge $maxtries ]; then
-     msg="ABORTING after 50 minutes of waiting for F$fhr to end."
+     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for awpreg F$fhr to become available."
      err_exit $msg
   fi
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregf${fhr}.grib2

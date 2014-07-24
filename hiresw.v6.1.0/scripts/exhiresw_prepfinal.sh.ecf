@@ -114,8 +114,8 @@ fi
 
 else
 
-echo "invalid NEST choice $NEST in prepfinal, exiting"
-./err_exit "improper NEST value passed into prepfinal"
+msg="FATAL ERROR: invalid NEST choice $NEST in prepfinal"
+./err_exit $msg
 fi
 
 
@@ -191,7 +191,8 @@ then
  cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01
 
  if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
-   ./err_exit "WRF initial or boundary condition files missing"
+   msg="FATAL ERROR: WRF initial or boundary condition files needed by WRF-ARW model not copied to $COMOUT"
+   ./err_exit $msg
  fi
 fi
 
