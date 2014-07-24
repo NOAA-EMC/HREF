@@ -564,6 +564,7 @@
        <shortname>PRES_ON_SPEC_PRES_ABOVE_GRND</shortname>
        <pname>PRES</pname>
        <fixed_sfc1_type>spec_pres_above_grnd</fixed_sfc1_type>
+       <fixed_sfc2_type>spec_pres_above_grnd</fixed_sfc2_type>
        <scale>6.0</scale>
     </param>
 
@@ -2992,7 +2993,7 @@
     <param>
        <post_avblfldidx>347</post_avblfldidx>
        <shortname>MAX_RHMAX_ON_SPEC_HGT_LVL_ABOVE_GRND_2m</shortname>
-       <pname>RHMAX</pname>
+       <pname>MAXRH</pname>
        <stats_proc>MAX</stats_proc>
        <pdstmpl>tmpl4_8</pdstmpl>
        <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
@@ -3003,8 +3004,9 @@
     <param>
        <post_avblfldidx>348</post_avblfldidx>
        <shortname>MIN_RHMIN_ON_SPEC_HGT_LVL_ABOVE_GRND_2m</shortname>
-       <pname>RHMIN</pname>
+       <pname>MINRH</pname>
        <stats_proc>MIN</stats_proc>
+       <table_info>NCEP</table_info>
        <pdstmpl>tmpl4_8</pdstmpl>
        <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
        <level>2</level>
