@@ -116,8 +116,8 @@ then
  NUMLEVS=41
  
         else
-           echo "FATAL ERROR: ${COMRAP}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
-           err_exit
+           msg="FATAL ERROR: ${COMRAP}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
+           err_exit $msg
         fi
 
  cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
@@ -128,7 +128,8 @@ then
 
 else
 
-./err_exit "JHIRESW_PREPRAP attempted to run for non-conus domain.  FATAL ERROR"
+msg="FATAL ERROR: JHIRESW_PREPRAP attempted to run for non-conus domain."
+./err_exit $msg
 
 fi
 
@@ -146,10 +147,6 @@ else
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
  | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/run_ungrib/namelist.nps
 
-fi
-if [ $err1 -ne 0 ] 
-then
-  ./err_exit "$whr input GRIB file from GFS not found.  FATAL ERROR"
 fi
 
 whr=`expr $whr + $incr`
@@ -351,7 +348,8 @@ err_chk
 cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap
 
 if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap ]; then
-   ./err_exit "WRF initial or boundary condition files missing"
+    msg="FATAL ERROR: WRF initial condition from RAP conditions not produced"
+   ./err_exit $msg
 fi
 
 # Cat REAL log files and send to COM
@@ -394,8 +392,8 @@ else
   then
     INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
-    echo "FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
-    ./err_exit
+    msg="FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
+    ./err_exit $msg
   fi
 fi
 
@@ -511,7 +509,8 @@ err=$?
 if [ $err -ne 0 ]
 then
 ls -ltr
-./err_exit "didnt copy over configure file"
+msg="FATAL ERROR: did not copy configure file needed by model to $COMOUT"
+./err_exit $msg
 fi
 
 

@@ -119,8 +119,8 @@ if [ $MODEL = "nmmb" ]; then
  elif [ $NEST = "conus" ] ; then
    cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
  else
-   echo "bad NEST selection in nemsinterp_4 $NEST"
-   ./err_exit "bad NEST selection in nemsinterp_4"
+   msg="FATAL ERROR: bad NEST selection $NEST in nemsinterp_4"
+   ./err_exit $msg
  fi
 fi
 
@@ -243,8 +243,6 @@ echo "DONE" > ../nemsinterpdone4
 
 cd $DATA
 
-# count=`ls nemsinterpdone* | wc -l`
-
 count=`ls $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.* | wc -l`
 
 while [ $count -lt 16 ]
@@ -253,24 +251,6 @@ sleep 20
 count=`ls $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.* | wc -l`
 echo now see $count boco files in com
 done
-
-
-# while [ $count -lt 4 ]
-# do
-# sleep 20
-# count=`ls nemsinterpdone* | wc -l`
-# echo nemsinterpdone count now $count
-# done
-
-
-# export err1=$?
-# if [ $err1 -ne 0 ]
-# then
-# echo "failed copy of boco.00${hr}"
-# ./err_exit "missing a critical file for the model"
-# fi
-
-##? done
 
 cp configure_file $COMOUT/${NEST}${MODEL}.t${cyc}z.configure_file
 export err=$?; err_chk
