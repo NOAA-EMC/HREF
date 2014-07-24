@@ -249,7 +249,7 @@
         write(6,*) 'cenlat= ', cenlat
         call ext_int_get_dom_ti_real(DataHandle,'CEN_LON',tmp            &
           ,1,ioutcount,istatus)
-        cenlon=int(0.5+gdsdegr*tmp)
+        cenlon=int(0.5+gdsdegr*(tmp+360.))
         write(6,*) 'cenlon= ', cenlon
         call ext_int_get_dom_ti_real(DataHandle,'TRUELAT1',tmp           &
           ,1,ioutcount,istatus)
@@ -261,7 +261,7 @@
         write(6,*) 'truelat2= ', truelat2
 	call ext_int_get_dom_ti_real(DataHandle,'STAND_LON',tmp          &
           ,1,ioutcount,istatus)
-        STANDLON=int(0.5+gdsdegr*tmp)
+        STANDLON=int(0.5+gdsdegr*(tmp+360.))
         write(6,*) 'STANDLON= ', STANDLON
         call ext_int_get_dom_ti_integer(DataHandle,'MAP_PROJ',itmp       &
           ,1,ioutcount,istatus)
@@ -2303,6 +2303,10 @@
        write(6,*) 'laststart,latlast A calling bcast=',latstart,latlast
        call collect_loc(gdlon,dummy)
        if(me.eq.0)then
+        if(grib=='grib2') then
+          if(dummy(1,1)<0) dummy(1,1)=dummy(1,1)+360.
+          if(dummy(im,jm)<0) dummy(im,jm)=dummy(im,jm)+360.
+        endif
         lonstart=int(0.5+dummy(1,1)*gdsdegr)
         lonlast=int(0.5+dummy(im,jm)*gdsdegr)
        end if

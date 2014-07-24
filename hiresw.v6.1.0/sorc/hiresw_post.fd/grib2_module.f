@@ -308,8 +308,8 @@
             print *,'finished gengrb2msg field=',i,'ntlfld=',ntlfld,'clength=',clength
             call wryte(lunout, clength, cgrib)
            else
-            print *,'WRONG, could not find ',trim(pset%param(nprm)%pname), &
-                 " in WMO and NCEP table!, ierr=", ierr
+            print *,'WRONG, could not find(b) ',trim(pset%param(nprm)%pname), &
+                 " in WMO and NCEP table, ierr=", ierr
             call mpi_abort()
            endif
          enddo
@@ -397,8 +397,8 @@
          cstart=cstart+clength
 !
        else
-         print *,'WRONG, could not find ',trim(pset%param(nprm)%pname), &
-                 " in WMO and NCEP table!"
+         print *,'WRONG, could not find(a) ',trim(pset%param(nprm)%pname), &
+                 " in WMO and NCEP table, ierr", ierr
 !!!         call mpi_abort()
        endif
 !
@@ -555,6 +555,9 @@
        ldfgrd=(MAPTYPE==203.and.(trim(pset%param(nprm)%pname)=='ugrd'.or.  &
          trim(pset%param(nprm)%pname)=='vgrd'))
        call getgds(ldfgrd,igdsmaxlen,igdtlen,igds,igdstmpl)
+
+        write(0,*) 'igdstmpl(11): ', igdstmpl(11)
+
        idefnum=1
        ideflist=0     !Used if igds(3) .ne. 0. Dummy array otherwise
 !
