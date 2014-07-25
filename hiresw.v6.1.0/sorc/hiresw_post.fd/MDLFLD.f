@@ -2917,7 +2917,11 @@
       IF(IGET(400).GT.0)THEN
         DO J=JSTA,JEND
           DO I=1,IM
-            GRID1(I,J)=SPVAL	       	      
+
+! will removal of SPVAL def fix GRIB2 issue?
+! also may look field look better with a little interpolation bleed.
+!            GRID1(I,J)=SPVAL	       	      
+            GRID1(I,J)=0.
             DO L=1,NINT(LMH(I,J))
 	      IF(DBZ(I,J,L)>18.3)then
 	        GRID1(I,J)=ZMID(I,J,L)
