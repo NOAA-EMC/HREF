@@ -135,6 +135,8 @@ timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
 icnt=1
 
 
+# wgrib2 WRFPRS09.tm00  -new_grid_winds grid -new_grid latlon -162.35:223:0.045 16.4:170:0.045 latlon.grb2
+# wgrib2 WRFPRS09.tm00 -new_grid_winds grid -new_grid mercator -162.35:223:0.045:-152.36  16.4:170:0.045:24.005 mercator.grb2
 
 # hireg="0 6 0 0 0 0 0 0 223 170 0 0 16400000 -162350000 136 24005000 -152360000 45000 45000 64"
 # hindfd="10 6 0 0 0 0 0 0 321 225 18073000 -161525000 136 20000000 23088000 -153869000 64 0 2500000 2500000"

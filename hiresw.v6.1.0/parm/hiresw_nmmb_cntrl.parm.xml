@@ -233,12 +233,6 @@
       </param>
 
        <param>
-       <shortname>WEASD_ON_SURFACE</shortname>
-       <pname>WEASD</pname>
-         <scale> 3.0</scale>
-      </param>
-
-       <param>
        <shortname>SNOWC_ON_SURFACE</shortname>
        <pname>SNOWC</pname>
        <table_info>NCEP</table_info>
@@ -289,26 +283,34 @@
       </param>
 
        <param>
-       <shortname>BEST_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <shortname>UNSTABLE_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
         <pname>CAPE</pname>
-       <level>    18000  </level>
-       <level2>      0  </level2>
-         <scale>4.0</scale>
-         </param>
-
-       <param>
-       <shortname>BEST_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
-        <pname>CAPE</pname>
-       <level>    9000 </level>
+       <level>    18000 </level>
        <level2>      0</level2>
          <scale>4.0</scale>
          </param>
 
        <param>
-       <shortname>BEST_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
+      <shortname>MIXED_LAYER_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
+        <pname>CAPE</pname>
+       <level>    9000 </level>
+       <level2>      0</level2>
+         <scale>4.0</scale>
+        </param>
+
+       <param>
+      <shortname>MIXED_LAYER_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
+        <pname>CIN</pname>
+       <level>    9000 </level>
+       <level2>      0</level2>
+         <scale>4.0</scale>
+        </param>
+
+       <param>
+       <shortname>UNSTABLE_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
       <pname>CIN</pname>
-       <level>    18000  9000 </level>
-       <level2>      0   0</level2>
+       <level>    18000 </level>
+       <level2>      0</level2>
          <scale>4.0</scale>
          </param>
 
@@ -740,6 +742,8 @@
        <param>
        <shortname>MAX_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
        <pname>MXUPHL</pname>
+       <level>    5000    </level>
+       <level2>    2000   </level2>
        <table_info>NCEP</table_info>
          <scale>-3.0</scale>
       </param>
@@ -864,6 +868,13 @@
        <pname>VGTYP</pname>
        <table_info>NCEP</table_info>
          <scale>3.0</scale>
+      </param>
+
+      <param>
+      <shortname>RETOP_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
+      <pname>RETOP</pname>
+      <table_info>NCEP</table_info>
+      <scale>-6.0</scale>
       </param>
 
        <param>

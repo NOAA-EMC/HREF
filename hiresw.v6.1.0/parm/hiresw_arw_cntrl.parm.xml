@@ -233,12 +233,6 @@
       </param>
 
        <param>
-       <shortname>WEASD_ON_SURFACE</shortname>
-       <pname>WEASD</pname>
-         <scale> 3.0</scale>
-      </param>
-
-       <param>
        <shortname>SNOWC_ON_SURFACE</shortname>
        <pname>SNOWC</pname>
        <table_info>NCEP</table_info>
@@ -289,7 +283,7 @@
       </param>
 
        <param>
-       <shortname>BEST_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <shortname>UNSTABLE_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
         <pname>CAPE</pname>
        <level>    18000  </level>
        <level2>      0  </level2>
@@ -297,7 +291,7 @@
          </param>
 
        <param>
-       <shortname>BEST_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <shortname>MIXED_LAYER_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
         <pname>CAPE</pname>
        <level>    9000 </level>
        <level2>      0</level2>
@@ -305,10 +299,18 @@
          </param>
 
        <param>
-       <shortname>BEST_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
-      <pname>CIN</pname>
-       <level>    18000  9000 </level>
-       <level2>      0   0</level2>
+       <shortname>UNSTABLE_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
+        <pname>CIN</pname>
+       <level>    18000  </level>
+       <level2>      0  </level2>
+         <scale>4.0</scale>
+         </param>
+
+       <param>
+       <shortname>MIXED_LAYER_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
+        <pname>CIN</pname>
+       <level>    9000 </level>
+       <level2>      0</level2>
          <scale>4.0</scale>
          </param>
 

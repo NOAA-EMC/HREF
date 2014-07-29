@@ -1,0 +1,78 @@
+#!/bin/ksh
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exhiresw_prdgen.sh
+# Script description:  Run nam product generator jobs
+#
+# Author:        Eric Rogers       Org: NP22         Date: 1999-06-23
+#
+# Abstract: This script runs the HiresW PRDGEN jobs
+#
+# Script history log:
+# 1999-06-23  Eric Rogers
+# 1999-08-25  Brent Gordon  Modified for production, removed here file.
+# 2003-03-21  Eric Rogers  Modified for special hourly output
+# 2007-04-30  Matthew Pyle - Adopted for HiresW use
+# 2008-05-06  Chris Magee - Add prdgendone file for gempak step to key on.
+# 2009-09-24  Shawna Cokley - Eliminates copy of date file to working directory
+# 2012-12-13  Matthew Pyle - Small changes for WCOSS machine
+# 2013-09-01  Matthew Pyle - Changes to be run from prdgenmgr (works on the $post_times hour passed in)
+# 2014-02-27  Matthew Pyle - Undoes changes to be run from prdgenmgr (now loops over time again)
+#
+
+set -x
+
+######
+export MEMBER=ctl
+export INCR=01
+######
+
+NDATE=${NDATE:-${utilexec}/ndate}
+NHOUR=${NHOUR:-${utilexec}/nhour}
+
+cd $DATA
+filedir=$DATA
+
+export tmmark=tm00
+
+export fhr=00
+export fhrend=48
+
+icnt=1
+
+while [ $fhr -le $fhrend ]
+do
+
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript_${fhr}
+
+
+if [ $NEST = "conus" ]
+then
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_west $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_east $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+else
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+fi
+
+chmod 775 $DATA/poescript_${fhr}
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=$DATA/poescript_${fhr}
+#
+
+# Execute the script.
+mpirun.lsf
+export err=$?; ./err_chk
+
+echo "done executing prdgen" > $DATA/prdgendone${fhr}
+postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"
+
+let fhr=fhr+1
+
+if [ $fhr -lt 10 ]
+then
+fhr=0$fhr
+fi
+
+done
