@@ -108,7 +108,7 @@ env
 ########################################################
 # Run the ex-script
 #
-/${HOMEhiresw}/scripts/exhiresw_prdgen.sh.ecf
+/${HOMEhiresw}/scripts/exhiresw_prdgeng2.sh.ecf
 #
 ########################################################
 

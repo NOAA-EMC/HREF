@@ -2,11 +2,11 @@
 #BSUB -oo /meso/save/Matthew.Pyle/logs/test_fore.out__DOM__CORE__CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/logs/test_fore.err__DOM__CORE__CYC_
 #BSUB -R span[ptile=_SPAN_]
-#BSUB -q "dev"
+#BSUB -q "debug"
 #BSUB -J HIRESW_FORECAST__DOM___CORE___CYC_
 #BSUB -P HRW-T2O
 #BSUB -n _NPROC_
-#BSUB -W 1:19
+#BSUB -W 0:19
 #BSUB -a poe
 #
 

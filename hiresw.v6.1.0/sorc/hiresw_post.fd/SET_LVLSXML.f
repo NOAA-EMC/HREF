@@ -213,11 +213,18 @@
 !
       if(trim(param%fixed_sfc1_type)=='spec_hgt_lvl_above_grnd') then
          if(index(param%shortname,"SPEC_HGT_LVL_ABOVE_GRND_FDHGT")>0) then
+        write(0,*) 'nlevel: ' , nlevel
+        write(0,*) 'NFD: ', NFD
            do j=1, nlevel
         iloop41:  do i=1, NFD
+        write(0,*) 'i,j, param%level(j), HTFD(i): ',  &
+                i,j, param%level(j), HTFD(i)
+
              if(nint(param%level(j))==nint(HTFD(i)) )then
               LVLS(i,ifld)=1
               LVLSXML(i,ifld)=j
+        write(0,*) 'set LVLS: ', LVLS(i,ifld)
+        write(0,*) 'set LVLSXML: ', LVLSXML(i,ifld)
               irec=irec+1
               exit iloop41
              endif

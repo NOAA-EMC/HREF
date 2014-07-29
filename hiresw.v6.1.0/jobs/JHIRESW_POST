@@ -98,7 +98,8 @@ export tmmark=tm00
 ########################################################
 # Run the ex-script
 #
-${HOMEhiresw}/scripts/exhiresw_post.sh.ecf
+# ${HOMEhiresw}/scripts/exhiresw_post.sh.ecf
+${HOMEhiresw}/scripts/exhiresw_postg2.sh.ecf
 #
 ########################################################
 

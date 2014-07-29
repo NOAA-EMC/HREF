@@ -2915,6 +2915,8 @@
 !     RADAR ECHO TOP (highest 18.3 dBZ level in each column)
 !
       IF(IGET(400).GT.0)THEN
+
+        write(0,*) 'radar echo top'
         DO J=JSTA,JEND
           DO I=1,IM
 
