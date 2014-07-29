@@ -444,13 +444,6 @@
       </param>
 
        <param>
-       <shortname>AVE_SHTFL_ON_SURFACE</shortname>
-       <pname>SHTFL</pname>
-              <stats_proc>AVE</stats_proc>
-         <scale>4.0</scale>
-      </param>
-
-       <param>
        <shortname>AVE_GFLUX_ON_SURFACE</shortname>
        <pname>GFLUX</pname>
               <stats_proc>AVE</stats_proc>
@@ -856,15 +849,14 @@
        <shortname>TCOLW_ON_ENTIRE_ATMOS</shortname>
        <pname>TCOLW</pname>
        <table_info>NCEP</table_info>
-         <scale> 5.0</scale>
-	      </param>
+       <scale> 5.0</scale>
+       </param>
 
 	<param>
         <shortname>GRMR_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
         <pname>GRLE</pname>
-         <scale> 5.0</scale>
-	   </param>
-
+        <scale> 5.0</scale>
+        </param>
 
        <param>
        <shortname>VGTYP_ON_SURFACE</shortname>
@@ -878,6 +870,14 @@
        <pname>VIL</pname>
          <scale> 4.0</scale>
       </param>
+
+     <param>
+     <shortname>RETOP_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
+     <pname>RETOP</pname>
+     <table_info>NCEP</table_info>
+     <scale>-6.0</scale>
+     </param>
+
 
    </paramset>
    </postxml>
