@@ -719,14 +719,14 @@
       </param>
 
        <param>
-       <shortname>MAX_MAXUVV_ON_SPEC_PRES_LVL_ABOVE_GRND_40-100hpa</shortname>
+       <shortname>MAX_MAXUVV_ON_ISOBARIC_SFC_40-100hpa</shortname>
        <pname>MAXUVV</pname>
        <table_info>NCEP</table_info>
          <scale>-3.0</scale>
       </param>
 
        <param>
-       <shortname>MAX_MAXDVV_ON_SPEC_HGT_LVL_ABOVE_GRND_40-100hpa</shortname>
+       <shortname>MAX_MAXDVV_ON_ISOBARIC_SFC_40-100hpa</shortname>
        <pname>MAXDVV</pname>
        <table_info>NCEP</table_info>
          <scale>-3.0</scale>
