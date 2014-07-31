@@ -683,6 +683,9 @@
               pset%time_range_unit, tinvstat,                  &
               stat_unit_time_key_succ,time_inc_betwn_succ_fld, &
               ipdstmpl(1:ipdstmpllen))
+
+        ipdstmpl(15)=scaled_val_fixed_sfc2
+
        print *,'aft g2sec4_temp8,ipdstmpl8=',ipdstmpl(1:ipdstmp4_8len)
 
        elseif(trim(pset%param(nprm)%pdstmpl)=='tmpl4_44') then
