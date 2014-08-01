@@ -283,36 +283,36 @@
       </param>
 
        <param>
-       <shortname>UNSTABLE_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <shortname>BEST_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
         <pname>CAPE</pname>
-       <level>    18000 </level>
-       <level2>      0</level2>
+       <level>    18000  </level>
+       <level2>      0   </level2>
          <scale>4.0</scale>
          </param>
 
        <param>
-      <shortname>MIXED_LAYER_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
-        <pname>CAPE</pname>
-       <level>    9000 </level>
-       <level2>      0</level2>
-         <scale>4.0</scale>
-        </param>
+       <shortname>BEST_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <pname>CIN</pname>
+       <level>    18000  </level>
+       <level2>      0   </level2>
+       <scale>4.0</scale>
+       </param>
 
        <param>
-      <shortname>MIXED_LAYER_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
-        <pname>CIN</pname>
+       <shortname>MIXED_LAYER_CAPE_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <pname>CAPE</pname>
        <level>    9000 </level>
        <level2>      0</level2>
-         <scale>4.0</scale>
-        </param>
+       <scale>4.0</scale>
+       </param>
 
        <param>
-       <shortname>UNSTABLE_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
-      <pname>CIN</pname>
-       <level>    18000 </level>
+       <shortname>MIXED_LAYER_CIN_ON_SPEC_PRES_ABOVE_GRND</shortname>
+       <pname>CIN</pname>
+       <level>    9000 </level>
        <level2>      0</level2>
-         <scale>4.0</scale>
-         </param>
+       <scale>4.0</scale>
+       </param>
 
 
        <param>
@@ -742,8 +742,6 @@
        <param>
        <shortname>MAX_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
        <pname>MXUPHL</pname>
-       <level>    5000    </level>
-       <level2>    2000   </level2>
        <table_info>NCEP</table_info>
          <scale>-3.0</scale>
       </param>
@@ -853,15 +851,15 @@
        <shortname>TCOLC_ON_ENTIRE_ATMOS</shortname>
        <pname>TCOLC</pname>
        <table_info>NCEP</table_info>
-         <scale> 5.0</scale>
-      </param>
+       <scale> 5.0</scale>
+       </param>
 
        <param>
        <shortname>TCOLW_ON_ENTIRE_ATMOS</shortname>
        <pname>TCOLW</pname>
        <table_info>NCEP</table_info>
-         <scale> 5.0</scale>
-      </param>
+       <scale> 5.0</scale>
+       </param>
 
        <param>
        <shortname>VGTYP_ON_SURFACE</shortname>
@@ -870,17 +868,17 @@
          <scale>3.0</scale>
       </param>
 
+       <param>
+       <shortname>VIL_ON_ENTIRE_ATMOS</shortname>
+       <pname>VIL</pname>
+       <scale> 4.0</scale>
+       </param>
+
       <param>
       <shortname>RETOP_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
       <pname>RETOP</pname>
       <table_info>NCEP</table_info>
       <scale>-6.0</scale>
-      </param>
-
-       <param>
-       <shortname>VIL_ON_ENTIRE_ATMOS</shortname>
-       <pname>VIL</pname>
-         <scale> 4.0</scale>
       </param>
 
    </paramset>
