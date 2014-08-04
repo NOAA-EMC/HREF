@@ -1905,9 +1905,22 @@
             if(ITPREC==0) then
               fld_info(cfld)%ntrange=0
             else
-              fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+        write(0,*) 'ntrange computed: ', (IFHR-ID(18))
+!mptest              fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+              fld_info(cfld)%ntrange=(IFHR-ID(18))
+              fld_info(cfld)%ntrange=mod(IFHR,ITPREC)
+        write(0,*) 'IFHR, ID(18): ', IFHR, ID(18)
+        write(0,*) 'ntrange computed: ', fld_info(cfld)%ntrange
             endif
             fld_info(cfld)%tinvstat=ITPREC
+
+        if (fld_info(cfld)%ntrange .eq. 0) then
+        fld_info(cfld)%tinvstat=ITPREC
+        else
+        fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
+        endif
+
+        write(0,*) 'tinvstat now: ',  fld_info(cfld)%tinvstat
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
       ENDIF
@@ -1960,11 +1973,13 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(033))
             if(ITPREC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+!mp               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
             else
                fld_info(cfld)%ntrange=0
             endif
             fld_info(cfld)%tinvstat=ITPREC
+            fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
            datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
       ENDIF
@@ -2019,11 +2034,13 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(034))
             if(ITPREC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+!mp               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
             else
                fld_info(cfld)%ntrange=0
             endif
             fld_info(cfld)%tinvstat=ITPREC
+            fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
       ENDIF
@@ -2063,11 +2080,13 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(256))
             if(ITPREC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+!mp              fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
             else
                fld_info(cfld)%ntrange=0
             endif
             fld_info(cfld)%tinvstat=ITPREC
+            fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
       ENDIF
@@ -2107,11 +2126,13 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(035))
             if(ITPREC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+!mp               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
             else
                fld_info(cfld)%ntrange=0
             endif
             fld_info(cfld)%tinvstat=ITPREC
+            fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
          ENDIF
@@ -2195,7 +2216,8 @@
               cfld=cfld+1
               fld_info(cfld)%ifld=IAVBLFLD(IGET(405))
               if(ITPREC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+!               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
               else
                fld_info(cfld)%ntrange=0
               endif
@@ -3345,11 +3367,13 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(042))
             if(ITSRFC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+!mp               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
             else
                fld_info(cfld)%ntrange=0
             endif
             fld_info(cfld)%tinvstat=ITSRFC
+            fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
           END IF 
@@ -3401,11 +3425,15 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(043))
             if(ITSRFC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+!mp               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+               fld_info(cfld)%ntrange=(IFHR-ID(18))
+        write(0,*) 'fld_info(cfld)%ntrange for heat flux: ', &
+                  fld_info(cfld)%ntrange
             else
                fld_info(cfld)%ntrange=0
             endif
             fld_info(cfld)%tinvstat=ITSRFC
+            fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
          ENDIF
