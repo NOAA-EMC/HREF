@@ -46,6 +46,8 @@ export mdl=$RUNTYP
 # cd $DATA/smartinit
 cd $DATA
 
+echo have INPUT_DATA as $INPUT_DATA
+
 cp $INPUT_DATA/DATE .
 
 #SMARTINIT OUTPUT grid filename extension
@@ -241,13 +243,16 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
     ln -sf LANDNDFDi  fort.49
   fi
 
+cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
+cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
+
   mksmart=1
   if [ $check -eq 0 -a $fhr -ne 00 ];then 
 
 
 	if [ $sgrb -ne 999 ] ; then
-    cp srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCP
-    cp srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCPi
+    cp $INPUT_DATA/srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCP
+    cp $INPUT_DATA/srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCPi
         fi
     cp MAXMIN${fhr2}.tm00 MAXMIN2
     cp MAXMIN${fhr1}.tm00 MAXMIN1
@@ -266,6 +271,7 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 cp $INPUT_DATA/${freq}precip.${fhr} .
 cp $INPUT_DATA/${freq}snow.${fhr} .
 cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
+cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
 
 
      $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
@@ -288,6 +294,8 @@ cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
 	mv new_meso${rg}.NDFDf${fhr} meso${rg}.NDFDf${fhr}
         $utilexec/grbindex meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
         fi
+
+ls -l meso${rg}.NDFDf${fhr}
 
   ln -sf "meso${rg}.NDFDf${fhr}"    fort.11
   ln -sf "meso${rg}.NDFDif${fhr}"   fort.12
@@ -446,7 +454,8 @@ fi
    export fhr=$fhr
    export ogrd 
    export mksmart
-   ${USHhiresw}/hiresw_ncoproc.sh
+#   ${USHhiresw}/hiresw_ncoproc.sh
+   ${USHhiresw}/hiresw_ncoprocg2.sh
 
 
 done  #fhr loop

@@ -110,6 +110,8 @@ env
 
 # cyc=`echo $CYCLE | cut -c9-10`
 
+rm $DATA/fcstd*
+
 bsub < ${HOMEhiresw}/launch/sub_post.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}

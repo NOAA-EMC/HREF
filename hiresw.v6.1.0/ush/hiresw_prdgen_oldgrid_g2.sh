@@ -171,36 +171,40 @@ export FORT621="input${fhr}.prd"
 
 ### extract just needed items
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'MSLET' -grib mslet.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":PRES:mean sea level:"  -grib prmsl.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'VIS' -grib vis.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(GUST|VIL|MAXUVV|MAXDVV|REFD|REFC|MAXREF|MXUPHL|\
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|GUST|VIL|MAXUVV|MAXDVV|REFD|REFC|MAXREF|MXUPHL|\
 TCOLI|TCOLR|TCOLS|TCOLC|TCOLW|LCDC|MCDC|HCDC|TCDC|RETOP|TSOIL|SOILW|PWAT|LFTX|4LFTX):" -grib 1.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|PRES|HGT|TMP|CSNOW|CICEP|CFRZR|CRAIN|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
-# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|PRES|HGT|TMP|CSNOW|CICEP|CFRZR|CRAIN|LHTFL|CAPE|CIN):surface:" -grib 3.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMP|RH|UGRD|VGRD|PLI|POT|DPT|SPFH|MCONV|VVEL|CAPE|CIN):(30-0|60-30|90-60|120-90|150-120|180-0|90-0|255-0) mb above ground:" -grib pbl.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(TMP|RH|UGRD|VGRD|PLI|POT|DPT|SPFH|MCONV|VVEL|CAPE|CIN):(30-0|60-30|90-60|120-90|150-120|180-0|90-0|255-0) mb above ground:" \
+-grib pbl.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMP|SPFH|DPT|RH|UGRD|VGRD|HLCY|USTM|VSTM|UPHL|PRES):(10|2|1000-0|3000-0|6000-0|1524|80|5000-2000) m above (ground|mean sea level):" -grib agl.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(TMP|SPFH|DPT|RH|UGRD|VGRD|HLCY|USTM|VSTM|UPHL|PRES):(10|2|\
+1000-0|3000-0|6000-0|1524|80|5000-2000) m above (ground|mean sea level):" \
+-grib agl.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'planetary boundary layer' -grib pbl2.grb
 
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(UGRD|VGRD|TMP|HGT|VVEL|RH|DPT|ABSV):(200|250|300|400|500|525|550|575|600|625|650|675|700|725|750|775|800|825|850|875|900|925|950|975|1000) mb:" -grib all_iso.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(UGRD|VGRD|TMP|HGT|VVEL|RH|DPT|ABSV):(200|250|300|400|500|525|550|575|\
+600|625|650|675|700|725|750|775|800|825|850|875|900|925|950|975|1000) mb:" \
+-grib all_iso.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
 
-cat mslet.grb prmsl.grb vis.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
-# cat mslet.grb prmsl.grb vis.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb > inputs.grb
+cat prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
 
-# rm  mslet.grb prmsl.grb vis.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb 
+rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb 
 
 
 

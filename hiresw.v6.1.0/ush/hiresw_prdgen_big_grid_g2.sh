@@ -163,15 +163,24 @@ export tmmark=tm00
 # make GRIB file with pressure data every 25 mb for EMC's FVS
 # verification
 
+use_1h=0
+use_3h=0
+
 if [ $fhr -eq 0 ]
 then
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
+use_3h=1
 elif [ $fhr%3 -eq 0 ]
 then
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
+use_3h=1
 else
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_1h master${fhr}.ctl
+use_1h=1
 fi
+
+echo use_1h $use_1h
+echo use_3h $use_3h
 
 
 while [ ! -e $INPUT_DATA/postdone${fhr} ]
@@ -179,14 +188,6 @@ do
 sleep 6
 done
 
-
-cat >input${fhr}.prd <<EOF5
-$INPUT_DATA/WRFPRS${fhr}.tm00
-EOF5
-
-rm fort.*
-
-export pgm=hiresw_prdgen
 
 if [ $DOMIN_SMALL = "conus" ]
 then
@@ -207,12 +208,78 @@ else
 export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
 fi
 
-export FORT10="master${fhr}.ctl"
-export FORT621="input${fhr}.prd"
+### extract just needed items
 
-### $EXEChiresw/hiresw_prdgen > prdgen.out${fhr} 2>&1
+if [ $use_1h -eq 1 ]
+then
 
-copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|\
+CSNOW|CICEP|CFRZR|CRAIN|TCDC|RETOP|4LFTX):" -grib 1.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|PRES|HGT|TMP|CAPE|CIN):surface:" -grib 3.grb
+
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(CAPE|CIN):(180-0|90-0) mb above ground:" \
+-grib pbl.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(TMP|SPFH|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):(10|2|\
+3000-0|6000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
+-grib agl.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "(HGT|VRATE):planetary boundary layer:" -grib pbl2.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+
+cat apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
+rm  apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb 
+
+elif [ $use_3h -eq 1 ]
+then
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIL|MAXUVV|MAXDVV|MAXREF|MXUPHL|\
+TCDC|RETOP):" -grib 1.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|HGT|CAPE|CIN):surface:" -grib 3.grb
+
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(CAPE|CIN):(180-0|90-0) mb above ground:" \
+-grib pbl.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+":(TMP|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):( \
+3000-0|6000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
+-grib agl.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(RH|DPT):2 m above ground:" -grib bonus_agl.grb
+cat bonus_agl.grb >> agl.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "(HGT|VRATE):planetary boundary layer:" -grib pbl2.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+
+cat  weasd.grb apcp.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
+rm   weasd.grb apcp.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb 
+
+fi
+
+# copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
+copygb2 -g"${reg}" -X -x inputs.grb ${filenamthree}${fhr}.tm00
+
+
+
+
+# copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
 
 
 export err=$?;./err_chk
@@ -242,7 +309,9 @@ if [ $fhr -eq 00 ]
 then
 
 
+
        cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+
 
 ### will be cat'd to smartinit generated file in ncoproc script
 ### no need to index, convert, or alert this file (which is not the final one for output)
@@ -322,3 +391,7 @@ done
 ###### DONE PRECIP BUCKET
 
 fi # f00 or not
+
+## temp copy to COMOUT
+       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}
+## temp copy to COMOUT

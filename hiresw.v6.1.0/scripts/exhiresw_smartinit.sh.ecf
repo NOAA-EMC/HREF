@@ -41,7 +41,7 @@ do
 sleep 10
 done
 
-$USHhiresw/hiresw_smartinit.sh_justprdgen 00
+$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake 00
 
 ###################################
 
@@ -61,7 +61,7 @@ hrs="03 06"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -80,7 +80,7 @@ hrs="09 12"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -100,7 +100,7 @@ hrs="15 18"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -120,7 +120,7 @@ hrs="21 24"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -140,7 +140,7 @@ hrs="27 30"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -160,7 +160,7 @@ hrs="33 36"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -180,7 +180,7 @@ hrs="39 42"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
@@ -200,7 +200,7 @@ hrs="45 48"
 
 for hr in $hrs
 do
-echo "$USHhiresw/hiresw_smartinit.sh_justprdgen $hr" >> poescript
+echo "$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake $hr" >> poescript
 done
 
 chmod 775 $DATA/poescript
