@@ -1,15 +1,15 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/logs/test_prdgen.out__DOM__CORE__CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/logs/test_prdgen.err__DOM__CORE__CYC_
-#BSUB -q "dev"
+#BSUB -q "dev_shared"
 #BSUB -J HIRESW_PRDGEN
-####BSUB -R rusage[mem=5000]
-####BSUB -R affinity[core(1)]
+#BSUB -R rusage[mem=5000]
+#BSUB -R affinity[core(1)]
 #BSUB -R span[ptile=_SPAN_]
 #BSUB -a poe
 #BSUB -n _NPROC_
 #BSUB -P HRW-T2O
-#BSUB -W 1:09
+#BSUB -W 0:39
 
 export MP_EUILIB=us
 

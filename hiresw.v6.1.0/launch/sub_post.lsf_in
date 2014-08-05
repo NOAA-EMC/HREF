@@ -4,10 +4,10 @@
 #BSUB -R span[ptile=_POSTSPAN_]
 #BSUB -J HIRESW_POST
 #BSUB -x
-#BSUB -q "dev"
+#BSUB -q "debug"
 #BSUB -n _NPROC_
 #BSUB -P HRW-T2O
-#BSUB -W 1:29
+#BSUB -W 0:19
 #BSUB -a poe
 #
 
