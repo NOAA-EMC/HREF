@@ -72,6 +72,10 @@ do
   if [ -d $DATA/smartinit_${hr} ]; then
     rm -rf $DATA/smartinit_${hr}/
   fi
+  if [ $hr == "00" ]
+  then
+  rm $DATA/*
+  fi
   mkdir -p $DATA/smartinit_${hr}
   cd $DATA/smartinit_${hr}
 
