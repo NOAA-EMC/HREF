@@ -37,6 +37,10 @@ ls -l smart.grb2
 # cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smart.grb2  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 
+cnvgrib -g21 ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 ${mdl}.t${cyc}z.smart${outreg}f${fhr}
+
+rm smart.grb2
+
 else
 
 cp $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}                               ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
@@ -51,7 +55,8 @@ fi
 
 if [ $SENDCOM = YES ]
 then
-cp ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 $COMOUT
+cp ${mdl}.t${cyc}z.smart${outreg}f${fhr} ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 $COMOUT
+$utilexec/grbindex $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr} $COMOUT/${mdl}.t${cyc}z.smart${outreg}if${fhr}
 $utilexec/wgrib2   $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 -s > $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2.idx
 export err=$?; err_chk
 fi

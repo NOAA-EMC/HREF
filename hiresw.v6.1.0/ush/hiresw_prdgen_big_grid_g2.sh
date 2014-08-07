@@ -213,31 +213,54 @@ fi
 if [ $use_1h -eq 1 ]
 then
 
+if [ $model == "arw" ] 
+then
+
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|\
-CSNOW|CICEP|CFRZR|CRAIN|TCDC|RETOP|4LFTX):" -grib 1.grb
+TCDC|RETOP|4LFTX):" -grib 1.grb
+
+else
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|CSNOW|CICEP|CFRZR|CRAIN|\
+MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|TCDC|RETOP|4LFTX):" -grib 1.grb
+
+fi
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|PRES|HGT|TMP|CAPE|CIN):surface:" -grib 3.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|HGT|PRES|CAPE|CIN):surface:" -grib 3.grb
 
 # $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "PWAT:entire atmosphere" -grib pwat.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
 ":(CAPE|CIN):(180-0|90-0) mb above ground:" \
 -grib pbl.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(TMP|SPFH|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):(10|2|\
-3000-0|6000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
+":(TMP|SPFH|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):(10|\
+3000-0|6000-0|3000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
 -grib agl.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "(HGT|VRATE):planetary boundary layer:" -grib pbl2.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+if [ $model == "arw" ] 
+then
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(RH|SPFH):2 m above ground:" -grib bonus_agl.grb
+else
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMP|DPT|RH|SPFH):2 m above ground:" -grib bonus_agl.grb
+fi
 
-cat apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
-rm  apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb 
+cat bonus_agl.grb >> agl.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
+# $WGRIB2 apcp1.grb -match 'hour acc fcst:' -grib apcp.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+# $WGRIB2 weasd1.grb -match 'hour acc fcst:' -grib weasd.grb
+
+cat apcp.grb weasd.grb 1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
+rm  apcp.grb weasd.grb 1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb 
 
 elif [ $use_3h -eq 1 ]
 then
@@ -247,34 +270,41 @@ TCDC|RETOP):" -grib 1.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|HGT|CAPE|CIN):surface:" -grib 3.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|CAPE|CIN):surface:" -grib 3.grb
 
 # $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "PWAT:entire atmosphere" -grib pwat.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
 ":(CAPE|CIN):(180-0|90-0) mb above ground:" \
 -grib pbl.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(TMP|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):( \
-3000-0|6000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
+":(TMP|SPFH|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):(3000-0|\
+6000-0|3000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
 -grib agl.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(RH|DPT):2 m above ground:" -grib bonus_agl.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(RH):2 m above ground:" -grib bonus_agl.grb
 cat bonus_agl.grb >> agl.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "(HGT|VRATE):planetary boundary layer:" -grib pbl2.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+rm apcp.grb
 
-cat  weasd.grb apcp.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
-rm   weasd.grb apcp.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb 
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp1.grb
+# $WGRIB2 apcp1.grb -match 'hour acc fcst:' -grib apcp.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+# $WGRIB2 weasd1.grb -match 'hour acc fcst:' -grib weasd.grb
+
+cat  weasd.grb  1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
+rm   weasd.grb  1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb 
 
 fi
 
 # copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
-copygb2 -g"${reg}" -X -x inputs.grb ${filenamthree}${fhr}.tm00
+copygb2 -g"${reg}" -x inputs.grb ${filenamthree}${fhr}.tm00
 
 
 
@@ -342,7 +372,7 @@ done
 
    export pgm=hiresw_pcpbucket_${DOMIN_bucket}
    $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
-   export err=$?;./err_chk
+#   export err=$?;./err_chk
 
      if [ $model = "arw" ] ; then
 
@@ -367,14 +397,16 @@ done
 
   export pgm=hiresw_pcpbucket_${DOMIN_bucket}
   $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
-  export err=$?;./err_chk
+#   export err=$?;./err_chk
 
 
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+#      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      else # not $fhr%3=0
 
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+#      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      fi
 
@@ -384,6 +416,7 @@ done
 ## model = "nmm"
 
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+#      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
 
   fi  # arw/nmm break
