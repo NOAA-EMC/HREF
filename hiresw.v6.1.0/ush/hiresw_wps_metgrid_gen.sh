@@ -154,6 +154,11 @@ done
 
 fi
 
+if [ $ICOUNT == "1" ]
+then
+cp ${fl} ../
+fi
+
 mv wpsdone.${ICOUNT} ../
 
 cp metgrid.log $DATA/metgrid.log.0000_${ICOUNT}
