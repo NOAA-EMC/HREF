@@ -59,6 +59,15 @@ POSTSPAN=2
 PRDGENPROCS=2
 BUFRSPAN=1
 NPROCBUFR=1
+elif [ $DOM$CORE == "conusnmmb" ]
+then
+MODPROCS=540
+MODSPAN=16
+POSTPROCS=40
+POSTSPAN=8
+PRDGENPROCS=4
+NPROCBUFR=48
+BUFRSPAN=8
 elif [ $DOM$CORE == "conusarw" ]
 then
 MODPROCS=592
@@ -94,10 +103,16 @@ sed s:_CYC_:${CYC}:g > sub_nemsinterp_3.lsf_${DOM}_${CORE}_${CYC}
 cat sub_nemsinterp_4.lsf_in |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
 sed s:_CYC_:${CYC}:g > sub_nemsinterp_4.lsf_${DOM}_${CORE}_${CYC}
 
+cat prelim.lsf_bigrap_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+
 else
 
 cat prelimfinal.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
 sed s:_CYC_:${CYC}:g > sub_prelimfinal.lsf_${DOM}_${CORE}_${CYC}
+
+cat prelim.lsf_bigrap_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
 
 fi
 
@@ -120,3 +135,8 @@ cat sub_smartinitb.lsf_in | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed 
 sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 
 bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+if [ $DOM == "conus" ]
+then
+bsub < sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+fi

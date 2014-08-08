@@ -17,14 +17,20 @@ module load NetCDF/4.2/serial
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
 
-/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_PREPRAP.sms.test _DOM_ _CORE_ _CYC_
+vers=`cat /u/Matthew.Pyle/hiresw_version`
 
-# bsub < sub_model.lsf__DOM___CORE___CYC_
-# bsub < sub_postmgr.lsf__DOM___CORE___CYC_
-# bsub < sub_prdgenmgr.lsf__DOM___CORE___CYC_
-# bsub < sub_wrfbufrsnd.lsf__DOM___CORE___CYC_
-# bsub < sub_hybridensemble.lsf__DOM___CORE___CYC_
-# bsub < sub_ensembleproduct.lsf__DOM___CORE___CYC_
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export MEMBER=ctl
 
-# rm sub_model.lsf__DOM___CORE___CYC_ sub_post.lsf__DOM___CORE___CYC_ sub_prdgen.lsf__DOM___CORE___CYC_
-# rm sub_wrfbufrsnd.lsf__DOM___CORE___CYC_ sub_hybridensemble.lsf__DOM___CORE___CYC_ sub_ensembleproduct.lsf__DOM___CORE___CYC_
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+
+export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}
+export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+
+$HOMEhiresw/jobs/JHIRESW_PREPRAP
