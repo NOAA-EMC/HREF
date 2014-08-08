@@ -3,6 +3,20 @@ core=${2}
 cyc=${3}
 
 
+# want to run this item on production machine
+
+myhost=`hostname | cut -c1`
+
+prodmach=`cat /etc/prod | cut -c1`
+
+if [ $myhost == $prodmach ]
+then
+echo proceed with job as on production
+else
+echo exit as appear to be on dev
+exit
+fi
+
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
 DATECYC=${DATE}${cyc}
