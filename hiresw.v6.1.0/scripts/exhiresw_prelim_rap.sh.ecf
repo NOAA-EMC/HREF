@@ -192,39 +192,13 @@ cd $DATA
 
 $USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL 
 
-if [ $MODEL = "arw" ]
-then
-count=`ls $DATA/met*.bin  | wc -l`
-elif [ $MODEL = "nmmb" ]
-then
-count=`ls $DATA/met*.dio | wc -l`
-else
-echo BAD MODEL CHOICE of $MODEL
-exit 99
-fi
+# if [ $MODEL == "nmmb" ]
+# then
+# cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${ystart}-${mstart}-${dstart}_${cyc}:00:00.dio
+# else
+# cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_em.d01.${ystart}-${mstart}-${dstart}_${cyc}:00:00.bin
+# fi
 
-
-if [ $mod = "rap" ]
-then
-COUNTLIM=1
-fi
-
-while [ $count -lt $COUNTLIM ]
-do
-sleep 20
-
-if [ $MODEL = "arw" ]
-then
-count=`ls $DATA/met*.bin  | wc -l`
-elif [ $MODEL = "nmmb" ]
-then
-count=`ls $DATA/met*.dio | wc -l`
-fi
-
-done
-
-## bonus sleep to make sure file is completely copied to the $DATA dir
-sleep 5
 
 cat $DATA/metgrid.log.0000_* > $COMOUT/${NEST}${MODEL}.t${cyc}z.metgrid.log
 

@@ -2125,19 +2125,15 @@
            elseif(grib=='grib2') then
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(035))
-            if(ITPREC>0) then
-!mp            fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
-               fld_info(cfld)%ntrange=(IFHR-ID(18))
-               fld_info(cfld)%ntrange=mod(IFHR,ITPREC)
-            else
-               fld_info(cfld)%ntrange=0
-            endif
 
-        if (fld_info(cfld)%ntrange .eq. 0) then
-        fld_info(cfld)%tinvstat=ITPREC
-        else
-        fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
-        endif
+            if(ITPREC==0) then
+              fld_info(cfld)%ntrange=0
+              fld_info(cfld)%tinvstat=ITPREC
+            else
+              fld_info(cfld)%ntrange=(IFHR-ID(18))
+              fld_info(cfld)%ntrange=mod(IFHR,ITPREC)
+              fld_info(cfld)%tinvstat=fld_info(cfld)%ntrange
+            endif
 
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif

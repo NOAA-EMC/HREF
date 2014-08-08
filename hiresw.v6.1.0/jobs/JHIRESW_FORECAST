@@ -38,6 +38,8 @@ fi
 mkdir $DATA
 cd $DATA 
 
+rm $DATA/*
+
 ecflow_client --event release_downstream
 
 ####################################
@@ -109,8 +111,6 @@ env
 ### bsub post scripts
 
 # cyc=`echo $CYCLE | cut -c9-10`
-
-rm $DATA/fcstd*
 
 bsub < ${HOMEhiresw}/launch/sub_post.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
