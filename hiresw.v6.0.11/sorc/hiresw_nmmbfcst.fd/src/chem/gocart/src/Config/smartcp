@@ -1,0 +1,147 @@
+#!/usr/bin/perl -w
+#=======================================================================
+# name - smartcp
+# purpose - Check to see if two files differ before copying one
+#           to the other. Do not copy if they are identical.
+# note - see usage at end of script for runtime options
+# 
+# !Revision History
+# -----------------
+# 31Jul2008  Stassi     Initial version of code.
+#=======================================================================
+use strict;
+
+# global variables
+#-----------------
+my ($myname, $force, $quiet);
+my ($Rflg, $iflg, $pflg);
+my (@source, $dest);
+
+# main program
+#-------------
+{
+    use File::Copy;
+    my $file;
+
+    &init();
+    foreach $file (@source) {
+        if ($force or &not_identical($file, $dest)) {
+            system "cp -f $Rflg $iflg $pflg $file $dest";
+        }
+    }
+}
+
+#=======================================================================
+# name - init
+# purpose - get runtime inputs
+#=======================================================================
+sub init {
+    use File::Basename;
+    use Getopt::Long "Configure";
+    my ($recursive, $interactive, $preserve, $help);
+    my ($numargs, $file);
+
+    $myname = basename $0;
+
+    Getopt::Long::Configure("no_ignore_case");
+    GetOptions("F" => \$force,
+               "i" => \$interactive,
+               "p" => \$preserve,
+               "q" => \$quiet,
+               "R" => \$recursive,
+               "h" => \$help);
+    &usage() if $help;
+
+    # check for proper runtime inputs
+    #--------------------------------
+    $numargs = scalar @ARGV;
+    if ($numargs == 0) {
+        print "$myname: missing file operand\n"
+            . "Try '$myname -h' for more information.\n";
+        exit;
+    } elsif ($numargs == 1) {
+        $file = $ARGV[0];
+        print "$myname: missing destination file operand after '$file'\n"
+            . "Try '$myname -h' for more information.\n";
+        exit;
+    }
+
+    # set cp flags
+    #-------------
+    if ($recursive)   { $Rflg = "-R"; }
+    else              { $Rflg = "";   }
+
+    if ($preserve)    { $pflg = "-p"; }
+    else              { $pflg = "";   }
+
+    if ($interactive) { $iflg = "-i"; }
+    else              { $iflg = "";   }
+
+    # get source file and destination (file or directory)
+    #----------------------------------------------------
+    $dest = pop @ARGV;
+    @source = @ARGV;
+
+    if (scalar(@source) > 1) {
+        unless (-d $dest) {
+            print "$myname: target '$dest' is not a directory\n";
+            exit;
+        }
+    }
+}
+
+#=======================================================================
+# name - not_identical
+# purpose - determine if two files are not identical
+#
+# input parameters
+# - file1, file2: the two files to compare
+#
+# return value
+#   non-zero (true): if the files are not identical
+#      zero (false): if the files are identical
+#=======================================================================
+sub not_identical {
+    my ($file1, $file2, $dflg, $status);
+
+    $file1 = shift @_;
+    $file2 = shift @_;
+    $file2 = "$file2/$file1" if (-d $file2);
+
+    $dflg = "";
+    $dflg = "-r" if (-d $file1);
+
+    $status = 1;    # default to true
+    if (-e $file2) {
+        $status = system("diff $dflg $file1 $file2 >& /dev/null");
+        unless ($status or $quiet) {
+            print "$myname: $file1 and $file2 are identical (no copy).\n";
+        }
+    }
+    return $status;
+}
+
+#=======================================================================
+# name - usage
+# purpose - print usage information
+#=======================================================================
+sub usage {
+    print <<"EOF";
+
+Usage: $myname [OPTION]... SOURCE DEST
+  or:  $myname [OPTION]... SOURCE... DIRECTORY
+Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
+
+OPTIONS
+  -F     Force; i.e. copy from SOURCE to DEST regardless of whether the two
+         files are equivalent (note: this is not the same as the -f cp flag)
+  -i     prompt before overwrite
+  -p     preserve file attributes
+  -R     copy directories recursively
+  -q     quiet mode
+  -h     print usage message
+
+
+EOF
+exit;
+}

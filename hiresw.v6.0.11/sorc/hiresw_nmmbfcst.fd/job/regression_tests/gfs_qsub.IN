@@ -1,0 +1,33 @@
+#! /bin/ksh --login
+
+#PBS -e _RUND_/err
+#PBS -o _RUND_/out
+#PBS -N _JBNME_
+#PBS -A _ACCNR_
+#PBS -l procs=_TASKS_
+#PBS -l walltime=00:_WLCLK_:00
+#PBS -W umask=027
+
+set -aeux
+export MPI_GROUP_MAX=96
+
+export SCHEDULER=_SCHED_
+if [ ${SCHEDULER} = pbs ]; then
+  export MACHINE_ID=zeus
+fi
+
+cd _RUND_
+
+echo "Model started:  " `date`
+
+#module load intel
+#module load mpt
+#module load adaptive
+
+export TASKSIZE=_TASKS_
+
+_RUND_/gfs_fcst_run
+
+echo "Model ended:    " `date`
+
+exit

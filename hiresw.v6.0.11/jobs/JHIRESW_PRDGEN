@@ -1,0 +1,137 @@
+#!/bin/sh
+
+########################################
+# RUNS HIRESW_PRDGEN JOB
+########################################
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+######################################################
+# Default to NCO production run environment
+#######################################################
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-${NEST}${MODEL}}
+
+export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export jlogfile=/com/logs/${envir}/jlogfile
+  export SENDDBN=NO
+  export SENDDBN_GB2=NO
+  export DBN_ALERT_TYPE=HIRESW_${DBN_NEST}_GB2_PARA
+  export DBN_ALERT_TYPE_WIDX=HIRESW_${DBN_NEST}_GB2_WIDX_PARA
+  export DBN_ALERT_TYPE_SMART=HIRESW_${DBN_NEST}_NDFD_GB2_PARA
+  export DBN_ALERT_TYPE_SMART_WIDX=HIRESW_${DBN_NEST}_NDFD_GB2_WIDX_PARA
+fi
+
+############################################################# 
+# obtain unique process id (pid) and make temp directories
+############################################################# 
+export pid=$$
+export DATA=${DATA:-/tmpnwprd1/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+mkdir -p $DATA/prdgen_full
+cd $DATA/prdgen_full
+
+##################################################
+# SENDECF  - Flag Events on ecFlow
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_${DBN_NEST}_GB2}
+export DBN_ALERT_TYPE_WIDX=${DBN_ALERT_TYPE_WIDX:-HIRESW_${DBN_NEST}_GB2_WIDX}
+export DBN_ALERT_TYPE_SMART=${DBN_ALERT_TYPE_SMART:-HIRESW_${DBN_NEST}_NDFD_GB2}
+export DBN_ALERT_TYPE_SMART_WIDX=${DBN_ALERT_TYPE_SMART_WIDX:-HIRESW_${DBN_NEST}_NDFD_GB2_WIDX}
+
+# Do not send alerts if DBNROOT is set to DBNROOT_OFF
+# The alerts cause an error to be returned from the ush script that is
+# poe'd when the DBNROOT path is not resolved
+
+if [ $DBNROOT = "DBNROOT_OFF" ]; then
+   export SENDDBN_GB2=${SENDDBN_GB2:-NO}
+else
+   export SENDDBN_GB2=${SENDDBN_GB2:-YES}
+fi
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${job}.${pid}}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+                                                                                                             
+export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
+export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
+export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
+export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
+export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
+
+###################################
+# Set up the UTILITIES
+###################################
+export utilscript=/nwprod/util/ush
+export utilexec=/nwprod/util/exec
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+# Run setpdy and initialize PDY variables
+sh $utilscript/setpdy.sh
+. PDY
+
+export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
+mkdir -p $COMOUT
+ 
+env
+
+########################################################
+# Run the ex-script
+#
+/${HOMEhiresw}/scripts/exhiresw_prdgen.sh.ecf
+#
+########################################################
+
+postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
+
+date
+
+cd /tmpnwprd1
+
+# Be sure that the wrfbufrsnd job is done before scrubbing $DATA
+#
+#while [ ! -e $DATA/sndpostdone48.tm00 ]
+#do
+#sleep 5
+#done
+#
+#if [ $MODEL = "arw" ]
+#then
+#rm $DATA/wrfo*
+#rm $DATA/wrfi*
+#rm $DATA/wrfb*
+#else
+#rm $DATA/*hst*
+#rm $DATA/*nemsio
+#fi
+#
+#rm $DATA/post/WRFPRS*

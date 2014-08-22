@@ -1,0 +1,216 @@
+#!/bin/ksh
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exhiresw_prepfinal.sh.sms
+# Script description:  Runs WRF REAL code for the WRF-ARW 
+#
+# Author:        Eric Rogers       Org: NP22         Date: 2004-07-02
+#
+# Abstract: The script runs the final piece of the WRF-ARW hiresw preprocessing.
+#           It runs the WRF "REAL" code which interpolate in the vertical and
+#           generates WRF model initial and lateral boundary conditions
+#
+# Script history log:
+# 2003-11-01  Matt Pyle - Original script for parallel
+# 2004-07-02  Eric Rogers - Preliminary modifications for production.
+# 2004-10-01  Eric Rogers - Modified to run special real executable for Alaska NMM
+# 2007-04-09  Matthew Pyle - Modified to run WPS rather than wrfsi
+# 2009-09-24  Shawna Cokley - Streamlines way script obtains date information -
+#                             pulls from $PDY rather than copying a file to the working directory
+# 2013-10-30  Matthew Pyle - Breaks out last piece from old prelim script  to run real, just for WRF-ARW
+
+set -x
+
+LENGTH=48
+
+### NEST options are east, west, ak, hi, pr, or conus
+### MODEL is arw or nmm or nmmb
+
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+yy=`echo $PDY | cut -c1-4`
+mm=`echo $PDY | cut -c5-6`
+dd=`echo $PDY | cut -c7-8`
+
+ystart=`echo $PDY | cut -c1-4`
+mstart=`echo $PDY | cut -c5-6`
+dstart=`echo $PDY | cut -c7-8`
+
+start=$ystart$mstart$dstart$cyc
+
+NDATE=${NDATE:-${utilexec}/ndate}
+
+int1=`$NDATE +12 $start`
+yyint1=`echo $int1 | cut -c1-4`
+mmint1=`echo $int1 | cut -c5-6`
+ddint1=`echo $int1 | cut -c7-8`
+hhint1=`echo $int1 | cut -c9-10`
+
+int2=`$NDATE +12 $int1`
+yyint2=`echo $int2 | cut -c1-4`
+mmint2=`echo $int2 | cut -c5-6`
+ddint2=`echo $int2 | cut -c7-8`
+hhint2=`echo $int2 | cut -c9-10`
+
+int3=`$NDATE +12 $int2`
+yyint3=`echo $int3 | cut -c1-4`
+mmint3=`echo $int3 | cut -c5-6`
+ddint3=`echo $int3 | cut -c7-8`
+hhint3=`echo $int3 | cut -c9-10`
+
+int4=`$NDATE +12 $int3`
+yyint4=`echo $int4 | cut -c1-4`
+mmint4=`echo $int4 | cut -c5-6`
+ddint4=`echo $int4 | cut -c7-8`
+hhint4=`echo $int4 | cut -c9-10`
+
+end=`$NDATE $LENGTH $start`
+
+yend=`echo $end | cut -c1-4`
+mend=`echo $end | cut -c5-6`
+dend=`echo $end | cut -c7-8`
+
+filt_start=`$NDATE -1 $start`
+
+filt_ys=`echo $filt_start | cut -c1-4`
+filt_ms=`echo $filt_start | cut -c5-6`
+filt_ds=`echo $filt_start | cut -c7-8`
+filt_hs=`echo $filt_start | cut -c9-10`
+
+filt_ye=$ystart
+filt_me=$mstart
+filt_de=$dstart
+filt_he=$cyc
+
+export CYCLE=$PDY$cyc
+echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
+
+#########################################################
+# RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)
+#########################################################
+
+cd $DATA
+
+cycstart=`echo ${PDY}${cyc}`
+
+start=$ystart$mstart$dstart
+
+end=`$NDATE $LENGTH $cycstart`
+
+yend=`echo $end | cut -c1-4`
+mend=`echo $end | cut -c5-6`
+dend=`echo $end | cut -c7-8`
+hend=`echo $end | cut -c9-10`
+
+## for all domains now, special namelist.input files are required for the model
+
+if [ $NEST = "pr" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr_model namelist.input_in_model
+fi
+
+elif [ $NEST = "hi" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi_model namelist.input_in_model
+fi
+
+elif [ $NEST = "guam" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam_model namelist.input_in_model
+fi
+
+elif [ $NEST = "ak" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_ak namelist.input_in_model
+fi
+
+elif [ $NEST = "conus" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_big namelist.input_in_model
+fi
+
+
+else
+
+echo "invalid NEST choice $NEST in prepfinal, exiting"
+./err_exit "improper NEST value passed into prepfinal"
+fi
+
+
+### number of input levels depends on source model data
+
+NUMLEVS=27
+
+cat namelist.input_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+ | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
+ | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
+ | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
+ | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
+ | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
+ | sed s:NUMLEV:$NUMLEVS: > namelist.input
+
+cat namelist.input_in_model | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+ | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
+ | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
+ | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
+ | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
+ | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
+ | sed s:NUMLEV:$NUMLEVS: > namelist.input_model
+
+rm fort.*
+
+cp $PARMhiresw/hiresw_LANDUSE.TBL LANDUSE.TBL
+cp $PARMhiresw/hiresw_ETAMPNEW_DATA ETAMPNEW_DATA
+cp $PARMhiresw/hiresw_ETAMPNEW_DATA micro_lookup.dat
+cp $PARMhiresw/hiresw_VEGPARM.TBL VEGPARM.TBL
+cp $PARMhiresw/hiresw_SOILPARM.TBL SOILPARM.TBL
+cp $PARMhiresw/hiresw_GENPARM.TBL GENPARM.TBL
+
+cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
+cp $FIXhiresw/hiresw_tr49t67 tr49t67
+cp $FIXhiresw/hiresw_tr49t85 tr49t85
+cp $FIXhiresw/hiresw_tr67t85 tr67t85
+
+export pgm=hiresw_${MODEL}_real
+. ./prep_step
+
+./startmsg
+
+export MP_PGMMODEL=spmd
+unset MP_CMDFILE
+
+mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+
+export err=$?; err_chk
+
+# Copy 3 files needed to run WRF forecast to COM (two in case of CONUS domain)
+# CONUS domain input file produced by separate JHIRESW_PREPRAP job
+
+cp wrfbdy_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01
+cp namelist.input_model $COMOUT/${NEST}${MODEL}.t${cyc}z.namelist.input
+
+if [ $NEST != "conus" ]
+then
+ cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01
+
+ if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
+   ./err_exit "WRF initial or boundary condition files missing"
+ fi
+fi
+
+cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
+
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
+postmsg "$jlogfile" "$msg"

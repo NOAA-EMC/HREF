@@ -1,0 +1,137 @@
+#!/bin/sh
+
+########################################
+# RUNS HIRESW POST JOB
+########################################
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+######################################################
+# Default to NCO production run environment
+#######################################################
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-${NEST}${MODEL}}
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export jlogfile=/com/logs/${envir}/jlogfile
+  export SENDDBN=NO
+  export SENDDBN_GB2=NO
+fi
+
+############################################################# 
+# obtain unique process id (pid) and make temp directories
+############################################################# 
+export pid=$$
+export DATA=${DATA:-/tmpnwprd1/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+mkdir -p $DATA/post
+cd $DATA/post 
+
+##################################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDECF  - Flag Events on ecFlow
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDDBN_GB2=${SENDDBN_GB2:-NO}
+export SENDECF=${SENDECF:-YES}
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${job}.${pid}}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+
+#nestMODEL=`echo ${NEST}${MODEL} | tr '[a-z]' '[A-Z]'`
+#export nestMODEL
+#export DBN_NEST=${nestMODEL}
+export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
+                                                                                                             
+export HOMEhiresw=${HOMEhires:-/nw${envir}/hiresw.${model_ver}}
+export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
+export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
+export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
+export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
+
+###################################
+# Set up the UTILITIES
+###################################
+export utilscript=/nwprod/util/ush
+export utilexec=/nwprod/util/exec
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+# Run setpdy and initialize PDY variables
+sh $utilscript/setpdy.sh
+. PDY
+
+export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
+
+mkdir -p $COMOUT
+ 
+env
+
+################################################
+# Copy Forecast files from com
+################################################
+. $COMIN/${NEST}${MODEL}.t${cyc}z.envir.sh
+export tmmark=tm00
+
+########################################################
+# Run the ex-script
+#
+${HOMEhiresw}/scripts/exhiresw_post.sh.ecf
+#
+########################################################
+
+postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
+
+#endfhr=48
+#
+#fhr=00
+#fhr=`printf '%02d' $fhrtst`
+#
+#while [ $fhr -le $endfhr ]
+#do
+#  ic=0
+#  while [ $ic -le 600 ]
+#  do
+#    if [ -s $DATA/postdone${fhr} ]
+#    then
+#       break
+#    else
+#       let ic=ic+1
+#       sleep 20
+#    fi
+#
+#    if [ $ic -ge 60 ]
+#    then
+#       err_exit "COULD NOT LOCATE: $DATA/postdone${fhr}"
+#    fi
+#  done
+#  let fhr=fhr+1
+#fhr=`printf '%02d' $fhr`
+#done
+
+cd /tmpnwprd1
+date

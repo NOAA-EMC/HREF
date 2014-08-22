@@ -1,0 +1,12 @@
+#
+# Resource file for GOCART Ozone grid component.
+#
+# Harvard production and loss [molecules m^{-3} s^{-1}] and
+# dry deposition speed [m s^{-1}]
+# ---------------------------------------------------------
+Harvards_file_name: /archive/u/wargan/chemistry/harvard.nc/Y%y4/M%m2/harvard_pl_ox.%y4%m2%d2.nc
+
+# Harvard production and loss [molecules m^{-3} s^{-1}] and
+# dry deposition speed [m s^{-1}]
+# ---------------------------------------------------------
+PCHEMs_file_name: /explore/nobackup/enielsen/pchem/species7.cpl.z_181x72
