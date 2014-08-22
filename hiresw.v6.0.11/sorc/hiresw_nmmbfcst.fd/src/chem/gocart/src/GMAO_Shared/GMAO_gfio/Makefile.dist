@@ -1,0 +1,57 @@
+.SUFFIXES : .F
+F77         = f90
+SGIARCH     =
+FFLAGS64    = 
+FFLAGS      = -cpp -c $(SGIARCH)
+CC          = cc
+CFLAGS      = -c -cpp $(SGIARCH)
+LDR         = f90
+LDRFLAGS    = $(SGIARCH) -o
+LDRFLAGS64  = 
+AR          = ar
+ARFLAGS     = -r
+HDFLIBDIR   = /ford1/local/irix6.2/hdf/lib
+HDFLIBS     = -lmfhdf -ldf -lz
+INCDIR      = /ford1/local/irix6.2/hdf/include
+LIBS        = -L$(HDFLIBDIR) $(HDFLIBS) 
+INC         = -I$(INCDIR)
+RM          = /bin/rm
+VERSION     = BETA
+
+LIBOBJS     = gfio.o diffdate.o getdate.o timesubs.o gfioutil.o
+TESTOBJS    = main.o
+COBJS       = testcall.o
+
+libgfiov$(VERSION)_r4.a: Makefile $(LIBOBJS)
+	make -u "SGIARCH = $(SGIARCH)" $(LIBOBJS)
+	$(AR) $(ARFLAGS) $@ $(LIBOBJS)
+
+libgfiov$(VERSION)_r8.a: Makefile $(LIBOBJS)
+	make -u "SGIARCH = $(SGIARCH)" $(LIBOBJS) "FFLAGS64 = -r8"
+	$(AR) $(ARFLAGS) $@ $(LIBOBJS)
+
+gfio_test32: libgfiov$(VERSION)_r4.a Makefile $(TESTOBJS)
+	make -u "SGIARCH = $(SGIARCH)" $(TESTOBJS)
+	$(LDR) $(LDRFLAGS) $@ $(TESTOBJS) -L. -lgfiov$(VERSION)_r4 $(LIBS)
+
+gfio_test64: libgfiov$(VERSION)_r8.a Makefile $(TESTOBJS)
+	make -u "SGIARCH = $(SGIARCH)" $(TESTOBJS) "FFLAGS64 = -r8"
+	$(LDR) $(LDRFLAGS) $@ $(LDRFLAGS64) $(TESTOBJS) -L. -lgfiov$(VERSION)_r8 $(LIBS)
+
+c_fortran: $(COBJS) libgfiov$(VERSION)_r4.a Makefile gfio_c.h
+	make -u "SGIARCH = $(SGIARCH)" $(COBJS)
+	$(LDR) $(LDRFLAGS) $@ $(COBJS) -L. -lgfiov$(VERSION)_r4 $(LIBS)
+
+.f.o:
+	$(F77) $(FFLAGS) $(FFLAGS64) $(INC) $<
+
+.F.o:
+	$(F77) $(FFLAGS) $(FFLAGS64) $(INC) $<
+
+.c.o:
+	$(CC) $(CFLAGS) $(INC) $<
+
+all:   libgfiov$(VERSION)_r4.a libgfiov$(VERSION)_r8.a
+
+clean:
+	$(RM) *.o lib*a

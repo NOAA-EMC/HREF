@@ -1,0 +1,63 @@
+#
+# Resource file for OC parameters. 
+# Emission factors in kg species / kg emissions (DM or species)
+#
+
+number_oc_classes:  2 
+OC_regions:  ExtData/AeroCom/sfc/ARCTAS.region_mask.x540_y361.2008.nc
+
+# Indicate regions using a comma-delimited list of integers.
+# To activate all land boxes, use -1, or all or global (not case sensitive)
+# -------------------------------------------------------------------------
+OC_regions_indices: global
+
+# For all land boxes in a latitude range, set doZoneMasking to
+# 1 then specify BOTH the south and north limits in degrees.
+# WARNING: When set, zone masking OVERRIDES regions setting above!
+# ----------------------------------------------------------------
+doZoneMasking: 0
+LatitudeSouth: 45.0
+LatitudeNorth: 90.0
+
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+
+# For emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+bb_srcfilen: ExtData/AeroCom/sfc/AeroCom.OC_bioburn.x360_y181_t14.%y4.nc
+biomass_burning_emission_factor: 1.
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+# Biofuel Source -- Included in AeroCom anthropogenic emissions
+  bf_srcfilen: /dev/null
+  biofuel_emission_factor: 1.
+
+# Anthropogenic (BF & FF) emissions -- allowed to input as two layers
+  eocant1_srcfilen: ExtData/AeroCom/sfc/AeroCom.noship_OC_src.sfc.x360_y181_t31.19780703_12z_20070703_12z.nc
+  eocant2_srcfilen: /dev/null
+
+# EDGAR based ship emissions of OC
+  oc_ship_srcfilen: ExtData/AeroCom/sfc/AeroCom.ship_OC_src.sfc.x360_y181_t31.19780703_12z_20080703_12z.nc
+
+# Terpene emission
+  terpene_srcfilen: ExtData/AeroCom/sfc/geia.terpene_biogenic.x144_y91_t12.1971.nc
+  terpene_emission_fraction: 0.1
+
+# Ratio of POM/OC -> convert source masses from carbon to POM
+  pom_oc_ratio: 1.4
+
+# Initially hydrophobic portion
+  hydrophobic_fraction: 0.5
+
+# Scavenging efficiency per bin [km-1]
+fscav: 0.0  0.4   #  

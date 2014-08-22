@@ -1,0 +1,4 @@
+Running "make_all" will run two separate makefiles
+(makefile_em and makefile_nmm) to build the two
+needed executables  (hiresw_sndp_arw and hiresw_sndp_nmm)
+in the ../../exec/ directory

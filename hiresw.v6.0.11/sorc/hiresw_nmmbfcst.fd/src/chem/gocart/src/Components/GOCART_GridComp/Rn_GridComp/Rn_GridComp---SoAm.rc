@@ -1,0 +1,28 @@
+#
+# Resource file for Radon parameters. 
+#
+
+number_Rn_bins: 1 
+Rn_regions: /cxfsm/nobackup2/enielsen/ARCTAS/RADON.region_mask.x540_y361.2001.hdf
+
+# Indicate regions using a comma-delimited list of integers.
+# To activate all land boxes, use -1, or all or global (not case sensitive)
+# -------------------------------------------------------------------------
+Rn_regions_indices: 6
+
+# For all land boxes in a latitude range, set doZoneMasking to
+# 1 then specify BOTH the south and north limits in degrees.
+# WARNING: When set, zone masking OVERRIDES regions setting above!
+# ----------------------------------------------------------------
+doZoneMasking: 0
+LatitudeSouth: 45.0
+LatitudeNorth: 90.0
+
+# Half-life and unit, which must be "years", "days", or "seconds".
+# ----------------------------------------------------------------
+HalfLife: 3.823
+HalfLifeUnit: days
+
+# Emission, mBq m^{-2} s^{-1}
+# ---------------------------
+Rn_emission_file_name: /explore/nobackup/enielsen/pchem/radon.x540_y361.hdf

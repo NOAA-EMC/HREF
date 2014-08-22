@@ -1,0 +1,12 @@
+set -x
+
+TARGDIR=../../exec/
+
+LIBDEF="-L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4"
+
+OPT="-convert big_endian"
+
+echo $LIBDEF
+
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_general

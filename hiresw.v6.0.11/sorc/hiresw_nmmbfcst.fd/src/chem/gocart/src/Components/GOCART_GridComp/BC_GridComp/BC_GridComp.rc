@@ -1,0 +1,44 @@
+#
+# Resource file for BC parameters. 
+# Emission factors in kg species / kg emissions (DM or species)
+#
+
+number_bc_classes:  2 
+
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+
+# For emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+  bb_srcfilen: ExtData/AeroCom/sfc/AeroCom.BC_bioburn.x360_y181_t14.%y4.nc
+  biomass_burning_emission_factor: 1.
+
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+# Biofuel Source -- Included in AeroCom anthropogenic emissions
+  bf_srcfilen: /dev/null
+  biofuel_emission_factor: 1.
+
+# Anthropogenic (BF & FF) emissions -- allowed to input as two layers
+  ebcant1_srcfilen: ExtData/AeroCom/sfc/AeroCom.noship_BC_src.sfc.x360_y181_t31.19780703_12z_20070703_12z.nc
+  ebcant2_srcfilen: /dev/null
+
+# EDGAR based ship emissions of BC
+  bc_ship_srcfilen: ExtData/AeroCom/sfc/AeroCom.ship_BC_src.sfc.x360_y181_t31.19780703_12z_20080703_12z.nc
+
+
+# Initially hydrophobic portion
+  hydrophobic_fraction: 0.8
+
+# Scavenging efficiency per bin [km-1]
+fscav: 0.0  0.4   #  

@@ -1,0 +1,29 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: O3
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+
+<O3::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl|# Sub|          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  O3       | kg/kg      | xyz | C |    |   |   |     | Ozone from GOCART
+  O3PPMV   | ppmv       | xyz | C |    |   |   |     | Ozone from GOCART
+# .........|............|.....|...|....|...|...|.....|..................................
+  O3CM001  | Dobsons    | xy  |   |    |   |   |     | Total ozone Bin 001
+  O3CM002  | Dobsons    | xy  |   |    |   |   |     | Total ozone Bin 002
+# ---------|------------|-----|---|----|---|---|-----|--------------------------------
+</O3::ExportSpec>

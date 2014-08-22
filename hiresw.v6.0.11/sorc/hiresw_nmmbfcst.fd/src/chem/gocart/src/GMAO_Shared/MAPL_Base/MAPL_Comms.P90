@@ -1,0 +1,895 @@
+!  $Id: MAPL_Comms.P90,v 1.15.2.4.2.5 2009/04/22 19:07:54 dkokron Exp $
+
+#include "MAPL_ErrLog.h"
+
+!BOP
+
+! !MODULE: MAPL_Comms -- A Module to parallel comunications until ESMF fully supports it
+
+
+! !INTERFACE:
+
+module MAPL_CommsMod
+
+  use ESMF_Mod
+  use MAPL_BaseMod
+  use MAPL_ConstantsMod
+  implicit none
+  private
+
+  public MAPL_Abort
+  public MAPL_CommsBcast
+  public MAPL_CommsScatterV
+  public MAPL_CommsGatherV
+  public MAPL_CommsAllGather
+  public MAPL_CommsAllGatherV
+  public MAPL_CommsAllReduceMin
+  public MAPL_CommsAllReduceMax
+  public MAPL_CommsAllReduceSum
+  public MAPL_CommsSend
+  public MAPL_CommsRecv
+  public MAPL_CommsSendRecv
+  public MAPL_AM_I_ROOT
+  public MAPL_NPES
+  public ArrayGather
+  public ArrayScatter
+  public MAPL_root
+
+  public MAPL_CreateRequest
+  public MAPL_CommRequest
+  public MAPL_ArrayIGather
+  public MAPL_CollectiveWait
+
+  type MAPL_CommRequest
+     integer, pointer :: al(:,:)=>null(), au(:,:)=>null(), recv(:)=>null()
+     real, pointer    ::  var(:)=>null()
+     real, pointer    :: global_array(:,:)=>null()
+     real, pointer    :: local_array(:,:)=>null()
+     integer          :: nDEs, MYPE, comm, root, send
+     logical          :: active=.false., amReceiver=.false.
+  end type MAPL_CommRequest
+
+
+  interface MAPL_Am_I_Root
+     module procedure MAPL_Am_I_Root_Layout
+     module procedure MAPL_Am_I_Root_Vm
+  end interface
+
+  interface MAPL_NPES
+     module procedure MAPL_NPES_Layout
+     module procedure MAPL_NPES_Vm
+  end interface
+
+  interface MAPL_CommsBcast
+     module procedure MAPL_CommsBcast_STRING_0
+     module procedure MAPL_CommsBcast_I4_0
+     module procedure MAPL_CommsBcast_R4_0
+     module procedure MAPL_CommsBcast_R8_0
+     module procedure MAPL_CommsBcast_I4_1
+     module procedure MAPL_CommsBcast_R4_1
+     module procedure MAPL_CommsBcast_R8_1
+     module procedure MAPL_CommsBcast_I4_2
+     module procedure MAPL_CommsBcast_R4_2
+     module procedure MAPL_CommsBcast_R8_2
+  end interface
+
+  interface MAPL_CommsScatterV
+     module procedure MAPL_CommsScatterV_R4_1
+     module procedure MAPL_CommsScatterV_R4_2
+     module procedure MAPL_CommsScatterV_R8_1
+     module procedure MAPL_CommsScatterV_R8_2
+  end interface
+
+  interface MAPL_CommsGatherV
+     module procedure MAPL_CommsGatherV_I4_1
+     module procedure MAPL_CommsGatherV_R4_1
+     module procedure MAPL_CommsGatherV_R4_2
+     module procedure MAPL_CommsGatherV_R8_1
+     module procedure MAPL_CommsGatherV_R8_2
+  end interface
+
+  interface MAPL_CommsAllGather
+     module procedure MAPL_CommsAllGather_I4_1
+     module procedure MAPL_CommsAllGather_L4_1
+  end interface
+
+  interface MAPL_ArrayIGather
+     module procedure MAPL_ArrayIGather_R4_2
+!     module procedure MAPL_CommsIGather_R4_3
+  end interface
+
+  interface MAPL_CommsAllGatherV
+     module procedure MAPL_CommsAllGatherV_I4_1
+     module procedure MAPL_CommsAllGatherV_R4_1
+  end interface
+
+  interface MAPL_CommsAllReduceMin
+     module procedure MAPL_CommsAllReduceMin_I4_0
+     module procedure MAPL_CommsAllReduceMin_R4_0
+     module procedure MAPL_CommsAllReduceMin_R8_0
+     module procedure MAPL_CommsAllReduceMin_I4_1
+     module procedure MAPL_CommsAllReduceMin_R4_1
+     module procedure MAPL_CommsAllReduceMin_R8_1
+     module procedure MAPL_CommsAllReduceMin_I4_2
+     module procedure MAPL_CommsAllReduceMin_R4_2
+     module procedure MAPL_CommsAllReduceMin_R8_2
+  end interface
+
+  interface MAPL_CommsAllReduceMax
+     module procedure MAPL_CommsAllReduceMax_I4_0
+     module procedure MAPL_CommsAllReduceMax_R4_0
+     module procedure MAPL_CommsAllReduceMax_R8_0
+     module procedure MAPL_CommsAllReduceMax_I4_1
+     module procedure MAPL_CommsAllReduceMax_R4_1
+     module procedure MAPL_CommsAllReduceMax_R8_1
+     module procedure MAPL_CommsAllReduceMax_I4_2
+     module procedure MAPL_CommsAllReduceMax_R4_2
+     module procedure MAPL_CommsAllReduceMax_R8_2
+  end interface
+
+  interface MAPL_CommsAllReduceSum
+     module procedure MAPL_CommsAllReduceSum_I4_0
+     module procedure MAPL_CommsAllReduceSum_R4_0
+     module procedure MAPL_CommsAllReduceSum_R8_0
+     module procedure MAPL_CommsAllReduceSum_I4_1
+     module procedure MAPL_CommsAllReduceSum_R4_1
+     module procedure MAPL_CommsAllReduceSum_R8_1
+     module procedure MAPL_CommsAllReduceSum_I4_2
+     module procedure MAPL_CommsAllReduceSum_R4_2
+     module procedure MAPL_CommsAllReduceSum_R8_2
+  end interface
+
+  interface MAPL_CommsSend
+     module procedure MAPL_CommsSend_I4_0
+     module procedure MAPL_CommsSend_I4_1
+     module procedure MAPL_CommsSend_R4_1
+     module procedure MAPL_CommsSend_R4_2
+     module procedure MAPL_CommsSend_R8_1
+     module procedure MAPL_CommsSend_R8_2
+  end interface
+
+  interface MAPL_CommsRecv
+     module procedure MAPL_CommsRecv_I4_0
+     module procedure MAPL_CommsRecv_I4_1
+     module procedure MAPL_CommsRecv_R4_1
+     module procedure MAPL_CommsRecv_R4_2
+     module procedure MAPL_CommsRecv_R8_1
+     module procedure MAPL_CommsRecv_R8_2
+  end interface
+
+  interface MAPL_CommsSendRecv
+     module procedure MAPL_CommsSendRecv_I4_0
+     module procedure MAPL_CommsSendRecv_R4_1
+     module procedure MAPL_CommsSendRecv_R4_2
+     module procedure MAPL_CommsSendRecv_R8_1
+     module procedure MAPL_CommsSendRecv_R8_2
+  end interface
+
+  interface ArrayScatter
+     module procedure ArrayScatter_R4_1
+     module procedure ArrayScatter_R8_1
+     module procedure ArrayScatter_R4_2
+     module procedure ArrayScatter_R8_2
+  end interface
+
+  interface ArrayGather
+     module procedure ArrayGather_I4_1
+     module procedure ArrayGather_R4_1
+     module procedure ArrayGather_R8_1
+     module procedure ArrayGather_R4_2
+     module procedure ArrayGather_R8_2
+  end interface
+  
+  include "mpif.h"
+
+  integer, parameter :: MAPL_root=0
+  integer, parameter :: msg_tag=11
+
+  contains
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!---------------------------
+!---------------------------
+!---------------------------
+  function MAPL_Am_I_Root_Vm(VM) result(R)
+    type (ESMF_VM) :: VM
+    logical        :: R
+
+    integer       :: deId
+    integer       :: status
+
+    R = .false.
+    call ESMF_VMGet(vm, localPet=deId, rc=status)
+    if (deId == MAPL_Root) R = .true.
+
+  end function MAPL_Am_I_Root_Vm
+
+  function MAPL_Am_I_Root_Layout(layout) result(R)
+    type (ESMF_DELayout), optional :: layout
+    logical                        :: R
+
+    integer       :: deId
+    integer       :: status
+    type(ESMF_VM) :: vm
+    integer       :: deList(1)
+
+    R = .false.
+    if (present(layout)) then
+!       call ESMF_DELayoutGet(layout, localDeCount=ldecount, rc=status)
+       call ESMF_DELayoutGet(layout, localDeList=deList, rc=status)
+    else
+       call ESMF_VMGetCurrent(vm, rc=status)
+       R = MAPL_Am_I_Root(vm)
+       return
+    end if
+    if (deList(1) == MAPL_Root) R = .true.
+
+  end function MAPL_Am_I_Root_Layout
+
+
+  subroutine MAPL_CreateRequest(grid, Root, request, rc)
+    type (ESMF_Grid),        intent(INOUT) :: grid
+    integer,                 intent(IN   ) :: Root
+    type (MAPL_CommRequest), intent(INOUT) :: request
+    integer, optional,       intent(  OUT) :: rc
+    
+! Local variables
+
+    integer                    :: status
+    character(len=ESMF_MAXSTR) :: IAm='MAPL_CreateRequest'
+
+    type (ESMF_VM)             :: VM
+    type (ESMF_DistGrid)       :: distGrid
+    type (ESMF_DELayout)       :: layout
+
+    integer, allocatable       :: AL(:,:), AU(:,:)
+    integer                    :: count
+    integer                    :: displs
+    integer                    :: I,J
+    integer                    :: myPE, nDEs
+    integer                    :: gridRank
+    integer                    :: comm, req
+    integer                    :: frst, last
+    integer                    :: lenx, leny
+    integer                    :: ISZ, JSZ
+    integer                    :: XSZ, YSZ
+    integer                    :: I1, IN, J1, JN, IM0, JM0
+    integer                    :: counts(5)
+
+! Begin
+!------
+
+    ASSERT_(.not.request%active)
+
+! Grid, layout, and communicator info all comes from the esmf grid
+!-----------------------------------------------------------------
+
+    call ESMF_GridGet     (GRID,     dimCount        =gridRank, RC=STATUS); VERIFY_(STATUS)
+    call ESMF_GridGet     (GRID,     distGrid        =distGrid, RC=STATUS); VERIFY_(STATUS)
+    call MAPL_GridGet     (GRID,globalCellCountPerDim=COUNTS  , RC=STATUS); VERIFY_(STATUS)
+
+    call ESMF_DistGridGet (distGrid, deLayout        =layout,   RC=STATUS); VERIFY_(STATUS)
+    call ESMF_DELayoutGet (layout,   VM              =vm,       RC=STATUS); VERIFY_(STATUS)
+    call ESMF_VMGet       (VM,       mpiCommunicator =comm,     RC=STATUS); VERIFY_(STATUS)
+    call ESMF_VMGet       (VM, localpet=MYPE, petcount=nDEs,  RC=STATUS)
+    VERIFY_(STATUS)
+
+    IM0 = COUNTS(1)
+    JM0 = COUNTS(2)
+
+! I will be calling MPI directly, so I want to make sure
+!   these are the ones MPI recognizes
+
+! Does not support 1D grids
+!--------------------------
+
+    ASSERT_(gridRank > 1)
+
+! Create the request
+!-------------------
+
+    request%amReceiver    =  (myPE == Root)
+    request%active        = .true.
+    request%nDEs          =  nDEs
+    request%myPE          =  myPE
+    request%comm          =  comm
+    request%root          =  root
+
+    POST: if(request%amReceiver) then
+
+       allocate (        AL   (gridRank,0:nDEs-1),        stat=STATUS); VERIFY_(STATUS)
+       allocate (        AU   (gridRank,0:nDEs-1),        stat=STATUS); VERIFY_(STATUS)
+       allocate (request%AL   (2       ,0:nDEs-1),        stat=STATUS); VERIFY_(STATUS)
+       allocate (request%AU   (2       ,0:nDEs-1),        stat=STATUS); VERIFY_(STATUS)
+       allocate (request%VAR  (0:IM0*JM0-1      ),        stat=STATUS); VERIFY_(STATUS)
+       allocate (request%RECV (0:nDEs-1         ),        stat=STATUS); VERIFY_(STATUS)
+       allocate (request%Global_Array( IM0,JM0  ),        stat=STATUS); VERIFY_(STATUS)
+
+! Get the local grid bounds for all pes. We will use only
+!   the first 2 dimensions.
+!--------------------------------------------------------
+
+       call ESMF_DistGridGet (distgrid, minIndexPDimPDe=AL, RC=STATUS); VERIFY_(STATUS)
+       call ESMF_DistGridGet (distgrid, maxIndexPDimPDe=AU, RC=STATUS); VERIFY_(STATUS)
+
+       request%AL = AL(1:2,:)
+       request%AU = AU(1:2,:)
+
+       deallocate(AL,AU)
+
+! Receiver posts nDEs-1 receives. Only receive requests 
+!    are saved in the collective request.
+!------------------------------------------------------
+
+       displs = 0
+       do i=0,nDEs-1
+          I1    = request%AL(1,i)
+          IN    = request%AU(1,i)
+          J1    = request%AL(2,i)
+          JN    = request%AU(2,i)
+          lenx  = IN-I1+1
+          leny  = JN-J1+1
+          count = lenx*leny
+
+          call MPI_IRecv(request%var(displs), count, MPI_REAL, &
+                      i, msg_tag, comm, request%recv(i), status)
+          VERIFY_(STATUS)
+          displs = displs + count
+       end do
+
+    else
+
+       nullify(request%AL   )
+       nullify(request%AU   )
+       nullify(request%VAR  )
+       nullify(request%Global_Array)
+
+    end if POST
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_CreateRequest
+
+
+  subroutine MAPL_ArrayIGather_R4_2(local_array, request, rc)
+    real,                    intent(IN   ) :: local_array (:,:)
+    type (MAPL_CommRequest), intent(INOUT) :: request
+    integer, optional,       intent(  OUT) :: rc
+    
+! Local variables
+
+    integer                    :: status
+    character(len=ESMF_MAXSTR) :: IAm='MAPL_ArrayIGather2d'
+
+
+    integer                    :: count
+    integer                    :: lenx, leny
+
+! Begin
+!------
+
+    allocate(request%local_array(size( LOCAL_ARRAY,1),size( LOCAL_ARRAY,2)), stat=STATUS)
+    VERIFY_(STATUS)
+
+! In senders, copy input to contiguous buffer for safety
+!-------------------------------------------------------
+
+    request%local_array = local_array
+
+! Post sends from all processors except root
+!-------------------------------------------
+
+    call MPI_ISend( request%Local_Array, size(Local_Array), MPI_REAL, &
+         request%root, msg_tag, request%comm, request%send,  status)
+    VERIFY_(STATUS)
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_ArrayIGather_R4_2
+
+
+  subroutine MAPL_CollectiveWait(request, glob2, glob3, rc)
+    type (MAPL_COMMRequest), intent(INOUT) :: request
+    real, pointer, optional                :: glob2(:,:)
+    real, pointer, optional                :: glob3(:,:,:)
+    integer, optional,       intent(  OUT) :: rc
+
+    integer                               :: status
+    character(len=ESMF_MAXSTR)            :: IAm='MAPL_CollectiveWait'
+
+    integer               :: i,k,ii,jj,ll
+
+    if(request%amReceiver) then
+       k = 0
+       PEs: do i=0,request%nDEs-1
+          call MPI_WAIT(request%recv(i),MPI_STATUS_IGNORE,status)
+          VERIFY_(STATUS)
+
+          do JJ=request%AL(2,i),request%AU(2,i)
+             do II=request%AL(1,i),request%AU(1,i)
+                request%global_array(II,JJ) = request%var(K)
+                K = K+1
+             end do
+          end do
+       end do PEs
+
+       deallocate(request%var )
+       deallocate(request%AU  )
+       deallocate(request%AL  )
+       deallocate(request%recv)
+
+       if((present( glob2 ))) glob2 => request%global_array
+
+    else
+
+       call MPI_WAIT(request%send,MPI_STATUS_IGNORE,status)
+       VERIFY_(STATUS)
+
+       deallocate(request%Local_Array)
+
+    endif
+
+    request%active = .false.
+
+    RETURN_(ESMF_SUCCESS)
+  end subroutine MAPL_CollectiveWait
+
+
+
+
+!---------------------------
+!---------------------------
+!---------------------------
+  function MAPL_NPES_Vm(VM) result(R)
+    type (ESMF_VM) :: VM
+    integer        :: R
+
+    integer       :: petCnt
+    integer       :: status
+
+    call ESMF_VMGet(vm, petCount=petCnt, rc=status)
+    R = petCnt
+
+    return
+  end function MAPL_NPES_Vm
+
+  function MAPL_NPES_Layout(layout) result(R)
+    type (ESMF_DELayout), optional :: layout
+    integer                        :: R
+
+    integer       :: petCnt
+    integer       :: status
+    type(ESMF_VM) :: vm
+    integer       :: deList(1)
+
+    call ESMF_DELayoutGet(layout, vm=vm, rc=status)
+    R = MAPL_NPES_Vm(vm)
+
+    return
+  end function MAPL_NPES_Layout
+
+
+
+!--BCAST -----------------
+
+! Rank 0
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 0
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 3
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 4
+#include "bcast.H"
+
+! Rank 1
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "bcast.H"
+
+! Rank 2
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 1
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "bcast.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "bcast.H"
+
+
+!--AllReduceMin -----------------
+    
+! Rank 0
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "allreducemin.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 3
+#include "allreducemin.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 4
+#include "allreducemin.H"
+
+! Rank 1
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "allreducemin.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "allreducemin.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "allreducemin.H"
+
+! Rank 2
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 1
+#include "allreducemin.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "allreducemin.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "allreducemin.H"
+
+!--AllReduceMax -----------------
+
+! Rank 0
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "allreducemax.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 3
+#include "allreducemax.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 4
+#include "allreducemax.H"
+
+! Rank 1
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "allreducemax.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "allreducemax.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "allreducemax.H"
+
+! Rank 2
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 1
+#include "allreducemax.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "allreducemax.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "allreducemax.H"
+
+!--AllReduceSum -----------------
+
+! Rank 0
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "allreducesum.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 3
+#include "allreducesum.H"
+
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 4
+#include "allreducesum.H"
+
+! Rank 1
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "allreducesum.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "allreducesum.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "allreducesum.H"
+
+! Rank 2
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 1
+#include "allreducesum.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "allreducesum.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "allreducesum.H"
+
+
+! Scatter
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "scatter.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "scatter.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "scatter.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "scatter.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "gather.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "gather.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "gather.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "gather.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "gather.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "allgather.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 2
+#include "allgather.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "allgatherv.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "allgatherv.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "send.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "send.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "send.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "send.H"
+
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "send.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "send.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "recv.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "recv.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "recv.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "recv.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "recv.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "recv.H"
+
+!---------------------------
+!---------------------------
+#define RANK_ 0
+#define VARTYPE_ 1
+#include "sendrecv.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "sendrecv.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "sendrecv.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "sendrecv.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "sendrecv.H"
+
+    subroutine MAPL_Abort
+
+	call ESMF_Finalize(terminationFlag = ESMF_Abort)
+    end subroutine MAPL_Abort
+
+!---------------------------
+!---------------------------
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "arrayscatter.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 1
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 3
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 1
+#define VARTYPE_ 4
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 3
+#include "arraygather.H"
+
+!---------------------------
+#define RANK_ 2
+#define VARTYPE_ 4
+#include "arraygather.H"
+
+
+!---------------------------
+end module MAPL_CommsMod

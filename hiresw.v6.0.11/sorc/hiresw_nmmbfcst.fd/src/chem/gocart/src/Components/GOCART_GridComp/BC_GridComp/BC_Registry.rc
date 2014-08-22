@@ -1,0 +1,42 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: BC
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+
+<BC::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl|# Sub|          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  BCMASS   | kg/kg      | xyz | C |    |   |   |     | Black Carbon Mass Mixing Ratio 
+# .........|............|.....|...|....|...|...|.....|..................................
+  BCEM001  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Emission Bin 001     
+  BCEM002  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Emission Bin 002     
+  BCDP001  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Dry Deposition Bin 001     
+  BCDP002  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Dry Deposition Bin 002     
+  BCWT001  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Wet Deposition Bin 001     
+  BCWT002  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Wet Deposition Bin 002     
+# BCSV001  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Convective Scavenging Bin 001     
+# BCSV002  | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Convective Scavenging Bin 002 
+  BCHYPHIL | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Hydrophobic to Hydrophilic    
+  BCEMAN   | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Anthropogenic Emissions
+  BCEMBB   | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Biomass Burning Emissions
+  BCEMBF   | kg m-2 s-1 | xy  |   |    |   |   |     | Black Carbon Biofuel Emissions
+  BCSMASS  | kg m-3     | xy  |   |    |   |   |     | Black Carbon Surface Mass Concentration    
+  BCCMASS  | kg m-2     | xy  |   |    |   |   |     | Black Carbon Column Mass Density    
+  BCEXTTAU |      1     | xy  |   |    |   |   |     | Black Carbon Extinction AOT [550 nm]    
+  BCSCATAU |      1     | xy  |   |    |   |   |     | Black Carbon Scattering AOT [550 nm]    
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+</BC::ExportSpec>
