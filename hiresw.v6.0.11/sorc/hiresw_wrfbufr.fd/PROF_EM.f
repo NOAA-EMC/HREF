@@ -3165,8 +3165,8 @@ C***  AND CLOUD FRACTION.
 C------------------------------------------------------------------
 C
       DO LV=1,LMHK
-c       LVL=LMHK-LV+1      !old ARW version Jun Du: 20081010
-        LVL=LV
+        LVL=LMHK-LV+1      !old ARW version Jun Du: 20081010
+!        LVL=LV
         PRODAT(LVL)      = PMID(N,LV)
 	if (mod(LV,15) .eq. 0 .and. mod(N,50) .eq. 0) then
 	write(6,*) 'PRODAT definition, PMID: ', N,L,PMID(N,LV)
@@ -3228,8 +3228,8 @@ C       BOTTOM UP
 C
 
       DO LL=1,LMHK
-c        LVL=LMHK-LL+1       !old ARW version  Jun Du: 20081010
-        LVL=LL
+        LVL=LMHK-LL+1       !old ARW version  Jun Du: 20081010
+!        LVL=LL
         STADHC(LL) = PRODAT(NWORD7+LL) - DHCNVC(LVL,N)
         STADHR(LL) = PRODAT(NWORD8+LL) - DHRAIN(LVL,N)
 C
