@@ -1,0 +1,7 @@
+v6.0.11 - released August 27, 2014
+ 
+Reverses the vertical ordering of BUFR output from the WRF-ARW model
+to match the expectation of GEMPAK debuffering software.
+
+* Should have no impact on timing, file sizes, etc.
+
