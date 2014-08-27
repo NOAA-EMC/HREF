@@ -3,5 +3,27 @@ v6.0.11 - released August 27, 2014
 Reverses the vertical ordering of BUFR output from the WRF-ARW model
 to match the expectation of GEMPAK debuffering software.
 
+Corrects a typo bug in JHIRESW_POST (one that impacts non-NCO parallel
+testing)
+
+Corrects a bug in the NMMB forecast model that will create problems 
+on January 1st of leap years.
+
 * Should have no impact on timing, file sizes, etc.
+
+
+Implementation instructions
+---------------------------
+
+After the tag is checked out, two executables should be rebuilt.
+
+1) Go to sorc/hiresw_wrfbufr.fd/
+
+"make" will build the executable as ../../exec/hiresw_wrfbufr by default.
+
+2) Go to sorc/hiresw_nmmbfcst.fd/src/
+
+Running "./build.scr" will build the executable as ../../../exec/hiresw_nmmbfcst
+by default.
+
 
