@@ -443,14 +443,14 @@
 !
             IF(CLOCK_DIRECTION=='Bckward ')THEN
               IF(MOD(YY2,4)==0)THEN
-                STOP_SEC=STOP_SEC-31557600
+                STOP_SEC=STOP_SEC-31622400
               ELSE
                 STOP_SEC=STOP_SEC-31536000
               ENDIF
 !
             ELSEIF(CLOCK_DIRECTION=='Forward ')THEN
               IF(MOD(YY1,4)==0)THEN
-                START_SEC=START_SEC-31557600
+                START_SEC=START_SEC-31622400
               ELSE
                 START_SEC=START_SEC-31536000
               ENDIF

@@ -66,7 +66,7 @@ export cycle=${cycle:-t${cyc}z}
 #export DBN_NEST=${nestMODEL}
 export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
                                                                                                              
-export HOMEhiresw=${HOMEhires:-/nw${envir}/hiresw.${model_ver}}
+export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
 export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
 export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
