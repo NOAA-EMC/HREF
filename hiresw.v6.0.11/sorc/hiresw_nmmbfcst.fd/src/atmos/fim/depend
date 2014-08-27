@@ -1,6 +1,0 @@
-fim_grid_comp.o : fim_grid_comp.F90 module_DYN_PHY_CPL_COMP.o module_PHYSICS_GRID_COMP.o module_DYNAMICS_GRID_COMP.o module_FIM_INTEGRATE.o fim_internal_state.o  
-fim_internal_state.o : fim_internal_state.F90  
-module_DYNAMICS_GRID_COMP.o : module_DYNAMICS_GRID_COMP.F90  
-module_DYN_PHY_CPL_COMP.o : module_DYN_PHY_CPL_COMP.F90  
-module_FIM_INTEGRATE.o : module_FIM_INTEGRATE.F90  
-module_PHYSICS_GRID_COMP.o : module_PHYSICS_GRID_COMP.F90  
