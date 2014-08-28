@@ -112,7 +112,15 @@ dd=`echo $time | cut -c7-8`
 hh=`echo $time | cut -c9-10`
 
 # needs to be made more specific in conjuction with ungrib job
+
+
+### provision for use from preprap job
+if [ -e ../FILE:${yy}-${mm}-${dd}_${hh} ]
+then
+mv ../FILE:${yy}-${mm}-${dd}_${hh} .
+else
 cp $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
+fi
 export err=$?
 
 if [ $err -ne 0 ]
