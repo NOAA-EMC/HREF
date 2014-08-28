@@ -182,6 +182,13 @@ export pgm=ungrib
 export err=$?; $DATA/err_chk
 fi
 
+files=`ls FILE*`
+
+for fl in $files
+do
+mv ${fl} ../
+done
+
 
 #########################################################
 # RUN SINGLE METGRID STEP OF RAP FILES
