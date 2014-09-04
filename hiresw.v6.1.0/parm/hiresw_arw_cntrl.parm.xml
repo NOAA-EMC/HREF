@@ -655,6 +655,12 @@
       </param>
 
        <param>
+       <shortname>HGT_ON_CLOUD_CEILING</shortname>
+       <pname>HGT</pname>
+        <scale> 6.0</scale>
+       </param>
+
+       <param>
        <shortname>HGT_ON_CLOUD_TOP</shortname>
        <pname>HGT</pname>
          <scale> 6.0</scale>
