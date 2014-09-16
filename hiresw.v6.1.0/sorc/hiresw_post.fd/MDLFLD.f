@@ -116,7 +116,8 @@
      &,     GRID1(IM,JM), GRID2(IM,JM)    &
      &,     CUREFL_S(IM,JM), CUREFL(IM,JM), CUREFL_I(IM,JM)    &
      &,     Zfrz(IM,JM), DBZ1(IM,JM),DBZR1(IM,JM),DBZI1(IM,JM)    &
-     &,     DBZC1(IM,JM),EGRID6(IM,JM),EGRID7(IM,JM),NLICE1(IM,JM)
+     &,     DBZC1(IM,JM),EGRID6(IM,JM),EGRID7(IM,JM),NLICE1(IM,JM) & 
+     &,     Zm10c(IM,JM)
 !
       REAL, ALLOCATABLE :: EL(:,:,:),RICHNO(:,:,:) ,PBLRI(:,:)    &
      &   ,PBLREGIME(:,:)      
@@ -235,6 +236,34 @@
       ELSE
          NMM_GFSmicro=.FALSE.
       ENDIF
+
+          Zm10c(I,J)=ZMID(I,J,NINT(LMH(I,J)))
+          DO L=NINT(LMH(I,J)),1,-1
+             IF (T(I,J,L) .LE. 263.15) THEN   
+                Zm10c(I,J)=ZMID(I,J,L)         !-- Find lowest level where T<-10C
+                EXIT
+             ENDIF
+          ENDDO      
+
+!           REFD at -10 C level
+            IF (IGET(950).GT.0) THEN
+                 DO J=JSTA,JEND
+                 DO I=1,IM
+                   GRID1(I,J)=DBZ(I,J,Zm10c(I,J))
+                 ENDDO
+                 ENDDO
+
+                 if(grib=="grib1" )then
+                   ID(1:25) = 0
+                   CALL GRIBIT(IGET(950),L,GRID1,IM,JM)
+                 else if(grib=="grib2" )then
+                   cfld=cfld+1
+                   fld_info(cfld)%ifld=IAVBLFLD(IGET(950))
+                   fld_info(cfld)%lvl=LVLSXML(L,IGET(950))
+                   datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+                 endif
+            ENDIF
+
 !
 !    Calculate convective radar reflectivity at the surface (CUREFL_S), 
 !    and the decrease in reflectivity above the 0C level (CUREFL_I)
@@ -247,6 +276,7 @@
           CUPRATE=RDTPHS*CPRATE(I,J)            !--- Cu precip rate, R (mm/h)
 !          CUPRATE=CUPPT(I,J)*1000./TRDLW        !--- mm/h
           CUPRATE=0.
+
           Zfrz(I,J)=ZMID(I,J,NINT(LMH(I,J)))  !-- Initialize to lowest model level
           DO L=1,NINT(LMH(I,J))               !-- Start from the top, work down
              IF (T(I,J,L) .GE. TFRZ) THEN
@@ -254,6 +284,7 @@
                 EXIT
              ENDIF
           ENDDO       !--- DO L=1,NINT(LMH(I,J))
+
 !          IF (CUPRATE .LE. 0. .OR. CUPPT(I,J).LE.0.) THEN
           IF (CUPRATE .LE. 0. .or. htop(i,j)>=spval) THEN ! bug fix, post doesn not use CUPPT 
              CUREFL_S(I,J)=0.
