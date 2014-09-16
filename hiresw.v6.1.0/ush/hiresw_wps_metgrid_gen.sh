@@ -31,6 +31,7 @@ STARTHR=$3
 ENDHR=$4
 ICOUNT=$5
 MODEL=$6
+SENDCOM=$7
 
 MULTINUM_IN=$ICOUNT
 
@@ -141,30 +142,25 @@ $DATA/err_chk
 echo "DONE" > wpsdone.${ICOUNT}
 
 if [ $MODEL = arw ] ; then
-# mv met*.bin  $DATA/.
-# cp met*.bin  $COMOUT/.
-
 files=`ls met*.bin`
-for fl in $files
-do
-cp ${fl} $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.${fl}
-done
-
 elif [ $MODEL = nmmb ] ; then
-# mv met*.dio  $DATA/.
-# cp met*.dio  $COMOUT/.
-
 files=`ls met*.dio`
+fi
+
+
+if [ $SENDCOM = 1 ] ; then
 for fl in $files
 do
 cp ${fl} $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.${fl}
 done
-
 fi
 
 if [ $ICOUNT == "1" ]
 then
+for fl in $files
+do
 cp ${fl} ../
+done
 fi
 
 mv wpsdone.${ICOUNT} ../

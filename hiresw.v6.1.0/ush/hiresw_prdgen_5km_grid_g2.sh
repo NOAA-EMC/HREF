@@ -118,14 +118,17 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":PRES:mean sea level:"  -grib prms
 
 echo collecting 1.grb
 time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|GUST|VIL|MAXUVV|MAXDVV|REFD|REFC|MAXREF|MXUPHL|\
-TCOLI|TCOLR|TCOLS|TCOLC|TCOLW|LCDC|MCDC|HCDC|TCDC|RETOP|TSOIL|SOILW|PWAT|LFTX|4LFTX):" -grib 1.grb
+TCOLI|TCOLR|TCOLS|TCOLC|TCOLW|LCDC|MCDC|HCDC|TCDC|RETOP|PWAT|LFTX|4LFTX):" -grib 1.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
+
 echo collecting 3.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|PRES|HGT|TMP|CSNOW|CICEP|CFRZR|CRAIN|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
+time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(PRES|HGT|TMP|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
 ":(TMP|RH|UGRD|VGRD|PLI|POT|DPT|SPFH|MCONV|VVEL|CAPE|CIN):(30-0|60-30|90-60|120-90|150-120|180-0|90-0|255-0) mb above ground:" \
@@ -149,9 +152,13 @@ echo just apcp.grb
 time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
 
-cat prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
+cat prmsl.grb  weasd.grb 1.grb 2.grb 3.grb cld.grb  pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
 
-rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb
+cat nn.grb ceiling.grb  > inputs_nn.grb
+
+cat apcp.grb > inputs_budget.grb
+
+rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb nn.grb ceiling.grb pbl.grb pbl2.grb  agl.grb all_iso.grb
 
 
 conus227="30 6 0 0 0 0 0 0 1473 1025 12190000 226541000 136 25000000 265000000 5079000 5079000 0 64 25000000 25000000"
@@ -163,7 +170,12 @@ echo copygb2 interp timing
 
 # time $WGRIB2  inputs.grb  -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 iplib${fhr}.tm00
 # time /u/Wesley.Ebisuzaki/bin/wgrib2  inputs.grb  -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 iplib${fhr}.tm00
-time /u/Wesley.Ebisuzaki/bin/wgrib2  inputs.grb  -set_grib_type jpeg -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00
+
+time /u/Wesley.Ebisuzaki/bin/wgrib2  inputs.grb  -set_grib_type complex2 -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00_bilin
+time /u/Wesley.Ebisuzaki/bin/wgrib2  inputs_nn.grb -new_grid_interpolation neighbor -set_grib_type complex2 -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00_nn
+time /u/Wesley.Ebisuzaki/bin/wgrib2  inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type complex2 -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00_budget
+
+cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 
 export err=$?;./err_chk
 

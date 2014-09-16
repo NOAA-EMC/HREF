@@ -114,11 +114,13 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":PRES:mean sea level:"  -grib prms
 
 echo collecting 1.grb
 time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|REFD|REFC|\
-TCDC|RETOP|TSOIL|SOILW|PWAT|LFTX|4LFTX):" -grib 1.grb
+TCDC|RETOP|PWAT|LFTX|4LFTX):" -grib 1.grb
+
+$WGRIB2  $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
 
 
 echo collecting 3.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(PRES|HGT|TMP|CSNOW|CICEP|CFRZR|CRAIN|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
+time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(PRES|HGT|TMP|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
 
@@ -147,9 +149,9 @@ echo just apcp.grb
 time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
 
-cat prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
+cat prmsl.grb  weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
 
-rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb
+rm   prmsl.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb
 
 
 
@@ -157,8 +159,14 @@ rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  ag
 
 conuswestreg="30 6 0 0 0 0 0 0 884 614 24500000 230800000 136 40500000 252000000 5000000 5000000 0 64 40500000 4050000"
 
-copygb2 -g"${conuswestreg}" -x inputs.grb ${filenamthree}${fhr}.tm00
+# copygb2 -g"${conuswestreg}" -x inputs.grb ${filenamthree}${fhr}.tm00_bilin
+# copygb2 -g"${conuswestreg}" -i2-x nn.grb ${filenamthree}${fhr}.tm00_nn
 
+/u/Wesley.Ebisuzaki/bin/wgrib2 inputs.grb -set_grib_type complex2 -new_grid_winds grid -new_grid lambert:271:38:38 250.200:884:5000 22.100:614:5000 ${filenamthree}${fhr}.tm00_bilin
+/u/Wesley.Ebisuzaki/bin/wgrib2 nn.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation neighbor -new_grid lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000 ${filenamthree}${fhr}.tm00_nn
+/u/Wesley.Ebisuzaki/bin/wgrib2 apcp.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation budget -new_grid lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000 ${filenamthree}${fhr}.tm00_budget
+
+cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 
 ###############################################################
 ###############################################################

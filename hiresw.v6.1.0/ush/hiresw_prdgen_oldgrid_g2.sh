@@ -175,14 +175,17 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":PRES:mean sea level:"  -grib prms
 
 echo collecting 1.grb
 time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|GUST|VIL|MAXUVV|MAXDVV|REFD|REFC|MAXREF|MXUPHL|\
-TCOLI|TCOLR|TCOLS|TCOLC|TCOLW|LCDC|MCDC|HCDC|TCDC|RETOP|TSOIL|SOILW|PWAT|LFTX|4LFTX):" -grib 1.grb
+TCOLI|TCOLR|TCOLS|TCOLC|TCOLW|LCDC|MCDC|HCDC|TCDC|RETOP|PWAT|LFTX|4LFTX):" -grib 1.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
 echo collecting 3.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|PRES|HGT|TMP|CSNOW|CICEP|CFRZR|CRAIN|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
+time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(PRES|HGT|TMP|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
 ":(TMP|RH|UGRD|VGRD|PLI|POT|DPT|SPFH|MCONV|VVEL|CAPE|CIN):(30-0|60-30|90-60|120-90|150-120|180-0|90-0|255-0) mb above ground:" \
@@ -206,16 +209,22 @@ echo just apcp.grb
 time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
 
+
+## split between inputs for bilinear interpolation and for nearest neighbor interpolation
+
 cat prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
 
-rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb 
+cat nn.grb ceiling.grb > inputs_nn.grb
+
+rm   prmsl.grb apcp.grb weasd.grb 1.grb 2.grb 3.grb cld.grb nn.grb ceiling.grb pbl.grb pbl2.grb  agl.grb all_iso.grb 
 
 
 
 # copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
-copygb2 -g"${reg}" -x inputs.grb ${filenamthree}${fhr}.tm00
+copygb2 -g"${reg}" -x inputs.grb ${filenamthree}${fhr}.tm00_bilin
+copygb2 -g"${reg}" -i2 -x inputs_nn.grb ${filenamthree}${fhr}.tm00_nn
 
-
+cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn > ${filenamthree}${fhr}.tm00
 
 export err=$?;./err_chk
 
