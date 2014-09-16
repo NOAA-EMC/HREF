@@ -16,7 +16,7 @@
 
       implicit none
 !
-      INTEGER, PARAMETER :: MXFLD=949,MXLVL=70
+      INTEGER, PARAMETER :: MXFLD=951,MXLVL=70
       CHARACTER*20 AVBL(MXFLD),FIELD(MXFLD)
       CHARACTER*50 AVBLGRB2(MXFLD)
       CHARACTER*6 DATSET      
@@ -617,8 +617,8 @@
      &                      /1,'VISIBILITY          ',020,001,     &
      &                       'VIS ON surface'/
       DATA IFILV(408),AVBL(408),IQ(408),IS(408),AVBLGRB2(408)      &
-     &                      /1,'GSD CLD BOT HEIGHT  ',007,002,     &
-     &                       'GSD HGT ON cloud_base'/                     !408
+     &                      /1,'GSD CEILING         ',007,215,     &
+     &                       'GSD HGT ON cloud_ceilng'/                     !408
       DATA IFILV(409),AVBL(409),IQ(409),IS(409),AVBLGRB2(409)      &
      &                      /1,'GSD CLD TOP HEIGHT  ',007,003,     &
      &                       'GSD HGT ON cloud_top'/                      !408
@@ -2047,6 +2047,11 @@
       DATA IFILV(901),AVBL(901),IQ(901),IS(901),AVBLGRB2(901)      &
      &                      /1,'MODEL SFC V WIND STR',125,001,     &
      &                       'V_FLX ON surface' /
+
+! HiresW additions (950-951)
+      DATA IFILV(950),AVBL(950),IQ(950),IS(950),AVBLGRB2(950)      &
+     &                      /1,'RADAR REFL -10C     ',211,004,     &
+     &                       'REFD ON -10C_isotherm' /
 
 !end initialization
 !

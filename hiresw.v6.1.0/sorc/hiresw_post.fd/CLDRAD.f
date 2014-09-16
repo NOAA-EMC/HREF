@@ -1468,6 +1468,7 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
   744    continue
 !       print*,'check RH at PBL top, RH,i,j,k2',RHB(k2-1),i,j,k2-1
          if (rhb(k2-1).gt.95. ) then
+!mptest         if (rhb(k2-1).gt.99.0 ) then
            zcldbase = ZMID(i,j,LM-k2+2)
 !       print*,' PBL cloud ceiling',zcldbase,i,j
            if (CLDZ(i,j).lt.-100.) then
@@ -1492,14 +1493,14 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
        if(IBOT.gt.0) then
 !        print *,'IBOTCu(i,j)',i,j,IBOTCu(i,j)
          if(CLDZ(I,J).lt.-100.) then
-!        print *,'add convective cloud, IBOT,CLDZ(I,J),ZMID(I,J,IBOT)'
-!     1        ,IBOT,CLDZ(I,J),ZMID(I,J,IBOT),i,j
+        print *,'add convective cloud, IBOT,CLDZ(I,J),ZMID(I,J,IBOT)' &
+             ,IBOT,CLDZ(I,J),ZMID(I,J,IBOT),i,j 
             CLDZ(I,J)=ZMID(I,J,IBOT)
             GOTO 746
          else if(ZMID(I,J,IBOT).lt.CLDZ(I,J)) then
-!        print *,'change ceiling for convective cloud, CLDZ(I,J),
-!     1              ZMID(I,J,IBOT),IBOT,i,j'
-!     1        ,IBOT,CLDZ(I,J),ZMID(I,J,IBOT),IBOT,i,j
+        print *,'change ceiling for convective cloud, CLDZ(I,J), &
+                   ZMID(I,J,IBOT),IBOT,i,j' &
+             ,IBOT,CLDZ(I,J),ZMID(I,J,IBOT),IBOT,i,j
             CLDZ(I,J)=ZMID(I,J,IBOT)
          endif
        endif
@@ -1560,6 +1561,7 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
 
 !    B. ZHOU: CEILING
         IF (IGET(260).GT.0) THEN                                                                                                          
+        write(0,*) 'call CALCEILING'
             CALL CALCEILING(CLDZ,TCLD,CEILING)                                                                                   
             DO J=JSTA,JEND
              DO I=1,IM
