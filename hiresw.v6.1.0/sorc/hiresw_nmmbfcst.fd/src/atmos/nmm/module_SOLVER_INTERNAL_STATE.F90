@@ -398,6 +398,8 @@
                                                     ,LPBL               &
                                                     ,NCFRCV,NCFRST
 !
+        REAL(kind=KFPT), POINTER :: UPHLCRIT                               !<-- Value of updraft helicity above which point values will be written for objects
+!
         REAL(kind=KFPT),DIMENSION(:,:,:),POINTER :: DUDT,DVDT
 !
         REAL(kind=KFPT),DIMENSION(:,:,:),POINTER :: RLWTT,RSWTT
@@ -468,7 +470,7 @@
                                                  ,U10MAX,V10MAX,SPD10MAX &
                                                  ,TLMIN,TLMAX           &
                                                  ,UPVVELMAX,DNVVELMAX   &
-                                                 ,UPHLMAX,REFDMAX       &
+                                                 ,UPHLMAX,UPHLOBJMAX,REFDMAX       &
                                                  ,AKHSAVG,AKMSAVG
 !
 !-----------------------------------------------------------------------
@@ -745,6 +747,7 @@
       CALL SET_VAR_PTR(int_state%VARS,NV,'NRDSW'      ,int_state%NRDSW )
       CALL SET_VAR_PTR(int_state%VARS,NV,'NSRFC'      ,int_state%NSRFC )
       CALL SET_VAR_PTR(int_state%VARS,NV,'AVGMAXLEN'  ,int_state%AVGMAXLEN  )
+      CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLCRIT'  ,int_state%UPHLCRIT  )
       CALL SET_VAR_PTR(int_state%VARS,NV,'IVEGSRC'    ,int_state%IVEGSRC    )
       CALL SET_VAR_PTR(int_state%VARS,NV,'CU_PHYSICS' ,int_state%CU_PHYSICS )
 
@@ -917,6 +920,7 @@
       CALL SET_VAR_PTR(int_state%VARS,NV,'TSHLTR'     ,int_state%TSHLTR   ,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'TWBS'       ,int_state%TWBS     ,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLMAX'    ,int_state%UPHLMAX  ,(/ IMS,JMS /),(/ IME,JME /) )
+      CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLOBJMAX' ,int_state%UPHLOBJMAX,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'UPVVELMAX'  ,int_state%UPVVELMAX,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'U10'        ,int_state%U10      ,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'U10MAX'     ,int_state%U10MAX   ,(/ IMS,JMS /),(/ IME,JME /) )
