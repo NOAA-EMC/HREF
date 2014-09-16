@@ -46,6 +46,7 @@
 'DLMD'       H       R       O      -      -   -  ''
 'SBD'        -       R       O      -      -   -  ''
 'WBD'        -       R       O      -      -   -  ''
+'UPHLCRIT'   -       -       O      -      -   -  'Value of updraft helicity above which diagnostic prints for object tracking are made'
 
 ###    1D integer
 
@@ -180,6 +181,7 @@
 'TSHLTR'     H       R       O      -      -   T  'Theta at 2-m again  (K)'
 'TWBS'       H       R       O      -      -   T  'Instantaneous sensible heat flux (W m-2)'
 'UPHLMAX'    H       -       O      -      -   T  'hourly maximum Updraft Helicity (m^2 s-2)'
+'UPHLOBJMAX' -       -       O      -      -   T  'maximum Updraft Helicity (m^2 s-2) for defining objects'
 'UPVVELMAX'  H       -       O      -      -   T  'hourly maximum upward vertical motion 400 hPa to sfc  (m s-1)'
 'U10'        H       R       O      -      -   T  'U at 10-m  (m s-1)'
 'U10MAX'     H       -       O      -      -   T  'hourly maximum U at 10-m  (m s-1)'
