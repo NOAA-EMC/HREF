@@ -197,7 +197,11 @@ done
 # Create a script to be poe'd
 cd $DATA
 
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL 
+# do not want to send RAP metgrid file to /com
+#
+export send=0
+#
+$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL $send
 
 # if [ $MODEL == "nmmb" ]
 # then
