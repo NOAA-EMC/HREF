@@ -1544,6 +1544,323 @@
 !
 !----------------------------------------------------------------------
 !
+      SUBROUTINE OBJECT_DIAGNOSE(T,Q,U                &
+                           ,V,CW                      &
+                           ,F_RAIN,F_ICE              &
+                           ,F_RIMEF                   &
+                           ,Z,W,PINT,PD               &
+                           ,CPRATE,HTOP               &
+                           ,T2,U10,V10                &
+                           ,PSHLTR,TSHLTR,QSHLTR      &
+                           ,SGML2,PSGML1              &
+                           ,REFDMAX                   &
+                           ,UPVVELMAX,DNVVELMAX       &
+                           ,TLMAX,TLMIN               &
+                           ,T02MAX,T02MIN             &
+                           ,RH02MAX,RH02MIN           &
+                           ,U10MAX,V10MAX,TH10,T10    &
+                           ,SPD10MAX                  &
+                           ,AKHS,AKMS                 &
+                           ,SNO                       &
+                           ,UPHLOBJMAX                &
+                           ,DT,NPHS,NTSD              &
+                           ,DXH,DYH                   &
+                           ,FIS                       &
+                           ,JDAT,GLAT,GLON            &   
+                           ,UPHLCRIT                  &
+                           ,ITS,ITE,JTS,JTE           & 
+                           ,IMS,IME,JMS,JME           &
+                           ,IDE,JDE                   & 
+                           ,ITS_B1,ITE_B1             &
+                           ,JTS_B1,JTE_B1             &
+                           ,LM,NCOUNT,FIRST_NMM)
+
+!      USE MODULE_MP_ETANEW, ONLY : FERRIER_INIT, GPVS,FPVS,FPVS0,NX
+!      USE MODULE_CONSTANTS, ONLY : R_D,R_V,CPV,CP,G
+
+      IMPLICIT NONE
+       
+!      REAL, PARAMETER :: RCP=R_D/CP, P00_INV=1.E-5
+
+      INTEGER,INTENT(IN) :: ITS,ITE,JTS,JTE,IMS,IME,JMS,JME,LM,NTSD
+      INTEGER,INTENT(IN) :: ITS_B1,ITE_B1,JTS_B1,JTE_B1
+      INTEGER,INTENT(IN) :: IDE,JDE,NPHS 
+      INTEGER,INTENT(INOUT) :: JDAT(8)
+
+      REAL, DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: GLAT, GLON
+
+      REAL, DIMENSION(IMS:IME,JMS:JME,1:LM),INTENT(IN) :: T, Q, U, V, CW   & 
+                                              ,F_RAIN,F_ICE,F_RIMEF        &
+                                              ,W,Z
+
+      REAL,DIMENSION(IMS:IME,JMS:JME,1:LM+1),INTENT(IN) :: PINT
+
+      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: PD,CPRATE,HTOP         &
+                                                    ,T2,U10,V10            &
+                                                    ,PSHLTR,TSHLTR,QSHLTR  &
+                                                    ,TH10,AKHS             &
+                                                    ,AKMS,SNO,FIS   
+
+      REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(INOUT):: REFDMAX               & 
+                                                   ,UPVVELMAX,DNVVELMAX     &
+                                                   ,TLMAX,TLMIN             &
+                                                   ,T02MAX,T02MIN           &
+                                                   ,RH02MAX,RH02MIN         &
+                                                   ,U10MAX,V10MAX           &
+                                                   ,SPD10MAX                &
+                                                   ,UPHLOBJMAX,T10         
+
+      REAL, INTENT(IN) :: DYH, DXH(1:JDE), UPHLCRIT
+      LOGICAL,INTENT(INOUT) :: FIRST_NMM
+      REAL, INTENT(IN) :: SGML2(LM),PSGML1(LM), DT
+ 
+      INTEGER :: UPINDX(IMS:IME,JMS:JME)
+      REAL, DIMENSION(IMS:IME,JMS:JME) :: P10
+
+      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC, UPHL 
+      REAL, DIMENSION(IMS:IME,JMS:JME,LM) :: PMID 
+
+      REAL :: PLOW, PUP,WGTa,WGTb,ZMIDloc,ZMIDP1
+      REAL :: P1Da,P1Db,P1D(2)
+      REAL :: T1Da,T1Db,T1D(2),fact
+      REAL :: Q1Da,Q1Db,Q1D(2)
+      REAL :: C1Da,C1Db,C1D(2)
+      REAL :: FR1Da,FR1Db,FR1D(2)
+      REAL :: FI1Da,FI1Db,FI1D(2)
+      REAL :: FS1Da,FS1Db,FS1D(2),DBZ1(2)
+
+      REAL :: CUPRATE, CUREFL, CUREFL_I, ZFRZ, DBZ1avg, FCTR, DELZ
+      REAL :: T02, RH02, TERM
+      REAL :: CAPPA_MOIST, VAPOR_PRESS, SAT_VAPOR_PRESS
+      REAL, SAVE :: R_FACTOR,CP_FACTOR, EPSILON, ONE_MINUS_EPSILON
+      REAL, SAVE:: DTPHS, RDTPHS
+      REAL :: MAGW2
+
+
+      REAL, PARAMETER :: R2D=57.2957795
+
+      INTEGER :: LCTOP
+      INTEGER :: I,J,JJ,L,NCOUNT,LL, RC, Ilook,Jlook
+      CHARACTER(LEN=2)::  CDAT(8)
+
+
+!***  COMPUTE AND SAVE THE FACTORS IN R AND CP TO ACCOUNT FOR
+!***  WATER VAPOR IN THE AIR.
+!***
+!***  RECALL: R  = Rd * (1. + Q * (1./EPSILON - 1.))
+!***          CP = CPd * (1. + Q * (CPv/CPd - 1.))
+
+      Ilook=99
+      Jlook=275
+
+!!     IF (FIRST_NMM) THEN
+!        DTPHS=DT*NPHS
+!        RDTPHS=3.6e6/DTPHS
+!        EPSILON=R_D/R_V
+!        ONE_MINUS_EPSILON=1.-EPSILON
+!        R_FACTOR=1./EPSILON-1.
+!        CP_FACTOR=CPV/CP-1.
+!! Make sure saturation vapor pressure lookup table is initialized
+!        CALL GPVS
+!        FIRST_NMM=.false.
+!!     ENDIF
+!
+!      DO L=1,LM
+!       DO J=JTS,JTE
+!        DO I=ITS,ITE
+!         PMID(I,J,L)=PSGML1(L)+SGML2(L)*PD(I,J)
+!        ENDDO
+!       ENDDO
+!      ENDDO
+!!
+!      DO J=JTS,JTE
+!       DO I=ITS,ITE
+!         ZINTSFC(I,J)=FIS(I,J)/g
+!       ENDDO
+!      ENDDO
+!
+!     WON'T BOTHER TO REBUILD HEIGHTS AS IS DONE IN POST.
+!     THE NONHYDROSTATIC MID-LAYER Z VALUES MATCH CLOSELY ENOUGH
+!     AT 1000 m AGL
+!
+!      DO J=JTS,JTE
+!       DO I=ITS,ITE
+! L_LOOP: DO L=1,LM-1
+!          PLOW= PMID(I,J,L+1)
+!          PUP=  PMID(I,J,L)
+!          IF (PLOW .ge. 40000. .and. PUP .le. 40000.) THEN
+!            UPINDX(I,J)=L
+!!            exit L_LOOP
+!          ENDIF 
+!         ENDDO L_LOOP
+!       ENDDO
+!      ENDDO
+!
+!      DO J=JTS_B1,JTE_B1
+!       DO I=ITS_B1,ITE_B1
+!  vloop: DO L=8,LM-1
+!          IF ( (Z(I,J,L+1)-ZINTSFC(I,J)) .LE. 1000.                &
+!          .AND.(Z(I,J,L)-ZINTSFC(I,J))   .GE. 1000.)  THEN
+!            ZMIDP1=Z(I,J,L)
+!            ZMIDloc=Z(I,J,L+1)
+!            P1D(1)=PMID(I,J,L)
+!            P1D(2)=PMID(I,J,L+1)
+!            T1D(1)=T(I,J,L)
+!            T1D(2)=T(I,J,L+1)
+!            Q1D(1)=Q(I,J,L)
+!            Q1D(2)=Q(I,J,L+1)
+!            C1D(1)=CW(I,J,L)
+!            C1D(2)=CW(I,J,L+1)
+!            FR1D(1)=F_RAIN(I,J,L)
+!            FR1D(2)=F_RAIN(I,J,L+1)
+!            FI1D(1)=F_ICE(I,J,L)
+!            FI1D(2)=F_ICE(I,J,L+1)
+!            FS1D(1)=F_RIMEF(I,J,L)
+!            FS1D(2)=F_RIMEF(I,J,L+1)
+!            EXIT vloop
+!          ENDIF
+!        ENDDO vloop
+!
+!!! INITIAL CUREFL VALUE WITHOUT REDUCTION ABOVE FREEZING LEVEL
+!
+!        CUPRATE=RDTPHS*CPRATE(I,J)
+!        CUREFL=300.*CUPRATE**1.4
+!        ZFRZ=Z(I,J,LM)
+!
+! culoop: IF (CUREFL > 0) THEN
+! vloop2:  DO L=1,LM
+!            IF (T(I,J,L) >= 273.15) THEN
+!              ZFRZ=Z(I,J,L)
+!              EXIT vloop2
+!            ENDIF
+!          ENDDO vloop2
+!
+!          LCTOP=NINT(HTOP(I,J))
+!          CUREFL_I=-2./MAX( 1000., Z(I,J,LCTOP)-ZFRZ )
+!
+! vloop3:  DO L=1,LM
+!            FCTR=0.
+!            IF (L >= LCTOP .and. L <= LM) THEN
+!              DELZ=Z(I,J,L)-ZFRZ
+!              IF (DELZ <= 0.) THEN
+!                FCTR=1.        !-- Below the highest freezing level
+!              ELSE
+!       !
+!       !--- Reduce convective radar reflectivity above freezing level
+!       !
+!                FCTR=10.**(CUREFL_I*DELZ)
+!              ENDIF
+!            ENDIF
+!          ENDDO vloop3
+!          CUREFL=FCTR*CUREFL
+!         ENDIF culoop
+!
+!         DO LL=1,2
+!          IF (C1D(LL) .GE. 1.e-12 .OR. CUREFL .GT. 0.) then
+!           CALL CALMICT(P1D(LL),T1D(LL),Q1D(LL),C1D(LL), &
+!                        FI1D(LL),FR1D(LL),FS1D(LL),CUREFL, &
+!                        DBZ1(LL), I, J, Ilook, Jlook) 
+!          ELSE
+!           DBZ1(LL)=-20.
+!          ENDIF 
+!         ENDDO
+!         FACT=(1000.+ZINTSFC(I,J)-ZMIDloc)/(ZMIDloc-ZMIDP1)
+!         DBZ1avg=DBZ1(2)+(DBZ1(2)-DBZ1(1))*FACT
+!!         REFDMAX(I,J)=max(REFDMAX(I,J),DBZ1avg)
+!       ENDDO
+!      ENDDO
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!      DO L=1,LM
+!       DO J=JTS,JTE
+!        DO I=ITS,ITE
+!         IF (L >= UPINDX(I,J)) THEN
+!           UPVVELMAX(I,J)=max(UPVVELMAX(I,J),W(I,J,L))
+!           DNVVELMAX(I,J)=min(DNVVELMAX(I,J),W(I,J,L))
+!         ENDIF
+!        ENDDO
+!       ENDDO
+!      ENDDO
+!
+
+!      DO J=JTS,JTE
+!      DO I=ITS,ITE
+!        TLMAX(I,J)=MAX(TLMAX(I,J),T(I,J,LM))  !<--- Hourly max lowest layer T
+!        TLMIN(I,J)=MIN(TLMIN(I,J),T(I,J,LM))  !<--- Hourly min lowest layer T
+!        IF (NTSD > 0) THEN
+!          CAPPA_MOIST=RCP*(1.+QSHLTR(I,J)*R_FACTOR)/(1.+QSHLTR(I,J)*CP_FACTOR)
+!          T02=TSHLTR(I,J)*(P00_INV*PSHLTR(I,J))**CAPPA_MOIST
+!          T02MAX(I,J)=MAX(T02MAX(I,J),T02)  !<--- Hourly max 2m T
+!          T02MIN(I,J)=MIN(T02MIN(I,J),T02)  !<--- Hourly min 2m T
+!!
+!          VAPOR_PRESS=PSHLTR(I,J)*QSHLTR(I,J)/                          &
+!                     (EPSILON+QSHLTR(I,J)*ONE_MINUS_EPSILON)
+!          SAT_VAPOR_PRESS=1.E3*FPVS0(T02)
+!          RH02=MIN(VAPOR_PRESS/SAT_VAPOR_PRESS,0.99)
+!
+!          RH02MAX(I,J)=MAX(RH02MAX(I,J),RH02)     !<--- Hourly max shelter RH
+!          RH02MIN(I,J)=MIN(RH02MIN(I,J),RH02)     !<--- Hourly min shelter RH
+!
+!          MAGW2=(U10(I,J)**2.+V10(I,J)**2.)
+!          IF (MAGW2 .gt. SPD10MAX(I,J)) THEN
+!            U10MAX(I,J)=U10(I,J)                 !<--- U assoc with Hrly max 10m wind speed
+!            V10MAX(I,J)=V10(I,J)                 !<--- V assoc with Hrly max 10m wind speed
+!            SPD10MAX(I,J)=MAGW2
+!          ENDIF
+!	ENDIF
+!      ENDDO
+!      ENDDO
+
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHL,UPHLOBJMAX,DXH,DYH          &
+                      ,JDAT,GLAT,GLON,IMS,IME,JMS,JME                &
+                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+      DO J=JTS,JTE
+      DO I=ITS,ITE
+
+       IF (UPHL(I,J) .ge. UPHLCRIT) THEN
+
+        JDAT(1)=JDAT(1)-2000
+        do JJ=1,8
+        write(cdat(JJ),73) JDAT(JJ)
+        enddo
+        JDAT(1)=JDAT(1)+2000
+
+        write(0,733) ' CI UH;' , &
+   CDAT(2),'/',CDAT(3),'/',CDAT(1),', ',&
+   CDAT(5),':',CDAT(6),':',CDAT(7),'.000,',&
+   R2D*GLAT(I,J),R2D*GLON(I,J),';',I,J,UPHL(I,J), &
+   NTSD*DT/60
+
+       ENDIF
+
+
+       IF (UPHLOBJMAX(I,J) .ge. UPHLCRIT) THEN
+
+        JDAT(1)=JDAT(1)-2000
+        do JJ=1,8
+        write(cdat(JJ),73) JDAT(JJ)
+        enddo
+        JDAT(1)=JDAT(1)+2000
+
+        write(0,733) ' 5MIN UH;' , &
+   CDAT(2),'/',CDAT(3),'/',CDAT(1),', ',&
+   CDAT(5),':',CDAT(6),':',CDAT(7),'.000,',&
+   R2D*GLAT(I,J),R2D*GLON(I,J),';',I,J,UPHLOBJMAX(I,J), &
+   NTSD*DT/60
+
+       ENDIF
+
+      ENDDO
+      ENDDO
+
+   73   format(I2.2)
+  733   format(13a,f6.3,1x,f8.3,a,2(1x,i5),2(1x,f7.2))
+
+
+      END SUBROUTINE OBJECT_DIAGNOSE
+
+! ----------------------------------------------------------------
 
       SUBROUTINE MAX_FIELDS(T,Q,U                     &
                            ,V,CW                      &
@@ -1568,6 +1885,7 @@
                            ,DT,NPHS,NTSD              &
                            ,DXH,DYH                   &
                            ,FIS                       &
+                           ,JDAT,GLAT,GLON            &   
                            ,ITS,ITE,JTS,JTE           & 
                            ,IMS,IME,JMS,JME           &
                            ,IDE,JDE                   & 
@@ -1584,7 +1902,10 @@
 
       INTEGER,INTENT(IN) :: ITS,ITE,JTS,JTE,IMS,IME,JMS,JME,LM,NTSD
       INTEGER,INTENT(IN) :: ITS_B1,ITE_B1,JTS_B1,JTE_B1
-      INTEGER,INTENT(IN) :: IDE,JDE,NPHS
+      INTEGER,INTENT(IN) :: IDE,JDE,NPHS 
+      INTEGER,INTENT(INOUT) :: JDAT(8)
+
+      REAL, DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: GLAT, GLON
 
       REAL, DIMENSION(IMS:IME,JMS:JME,1:LM),INTENT(IN) :: T, Q, U, V, CW   & 
                                               ,F_RAIN,F_ICE,F_RIMEF        &
@@ -1615,7 +1936,7 @@
       INTEGER :: UPINDX(IMS:IME,JMS:JME)
       REAL, DIMENSION(IMS:IME,JMS:JME) :: P10
 
-      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC 
+      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC, UPHL 
       REAL, DIMENSION(IMS:IME,JMS:JME,LM) :: PMID 
 
       REAL :: PLOW, PUP,WGTa,WGTb,ZMIDloc,ZMIDP1
@@ -1807,8 +2128,8 @@
       ENDDO
       ENDDO
 
-      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          &
-                      ,IMS,IME,JMS,JME                          &
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHL,UPHLMAX,DXH,DYH          &
+                      ,JDAT,GLAT,GLON,IMS,IME,JMS,JME                &
                       ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
 
       NCOUNT=NCOUNT+1
@@ -1837,26 +2158,29 @@
       END SUBROUTINE MAX_FIELDS
 !
 !----------------------------------------------------------------------
-      SUBROUTINE CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DX,DY            &
+      SUBROUTINE CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHL,UPHLMAX,DX,DY       &
+                            ,JDAT,GLAT,GLON                           &   
                             ,IMS,IME,JMS,JME                          &
                             ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
 
       INTEGER, INTENT(IN) :: IMS,IME,JMS,JME,ITS,ITE
       INTEGER, INTENT(IN) :: JTS,JTE,IDE,JDE,LM
+      INTEGER, INTENT(INOUT) :: JDAT(8)
+      REAL, DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: GLAT, GLON
       REAL,INTENT(IN) :: U(IMS:IME,JMS:JME,LM)
       REAL,INTENT(IN) :: V(IMS:IME,JMS:JME,LM)
       REAL,INTENT(IN) :: W(IMS:IME,JMS:JME,LM)
       REAL,INTENT(IN) :: Z(IMS:IME,JMS:JME,LM)
       REAL,INTENT(IN) :: ZINTSFC(IMS:IME,JMS:JME)
-      REAL,INTENT(INOUT) :: UPHLMAX(IMS:IME,JMS:JME)
+      REAL,INTENT(INOUT) :: UPHLMAX(IMS:IME,JMS:JME),UPHL(IMS:IME,JMS:JME)                                 
       REAL,INTENT(IN) :: DX(1:JDE),DY
 
 ! local variables
 
-      REAL :: UPHL   (IMS:IME,JMS:JME)
       INTEGER :: I,J,L
       REAL :: R2DX,R2DY,DZ,ZMIDLOC
       REAL :: DUDY,DVDX
+      REAL, PARAMETER :: R2D=57.2957795
 
       REAL, PARAMETER:: HLOWER=2000.
       REAL, PARAMETER:: HUPPER=5000.
@@ -1895,6 +2219,7 @@
                UPHL(I,J)=UPHL(I,J)+(DVDX-DUDY)*W(I,J,L)*DZ
              ENDIF
            ENDDO L_LOOP
+
            UPHLMAX(I,J)=MAX(UPHL(I,J),UPHLMAX(I,J))
         ENDDO
       ENDDO J_LOOP
@@ -2157,6 +2482,7 @@
                            ,DT,NPHS,NTSD              &
                            ,DXH,DYH                   &
                            ,FIS                       &
+                           ,JDAT,GLAT,GLON            &   
                            ,ITS,ITE,JTS,JTE           & 
                            ,IMS,IME,JMS,JME           &
                            ,IDE,JDE                   & 
@@ -2174,6 +2500,8 @@
       INTEGER,INTENT(IN) :: ITS,ITE,JTS,JTE,IMS,IME,JMS,JME,LM,NTSD
       INTEGER,INTENT(IN) :: ITS_B1,ITE_B1,JTS_B1,JTE_B1
       INTEGER,INTENT(IN) :: IDE,JDE,NPHS
+      INTEGER,INTENT(INOUT) :: JDAT(8)
+      REAL, DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: GLAT, GLON
 
       REAL, DIMENSION(IMS:IME,JMS:JME,1:LM),INTENT(IN) :: T, Q, U, V, CW   & 
                                               ,F_RAIN,F_ICE,F_RIMEF        &
@@ -2204,7 +2532,7 @@
       INTEGER :: UPINDX(IMS:IME,JMS:JME)
       REAL, DIMENSION(IMS:IME,JMS:JME) :: P10
 
-      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC 
+      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC, UPHL
       REAL, DIMENSION(IMS:IME,JMS:JME,LM) :: PMID 
 
       REAL :: PLOW, PUP,WGTa,WGTb,ZMIDloc,ZMIDP1
@@ -2399,8 +2727,8 @@
       ENDDO
       ENDDO
 
-      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          & 
-                      ,IMS,IME,JMS,JME                          &
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHL,UPHLMAX,DXH,DYH          & 
+                      ,JDAT,GLAT,GLON,IMS,IME,JMS,JME                &
                       ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
 
       NCOUNT=NCOUNT+1
@@ -2453,6 +2781,7 @@
                            ,DT,NPHS,NTSD              &
                            ,DXH,DYH                   &
                            ,FIS                       &
+                           ,JDAT,GLAT,GLON            &   
                            ,P_QR,P_QS,P_QG            &
                            ,ITS,ITE,JTS,JTE           & 
                            ,IMS,IME,JMS,JME           &
@@ -2472,6 +2801,9 @@
       INTEGER,INTENT(IN) :: ITS_B1,ITE_B1,JTS_B1,JTE_B1
       INTEGER,INTENT(IN) :: IDE,JDE,NPHS,NUM_WATER
       INTEGER,INTENT(IN) :: P_QR,P_QS,P_QG
+      REAL, DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: GLAT, GLON
+
+      INTEGER,INTENT(INOUT) :: JDAT(8)
 
       REAL, DIMENSION(IMS:IME,JMS:JME,1:LM),INTENT(IN) :: T,Q,U,V,Z,W
 
@@ -2502,7 +2834,7 @@
       INTEGER :: UPINDX(IMS:IME,JMS:JME)
       REAL, DIMENSION(IMS:IME,JMS:JME) :: P10
 
-      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC 
+      REAL, DIMENSION(IMS:IME,JMS:JME) :: ZINTSFC, UPHL
       REAL, DIMENSION(IMS:IME,JMS:JME,LM) :: PMID 
 
       REAL :: PLOW, PUP,WGTa,WGTb,ZMIDloc,ZMIDP1
@@ -2696,8 +3028,8 @@
       ENDDO
       ENDDO
 
-      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          & 
-                      ,IMS,IME,JMS,JME                          &
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHL,UPHLMAX,DXH,DYH          & 
+                      ,JDAT,GLAT,GLON,IMS,IME,JMS,JME                &
                       ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
 
       NCOUNT=NCOUNT+1

@@ -65,6 +65,7 @@
 !
       USE MODULE_DIAGNOSE,ONLY : EXIT,FIELD_STATS                       &
                                 ,MAX_FIELDS,MAX_FIELDS_HR,MAX_FIELDS_W6 &
+                                ,OBJECT_DIAGNOSE                        & 
                                 ,HMAXMIN,TWR,VMAXMIN,VWR,WRT_PCP        &
                                 ,LAT_LON_BNDS
 !
@@ -5365,6 +5366,22 @@
 !***  diagnostic fields to begin accumulating for the next period
 !-----------------------------------------------------------------------
 !
+      IF(NTIMESTEP == 0 .or. MOD(NTIMESTEP,(NSTEPS_PER_HOUR/12))==0) THEN
+
+!        if ( maxval(int_state%UPHLOBJMAX) .gt. 0.)  then
+        if (MYPE .eq. 0) then
+!        write(0,*) 'UPHLOBJMAX reset from ', maxval(int_state%UPHLOBJMAX)                                           
+        write(0,*) 'UPHLOBJMAX reset '                                         
+        write(0,*) 'int_state%UPHLCRIT: ', int_state%UPHLCRIT
+        endif
+
+        DO J=JTS,JTE
+        DO I=ITS,ITE
+        int_state%UPHLOBJMAX(I,J)=-999.
+        ENDDO
+        ENDDO
+      ENDIF
+
       IF(NTIMESTEP == 0 .or. MOD(NTIMESTEP,NSTEPS_PER_RESET)==0) THEN
         DO J=JTS,JTE
         DO I=ITS,ITE
@@ -5392,11 +5409,64 @@
 !
         int_state%NCOUNT=0
       ENDIF
+
+
+!!    consider a special OBJECT_DIAGNOSE call to avoid the 3-hearded
+!     MAX_FIELDS mess? And also to call every (other?) time step?
+
+          CALL ESMF_TimeGet(time=CURRTIME                               &  !<-- The cuurent forecast time (ESMF)
+                           ,yy  =JDAT(1)                                &  !<-- The current forecast year (integer)
+                           ,mm  =JDAT(2)                                &  !<-- The current forecast month (integer)
+                           ,dd  =JDAT(3)                                &  !<-- The current forecast day (integer)
+                           ,h   =JDAT(5)                                &  !<-- The current forecast hour (integer)
+                           ,m   =JDAT(6)                                &  !<-- The current forecast minute (integer)
+                           ,s   =JDAT(7)                                &  !<-- The current forecast second (integer)
+                           ,rc  =RC)
+
+      IF (FILTER_METHOD==0 ) THEN
+
+          CALL OBJECT_DIAGNOSE(int_state%T,int_state%Q,int_state%U            &
+                         ,int_state%V,int_state%CW                       &
+                         ,int_state%F_RAIN,int_state%F_ICE               &
+                         ,int_state%F_RIMEF,int_state%Z                  &
+                         ,int_state%W_TOT,int_state%PINT                 &
+                         ,int_state%PD                                   &
+                         ,int_state%CPRATE,int_state%HTOP                &
+                         ,int_state%T2,int_state%U10,int_state%V10       &
+                         ,int_state%PSHLTR,int_state%TSHLTR              &
+                         ,int_state%QSHLTR                               &
+                         ,int_state%SGML2,int_state%PSGML1               &
+                         ,int_state%REFDMAX                              &
+                         ,int_state%UPVVELMAX,int_state%DNVVELMAX        &
+                         ,int_state%TLMAX,int_state%TLMIN                &
+                         ,int_state%T02MAX,int_state%T02MIN              &
+                         ,int_state%RH02MAX,int_state%RH02MIN            &
+                         ,int_state%U10MAX,int_state%V10MAX              &
+                         ,int_state%TH10,int_state%T10                   &
+                         ,int_state%SPD10MAX                             &
+                         ,int_state%AKHS,int_state%AKMS                  &
+                         ,int_state%SNO                                  &
+                         ,int_state%UPHLOBJMAX                           &
+                         ,int_state%DT,int_state%NPHS,int_state%NTSD     &
+                         ,int_state%DXH,int_state%DYH                    &
+                         ,int_state%FIS                                  &
+                         ,JDAT,int_state%GLAT,int_state%GLON             &   
+                         ,int_state%UPHLCRIT                             &      
+                         ,ITS,ITE,JTS,JTE                                &
+                         ,IMS,IME,JMS,JME                                &
+                         ,IDE,JDE                                        &
+                         ,ITS_B1,ITE_B1,JTS_B1,JTE_B1                    &
+                         ,LM,int_state%NCOUNT,int_state%FIRST_NMM)
+      ENDIF
+
+
 !
 !     IF (mod(int_state%NTSD,NSTEPS_PER_CHECK) == 0) THEN
       IF (mod(int_state%NTSD,NSTEPS_PER_CHECK) == 0 .and. FILTER_METHOD==0 ) THEN
+
 !
         IF (TRIM(int_state%MICROPHYSICS) == 'fer') THEN
+
 !
           CALL MAX_FIELDS(int_state%T,int_state%Q,int_state%U            &
                          ,int_state%V,int_state%CW                       &
@@ -5425,6 +5495,7 @@
                          ,int_state%DT,int_state%NPHS,int_state%NTSD     &
                          ,int_state%DXH,int_state%DYH                    &
                          ,int_state%FIS                                  &
+                         ,JDAT,int_state%GLAT,int_state%GLON             &   
                          ,ITS,ITE,JTS,JTE                                &
                          ,IMS,IME,JMS,JME                                &
                          ,IDE,JDE                                        &
@@ -5460,6 +5531,7 @@
                             ,int_state%DT,int_state%NPHS,int_state%NTSD  &
                             ,int_state%DXH,int_state%DYH                 &
                             ,int_state%FIS                               &
+                            ,JDAT,int_state%GLAT,int_state%GLON          &   
                             ,ITS,ITE,JTS,JTE                             &
                             ,IMS,IME,JMS,JME                             &
                             ,IDE,JDE                                     &
@@ -5493,6 +5565,7 @@
                            ,int_state%DT,int_state%NPHS,int_state%NTSD  &
                            ,int_state%DXH,int_state%DYH                 &
                            ,int_state%FIS                               &
+                           ,JDAT,int_state%GLAT,int_state%GLON         &   
                            ,int_state%P_QR,int_state%P_QS               &
                            ,int_state%P_QG                              &
                            ,ITS,ITE,JTS,JTE                             &
