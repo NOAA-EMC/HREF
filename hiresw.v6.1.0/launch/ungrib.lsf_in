@@ -28,6 +28,8 @@ export cyc=_CYC_
 export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+export COMGFS=/global/noscrub/emc.glopara/com/gfs/para/gfs.${DATE}
+# export COMGFS=/com/gfs/prod/gfs.${DATE}
 
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}
