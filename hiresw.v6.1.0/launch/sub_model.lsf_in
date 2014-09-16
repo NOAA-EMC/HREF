@@ -6,7 +6,7 @@
 #BSUB -J HIRESW_FORECAST__DOM___CORE___CYC_
 #BSUB -P HRW-T2O
 #BSUB -n _NPROC_
-#BSUB -W 0:09
+#BSUB -W 0:35
 #BSUB -a poe
 #
 
