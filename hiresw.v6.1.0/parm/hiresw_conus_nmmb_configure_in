@@ -89,6 +89,7 @@ restart:          false   # True--> A restarted run
 minutes_restart:  4320       # Frequency of restart output (minutes)
 
 avg_max_length: 3600        # Time in seconds when averaged fields are reset
+object_uphl: 5.0           # Updraft Helicity value used to define convective objects
 
 rst_out_00:          false  # True--> Write 00h history in restarted run
 write_last_restart:  true   # True--> Write last restart file
