@@ -49,7 +49,12 @@ echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER" > 
 
 if [ $NEST = "conus" ]
 then
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 2" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 3" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 4" >> $DATA/poescript_${fhr}
+
 echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_west $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
 echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_east $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
 else
@@ -64,6 +69,22 @@ export MP_CMDFILE=$DATA/poescript_${fhr}
 # Execute the script.
 mpirun.lsf
 export err=$?; ./err_chk
+
+if [ $NEST = "conus" ]
+then
+
+# reassemble the large 5 km output grid
+
+ls -l $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4
+
+cat $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_2 \
+    $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4 > $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2
+
+rm $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_2 \
+   $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4
+
+fi
+  
 
 echo "done executing prdgen" > $DATA/prdgendone${fhr}
 postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"
