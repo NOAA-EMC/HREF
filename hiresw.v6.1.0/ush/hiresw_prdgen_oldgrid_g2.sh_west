@@ -80,6 +80,7 @@ export tmmark=tm00
 # verification
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
+cp $PARMhiresw/hiresw_conus_awpregeast.txt hiresw_grid_extract.txt
 
 while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
@@ -110,49 +111,43 @@ export pgm=hiresw_prdgen  ;. ./prep_step
 
 ### extract just needed items
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":PRES:mean sea level:"  -grib prmsl.grb
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":PRES:mean sea level:"  -grib prmsl.grb
+# time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|REFD|REFC|\
+# TCDC|RETOP|PWAT|LFTX|4LFTX):" -grib 1.grb
 
-echo collecting 1.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|REFD|REFC|\
-TCDC|RETOP|PWAT|LFTX|4LFTX):" -grib 1.grb
+# $WGRIB2  $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
+# time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(PRES|HGT|TMP|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
 
-$WGRIB2  $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+# ":(TMP|RH|UGRD|VGRD|PLI|POT|DPT|SPFH|MCONV|VVEL|CAPE|CIN):(30-0|60-30|90-60|120-90|150-120|180-0|90-0|255-0) mb above ground:" \
+# -grib pbl.grb
+
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+# ":(TMP|SPFH|DPT|RH|UGRD|VGRD|HLCY|USTM|VSTM|UPHL|PRES):(10|2|1524|\
+# 1000-0|3000-0|6000-0|5000-2000) m above (ground|mean sea level):" \
+# -grib agl.grb
+
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(UGRD|VGRD|VRATE):planetary boundary layer:" -grib pbl2.grb
+
+# time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
+# ":(UGRD|VGRD|TMP|HGT|VVEL|DPT|ABSV):(200|250|400|500|\
+# 700|850|925|1000) mb:" \
+# -grib all_iso.grb
+
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(UGRD|VGRD|TMP|HGT|DPT):300 mb:"  -grib bonus_iso.grb
+
+# cat bonus_iso.grb >> all_iso.grb
+
+# time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
+# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
+
+# cat prmsl.grb  weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
+
+# rm   prmsl.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb
 
 
-echo collecting 3.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(PRES|HGT|TMP|LHTFL|SHTFL|CAPE|CIN):surface:" -grib 3.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(TMP|RH|UGRD|VGRD|PLI|POT|DPT|SPFH|MCONV|VVEL|CAPE|CIN):(30-0|60-30|90-60|120-90|150-120|180-0|90-0|255-0) mb above ground:" \
--grib pbl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(TMP|SPFH|DPT|RH|UGRD|VGRD|HLCY|USTM|VSTM|UPHL|PRES):(10|2|1524|\
-1000-0|3000-0|6000-0|5000-2000) m above (ground|mean sea level):" \
--grib agl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(UGRD|VGRD|VRATE):planetary boundary layer:" -grib pbl2.grb
-
-echo collecting all_iso.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(UGRD|VGRD|TMP|HGT|VVEL|DPT|ABSV):(200|250|400|500|\
-700|850|925|1000) mb:" \
--grib all_iso.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(UGRD|VGRD|TMP|HGT|DPT):300 mb:"  -grib bonus_iso.grb
-
-cat bonus_iso.grb >> all_iso.grb
-
-echo just apcp.grb
-time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
-
-cat prmsl.grb  weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb agl.grb all_iso.grb  > inputs.grb
-
-rm   prmsl.grb weasd.grb 1.grb 2.grb 3.grb cld.grb pbl.grb pbl2.grb  agl.grb all_iso.grb
-
+time $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
 
 # copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
@@ -163,10 +158,12 @@ conuswestreg="30 6 0 0 0 0 0 0 884 614 24500000 230800000 136 40500000 252000000
 # copygb2 -g"${conuswestreg}" -i2-x nn.grb ${filenamthree}${fhr}.tm00_nn
 
 /u/Wesley.Ebisuzaki/bin/wgrib2 inputs.grb -set_grib_type complex2 -new_grid_winds grid -new_grid lambert:271:38:38 250.200:884:5000 22.100:614:5000 ${filenamthree}${fhr}.tm00_bilin
-/u/Wesley.Ebisuzaki/bin/wgrib2 nn.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation neighbor -new_grid lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000 ${filenamthree}${fhr}.tm00_nn
-/u/Wesley.Ebisuzaki/bin/wgrib2 apcp.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation budget -new_grid lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000 ${filenamthree}${fhr}.tm00_budget
 
-cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
+# /u/Wesley.Ebisuzaki/bin/wgrib2 nn.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation neighbor -new_grid lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000 ${filenamthree}${fhr}.tm00_nn
+# /u/Wesley.Ebisuzaki/bin/wgrib2 apcp.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation budget -new_grid lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000 ${filenamthree}${fhr}.tm00_budget
+
+# cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
+mv ${filenamthree}${fhr}.tm00_bilin  ${filenamthree}${fhr}.tm00
 
 ###############################################################
 ###############################################################
