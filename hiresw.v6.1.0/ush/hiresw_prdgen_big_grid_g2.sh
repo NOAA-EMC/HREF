@@ -219,16 +219,20 @@ then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|\
 TCDC|RETOP|4LFTX):" -grib 1.grb
 
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
+
 else
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|CSNOW|CICEP|CFRZR|CRAIN|\
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|\
 MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|TCDC|RETOP|4LFTX):" -grib 1.grb
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
 
 fi
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|HGT|PRES|CAPE|CIN):surface:" -grib 3.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HGT|PRES|CAPE|CIN):surface:" -grib 3.grb
 
 # $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "PWAT:entire atmosphere" -grib pwat.grb
@@ -270,7 +274,8 @@ TCDC|RETOP):" -grib 1.grb
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|CAPE|CIN):surface:" -grib 3.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(CAPE|CIN):surface:" -grib 3.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
 
 # $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
 
@@ -304,9 +309,11 @@ rm   weasd.grb  1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb
 fi
 
 # copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
-copygb2 -g"${reg}" -x inputs.grb ${filenamthree}${fhr}.tm00
+copygb2 -g"${reg}" -x inputs.grb ${filenamthree}${fhr}.tm00_bilin
+copygb2 -g"${reg}" -x nn.grb ${filenamthree}${fhr}.tm00_nn
 
 
+cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn > ${filenamthree}${fhr}.tm00
 
 
 # copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
