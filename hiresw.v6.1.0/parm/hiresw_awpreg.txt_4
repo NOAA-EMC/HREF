@@ -1,0 +1,74 @@
+RH:925 mb:
+HGT:925 mb:
+TMP:925 mb:
+DPT:925 mb:
+UGRD:925 mb:
+VGRD:925 mb:
+RH:950 mb:
+HGT:950 mb:
+TMP:950 mb:
+DPT:950 mb:
+UGRD:950 mb:
+VGRD:950 mb:
+RH:975 mb:
+HGT:975 mb:
+TMP:975 mb:
+DPT:975 mb:
+UGRD:975 mb:
+VGRD:975 mb:
+RH:1000 mb:
+HGT:1000 mb:
+TMP:1000 mb:
+DPT:1000 mb:
+UGRD:1000 mb:
+VGRD:1000 mb:
+TMP:surface:
+LHTFL:surface:
+SHTFL:surface:
+POT:30-0 mb above ground:
+DPT:30-0 mb above ground:
+SPFH:30-0 mb above ground:
+MCONV:30-0 mb above ground:
+VVEL:30-0 mb above ground:
+PWAT:30-0 mb above ground:
+UGRD:1524 m above mean sea level:
+VGRD:1524 m above mean sea level:
+UGRD:80 m above ground:
+VGRD:80 m above ground:
+TMP:80 m above ground:
+PRES:80 m above ground:
+SPFH:80 m above ground:
+HGT:cloud base:
+CAPE:90-0 mb above ground:
+CIN:90-0 mb above ground:
+HLCY:1000-0 m above ground:
+REFC:entire atmosphere:
+REFD:1 hybrid level:
+REFD:1000 m above ground:
+REFD:4000 m above ground:
+UPHL:5000-2000 m above ground:
+RETOP:entire atmosphere (considered as a single layer):
+MAXREF:1000 m above ground:
+MXUPHL:5000-2000 m above ground:
+MAXUVV:400-1000 mb:
+MAXDVV:400-1000 mb:
+MAXUW:10 m above ground:
+MAXVW:10 m above ground:
+TMAX:2 m above ground:
+TMIN:2 m above ground:
+MAXRH:2 m above ground:
+MINRH:2 m above ground:
+HGT:planetary boundary layer:
+VRATE:planetary boundary layer:
+UGRD:planetary boundary layer:
+VGRD:planetary boundary layer:
+GUST:surface:
+VIL:entire atmosphere:
+TCOLW:entire atmosphere:
+TCOLI:entire atmosphere:
+TCOLR:entire atmosphere:
+TCOLS:entire atmosphere:
+TCOLC:entire atmosphere:
+LCDC:low cloud layer:
+MCDC:middle cloud layer:
+HCDC:high cloud layer:
