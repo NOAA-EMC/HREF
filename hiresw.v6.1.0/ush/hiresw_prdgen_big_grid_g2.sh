@@ -29,9 +29,12 @@ DOMIN_SMALL=$2
 CYC=$3
 model=$4
 MEMBER=$5
+subpiece=${6}
 
 reflag=1
 
+# mkdir ${DATA}/prdgen_full_${subpiece}
+# cd ${DATA}/prdgen_full_${subpiece}/
 mkdir ${DATA}/prdgen_full
 cd ${DATA}/prdgen_full/
 sh $utilscript/setup.sh
@@ -60,6 +63,7 @@ then
   IM=2145
   JM=1377
   reg="30 6 0 0 0 0 0 0 2145 1377 20192000 238446000 136 25000000 265000000 2540000 2540000 0 64 25000000 25000000"
+  wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540"
 elif [ $DOMIN = "aknmmb" ]
 then
   filenamthree="wrf.AK04"
@@ -70,6 +74,7 @@ then
   JM=1105
 #  reg="20 6 0 0 0 0 0 0 1649 1105 40530000 -178571000 136 60000000 -150000000 2976000 2976000 0 64"
   reg="20 6 0 0 0 0 0 0 1649 1105 40530000 181429000 136 60000000 2100000000 2976000 2976000 0 64"
+  wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976"
 elif [ $DOMIN = "guamnmmb" ]
 then
   filenamthree="wrf.GU04"
@@ -79,6 +84,7 @@ then
   IM=193
   JM=193
   reg="10 6 0 0 0 0 0 0 193 193 12350000 143687000 136 20000000 16794000 148280000 64 0 2500000 2500000"
+  wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794"
 elif [ $DOMIN = "hinmmb" ]
 then
   filenamthree="wrf.HI04"
@@ -88,6 +94,7 @@ then
   IM=321
   JM=225
   reg="10 6 0 0 0 0 0 0 321 225 18073000 198475000 136 20000000 23088000 206131000 64 0 2500000 2500000"
+  wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088"
 elif [ $DOMIN = "prnmmb" ]
 then
   filenamthree="wrf.PR04"
@@ -97,6 +104,7 @@ then
   IM=177
   JM=129
   reg="10 6 0 0 0 0 0 0 177 129 16829000 291804000 136 20000000 19747000 296028000 64 0 2500000 2500000"
+  wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747"
 fi
 
 if [ $DOMIN = "akarw" ]
@@ -109,6 +117,7 @@ then
   JM=1105
   reg="20 6 0 0 0 0 0 0 1649 1105 40530000 -178571000 136 60000000 -150000000 2976000 2976000 0 64"
   reg="20 6 0 0 0 0 0 0 1649 1105 40530000 181429000 136 60000000 2100000000 2976000 2976000 0 64"
+  wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976"
 elif [ $DOMIN = "conusarw" ]
 then
   filenamthree="wrf.EMCONUS04"
@@ -119,6 +128,7 @@ then
   JM=1377
 #  reg="30 6 0 0 0 0 0 0 2145 1377 20192000 -121554000 136 25000000 -95000000 2540000 2540000 0 64 25000000 25000000"
   reg="30 6 0 0 0 0 0 0 2145 1377 20192000 238446000 136 25000000 265000000 2540000 2540000 0 64 25000000 25000000"
+  wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540"
 elif [ $DOMIN = "guamarw" ]
 then
   filenamthree="wrf.EMGU04"
@@ -128,6 +138,7 @@ then
   IM=193
   JM=193
   reg="10 6 0 0 0 0 0 0 193 193 12350000 143687000 136 20000000 16794000 148280000 64 0 2500000 2500000"
+  wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794"
 elif [ $DOMIN = "hiarw" ]
 then
   filenamthree="wrf.EMHI04"
@@ -138,6 +149,7 @@ then
   JM=225
 #  reg="10 6 0 0 0 0 0 0 321 225 18073000 -161525000 136 20000000 23088000 -153869000 64 0 2500000 2500000"
   reg="10 6 0 0 0 0 0 0 321 225 18073000 198475000 136 20000000 23088000 206131000 64 0 2500000 2500000"
+  wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088"
 elif [ $DOMIN = "prarw" ]
 then
   filenamthree="wrf.EMPR04"
@@ -148,6 +160,7 @@ then
   JM=129
 #  reg="10 6 0 0 0 0 0 0 177 129 16829000 -68196000 136 20000000 19747000 -63972000 64 0 2500000 2500000"
   reg="10 6 0 0 0 0 0 0 177 129 16829000 291804000 136 20000000 19747000 296028000 64 0 2500000 2500000"
+  wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747"
 fi
 
 filedir=$DATA
@@ -168,16 +181,46 @@ use_3h=0
 
 if [ $fhr -eq 0 ]
 then
+
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
+
+# if [ $DOMIN_SMALL = "conus" ]
+# then
+# cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_${subpiece} hiresw_grid_extract.txt
+# else
+
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
+# fi
 use_3h=1
+
 elif [ $fhr%3 -eq 0 ]
 then
+
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
+# if [ $DOMIN_SMALL = "conus" ]
+# then
+# cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_${subpiece} hiresw_grid_extract.txt
+# else
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
+
+# fi
 use_3h=1
+
 else
+
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_1h master${fhr}.ctl
+# if [ $DOMIN_SMALL = "conus" ]
+# then
+# cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h_${subpiece} hiresw_grid_extract.txt
+# else
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h hiresw_grid_extract.txt
+# fi
 use_1h=1
+
 fi
+
+
+# use *ndfd.txt_1h and *ndfd.txt_3h files?
 
 echo use_1h $use_1h
 echo use_3h $use_3h
@@ -210,107 +253,14 @@ fi
 
 ### extract just needed items
 
-if [ $use_1h -eq 1 ]
-then
 
-if [ $model == "arw" ] 
-then
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|\
-TCDC|RETOP|4LFTX):" -grib 1.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
 
-else
+/u/Wesley.Ebisuzaki/bin/wgrib2  inputs.grb  -set_grib_type complex2 -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIS|VIL|\
-MAXUVV|MAXDVV|REFC|MAXREF|MXUPHL|TCDC|RETOP|4LFTX):" -grib 1.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
-
-fi
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HGT|PRES|CAPE|CIN):surface:" -grib 3.grb
-
-# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "PWAT:entire atmosphere" -grib pwat.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(CAPE|CIN):(180-0|90-0) mb above ground:" \
--grib pbl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(TMP|SPFH|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):(10|\
-3000-0|6000-0|3000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
--grib agl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "(HGT|VRATE):planetary boundary layer:" -grib pbl2.grb
-
-if [ $model == "arw" ] 
-then
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(RH|SPFH):2 m above ground:" -grib bonus_agl.grb
-else
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMP|DPT|RH|SPFH):2 m above ground:" -grib bonus_agl.grb
-fi
-
-cat bonus_agl.grb >> agl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp.grb
-# $WGRIB2 apcp1.grb -match 'hour acc fcst:' -grib apcp.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
-# $WGRIB2 weasd1.grb -match 'hour acc fcst:' -grib weasd.grb
-
-cat apcp.grb weasd.grb 1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
-rm  apcp.grb weasd.grb 1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb 
-
-elif [ $use_3h -eq 1 ]
-then
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(MSLET|VIL|MAXUVV|MAXDVV|MAXREF|MXUPHL|\
-TCDC|RETOP):" -grib 1.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TMAX|TMIN|MAXUW|MAXVW|MAXRH|MINRH):" -grib 2.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(CAPE|CIN):surface:" -grib 3.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
-
-# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud base:" -grib cld.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "PWAT:entire atmosphere" -grib pwat.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(CAPE|CIN):(180-0|90-0) mb above ground:" \
--grib pbl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match \
-":(TMP|SPFH|RH|UGRD|VGRD|HLCY|REFD|USTM|VSTM|UPHL|PRES):(3000-0|\
-6000-0|3000-0|1000-0|1000|4000|80|5000-2000) m above (ground|mean sea level):" \
--grib agl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(RH):2 m above ground:" -grib bonus_agl.grb
-cat bonus_agl.grb >> agl.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "(HGT|VRATE):planetary boundary layer:" -grib pbl2.grb
-
-rm apcp.grb
-
-# $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'APCP' -grib apcp1.grb
-# $WGRIB2 apcp1.grb -match 'hour acc fcst:' -grib apcp.grb
-
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match 'WEASD' -grib weasd.grb
-# $WGRIB2 weasd1.grb -match 'hour acc fcst:' -grib weasd.grb
-
-cat  weasd.grb  1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb  > inputs.grb
-rm   weasd.grb  1.grb 2.grb 3.grb pwat.grb  pbl.grb pbl2.grb agl.grb 
-
-fi
-
-# copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
-copygb2 -g"${reg}" -x inputs.grb ${filenamthree}${fhr}.tm00_bilin
-copygb2 -g"${reg}" -x nn.grb ${filenamthree}${fhr}.tm00_nn
+/u/Wesley.Ebisuzaki/bin/wgrib2  nn.grb  -set_grib_type complex2 -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
 
 
 cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn > ${filenamthree}${fhr}.tm00
@@ -435,3 +385,4 @@ fi # f00 or not
 ## temp copy to COMOUT
        cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}
 ## temp copy to COMOUT
+echo  "done" > $DATA/done_ndfd_f${fhr}
