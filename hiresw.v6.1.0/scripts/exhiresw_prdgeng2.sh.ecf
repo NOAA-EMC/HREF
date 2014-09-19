@@ -28,8 +28,11 @@ export MEMBER=ctl
 export INCR=01
 ######
 
+utilexec=${utilexec:-/nwprod/util/exec}
 NDATE=${NDATE:-${utilexec}/ndate}
 NHOUR=${NHOUR:-${utilexec}/nhour}
+
+WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
 
 cd $DATA
 filedir=$DATA
@@ -46,19 +49,30 @@ do
 
 echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER" > $DATA/poescript_${fhr}
 
-
 if [ $NEST = "conus" ]
 then
+
 
 echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
 echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 2" >> $DATA/poescript_${fhr}
 echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 3" >> $DATA/poescript_${fhr}
 echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 4" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 5" >> $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_west $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_east $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 1 east" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 2 east" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 1 west" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 2 west" >> $DATA/poescript_${fhr}
+
+elif [ $NEST = "ak" ]
+then
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 2" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 3" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 4" >> $DATA/poescript_${fhr}
+
 else
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
 fi
 
 chmod 775 $DATA/poescript_${fhr}
@@ -67,7 +81,7 @@ export MP_CMDFILE=$DATA/poescript_${fhr}
 #
 
 # Execute the script.
-mpirun.lsf
+time mpirun.lsf
 export err=$?; ./err_chk
 
 if [ $NEST = "conus" ]
@@ -75,16 +89,42 @@ then
 
 # reassemble the large 5 km output grid
 
-ls -l $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4
-
 cat $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_2 \
-    $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4 > $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2
+    $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4 \
+    $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_5 > $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2
+
+$WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2.idx
 
 rm $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_2 \
-   $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4
+   $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_4 $COMOUT/${NEST}${MODEL}.t${cyc}z.awp5kmf${fhr}.grib2_5
+
+# reassemble the legacy 5 km output grid
+
+cat $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2_2 \
+ > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2
+cat $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2_2 \
+ > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2
+
+rm $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2_2
+rm $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2_2
+$WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregeastf${fhr}.grib2.idx
+$WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregwestf${fhr}.grib2.idx
+
+elif [ $NEST = "ak" ]
+then
+cat $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_2 \
+    $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_4 > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2
+  
+rm $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_2 \
+ $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_3 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_4
+
+$WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2.idx
+else
+
+mv $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2
+$WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2.idx
 
 fi
-  
 
 echo "done executing prdgen" > $DATA/prdgendone${fhr}
 postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"

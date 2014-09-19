@@ -73,7 +73,7 @@ yend=`echo $end | cut -c1-4`
 mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 
-whr=000
+whr=00
 count=0
 last=$LENGTH
 incr=3
@@ -107,26 +107,24 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
+mod=gfs
+type=pgrb2.0p50.f0
+suf=""
 
 while [ $whr -le $last ]
 do
 
-# while [ ! -e ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} ]
-while [ ! -e ${COMGFS}/gfs.t${cyc}z.pgrb2.0p50.f${whr} ]
+while [ ! -e ${COMGFS}/${mod}.t${cyc}z.${type}${whr} ]
 do
 sleep 10
 done
 
-#  cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/.
-  cp ${COMGFS}/gfs.t${cyc}z.pgrb2.0p50.f${whr} $DATA/.
+  cp ${COMGFS}/${mod}.t${cyc}z.${type}${whr} $DATA/.
   export err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_2/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_3/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_4/Vtable 
-  mod=gfs
-  type=pgrb2.0p50.f
-  suf=""
 
 if [ $mod = "rap" ]
 then
@@ -189,48 +187,44 @@ whr=`expr $whr + $incr`
 
 if [ $whr -lt 10 ]
 then
-whr=00$whr
-elif [ $whr -lt 100 ]
-then
 whr=0$whr
 fi
 
 done
-
 
 ### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
 if [ $GRIBSRC != "RAP" ]
 then
 
-mv ${mod}.t${cyc}z.${type}000${suf} ./run_ungrib_1/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}003${suf} ./run_ungrib_1/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}006${suf} ./run_ungrib_1/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}009${suf} ./run_ungrib_1/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}012${suf} ./run_ungrib_1/GRIBFILE.AAE
+mv ${mod}.t${cyc}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}03${suf} ./run_ungrib_1/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAD
+cp ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}012${suf} ./run_ungrib_2/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}015${suf} ./run_ungrib_2/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}018${suf} ./run_ungrib_2/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}021${suf} ./run_ungrib_2/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}024${suf} ./run_ungrib_2/GRIBFILE.AAE
+mv ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_2/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}15${suf} ./run_ungrib_2/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAD
+cp ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}024${suf} ./run_ungrib_3/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}027${suf} ./run_ungrib_3/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}030${suf} ./run_ungrib_3/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}033${suf} ./run_ungrib_3/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}036${suf} ./run_ungrib_3/GRIBFILE.AAE
+mv ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_3/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}27${suf} ./run_ungrib_3/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAD
+cp ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}036${suf} ./run_ungrib_4/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}039${suf} ./run_ungrib_4/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}042${suf} ./run_ungrib_4/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}045${suf} ./run_ungrib_4/GRIBFILE.AAD
-mv ${mod}.t${cyc}z.${type}048${suf} ./run_ungrib_4/GRIBFILE.AAE
+mv ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_4/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}39${suf} ./run_ungrib_4/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAD
+mv ${mod}.t${cyc}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAE
 
 else
 
-mv ${mod}.t${cyc}z.${type}000${suf} GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}003${suf} GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}00${suf} GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}03${suf} GRIBFILE.AAB
 
 fi
 
@@ -258,7 +252,7 @@ export pgm=hiresw_wps_ungrib_gen.sh
 mpirun.lsf
 export err=$?; $DATA/err_chk
 
-### but all jobs will output these files.  Potentially problematic
+
 cd run_ungrib/
 
 files=`ls FILE*`
