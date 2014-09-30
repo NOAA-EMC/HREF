@@ -311,6 +311,7 @@
 
 ! or get SLDPTH from wrf output
 
+        write(0,*) 'NSOIL, size(SLDPTH2): ', NSOIL, size(SLDPTH2)
       VarName='DZS'
       call getVariableB(fileName,DateStr,DataHandle,VarName,SLDPTH2,      &
        1,1,1,NSOIL,1,1,1,NSOIL)
@@ -331,9 +332,11 @@
 
       print*,'im,jm,lm= ',im,jm,lm
 
+        write(0,*) 'call for VAR_SSO'
       VarName='VAR_SSO'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
+        write(0,*) 'return for VAR_SSO'
 
       VarName='LAP_HGT'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -343,24 +346,42 @@
       VarName='U'
 !      call getVariable(fileName,DateStr,DataHandle,'U',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
+
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
+
         print*, 'for U get, J loop: ', jsta_2l, jend_2u
       do l = 1, lm
        do j = jsta_2l, jend_2u
         do i = 1, im+1
-            u ( i, j, l ) = dum3d ( i, j, l )
 
-        if (I .eq. 5 .and. J .eq. 54) then
-        print*, 'I,J,L, u(i,j,l): ', I,J,L, u(i,j,l)
+        if (I .eq. IM+1 .and. J .eq. JM) then
+        U(i,j,l)=dum3d(i-1,j,l)
+!        write(0,*) 'avoided dum3d ( i, j, l ): ',i,j,l,dum3d(i,j,l)
+        else
+            u ( i, j, l ) = dum3d ( i, j, l )
         endif
+
+!        if (I .eq. 5 .and. J .eq. 54) then
+!        print*, 'I,J,L, u(i,j,l): ', I,J,L, u(i,j,l)
+!        endif
 
         end do
        end do
 !  fill up UH which is U at P-points including 2 row halo
        do j = jsta_2l, jend_2u
         do i = 1, im
+        if (I .eq. IM .and. J .eq. JM) then
+!            write(0,*) 'avoiding : ', I+1,J,L,dum3d(I+1,J,L)
+            UH (I,J,L) = dum3d(I,J,L)
+        else
             UH (I,J,L) = (dum3d(I,J,L)+dum3d(I+1,J,L))*0.5
+        endif
+
+        if (UH(I,J,L) .ne. UH(I,J,L)) then
+        write(0,*) 'bad UH def at I,J,L: ', I,J,L, UH(I,J,L)
+        endif
+
         end do
        end do
       end do
@@ -385,6 +406,11 @@
        do j = jsta_2l, jend_2u
         do i = 1, im
           VH(I,J,L) = (dum3d(I,J,L)+dum3d(I,J+1,L))*0.5
+
+        if (VH(I,J,L) .ne. VH(I,J,L)) then
+        write(0,*) 'bad VH: ', I,J,L, VH(I,J,L)
+        endif
+
         end do
        end do
       end do
@@ -405,7 +431,12 @@
       DO L=1,LM
         DO I=1,IM
          DO J=JSTA_2L,JEND_2U
+        if (I .eq. IM .and. J .eq. JM .and. L .eq. LM) then
+!        write(0,*) 'avoid I,J,L+1,W: ', I,J,L+1,DUM3D(I,J,L+1)
+        WH(I,J,L)=DUM3D(I,J,L)
+        else
           WH(I,J,L) = (DUM3D(I,J,L)+DUM3D(I,J,L+1))*0.5
+        endif
          ENDDO
         ENDDO
       ENDDO
@@ -630,7 +661,13 @@
         IM,1,JM,1,IM,JS,JE,1)
        do j = jsta_2l, jend_2u
         do i = 1, im
+        if (I .eq. im .and. J .eq. jend_2u .and. &
+            DUMMY2(I,J) .ne. DUMMY2(I,J)) then
+            U10 ( i, j ) = 0.5*(dummy2(i-1,J)+dummy2(i,j-1))
+        else
             U10 ( i, j ) = dummy2( i, j )
+        endif
+
         end do
        end do
 !       print*,'U10 at ',ii,jj,' = ',U10(ii,jj)
@@ -638,7 +675,8 @@
       VarName='V10'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
         IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jev
+       do j = jsta_2l, jend_2u
+!!       do j = jsta_2l, jev !! 10 m winds on what stagger?
         do i = 1, im
             V10 ( i, j ) = dummy2( i, j )
         end do
@@ -695,10 +733,17 @@
         do i = 1, im
 !HC            q ( i, j, l ) = dum3d ( i, j, l )
 !HC CONVERT MIXING RATIO TO SPECIFIC HUMIDITY
+
             q ( i, j, l ) = dum3d ( i, j, l )/(1.0+dum3d ( i, j, l ))
 ! now that I have T,q,P  compute omega from wh
             omga(I,J,L) = -WH(I,J,L)*pmid(i,j,l)*G/                       &
                               (RD*t(i,j,l)*(1.+D608*q(i,j,l)))
+
+        if (omga(I,J,L) .ne. omga(I,J,L)) then
+        write(0,*) 'I,J,L, WH, PMID, T, Q: ', &
+        I,J,L, WH(I,J,L), PMID(I,J,L), T(I,J,L), Q(I,J,L)
+        endif
+
         end do
        end do
       end do
@@ -740,8 +785,14 @@
       ENDDO
       ENDDO
 
+!        write(6,*) 'what is jsta_2l here: ', jsta_2l
+!        write(0,*) 'what is jsta_2l here: ', jsta_2l
+
+!        write(0,*) 'jsta_2l, jend_2u: ', jsta_2l, jend_2u
+!        write(0,*) 'shape(pvapor): ', shape(pvapor)
       do L=1,405
         call exch(pvapor(1,jsta_2l))
+
         do J=JSTA_M,JEND_M
         do I=2,IM-1
 
@@ -1113,9 +1164,8 @@
       end do 
 
       VarName='SMCREL'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-      
+      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+        IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
 
       VarName='SEAICE'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1422,7 +1472,7 @@
 !        IM,1,JM,1,IM,JS,JE,1)
 !       do j = jsta_2l, jend_2u
 !        do i = 1, im
-            QZ0 ( i, j ) = dummy ( i, j )
+!            QZ0 ( i, j ) = dummy ( i, j )
 !        end do
 !       end do
 !      print*,'QZ0 at ',ii,jj,' = ',QZ0(ii,jj)

@@ -25,7 +25,7 @@
 !
       integer :: KGTYPE,IOUTYP,SVALUE,NFLD,IGET(MXFLD),           &
                  IQ(MXFLD),IS(MXFLD),ISMSTG(MXFLD),               &
-                 ISMFUL(MXFLD),ISMOUT(MXFLD),LVLS(MXLVL,MXFLD),   &
+                 ISMFUL(MXFLD),ISMOUT(MXFLD),LVLS(MXLVL,0:MXFLD),   &
                  IDENT(MXFLD),IFILV(MXFLD),IAVBLFLD(MXFLD),       &
                  ID(25),IGDS(18)
       real    :: DEC(MXFLD)

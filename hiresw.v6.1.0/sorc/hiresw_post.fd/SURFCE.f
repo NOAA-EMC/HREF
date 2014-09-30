@@ -1152,7 +1152,7 @@
             ENDDO
             ENDDO
             CALL DEWPOINT(EVP,EGRID1)
-       print *,' MAX DEWPOINT',maxval(egrid1)
+!       print *,' MAX DEWPOINT',maxval(egrid1)
 ! DEWPOINT
            IF (IGET(113).GT.0) THEN
 	    GRID1=spval
@@ -3445,6 +3445,7 @@
           IF(MODELNAME .EQ. 'NCAR'.OR.MODELNAME.EQ.'RSM' .OR. &
              MODELNAME.EQ.'RAPR')THEN
 	    GRID1=SPVAL
+            ITSRFC=0 ! notusedforarw
 	    ID(1:25)=0
 	  ELSE
             IF(ASRFC.GT.0.)THEN

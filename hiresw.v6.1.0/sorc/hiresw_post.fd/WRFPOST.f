@@ -787,7 +787,7 @@
          IF (IEOF.NE.0) GOTO 20
        else if(grib=="grib2") then
          npset=npset+1
-         CALL SET_OUTFLDS(kth,kpv,pv)
+         CALL SET_OUTFLDS(kth,th,kpv,pv)
          print *,'before npset=',npset
          if(allocated(datapd))deallocate(datapd)
          allocate(datapd(im,1:jend-jsta+1,nrecout+100))
@@ -813,8 +813,11 @@
 !      if(me==0)call w3tage('bf grb2  ')
         write(0,*) 'calling gribit2 with post_fname: ', post_fname, '_END'
          call gribit2(post_fname)
+        write(0,*) 'past gribit2 for post_fname: ', post_fname, '_END'
          deallocate(datapd)
+        write(0,*) 'past datapd dealloc'
          deallocate(fld_info)
+        write(0,*) 'past fld_info dealloc'
          if(npset>=num_pset) go to 20
         endif
 
@@ -828,7 +831,9 @@
  20   CONTINUE
 !
 !-------
+        write(0,*) 'call grib_info_finalize'
      call grib_info_finalize()
+        write(0,*) 'past grib_info_finalize'
 !
       IF(ME.EQ.0)THEN
         WRITE(6,*)' '

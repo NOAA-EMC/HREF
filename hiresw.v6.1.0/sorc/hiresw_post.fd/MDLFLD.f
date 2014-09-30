@@ -237,6 +237,8 @@
          NMM_GFSmicro=.FALSE.
       ENDIF
 
+                 DO J=JSTA,JEND
+                 DO I=1,IM
           Zm10c(I,J)=ZMID(I,J,NINT(LMH(I,J)))
           DO L=NINT(LMH(I,J)),1,-1
              IF (T(I,J,L) .LE. 263.15) THEN   
@@ -244,6 +246,8 @@
                 EXIT
              ENDIF
           ENDDO      
+                 ENDDO
+                 ENDDO
 
 !           REFD at -10 C level
             IF (IGET(950).GT.0) THEN
