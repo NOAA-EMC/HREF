@@ -319,7 +319,7 @@ subroutine getVariableBikj(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2
       do j=js,je
        VarBuff(i,j,l)=data(i,ll,j,1)
         if (VarBuff(i,j,l) .ne. VarBuff(i,j,l)) then
-        write(0,*) 'defined bad at i,j,l: ', i,j,l,VarBuff(i,j,l)
+        write(0,*) 'defined bad at i,j,l: ', i,j,l,VarName,VarBuff(i,j,l)
         endif
       enddo
      enddo
