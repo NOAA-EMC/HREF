@@ -9,10 +9,10 @@ TARGET   = ../../exec/hiresw_post
 FC       = mpfort -compiler ifort
 CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
-OPTS     = -O3  -assume noold_ldout_format
+OPTS     = -O3  -assume noold_ldout_format 
 FREE     = -FR
-TRAPS    = 
-DEBUG    = -g
+TRAPS    = -ftrapuv  -check all  -fp-stack-check  -fstack-protector
+DEBUG    = -g -traceback
 
 #
 # Now the hard part. NCEPPOST needs 19 libraries, WOW!!!!!

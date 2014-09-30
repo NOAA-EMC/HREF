@@ -389,11 +389,21 @@
          print *,'  discipline ', idisc, '  category ', icatg,     &
                  '  parameter', iparm,' for var',                  &
                  trim(pset%param(nprm)%pname)
+         write(0,*) '  discipline ', idisc, '  category ', icatg,     &
+                 '  parameter', iparm,' for var',                  &
+                 trim(pset%param(nprm)%pname)
 !
 !--- generate grib2 message ---
 !
+!        write(0,*) 'idisc, icatg, iparm, nprm,nlvl,fldlvl1,fldlvl2,ntrange: ', &
+!     idisc,icatg, iparm,nprm,nlvl,fldlvl1,fldlvl2,ntrange
+
          call gengrb2msg(idisc,icatg, iparm,nprm,nlvl,fldlvl1,fldlvl2,ntrange,  &
                        leng_time_range_stat,datafld(:,i),cgrib(cstart),clength)
+
+!        write(0,*) 'leng_time_range_stat, datafld(1,1),cgrib(cstart),clength: ', & 
+!           leng_time_range_stat, datafld(1,1),cgrib(cstart),clength
+
          cstart=cstart+clength
 !
        else
@@ -508,7 +518,7 @@
     real(4) coordlist(1)
     logical ldfgrd
 !
-    integer ierr
+    integer ierr, J
 !
 !----------------------------------------------------------------------------------------
 ! Feed input keys for GRIB2 Section 0 and 1 and get outputs from arrays listsec0 and listsec1
@@ -556,7 +566,7 @@
          trim(pset%param(nprm)%pname)=='vgrd'))
        call getgds(ldfgrd,igdsmaxlen,igdtlen,igds,igdstmpl)
 
-        write(0,*) 'igdstmpl(11): ', igdstmpl(11)
+!        write(0,*) 'igdstmpl(11): ', igdstmpl(11)
 
        idefnum=1
        ideflist=0     !Used if igds(3) .ne. 0. Dummy array otherwise
@@ -735,21 +745,31 @@
               scale_fct_fixed_sfc2,                            &
               scaled_val_fixed_sfc2,                           &
               ipdstmpl(1:ipdstmpllen))
-!       print *,'aft g2sec4_temp48,name=',trim(pset%param(nprm)%shortname),&
-!          'ipdstmpl48=',ipdstmpl(1:ipdstmp4_48len)
+       print *,'aft g2sec4_temp48,name=',trim(pset%param(nprm)%shortname),&
+          'ipdstmpl48=',ipdstmpl(1:ipdstmp4_48len)
 
       endif
 !
 !----------
 ! idrstmpl array is the output from g2sec5
 !
+!        write(0,*) 'pset%packing_method: ', pset%packing_method
        call get_g2_sec5packingmethod(pset%packing_method,idrsnum,ierr)
+
+
+        do J=1,size(datafld1)
+        if (datafld1(J) .ne. datafld1(J)) then
+        write(0,*) 'J, pset%param(nprm)%pname, datafld1(J): ', J, &
+               trim(pset%param(nprm)%pname), datafld1(J)
+        endif
+        enddo
+
        if(maxval(datafld1)==minval(datafld1))then
         idrsnum=0
         print*,' changing to simple packing for constant fields'
-       end if 
-       print *,'aft g2sec5,packingmethod=',pset%packing_method,'idrsnum=',idrsnum, &
-         'data=',maxval(datafld1),minval(datafld1)
+      end if 
+!       print *,'aft g2sec5,packingmethod=',pset%packing_method,'idrsnum=',idrsnum, &
+!         'data=',maxval(datafld1),minval(datafld1)
 !
 !*** set number of bits, and binary scale
 !
@@ -1067,10 +1087,10 @@
        ifield3(15) = DXVAL
        ifield3(16) = DYVAL
 
-        write(0,*) 'im, jm: ', im,jm
-        write(0,*) 'latstart, lonstart: ', latstart, lonstart
-        write(0,*) 'TRUELAT1,STANDLON: ', TRUELAT1,STANDLON
-        write(0,*) 'dxval, dyval: ', dxval, dyval
+!        write(0,*) 'im, jm: ', im,jm
+!        write(0,*) 'latstart, lonstart: ', latstart, lonstart
+!        write(0,*) 'TRUELAT1,STANDLON: ', TRUELAT1,STANDLON
+!        write(0,*) 'dxval, dyval: ', dxval, dyval
        IF(TRUELAT1>0)then
         ifield3(17) = 0
        else
@@ -1213,7 +1233,7 @@
 
      ENDIF
 
-    write(0,*)'igds=',igds,'igdstempl=',ifield3(1:ifield3len)
+!     write(0,*)'igds=',igds,'igdstempl=',ifield3(1:ifield3len)
      end subroutine getgds
 !
 !-------------------------------------------------------------------------------------
