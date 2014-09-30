@@ -193,7 +193,7 @@
        STOP
       END IF
 !     ACCUMULATED PRECIP 
-      J = 1;JPDS = -1;JPDS(3) = IGDNUM
+      J = 0;JPDS = -1;JPDS(3) = IGDNUM
       JPDS(5) = 061;JPDS(6) = 001
       JPDS(13) = 1
       CALL SETVAR(LUGB3,LUGI3,NUMVAL,J,JPDS,JGDS,KF,      &
@@ -228,7 +228,7 @@
        STOP
       END IF
 !     ACCUMULATED PRECIP 
-      J = 1;JPDS = -1;JPDS(3) = IGDNUM
+      J = 0;JPDS = -1;JPDS(3) = IGDNUM
       JPDS(5) = 061;JPDS(6) = 001
       JPDS(13) = 1
       CALL SETVAR(LUGB4,LUGI4,NUMVAL,J,JPDS,JGDS,KF,     &
