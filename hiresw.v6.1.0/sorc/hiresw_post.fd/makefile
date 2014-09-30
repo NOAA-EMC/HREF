@@ -11,7 +11,7 @@ CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
 OPTS     = -O3  -assume noold_ldout_format 
 FREE     = -FR
-TRAPS    = -ftrapuv  -check all  -fp-stack-check  -fstack-protector
+TRAPS    = # -ftrapuv  -check all  -fp-stack-check  -fstack-protector
 DEBUG    = -g -traceback
 
 #
