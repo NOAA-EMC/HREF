@@ -2965,6 +2965,13 @@ end subroutine retrieve_field
         if (I .eq. 50 .and. J .eq. 50) then
         write(0,*) 'I,J,msfu: ', I,J,grid%msfu(I,J)
         endif
+
+        if (grid%msfu(I,J) .lt. 0.7 ) then
+        write(0,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
+        grid%msfu(I,J)=dumdata_u(I-1,J-1,1)
+        write(0,*) 'changing msfu to: ',I,J,  grid%msfu(I,J)
+        endif
+
          ENDDO
         ENDDO
 
