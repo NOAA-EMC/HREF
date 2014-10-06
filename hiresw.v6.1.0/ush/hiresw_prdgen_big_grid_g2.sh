@@ -32,6 +32,7 @@ MEMBER=$5
 subpiece=${6}
 
 reflag=1
+compress=jpeg
 
 # mkdir ${DATA}/prdgen_full_${subpiece}
 # cd ${DATA}/prdgen_full_${subpiece}/
@@ -258,9 +259,9 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WG
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
 
-/u/Wesley.Ebisuzaki/bin/wgrib2  inputs.grb  -set_grib_type complex2 -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+/u/Wesley.Ebisuzaki/bin/wgrib2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
-/u/Wesley.Ebisuzaki/bin/wgrib2  nn.grb  -set_grib_type complex2 -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+/u/Wesley.Ebisuzaki/bin/wgrib2  nn.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
 
 
 cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn > ${filenamthree}${fhr}.tm00

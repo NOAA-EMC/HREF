@@ -31,6 +31,7 @@ model=$4
 MEMBER=$5
 subpiece=$6
 
+compress=complex2
 reflag=1
 
 mkdir ${DATA}/prdgen_5km_${subpiece}
@@ -189,20 +190,20 @@ export FORT621="input${fhr}.prd"
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
-/u/Wesley.Ebisuzaki/bin/wgrib2 inputs.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+/u/Wesley.Ebisuzaki/bin/wgrib2 inputs.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
-if [ $subpiece =  "1" ]
+if [ $subpiece =  "0"  -o $subpiece =  "1" ]
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
 cat nn.grb ceiling.grb > inputs_nn.grb
 
-/u/Wesley.Ebisuzaki/bin/wgrib2 inputs_nn.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
-/u/Wesley.Ebisuzaki/bin/wgrib2 inputs_budget.grb -set_grib_type complex2 -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+/u/Wesley.Ebisuzaki/bin/wgrib2 inputs_nn.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+/u/Wesley.Ebisuzaki/bin/wgrib2 inputs_budget.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
-if [ $subpiece = "1" ]
+if [ $subpiece =  "0"  -o $subpiece =  "1" ]
 then
 cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 else
@@ -260,7 +261,7 @@ echo "inside f00 test"
 
 else
 
-if [ $subpiece = "1" ]
+if [ $subpiece =  "0"  -o $subpiece =  "1" ]
 then
 
 ### do precip buckets if model is ARW
