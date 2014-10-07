@@ -269,17 +269,17 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_3 list_3.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_4 list_4.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_5 list_5.txt
 
-wgrib2 $INF | grep -F -f list_1.txt | wgrib2 -i -grib inputs.grb2_1 $INF
-wgrib2 $INF | grep -F -f list_2.txt | wgrib2 -i -grib inputs.grb2_2 $INF
-wgrib2 $INF | grep -F -f list_3.txt | wgrib2 -i -grib inputs.grb2_3 $INF
-wgrib2 $INF | grep -F -f list_4.txt | wgrib2 -i -grib inputs.grb2_4 $INF
-wgrib2 $INF | grep -F -f list_5.txt | wgrib2 -i -grib inputs.grb2_5 $INF
+WGRIB2=$EXEChiresw/hiresw_wgrib2
+
+$WGRIB2 $INF | grep -F -f list_1.txt | wgrib2 -i -grib inputs.grb2_1 $INF
+$WGRIB2 $INF | grep -F -f list_2.txt | wgrib2 -i -grib inputs.grb2_2 $INF
+$WGRIB2 $INF | grep -F -f list_3.txt | wgrib2 -i -grib inputs.grb2_3 $INF
+$WGRIB2 $INF | grep -F -f list_4.txt | wgrib2 -i -grib inputs.grb2_4 $INF
+$WGRIB2 $INF | grep -F -f list_5.txt | wgrib2 -i -grib inputs.grb2_5 $INF
 
 rm wgrib2.poe
 compress=complex2
 
-WGRIB2=/u/Wesley.Ebisuzaki/bin/wgrib2
-# WGRIB2=wgrib2
 
 echo "#! /bin/ksh" > a.poe
 echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe
