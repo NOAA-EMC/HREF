@@ -138,7 +138,7 @@ mm2=`echo $t2 | cut -c5-6`
 dd2=`echo $t2 | cut -c7-8`
 hh2=`echo $t2 | cut -c9-10`
 
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.di
+cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio
 
 t3=`$NDATE +3 $t2`
 
