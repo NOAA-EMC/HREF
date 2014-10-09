@@ -271,6 +271,8 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_5 list_5.txt
 
 WGRIB2=$EXEChiresw/hiresw_wgrib2
 
+rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5
+
 $WGRIB2 $INF | grep -F -f list_1.txt | wgrib2 -i -grib inputs.grb2_1 $INF
 $WGRIB2 $INF | grep -F -f list_2.txt | wgrib2 -i -grib inputs.grb2_2 $INF
 $WGRIB2 $INF | grep -F -f list_3.txt | wgrib2 -i -grib inputs.grb2_3 $INF
@@ -280,6 +282,7 @@ $WGRIB2 $INF | grep -F -f list_5.txt | wgrib2 -i -grib inputs.grb2_5 $INF
 rm wgrib2.poe
 compress=complex2
 
+rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5
 
 echo "#! /bin/ksh" > a.poe
 echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe
@@ -311,6 +314,8 @@ time mpirun.lsf
 export err=$?; ./err_chk
 
 rm cnvgrib.poe
+
+rm inputs.grb_?
 
        echo "cnvgrib -g21 model.ndfd_1 inputs.grb_1" > cnvgrib.poe
        echo "cnvgrib -g21 model.ndfd_2 inputs.grb_2" >> cnvgrib.poe
