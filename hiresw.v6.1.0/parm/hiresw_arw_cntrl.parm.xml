@@ -861,12 +861,6 @@
        </param>
 
        <param>
-         <shortname>GRMR_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
-         <pname>GRLE</pname>
-         <scale> 5.0</scale>
-       </param>
-
-       <param>
        <shortname>VGTYP_ON_SURFACE</shortname>
        <pname>VGTYP</pname>
        <table_info>NCEP</table_info>
