@@ -1,11 +1,5 @@
 MSLET:mean sea level:
-VIS:surface:
-PRES:surface:
-HGT:surface:
 RH:2 m above ground:
-SPFH:2 m above ground:
-UGRD:10 m above ground:
-VGRD:10 m above ground:
 APCP:surface:
 WEASD:surface:
 CAPE:surface:
@@ -22,7 +16,6 @@ SPFH:80 m above ground:
 CAPE:90-0 mb above ground:
 CIN:90-0 mb above ground:
 HLCY:1000-0 m above ground:
-REFC:entire atmosphere (considered as a single layer):
 REFD:1000 m above ground:
 RETOP:entire atmosphere (considered as a single layer):
 MAXREF:1000 m above ground:
@@ -35,8 +28,7 @@ TMAX:2 m above ground:
 TMIN:2 m above ground:
 MAXRH:2 m above ground:
 MINRH:2 m above ground:
-HGT:planetary boundary layer:
 VRATE:planetary boundary layer:
 UGRD:planetary boundary layer:
 VGRD:planetary boundary layer:
-VIL:entire atmosphere (considered as a single layer):
+VIL:entire atmosphere

@@ -28,8 +28,6 @@ VGRD:40 hybrid lev
 TCDC:40 hybrid lev
 PRES:surface
 HGT:surface
-VGTYP:surface
-LAND:surface
 REFC:
 VIS:surface
 GUST:surface
@@ -47,10 +45,6 @@ UGRD:10 m above ground
 VGRD:10 m above ground
 APCP:surface
 HGT:lowest level of the wet bulb zero
-CSNOW:surface
-CICEP:surface
-CFRZR:surface
-CRAIN:surface
 LCDC:low cloud layer
 MCDC:middle cloud layer
 HCDC:high cloud layer

@@ -268,21 +268,23 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_2 list_2.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_3 list_3.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_4 list_4.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_5 list_5.txt
+cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_nn list_nn.txt
 
 WGRIB2=$EXEChiresw/hiresw_wgrib2
 
-rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5
+rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_nn
 
-$WGRIB2 $INF | grep -F -f list_1.txt | wgrib2 -i -grib inputs.grb2_1 $INF
-$WGRIB2 $INF | grep -F -f list_2.txt | wgrib2 -i -grib inputs.grb2_2 $INF
-$WGRIB2 $INF | grep -F -f list_3.txt | wgrib2 -i -grib inputs.grb2_3 $INF
-$WGRIB2 $INF | grep -F -f list_4.txt | wgrib2 -i -grib inputs.grb2_4 $INF
-$WGRIB2 $INF | grep -F -f list_5.txt | wgrib2 -i -grib inputs.grb2_5 $INF
+$WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1 $INF
+$WGRIB2 $INF | grep -F -f list_2.txt | $WGRIB2 -i -grib inputs.grb2_2 $INF
+$WGRIB2 $INF | grep -F -f list_3.txt | $WGRIB2 -i -grib inputs.grb2_3 $INF
+$WGRIB2 $INF | grep -F -f list_4.txt | $WGRIB2 -i -grib inputs.grb2_4 $INF
+$WGRIB2 $INF | grep -F -f list_5.txt | $WGRIB2 -i -grib inputs.grb2_5 $INF
+$WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
 
 rm wgrib2.poe
 compress=complex2
 
-rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5
+rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_nn
 
 echo "#! /bin/ksh" > a.poe
 echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe
@@ -294,6 +296,7 @@ echo "#! /bin/ksh" > d.poe
 echo "$WGRIB2  inputs.grb2_4  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_4" >> d.poe
 echo "#! /bin/ksh" > e.poe
 echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe
+
 
 chmod 775 a.poe
 chmod 775 b.poe
@@ -313,6 +316,8 @@ export MP_CMDFILE=wgrib2.poe
 time mpirun.lsf
 export err=$?; ./err_chk
 
+$WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
+
 rm cnvgrib.poe
 
 rm inputs.grb_?
@@ -329,7 +334,9 @@ export MP_CMDFILE=cnvgrib.poe
 time mpirun.lsf
 export err=$?; ./err_chk
 
-cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr}.tm00
+cnvgrib -g21 model.ndfd_nn inputs.grb_nn
+
+cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_nn > NDFD${fhr}.tm00
 
 
 #    ${utilexec}/wgrib -s inputs.grb | \
@@ -447,7 +454,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
 
 
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${fhr}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
 	echo "contents of WRFPRS${fhr}.tm00"
 	${utilexec}/wgrib WRFPRS${fhr}.tm00
@@ -462,7 +469,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
 
 	echo here with FHRFRQ $FHRFRQ
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${FHRFRQ}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${FHRFRQ}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
 	echo "contents of WRFPRS${FHRFRQ}.tm00"
 	${utilexec}/wgrib WRFPRS${FHRFRQ}.tm00
@@ -499,7 +506,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
       if [ $MKPCP -eq $mk12p ];then
 
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr9}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${fhr9}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr9}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
 	echo "contents of WRFPRS${fhr9}.tm00"
 	${utilexec}/wgrib WRFPRS${fhr9}.tm00
@@ -517,7 +524,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
 #            cnvgrib -g21  $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3} WRFPRS${fhr3}.tm00
 
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
         echo "contents of WRFPRS${fhr3}.tm00"
         ${utilexec}/wgrib WRFPRS${fhr3}.tm00
@@ -540,7 +547,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
            else
 #             cnvgrib -g21 $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
            fi
 
@@ -566,7 +573,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
 	   else
 #             cnvgrib -g21  $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3} WRFPRS${fhr3}.tm00
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
            fi
 
@@ -583,7 +590,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 > NDFD${fhr
            else
 #             cnvgrib -g21 $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}
-        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | wgrib2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
+        $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
         cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
            fi
 
