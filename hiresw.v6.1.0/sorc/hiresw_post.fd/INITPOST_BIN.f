@@ -350,17 +350,10 @@
       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
 
-        print*, 'for U get, J loop: ', jsta_2l, jend_2u
       do l = 1, lm
        do j = jsta_2l, jend_2u
         do i = 1, im+1
-
-        if (I .eq. IM+1 .and. J .eq. JM) then
-        U(i,j,l)=dum3d(i-1,j,l)
-!        write(0,*) 'avoided dum3d ( i, j, l ): ',i,j,l,dum3d(i,j,l)
-        else
             u ( i, j, l ) = dum3d ( i, j, l )
-        endif
 
 !        if (I .eq. 5 .and. J .eq. 54) then
 !        print*, 'I,J,L, u(i,j,l): ', I,J,L, u(i,j,l)
@@ -371,17 +364,7 @@
 !  fill up UH which is U at P-points including 2 row halo
        do j = jsta_2l, jend_2u
         do i = 1, im
-        if (I .eq. IM .and. J .eq. JM) then
-!            write(0,*) 'avoiding : ', I+1,J,L,dum3d(I+1,J,L)
-            UH (I,J,L) = dum3d(I,J,L)
-        else
             UH (I,J,L) = (dum3d(I,J,L)+dum3d(I+1,J,L))*0.5
-        endif
-
-        if (UH(I,J,L) .ne. UH(I,J,L)) then
-        write(0,*) 'bad UH def at I,J,L: ', I,J,L, UH(I,J,L)
-        endif
-
         end do
        end do
       end do
@@ -431,12 +414,7 @@
       DO L=1,LM
         DO I=1,IM
          DO J=JSTA_2L,JEND_2U
-        if (I .eq. IM .and. J .eq. JM .and. L .eq. LM) then
-!        write(0,*) 'avoid I,J,L+1,W: ', I,J,L+1,DUM3D(I,J,L+1)
-        WH(I,J,L)=DUM3D(I,J,L)
-        else
           WH(I,J,L) = (DUM3D(I,J,L)+DUM3D(I,J,L+1))*0.5
-        endif
          ENDDO
         ENDDO
       ENDDO
@@ -739,11 +717,6 @@
             omga(I,J,L) = -WH(I,J,L)*pmid(i,j,l)*G/                       &
                               (RD*t(i,j,l)*(1.+D608*q(i,j,l)))
 
-        if (omga(I,J,L) .ne. omga(I,J,L)) then
-        write(0,*) 'I,J,L, WH, PMID, T, Q: ', &
-        I,J,L, WH(I,J,L), PMID(I,J,L), T(I,J,L), Q(I,J,L)
-        endif
-
         end do
        end do
       end do
@@ -785,11 +758,6 @@
       ENDDO
       ENDDO
 
-!        write(6,*) 'what is jsta_2l here: ', jsta_2l
-!        write(0,*) 'what is jsta_2l here: ', jsta_2l
-
-!        write(0,*) 'jsta_2l, jend_2u: ', jsta_2l, jend_2u
-!        write(0,*) 'shape(pvapor): ', shape(pvapor)
       do L=1,405
         call exch(pvapor(1,jsta_2l))
 
@@ -2377,12 +2345,24 @@
 !
 
 !MEB not sure how to get these 
+
+!! MEP -  can we fix dx and dy here when GRIB2 to make expected meters, or not?
+
+        if (grib == 'grib1') then
        do j = jsta_2l, jend_2u
         do i = 1, im
             DX ( i, j ) = dxval/MSFT(I,J)
             DY ( i, j ) = dyval/MSFT(I,J)
         end do
        end do
+        else
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            DX ( i, j ) = 1.e-3*dxval/MSFT(I,J)
+            DY ( i, j ) = 1.e-3*dyval/MSFT(I,J)
+        end do
+       end do
+        endif
 !MEB not sure how to get these 
 
 ! close up shop
