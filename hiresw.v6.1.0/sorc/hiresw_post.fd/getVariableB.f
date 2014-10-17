@@ -141,9 +141,6 @@ subroutine getVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
     do i=1,im1
       do j=js,je
        VarBuff(i,j,1)=data(i,j,1,1)
-        if (VarBuff(i,j,1) .ne. VarBuff(i,j,1)) then
-        write(0,*) 'bad read : ', VarName, i,j,VarBuff(i,j,1)
-        endif
       enddo
     enddo 
    else if(ndim .eq. 3)then
@@ -318,9 +315,6 @@ subroutine getVariableBikj(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2
      do i=1,im1
       do j=js,je
        VarBuff(i,j,l)=data(i,ll,j,1)
-        if (VarBuff(i,j,l) .ne. VarBuff(i,j,l)) then
-        write(0,*) 'defined bad at i,j,l: ', i,j,l,VarName,VarBuff(i,j,l)
-        endif
       enddo
      enddo
 !     write(0,*) Varname,' L ',l,': = ',data(1,ll,1,1)
