@@ -1,5 +1,8 @@
   MODULE rdgrib
   use grddef
+        USE GRIB_MOD
+        USE pdstemplates
+
 !=======================================================================
 !  routines to  read/write grib data 
 !=======================================================================
@@ -72,15 +75,15 @@ contains
    REAL,      INTENT(INOUT)  :: GRID(:),VARB(:,:)
    LOGICAL*1, INTENT(INOUT)  :: MASK(:)
 !-----------------------------------------------------------------------------------------
-      INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200), JDISC
+      INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
 
-C grib2
+! C grib2
       INTEGER :: LUB,LUI,J,JDISC,JPDTN,JGDTN
       INTEGER,DIMENSION(:) :: JIDS(200),JPDT(200),JGDT(200)
       LOGICAL :: UNPACK
       INTEGER :: K,IRET
       TYPE(GRIBFIELD) :: GFLD
-C grib2
+! C grib2
 
 
 
@@ -96,11 +99,11 @@ C grib2
         JGDTN=-1
         JGDT=-9999
 
-        call getgb2(LUB,LUI,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET)
+        call getgb2(LUB,LUI,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT, &
+          UNPACK,K,GFLD,IRET)
 
-      SUBROUTINE GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &                  UNPACK,K,GFLD,IRET)
+!      SUBROUTINE GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &                  UNPACK,K,GFLD,IRET)
 
 !        write(0,*) 'IRET from GETGB call ', IRET
 !        write(0,*) 'jpds(5:7) for found variable: ' , JPDS(5:7)
@@ -137,58 +140,6 @@ C grib2
 
       RETURN
       END SUBROUTINE setvar_g2
-
-     SUBROUTINE SETVAR(LUB,LUI,NUMV,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,VARB,IRET,ISTAT)
-!============================================================================
-!     This Routine reads in a grib field and initializes a 2-D variable
-!     Requested from w3lib GETGRB routine
-!     10-2012   Jeff McQueen
-!     NOTE: ONLY WORKS for REAL Type Variables
-!============================================================================
-
-   REAL,      INTENT(INOUT)  :: GRID(:),VARB(:,:)
-   LOGICAL*1, INTENT(INOUT)  :: MASK(:)
-!-----------------------------------------------------------------------------------------
-      INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
-
-!     Get GRIB Variable
-
-      CALL GETGB(LUB,LUI,NUMV,J,JPDS,JGDS,KF,K,KPDS,KGDS,MASK,GRID,IRET)
-!        write(0,*) 'IRET from GETGB call ', IRET
-!        write(0,*) 'jpds(5:7) for found variable: ' , JPDS(5:7)
-
-      IMAX=KGDS(2)
-      IF(IRET.EQ.0) THEN
-        DO KK = 1, NUMV
-          IF(MOD(KK,IMAX).EQ.0) THEN
-            M=IMAX
-            N=INT(KK/IMAX)
-          ELSE
-            M=MOD(KK,IMAX)
-            N=INT(KK/IMAX) + 1
-          ENDIF
-          VARB(M,N) = GRID(KK)
-        ENDDO
-       IF(JPDS(6).ne.109 .or. JPDS(6).eq.109.and.J.le.40) &
-        WRITE(0,100) JPDS(5),JPDS(6),JPDS(7),J,MINVAL(VARB),MAXVAL(VARB)
- 100   FORMAT('VARB UNPACKED ', 4I7,2G12.4)
-      ELSE
-       WRITE(6,*)'====================================================='
-       WRITE(6,*)'COULD NOT UNPACK VARB(setvar)',K,JPDS(3),JPDS(5),JPDS(6),IRET
-       WRITE(6,*)'USING J: ', J
-       WRITE(6,*)'UNIT', LUB,LUI,NUMV,KF
-       WRITE(6,*)'====================================================='
-       print *,'JPDS',jpds(1:25)
-       ISTAT = IRET
-! 01-29-13 JTM : past hour 60 nam output onli to level 35
-       if (JPDS(6).ne.109) then
-        write(0,*) 'jpds(5:7): ' , JPDS(5:7)
-                STOP 'ABORT: GRIB VARB READ ERROR'
-       endif
-      ENDIF
-
-      RETURN
-      END SUBROUTINE setvar
 
 
 
