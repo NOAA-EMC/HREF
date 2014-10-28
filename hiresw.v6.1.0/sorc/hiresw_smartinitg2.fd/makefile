@@ -11,6 +11,9 @@ FC =   ifort -convert big_endian -g -traceback -assume noold_ldout_format
 LIBS = -L/usr/local/lib   \
 	-L/nwprod/lib  -lip_4 -lw3nco_4 -lw3emc_4 -lbacio_4
 NCEP_LIB_DIR = 
+LIBDEFG2=-L/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz
+INCG2=-I/nwprod/lib/incmod/g2_4 -I/nwprod/lib/incmod/g2tmpl
+
 
 # FFLAGS = -O -fp-model strict -list 
 # LDFLAGS =-FR -assume byterecl -check all -debug all -warn nounused  
@@ -25,13 +28,13 @@ PROFLIB =	-lprof
 all:		$(CMD)
 
 $(OBJS1): %.o: %.f90
-	$(FC) -c $*.f90
+	$(FC) $(INCG2) -c $*.f90
 
 $(OBJS2): %.o: %.f90
-	$(FC) -c $*.f90
+	$(FC) $(INCG2) -c $*.f90
 
 $(CMD):		$(OBJS1) $(OBJS2)
-	$(FC) $(FFLAGS) $(LDFLAGS) -o $(@) $(OBJS1) $(OBJS2) $(LIBS)
+	$(FC) $(FFLAGS) $(LDFLAGS) -o $(@) $(OBJS1) $(OBJS2) $(INCG2) $(LIBDEFG2) $(LIBS)
 
 clean:
 	-rm -f $(OBJS1) $(OBJS2) *.mod

@@ -381,6 +381,7 @@
        DEC=-2.0
         print*, 'writing DOWNT(251,100) as: ', DOWNT(251,100)
 
+
 !! need to use a GRIBI2 routine like is available in grib2_module
        CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,70,DEC)
 
