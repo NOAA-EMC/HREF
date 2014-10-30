@@ -318,25 +318,27 @@ export err=$?; ./err_chk
 
 $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
-rm cnvgrib.poe
+# rm cnvgrib.poe
 
-rm inputs.grb_?
+# rm inputs.grb_?
 
-       echo "cnvgrib -g21 model.ndfd_1 inputs.grb_1" > cnvgrib.poe
-       echo "cnvgrib -g21 model.ndfd_2 inputs.grb_2" >> cnvgrib.poe
-       echo "cnvgrib -g21 model.ndfd_3 inputs.grb_3" >> cnvgrib.poe
-       echo "cnvgrib -g21 model.ndfd_4 inputs.grb_4" >> cnvgrib.poe
-       echo "cnvgrib -g21 model.ndfd_5 inputs.grb_5" >> cnvgrib.poe
+#       echo "cnvgrib -g21 model.ndfd_1 inputs.grb_1" > cnvgrib.poe
+#       echo "cnvgrib -g21 model.ndfd_2 inputs.grb_2" >> cnvgrib.poe
+#       echo "cnvgrib -g21 model.ndfd_3 inputs.grb_3" >> cnvgrib.poe
+#       echo "cnvgrib -g21 model.ndfd_4 inputs.grb_4" >> cnvgrib.poe
+#       echo "cnvgrib -g21 model.ndfd_5 inputs.grb_5" >> cnvgrib.poe
 
-chmod 775 cnvgrib.poe
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=cnvgrib.poe
-time mpirun.lsf
-export err=$?; ./err_chk
+# chmod 775 cnvgrib.poe
+# export MP_PGMMODEL=mpmd
+# export MP_CMDFILE=cnvgrib.poe
+# time mpirun.lsf
+# export err=$?; ./err_chk
 
-cnvgrib -g21 model.ndfd_nn inputs.grb_nn
+# cnvgrib -g21 model.ndfd_nn inputs.grb_nn
 
-cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_nn > NDFD${fhr}.tm00
+# cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_nn > NDFD${fhr}.tm00
+
+cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_nn > NDFD${fhr}.tm00
 
 
 #    ${utilexec}/wgrib -s inputs.grb | \
@@ -344,10 +346,10 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 #     ${utilexec}/wgrib -i -grib -o temp inputs.grb > wgrib.out
 #     mv temp WRFPRS${fhr}.tm00
 
-	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}.g1
+	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
 	cp NDFD${fhr}.tm00 $prdgfl
 
-  $utilexec/grbindex WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+  $utilexec/grb2index WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 
 # cp $PARMhiresw/hiresw_${MODEL}_mastersmart.${RUNTYP}.ctl  master${fhr}.ctl
 
@@ -370,9 +372,10 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
     fi
     if [ $check6 -eq 0 ];then 
       mk6p=6
-	if [ MODEL = "nmmb" ] 
+	if [ $MODEL = "nmmb" ] 
         then 
       ppgm=add
+	echo mk6p and ppgm are $mk6p $ppgm
         else
       ppgm=make
         fi
@@ -396,7 +399,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 
 #-------------------------------------------------------------
 # ON-CYCLE:  At 12-hr times:  Need 6 hour buckets as well
-# Except for 6 hr times (18,30,42...) : Already have 6 hour buckets
+# Except for 6 hr times (18,30,42...) : Already have 6 hour buckets  ### not true hiresw
 # In addition, For 00/12 UTC valid times: Need to make 12 hour accumulations
 #-------------------------------------------------------------
   case $fhr in 
@@ -435,6 +438,8 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
         if [ $ppgm = add ];then 
           FHRFRQ=$fhr3
           pfhr1=$fhr3;pfhr2=$fhr
+	echo add block here FHRFRQ $FHRFRQ
+	echo add block pfhr1 pfhr2 $pfhr1 $pfhr2
         fi;;
 
         $mk12p )
@@ -447,6 +452,7 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
         fi
 
         if [ $ppgm = add ];then 
+	echo add block just mk12p or all
         pfhr1=$fhr9;pfhr2=$fhr6;pfhr3=$fhr3;pfhr4=$fhr
         fi;;
 
@@ -455,9 +461,11 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
-	echo "contents of WRFPRS${fhr}.tm00"
-	${utilexec}/wgrib WRFPRS${fhr}.tm00
+
+#         cnvgrib -g21  WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
+       mv WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
+# 	echo "contents of WRFPRS${fhr}.tm00"
+#	${utilexec}/wgrib WRFPRS${fhr}.tm00
    
 #mp        cp $COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ} WRFPRS${FHRFRQ}.tm00
 
@@ -470,27 +478,29 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 	echo here with FHRFRQ $FHRFRQ
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${FHRFRQ}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
-	echo "contents of WRFPRS${FHRFRQ}.tm00"
-	${utilexec}/wgrib WRFPRS${FHRFRQ}.tm00
+
+#        cnvgrib -g21  WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
+         mv WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
+#	echo "contents of WRFPRS${FHRFRQ}.tm00"
+#	${utilexec}/wgrib WRFPRS${FHRFRQ}.tm00
 	fi
 
-        ${utilexec}/wgrib -s WRFPRS${FHRFRQ}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-                        |${utilexec}/wgrib -i -grib -o temp WRFPRS${FHRFRQ}.tm00 > wgrib.out
-        mv temp WRFPRS${FHRFRQ}.tm00
+#why        ${utilexec}/wgrib -s WRFPRS${FHRFRQ}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
+#why                        |${utilexec}/wgrib -i -grib -o temp WRFPRS${FHRFRQ}.tm00 > wgrib.out
+#why       mv temp WRFPRS${FHRFRQ}.tm00
 
-      $utilexec/grbindex WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+      $utilexec/grb2index WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 	err1=$?
 	if [ $err1 -ne 0 ]
 	then
-	echo trouble running grbindex on WRFPRS${fhr}.tm00
+	echo trouble running grb2index on WRFPRS${fhr}.tm00
 	fi
 
-      $utilexec/grbindex WRFPRS${FHRFRQ}.tm00 WRFPRS${FHRFRQ}i.tm00
+      $utilexec/grb2index WRFPRS${FHRFRQ}.tm00 WRFPRS${FHRFRQ}i.tm00
 	err1=$?
 	if [ $err1 -ne 0 ]
 	then
-	echo trouble running grbindex on WRFPRS${FHRFRQ}.tm00
+	echo trouble running grb2index on WRFPRS${FHRFRQ}.tm00
 	fi
 
       export pgm=nam_smartprecip; . prep_step
@@ -507,9 +517,11 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr9}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr9}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
-	echo "contents of WRFPRS${fhr9}.tm00"
-	${utilexec}/wgrib WRFPRS${fhr9}.tm00
+
+#        cnvgrib -g21  WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
+      mv WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
+#	echo "contents of WRFPRS${fhr9}.tm00"
+#	${utilexec}/wgrib WRFPRS${fhr9}.tm00
 
 
 	if [ $MODEL = "nmmb" ]
@@ -525,19 +537,25 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
-        echo "contents of WRFPRS${fhr3}.tm00"
-        ${utilexec}/wgrib WRFPRS${fhr3}.tm00
+
+#        cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
+	mv  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
+#        echo "contents of WRFPRS${fhr3}.tm00"
+#        ${utilexec}/wgrib WRFPRS${fhr3}.tm00
 
 
            fi
+#####
 
-          ${utilexec}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-                          |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
-          mv temp WRFPRS${fhr3}.tm00
-        echo "contents of redone WRFPRS${fhr3}.tm00"
-        ${utilexec}/wgrib WRFPRS${fhr3}.tm00
-        $utilexec/grbindex WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
+	ls -l  WRFPRS${fhr3}.tm00
+
+#          ${utilexec}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
+#                          |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
+#          mv temp WRFPRS${fhr3}.tm00
+#        echo "contents of redone WRFPRS${fhr3}.tm00"
+#        ${utilexec}/wgrib WRFPRS${fhr3}.tm00
+
+        $utilexec/grb2index WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
 
 #          cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
 
@@ -548,13 +566,15 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 #             cnvgrib -g21 $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
+#        cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
+       mv WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
            fi
 
-          ${utilexec}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-                           |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
-          mv temp WRFPRS${fhr6}.tm00
-        $utilexec/grbindex WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
+#####
+#why          ${utilexec}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
+#why                           |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
+#why          mv temp WRFPRS${fhr6}.tm00
+        $utilexec/grb2index WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
 
         ln -sf "WRFPRS${fhr6}.tm00"      fort.15    
         ln -sf "WRFPRS${fhr6}i.tm00"     fort.16
@@ -574,13 +594,15 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 #             cnvgrib -g21  $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3} WRFPRS${fhr3}.tm00
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
+#        cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
+	mv  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
            fi
 
-          ${utilexec}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-                          |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
-          mv temp WRFPRS${fhr3}.tm00
-        $utilexec/grbindex WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
+#####
+#why          ${utilexec}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
+#why                          |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
+#why          mv temp WRFPRS${fhr3}.tm00
+        $utilexec/grb2index WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
 
 #          cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
 
@@ -591,13 +613,15 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 #             cnvgrib -g21 $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
         INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
-        cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
+#        cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
+	mv WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
            fi
 
-          ${utilexec}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-                           |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
-          mv temp WRFPRS${fhr6}.tm00
-        $utilexec/grbindex WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
+#####
+#why          ${utilexec}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
+#why                           |${utilexec}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
+#why          mv temp WRFPRS${fhr6}.tm00
+        $utilexec/grb2index WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
 
 
         ln -sf "WRFPRS${fhr}.tm00"       fort.15
@@ -622,10 +646,10 @@ cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_
 	IARW=1
 	fi
 
-	echo about to execute hiresw_smartprecip
+	echo about to execute hiresw_smartprecipg2
 	ls -l fort.*
 
-     $EXEChiresw/hiresw_smartprecip <<EOF > ${ppgm}precip${freq}${fhr}.out 2>errfile_${freq}${fhr}
+     $EXEChiresw/hiresw_smartprecipg2 <<EOF > ${ppgm}precip${freq}${fhr}.out 2>errfile_${freq}${fhr}
 $pfhr1 $pfhr2 $pfhr3 $pfhr4 $IARW
 EOF
 export err=$?; err_chk
@@ -633,13 +657,16 @@ export err=$?; err_chk
 #    Interp precip to smartinit GRID
      cpgbgrd=$grid
 
-	echo cpgbrd is $cpgbrd
+	echo cpgbgrd is $cpgbgrd
 
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
      if [ $RUNTYP = aknest3 ];then cpgbgrd=$grid;fi
 
    
-     $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
+# $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
+# echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe
+#     $utilexec/copygb2 -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
+$WGRIB2 ${freq}precip.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def}  ${freq}precip
 	err=$?
 
 	if [ $err -ne 0 ]
@@ -648,14 +675,15 @@ export err=$?; err_chk
 	fi
 
 	echo here with freq $freq and fhr $fhr
-     $utilexec/grbindex ${freq}precip ${freq}precipi
+     $utilexec/grb2index ${freq}precip ${freq}precipi
 	ls -l  ${freq}precip ${freq}precipi
-     $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
+#      $utilexec/copygb2 -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
+$WGRIB2 ${freq}snow.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def}  ${freq}snow
 	if [ $err -ne 0 ]
 	then
 	echo "bad copygb to generate ${freq}snow"
 	fi
-     $utilexec/grbindex ${freq}snow ${freq}snowi
+     $utilexec/grb2index ${freq}snow ${freq}snowi
     fi #MKPCP>0
   done #MKPCP loop
 
@@ -665,7 +693,7 @@ export err=$?; err_chk
 
  if [ -e WRFPRS${fhr}i.tm00 ];then rm WRFPRS${fhr}i.tm00;fi
 
-  $utilexec/grbindex WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+  $utilexec/grb2index WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 
 #   echo creating $prdgfl file for fhr $fhr
 #   cat >input${fhr}.prd <<EOF5
@@ -694,7 +722,7 @@ export err=$?; err_chk
     exit
   fi
 
-  $utilexec/grbindex meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+  $utilexec/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
 echo "DONE" > smartinitprdgendone${fhr}
 datestr=`date`
