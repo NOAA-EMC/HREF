@@ -105,11 +105,17 @@ contains
 !      SUBROUTINE GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
 !     &                  UNPACK,K,GFLD,IRET)
 
-!        write(0,*) 'IRET from GETGB call ', IRET
+        write(0,*) 'IRET from GETGB2 call ', IRET
 !        write(0,*) 'jpds(5:7) for found variable: ' , JPDS(5:7)
 
-      IMAX=KGDS(2)
+!      IMAX=KGDS(2)
+
+
       IF(IRET.EQ.0) THEN
+        write(0,*) 'found it'
+
+        write(0,*) 'probably not knowing NUMV: ', NUMV
+        write(0,*) 'probably not knowing IMAX: ', IMAX
         DO KK = 1, NUMV
           IF(MOD(KK,IMAX).EQ.0) THEN
             M=IMAX

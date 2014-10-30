@@ -233,7 +233,7 @@
 !     READ INDEX FILE TO GET GRID SPECS
 !==========================================================
         write(0,*) 'here c - call RDHDRS'
-      CALL RDHDRS(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
+      CALL RDHDRS_g2(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
       IMAX=GDIN%IMAX;JMAX=GDIN%JMAX;KMAX=GDIN%KMAX
       NUMLEV=GDIN%KMAX
       ITOT=IMAX*JMAX
@@ -244,7 +244,7 @@
 
         if (HAVESREF .eq. 1) then
       print *, ' READING SREF HDRS',LUGB2,LUGI2
-      CALL RDHDRS(LUGB2,LUGI2,IGDNUM2,GDIN,NUMVAL2)
+      CALL RDHDRS_g2(LUGB2,LUGI2,IGDNUM2,GDIN,NUMVAL2)
         endif
 
         write(0,*) 'here e - past RDHDRS'
@@ -255,10 +255,10 @@
 
         write(0,*) 'READ 3-hr precip HDRS from Unit ', LUGP3,LUGP3I
       print *, 'READ 3-hr precip HDRS from Unit ', LUGP3,LUGP3I
-      CALL RDHDRS(LUGP3,LUGP3I,IGDNUM3,GDIN,NUMVAL3)
+      CALL RDHDRS_g2(LUGP3,LUGP3I,IGDNUM3,GDIN,NUMVAL3)
         write(0,*) 'here f - past RDHDRS'
       print *, 'READ 3-hr snow HDRS from Unit ', LUGS3,LUGS3I
-      CALL RDHDRS(LUGS3,LUGS3I,IGDNUMSN3,GDIN,NUMVALSN3)
+      CALL RDHDRS_g2(LUGS3,LUGS3I,IGDNUMSN3,GDIN,NUMVALSN3)
         write(0,*) 'here g - past RDHDRS'
       IGDNUM5=IGDNUMSN3
 
@@ -267,15 +267,15 @@
       IF (LHR6.OR.LHR9.OR.LHR12) THEN
         print *, 'READING 6 hr precip HDR from Unit ', LUGP6,LUG6PI
         write(0,*) 'here ga - '
-        CALL RDHDRS(LUGP6,LUGP6I,IGDNUM6,GDIN,NUMVAL6)
+        CALL RDHDRS_g2(LUGP6,LUGP6I,IGDNUM6,GDIN,NUMVAL6)
         write(0,*) 'here gb - '
         print *, 'READING 6 hr SNOW HDR from Unit ', LUGS6,LUGS6I
-        CALL RDHDRS(LUGS6,LUGS6I,IGDNUMSN6,GDIN,NUMVALSN6)
+        CALL RDHDRS_g2(LUGS6,LUGS6I,IGDNUMSN6,GDIN,NUMVALSN6)
         write(0,*) 'here gc - '
         IF(LHR12) THEN
           print *, 'READING 12 hr precip HDR from Unit ', LUGP12,LUGP12I
         write(0,*) 'here gd - '
-          CALL RDHDRS(LUGP12,LUGP12I,IGDNUM12,GDIN,NUMVAL12)
+          CALL RDHDRS_g2(LUGP12,LUGP12I,IGDNUM12,GDIN,NUMVAL12)
         write(0,*) 'here ge - '
         ENDIF
       ENDIF
@@ -290,7 +290,7 @@
 !     ALL OF THESE MIN/MAX FILES AND NOT DO THIS FOR EACH
 
       print *, "Reading min/max Temp HDR from UNIT:",LUGT1, LUGT1I
-      CALL RDHDRS(LUGT1,LUGT1I,IGDNUMT,GDIN,NUMVALT)
+      CALL RDHDRS_g2(LUGT1,LUGT1I,IGDNUMT,GDIN,NUMVALT)
 
 !     Fill the max/min T/Td holders with 0's to
 !      1) account for this array at times other than f12,24,36...
@@ -299,14 +299,14 @@
       DHOLD=0.
 
       print *, "Reading min/max Temp HDR from UNIT:",LUGT2, LUGT2I, NUMVALT
-      CALL RDHDRS(LUGT2,LUGT2I,IGDNUMT,GDIN,NUMVALT)
+      CALL RDHDRS_g2(LUGT2,LUGT2I,IGDNUMT,GDIN,NUMVALT)
 
       IF (LHR12) THEN
         LUGT=LUGT3    
         LUGTI=LUGT3I   
         DO  IT=3,5
           print *, "Reading min/max Temp  UNIT:",LUGT, LUGTI
-          CALL RDHDRS(LUGT,LUGTI,IGDNUMT,GDIN,NUMVALT)
+          CALL RDHDRS_g2(LUGT,LUGTI,IGDNUMT,GDIN,NUMVALT)
           LUGT=LUGT+1
           LUGTI=LUGTI+1
           print*, 'IGDNUMT is: ', IGDNUMT
@@ -334,6 +334,8 @@
 
        JPDT(1) = 003
        JPDT(2) = 005
+
+        write(0,*) 'call SETVAR_g2'
 
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,KPDS,KGDS,MASK,GRID,ZSFC,IRET,ISTAT)
       WHERE (ZSFC < 0.0) ZSFC=0.0
