@@ -273,7 +273,12 @@
 !     READ INDEX FILE TO GET GRID SPECS
 !==========================================================
     LUGB=11;LUGI=12
-    CALL RDHDRS(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
+!nope    CALL RDHDRS(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
+
+
+        write(0,*) 'to RDHDRS_g2 call'
+
+    CALL RDHDRS_g2(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
     IM=GDIN%IMAX;JM=GDIN%JMAX;ITOT=NUMVAL
     GDIN%KMAX=40       ! HARDWIRE MAXLEVs
     if (lnest) GDIN%KMAX=40
