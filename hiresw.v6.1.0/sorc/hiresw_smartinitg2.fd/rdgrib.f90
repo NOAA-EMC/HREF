@@ -6,6 +6,8 @@
 !=======================================================================
 !  routines to  read/write grib data 
 !=======================================================================
+
+        IMPLICIT NONE
      
    REAL,      ALLOCATABLE  :: GRID(:)
    LOGICAL*1, ALLOCATABLE  :: MASK(:)
@@ -23,6 +25,8 @@ contains
    LOGICAL*1, INTENT(INOUT)  :: MASK(:)
 !-----------------------------------------------------------------------------------------
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
+        INTEGER :: KK, NUMV, LUB, LUI, J, KF, K, IRET, IMAX
+        INTEGER :: M, N, ISTAT
 
 !     Get GRIB Variable
 
@@ -76,6 +80,8 @@ contains
    LOGICAL*1, INTENT(INOUT)  :: MASK(:)
 !-----------------------------------------------------------------------------------------
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
+        INTEGER :: KK, NUMV
+        INTEGER :: M, N, ISTAT, IMAX, KF
 
 ! C grib2
       INTEGER :: LUB,LUI,J,JDISC,JPDTN,JGDTN
@@ -85,37 +91,30 @@ contains
       TYPE(GRIBFIELD) :: GFLD
 ! C grib2
 
-
-
 !     Get GRIB Variable
 
-!       CALL GETGB(LUB,LUI,NUMV,J,JPDS,JGDS,KF,K,KPDS,KGDS,MASK,GRID,IRET)
+        J=0
+        UNPACK=.TRUE.
 
-        JDISC=0
-
-        JIDS=-9999
-        JPDTN=-1
-        JPDT=-9999
-        JGDTN=-1
-        JGDT=-9999
-
-        call getgb2(LUB,LUI,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT, &
+        call getgb2(LUB,LUI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT, &
           UNPACK,K,GFLD,IRET)
 
-!      SUBROUTINE GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-!     &                  UNPACK,K,GFLD,IRET)
+!        write(0,*) 'IRET from getgb2: ', IRET
 
-        write(0,*) 'IRET from GETGB2 call ', IRET
-!        write(0,*) 'jpds(5:7) for found variable: ' , JPDS(5:7)
+!        if (IRET .ne. 0) then
+!        STOP
+!        endif
 
-!      IMAX=KGDS(2)
-
+        if (IRET .eq. 0) then
+        IMAX=gfld%igdtmpl(8)
+!        write(0,*) 'seem good.  IMAX: ', imax
+!        write(0,*) 'associated(gfld%fld): ', associated(gfld%fld)
+!        write(0,*) 'size(gfld%fld): ', size(gfld%fld)
+!        write(0,*) 'gfld%fld(1): ', gfld%fld(1)
+        endif
 
       IF(IRET.EQ.0) THEN
-        write(0,*) 'found it'
 
-        write(0,*) 'probably not knowing NUMV: ', NUMV
-        write(0,*) 'probably not knowing IMAX: ', IMAX
         DO KK = 1, NUMV
           IF(MOD(KK,IMAX).EQ.0) THEN
             M=IMAX
@@ -124,18 +123,18 @@ contains
             M=MOD(KK,IMAX)
             N=INT(KK/IMAX) + 1
           ENDIF
-          VARB(M,N) = GRID(KK)
+          VARB(M,N) = gfld%fld(KK)
         ENDDO
+
        IF(JPDS(6).ne.109 .or. JPDS(6).eq.109.and.J.le.40) &
         WRITE(0,100) JPDS(5),JPDS(6),JPDS(7),J,MINVAL(VARB),MAXVAL(VARB)
  100   FORMAT('VARB UNPACKED ', 4I7,2G12.4)
       ELSE
-       WRITE(6,*)'====================================================='
-       WRITE(6,*)'COULD NOT UNPACK VARB(setvar)',K,JPDS(3),JPDS(5),JPDS(6),IRET
-       WRITE(6,*)'USING J: ', J
-       WRITE(6,*)'UNIT', LUB,LUI,NUMV,KF
-       WRITE(6,*)'====================================================='
-       print *,'JPDS',jpds(1:25)
+       WRITE(0,*)'====================================================='
+       WRITE(0,*)'COULD NOT UNPACK VARB(setvar)',K,JPDT(1),JPDT(2),IRET
+       WRITE(0,*)'USING J: ', J
+       WRITE(0,*)'UNIT', LUB,LUI,NUMV
+       WRITE(0,*)'====================================================='
        ISTAT = IRET
 ! 01-29-13 JTM : past hour 60 nam output onli to level 35
        if (JPDS(6).ne.109) then
@@ -160,7 +159,10 @@ contains
 !     10-2012  Jeff McQueen
 !=============================================================
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
-      PARAMETER(MBUF=2000000)
+      INTEGER, PARAMETER :: MBUF=2000000
+      INTEGER :: IRGI, IRGS, JR, KF, KSKIP, LUB, LUI, IRETGB
+      INTEGER :: IRETGI, NLEN, NNUM, ISTAT, K
+      INTEGER :: LSKIP, LGRIB, IGDN, KR, NUMV
       CHARACTER CBUF(MBUF)
       CHARACTER*80 FNAME
       INTEGER JENS(200),KENS(200)
@@ -246,6 +248,8 @@ contains
 
       CHARACTER*80 FNAME
       INTEGER JENS(200),KENS(200)
+      INTEGER :: IRGI, IRGS, JR, KSKIP, IRETGB, IRETGI, NLEN
+      INTEGER :: NNUM, ISTAT, IGDN, NUMV
 
 ! C grib2
       INTEGER :: LUB,LUI,J,JDISC,JPDTN,JGDTN
@@ -268,7 +272,7 @@ contains
 
       WRITE(FNAME(6:7),FMT='(I2)')LUB
       CALL BAOPEN(LUB,FNAME,IRETGB)
-        write(0,*) 'IRETGB on baopen: ', IRETGB
+        write(0,*) 'IRETGB on baopen, lub: ', IRETGB, LUB
       WRITE(FNAME(6:7),FMT='(I2)')LUI
       CALL BAOPEN(LUI,FNAME,IRETGI)
         write(0,*) 'IRETGI on baopen: ', IRETGi
