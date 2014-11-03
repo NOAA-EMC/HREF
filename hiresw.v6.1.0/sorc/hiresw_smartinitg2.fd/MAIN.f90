@@ -20,6 +20,7 @@
 !========================================================================
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200),ID(25)
       INTEGER IMAX,JMAX,KMAX,FHR,CYC,DATE,HOUR,ITOT,OGRD,HAVESREF
+      REAL :: RH1SUM, RH2SUM
 
       REAL :: DX
 
@@ -152,7 +153,7 @@
     REAL, ALLOCATABLE   :: EXN(:,:)
     REAL, ALLOCATABLE   :: ROUGH_MOD(:,:)
     REAL, ALLOCATABLE   :: TTMP(:,:),DTMP(:,:),UTMP(:,:),VTMP(:,:) 
-    REAL, ALLOCATABLE   :: SFCHTNEW(:,:)
+!    REAL, ALLOCATABLE   :: SFCHTNEW(:,:)
     LOGICAL, INTENT(IN)  :: VALIDPT(:,:)
      real exn0,exn1, wsp
      integer nmod(2)
@@ -199,7 +200,10 @@
         write(0,*) 'start program'
         write(6,*) 'start program'
       LNEST=.FALSE.
-      LCYCON=FALSE;LHR12=.FALSE.;LHR3=.FALSE.
+      LCYCON=.FALSE.
+      LHR12=.FALSE.
+      LHR3=.FALSE.
+
       call getarg(1,CTMP)
         write(0,*) 'CTMP(1): ' , CTMP
       READ (ctmp,*) GDIN%CYC
@@ -314,7 +318,6 @@
 
         write(0,*) 'allocated stuff'
 
-    RH=0.
         write(0,*) 'call GETGRIB with HAVESREF: ', HAVESREF
     CALL GETGRIB(ISNOW,IZR,IIP,IRAIN,VEG,WETFRZ,  &
     P03M,P06M,P12M,SN03,SN06,P3CP01,P3CP10,P3CP50,P6CP01,  &
@@ -846,8 +849,21 @@
           RH2SUM=RH2SUM+1.
         ENDIF
        ENDDO
+
+        if (RH1SUM .ge. 1) then
        RH1=RH1TOT/RH1SUM
+        else
+        write(0,*) 'RH1SUM is zero...would divide by zero'
+       RH1=0.2
+        endif
+
+        if (RH2SUM .ge. 1) then
        RH2=RH2TOT/RH2SUM 
+        else
+        write(0,*) 'RH2SUM is zero...would divide by zero'
+       RH2=0.8
+        endif
+
        IF (RH2.GT.0.8 .AND. RH1.LT.0.2) THEN
         LAL(I,J)=LLAL+1.
        ELSE
@@ -1077,8 +1093,8 @@
        ENDIF
 
 !      Compute Haines Index
-!        goto 993
 
+        if (LHR3) then  ! only on 3 hourly times
       ALLOCATE (HAINES(IM,JM),HLVL(IM,JM),STAT=kret)
 
         print*, 'call HINDEX'
@@ -1094,7 +1110,7 @@
       ID(8)=209;ID(9)=1
       DEC=1.0
 
-  993 continue
+        endif
 !jtm not needed      CALL GRIBIT(ID,RITEHD,HLVL,GDIN,70,DEC)
 
 

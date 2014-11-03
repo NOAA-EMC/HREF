@@ -95,22 +95,18 @@ contains
 
         J=0
         UNPACK=.TRUE.
+        K=0
 
         call getgb2(LUB,LUI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT, &
           UNPACK,K,GFLD,IRET)
 
-!        write(0,*) 'IRET from getgb2: ', IRET
-
-!        if (IRET .ne. 0) then
+        if (IRET .ne. 0) then
+         write(0,*) 'IRET from getgb2: ', IRET
 !        STOP
-!        endif
+        endif
 
         if (IRET .eq. 0) then
         IMAX=gfld%igdtmpl(8)
-!        write(0,*) 'seem good.  IMAX: ', imax
-!        write(0,*) 'associated(gfld%fld): ', associated(gfld%fld)
-!        write(0,*) 'size(gfld%fld): ', size(gfld%fld)
-!        write(0,*) 'gfld%fld(1): ', gfld%fld(1)
         endif
 
       IF(IRET.EQ.0) THEN
@@ -126,19 +122,19 @@ contains
           VARB(M,N) = gfld%fld(KK)
         ENDDO
 
-       IF(JPDS(6).ne.109 .or. JPDS(6).eq.109.and.J.le.40) &
-        WRITE(0,100) JPDS(5),JPDS(6),JPDS(7),J,MINVAL(VARB),MAXVAL(VARB)
+       IF(JPDT(10).ne.105 .or. JPDT(10).eq.109.and.J.le.40) &
+        WRITE(0,100) JPDT(1),JPDT(2),JPDT(10),J,MINVAL(VARB),MAXVAL(VARB)
  100   FORMAT('VARB UNPACKED ', 4I7,2G12.4)
       ELSE
        WRITE(0,*)'====================================================='
        WRITE(0,*)'COULD NOT UNPACK VARB(setvar)',K,JPDT(1),JPDT(2),IRET
-       WRITE(0,*)'USING J: ', J
+       write(0,*) 'JPDT(1:12): ' , JPDT(1:12)
        WRITE(0,*)'UNIT', LUB,LUI,NUMV
        WRITE(0,*)'====================================================='
        ISTAT = IRET
 ! 01-29-13 JTM : past hour 60 nam output onli to level 35
-       if (JPDS(6).ne.109) then
-        write(0,*) 'jpds(5:7): ' , JPDS(5:7)
+       if (JPDT(10).ne.105) then
+        write(0,*) 'JPDT(1:12): ' , JPDT(1:12)
                 STOP 'ABORT: GRIB VARB READ ERROR'
        endif
       ENDIF
@@ -272,10 +268,10 @@ contains
 
       WRITE(FNAME(6:7),FMT='(I2)')LUB
       CALL BAOPEN(LUB,FNAME,IRETGB)
-        write(0,*) 'IRETGB on baopen, lub: ', IRETGB, LUB
+        write(0,*) 'IRETGB on baopen, LUB: ', IRETGB, LUB
       WRITE(FNAME(6:7),FMT='(I2)')LUI
       CALL BAOPEN(LUI,FNAME,IRETGI)
-        write(0,*) 'IRETGI on baopen: ', IRETGi
+        write(0,*) 'IRETGI on baopen, LUI: ', IRETGi, LUI
 
 
         write(0,*) 'to getidx call'
@@ -304,6 +300,7 @@ contains
         JGDTN=-1
         JGDT=-9999
 
+        write(0,*) 'to GETGB2S call: '
         call GETGB2S(CBUF,NLEN,NNUM,J,JDISC,JIDS,JPDTN,JPDT,JGDTN, &
                         JGDT,K,GFLD,LPOS,IRGS)
         IF(IRGS .NE. 0) THEN
