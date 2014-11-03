@@ -87,7 +87,8 @@
           ERROR=-1.0E+09
           do jj=1,ny
           do ii=1,nx
-          if (validpt(i,j)) then
+!mptst          if (validpt(i,j)) then
+          if (validpt(ii,jj)) then
             SELECT CASE (IDIR)
              CASE (1)
               I=II

@@ -7,8 +7,8 @@
     use aset3d
     use aset2d
     use rdgrib
-        USE GRIB_MOD
-        USE pdstemplates
+    USE GRIB_MOD
+    USE pdstemplates
 
 
 !$$$  SUBPROGRAM DOCUMENTATION BLOCK
@@ -72,6 +72,8 @@
 
 !  TYPE(ISET), INTENT(INOUT) :: iprcp
    INTEGER, INTENT(INOUT) :: ISNOW(:,:),IZR(:,:),IIP(:,:),IRAIN(:,:)
+        REAL, allocatable,dimension(:,:) :: RTYPE
+    
 
 !  TYPE PCPSET, INTENT(INOUT) :: prcp
    REAL,    INTENT(INOUT) :: P03M(:,:),P06M(:,:),P12M(:,:),SN03(:,:),SN06(:,:)
@@ -332,12 +334,8 @@
       endif !LFULL
 
 !  get sfc height 
-      ALLOCATE (GRID(ITOT),MASK(ITOT),STAT=kret)
-      print *,'GRID ALLOCATED',ITOT,' kret',kret
-
-!      J=0;JPDS=-1;JGDS=-1;JPDS(3) = IGDNUM
-!      JPDS(5) = 007
-!      JPDS(6) = 001
+!tst      ALLOCATE (GRID(ITOT),MASK(ITOT),STAT=kret)
+!tst      print *,'GRID ALLOCATED',ITOT,' kret',kret
 
         JIDS=-9999
         JPDTN=-1
@@ -379,103 +377,161 @@
       if (lfull) then
 
 ! snow
-      
-       JPDT(1) = 003
-       JPDT(2) = 036
+
+        JIDS=-9999
+        JPDT=-9999
+        JGDTN=-1
+        JGDT=-9999
+        JDISC=0
+
+        JPDTN=0
+       JPDT(1) = 001
+       JPDT(2) = 195 ! 036
        JPDT(10) = 1
+        UNPACK=.true.
+        J=0
+       
+        allocate(RTYPE(IMAX,JMAX))
 
-      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
-                  UNPACK,K,GFLD,IRET)
+!      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
+!                  UNPACK,K,GFLD,IRET)
 
-      IF(IRET.EQ.0) THEN
-        DO KK = 1, ITOT
-          IF(MOD(KK,IMAX).EQ.0) THEN
-            M=IMAX
-            N=INT(KK/IMAX)
-          ELSE
-            M=MOD(KK,IMAX)
-            N=INT(KK/IMAX) + 1
-          ENDIF
-          ISNOW(M,N) = GFLD%FLD(KK)
-        ENDDO
-        WRITE(6,*) 'FOUND SNOW CATEGORY'
-      ELSE
-       WRITE(6,*)'COULD NOT UNPACK VARB(a)',JPDT(1:10),IRET
-       ISTAT = IRET
-      ENDIF
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
+                     KPDS,KGDS,MASK,GRID,RTYPE,IRET,ISTAT)
+
+        write(0,*) 'IRET from snow cat: ', IRET
+
+        do J=1,JMAX
+        do I=1,IMAX
+        ISNOW(I,J)=int(RTYPE(I,J))
+        enddo
+        enddo
+
+
+!      IF(IRET.EQ.0) THEN
+!        DO KK = 1, ITOT
+!          IF(MOD(KK,IMAX).EQ.0) THEN
+!            M=IMAX
+!            N=INT(KK/IMAX)
+!          ELSE
+!            M=MOD(KK,IMAX)
+!            N=INT(KK/IMAX) + 1
+!          ENDIF
+!          ISNOW(M,N) = GFLD%FLD(KK)
+!        ENDDO
+!        WRITE(6,*) 'FOUND SNOW CATEGORY'
+!      ELSE
+!       WRITE(6,*)'COULD NOT UNPACK VARB(a)',JPDT(1:10),IRET
+!       ISTAT = IRET
+!      ENDIF
 
 ! ice pellets
-       JPDT(1) = 003
-       JPDT(2) = 035
+       JPDT(1) = 001
+       JPDT(2) = 194 ! 035
        JPDT(10) = 1
 
-      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
-                  UNPACK,K,GFLD,IRET)
-      IF(IRET.EQ.0) THEN
-        DO KK = 1, ITOT
-          IF(MOD(KK,IMAX).EQ.0) THEN
-            M=IMAX
-            N=INT(KK/IMAX)
-          ELSE
-            M=MOD(KK,IMAX)
-            N=INT(KK/IMAX) + 1
-          ENDIF
-          IIP(M,N) = GFLD%FLD(KK)
-        ENDDO
-        WRITE(6,*) 'FOUND ICE PELLETS CATEGORY'
-      ELSE
-       WRITE(6,*)'COULD NOT UNPACK VARB(b)',JPDT(1:10),IRET
-       ISTAT = IRET
-      ENDIF
+        write(0,*) 'to ice pellets'
 
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
+                     KPDS,KGDS,MASK,GRID,RTYPE,IRET,ISTAT)
+
+        write(0,*) 'IRET from snow cat: ', IRET
+
+        do J=1,JMAX
+        do I=1,IMAX
+        IIP(I,J)=int(RTYPE(I,J))
+        enddo
+        enddo
+
+!      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
+!                  UNPACK,K,GFLD,IRET)
+!      IF(IRET.EQ.0) THEN
+!        DO KK = 1, ITOT
+!          IF(MOD(KK,IMAX).EQ.0) THEN
+!            M=IMAX
+!            N=INT(KK/IMAX)
+!          ELSE
+!            M=MOD(KK,IMAX)
+!            N=INT(KK/IMAX) + 1
+!          ENDIF
+!          IIP(M,N) = GFLD%FLD(KK)
+!        ENDDO
+!        WRITE(6,*) 'FOUND ICE PELLETS CATEGORY'
+!      ELSE
+!       WRITE(6,*)'COULD NOT UNPACK VARB(b)',JPDT(1:10),IRET
+!       ISTAT = IRET
+!      ENDIF
+!
 ! frz rain
-       JPDT(1) = 003
-       JPDT(2) = 034
+       JPDT(1) = 001
+       JPDT(2) = 193 ! 034
        JPDT(10) = 1
 
-      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
-                  UNPACK,K,GFLD,IRET)
+!      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
+!                  UNPACK,K,GFLD,IRET)
+!
+!      IF(IRET.EQ.0) THEN
+!        DO KK = 1, ITOT
+!          IF(MOD(KK,IMAX).EQ.0) THEN
+!            M=IMAX
+!            N=INT(KK/IMAX)
+!          ELSE
+!            M=MOD(KK,IMAX)
+!            N=INT(KK/IMAX) + 1
+!          ENDIF
+!          IZR(M,N) = GFLD%FLD(KK)
+!        ENDDO
+!        WRITE(6,*) 'FOUND FREEZING RAIN CATEGORY'
+!      ELSE
+!       WRITE(6,*)'COULD NOT UNPACK VARB(c)',JPDT(1:10),IRET
+!       ISTAT = IRET
+!      ENDIF
 
-      IF(IRET.EQ.0) THEN
-        DO KK = 1, ITOT
-          IF(MOD(KK,IMAX).EQ.0) THEN
-            M=IMAX
-            N=INT(KK/IMAX)
-          ELSE
-            M=MOD(KK,IMAX)
-            N=INT(KK/IMAX) + 1
-          ENDIF
-          IZR(M,N) = GFLD%FLD(KK)
-        ENDDO
-        WRITE(6,*) 'FOUND FREEZING RAIN CATEGORY'
-      ELSE
-       WRITE(6,*)'COULD NOT UNPACK VARB(c)',JPDT(1:10),IRET
-       ISTAT = IRET
-      ENDIF
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
+                     KPDS,KGDS,MASK,GRID,RTYPE,IRET,ISTAT)
+
+        write(0,*) 'IRET from freezing rain cat: ', IRET
+
+        do J=1,JMAX
+        do I=1,IMAX
+        IZR(I,J)=int(RTYPE(I,J))
+        enddo
+        enddo
 
 ! rain
-       JPDT(1) = 003
-       JPDT(2) = 034
+       JPDT(1) = 001
+       JPDT(2) = 192 ! 034
        JPDT(10) = 1
 
-      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
-                  UNPACK,K,GFLD,IRET)
-      IF(IRET.EQ.0) THEN
-        DO KK = 1, ITOT
-          IF(MOD(KK,IMAX).EQ.0) THEN
-            M=IMAX
-            N=INT(KK/IMAX)
-          ELSE
-            M=MOD(KK,IMAX)
-            N=INT(KK/IMAX) + 1
-          ENDIF
-          IRAIN(M,N) = GFLD%FLD(KK)
-        ENDDO
-        WRITE(6,*) 'FOUND RAIN CATEGORY'
-      ELSE
-       WRITE(6,*)'COULD NOT UNPACK VARB(d)',JPDT(1:10),IRET
-       ISTAT = IRET
-      ENDIF
+!      CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDTN,JGDT, &
+!                  UNPACK,K,GFLD,IRET)
+!      IF(IRET.EQ.0) THEN
+!        DO KK = 1, ITOT
+!          IF(MOD(KK,IMAX).EQ.0) THEN
+!            M=IMAX
+!            N=INT(KK/IMAX)
+!          ELSE
+!            M=MOD(KK,IMAX)
+!            N=INT(KK/IMAX) + 1
+!          ENDIF
+!          IRAIN(M,N) = GFLD%FLD(KK)
+!        ENDDO
+!        WRITE(6,*) 'FOUND RAIN CATEGORY'
+!      ELSE
+!       WRITE(6,*)'COULD NOT UNPACK VARB(d)',JPDT(1:10),IRET
+!       ISTAT = IRET
+!      ENDIF
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
+                     KPDS,KGDS,MASK,GRID,RTYPE,IRET,ISTAT)
+
+        write(0,*) 'IRET from freezing rain cat: ', IRET
+
+        do J=1,JMAX
+        do I=1,IMAX
+        IRAIN(I,J)=int(RTYPE(I,J))
+        enddo
+        enddo
 
       endif !lfull
     
@@ -566,34 +622,26 @@
 
 !! 225 is vegetation type, not vegetation fraction
 
-!      JPDS=-1;J=0;JPDS(3) = IGDNUM
-!      JPDS(5) = 225
-!      JPDS(6) = 001
-!
-!      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,VEG,IRET,ISTAT)
-
-
-!!! choking on this read...WHY?
-
        J=0
        JDISC    = 2
        JPDT(1)  = 0
        JPDT(2)  = 198
        JPDT(10) = -9999
+       JPDT(12) = -9999
 
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,VEG,IRET,ISTAT)
 
+        write(0,*) 'VEG(1,1): ', VEG(1,1)
+
+
 ! Best Liftex Index 
       if (lfull.or.lanl) then
-!      JPDS=-1;J=0;JPDS(3) = IGDNUM
-!      JPDS(5) = 132 
-!      JPDS(6) = 116 
-!      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,BLI,IRET,ISTAT)
 
        JDISC=0
+        JPDT=-9999
        JPDT(1) = 7
-       JPDT(2) = 1
+       JPDT(2) = 193
        JPDT(10) = -9999
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,BLI,IRET,ISTAT)
@@ -614,29 +662,17 @@
       IF (LHR3) THEN
 
 ! Read 3-hr Precip 
-!       JPDS=-1;J=0
-!       JPDS(3) = IGDNUM3 
-!       NUMVP = NUMVAL3
-!       JPDS(5) = 61 
-!       JPDS(6) = 001 
-!       print *, 'FHR ',IFHR,'  READ 3 hr PRECIP from file unit',LUGP3,LUGS3,IGDNUM3
-!       CALL SETVAR(LUGP3,LUGP3I,NUMVP,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,P03M,IRET,ISTAT)
 
        JDISC=0
        JPDTN=8
        JPDT(1) = 1
        JPDT(2) = 8
        JPDT(10) = -9999
+       JPDT(12) = -9999
       CALL SETVAR_g2(LUGP3,LUGP3I,NUMVP,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,P03M,IRET,ISTAT)
 
 ! 3-hr Snow 
-!       JPDS=-1;J=0
-!       JPDS(3) = IGDNUMSN3
-!       NUMVS=NUMVALSN3
-!       JPDS(5) = 65
-!       JPDS(6) = 001 
-!       CALL SETVAR(LUGS3,LUGS3I,NUMVS,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,SN03,IRET,ISTAT)
 
        JDISC=0
        JPDTN=8
@@ -653,12 +689,6 @@
       IF (LHR6.OR.LHR12) THEN
 
 ! Read 6-hr Precip 
-!        JPDS=-1;J=0
-!        JPDS(5) = 61
-!        JPDS(6) = 001 
-!        JPDS(3) = IGDNUM6;NUMVP=NUMVAL6
-!        print *, LCYCON,IFHR,'READ 6 hr PRECIP from  file',LUGP6,IGDNUM6
-!        CALL SETVAR(LUGP6,LUGP6I,NUMVP,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,P06M,IRET,ISTAT)
 
        JPDTN=8
        JPDT(1) = 1
@@ -669,12 +699,6 @@
 
 
 !     6-hr snow 
-!       JPDS=-1;J=0
-!       JPDS(3) = IGDNUMSN6
-!       NUMVS=NUMVAL6
-!       JPDS(5) = 65
-!       JPDS(6) = 001 
-!       CALL SETVAR(LUGS6,LUGS6I,NUMVS,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,SN06,IRET,ISTAT)
 
        JPDTN=8
        JPDT(1) = 1
@@ -685,13 +709,7 @@
 
 ! Read  12-hr Precip
         IF(LHR12) THEN
-!          JPDS=-1; J=0
-!          JPDS(5) = 61
-!          JPDS(6) = 001
-!          JPDS(3) = IGDNUM
-!          JPDS(3) = IGDNUM12;NUMVP=NUMVAL12
           print *, LCYCON,IFHR,'READ 12 hr PRECIP from file ',LUGP12,IGDNUM12
-!          CALL SETVAR(LUGP12,LUGP12i,NUMVP,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,P12M,IRET,ISTAT)
 
        JPDTN=8
        JPDT(1) = 1
@@ -704,12 +722,6 @@
 
 !  READ min/max temperature values for previous 2 hours
       print *, 'Reading max/min for previous 2 hours',LUGT1,LUGT2,IGDNUMT
-!      JPDS=-1;J=0 ! ;JPDS(3) = IGDNUMT
-!      JPDS(5) = 11
-!      JPDS(6) = 105
-!      JPDS(7) = 2
-!      CALL SETVAR(LUGT1,LUGT1I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,THOLD(:,:,2),IRET,ISTAT)
-
        JPDT(1) = 0
        JPDT(2) = 000
        JPDT(10) = 103
@@ -720,13 +732,6 @@
         print*, 'THOLD(251,100,2): ', THOLD(251,100,2)
         print*, 'THOLD(253,131,2): ', THOLD(253,131,2)
 
-!      JPDS=-1;J=0 ! ;JPDS(3) = IGDNUMT
-!      JPDS(5) = 17
-!      JPDS(6) = 001
-!      JPDS(6) = 105
-!      JPDS(7) = 2
-!      CALL SETVAR(LUGT1,LUGT1I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,DHOLD(:,:,2),IRET,ISTAT)
-
        JPDT(1) = 0
        JPDT(2) = 006
        JPDT(10) = 103
@@ -735,29 +740,12 @@
                      KPDS,KGDS,MASK,GRID,DHOLD(:,:,2),IRET,ISTAT)
 
 
-
-!      JPDS=-1;J=0 ! ;JPDS(3) = IGDNUMT
-!      JPDS(5) = 11
-!      JPDS(6) = 001
-!      JPDS(6) = 105
-!      JPDS(7) = 2
-!      CALL SETVAR(LUGT2,LUGT2I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,THOLD(:,:,3),IRET,ISTAT)
-
        JPDT(1) = 0
        JPDT(2) = 000
        JPDT(10) = 103
        JPDT(12) = 2
       CALL SETVAR_g2(LUGT2,LUGT2I,NUMVALT,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,THOLD(:,:,3),IRET,ISTAT)
-
-
-
-!      JPDS=-1;J=0 ! ;JPDS(3) = IGDNUMT
-!      JPDS(5) = 17
-!      JPDS(6) = 001
-!      JPDS(6) = 105
-!      JPDS(7) = 2
-!      CALL SETVAR(LUGT2,LUGT2I,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,DHOLD(:,:,3),IRET,ISTAT)
 
        JPDT(1) = 0
        JPDT(2) = 006
@@ -783,14 +771,7 @@
            LUGTB=LUGT5I
          ENDIF
  
-!         JPDS = -1;J=0
-!         JPDS(3) = IGDNUMT
-!         JPDS(6) = 105
-!         JPDS(7) = 2
-!         JPDS(14) = IIH   
          print *, 'READING TEMP for hr', IIH, LUGTA,LUGTB,KT
-!         CALL SETVAR(LUGTA,LUGTB,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,THOLD(:,:,KT),IRET,ISTAT)
-
 
        JPDT(1) = 0
        JPDT(2) = 000
@@ -801,13 +782,7 @@
 
 
 
-!         JPDS = -1;J=0
-!         JPDS(3) = IGDNUMT
-!         JPDS(6) = 105
-!         JPDS(7) = 2
-!         JPDS(14) = IIH   
          print *, 'READING  DPT for hr', IIH, LUGTA,LUGTB,KT 
-!         CALL SETVAR(LUGTA,LUGTB,NUMVALT,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,DHOLD(:,:,KT),IRET,ISTAT)
 
        JPDT(1) = 0
        JPDT(2) = 006
@@ -826,10 +801,16 @@
 
 !   get the vertical profile of pressure 
       print *,'READ UPPER LEVEL fields from unit ', LUGB,'KMAX',KMAX
-      J=0
+
+        JDISC=0
+
+!        JIDS=-9999
+        JPDTN=0
+        JPDT=-9999
+        JGDTN=-1
+        JGDT=-9999
+
       DO LL=1,KMAX
-!       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=001; JPDS(6)=109
-!       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,PMID(:,:,LL),IRET,ISTAT)
 
        JPDT(1) = 003
        JPDT(2) = 000
@@ -839,28 +820,54 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,PMID(:,:,LL),IRET,ISTAT)
 
-!mptest       J=K
-      ENDDO
+        if (IRET .eq. 0) then
+        write(0,*) 'PMID(1,1,LL): ', LL, PMID(1,1,LL)
+        endif
 
-      DO LL=1,KMAX
-        write(0,*) 'PMID(1,1,LL): ', PMID(1,1,LL)
+        if (IRET .ne. 0) then
+        write(0,*) 'IRET from pressure column : ', IRET
+              STOP
+        endif
+
+!mptest       J=K
       ENDDO
 
 !   get the vertical profile of height 
       J=0
       DO LL=1,KMAX  
-       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=007; JPDS(6)=109
-       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,HGHT(:,:,LL),IRET,ISTAT)
-       J=K
+
+       JPDT(1) = 003
+       JPDT(2) = 005
+       JPDT(10) = 105
+       JPDT(12) = LL
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,HGHT(:,:,LL),IRET,ISTAT)
+        if (IRET .eq. 0) then
+        write(0,*) 'HGHT(1,1,LL): ', HGHT(1,1,LL)
+        endif
+
+!mptest       J=K
       ENDDO
+
 
 !   get the vertical profile of temperature
       J=0
       DO LL=1,KMAX  
-       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=011; JPDS(6)=109
-       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,T(:,:,LL),IRET,ISTAT)
-       J=K
+!mptest       J=K
+
+       JPDT(1) = 000
+       JPDT(2) = 000
+       JPDT(10) = 105
+       JPDT(12) = LL
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,T(:,:,LL),IRET,ISTAT)
+        write(0,*) 'T(1,1,LL): ', T(1,1,LL)
+
       ENDDO
+
+
 ! note points that are within bitmap
        VALIDPT=.TRUE.
        WHERE(T(:,:,1).LE.10.) VALIDPT = .FALSE.
@@ -886,25 +893,44 @@
 !   get the vertical profile of q
       J=0
       DO LL=1,KMAX   
-       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=051; JPDS(6)=109
-       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,Q(:,:,LL),IRET,ISTAT)
-       J=K
+!mptest       J=K
+
+       JPDT(1) = 001
+       JPDT(2) = 000
+       JPDT(10) = 105
+       JPDT(12) = LL
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,Q(:,:,LL),IRET,ISTAT)
+        write(0,*) 'Q(1,1,LL): ', Q(1,1,LL)
+
+
       ENDDO
 
 !   get the vertical profile of u 
       J=0
       DO LL=1,KMAX  
-       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=033; JPDS(6)=109
-       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,UWND(:,:,LL),IRET,ISTAT)
-       J=K
+!mptest       J=K
+       JPDT(1) = 002
+       JPDT(2) = 002
+       JPDT(10) = 105
+       JPDT(12) = LL
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,UWND(:,:,LL),IRET,ISTAT)
       ENDDO
 
 !   get the vertical profile of v
       J=0
       DO LL=1,KMAX  
-       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=034; JPDS(6)=109
-       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,VWND(:,:,LL),IRET,ISTAT)
-       J=K
+!mptest       J=K
+       JPDT(1) = 002
+       JPDT(2) = 002
+       JPDT(10) = 105
+       JPDT(12) = LL
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,UWND(:,:,LL),IRET,ISTAT)
       ENDDO
         write(0,*) 'is llimited true....will avoid T850, etc: ', llimited
       if (llimited) return
@@ -913,68 +939,111 @@
       if (.not. lnest) then
       J=0
       DO LL=1,KMAX  
-       JPDS=-1; JPDS(3)=IGDNUM; JPDS(5)=071; JPDS(6)=109
-       CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,CFR(:,:,LL),IRET,ISTAT)
-       J=K
+!mptest       J=K
+
+
+        write(0,*) 'vertical column of cloud fraction'
+       JPDT(1) = 006
+       JPDT(2) = 032
+       JPDT(10) = 105
+       JPDT(12) = LL
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,CFR(:,:,LL),IRET,ISTAT)
+
+
+
       ENDDO
       endif
 
 !   950 mb temperature
-      J=0
-      JPDS(3) = IGDNUM
-      JPDS(5) = 011
-      JPDS(6) = 100
-      JPDS(7) = 950
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,T950,IRET,ISTAT)
+
+       JPDT=-9999
+       JPDT(1) = 000
+       JPDT(2) = 000
+       JPDT(10) = 100
+       JPDT(12) = 95000
+
+       write(0,*) '950 T get'
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,T950,IRET,ISTAT)
 
 !   850 mb temperature
-      JPDS(7) = 850
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,T850,IRET,ISTAT)
+
+       JPDT(12) = 85000
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,T850,IRET,ISTAT)
 
 !   700 mb temperature
-      JPDS(7) = 700
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,T700,IRET,ISTAT)
+
+       JPDT(12) = 70000
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,T700,IRET,ISTAT)
 
 !   500 mb temperature
-      JPDS(7) = 500
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,T500,IRET,ISTAT)
+
+       JPDT(12) = 50000
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,T500,IRET,ISTAT)
 
 !   850 mb RH
       J=0
-      JPDS(5) = 052
-      JPDS(6) = 100
-      JPDS(7) = 850
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,RH850,IRET,ISTAT)
+
+       JPDT(1) = 001
+       JPDT(2) = 001
+       JPDT(10) = 100
+       JPDT(12) = 85000
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,RH850,IRET,ISTAT)
 
 !   700 mb RH
-      JPDS(7) = 700
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,RH700,IRET,ISTAT)
+
+       JPDT(12) = 70000
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,RH700,IRET,ISTAT)
 
         write(0,*) 'T850, T700, T500: ', T850(1,1), T700(1,1), T500(1,1)
         write(0,*) 'RH850, RH700: ', RH850(1,1), RH700(1,1)
 
 !  sfc wind gust 
       J=0
-      JPDS=-1
-      JPDS(3) = IGDNUM
-      JPDS(5) = 180 
-      JPDS(6) = 001
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,GUST,IRET,ISTAT)
+
+       JPDT(1) = 002
+       JPDT(2) = 022
+       JPDT(10) = -9999
+       JPDT(12) = -9999
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,GUST,IRET,ISTAT)
+
 
 ! composite reflectivity
-      JPDS(5) = 212
-      JPDS(6) = 200
-      CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,REFC,IRET,ISTAT)
+          
+       JPDT(1) = 16
+       JPDT(2) = 196
+       JPDT(10) = -9999
+       JPDT(12) = -9999
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,REFC,IRET,ISTAT)
 
       if (lanl) return
 
 !     nests already have computed cld fracs...
       if (lnest) then
-        J=0;JPDS=-1
-        JPDS(3)=IGDNUM
-        JPDS(5) = 71
-        JPDS(6) = 200
-        CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,TCLD,IRET,ISTAT)
+
+       JPDT(1) = 6
+       JPDT(2) = 00
+       JPDT(10) = -9999
+       JPDT(12) = -9999
+
+      CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
+                     KPDS,KGDS,MASK,GRID,TCLD,IRET,ISTAT)
+
+
 !        JPDS(5) = 73
 !        JPDS(6) = 214
 !        CALL SETVAR(LUGB,LUGI,NUMVAL,J,JPDS,JGDS,KF, K,KPDS,KGDS,MASK,GRID,LCLD,IRET,ISTAT)
@@ -988,6 +1057,7 @@
 
         if (HAVESREF .eq. 1) then
 
+        write(0,*) 'to read of SREF precip'
 !  READ SREF precip
       print*; print *,'READ SREF Precip Probs', LUGB2
 

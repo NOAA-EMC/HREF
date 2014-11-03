@@ -17,7 +17,7 @@
     REAL, ALLOCATABLE   :: EXN(:,:) 
     REAL, ALLOCATABLE   :: ROUGH_MOD(:,:)
     REAL, ALLOCATABLE   :: TTMP(:,:),DTMP(:,:),UTMP(:,:),VTMP(:,:)
-    REAL, ALLOCATABLE   :: SFCHTNEW(:,:)
+!    REAL, ALLOCATABLE   :: SFCHTNEW(:,:)
 
 !    LOGICAL*1,   ALLOCATABLE   :: MASK(:)
 !    REAL,        ALLOCATABLE   :: GRID(:)
@@ -103,7 +103,9 @@
       print *, 'READ IN  GRIB  TOPO file'
         JGDS=-1
         CALL RDHDRS(46,47,IGDNUM,GDIN,NUMVAL)
-        DEALLOCATE(GRID,MASK)
+        if (allocated(grid)) deallocate(grid)
+        if (allocated(mask)) deallocate(mask)
+!        DEALLOCATE(GRID,MASK)
         ALLOCATE (GRID(NUMVAL),MASK(NUMVAL),STAT=kret)
         J=0;JPDS=-1;JPDS(3)=IGDNUM;JPDS(5)=8;JPDS(6)=1
         CALL SETVAR(46,47,NUMVAL,J,JPDS,JGDS,KF,K,KPDS,KGDS,MASK,GRID,topo_ndfd,IRET,ISTAT)
@@ -151,7 +153,8 @@
 ! -- Now let's start reducing to NDFD topo elevation.
 !C ****************************************************************
         where (zsfc .lt. 0.) zsfc=0.0
-        sfchtnew = topo_ndfd
+!        allocate(sfchtnew(gdin%imax,gdin%jmax))
+!        sfchtnew = topo_ndfd
         tnew=spval;qnew=spval
         dewnew=spval;unew=spval;vnew=spval
         pnew=spval
