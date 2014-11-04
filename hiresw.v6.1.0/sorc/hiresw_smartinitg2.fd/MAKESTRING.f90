@@ -122,7 +122,7 @@
          cwxstr="SChc:"//TRIM(cwx)
        ELSE IF (PROBWX.LT.55.) THEN
          cwxstr="Chc:"//TRIM(cwx)
-       ELSE IF (PROB.LT.75.) THEN
+       ELSE IF (PROBWX.LT.75.) THEN
          cwxstr="Lklyc:"//TRIM(cwx)
        ELSE
          cwxstr="Def:"//TRIM(cwx)

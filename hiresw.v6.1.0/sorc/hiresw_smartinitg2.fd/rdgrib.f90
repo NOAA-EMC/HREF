@@ -93,7 +93,7 @@ contains
 
 !     Get GRIB Variable
 
-        J=0
+!!        J=0
         UNPACK=.TRUE.
         K=0
 
@@ -268,11 +268,14 @@ contains
 
       WRITE(FNAME(6:7),FMT='(I2)')LUB
       CALL BAOPEN(LUB,FNAME,IRETGB)
+        if (IRETGB .ne. 0) then
         write(0,*) 'IRETGB on baopen, LUB: ', IRETGB, LUB
+        endif
       WRITE(FNAME(6:7),FMT='(I2)')LUI
       CALL BAOPEN(LUI,FNAME,IRETGI)
+        if (IRETGI .ne. 0) then
         write(0,*) 'IRETGI on baopen, LUI: ', IRETGi, LUI
-
+        endif
 
         write(0,*) 'to getidx call'
 
@@ -313,7 +316,7 @@ contains
 !        enddo
 !        endif
 
-        write(0,*) 'gfld%igdtnum: ', gfld%igdtnum
+!        write(0,*) 'gfld%igdtnum: ', gfld%igdtnum
 
           selectcase( gfld%igdtnum )     !  Template number
            case (0:3)   ! Lat/Lon
@@ -342,8 +345,6 @@ contains
               GDIN%JMAX=0
          end select
 
-        write(0,*) 'past select'
-
 !JTM    write(6,*)' IRET FROM GETGB1S ',IRGS,JR
         IF(IRGS .NE. 0) THEN
           WRITE(6,*)' PROBLEMS ON 1ST READ OF GRIB FILE SO ABORT'
@@ -357,10 +358,10 @@ contains
         NUMV = GDIN%IMAX*GDIN%JMAX
       ENDDO
 
-        write(0,*) 'to diag writes'
+!        write(0,*) 'to diag writes'
 
-        write(0,*) 'gfld%igdtnum: ', gfld%igdtnum
-        write(0,*) 'GDIN%IMAX, GDIN%JMAX: ', GDIN%IMAX, GDIN%JMAX
+!        write(0,*) 'gfld%igdtnum: ', gfld%igdtnum
+!        write(0,*) 'GDIN%IMAX, GDIN%JMAX: ', GDIN%IMAX, GDIN%JMAX
 
   280 FORMAT(' IGDN, IMAX,JMAX, ',4I5)
       RETURN
