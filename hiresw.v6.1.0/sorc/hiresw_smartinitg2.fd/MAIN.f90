@@ -843,8 +843,8 @@
           RH1TOT=RH1TOT+RH(I,J,L)
           RH1SUM=RH1SUM+1.
         ENDIF
-        IF(PSFC(I,J)-PMID(I,J,L).LT.18000. .AND.  &
-          PSFC(I,J)-PMID(I,J,L).GT.15000.) THEN
+        IF(PSFC(I,J)-PMID(I,J,L).LT.18500. .AND.  &
+          PSFC(I,J)-PMID(I,J,L).GT.14500.) THEN
           RH2TOT=RH2TOT+RH(I,J,L)
           RH2SUM=RH2SUM+1.
         ENDIF
