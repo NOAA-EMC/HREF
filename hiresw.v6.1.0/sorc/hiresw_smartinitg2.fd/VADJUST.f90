@@ -42,6 +42,11 @@
       ALLOCATE (UB(NY,2),VB(NX,2),STAT=kret)
       ALLOCATE (PHI(NX,NY,2),STAT=kret)
 
+! set PHI to zero.  Seems like only PHI(:,:,2) is defined, yet only PHI(:,:,1)
+! is used
+
+        PHI=0.
+
 !     COMPUTE TERRAIN GRADIENTS AND INITIAL POTENTIAL
 
       DXI=0.5/DX
@@ -73,6 +78,8 @@
       UB(:,2)=PHI(NX,:,1)
       VB(:,1)=PHI(:,1,1)
       VB(:,2)=PHI(:,NY,1)
+
+      write(0,*) 'minval(UB),maxval(UB): ', minval(UB),maxval(UB)
 
 !     SOLVE POISSON EQUATION BY GAUSS-SEIDEL METHOD FOR
 !     VELOCITY POTENTIAL

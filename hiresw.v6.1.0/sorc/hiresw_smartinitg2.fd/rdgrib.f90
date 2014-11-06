@@ -68,7 +68,7 @@ contains
       END SUBROUTINE setvar
 
      SUBROUTINE SETVAR_g2(LUB,LUI,NUMV,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF, &
-                                       K,KPDS,KGDS,MASK,GRID,VARB,IRET,ISTAT)
+                                       K,KPDS,KGDS,MASK,GRID,VARB,GFLD,IRET,ISTAT)
 !============================================================================
 !     This Routine reads in a grib field and initializes a 2-D variable
 !     Requested from w3lib GETGRB routine
