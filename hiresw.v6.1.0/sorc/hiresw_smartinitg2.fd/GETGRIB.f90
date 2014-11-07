@@ -584,8 +584,8 @@
 
         write(0,*) 'IRET for t2m: ', IRET
 
-        print*, 'T2(251,100): ', T2(251,100)
-        print*, 'T2(253,131): ', T2(253,131)
+!        print*, 'T2(251,100): ', T2(251,100)
+!        print*, 'T2(253,131): ', T2(253,131)
 
 ! 2-m spec hum
        JPDT(1) = 1
@@ -754,8 +754,8 @@
       CALL SETVAR_g2(LUGT1,LUGT1I,NUMVALT,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,THOLD(:,:,2),GFLD,IRET,ISTAT)
 
-        print*, 'THOLD(251,100,2): ', THOLD(251,100,2)
-        print*, 'THOLD(253,131,2): ', THOLD(253,131,2)
+!        print*, 'THOLD(251,100,2): ', THOLD(251,100,2)
+!        print*, 'THOLD(253,131,2): ', THOLD(253,131,2)
 
        JPDT(1) = 0
        JPDT(2) = 006
@@ -907,11 +907,11 @@
        do i=1,imax
        do j=1,jmax
 
-        if (I .eq. 251 .and. J .eq. 100) then
-        do LL=1,KMAX
-        print*, 'T(251,100,LL): ', T(251,100,LL)
-        enddo
-        endif
+!        if (I .eq. 251 .and. J .eq. 100) then
+!        do LL=1,KMAX
+!        print*, 'T(251,100,LL): ', T(251,100,LL)
+!        enddo
+!        endif
 
          if(validpt(i,j).and.T(i,j,1).le.10) then 
             print *,' Inconsistent valid pt at :', i,j,' Temperature=',T(i,j,1)
@@ -1163,12 +1163,12 @@
       IF (IFHR .EQ. 3) THEN
         IF (.NOT.LCYCON) THEN
           print *, 'FHR=3 so zero 6 and 12-hr sref probabilities'
-          S6REF01(M,N) = 0.0
-          S6REF10(M,N) = 0.0
-          S6REF50(M,N) = 0.0
-          S12REF01(M,N) = 0.0
-          S12REF10(M,N) = 0.0
-          S12REF50(M,N) = 0.0
+          S6REF01(:,:) = 0.0
+          S6REF10(:,:) = 0.0
+          S6REF50(:,:) = 0.0
+          S12REF01(:,:) = 0.0
+          S12REF10(:,:) = 0.0
+          S12REF50(:,:) = 0.0
         ENDIF
        print *, 'bailing out of sref pcp early IFHR=',IFHR
        RETURN

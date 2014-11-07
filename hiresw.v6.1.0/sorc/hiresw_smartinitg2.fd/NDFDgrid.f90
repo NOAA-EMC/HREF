@@ -117,8 +117,8 @@
         print*, ' min, max of veg_ndfd: ', minval(veg_ndfd),maxval(veg_ndfd)
         print*, 'read ivgid: ', ivgid
 
-        print*, 'veg_ndfd(251,100); ', veg_ndfd(251,100)
-        print*, 'veg_ndfd(253,131); ', veg_ndfd(253,131)
+!        print*, 'veg_ndfd(251,100); ', veg_ndfd(251,100)
+!        print*, 'veg_ndfd(253,131); ', veg_ndfd(253,131)
 
         if (gdin%region .eq. 'CS2P') then 
           lconus=.TRUE.
