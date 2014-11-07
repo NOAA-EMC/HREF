@@ -399,7 +399,7 @@
        ID(9)=105
        ID(11)=2
        DEC=-2.0
-        print*, 'writing DOWNT(251,100) as: ', DOWNT(251,100)
+!!        print*, 'writing DOWNT(251,100) as: ', DOWNT(251,100)
 
 
 !! need to use a GRIBI2 routine like is available in grib2_module
@@ -421,6 +421,11 @@
        GFLD%ipdtmpl(2)=0
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
+!tst       GFLD%idrtnum=40 ! 40 = JPEG
+       GFLD%idrtnum=3 ! 3 = complex
+       gfld%idrtmpl(1)=0
+       gfld%idrtmpl(2)=DEC
+       
        CALL PUTGB2(51,GFLD,IRET)
 
 
@@ -441,6 +446,7 @@
        GFLD%ipdtmpl(2)=6
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD,IRET)
 
@@ -459,6 +465,7 @@
        GFLD%ipdtmpl(2)=0
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
+       gfld%idrtmpl(2)=3
 
        CALL PUTGB2(51,GFLD,IRET)
 
@@ -477,6 +484,7 @@
        GFLD%ipdtmpl(2)=2
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=10
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD,IRET)
 
@@ -497,9 +505,8 @@
        GFLD%ipdtmpl(2)=3
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=10
-       GFLD%idrtnum=3
         write(0,*) 'gfld%idrtmpl: ', gfld%idrtmpl
-        gfld%idrtmpl(2)=-2
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD,IRET)
 
@@ -509,6 +516,18 @@
        ID(8)=1;ID(9)=1
        DEC=3.0
        CALL GRIBIT(ID,RITEHD,PSFC,GDIN,70,DEC)
+
+       CALL FILL_FLD(GFLD,NUMV,IM,JM,PSFC)
+
+       GFLD%ipdtmpl(1)=3
+       GFLD%ipdtmpl(2)=0
+       GFLD%ipdtmpl(10)=1
+       GFLD%ipdtmpl(12)=0
+       gfld%idrtmpl(2)=DEC
+
+       CALL PUTGB2(51,GFLD,IRET)
+
+
 
 !      Output high res topo,land for nests ??
 !      Output topo for all grids 03-07-13
@@ -525,7 +544,7 @@
        GFLD%ipdtmpl(2)=5
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
-       GFLD%idrtnum=3
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD,IRET)
 
@@ -545,8 +564,8 @@
        GFLD%ipdtmpl(2)=198
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
-       GFLD%idrtnum=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
        ENDIF
 ! ----------------------------------------
@@ -573,6 +592,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
 ! ----------------------------------------
@@ -589,6 +609,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
         write(0,*) 'IRET for DOWNP PUTGB2: ', IRET
@@ -699,6 +720,7 @@
 
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=3
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD8,IRET)
 
@@ -721,6 +743,7 @@
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD8,IRET)
 
@@ -752,6 +775,7 @@
 
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=6
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD8,IRET)
 
@@ -773,6 +797,7 @@
 
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=6
+       gfld%idrtmpl(2)=DEC
 
        CALL PUTGB2(51,GFLD8,IRET)
        ENDIF
@@ -807,6 +832,7 @@
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=12
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
 
@@ -827,6 +853,7 @@
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=12
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
         ENDIF
@@ -850,6 +877,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
 !    #--------------------------------------------------------------------------
@@ -903,6 +931,7 @@
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
 
@@ -936,6 +965,7 @@
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
 
@@ -969,6 +999,7 @@
        GFLD8%ipdtmpl(22)=1
        GFLD8%ipdtmpl(27)=6
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
 
@@ -1009,6 +1040,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
 
@@ -1027,6 +1059,7 @@
        GFLD%ipdtmpl(10)=10
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
 
@@ -1052,6 +1085,7 @@
        GFLD%ipdtmpl(10)=245
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
        write(0,*) 'IRET for WETFRZ: ', IRET
 
@@ -1072,6 +1106,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
         write(0,*) 'IRET for VIS: ', IRET
 
@@ -1120,6 +1155,7 @@
        GFLD%ipdtmpl(10)=220
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
         write(0,*) 'IRET for PBL WINDIR: ', IRET
 
@@ -1137,6 +1173,7 @@
        GFLD%ipdtmpl(10)=220
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
         write(0,*) 'IRET for PBL WINSPD: ', IRET
 
@@ -1171,6 +1208,7 @@
        GFLD%ipdtmpl(10)=220
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
         write(0,*) 'IRET for PBL RH: ', IRET
 
@@ -1221,6 +1259,7 @@
        GFLD%ipdtmpl(10)=220
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
         write(0,*) 'IRET for PBL HGT: ', IRET
 
@@ -1302,6 +1341,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
         write(0,*) 'IRET for LAL: ', IRET
 
@@ -1328,6 +1368,7 @@
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
  
@@ -1347,6 +1388,7 @@
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
     ENDIF
 
@@ -1396,10 +1438,12 @@
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,TEMP2)
        GFLD%ipdtmpl(9)=gdin%FHR-2
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
             else
@@ -1422,12 +1466,13 @@
        GFLD%ipdtmpl(2)=6
        GFLD%ipdtmpl(9)=gdin%FHR-1
        GFLD%ipdtmpl(10)=103
-       GFLD%ipdtmpl(12)=2
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,TEMP2)
        GFLD%ipdtmpl(9)=gdin%FHR-2
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
             endif
@@ -1519,6 +1564,7 @@
        GFLD8%ipdtmpl(24)=2
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
 
@@ -1545,6 +1591,7 @@
        GFLD8%ipdtmpl(24)=3
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
        ID(1:25) = 0
@@ -1573,6 +1620,7 @@
        GFLD8%ipdtmpl(24)=2 ! 2=max
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
        ID(8)=217
@@ -1596,6 +1644,7 @@
        GFLD8%ipdtmpl(24)=3 ! 3=min
        GFLD8%ipdtmpl(27)=3
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
       ENDIF
 
@@ -1652,6 +1701,7 @@
        GFLD8%ipdtmpl(24)=2
        GFLD8%ipdtmpl(27)=12
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
 
@@ -1681,6 +1731,7 @@
        GFLD8%ipdtmpl(24)=3
        GFLD8%ipdtmpl(27)=12
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
          ID(2)=129
@@ -1705,6 +1756,7 @@
        GFLD8%ipdtmpl(24)=2 ! 2=max
        GFLD8%ipdtmpl(27)=12
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
 
          ID(8)=217
@@ -1727,6 +1779,7 @@
        GFLD8%ipdtmpl(24)=3 ! 3=min
        GFLD8%ipdtmpl(27)=12
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD8,IRET)
        ENDIF
 
@@ -1755,6 +1808,7 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
+       gfld%idrtmpl(2)=DEC
        CALL PUTGB2(51,GFLD,IRET)
 
 
