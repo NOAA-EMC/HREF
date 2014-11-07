@@ -147,6 +147,7 @@
                                 ,rc             =RC)
 
         CALL ESMF_FieldGet(field=tmpfield, name=dyn_name(N), dimCount=tmp_rank, rc=rc)
+
 !
         IF (tmp_rank == 2) THEN
           tot_rank_2d=tot_rank_2d+1
@@ -175,7 +176,7 @@
       ENDIF
 !
       IF (tot_rank_3d > 0 .and. .not. associated(array_save_3d)) THEN
-      	allocate(array_save_3d(ITS:ITE,JTS:JTE,LM,tot_rank_3d),stat=istat)
+      	allocate(array_save_3d(ITS:ITE,JTS:JTE,LM+1,tot_rank_3d),stat=istat)
         if(istat/=0)then
           write(0,*)' DIGITAL_FILTER_DYN_INIT_NMM failed to allocate array_save_3d stat=',istat
           write(0,*)' Aborting!!'
@@ -247,7 +248,7 @@
       real(kind=kfpt), dimension(:,:,:,:), pointer, intent(inout) :: array_save_3d
       real(kind=kfpt), dimension(:,:,:,:,:), pointer, intent(inout) :: array_save_4d
 !
-      integer(kind=kint) :: i,ii,j,jj,l,n,num_spec,p,rc,rc_upd
+      integer(kind=kint) :: i,ii,j,jj,l,n,num_spec,p,rc,rc_upd,LDIM
       real(kind=kfpt) :: digfil,prod,sx,wx
       real(kind=kfpt),dimension(:,:)    ,pointer :: hold_2d
       real(kind=kfpt),dimension(:,:,:)  ,pointer :: hold_3d
@@ -334,14 +335,15 @@
                             ,farrayPtr =HOLD_3D                         &  !<-- Put the pointer here
                             ,rc        =RC)
 
-          do l=1,lm  
+	LDIM=size(HOLD_3D,dim=3)
+
+          do l=1,LDIM
             do j=jts,jte
             do i=its,ite
               array_save_3d(i,j,l,n)=array_save_3d(i,j,l,n)+digfil*hold_3d(i,j,l)
             enddo
             enddo
          enddo
-
         enddo
 !
       endif
@@ -421,7 +423,7 @@
       REAL(kind=KFPT),DIMENSION(:,:,:,:),POINTER,INTENT(INOUT) :: ARRAY_SAVE_3D
       REAL(kind=KFPT),DIMENSION(:,:,:,:,:),POINTER,INTENT(INOUT) :: ARRAY_SAVE_4D
 !
-      INTEGER(KIND=KINT) :: I,II,J,JJ,L,N,P,RC,RC_UPD
+      INTEGER(KIND=KINT) :: I,II,J,JJ,L,N,P,RC,RC_UPD,LDIM
       REAL(KIND=KFPT),DIMENSION(:,:)    ,POINTER :: HOLD_2D
       REAL(KIND=KFPT),DIMENSION(:,:,:)  ,POINTER :: HOLD_3D
       REAL(KIND=KFPT),DIMENSION(:,:,:,:),POINTER :: HOLD_4D
@@ -456,7 +458,15 @@
 !
       IF (tot_rank_3d > 0) THEN
         DO N=1,tot_rank_3d
-          DO L=1,LM
+          FIELD_NAME=name_save_3d(N)
+
+          IF (FIELD_NAME == 'PINT') THEN
+            LDIM=LM+1
+          ELSE
+            LDIM=LM
+          ENDIF
+
+          DO L=1,LDIM
             DO J=JTS,JTE
             DO I=ITS,ITE
               array_save_3d(I,J,L,N)=totalsumi*array_save_3d(I,J,L,N)
@@ -558,7 +568,9 @@
 !         CALL ERR_MSG(RC,MESSAGE_CHECK,RC_UPD)
 ! ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 !
-          DO L=1,LM
+          LDIM=size(HOLD_3D,dim=3)
+
+          DO L=1,LDIM
             DO J=JTS,JTE
             DO I=ITS,ITE
               HOLD_3D(I,J,L)=array_save_3d(I,J,L,N)
@@ -566,7 +578,7 @@
             ENDDO
           ENDDO
 
-          CALL HALO_EXCH(hold_3d,LM,2,2)
+          CALL HALO_EXCH(hold_3d,LDIM,2,2)
         ENDDO
       ENDIF
 !
