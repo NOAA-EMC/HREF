@@ -286,6 +286,8 @@ cp $INPUT_DATA/${freq}precip.${fhr} .
 err1=$?
 cp $INPUT_DATA/${freq}snow.${fhr} .
 err2=$?
+cp $INPUT_DATA/3precip.${fhr} .
+
 cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
 cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
 
