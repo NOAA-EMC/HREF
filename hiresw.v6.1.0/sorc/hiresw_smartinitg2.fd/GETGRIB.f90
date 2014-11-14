@@ -957,7 +957,7 @@
       DO LL=1,KMAX  
        J=K
        JPDT(1) = 002
-       JPDT(2) = 002
+       JPDT(2) = 003
        JPDT(10) = 105
        JPDT(12) = LL
 
