@@ -962,7 +962,7 @@
        JPDT(12) = LL
 
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
-                     KPDS,KGDS,MASK,GRID,UWND(:,:,LL),GFLD,IRET,ISTAT)
+                     KPDS,KGDS,MASK,GRID,VWND(:,:,LL),GFLD,IRET,ISTAT)
       ENDDO
         write(0,*) 'is llimited true....will avoid T850, etc: ', llimited
       if (llimited) return
@@ -1132,6 +1132,7 @@
 
         
         write(0,*) 'min,max S3REF01: ', minval(S3REF01),maxval(S3REF01)
+        write(0,*) 'sum(S3REF01): ', sum(S3REF01)
 
 ! probability of .1"
 !      J = 2
