@@ -277,9 +277,9 @@ nodeep:     .false.         # All deep convection diverted to shallow swap algor
 nrads:     300               # Number of dynamics timesteps between calls to shortwave
 nradl:     300               # Number of dynamics timesteps  between calls to longwave
 
-nphs:       6               # Number of dynamics timesteps between calls to landsurface and turbulence
+nphs:       4               # Number of dynamics timesteps between calls to landsurface and turbulence
 
-nprecip:    6               # Number of dynamics timesteps between calls to convection and microphysics
+nprecip:    4               # Number of dynamics timesteps between calls to convection and microphysics
 
 ####
 #### NOTE:  User must set nhrs_udef to .TRUE. and set the emptying frequencies (nhrs_*) to the desired values
