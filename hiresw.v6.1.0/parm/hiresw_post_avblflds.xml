@@ -5433,5 +5433,14 @@
        <scale> 4.0</scale>
     </param>
 
+    <param>
+       <post_avblfldidx>950</post_avblfldidx>
+       <shortname>REFD_ON_ISOTHERMAL</shortname>
+       <pname>REFD</pname>
+       <fixed_sfc1_type>isothermal</fixed_sfc1_type>
+       <level>263.15</level>
+       <scale>-4.0</scale>
+    </param>
+
   </post_avblflds>
 </postxml>
