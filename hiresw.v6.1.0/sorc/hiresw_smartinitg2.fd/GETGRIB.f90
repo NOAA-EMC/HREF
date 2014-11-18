@@ -924,16 +924,14 @@
 !   get the vertical profile of q
       J=0
       DO LL=1,KMAX   
-!mptest       J=K
-
        JPDT(1) = 001
        JPDT(2) = 000
        JPDT(10) = 105
        JPDT(12) = LL
 
-        J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,Q(:,:,LL),GFLD,IRET,ISTAT)
+        J=K
         write(0,*) 'Q(1,1,LL): ', Q(1,1,LL)
 
 
@@ -942,7 +940,6 @@
 !   get the vertical profile of u 
       J=0
       DO LL=1,KMAX  
-       J=K
        JPDT(1) = 002
        JPDT(2) = 002
        JPDT(10) = 105
@@ -950,12 +947,17 @@
 
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,UWND(:,:,LL),GFLD,IRET,ISTAT)
+
+       J=K
+        if (I .eq. 293 .and. J .eq. 132) then
+        write(0,*) 'I,J, LL, UWND(I,J,LL): ', I,J, LL, UWND(I,J,LL)
+        endif
+
       ENDDO
 
 !   get the vertical profile of v
       J=0
       DO LL=1,KMAX  
-       J=K
        JPDT(1) = 002
        JPDT(2) = 003
        JPDT(10) = 105
@@ -963,6 +965,10 @@
 
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,VWND(:,:,LL),GFLD,IRET,ISTAT)
+       J=K
+        if (I .eq. 293 .and. J .eq. 132) then
+        write(0,*) 'I,J, LL, VWND(I,J,LL): ', I,J, LL, VWND(I,J,LL)
+        endif
       ENDDO
         write(0,*) 'is llimited true....will avoid T850, etc: ', llimited
       if (llimited) return
@@ -971,7 +977,6 @@
       if (.not. lnest) then
       J=0
       DO LL=1,KMAX  
-       J=K
         write(0,*) 'vertical column of cloud fraction'
        JPDT(1) = 006
        JPDT(2) = 032
@@ -980,6 +985,7 @@
 
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,CFR(:,:,LL),GFLD,IRET,ISTAT)
+       J=K
 
 
 
@@ -1085,6 +1091,10 @@
       J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,TCLD,GFLD,IRET,ISTAT)
+
+        write(0,*) 'IRET from SETVAR_g2 for TCLD ', IRET
+
+        write(0,*) 'maxval(TCLD): ', maxval(TCLD)
 
 
 !        JPDS(5) = 73
