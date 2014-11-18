@@ -701,9 +701,17 @@
       </param>
 
        <param>
+       <shortname>REFD_ON_ISOTHERMAL</shortname>
+       <pname>REFD</pname>
+       <level> 263.15 </level>
+       <table_info>NCEP</table_info>
+       <scale>-4.0</scale>
+       </param>
+
+       <param>
        <shortname>REFD_ON_SPEC_HGT_LVL_ABOVE_GRND</shortname>
        <pname>REFD</pname>
-       <level>    1000    4000  </level>
+       <level>4000 1000</level>
        <table_info>NCEP</table_info>
          <scale>-4.0</scale>
       </param>
@@ -714,7 +722,7 @@
        <level>    5000    </level>
        <level2>    2000   </level2>
        <table_info>NCEP</table_info>
-         <scale>3.0</scale>
+         <scale>-4.0</scale>
       </param>
 
        <param>
