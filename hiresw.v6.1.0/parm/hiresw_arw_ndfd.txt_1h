@@ -42,7 +42,5 @@ MAXRH:2 m above ground:
 MINRH:2 m above ground:
 HGT:planetary boundary layer:
 VRATE:planetary boundary layer:
-UGRD:planetary boundary layer:
-VGRD:planetary boundary layer:
 VIL:entire atmosphere:
 TCDC:entire atmosphere
