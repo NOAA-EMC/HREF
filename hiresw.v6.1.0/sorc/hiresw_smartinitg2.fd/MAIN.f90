@@ -1022,6 +1022,7 @@
         print *, 'Compute SKYCVR',FHR
         ALLOCATE (TEMP1(IM,JM),TEMP2(IM,JM),STAT=kret)
         ALLOCATE (SKY(IM,JM),STAT=kret)
+
 !         if(lnest) then
 !           SKY=SPVAL
 !           where(validpt)
@@ -1031,15 +1032,15 @@
 !         else
           CALL SKYCVR(SKY,CFR,GDIN)
           CALL BOUND (SKY,0.,100.)
-!        endif
+!         endif
         DEALLOCATE (TEMP1,TEMP2,STAT=kret)
 
         ID(1:25) = 0
         ID(8)=71;ID(9)=1
         DEC=3.0
-        CALL GRIBIT(ID,RITEHD,SKY,GDIN,70,DEC)
+!        CALL GRIBIT(ID,RITEHD,SKY,GDIN,70,DEC)
 
-       CALL FILL_FLD(GFLD,NUMV,IM,JM,SKY)
+!       CALL FILL_FLD(GFLD,NUMV,IM,JM,SKY)
 
        GFLD%discipline=0
        GFLD%ipdtnum=0
@@ -1048,8 +1049,8 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
-       CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+!       CALL set_scale(gfld, DEC)
+!       CALL PUTGB2(51,GFLD,IRET)
 
 
         ID(1:25) = 0
@@ -1135,6 +1136,16 @@
         LMBL=INT(PBLMARK(I,J))
          UTOT=SUM(UWND(I,J,1:LMBL))
          VTOT=SUM(VWND(I,J,1:LMBL))
+        
+        if (I .eq. 293 .and. J .eq. 132) then
+        write(0,*) 'LMBL: ', LMBL
+        write(0,*) 'UTOT, VTOT: ', UTOT, VTOT
+        do L=1,LMBL
+        write(0,*) 'L, UWND,VWND: ', L, UWND(I,J,L),VWND(I,J,L)
+        enddo
+
+        endif
+
         UTRANS=UTOT/LMBL
         VTRANS=VTOT/LMBL
         MGTRANS(I,J)=SQRT(UTRANS*UTRANS+VTRANS*VTRANS) 
