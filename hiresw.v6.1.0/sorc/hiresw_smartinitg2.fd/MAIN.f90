@@ -423,15 +423,26 @@
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
        GFLD%idrtnum=40 ! 40 = JPEG
-!tst       GFLD%idrtnum=3 ! 3 = complex
+!
+       GFLD%idrtmpl(5)=0
+       GFLD%idrtmpl(6)=0
+       GFLD%idrtmpl(7)=-1
+
+!       GFLD%idrtnum=3 ! 3 = complex
 
        gfld%idrtmpl(1)=0
+    
        
        CALL set_scale(gfld, DEC)
+        write(0,*) 'back from set_scale'
+        write(0,*) 'call PUTGB2'
        CALL PUTGB2(51,GFLD,IRET)
+        write(0,*) 'IRET from PUTGB2 ', IRET
 
 
+        write(0,*) 'call normal GRIBIT'
        CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,70,DEC)
+        write(0,*) 'return normal GRIBIT'
 
 ! ----------------------------------------
 
@@ -2057,6 +2068,7 @@
 
       print *,'Compute ',IAHR,' HR BUCKET    FHR=',IFHR 
 
+        if (IM .ge. 139 .and. JM .ge. 154) then
         write(0,*) 'PBLMARK: ', PBLMARK(139,154)
         write(0,*) 'RH: ', RH(139,154,1:6)
         write(0,*) 'BLI: ', BLI(139,154)
@@ -2065,6 +2077,7 @@
         write(0,*) 'PCP10: ', PCP10(139,154)
         write(0,*) 'PXCP01: ', PXCP01(139,154)
         write(0,*) 'PXCP10: ', PXCP10(139,154)
+        endif
 
       IF (IAHR.EQ.3 .AND. IFHR .GT. 11) THEN
         ALLOCATE(TMPPCP(IM,JM))
@@ -2392,7 +2405,7 @@
 
 
         call g2getbits(GFLD%ibmap,DEC,size(GFLD%fld),locbmap,GFLD%fld, &
-                      GFLD%idrtmpl(1),GFLD%idrtmpl(2),GFLD%idrtmpl(3),inumbits)
+                      GFLD%idrtmpl(1),GFLD%idrtmpl(2),GFLD%idrtmpl(3),GFLD%idrtmpl(4))
 
 !        if (DEC .lt. 0.) then
 !          gfld%idrtmpl(2)=int(DEC)
@@ -2402,8 +2415,7 @@
 !          gfld%idrtmpl(3)=int(DEC)
 !        endif
 
-        write(0,*) 'gfld%idrtmpl(2:3) defined, inumbits: ', gfld%idrtmpl(2:3), &
-                   inumbits
+        write(0,*) 'gfld%idrtmpl(2:3) defined, inumbits: ', gfld%idrtmpl(2:4)
 
         END SUBROUTINE SET_SCALE
 
