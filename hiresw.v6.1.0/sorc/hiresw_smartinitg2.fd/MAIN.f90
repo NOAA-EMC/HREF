@@ -422,13 +422,11 @@
        GFLD%ipdtmpl(9)=gdin%FHR
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=2
+
        GFLD%idrtnum=40 ! 40 = JPEG
-!
        GFLD%idrtmpl(5)=0
        GFLD%idrtmpl(6)=0
        GFLD%idrtmpl(7)=-1
-
-!       GFLD%idrtnum=3 ! 3 = complex
 
        gfld%idrtmpl(1)=0
     
@@ -720,9 +718,10 @@
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,POP3)
 
-        write(0,*) 'min/max POP3: ', minval(POP3),maxval(POP3)
-        write(0,*) 'gfld8%fld extreme: ', minval(gfld8%fld), &
-                                          maxval(gfld8%fld) 
+       GFLD8%idrtnum=40 ! 40 = JPEG
+       GFLD8%idrtmpl(5)=0
+       GFLD8%idrtmpl(6)=0
+       GFLD8%idrtmpl(7)=-1
 
        GFLD8%discipline=1
        GFLD8%ipdtnum=8     ! should be superfluous
@@ -1980,6 +1979,9 @@
           ENDIF
 
           SNOWAMT(I,J)=SN0(I,J)*TEMP2(I,J)*0.001            !Convert to m
+
+        else
+          SNOWAMT(I,J)=0.
         endif
 
 
