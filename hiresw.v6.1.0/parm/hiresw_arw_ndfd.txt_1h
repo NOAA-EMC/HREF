@@ -6,8 +6,6 @@ RH:2 m above ground:
 SPFH:2 m above ground:
 UGRD:10 m above ground:
 VGRD:10 m above ground:
-APCP:surface:
-WEASD:surface:
 CAPE:surface:
 CIN:surface:
 PWAT:entire atmosphere (considered as a single layer):
