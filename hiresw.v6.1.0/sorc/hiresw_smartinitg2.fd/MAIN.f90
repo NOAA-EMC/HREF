@@ -30,7 +30,7 @@
       CHARACTER*4 CTMP,REGION,CORE
 
       CHARACTER*50, ALLOCATABLE :: WXSTRING(:,:)
-      CHARAcTER(LEN=80) :: FNAMEOUT
+      CHARAcTER(LEN=80) :: FNAMEOUT, FNAME2OUT
 !-----------------------------------------------------------------------------------
 !  TYPE(ISET), INTENT(IN) :: iprcp(,:,)
    INTEGER, ALLOCATABLE :: ISNOW(:,:),IZR(:,:),IIP(:,:),IRAIN(:,:)
@@ -405,11 +405,15 @@
 !! need to use a GRIBI2 routine like is available in grib2_module
 
        FNAMEOUT='smartg2.xx'
+       FNAME2OUT='MAXMIN.xx'
         write(0,*) 'FHR known as: ', FHR
        WRITE(FNAMEOUT(9:10),FMT='(I2.2)')FHR
+       WRITE(FNAME2OUT(8:9),FMT='(I2.2)')FHR
         write(0,*) 'FNAMEOUT(1:10): ', FNAMEOUT(1:10)
+        write(0,*) 'FNAME2OUT(1:9): ', FNAME2OUT(1:9)
 
        CALL BAOPEN(51,FNAMEOUT,IRET)
+       CALL BAOPEN(52,FNAM2EOUT,IRET)
         write(0,*) 'IRET from BAOPEN: ', IRET
 
         NUMV=IM*JM
@@ -433,9 +437,7 @@
        
        CALL set_scale(gfld, DEC)
         write(0,*) 'back from set_scale'
-        write(0,*) 'call PUTGB2'
-       CALL PUTGB2(51,GFLD,IRET)
-        write(0,*) 'IRET from PUTGB2 ', IRET
+       CALL PUTGB2(51,GFLD,IRET) ! DOWNT
 
 
         write(0,*) 'call normal GRIBIT'
@@ -460,7 +462,7 @@
        gfld%idrtmpl(2)=DEC
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! DOWNDEW
 
 ! ----------------------------------------
 
@@ -480,7 +482,7 @@
 
         write(0,*) 'scale and write DOWNQ'
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET)  ! DOWNQ
 
 ! ----------------------------------------
 
@@ -499,7 +501,7 @@
        GFLD%ipdtmpl(12)=10
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! DOWNU
 
 ! ----------------------------------------
 
@@ -521,7 +523,7 @@
         write(0,*) 'gfld%idrtmpl: ', gfld%idrtmpl
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! DOWNV
 
 ! ----------------------------------------
 
@@ -538,7 +540,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! PSFC
 
 
 
@@ -559,7 +561,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET)  ! TOPO
 
 ! ----------------------------------------
        IF (REGION .NE. 'CS' .and. REGION .NE.'CS2P' )THEN
@@ -579,7 +581,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! VEG_NDFD
        ENDIF
 ! ----------------------------------------
 
@@ -606,7 +608,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! WGUST
 
 ! ----------------------------------------
 
@@ -623,7 +625,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! DOWNP
 
         write(0,*) 'IRET for DOWNP PUTGB2: ', IRET
 
@@ -736,7 +738,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! POP3
 
 ! ----------------------------------------
 
@@ -764,7 +766,7 @@
 
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! P03M
 
 ! ----------------------------------------
 
@@ -796,7 +798,7 @@
        GFLD8%ipdtmpl(27)=6
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! POP6
 
 ! ----------------------------------------------------
 
@@ -818,7 +820,7 @@
        GFLD8%ipdtmpl(27)=6
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! P06M
        ENDIF
 
 ! ----------------------------------------
@@ -852,7 +854,7 @@
        GFLD8%ipdtmpl(27)=12
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! POP12
 
 
          ID(8)=61;ID(9)=1
@@ -873,7 +875,7 @@
        GFLD8%ipdtmpl(27)=12
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! P12M
 
         ENDIF
        ENDIF
@@ -897,7 +899,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! GRIDWX
 
 !    #--------------------------------------------------------------------------
 !    #  Chance of Wetting Rain (0.1 inch).  Same algorithm as PoP, but requires
@@ -951,7 +953,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! CWR
 
 
 !======================================================================
@@ -985,7 +987,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! SNOWAMT3
 
         do isn=1,im
         do jsn=1,jm
@@ -1018,7 +1020,7 @@
        GFLD8%ipdtmpl(27)=6
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! SNOWAMT6
 
 
 
@@ -1060,7 +1062,7 @@
        GFLD%ipdtmpl(12)=0
 
 !       CALL set_scale(gfld, DEC)
-!       CALL PUTGB2(51,GFLD,IRET)
+!       CALL PUTGB2(51,GFLD,IRET) ! SKY
 
 
         ID(1:25) = 0
@@ -1075,11 +1077,11 @@
        GFLD%ipdtnum=0
        GFLD%ipdtmpl(1)=16
        GFLD%ipdtmpl(2)=196 ! old version more familiar to downstream codes?
-       GFLD%ipdtmpl(10)=10
+       GFLD%ipdtmpl(10)=200
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! REFC
 
 
 !========================================================================
@@ -1105,7 +1107,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! WETFRZ
        write(0,*) 'IRET for WETFRZ: ', IRET
 
 
@@ -1126,7 +1128,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET)  ! VIS
         write(0,*) 'IRET for VIS: ', IRET
 
 !==========================================================================
@@ -1185,7 +1187,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! DIRTRANS
         write(0,*) 'IRET for PBL WINDIR: ', IRET
 
       ID(1:25) = 0
@@ -1203,7 +1205,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! MGTRANS
         write(0,*) 'IRET for PBL WINSPD: ', IRET
 
 !  compute PBL RH
@@ -1238,7 +1240,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! BLR
         write(0,*) 'IRET for PBL RH: ', IRET
 
 !========================================================================
@@ -1289,7 +1291,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! MIXHGT
         write(0,*) 'IRET for PBL HGT: ', IRET
 
 
@@ -1371,7 +1373,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! LAL
         write(0,*) 'IRET for LAL: ', IRET
 
     ENDIF  ! 3 hour writes
@@ -1398,7 +1400,7 @@
        GFLD%ipdtmpl(12)=2
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(52,GFLD,IRET) ! DOWNT for MAXMIN file
 
  
       ID(1:25) = 0
@@ -1418,7 +1420,7 @@
        GFLD%ipdtmpl(12)=2
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(52,GFLD,IRET) ! DOWNDEW for MAXMIN file
     ENDIF
 
 !   For HI Nest Write limited data to grib file for hrs 1,2,4,5,7,8
@@ -1468,12 +1470,12 @@
        GFLD%ipdtmpl(12)=2
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! TEMP (-1 h)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,TEMP2)
        GFLD%ipdtmpl(9)=gdin%FHR-2
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! TEMP (-2 h)
 
             else
 
@@ -1497,12 +1499,12 @@
        GFLD%ipdtmpl(10)=103
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! TD (-1 h)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,TEMP2)
        GFLD%ipdtmpl(9)=gdin%FHR-2
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! TD (-2 h)
 
             endif
 
@@ -1595,7 +1597,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! TMAX3
 
 
 
@@ -1623,7 +1625,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! TMIN3
 
        ID(1:25) = 0
        ID(2)=129
@@ -1652,7 +1654,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! RHMAX3
 
        ID(8)=217
        ID(9)=105
@@ -1676,7 +1678,7 @@
        GFLD8%ipdtmpl(27)=3
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! RHMIN3
       ENDIF
 
 !  now compute the max and min values if end of 12-hr period
@@ -1733,7 +1735,7 @@
        GFLD8%ipdtmpl(27)=12
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! TMAX12
 
 
 
@@ -1763,7 +1765,7 @@
        GFLD8%ipdtmpl(27)=12
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! TMIN12
 
          ID(2)=129
          ID(8)=218
@@ -1788,7 +1790,7 @@
        GFLD8%ipdtmpl(27)=12
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! RHMAX12
 
          ID(8)=217
        ID(9)=105
@@ -1811,7 +1813,7 @@
        GFLD8%ipdtmpl(27)=12
 
        CALL set_scale(gfld8, DEC)
-       CALL PUTGB2(51,GFLD8,IRET)
+       CALL PUTGB2(51,GFLD8,IRET) ! RHMIN12
        ENDIF
 
 !      Compute Haines Index
@@ -1840,7 +1842,7 @@
        GFLD%ipdtmpl(12)=0
 
        CALL set_scale(gfld, DEC)
-       CALL PUTGB2(51,GFLD,IRET)
+       CALL PUTGB2(51,GFLD,IRET) ! HINDEX
 
         call baclose(51,iret)
 
