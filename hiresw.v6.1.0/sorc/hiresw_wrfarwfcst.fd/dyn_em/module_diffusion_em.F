@@ -6008,7 +6008,13 @@ END SUBROUTINE phy_bc
 
     END SUBROUTINE compute_diff_metrics
 
-    SUBROUTINE cal_helicity ( config_flags, u, v, w, uh, up_heli_max,&
+! SRD
+
+
+    SUBROUTINE cal_helicity ( config_flags, u, v, w,                 &
+                                   uh, uh_inst, up_heli_max,         &
+                                   uh16, up_heli_max16,              &
+                                   uh03, up_heli_max03,              &
                                    ph, phb,                          &
                                    msfux, msfuy,                     &
                                    msfvx, msfvy,                     &
@@ -6055,7 +6061,13 @@ END SUBROUTINE phy_bc
     ::  u, v, w, ph, phb, zx, zy, rdz, rdzw
 
     REAL, DIMENSION( ims:ime, jms:jme ), INTENT( INOUT )  &
-    :: uh, up_heli_max
+    :: uh, uh_inst, up_heli_max
+
+    REAL, DIMENSION( ims:ime, jms:jme ), INTENT( INOUT )  &
+    :: uh16, up_heli_max16
+
+    REAL, DIMENSION( ims:ime, jms:jme ), INTENT( INOUT )  &
+    :: uh03, up_heli_max03
 
 ! Local variables.
 
@@ -6078,6 +6090,13 @@ END SUBROUTINE phy_bc
 
     LOGICAL, DIMENSION( its-2:ite+2, jts-2:jte+2 )  &
     :: use_column
+
+    REAL  &
+    :: uh_smth16, uh_smth03
+
+    LOGICAL, DIMENSION( its-2:ite+2, jts-2:jte+2 )  &
+    :: use_column16, use_column03
+
 
 ! End declarations.
 !-----------------------------------------------------------------------
@@ -6354,6 +6373,19 @@ END SUBROUTINE phy_bc
     DO i = i_start, i_end
       use_column(i,j) = .true.
       uh(i,j) = 0.
+      uh_inst(i,j) = 0.
+
+! These fields are for a test of the updraft helicity betweeen the
+! 1000 m and 6000 m levels.
+
+      use_column16(i,j) = .true.
+      uh16(i,j) = 0.
+
+! These fields are for a test of the updraft helicity betweeen the
+! 0 m and 3000 m levels.
+
+      use_column03(i,j) = .true.
+      uh03(i,j) = 0.
     END DO
     END DO
 
@@ -6385,6 +6417,36 @@ END SUBROUTINE phy_bc
           uh(i,j) = 0.
         ENDIF
       ENDIF
+
+
+! These fields are for a test of the updraft helicity betweeen the
+! 1000 m and 6000 m levels.
+
+      IF ( zl .GE. 1000. .AND. zu .LE. 6000. ) THEN
+        IF ( wavg(i,k,j) .GT. 0. .AND. wavg(i,k+1,j) .GT. 0. ) THEN
+          uh16(i,j) = uh16(i,j) + ( ( wavg(i,k,j) * rvort(i,k,j) + &
+                    wavg(i,k+1,j) * rvort(i,k+1,j) ) * 0.5 ) &
+                    * ( zu - zl )
+        ELSE
+          use_column16(i,j) = .false.
+          uh16(i,j) = 0.
+        ENDIF
+      ENDIF
+
+! These fields are for a test of the updraft helicity betweeen the
+! 0 m and 3000 m levels.
+
+      IF ( zl .GE. 0. .AND. zu .LE. 3000. ) THEN
+        IF ( wavg(i,k,j) .GT. 0. .AND. wavg(i,k+1,j) .GT. 0. ) THEN
+          uh03(i,j) = uh03(i,j) + ( ( wavg(i,k,j) * rvort(i,k,j) + &
+                    wavg(i,k+1,j) * rvort(i,k+1,j) ) * 0.5 ) &
+                    * ( zu - zl )
+        ELSE
+          use_column03(i,j) = .false.
+          uh03(i,j) = 0.
+        ENDIF
+      ENDIF
+
     END DO
     END DO
     END DO
@@ -6400,6 +6462,7 @@ END SUBROUTINE phy_bc
                            uh(i-1,j+1) + uh(i-1,j-1) )
 
       IF ( use_column(i,j) ) THEN
+        uh_inst(i,j) = uh_smth
         IF ( uh_smth .GT. up_heli_max(i,j) ) THEN
            up_heli_max(i,j) = uh_smth
         ENDIF
@@ -6408,6 +6471,41 @@ END SUBROUTINE phy_bc
 !     IF ( up_heli_max(i,j) .GT. 1.0e+3 ) THEN
 !       print *,' i,j,up_heli_max = ', i,j,up_heli_max(i,j)
 !     ENDIF
+
+! These fields are for a test of the updraft helicity betweeen the
+! 1000 m and 6000 m levels.
+
+      uh_smth16 = 0.25   *   uh16(i  ,j  ) + &
+                  0.125  * ( uh16(i+1,j  ) + uh16(i-1,j  ) + &
+                             uh16(i  ,j+1) + uh16(i  ,j-1) ) + &
+                  0.0625 * ( uh16(i+1,j+1) + uh16(i+1,j-1) + &
+                             uh16(i-1,j+1) + uh16(i-1,j-1) )
+
+      IF ( use_column16(i,j) .and. uh_smth16 .GT. up_heli_max16(i,j) ) THEN
+        up_heli_max16(i,j) = uh_smth16
+      ENDIF
+
+      IF ( up_heli_max16(i,j) .GT. 1.0e+3 ) THEN
+        print *,' i,j,up_heli_max16 = ', i,j,up_heli_max16(i,j)
+      ENDIF
+
+! These fields are for a test of the updraft helicity betweeen the
+! 0 m and 3000 m levels.
+
+      uh_smth03 = 0.25   *   uh03(i  ,j  ) + &
+                  0.125  * ( uh03(i+1,j  ) + uh03(i-1,j  ) + &
+                             uh03(i  ,j+1) + uh03(i  ,j-1) ) + &
+                  0.0625 * ( uh03(i+1,j+1) + uh03(i+1,j-1) + &
+                             uh03(i-1,j+1) + uh03(i-1,j-1) )
+
+      IF ( use_column03(i,j) .and. uh_smth03 .GT. up_heli_max03(i,j) ) THEN
+        up_heli_max03(i,j) = uh_smth03
+      ENDIF
+
+      IF ( up_heli_max03(i,j) .GT. 1.0e+3 ) THEN
+        print *,' i,j,up_heli_max03 = ', i,j,up_heli_max03(i,j)
+      ENDIF
+
     END DO
     END DO
 
@@ -6422,6 +6520,8 @@ END SUBROUTINE phy_bc
       DO k = kts, kte
 !        rvort(ids,k,j) = rvort(ids+1,k,j)
         up_heli_max(ids,j) = up_heli_max(ids+1,j)
+        up_heli_max16(ids,j) = up_heli_max16(ids+1,j)
+        up_heli_max03(ids,j) = up_heli_max03(ids+1,j)
       END DO
       END DO
     END IF
@@ -6431,6 +6531,8 @@ END SUBROUTINE phy_bc
       DO i = its, ite
 !        rvort(i,k,jds) = rvort(i,k,jds+1)
         up_heli_max(i,jds) = up_heli_max(i,jds+1)
+        up_heli_max16(i,jds) = up_heli_max16(i,jds+1)
+        up_heli_max03(i,jds) = up_heli_max03(i,jds+1)
       END DO
       END DO
     END IF
@@ -6440,6 +6542,8 @@ END SUBROUTINE phy_bc
       DO k = kts, kte
 !        rvort(ide,k,j) = rvort(ide-1,k,j)
         up_heli_max(ide,j) = up_heli_max(ide-1,j)
+        up_heli_max16(ide,j) = up_heli_max16(ide-1,j)
+        up_heli_max03(ide,j) = up_heli_max03(ide-1,j)
       END DO
       END DO
     END IF
@@ -6449,6 +6553,8 @@ END SUBROUTINE phy_bc
       DO i = its, ite
 !        rvort(i,k,jde) = rvort(i,k,jde-1)
         up_heli_max(i,jde) = up_heli_max(i,jde-1)
+        up_heli_max16(i,jde) = up_heli_max16(i,jde-1)
+        up_heli_max03(i,jde) = up_heli_max03(i,jde-1)
       END DO
       END DO
     END IF
