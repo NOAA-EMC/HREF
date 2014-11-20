@@ -35,6 +35,11 @@ SUBROUTINE solve_em ( grid , config_flags  &
                  ,halo_em_tke_old_e_7_sub,halo_em_tracer_e_3_sub,halo_em_tracer_e_5_sub    &
                  ,halo_em_tracer_e_7_sub,halo_em_tracer_old_e_5_sub                        &
                  ,halo_em_tracer_old_e_7_sub,period_bdy_em_a_sub                           &
+! SRD
+                 ,halo_em_diags_sub                                                        &
+!...HailCast
+                 ,halo_em_phys_w_sub                                                       &
+! SRD
                  ,period_bdy_em_b3_sub,period_bdy_em_b_sub,period_bdy_em_chem2_sub         &
                  ,period_bdy_em_chem_old_sub,period_bdy_em_chem_sub,period_bdy_em_d3_sub   &
                  ,period_bdy_em_d_sub,period_bdy_em_e_sub,period_bdy_em_moist2_sub         &
@@ -63,6 +68,11 @@ SUBROUTINE solve_em ( grid , config_flags  &
    USE module_lightning_driver, ONLY : lightning_driver
    USE module_fddaobs_driver
    USE module_diagnostics
+! SRD
+!...HailCast
+!tst   USE module_afwa_diagnostics
+! SRD
+
 #ifdef WRF_CHEM
    USE module_input_chem_data
    USE module_input_tracer
@@ -172,6 +182,11 @@ SUBROUTINE solve_em ( grid , config_flags  &
    INTEGER, PARAMETER                         :: precision = 100
    INTEGER                                    :: num, den
    TYPE(WRFU_TimeInterval)                    :: dtInterval, intervaltime,restartinterval
+
+! SRD
+   CHARACTER*19 curr_date
+! SRD
+
 
 ! Define benchmarking timers if -DBENCH is compiled
 #include <bench_solve_em_def.h>
@@ -4019,20 +4034,73 @@ BENCH_END(bc_2d_tim)
       &             ,DIAGFLAG=diag_flag                                    &
       &             ,HISTORY_INTERVAL=grid%history_interval                &
       &             ,ITIMESTEP=grid%itimestep                              &
-      &             ,Q2=grid%q2,PSFC=grid%psfc                  &
+      &             ,Q2=grid%q2,PSFC=grid%psfc                             &
       &             ,T2MAX=grid%t02_max,T2MIN=grid%t02_min                 &
       &             ,RH2MAX=grid%rh02_max,RH2MIN=grid%rh02_min             &
+      &             ,T=grid%t_2                                            &
       &             ,U10=grid%u10,V10=grid%v10,W=grid%w_2                  &
+      &             ,P=grid%p, PB=grid%pb                                  &
       &             ,WSPD10MAX=grid%wspd10max                              &
       &             ,UP_HELI_MAX=grid%up_heli_max                          &
+      &             ,UP_HELI_MAX16=grid%up_heli_max16                      &
+      &             ,UP_HELI_MAX03=grid%up_heli_max03                      &
+!      &             ,UP_HELI_MAXP=grid%up_heli_maxp                        &
+!      &             ,UP_HELI_MAXE=grid%up_heli_maxe                        &
       &             ,W_UP_MAX=grid%w_up_max,W_DN_MAX=grid%w_dn_max         &
       &             ,ZNW=grid%znw,W_COLMEAN=w_colmean                      &
       &             ,NUMCOLPTS=numcolpts,W_MEAN=grid%w_mean                &
       &             ,GRPL_MAX=grid%grpl_max,GRPL_COLINT=grpl_colint        &
       &             ,REFD_MAX=grid%refd_max                                &
-      &             ,refl_10cm=grid%refl_10cm                              &
+      &             ,REFD05=grid%refd05,REFD10=grid%refd10                 &
+      &             ,REFD15=grid%refd15,REFD20=grid%refd20                 &
+      &             ,REFD25=grid%refd25,REFD30=grid%refd30                 &
+      &             ,REFD35=grid%refd35,REFD40=grid%refd40                 &
+      &             ,REFD45=grid%refd45,REFD50=grid%refd50                 &
+      &             ,REFD55=grid%refd55,REFD60=grid%refd60                 &
+      &             ,REFDM10C=grid%refdm10c                                &
+      &             ,REFDM10C_CALC=refdm10c_calc                           &
+      &             ,REFDM10C_MAX=grid%refdm10c_max                        &
+      &             ,LTG1_MAX=grid%ltg1_max,LTG2_MAX=grid%ltg2_max         &
+      &             ,LTG3_MAX=grid%ltg3_max                                &
+      &             ,LTG1=grid%ltg1,LTG2=grid%ltg2,LTG3=grid%ltg3          &
+      &             ,LTG1_CALC=ltg1_calc                                   &
+      &             ,TOTICE_COLINT=totice_colint,MSFT=grid%msft            &
+      &             ,QR_CURR=moist(ims,kms,jms,P_QR)                       &
+      &             ,QS_CURR=moist(ims,kms,jms,P_QS)                       &
+      &             ,QI_CURR=moist(ims,kms,jms,P_QI)                       &
       &             ,QG_CURR=moist(ims,kms,jms,P_QG)                       &
-      &             ,RHO=rho,PH=grid%ph_2,PHB=grid%phb,G=g                 &
+      &             ,F_RIMEF_PHY=grid%f_rimef_phy                          &
+      &             ,RHO=rho,PH=grid%ph_2,PHB=grid%phb                     &
+      &             ,DZ8W=dz8w                                             &
+      &             ,PRATE=grid%prate                                      &
+      &             ,REFD3D=grid%refd3d,VIL2=grid%vil2                     &
+      &             ,REFL_10CM=grid%refl_10cm                              &
+      &             ,GRID_CLOCK=grid%domain_clock,GRID_ALARMS=grid%alarms  & !--Uli Blahak (01 Dec 2006)                                     
+!      &             ,U10MIN05=grid%u10min05,U10MIN10=grid%u10min10         &
+!      &             ,U10MIN15=grid%u10min15,U10MIN20=grid%u10min20         &
+!      &             ,U10MIN25=grid%u10min25,U10MIN30=grid%u10min30         &
+!      &             ,U10MIN35=grid%u10min35,U10MIN40=grid%u10min40         &
+!      &             ,U10MIN45=grid%u10min45,U10MIN50=grid%u10min50         &
+!      &             ,U10MIN55=grid%u10min55,U10MIN60=grid%u10min60         &
+!      &             ,V10MIN05=grid%v10min05,V10MIN10=grid%v10min10         &
+!      &             ,V10MIN15=grid%v10min15,V10MIN20=grid%v10min20         &
+!      &             ,V10MIN25=grid%v10min25,V10MIN30=grid%v10min30         &
+!      &             ,V10MIN35=grid%v10min35,V10MIN40=grid%v10min40         &
+!      &             ,V10MIN45=grid%v10min45,V10MIN50=grid%v10min50         &
+!      &             ,V10MIN55=grid%v10min55,V10MIN60=grid%v10min60         &
+!      &             ,U100MIN05=grid%u100min05,U100MIN10=grid%u100min10     &
+!      &             ,U100MIN15=grid%u100min15,U100MIN20=grid%u100min20     &
+!      &             ,U100MIN25=grid%u100min25,U100MIN30=grid%u100min30     &
+!      &             ,U100MIN35=grid%u100min35,U100MIN40=grid%u100min40     &
+!      &             ,U100MIN45=grid%u100min45,U100MIN50=grid%u100min50     &
+!      &             ,U100MIN55=grid%u100min55,U100MIN60=grid%u100min60     &
+!      &             ,V100MIN05=grid%v100min05,V100MIN10=grid%v100min10     &
+!      &             ,V100MIN15=grid%v100min15,V100MIN20=grid%v100min20     &
+!      &             ,V100MIN25=grid%v100min25,V100MIN30=grid%v100min30     &
+!      &             ,V100MIN35=grid%v100min35,V100MIN40=grid%v100min40     &
+!      &             ,V100MIN45=grid%v100min45,V100MIN50=grid%v100min50     &
+!      &             ,V100MIN55=grid%v100min55,V100MIN60=grid%v100min60     &
+! SRD
                   ! Dimension arguments
       &             ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde     &
       &             ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme     &
@@ -4105,6 +4173,64 @@ BENCH_END(bc_2d_tim)
         &           ,NUM_TILES=grid%num_tiles                              &
         &                                                          )
    ENDIF
+
+#ifdef DM_PARALLEL
+#    include "HALO_EM_DIAGS.inc"
+#endif
+
+       CALL domain_clock_get ( grid, current_timestr=curr_date )
+       print *,' current date = ', curr_date
+
+BENCH_START(diagnostic_output_calc2_tim)
+
+       !$OMP PARALLEL DO   &
+       !$OMP PRIVATE ( ij )
+
+       DO ij = 1 , grid%num_tiles
+
+
+          CALL wrf_debug ( 200 , ' call diagnostic_output_calc2' )
+          CALL diagnostic_output_calc2 (                   &
+      &              ITIMESTEP=grid%itimestep,             &
+      &              XTIME=grid%xtime,                     &
+      &              CURR_DATE=curr_date,                  &
+      &              CURR_SECS=curr_secs,                  &
+      &              HISTORY_INTERVAL=grid%history_interval, &
+      &              LTG1=grid%ltg1,                       &
+      &              LTG3=grid%ltg3,                       &
+      &              W=grid%w_2,                           &
+      &              QR=moist(ims,kms,jms,P_QR),           &
+      &              QG=moist(ims,kms,jms,P_QG),           &
+      &              REFDM10C=grid%refdm10c,               &
+      &              UH_INST=grid%uh_inst,                 &
+      &              UH_5MIN_MAX=grid%uh_5min_max,         &
+      &              PH=grid%ph_2,PHB=grid%phb,G=g,        &
+      &              NCA_LTG=grid%nca_ltg,                 &
+      &              NCI_LTG=grid%nci_ltg,                 &
+      &              NCA_W=grid%nca_w,                     &
+      &              NCI_W=grid%nci_w,                     &
+      &              NCA_WQ=grid%nca_wq,                   &
+      &              NCI_WQ=grid%nci_wq,                   &
+      &              NCA_REFD=grid%nca_refd,               &
+      &              NCI_REFD=grid%nci_refd,               &
+      &              QR_MAX_CI=grid%qr_max_ci,             &
+      &              QG_MAX_CI=grid%qg_max_ci,             &
+      &              DT=grid%dt,                           &
+      &              XLAT=grid%xlat,                       &
+      &              XLONG=grid%xlong,                     &
+      &              IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds, KDE=kde, &
+      &              IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms, KME=kme, &
+      &              IPS=ips,IPE=ipe, JPS=jps,JPE=jpe, KPS=kps, KPE=kpe, &
+      &              I_START=grid%i_start(ij),I_END=min(grid%i_end(ij), ide-1), &
+      &              J_START=grid%j_start(ij),J_END=min(grid%j_end(ij), jde-1), &
+      &              KTS=k_start, KTE=min(k_end,kde-1)                   &
+      &              )
+
+       END DO
+       !$OMP END PARALLEL DO
+
+BENCH_END(diagnostic_output_calc2_tim)
+
 
    IF ( config_flags%p_lev_diags .NE. SKIP_PRESS_DIAGS ) THEN
      !  Process the diags if this is the correct time step OR
