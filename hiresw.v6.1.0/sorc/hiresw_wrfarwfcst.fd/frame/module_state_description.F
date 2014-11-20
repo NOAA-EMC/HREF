@@ -240,12 +240,12 @@ MODULE module_state_description
   INTEGER, PARAMETER :: PARAM_qndrop = 1
   INTEGER            ::     P_qndrop = 1
   LOGICAL            ::     F_qndrop = .FALSE.
-  INTEGER, PARAMETER :: PARAM_qni = 2
-  INTEGER            ::     P_qni = 1
-  LOGICAL            ::     F_qni = .FALSE.
-  INTEGER, PARAMETER :: PARAM_qt = 3
+  INTEGER, PARAMETER :: PARAM_qt = 2
   INTEGER            ::     P_qt = 1
   LOGICAL            ::     F_qt = .FALSE.
+  INTEGER, PARAMETER :: PARAM_qni = 3
+  INTEGER            ::     P_qni = 1
+  LOGICAL            ::     F_qni = .FALSE.
   INTEGER, PARAMETER :: PARAM_qns = 4
   INTEGER            ::     P_qns = 1
   LOGICAL            ::     F_qns = .FALSE.
