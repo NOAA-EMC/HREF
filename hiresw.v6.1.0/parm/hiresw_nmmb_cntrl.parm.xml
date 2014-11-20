@@ -407,7 +407,7 @@
       </param>
 
        <param>
-       <shortname>INST_TCDC_ON_ENTIRE_ATMOS</shortname>
+       <shortname>INST_TCDC_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCDC</pname>
          <scale> 3.0</scale>
       </param>
@@ -686,7 +686,7 @@
       </param>
 
        <param>
-       <shortname>REFC_ON_ENTIRE_ATMOS</shortname>
+       <shortname>REFC_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>REFC</pname>
        <table_info>NCEP</table_info>
          <scale>-4.0</scale>
@@ -883,7 +883,7 @@
       </param>
 
        <param>
-       <shortname>VIL_ON_ENTIRE_ATMOS</shortname>
+       <shortname>VIL_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>VIL</pname>
        <scale> 6.0</scale>
        </param>
