@@ -30,6 +30,7 @@ TMAX:2 m above ground:
 TMIN:2 m above ground:
 MAXRH:2 m above ground:
 MINRH:2 m above ground:
+HGT:planetary boundary layer:
 VRATE:planetary boundary layer:
 VIL:entire atmosphere
 TCDC:entire atmosphere
