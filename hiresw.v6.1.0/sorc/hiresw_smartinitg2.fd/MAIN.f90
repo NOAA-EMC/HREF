@@ -379,7 +379,12 @@
        CALL NDFDgrid(VEG,DOWNT,DOWNDEW,DOWNU,DOWNV,DOWNQ,DOWNP,TOPO,VEG_NDFD, &
                      gdin,VALIDPT,core,dx)
 
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       IF (MOD(FHR,3).EQ.0) THEN 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !       Find inconsistent valid points  JTM 1-28-2013
 !       where (downt .le. 10) validpt=.false.
 !       where (downq .gt. 1) validpt=.false.
@@ -405,16 +410,12 @@
 !! need to use a GRIBI2 routine like is available in grib2_module
 
        FNAMEOUT='smartg2.xx'
-       FNAME2OUT='MAXMIN.xx'
         write(0,*) 'FHR known as: ', FHR
        WRITE(FNAMEOUT(9:10),FMT='(I2.2)')FHR
-       WRITE(FNAME2OUT(8:9),FMT='(I2.2)')FHR
         write(0,*) 'FNAMEOUT(1:10): ', FNAMEOUT(1:10)
-        write(0,*) 'FNAME2OUT(1:9): ', FNAME2OUT(1:9)
 
        CALL BAOPEN(51,FNAMEOUT,IRET)
-       CALL BAOPEN(52,FNAM2EOUT,IRET)
-        write(0,*) 'IRET from BAOPEN: ', IRET
+        write(0,*) 'IRET from BAOPEN of 51: ', IRET
 
         NUMV=IM*JM
 
@@ -1283,16 +1284,24 @@
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,MIXHGT)
 
+!       GFLD%discipline=0
+!       GFLD%ipdtnum=0
+!       GFLD%ipdtmpl(1)=3
+!       GFLD%ipdtmpl(2)=6
+!       GFLD%ipdtmpl(10)=220
+!       GFLD%ipdtmpl(12)=0
+
        GFLD%discipline=0
        GFLD%ipdtnum=0
-       GFLD%ipdtmpl(1)=3
-       GFLD%ipdtmpl(2)=6
+       GFLD%ipdtmpl(1)=19
+       GFLD%ipdtmpl(2)=3
        GFLD%ipdtmpl(10)=220
        GFLD%ipdtmpl(12)=0
 
+
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! MIXHGT
-        write(0,*) 'IRET for PBL HGT: ', IRET
+        write(0,*) 'IRET for PBL MIXHGT: ', IRET
 
 
 
@@ -1376,19 +1385,34 @@
        CALL PUTGB2(51,GFLD,IRET) ! LAL
         write(0,*) 'IRET for LAL: ', IRET
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ENDIF  ! 3 hour writes
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         print*, 'here checking LCYCON'
     IF(LCYCON .AND. .NOT.LHR12 .OR.             &
       .NOT.LCYCON.AND.MOD(FHR-6,12).NE.0) THEN 
       print *, 'going to write minmax ', fhr
-      RITEHD = .TRUE.
-      ID(1:25) = 0
-      ID(8)=11
-        ID(9)=105
-        ID(11)=2
-      DEC=-2.0
-      CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,71,DEC)
+
+       FNAME2OUT='MAXMING2.fxx'
+       WRITE(FNAME2OUT(11:12),FMT='(I2.2)')FHR
+       write(0,*) 'FNAME2OUT(1:12): ', FNAME2OUT(1:12)
+       CALL BAOPEN(52,FNAME2OUT,IRET)
+       write(0,*) 'IRET from BAOPEN of 52: ', IRET
+
+        NUMV=IM*JM
+
+!      RITEHD = .TRUE.
+!      ID(1:25) = 0
+!      ID(8)=11
+!        ID(9)=105
+!        ID(11)=2
+       DEC=-2.0
+!      CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,71,DEC)
+
+        write(0,*) 'min,max DOWNT: ', minval(DOWNT),maxval(DOWNT)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNT)
 
@@ -1403,12 +1427,12 @@
        CALL PUTGB2(52,GFLD,IRET) ! DOWNT for MAXMIN file
 
  
-      ID(1:25) = 0
-      ID(8)=17
-        ID(9)=105
-        ID(11)=2
+!      ID(1:25) = 0
+!      ID(8)=17
+!        ID(9)=105
+!        ID(11)=2
       DEC=-2.0
-      CALL GRIBIT(ID,RITEHD,DOWNDEW,GDIN,71,DEC)
+!      CALL GRIBIT(ID,RITEHD,DOWNDEW,GDIN,71,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNDEW)
 
@@ -1421,6 +1445,7 @@
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(52,GFLD,IRET) ! DOWNDEW for MAXMIN file
+        call baclose(52,iret)
     ENDIF
 
 !   For HI Nest Write limited data to grib file for hrs 1,2,4,5,7,8
@@ -2410,14 +2435,6 @@
 
         call g2getbits(GFLD%ibmap,DEC,size(GFLD%fld),locbmap,GFLD%fld, &
                       GFLD%idrtmpl(1),GFLD%idrtmpl(2),GFLD%idrtmpl(3),GFLD%idrtmpl(4))
-
-!        if (DEC .lt. 0.) then
-!          gfld%idrtmpl(2)=int(DEC)
-!          gfld%idrtmpl(3)=0
-!        else
-!          gfld%idrtmpl(2)=0
-!          gfld%idrtmpl(3)=int(DEC)
-!        endif
 
         write(0,*) 'gfld%idrtmpl(2:3) defined, inumbits: ', gfld%idrtmpl(2:4)
 
