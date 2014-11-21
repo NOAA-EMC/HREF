@@ -185,37 +185,37 @@ then
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
 
-# if [ $DOMIN_SMALL = "conus" ]
-# then
-# cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_${subpiece} hiresw_grid_extract.txt
-# else
+if [ $DOMIN_SMALL = "conus" ]
+then
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus hiresw_grid_extract.txt
+else
 
 cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
-# fi
+fi
 use_3h=1
 
 elif [ $fhr%3 -eq 0 ]
 then
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
-# if [ $DOMIN_SMALL = "conus" ]
-# then
-# cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_${subpiece} hiresw_grid_extract.txt
-# else
+if [ $DOMIN_SMALL = "conus" ]
+then
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus hiresw_grid_extract.txt
+else
 cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
 
-# fi
+fi
 use_3h=1
 
 else
 
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_1h master${fhr}.ctl
-# if [ $DOMIN_SMALL = "conus" ]
-# then
-# cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h_${subpiece} hiresw_grid_extract.txt
-# else
+if [ $DOMIN_SMALL = "conus" ]
+then
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h_conus hiresw_grid_extract.txt
+else
 cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h hiresw_grid_extract.txt
-# fi
+fi
 use_1h=1
 
 fi
@@ -263,13 +263,12 @@ $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid $
      if [ $fhr%3 -ne 0 ]
      then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
-$WGRIB2  nn.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+$WGRIB2  nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
 cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn > ${filenamthree}${fhr}.tm00
      else
 mv ${filenamthree}${fhr}.tm00_bilin  ${filenamthree}${fhr}.tm00
      fi
     
-
 
 # copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
 
@@ -362,7 +361,8 @@ done
 #   export err=$?;./err_chk
 
 
-     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+#     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 #      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      else # not $fhr%3=0
