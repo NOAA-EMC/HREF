@@ -265,11 +265,14 @@ echo err1 err2 on copies $err1 $err2
     cp $INPUT_DATA/srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCP
     cp $INPUT_DATA/srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCPi
         fi
-    cp MAXMIN${fhr2}.tm00 MAXMIN2
-    cp MAXMIN${fhr1}.tm00 MAXMIN1
+	echo fhr2 $fhr2
+	echo fhr1 $fhr1
+    cp MAXMING2.f${fhr2} MAXMIN2
+    cp MAXMING2.f${fhr1} MAXMIN1
 
-	cnvgrib -g12 MAXMIN${fhr2}.tm00 MAXMIN2
-        cnvgrib -g12 MAXMIN${fhr1}.tm00 MAXMIN1
+#	cnvgrib -g12 MAXMIN${fhr2}.tm00 MAXMIN2
+#        cnvgrib -g12 MAXMIN${fhr1}.tm00 MAXMIN1
+
     $utilexec/grb2index MAXMIN1 MAXMIN1i
     $utilexec/grb2index MAXMIN2 MAXMIN2i
   fi
