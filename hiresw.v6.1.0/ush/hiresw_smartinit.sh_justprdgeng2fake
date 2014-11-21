@@ -27,6 +27,8 @@ compress=complex2
 
 ffhr=${1}
 
+echo working ffhr $ffhr
+
 cd  $DATA/smartinit_${ffhr}/
 
 #=====================================================================
@@ -186,8 +188,17 @@ if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
   grbpre="2 0 0 0 0"
   for PHR in $pcphr3 $pcphr6 $pcphr12;do 
 
+
+### need an offset here to account for the 3 h offset in the SREF data????
+### need an offset here to account for the 3 h offset in the SREF data????
+### need an offset here to account for the 3 h offset in the SREF data????
+### need an offset here to account for the 3 h offset in the SREF data????
+
+
 #   prob of pcp > 0.01
 #    $utilexec/wgrib -PDS10 SREFPROB |grep "${grbpre} 64 64 0 0"|grep "0 1 $PHR $pcphr 4"|$utilexec/wgrib -i -grib -o dump SREFPROB
+
+	echo "get PCP>0.01 over: " ${PHR} ${pcphr}
 
     $WGRIB2 SREFPROB | grep APCP |  grep "prob >0.25" | grep ":${PHR}-${pcphr} hour" | $WGRIB2 -i SREFPROB  -grib dump
     let IP=IP+1
