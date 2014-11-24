@@ -3177,11 +3177,11 @@
         int_state%EF4T=IFACT*DTRATIO*int_state%EF4T
 !
         DO J=JDS,JDE
-          int_state%DDMPU(J)=IFACT*int_state%DDMPU(J)
+          int_state%DDMPU(J)=IFACT*DTRATIO*int_state%DDMPU(J)
           int_state%FAD(J)=IFACT*DTRATIO*int_state%FAD(J)
           int_state%FAH(J)=IFACT*DTRATIO*int_state%FAH(J)
           int_state%FCP(J)=IFACT*DTRATIO*int_state%FCP(J)
-          int_state%WPDAR(J)=IFACT*int_state%WPDAR(J)
+          int_state%WPDAR(J)=IFACT/DTRATIO*int_state%WPDAR(J)
         ENDDO
 !
         DO J=JTS,JTE
@@ -3390,11 +3390,11 @@
 !         IF (MYPE == 0) WRITE(0,*) 'NBOCO reset to : ', NBOCO
 !
           DO J=JDS,JDE
-            int_state%DDMPU(J)=IFACT*int_state%DDMPU(J)
+            int_state%DDMPU(J)=IFACT*DTRATIO*int_state%DDMPU(J)
             int_state%FAD(J)=IFACT*DTRATIO*int_state%FAD(J)
             int_state%FAH(J)=IFACT*DTRATIO*int_state%FAH(J)
             int_state%FCP(J)=IFACT*DTRATIO*int_state%FCP(J)
-            int_state%WPDAR(J)=IFACT*int_state%WPDAR(J)
+            int_state%WPDAR(J)=IFACT/DTRATIO*int_state%WPDAR(J)
 !
             DDMPU(J)=int_state%DDMPU(J)
             FAD(J)=int_state%FAD(J)
@@ -5369,11 +5369,11 @@
       IF(NTIMESTEP == 0 .or. MOD(NTIMESTEP,(NSTEPS_PER_HOUR/12))==0) THEN
 
 !        if ( maxval(int_state%UPHLOBJMAX) .gt. 0.)  then
-        if (MYPE .eq. 0) then
+
+!        if (MYPE .eq. 0) then
 !        write(0,*) 'UPHLOBJMAX reset from ', maxval(int_state%UPHLOBJMAX)                                           
-        write(0,*) 'UPHLOBJMAX reset '                                         
-        write(0,*) 'int_state%UPHLCRIT: ', int_state%UPHLCRIT
-        endif
+!        write(0,*) 'int_state%UPHLCRIT: ', int_state%UPHLCRIT
+!        endif
 
         DO J=JTS,JTE
         DO I=ITS,ITE
@@ -5457,6 +5457,7 @@
                          ,IDE,JDE                                        &
                          ,ITS_B1,ITE_B1,JTS_B1,JTE_B1                    &
                          ,LM,int_state%NCOUNT,int_state%FIRST_NMM)
+
       ENDIF
 
 
