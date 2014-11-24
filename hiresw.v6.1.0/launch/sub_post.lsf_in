@@ -7,7 +7,7 @@
 #BSUB -q "dev"
 #BSUB -n _NPROC_
 #BSUB -P HRW-T2O
-#BSUB -W 0:40
+#BSUB -W 0:45
 #BSUB -a poe
 #
 

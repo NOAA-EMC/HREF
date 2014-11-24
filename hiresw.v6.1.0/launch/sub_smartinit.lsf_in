@@ -4,10 +4,10 @@
 #BSUB -q "dev_shared"
 #BSUB -J HIRESW_SMARTINIT
 #BSUB -P HRW-T2O
-#BSUB -R "span[ptile=2]"
+#BSUB -R "span[ptile=5]"
 #BSUB -R affinity[core(1)]
-#BSUB -R rusage[mem=5000]
-#BSUB -n 2
+#BSUB -R rusage[mem=3000]
+#BSUB -n 5
 ###BSUB -x
 #BSUB -W 0:39
 #BSUB -a poe
@@ -32,11 +32,28 @@ export cyc=_CYC_
 export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+DATEM1=`/nwprod/util/exec/ndate -24 ${DATE}${cyc} | cut -c1-8`
+
+
 
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export COMIN=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 
-export COMIN_SREF=/com/sref/prod/sref.${DATE}
+
+
+if [ ${cyc} = "00" ]
+then
+export COMIN_SREF=/com/sref/prod/sref.${DATEM1}/21/ensprod
+elif [ ${cyc} = "06" ]
+then
+export COMIN_SREF=/com/sref/prod/sref.${DATE}/03/ensprod
+elif [ ${cyc} = "12" ]
+then
+export COMIN_SREF=/com/sref/prod/sref.${DATE}/09/ensprod
+elif [ ${cyc} = "18" ]
+then
+export COMIN_SREF=/com/sref/prod/sref.${DATE}/15/ensprod
+fi
 
 export INPUT_DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
 export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}
