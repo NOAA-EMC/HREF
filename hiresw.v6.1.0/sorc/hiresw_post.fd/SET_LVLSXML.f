@@ -13,6 +13,7 @@
 !   04_03_2012  Jun Wang - add SPEC_PRES_ABOVE_GRND for different CAPE/CIN
 !   08_06_2013  S  Moorthi  - fix index out of bound after iloop5
 !   10_03_2013  Jun Wang - add isentropic levels
+!   10_21_2014  M Pyle - Isothermal
 !
 ! USAGE:    CALL SET_LVLSXML(param,ifld,irec,kpv,pv,kth,th)
 !   INPUT ARGUMENT LIST:
@@ -88,6 +89,21 @@
               exit iloop
              endif
            enddo  iloop
+           enddo
+           return
+      endif
+!
+      if(trim(param%fixed_sfc1_type)=='isothermal') then
+           do j=1, nlevel
+        iloop0:  do i=1, lsm
+         
+             if(abs(param%level(j)-SPL(i))<small1)then
+              LVLS(i,ifld)=1
+              LVLSXML(i,ifld)=j
+              irec=irec+1
+              exit iloop0
+             endif
+           enddo  iloop0
            enddo
            return
       endif

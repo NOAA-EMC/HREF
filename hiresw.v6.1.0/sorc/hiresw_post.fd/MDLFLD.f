@@ -237,36 +237,6 @@
          NMM_GFSmicro=.FALSE.
       ENDIF
 
-                 DO J=JSTA,JEND
-                 DO I=1,IM
-          Zm10c(I,J)=ZMID(I,J,NINT(LMH(I,J)))
-          DO L=NINT(LMH(I,J)),1,-1
-             IF (T(I,J,L) .LE. 263.15) THEN   
-                Zm10c(I,J)=ZMID(I,J,L)         !-- Find lowest level where T<-10C
-                EXIT
-             ENDIF
-          ENDDO      
-                 ENDDO
-                 ENDDO
-
-!           REFD at -10 C level
-            IF (IGET(950).GT.0) THEN
-                 DO J=JSTA,JEND
-                 DO I=1,IM
-                   GRID1(I,J)=DBZ(I,J,Zm10c(I,J))
-                 ENDDO
-                 ENDDO
-
-                 if(grib=="grib1" )then
-                   ID(1:25) = 0
-                   CALL GRIBIT(IGET(950),L,GRID1,IM,JM)
-                 else if(grib=="grib2" )then
-                   cfld=cfld+1
-                   fld_info(cfld)%ifld=IAVBLFLD(IGET(950))
-                   fld_info(cfld)%lvl=LVLSXML(L,IGET(950))
-                   datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
-                 endif
-            ENDIF
 
 !
 !    Calculate convective radar reflectivity at the surface (CUREFL_S), 
@@ -738,6 +708,42 @@
 
       END IF
 	write(0,*) 'here with max DBZ(b): ', maxval(DBZ(:,:,:))
+
+            IF (IGET(950).GT.0) THEN
+
+                 DO J=JSTA,JEND
+                 DO I=1,IM
+          Zm10c(I,J)=ZMID(I,J,NINT(LMH(I,J)))
+          DO L=NINT(LMH(I,J)),1,-1
+             IF (T(I,J,L) .LE. 263.15) THEN   
+                Zm10c(I,J)= L        !-- Find lowest level where T<-10C
+                EXIT
+             ENDIF
+          ENDDO      
+                 ENDDO
+                 ENDDO
+
+!           REFD at -10 C level
+                 DO J=JSTA,JEND
+                 DO I=1,IM
+                   GRID1(I,J)=DBZ(I,J,Zm10c(I,J))
+        if (mod(I,10) .eq. 0 .and. mod(J,10) .eq. 0) then
+        write(0,*) 'I,J,Zm10c, GRID1: ', I,J,Zm10c(I,J), GRID1(I,J)
+        endif
+                 ENDDO
+                 ENDDO
+
+                 if(grib=="grib1" )then
+                   ID(1:25) = 0
+                   CALL GRIBIT(IGET(950),L,GRID1,IM,JM)
+                 else if(grib=="grib2" )then
+                   cfld=cfld+1
+                   fld_info(cfld)%ifld=IAVBLFLD(IGET(950))
+                   fld_info(cfld)%lvl=LVLSXML(L,IGET(950))
+                   datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+                 endif
+
+          ENDIF
 !     
 !     OUTPUT/CALCULATE PRESSURE, OMEGA, POTENTIAL TEMPERATURE,
 !     DEWPOINT TEMPERATURE, RELATIVE HUMIDITY, AND 

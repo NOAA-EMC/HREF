@@ -12,7 +12,7 @@ CPPFLAGS = -DLINUX
 OPTS     = -O3  -assume noold_ldout_format 
 FREE     = -FR
 TRAPS    = # -ftrapuv  -check all  -fp-stack-check  -fstack-protector
-DEBUG    = -g -traceback
+DEBUG    = -g  # -traceback
 
 #
 # Now the hard part. NCEPPOST needs 19 libraries, WOW!!!!!

@@ -2050,8 +2050,8 @@
 
 ! HiresW additions (950-951)
       DATA IFILV(950),AVBL(950),IQ(950),IS(950),AVBLGRB2(950)      &
-     &                      /1,'RADAR REFL -10C     ',211,004,     &
-     &                       'REFD ON -10C_isotherm' /
+     &                      /1,'RADAR REFL ISOTHERMAL ',211,020,     &
+     &                       'REFD_ON_ISOTHERMAL' /
 
 !end initialization
 !
