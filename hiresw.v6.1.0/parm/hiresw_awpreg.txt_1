@@ -12,7 +12,7 @@ VGRD:10 m above ground:
 CAPE:surface:
 CIN:surface:
 PWAT:entire atmosphere (considered as a single layer):
-TCDC:entire atmosphere:
+TCDC:entire atmosphere (considered as a single layer):
 HGT:cloud ceiling:
 HLCY:3000-0 m above ground:
 USTM:6000-0 m above ground:
