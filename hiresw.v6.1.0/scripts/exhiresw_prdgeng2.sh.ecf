@@ -33,6 +33,8 @@ NDATE=${NDATE:-${utilexec}/ndate}
 NHOUR=${NHOUR:-${utilexec}/nhour}
 
 WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
+export WGRIB2=${EXEChiresw}/hiresw_wgrib2
+
 
 cd $DATA
 filedir=$DATA
@@ -72,7 +74,7 @@ echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 3" >
 echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 4" >> $DATA/poescript_${fhr}
 
 else
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 0" >> $DATA/poescript_${fhr}
 fi
 
 chmod 775 $DATA/poescript_${fhr}
@@ -121,7 +123,7 @@ rm $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL
 $WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2.idx
 else
 
-mv $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_1 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2
+mv $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2_0 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2
 $WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2.idx
 
 fi
