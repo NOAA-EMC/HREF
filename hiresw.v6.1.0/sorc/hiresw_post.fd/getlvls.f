@@ -490,5 +490,12 @@
             LVLSXML(j,ifld)=j
          enddo
       endif
+!
+      if(trim(param%fixed_sfc1_type)=='isothermal') then
+         do j=1, nlevel
+            LVLS(j,ifld)=1
+            LVLSXML(j,ifld)=j
+         enddo
+      endif
 !     
          end
