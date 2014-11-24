@@ -9,7 +9,7 @@
 #BSUB -a poe
 #BSUB -n _NPROC_
 #BSUB -P HRW-T2O
-#BSUB -W 0:39
+#BSUB -W 0:45
 
 export MP_EUILIB=us
 
