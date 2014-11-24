@@ -20,7 +20,7 @@ SPFH:80 m above ground:
 CAPE:90-0 mb above ground:
 CIN:90-0 mb above ground:
 HLCY:1000-0 m above ground:
-REFC:entire atmosphere:
+REFC:entire atmosphere (considered as a single layer):
 REFD:1000 m above ground:
 RETOP:entire atmosphere (considered as a single layer):
 MAXREF:1000 m above ground:
@@ -37,4 +37,4 @@ HGT:planetary boundary layer:
 VRATE:planetary boundary layer:
 UGRD:planetary boundary layer:
 VGRD:planetary boundary layer:
-VIL:entire atmosphere:
+VIL:entire atmosphere (considered as a single layer):

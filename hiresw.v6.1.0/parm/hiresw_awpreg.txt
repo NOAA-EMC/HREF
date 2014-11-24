@@ -12,7 +12,7 @@ VGRD:10 m above ground:
 CAPE:surface:
 CIN:surface:
 PWAT:entire atmosphere (considered as a single layer):
-TCDC:entire atmosphere:
+TCDC:entire atmosphere (considered as a single layer):
 HGT:cloud ceiling:
 HLCY:3000-0 m above ground:
 USTM:6000-0 m above ground:
@@ -238,7 +238,7 @@ HGT:cloud base:
 CAPE:90-0 mb above ground:
 CIN:90-0 mb above ground:
 HLCY:1000-0 m above ground:
-REFC:entire atmosphere:
+REFC:entire atmosphere (considered as a single layer):
 REFD:1 hybrid level:
 REFD:1000 m above ground:
 REFD:4000 m above ground:
@@ -259,7 +259,7 @@ VRATE:planetary boundary layer:
 UGRD:planetary boundary layer:
 VGRD:planetary boundary layer:
 GUST:surface:
-VIL:entire atmosphere:
+VIL:entire atmosphere (considered as a single layer):
 TCOLW:entire atmosphere:
 TCOLI:entire atmosphere:
 TCOLR:entire atmosphere:

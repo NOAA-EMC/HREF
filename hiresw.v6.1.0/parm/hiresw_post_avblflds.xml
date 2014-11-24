@@ -1426,9 +1426,9 @@
 
     <param>
        <post_avblfldidx>161</post_avblfldidx>
-       <shortname>INST_TCDC_ON_ENTIRE_ATMOS</shortname>
+       <shortname>INST_TCDC_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCDC</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 3.0</scale>
     </param>
 
@@ -2144,9 +2144,9 @@
 
     <param>
        <post_avblfldidx>252</post_avblfldidx>
-       <shortname>REFC_ON_ENTIRE_ATMOS</shortname>
+       <shortname>REFC_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>REFC</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale>4.0</scale>
     </param>
 
@@ -4587,10 +4587,10 @@
 
     <param>
        <post_avblfldidx>581</post_avblfldidx>
-       <shortname>VIL_ON_ENTIRE_ATMOS</shortname>
+       <shortname>VIL_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <longname> entire atmosphere Vertically Integrated Liquid (kg/m-2) </longname>
        <pname>VIL</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 4.0</scale>
     </param>
 

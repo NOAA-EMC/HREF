@@ -23,7 +23,7 @@ HLCY:1000-0 m above ground:
 HLCY:3000-0 m above ground:
 USTM:6000-0 m above ground:
 VSTM:6000-0 m above ground:
-REFC:entire atmosphere:
+REFC:entire atmosphere (considered as a single layer):
 REFD:1000 m above ground:
 REFD:4000 m above ground:
 RETOP:entire atmosphere (considered as a single layer):
@@ -40,5 +40,5 @@ MAXRH:2 m above ground:
 MINRH:2 m above ground:
 HGT:planetary boundary layer:
 VRATE:planetary boundary layer:
-VIL:entire atmosphere:
-TCDC:entire atmosphere
+VIL:entire atmosphere (considered as a single layer):
+TCDC:entire atmosphere (considered as a single layer):
