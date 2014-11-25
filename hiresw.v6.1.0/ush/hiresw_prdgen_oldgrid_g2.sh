@@ -200,7 +200,7 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.
 cat nn.grb ceiling.grb > inputs_nn.grb
 
 $WGRIB2 inputs_nn.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
-$WGRIB2 inputs_budget.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+$WGRIB2 inputs_budget.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
 if [ $subpiece =  "0"  -o $subpiece =  "1" ]
