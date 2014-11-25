@@ -68,7 +68,7 @@ contains
       END SUBROUTINE setvar
 
      SUBROUTINE SETVAR_g2(LUB,LUI,NUMV,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF, &
-                                       K,KPDS,KGDS,MASK,GRID,VARB,GFLD,IRET,ISTAT)
+                                       K,KPDS,KGDS,MASK,GRID,VARB,GFLD,SREF,IRET,ISTAT)
 !============================================================================
 !     This Routine reads in a grib field and initializes a 2-D variable
 !     Requested from w3lib GETGRB routine
@@ -82,6 +82,7 @@ contains
       INTEGER JPDS(200),JGDS(200),KPDS(200),KGDS(200)
         INTEGER :: KK, NUMV
         INTEGER :: M, N, ISTAT, IMAX, KF
+        INTEGER, INTENT(IN) :: SREF
 
 ! C grib2
       INTEGER :: LUB,LUI,J,JDISC,JPDTN,JGDTN
@@ -119,7 +120,14 @@ contains
             M=MOD(KK,IMAX)
             N=INT(KK/IMAX) + 1
           ENDIF
+
+        if (SREF .eq. 1 .and. gfld%fld(KK) .gt. 100.) then
+!          write(0,*) 'ignore as bad SREF value at: ', KK, gfld%fld(KK)
+          VARB(M,N) = 0.
+        else
           VARB(M,N) = gfld%fld(KK)
+        endif
+
         ENDDO
 
        IF(JPDT(10).ne.105 .or. JPDT(10).eq.109.and.J.le.40) &
