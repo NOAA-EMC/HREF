@@ -577,9 +577,12 @@
        GFLD%discipline=2
 
        GFLD%ipdtmpl(1)=0
-       GFLD%ipdtmpl(2)=198
+       GFLD%ipdtmpl(2)=0 ! was 198
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
+
+        write(0,*) 'min,max(VEG_NDFD): ', minval(VEG_NDFD), &
+                                          maxval(VEG_NDFD)
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! VEG_NDFD
