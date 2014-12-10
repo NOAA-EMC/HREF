@@ -5375,6 +5375,8 @@ END
      &,          end_second,interval_seconds                            &
      &,          history_interval,frames_per_outfile                    &
      &,          restart_interval,io_form_history                       &
+     &,          io_form_auxinput1                                      &
+     &,          auxhist3_interval                                      &
      &,          io_form_restart,io_form_input                          &
      &,          io_form_boundary,debug_level                           &
      &,          auxhist2_interval,io_form_auxhist2                     &
@@ -5396,9 +5398,11 @@ END
      &,                      end_second,interval_seconds                &
      &,                      input_from_file,history_interval           &
      &,                      frames_per_outfile,restart                 &
-     &,                      restart_interval,io_form_history           &
+     &,                      restart_interval,auxhist3_interval         &
+     &,                      io_form_history                            &
      &,                      io_form_restart,io_form_input              &
-     &,                      io_form_boundary,debug_level               &
+     &,                      io_form_auxinput1,io_form_boundary         &
+     &,                      debug_level                                &
      &,                      nwp_diagnostics,output_diagnostics         &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
@@ -5416,12 +5420,14 @@ END
 !***  Save the initial time so we can compute the forecast hour.
 !-----------------------------------------------------------------------
 !
+        write(0,*) 'inside write_restartdone'
       if(initial)then
         call int_get_fresh_handle(iunit)
         open(unit=iunit,file="namelist.input",form="formatted"          &
      &,      status="old")
         read(iunit,time_control)
         close(iunit)
+        write(0,*) 'inside write_restartdone, past time_control read'
 !
         if(start_month==2.and.mod(start_year,4)==0)days_per_month(2)=29
         initial=.false.
@@ -5445,6 +5451,8 @@ END
       read(wrf_month,*)month
       read(wrf_day,*)iday
       read(wrf_hour,*)ihour
+
+        write(0,*) 'iyear, month, iday: ', iyear, month, iday
 !
 !-----------------------------------------------------------------------
 !***  Compute the forecast hour.
