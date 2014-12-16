@@ -12,11 +12,14 @@
 # 2004-07-07  Eric Rogers - Preliminary modifications for production.
 # 2009-09-24  Shawna Cokley - Removes copy of date file to nmcdate
 # 2013-02-20  Matthew Pyle - New branch for non-WRF (NMMB) code
+# 2014-12-09  Matthew Pyle - restarting from non-zero capacity
 
 set -x
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
+
+NDATE=${NDATE:-${utilexec}/ndate}
 
 cd $DATA
 
@@ -25,18 +28,165 @@ cd $DATA
 #
 . $COMIN/${RUN}.t${cyc}z.envir.sh
 
+START=00
+LENGTH=48
+
 echo $CYCLE > fcstdate
 
 PDY=`cat fcstdate | cut -c1-8`
 DATE=`cat fcstdate | cut -c5-8`
 CYC=`cat fcstdate | cut -c9-10`
 
+YY=`cat fcstdate | cut -c1-4`
+MM=`cat fcstdate | cut -c5-6`
+DD=`cat fcstdate | cut -c7-8`
+HH=`cat fcstdate | cut -c9-10`
+
 year=`echo $PDY | cut -c1-4`
 ym1=`expr $year - 1`
+
+
+restart=.false.
+runhour=$LENGTH
 
 export tmmark="tm00"
 
 rm fort.*
+
+###
+
+### are restart files in run directory?  If so, figure out where to restart, and clean up model 
+### output from beyond that point
+
+### configure/namelist file changes (restart --> true)?
+
+### ARW needs new start time, right?
+
+if [ $MODEL == "arw" ]
+then
+
+lasthour=00
+
+if [ -e restartdone06.tm00 ]
+then
+lasthour=`ls -1rt restartdone??.tm00 | tail -1 | cut -c 12-13`
+typeset -Z2 lasthour
+
+
+if [ $lasthour -gt 0 ]
+then
+
+## compute new starting date and time for ARW
+
+fcstdate=`$NDATE +${lasthour} ${CYCLE}`
+YY=`echo $fcstdate | cut -c1-4`
+MM=`echo $fcstdate | cut -c5-6`
+DD=`echo $fcstdate | cut -c7-8`
+HH=`echo $fcstdate | cut -c9-10`
+let runhour="$LENGTH - $lasthour"
+restart=.true.
+
+### Since model can only be restarted if modolo(fhr,3)=0, compare last fcstdone file to last
+### restartdone file. If they are not at the same forecast hour, delete all fcstdone files with fhr > then
+### the last restartdone file so that the restarted post and postsnd jobs are in synch with the restarted
+### model run
+
+fcstlasthr=`ls -1 fcstdone??.tm00 | tail -1 | cut -c 9-10`
+
+if [ $fcstlasthr -gt $lasthour ]
+then
+   rm fcstdone${fcstlasthr}*
+   let "fhrp1=fcstlasthr+1"
+   let "fhrp2=fcstlasthr+2"
+   let "fhrp3=fcstlasthr+3"
+   let "fhrp4=fcstlasthr+4"
+   let "fhrp5=fcstlasthr+5"
+   let "fhrp6=fcstlasthr+6"
+   typeset -Z2 fhrp1
+   typeset -Z2 fhrp2
+   typeset -Z2 fhrp3
+   typeset -Z2 fhrp4
+   typeset -Z2 fhrp5
+   typeset -Z2 fhrp6
+   rm fcstdone${fhrp1}*
+   rm fcstdone${fhrp2}*
+   rm fcstdone${fhrp3}*
+   rm fcstdone${fhrp4}*
+   rm fcstdone${fhrp5}*
+   rm fcstdone${fhrp6}*
+   let "fhrm1=fcstlasthr-1"
+   typeset -Z2 fhrm1
+   while [ $fhrm1 -gt $lasthour ]
+   do
+     rm fcstdone${fhrm1}*
+     let "fhrm1=fhrm1-1"
+   done
+fi
+
+fi
+
+fi
+
+else
+
+### NMMB
+
+domain=1
+
+if [ -e restartdone.0${domain}.0006h_00m_00.00s ] 
+then
+lasthour=`ls -1rt restartdone.0${domain}.????h_* | tail -1 | cut -c 18-19`
+
+
+if [ $lasthour -gt 0 ]
+then
+restart=.true.
+
+mv nmmb_rst_01_nio_00${lasthour}h_00m_00.00s restart_file_01_nemsio
+
+### Since model can only be restarted if modolo(fhr,3)=0, compare last fcstdone file to last
+### restartdone file. If they are not at the same forecast hour, delete all fcstdone files with fhr > then
+### the last restartdone file so that the restarted post and postsnd jobs are in synch with the restarted
+### model run
+
+fcstlasthr=`ls -1 fcstdone.01.????h_* | tail -1 | cut -c 15-16`
+
+if [ $fcstlasthr -gt $lasthour ]
+then
+   rm fcstdone.01.00${fcstlasthr}h_*
+   let "fhrp1=fcstlasthr+1"
+   let "fhrp2=fcstlasthr+2"
+   let "fhrp3=fcstlasthr+3"
+   let "fhrp4=fcstlasthr+4"
+   let "fhrp5=fcstlasthr+5"
+   let "fhrp6=fcstlasthr+6"
+   typeset -Z2 fhrp1
+   typeset -Z2 fhrp2
+   typeset -Z2 fhrp3
+   typeset -Z2 fhrp4
+   typeset -Z2 fhrp5
+   typeset -Z2 fhrp6
+   rm fcstdone.01.0${fhrp1}h_*
+   rm fcstdone.01.0${fhrp2}h_*
+   rm fcstdone.01.0${fhrp3}h_*
+   rm fcstdone.01.0${fhrp4}h_*
+   rm fcstdone.01.0${fhrp5}h_*
+   rm fcstdone.01.0${fhrp6}h_*
+   let "fhrm1=fcstlasthr-1"
+   typeset -Z2 fhrm1
+   while [ $fhrm1 -gt $lasthour ]
+   do
+     rm fcstdone.01.0${fhrm1}h_*
+     let "fhrm1=fhrm1-1"
+   done
+fi
+
+fi
+
+
+fi
+
+fi
 
 if [ $MODEL != "nmmb" ]
 then
@@ -51,7 +201,19 @@ cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 wrfinput_d01
 fi
 
 export err2=$?
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.namelist.input namelist.input
+echo YY $YY
+echo MM $MM
+echo DD $DD
+echo HH $HH
+echo runhour $runhour
+echo restart $restart
+
+cat $COMIN/${NEST}${MODEL}.t${cyc}z.namelist.input | sed s:_YYS_:${YY}:g | \
+                                                     sed s:_MMS_:${MM}:g | \
+                                                     sed s:_DDS_:${DD}:g | \
+                                                     sed s:_HHS_:${HH}:g | \
+                                                     sed s:_RUNH_:${runhour}:g | \
+                                                     sed s:_RESTART_:${restart}:g  > namelist.input
 export err3=$?
 
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
@@ -121,7 +283,7 @@ cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio input_domain_01_nemsio
 fi
 
 export err2=$?
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.configure_file configure_file
+cat $COMIN/${NEST}${MODEL}.t${cyc}z.configure_file | sed s:_RESTART_:${restart}:g >  configure_file
 export err3=$?
 
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
