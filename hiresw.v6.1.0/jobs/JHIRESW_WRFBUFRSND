@@ -35,13 +35,14 @@ export pid=$$
 export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
 export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
 
-if [ -d $DATA/bufrpost ]; then
-   rm -f $DATA/bufrpost/
-fi
+# if [ -d $DATA/bufrpost ]; then
+#    rm -f $DATA/bufrpost/
+# fi
 
 mkdir -p $DATA/bufrpost
 cd $DATA/bufrpost 
-rm $DATA/profilm.c1.tm00*
+
+# rm $DATA/profilm.c1.tm00*
 
 ####################################
 # File To Log Msgs
