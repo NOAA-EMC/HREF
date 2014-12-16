@@ -45,7 +45,7 @@ jnpes:  42            # Number of compute tasks in the J direction
 quilting:              true    # Do you want asynchronous quilting/history writes?
 read_groups:           0
 read_tasks_per_group:  0
-write_groups:          1
+write_groups:          2
 write_tasks_per_group: 21
 #prodmaybe write_tasks_per_group: 23
 
@@ -84,9 +84,9 @@ nhours_fcst:      48   # Length of the forecast (hours)
 minutes_history:  60       # Frequency of history output (minutes)
 nhours_dfini:       0
 
-restart:          false   # True--> A restarted run
+restart:          _RESTART_   # True--> A restarted run
 # minutes_restart:  1440       # Frequency of restart output (minutes)
-minutes_restart:  4320       # Frequency of restart output (minutes)
+minutes_restart:  360       # Frequency of restart output (minutes)
 
 avg_max_length: 3600        # Time in seconds when averaged fields are reset
 object_uphl: 20.0           # Updraft Helicity value used to define convective objects
