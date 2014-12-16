@@ -1,12 +1,12 @@
  &time_control
- run_days                            = 0,
- run_hours                           = _RUNH_,
+ run_days                            = 2,
+ run_hours                           = 00,
  run_minutes                         = 0,
  run_seconds                         = 0,
- start_year                          = _YYS_, 
- start_month                         = _MMS_,   
- start_day                           = _DDS_,   
- start_hour                          = _HHS_,   
+ start_year                          = YSTART, 
+ start_month                         = MSTART,   
+ start_day                           = DSTART,   
+ start_hour                          = HSTART,   
  start_minute                        = 00,   
  start_second                        = 00,   
  end_year                            = YEND, 
@@ -19,17 +19,15 @@
  input_from_file                     = .true.,
  history_interval                    = 60,  
  frames_per_outfile                  = 1,
- restart                             = _RESTART_,
- restart_interval                    = 360,
- auxhist3_interval                   = 60
+ restart                             = .false.,
+ restart_interval                    = 5000,
  io_form_history                     = 1
  io_form_restart                     = 1
  io_form_input                       = 1
  io_form_auxinput1                   = 1
  io_form_boundary                    = 1
  debug_level                         = 0
- nwp_diagnostics  =  1,
- output_diagnostics  =  1,
+ auxinput1_inname                    = "met_em.d<domain>.<date>"
  /
 
  &dfi_control
@@ -52,21 +50,20 @@
  dfi_fwdstop_second                  = 00,
  /
 
-
  &domains
- time_step                           = 22,
- time_step_fract_num                 = 1,
- time_step_fract_den                 = 2,
+ time_step                           = 24,
+ time_step_fract_num                 = 0,
+ time_step_fract_den                 = 1,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 305,    
+ e_we                                = 1545,    
  s_sn                                = 1,     
- e_sn                                = 270,    
+ e_sn                                = 950,    
  s_vert                              = 1,     
  e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3800, 
- dy                                  = 3800, 
+ dx                                  = 4200, 
+ dy                                  = 4200, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
@@ -76,21 +73,21 @@
  feedback                            = 1,
  smooth_option                       = 0
  p_top_requested                     = 5000
- eta_levels                          =  1.0000, .9930, .9849, .9756, .9649, .9525, .9382, .9215, .9019,
-                                         .8790, .8521, .8209, .7853, .7454, .7016, .6546, .6052, .5545,
-                                         .5039, .4548, .4088, .3669, .3295, .2965, .2675, .2413, .2169,
-                                         .1937, .1712, .1496, .1290, .1094, .0912, .0743, .0588, .0448,
-                                         .0325, .0218, .0128, .0055, 0.
+ eta_levels                          =  1.0000, .9952, .9896, .9834, .9765, .9689, .9607, .9520, .9427,
+                                         .9329, .9226, .9116, .8993, .8850, .8675, .8456, .8181, .7844,
+                                         .7446, .6997, .6506, .5987, .5446, .4904, .4361, .3831, .3322,
+                                         .2843, .2402, .2007, .1662, .1368, .1117, .0903, .0716, .0550,
+                                         .0403, .0274, .0164, .0073, 0.
  interp_type                         = 1
  lowest_lev_from_sfc                 = .false.
  lagrange_order                      = 1
  force_sfc_in_vinterp                = 1
- zap_close_levels                    = 1000
+ zap_close_levels                    = 900
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x=4
- nproc_y=14
  /
+ nproc_x=25
+ nproc_y=20
 
  &physics
  mp_physics                          = 6,  
@@ -114,7 +111,6 @@
  maxens2                             = 3,
  maxens3                             = 16,
  ensdim                              = 144,
- do_radar_ref                        = 1,
  /
 
  &fdda
@@ -148,14 +144,7 @@
  &grib2
  /
 
- &logging
-  compute_slaves_silent=.true.
-  io_servers_silent=.true.
-  stderr_logging=0
- /
-
-
  &namelist_quilt
- nio_tasks_per_group = 7,
+ nio_tasks_per_group = 1,
  nio_groups = 1,
  /

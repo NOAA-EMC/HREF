@@ -1,12 +1,12 @@
  &time_control
- run_days                            = 2,
- run_hours                           = 00,
+ run_days                            = 0,
+ run_hours                           = _RUNH_,
  run_minutes                         = 0,
  run_seconds                         = 0,
- start_year                          = YSTART, 
- start_month                         = MSTART,   
- start_day                           = DSTART,   
- start_hour                          = HSTART,   
+ start_year                          = _YYS_, 
+ start_month                         = _MMS_,   
+ start_day                           = _DDS_,   
+ start_hour                          = _HHS_,   
  start_minute                        = 00,   
  start_second                        = 00,   
  end_year                            = YEND, 
@@ -19,8 +19,8 @@
  input_from_file                     = .true.,
  history_interval                    = 60,  
  frames_per_outfile                  = 1,
- restart                             = .false.,
- restart_interval                    = 5000,
+ restart                             = _RESTART_,
+ restart_interval                    = 360,
  auxhist3_interval                   = 60
  io_form_history                     = 1
  io_form_restart                     = 1

@@ -54,19 +54,19 @@
 
 
  &domains
- time_step                           = 22,
- time_step_fract_num                 = 1,
- time_step_fract_den                 = 2,
+ time_step                           = 20,
+ time_step_fract_num                 = 5,
+ time_step_fract_den                 = 11,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 305,    
+ e_we                                = 1188,    
  s_sn                                = 1,     
- e_sn                                = 270,    
+ e_sn                                = 972,    
  s_vert                              = 1,     
  e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3800, 
- dy                                  = 3800, 
+ dx                                  = 3500, 
+ dy                                  = 3500, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
@@ -88,8 +88,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x=4
- nproc_y=14
+ nproc_x = 13
+ nproc_y = 40
  /
 
  &physics
@@ -148,14 +148,14 @@
  &grib2
  /
 
+
  &logging
-  compute_slaves_silent=.true.
-  io_servers_silent=.true.
-  stderr_logging=0
+  compute_slaves_silent=.true.   ! all compute ranks except 0 are silent
+  io_servers_silent=.true.    ! all I/O server ranks are silent
+  stderr_logging=0   ! disable output to stderr except for error messages
  /
 
-
  &namelist_quilt
- nio_tasks_per_group = 7,
- nio_groups = 1,
+ nio_tasks_per_group = 20,
+ nio_groups = 2,
  /
