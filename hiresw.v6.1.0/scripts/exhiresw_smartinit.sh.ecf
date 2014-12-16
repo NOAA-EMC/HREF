@@ -34,9 +34,23 @@ cd $DATA
   export ENDHR=48
   export RUNTYP=${RUN}
 
-hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
 
-for hr in $hrs
+hr=00
+
+hrlim=48
+
+if [ -e $DATA/smartinitprdgendone00 ]
+then
+cd $DATA
+lasthour=`ls -1rt smartinitprdgendone?? | tail -1 | cut -c 20-21`
+let "hr=lasthour+3"
+typeset -Z2 hr
+fi
+
+echo start smartinit with hr $hr
+
+
+while [ $hr -le $hrlim ]
 do
 
 while [ ! -e $INPUT_DATA/prdgendone${hr} ]
@@ -45,6 +59,9 @@ sleep 10
 done
 
 $USHhiresw/hiresw_smartinit.sh_justprdgeng2fake ${hr}
+
+let "hr=hr+3"
+typeset -Z2 hr
 
 done
 
