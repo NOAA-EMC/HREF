@@ -32,13 +32,15 @@ fi
 ###########################################################
 export pid=$$
 export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
-if [ -d $DATA ]; then
-  rm -rf $DATA
-fi
+
+# if [ -d $DATA ]; then
+#   rm -rf $DATA
+# fi
+
 mkdir $DATA
 cd $DATA 
 
-rm $DATA/*
+# rm $DATA/*
 
 ecflow_client --event release_downstream
 
@@ -66,13 +68,6 @@ export MP_USE_BULK_XFER=yes
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
-
-###################################
-# Set up restart variable RERUN (default = NO)
-# (YES means start from the beginning,
-# NO means pick up where forecast left off, if able to)
-###################################
-export RERUN=${RERUN:-NO}
 
 export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
 export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}

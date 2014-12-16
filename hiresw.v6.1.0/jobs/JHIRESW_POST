@@ -36,7 +36,7 @@ export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}
 export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
 mkdir -p $DATA
 cd $DATA
-rm $DATA/*
+# rm $DATA/*
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
