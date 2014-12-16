@@ -73,8 +73,8 @@ nhours_fcst:      48   # Length of the forecast (hours)
 minutes_history:  60       # Frequency of history output (minutes)
 nhours_dfini:       0
 
-restart:          false   # True--> A restarted run
-minutes_restart:  4320       # Frequency of restart output (minutes)
+restart:          _RESTART_   # True--> A restarted run
+minutes_restart:  360       # Frequency of restart output (minutes)
 
 avg_max_length: 3600        # Time in seconds when averaged fields are reset
 object_uphl: 20.0           # Updraft Helicity value used to define convective objects
