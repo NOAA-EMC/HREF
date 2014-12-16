@@ -86,7 +86,7 @@ HH=`echo $fcstdate | cut -c9-10`
 let runhour="$LENGTH - $lasthour"
 restart=.true.
 
-### Since model can only be restarted if modolo(fhr,3)=0, compare last fcstdone file to last
+### Since model can only be restarted if modolo(fhr,6)=0, compare last fcstdone file to last
 ### restartdone file. If they are not at the same forecast hour, delete all fcstdone files with fhr > then
 ### the last restartdone file so that the restarted post and postsnd jobs are in synch with the restarted
 ### model run
@@ -96,24 +96,6 @@ fcstlasthr=`ls -1 fcstdone??.tm00 | tail -1 | cut -c 9-10`
 if [ $fcstlasthr -gt $lasthour ]
 then
    rm fcstdone${fcstlasthr}*
-   let "fhrp1=fcstlasthr+1"
-   let "fhrp2=fcstlasthr+2"
-   let "fhrp3=fcstlasthr+3"
-   let "fhrp4=fcstlasthr+4"
-   let "fhrp5=fcstlasthr+5"
-   let "fhrp6=fcstlasthr+6"
-   typeset -Z2 fhrp1
-   typeset -Z2 fhrp2
-   typeset -Z2 fhrp3
-   typeset -Z2 fhrp4
-   typeset -Z2 fhrp5
-   typeset -Z2 fhrp6
-   rm fcstdone${fhrp1}*
-   rm fcstdone${fhrp2}*
-   rm fcstdone${fhrp3}*
-   rm fcstdone${fhrp4}*
-   rm fcstdone${fhrp5}*
-   rm fcstdone${fhrp6}*
    let "fhrm1=fcstlasthr-1"
    typeset -Z2 fhrm1
    while [ $fhrm1 -gt $lasthour ]
@@ -144,39 +126,23 @@ restart=.true.
 
 mv nmmb_rst_01_nio_00${lasthour}h_00m_00.00s restart_file_01_nemsio
 
-### Since model can only be restarted if modolo(fhr,3)=0, compare last fcstdone file to last
+### Since model can only be restarted if modolo(fhr,6)=0, compare last fcstdone file to last
 ### restartdone file. If they are not at the same forecast hour, delete all fcstdone files with fhr > then
 ### the last restartdone file so that the restarted post and postsnd jobs are in synch with the restarted
 ### model run
 
 fcstlasthr=`ls -1 fcstdone.01.????h_* | tail -1 | cut -c 15-16`
 
+echo fcstlasthr is $fcstlasthr
+
 if [ $fcstlasthr -gt $lasthour ]
 then
    rm fcstdone.01.00${fcstlasthr}h_*
-   let "fhrp1=fcstlasthr+1"
-   let "fhrp2=fcstlasthr+2"
-   let "fhrp3=fcstlasthr+3"
-   let "fhrp4=fcstlasthr+4"
-   let "fhrp5=fcstlasthr+5"
-   let "fhrp6=fcstlasthr+6"
-   typeset -Z2 fhrp1
-   typeset -Z2 fhrp2
-   typeset -Z2 fhrp3
-   typeset -Z2 fhrp4
-   typeset -Z2 fhrp5
-   typeset -Z2 fhrp6
-   rm fcstdone.01.0${fhrp1}h_*
-   rm fcstdone.01.0${fhrp2}h_*
-   rm fcstdone.01.0${fhrp3}h_*
-   rm fcstdone.01.0${fhrp4}h_*
-   rm fcstdone.01.0${fhrp5}h_*
-   rm fcstdone.01.0${fhrp6}h_*
    let "fhrm1=fcstlasthr-1"
    typeset -Z2 fhrm1
    while [ $fhrm1 -gt $lasthour ]
    do
-     rm fcstdone.01.0${fhrm1}h_*
+     rm fcstdone.01.00${fhrm1}h_*
      let "fhrm1=fhrm1-1"
    done
 fi
