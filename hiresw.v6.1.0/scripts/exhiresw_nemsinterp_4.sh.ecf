@@ -133,27 +133,13 @@ if [ $MODEL = "nmmb" ]
 then
 
 cat  configure_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: > configure_file_01
-
+                  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: > configure_file_01
 cp configure_file_01 configure_file
 
 else
 
-cat namelist.input_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
- | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
- | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
- | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
- | sed s:NUMLEV:$NUMLEVS: > namelist.input
-
-cat namelist.input_in_model | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
- | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
- | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend:  \
- | sed s:FILT_YS:${filt_ys}: | sed s:FILT_MS:${filt_ms}: | sed s:FILT_DS:${filt_ds}: \
- | sed s:FILT_HS:${filt_hs}: | sed s:FILT_YE:${filt_ye}: | sed s:FILT_ME:${filt_me}: \
- | sed s:FILT_DE:${filt_de}: | sed s:FILT_HE:${filt_he}: \
- | sed s:NUMLEV:$NUMLEVS: > namelist.input_model
+msg="FATAL ERROR: nemsinterp_4 only run for NMMB core"
+./err_exit $msg
 
 fi
 

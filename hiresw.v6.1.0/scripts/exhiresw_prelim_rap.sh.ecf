@@ -233,8 +233,8 @@ hend=`echo $end | cut -c9-10`
 if [ $NEST = "conus" ] ; then
 
 if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_big namelist.input_in_model
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus_model namelist.input_in_model
 elif [ $MODEL = "nmmb" ]; then
   cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
 else

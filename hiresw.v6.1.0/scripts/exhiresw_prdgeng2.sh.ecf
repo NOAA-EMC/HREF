@@ -19,6 +19,7 @@
 # 2012-12-13  Matthew Pyle - Small changes for WCOSS machine
 # 2013-09-01  Matthew Pyle - Changes to be run from prdgenmgr (works on the $post_times hour passed in)
 # 2014-02-27  Matthew Pyle - Undoes changes to be run from prdgenmgr (now loops over time again)
+# 2014-12-09  Matthew Pyle - Adds ability to be restarted midstream
 #
 
 set -x
@@ -43,6 +44,34 @@ export tmmark=tm00
 
 export fhr=00
 export fhrend=48
+
+## see if any prdgendone?? files exist, and if so, which is the last hour completed
+
+while [ $fhr -le $fhrend ]
+do
+
+if [ -e prdgendone${fhr} ]
+then
+let fhr=fhr+1
+
+if [ $fhr -lt 10 ]
+then
+fhr=0$fhr
+fi
+
+fhrsave=${fhr}
+
+else
+fhrsave=${fhr}
+fhr=99
+fi
+
+done
+
+fhr=${fhrsave}
+
+echo STARTING PRDGEN with fhr $fhr
+
 
 icnt=1
 

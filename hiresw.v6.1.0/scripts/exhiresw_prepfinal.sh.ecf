@@ -101,14 +101,14 @@ elif [ $NEST = "ak" ] ; then
 
 if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_ak namelist.input_in_model
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak_model namelist.input_in_model
 fi
 
 elif [ $NEST = "conus" ] ; then
 
 if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_big namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_model_big namelist.input_in_model
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus_model namelist.input_in_model
 fi
 
 
