@@ -73,20 +73,35 @@ ehr=`echo $FINALDATE | cut -c12-13`
 
 edate=$eyr$emn$edy$ehr
 
-# If job needs to be restarted due to production failure, reset
-# wdate=valid date of first available WRF restart file
 
-wdate=$wyr$wmn$wdy$whr
+# check for existence of sndpostdone files
+
+cd $DATA
+
+if [ -e sndpostdone00.tm00 ]
+then
+
+lasthour=`ls -1rt sndpostdone??.tm00 | tail -1 | cut -c 12-13`
+typeset -Z2 lasthour
+
+let "fhr=lasthour+1"
+
+else
+
+fhr=00
+
+fi
 
 timeform=$STARTDATE
 
-if [ $wdate -eq $startdate ] ; then
-  fhr=00
-else
-  fhr=`/nwprod/util/exec/nhour $wdate $startdate`
-fi
-
 export fhr
+
+wdate=`$NDATE +${fhr} $startdate`
+
+echo starting with fhr $fhr
+echo starting with wdate $wdate
+
+cd $DATA/bufrpost
 
 ########################################################
 
