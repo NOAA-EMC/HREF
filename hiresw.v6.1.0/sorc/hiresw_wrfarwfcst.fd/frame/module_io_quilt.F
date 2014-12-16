@@ -5208,6 +5208,9 @@ END
 !
       integer,save :: start_year,start_month,start_day                  &
      &,               start_hour,start_minute,start_second
+
+      integer,save :: sim_start_year,sim_start_month      &
+     &,               sim_start_day, sim_start_hour 
 !
       integer :: run_days,run_hours,run_minutes                         &
      &,          run_seconds,ntstart                                    &
@@ -5232,8 +5235,10 @@ END
 !
 !
       namelist /time_control/ run_days,run_hours,run_minutes            &
-     &,                      run_seconds,start_year,start_month         &
-     &,                      start_day,start_hour,start_minute          &
+     &,                      run_seconds,sim_start_year,sim_start_month &
+     &,                      sim_start_day,sim_start_hour               &
+     &,                      start_year,start_month,start_day           &
+     &,                      start_hour,start_minute                    &
      &,                      start_second,tstart,end_year,end_month     &
      &,                      end_day,end_hour,end_minute                &
      &,                      end_second,interval_seconds                &
@@ -5270,6 +5275,7 @@ END
 !
         if(start_month==2.and.mod(start_year,4)==0)days_per_month(2)=29
         initial=.false.
+
       endif
 !
 !-----------------------------------------------------------------------
@@ -5295,10 +5301,15 @@ END
 !***  Compute the forecast hour.
 !-----------------------------------------------------------------------
 !
-      idif_year=iyear-start_year
-      idif_month=month-start_month
-      idif_day=iday-start_day
-      idif_hour=ihour-start_hour
+!      idif_year=iyear-start_year
+!      idif_month=month-start_month
+!      idif_day=iday-start_day
+!      idif_hour=ihour-start_hour
+
+      idif_year=iyear-sim_start_year
+      idif_month=month-sim_start_month
+      idif_day=iday-sim_start_day
+      idif_hour=ihour-sim_start_hour
 !
 !***  This logic applies to forecasts shorter than a month.
 !
@@ -5368,6 +5379,9 @@ END
       integer,save :: start_year,start_month,start_day                  &
      &,               start_hour,start_minute,start_second
 !
+      integer,save :: sim_start_year,sim_start_month      &
+     &,               sim_start_day, sim_start_hour 
+!
       integer :: run_days,run_hours,run_minutes                         &
      &,          run_seconds,ntstart                                    &
      &,          end_year,end_month                                     &
@@ -5391,18 +5405,20 @@ END
       real,save :: tstart
 !
       namelist /time_control/ run_days,run_hours,run_minutes            &
-     &,                      run_seconds,start_year,start_month         &
-     &,                      start_day,start_hour,start_minute          &
+     &,                      run_seconds,sim_start_year,sim_start_month &
+     &,                      sim_start_day,sim_start_hour               &
+     &,                      start_year,start_month,start_day           &
+     &,                      start_hour,start_minute                    &
      &,                      start_second,tstart,end_year,end_month     &
      &,                      end_day,end_hour,end_minute                &
      &,                      end_second,interval_seconds                &
      &,                      input_from_file,history_interval           &
      &,                      frames_per_outfile,restart                 &
      &,                      restart_interval,auxhist3_interval         &
-     &,                      io_form_history                            &
+     &,                      io_form_history           &
      &,                      io_form_restart,io_form_input              &
-     &,                      io_form_auxinput1,io_form_boundary         &
-     &,                      debug_level                                &
+     &,          io_form_auxinput1                                      &
+     &,                      io_form_boundary,debug_level               &
      &,                      nwp_diagnostics,output_diagnostics         &
      &,                      auxhist2_outname,auxhist2_interval         &
      &,                      io_form_auxhist2,write_input               &
@@ -5412,6 +5428,8 @@ END
      &,                      inputout_begin_s,inputout_end_y            &
      &,                      inputout_end_mo,inputout_end_d             &
      &,                      inputout_end_h,inputout_end_s
+
+
 !-----------------------------------------------------------------------
 !***********************************************************************
 !-----------------------------------------------------------------------
@@ -5458,10 +5476,10 @@ END
 !***  Compute the forecast hour.
 !-----------------------------------------------------------------------
 !
-      idif_year=iyear-start_year
-      idif_month=month-start_month
-      idif_day=iday-start_day
-      idif_hour=ihour-start_hour
+      idif_year=iyear-sim_start_year
+      idif_month=month-sim_start_month
+      idif_day=iday-sim_start_day
+      idif_hour=ihour-sim_start_hour
 !
 !***  This logic applies to forecasts shorter than a month.
 !
