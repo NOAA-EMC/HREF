@@ -22,6 +22,7 @@
 # 2013-07-02  Jeff McQueen  - Modified to create all 00 hour downscaling from NAM parent
 #                             While 03 --> 54/60 created from NAM Nests
 # 2014-01-23  Matthew Pyle  - Adopted for HiresW - split into two jobs
+# 2014-12-17  Matthew Pyle  - Restartable capability
 #
 
 
@@ -35,9 +36,24 @@ cd $DATA
   export ENDHR=48
   export RUNTYP=${RUN}
 
-hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+hr=00
 
-for hr in $hrs
+
+# hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+
+if [ -e smartinitbdone00 ]
+then
+
+# figure out last hour completed
+lasthour=`ls -1rt smartinitbdone?? | tail -1 | cut -c 15-16`
+let "hr=lasthour+3"
+typeset -Z2 hr
+fi
+
+echo start smartinitb with hr $hr
+
+
+while [ $hr -le $ENDHR ]
 do
 
 while [ ! -e $INPUT_DATA/smartinitprdgendone${hr} ]
@@ -47,6 +63,10 @@ done
 
 export ffhr=${hr}
 $USHhiresw/hiresw_smartinit.sh_justsmartinit 
+
+echo "DONE" > smartinitbdone${hr}
+
+let "hr=hr+3"
 
 done
 
