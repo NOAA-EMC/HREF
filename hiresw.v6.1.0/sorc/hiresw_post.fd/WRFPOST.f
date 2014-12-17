@@ -131,8 +131,8 @@
       use gfsio_module, only: gfsio_gfile, gfsio_init, gfsio_open, gfsio_getfilehead
       use nemsio_module, only: nemsio_getheadvar, nemsio_gfile, nemsio_init, nemsio_open, &
               nemsio_getfilehead,nemsio_close
-      use CTLBLK_mod, only: filenameaer, me, num_procs, num_servers, mpi_comm_comp, datestr,&
-              mpi_comm_inter, filename, ioform, grib, idat, filenameflux, filenamed3d, gdsdegr,&
+      use CTLBLK_mod, only: filenameaer, me, num_procs, num_servers, mpi_comm_comp, startdatestr,&
+              datestr, mpi_comm_inter, filename, ioform, grib, idat, filenameflux, filenamed3d, gdsdegr,&
               spldef, modelname, ihrst, lsmdef,vtimeunits, tprec, pthresh, datahandle, im, jm, lm,&
               lp1, lm1, im_jm, isf_surface_physics, nsoil, spl, lsmp1, global,&
               jsta, jend, jsta_m, jend_m, jsta_2l, jend_2u, novegtype, icount_calmict, npset, datapd,&
@@ -217,6 +217,7 @@
        read(5,113) IOFORM
       endif
            print*,'OUTFORM2= ',grib
+      read(5,112) StartDateStr
       read(5,112) DateStr
       read(5,114) MODELNAME 
 ! assume for now that the first date in the stdin file is the start date

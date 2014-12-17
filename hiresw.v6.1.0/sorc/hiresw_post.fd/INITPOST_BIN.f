@@ -62,6 +62,7 @@
 ! close a NetCDF dataset. In order to change it to read an internal (binary)
 ! dataset, do a global replacement of _ncd_ with _int_. 
 
+!        character(len=19), intent(in) :: StartDateStr
       character(len=31) :: VarName
       integer :: Status
       character startdate*19,SysDepInfo*80
@@ -166,9 +167,19 @@
       ENDIF
 !
 ! Getting start time
+
+!!! problematic for restarts
+
       call ext_int_get_dom_ti_char(DataHandle,'START_DATE',startdate,  &
         status )
+
+        startdate=startdatestr
+
       print*,'startdate= ',startdate
+!      call ext_int_get_dom_ti_real(DataHandle,'TSTART',tmp,  &
+!                                   1,ioutcount,istatus)
+!        write(0,*) 'pulled tstart: ', tmp
+
       jdate=0
       idate=0
       read(startdate,15)iyear,imn,iday,ihrst,imin      
