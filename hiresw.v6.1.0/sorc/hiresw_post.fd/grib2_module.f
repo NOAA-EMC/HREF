@@ -478,7 +478,7 @@
 !
     integer,intent(in) :: idisc,icatg, iparm,nprm,fldlvl1,fldlvl2,ntrange,tinvstat
     integer,intent(inout) :: nlvl
-    real,dimension(:),intent(in) :: datafld1
+    real,dimension(:),intent(inout) :: datafld1
     character(1),intent(inout) :: cgrib(max_bytes)
     integer, intent(inout) :: lengrib
 !
@@ -759,6 +759,7 @@
 
         do J=1,size(datafld1)
         if (datafld1(J) .ne. datafld1(J)) then
+            datafld1(J)=datafld1(J-1)
         write(0,*) 'J, pset%param(nprm)%pname, datafld1(J): ', J, &
                trim(pset%param(nprm)%pname), datafld1(J)
         endif

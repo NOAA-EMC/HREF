@@ -288,36 +288,6 @@
         DT=tmp
         print*,'DT= ',DT
 
-      VarName='XLAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            GDLAT ( i, j ) = dummy ( i, j )
-! compute F = 2*omg*sin(xlat)
-            f(i,j) = 1.454441e-4*sin(gdlat(i,j)*DTR)
-        end do
-       end do
-! pos north
-      print*,'read past GDLAT'
-      print*,'GDLAT at ',ii,jj,' = ',GDLAT(ii,jj)
-
-
-      VarName='XLONG'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            GDLON ( i, j ) = dummy ( i, j )
-!            if(abs(GDLAT(i,j)-20.0).lt.0.5 .and. abs(GDLON(I,J)
-!     1      +157.0).lt.5.)print*
-!     2      ,'Debug:I,J,GDLON,GDLAT,SM,HGT,psfc= ',i,j,GDLON(i,j)
-!     3      ,GDLAT(i,j),SM(i,j),FIS(i,j)/G,PINT(I,j,lm+1)
-        end do
-       end do
-!       print*,'GDLON at ',ii,jj,' = ',GDLON(ii,jj)
-       print*,'read past GDLON'
-
 ! get 3-D variables
       VarName='LU_INDEX'
 	write(6,*) 'call getIVariable for : ', VarName
@@ -1365,10 +1335,6 @@
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='COSZEN'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-        IM,1,JM,1,IM,JS,JE,1)
-
       VarName='LAI'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
@@ -1759,14 +1725,6 @@
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
 
-      VarName='TLP_STRAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
-        1,1,1,1,1,1,1,1)
-
-      VarName='P_STRAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
-        1,1,1,1,1,1,1,1)
-
       VarName='MAX_MSTFX'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,   &
         1,1,1,1,1,1,1,1)
@@ -1854,23 +1812,22 @@
 !        ,IM,1,JM,1,IM,JS,JE,1)
 !
       VarName='RAINCV'
-       CPRATE=0.
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!       do j = jsta_2l, jend_2u
-!        do i = 1, im
-!            CPRATE ( i, j ) = dummy ( i, j )* 0.001
-!        end do
-!       end do
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            CPRATE ( i, j ) = dummy ( i, j )* 0.001
+        end do
+       end do
        
-!       VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!       do j = jsta_2l, jend_2u
-!        do i = 1, im
-!            prec ( i, j ) = (dummy ( i, j )+dummy2(i,j))* 0.001
-!        end do
-!       end do
+       VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            prec ( i, j ) = (dummy ( i, j )+dummy2(i,j))* 0.001
+        end do
+       end do
 
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -2071,6 +2028,36 @@
 
 
 !
+      VarName='XLAT'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            GDLAT ( i, j ) = dummy ( i, j )
+! compute F = 2*omg*sin(xlat)
+            f(i,j) = 1.454441e-4*sin(gdlat(i,j)*DTR)
+        end do
+       end do
+! pos north
+      print*,'read past GDLAT'
+      print*,'GDLAT at ',ii,jj,' = ',GDLAT(ii,jj)
+
+
+      VarName='XLONG'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            GDLON ( i, j ) = dummy ( i, j )
+!            if(abs(GDLAT(i,j)-20.0).lt.0.5 .and. abs(GDLON(I,J)
+!     1      +157.0).lt.5.)print*
+!     2      ,'Debug:I,J,GDLON,GDLAT,SM,HGT,psfc= ',i,j,GDLON(i,j)
+!     3      ,GDLAT(i,j),SM(i,j),FIS(i,j)/G,PINT(I,j,lm+1)
+        end do
+       end do
+!       print*,'GDLON at ',ii,jj,' = ',GDLON(ii,jj)
+       print*,'read past GDLON'
+
       VarName='XLAT_U'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
@@ -2115,21 +2102,21 @@
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='FLX4'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FVB'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FBUR'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FGSN'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!        IM,1,JM,1,IM,JS,JE,1)
+      VarName='FLX4'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FVB'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FBUR'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FGSN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='TMN'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -2317,16 +2304,7 @@
       call getIVariable(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
         1,1,1,1,1,1,1,1)
 
-        VarName='AFWA_RAIN'
-        write(6,*) 'call getVariableB for : ', VarName
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-       IM,1,JM,1,IM,JS,JE,1)
-
       VarName='LANDMASK'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-        IM,1,JM,1,IM,JS,JE,1)
-
-      VarName='LAKEMASK'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
         IM,1,JM,1,IM,JS,JE,1)
 
