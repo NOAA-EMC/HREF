@@ -504,27 +504,6 @@ c closing wrf io api
 ! get 3-D variables
       print*,'im,jm,lm= ',im,jm,lm
 c
-      VarName='XLAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
-      do j = 1, jm
-        do i = 1, im
-            GDLAT ( i, j ) = DUMMY ( i, j )
-        end do
-       end do
-
-
-      VarName='XLONG'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
-       do j = 1, jm
-        do i = 1, im
-            GDLON ( i, j ) = DUMMY ( i, j )
-        end do
-       end do
-
       VarName='LU_INDEX'
         write(6,*) 'call getIVariable for : ', VarName
       call getIVariableB(fileName,DateStr,DataHandle,VarName,IDUMMY,     &
@@ -1066,10 +1045,6 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='COSZEN'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
       VarName='LAI'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
@@ -1189,14 +1164,6 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
      +  1,1,1,1,1,1,1,1)
 
-      VarName='TLP_STRAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
-     +  1,1,1,1,1,1,1,1)
-
-      VarName='P_STRAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
-     +  1,1,1,1,1,1,1,1)
-
       VarName='MAX_MSTFX'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,      &
      +  1,1,1,1,1,1,1,1)
@@ -1236,13 +1203,13 @@ c
         write(0,*) 'max of ACPREC: ', maxval(ACPREC)
 
 
-!      VarName='RAINCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='RAINCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -1346,6 +1313,27 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
+      VarName='XLAT'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      do j = 1, jm
+        do i = 1, im
+            GDLAT ( i, j ) = DUMMY ( i, j )
+        end do
+       end do
+
+
+      VarName='XLONG'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+       do j = 1, jm
+        do i = 1, im
+            GDLON ( i, j ) = DUMMY ( i, j )
+        end do
+       end do
+
       VarName='XLAT_U'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
@@ -1384,21 +1372,21 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='FLX4'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FVB'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='FLX4'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='FBUR'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FGSN'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='FVB'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FBUR'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FGSN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
 
       VarName='TMN'
@@ -1513,15 +1501,7 @@ c
       call getIVariableB(fileName,DateStr,DataHandle,VarName,DUM1D(1),     &
      +  1,1,1,1,1,1,1,1)
 
-      VarName='AFWA_RAIN'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
       VarName='LANDMASK'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
-      VarName='LAKEMASK'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
@@ -2118,14 +2098,6 @@ c20080701     + ,itmp,1,ioutcount,istatus)
 !insert
 
       print*,'im,jm,lm= ',im,jm,lm
-
-      VarName='XLAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
-      VarName='XLONG'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
 c
       VarName='LU_INDEX'
         write(6,*) 'call getIVariable for : ', VarName
@@ -2468,11 +2440,6 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='COSZEN'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-     +  IM,1,JM,1,IM,JS,JE,1)
-
-
       VarName='LAI'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
@@ -2565,15 +2532,6 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
      +  1,1,1,1,1,1,1,1)
 
-      VarName='TLP_STRAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,        &
-     +  1,1,1,1,1,1,1,1)
-
-      VarName='P_STRAT'
-      call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,       &
-     +  1,1,1,1,1,1,1,1)
-
-
       VarName='MAX_MSTFX'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUM0D,      &
      +  1,1,1,1,1,1,1,1)
@@ -2612,13 +2570,13 @@ c
 
         write(0,*) 'maxval ACPREC0: ', maxval(acprec0)
 
-!       VarName='RAINCV'
-!       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+       VarName='RAINCV'
+       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -2695,6 +2653,16 @@ c
      +  IM,1,JM,1,IM,JS,JE,1)
 
 
+
+      VarName='XLAT'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+
+      VarName='XLONG'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
       VarName='XLAT_U'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
@@ -2731,21 +2699,21 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='FLX4'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FVB'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FBUR'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
-!
-!      VarName='FGSN'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='FLX4'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FVB'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FBUR'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='FGSN'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
 
       VarName='TMN'
