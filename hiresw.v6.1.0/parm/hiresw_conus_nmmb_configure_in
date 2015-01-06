@@ -11,7 +11,7 @@ core: nmm                   # Introduce ourselves to the NEMS
 
 im:  1765                   # I gridpoints
 jm:  1100                    # J gridpoints
-lm:  40                     # Number of atmospheric layers
+lm:  50                     # Number of atmospheric layers
 
 tph0d:   40.0               # Central geographic latitude of grid (degrees)
 tlm0d: -98.0               # Central geographic longitude of grid (degrees, positive east)
