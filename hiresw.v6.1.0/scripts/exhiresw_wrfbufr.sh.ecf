@@ -85,6 +85,7 @@ lasthour=`ls -1rt sndpostdone??.tm00 | tail -1 | cut -c 12-13`
 typeset -Z2 lasthour
 
 let "fhr=lasthour+1"
+typeset -Z2 fhr
 
 else
 
@@ -293,7 +294,6 @@ then
   . prep_step
 fi
 
-
   export FORT20=$DATA/class1.bufr
   export DIRD=${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr
 
@@ -313,8 +313,6 @@ ${USHprod}/cwordsh unblk ${fl} ${fl}.unb
 ${USHprod}/cwordsh block ${fl}.unb ${fl}.wcoss
 rm ${fl}.unb
 done
-
-
 
 # Make an upper case version of the ${RUN} variable for the alert
 #export DBN_NEST=`echo ${RUN} | tr '[a-z]' '[A-Z]'`
