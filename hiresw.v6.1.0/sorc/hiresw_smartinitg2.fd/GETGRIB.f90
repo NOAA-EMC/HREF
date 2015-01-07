@@ -260,6 +260,7 @@
       ITOT=IMAX*JMAX
       print *,gdin%imax,jmax,kmax,numlev,itot
         write(0,*) 'here d - past RDHDRS'
+        write(0,*) 'see NUMLEV: ', NUMLEV
 
       if (lfull) then
 
@@ -361,6 +362,9 @@
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K, &
                      KPDS,KGDS,MASK,GRID,ZSFC,GFLD_S,ISSREF,IRET,ISTAT)
+
+        write(0,*) 'GFLD_S%ibmap: ', GFLD_S%ibmap
+        
       WHERE (ZSFC < 0.0) ZSFC=0.0
 
         write(0,*) 'minval(zsfc),maxval(zsfc): ', minval(zsfc),maxval(zsfc)
@@ -428,6 +432,9 @@
 !            N=INT(KK/IMAX) + 1
 !          ENDIF
 !          ISNOW(M,N) = GFLD%FLD(KK)
+!        ENDDO
+!        WRITE(6,*) 'FOUND SNOW CATEGORY'
+!      ELSE
 !        ENDDO
 !        WRITE(6,*) 'FOUND SNOW CATEGORY'
 !      ELSE
@@ -904,7 +911,7 @@
 
 ! note points that are within bitmap
        VALIDPT=.TRUE.
-       WHERE(T(:,:,1).LE.10.) VALIDPT = .FALSE.
+       WHERE(T(:,:,1).LE.10. .or. T(:,:,1) .ge. 9.e20) VALIDPT = .FALSE.
 
 ! JTM 01-28-13: Added check for where previous temps are not at validpts
        do i=1,imax
@@ -935,7 +942,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,Q(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
         J=K
-        write(0,*) 'Q(1,1,LL): ', Q(1,1,LL)
+        write(0,*) 'Q(50,50,LL): ', Q(50,50,LL)
 
 
       ENDDO
@@ -1216,9 +1223,6 @@
                      KPDS,KGDS,MASK,GRID,S6REF01,GFLD,ISSREF,IRET,ISTAT)
 
 
-! 6-hr probability of 0.1"
-!      J = J+2
-!      JPDS=-1;JGDS=-1
 !      JPDS(3) = IGDNUM2
 !      JPDS(5) = 191 
 !      JPDS(6) = 001
