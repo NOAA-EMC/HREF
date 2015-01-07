@@ -23,7 +23,8 @@ inest=1  # treat hiresw domains like they are nests
 
 export rg=$RUNTYP
 WGRIB2=$EXEChiresw/hiresw_wgrib2
-compress=complex2
+# compress=complex2
+compress=jpeg
 
 ffhr=${1}
 
@@ -289,21 +290,24 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_2 list_2.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_3 list_3.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_4 list_4.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_5 list_5.txt
+cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_6 list_6.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_nn list_nn.txt
 
 
-rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_nn
+# protect with (if -e) types of statements?
+rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_6 inputs.grb2_nn
 
 $WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1 $INF
 $WGRIB2 $INF | grep -F -f list_2.txt | $WGRIB2 -i -grib inputs.grb2_2 $INF
 $WGRIB2 $INF | grep -F -f list_3.txt | $WGRIB2 -i -grib inputs.grb2_3 $INF
 $WGRIB2 $INF | grep -F -f list_4.txt | $WGRIB2 -i -grib inputs.grb2_4 $INF
 $WGRIB2 $INF | grep -F -f list_5.txt | $WGRIB2 -i -grib inputs.grb2_5 $INF
+$WGRIB2 $INF | grep -F -f list_6.txt | $WGRIB2 -i -grib inputs.grb2_6 $INF
 $WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
 
 rm wgrib2.poe
 
-rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_nn
+rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_6 model.ndfd_nn
 
 echo "#! /bin/ksh" > a.poe
 echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe
@@ -315,6 +319,8 @@ echo "#! /bin/ksh" > d.poe
 echo "$WGRIB2  inputs.grb2_4  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_4" >> d.poe
 echo "#! /bin/ksh" > e.poe
 echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe
+echo "#! /bin/ksh" > f.poe
+echo "$WGRIB2  inputs.grb2_6  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_6" >> f.poe
 
 
 chmod 775 a.poe
@@ -322,12 +328,14 @@ chmod 775 b.poe
 chmod 775 c.poe
 chmod 775 d.poe
 chmod 775 e.poe
+chmod 775 f.poe
 
 echo "a.poe" > wgrib2.poe
 echo "b.poe" >> wgrib2.poe
 echo "c.poe" >> wgrib2.poe
 echo "d.poe" >> wgrib2.poe
 echo "e.poe" >> wgrib2.poe
+echo "f.poe" >> wgrib2.poe
 
 chmod 775 wgrib2.poe
 export MP_PGMMODEL=mpmd
@@ -357,7 +365,7 @@ $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neigh
 
 # cat inputs.grb_1 inputs.grb_2 inputs.grb_3 inputs.grb_4 inputs.grb_5 inputs.grb_nn > NDFD${fhr}.tm00
 
-cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_nn > NDFD${fhr}.tm00
+cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_6 model.ndfd_nn > NDFD${fhr}.tm00
 
 
 #    ${utilexec}/wgrib -s inputs.grb | \
