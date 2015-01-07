@@ -33,8 +33,12 @@
       real tmean,dz,theta1,theta6
       logical ladjland,lconus,lnest
 
+      REAL(KIND=8) :: btim
+      REAL :: time_begin, time_end
+
  INTERFACE
-    SUBROUTINE vadjust(VALIDPT,U,V,HTOPO,DX,DY,IM,JM)
+!    SUBROUTINE vadjust(VALIDPT,U,V,HTOPO,DX,DY,IM,JM)
+    SUBROUTINE vadjust(VALIDPT,VEG_NDFD,U,V,HTOPO,DX,DY,IM,JM,gdin)
 
     use constants
     use grddef
@@ -42,6 +46,7 @@
     use aset3d
 
     LOGICAL, INTENT(IN) :: VALIDPT(:,:)
+    REAL, INTENT(IN) :: VEG_NDFD(:,:)
     REAL, INTENT(INOUT) :: U(:,:),V(:,:)
     REAL, INTENT(IN) :: HTOPO(:,:),DX,DY
     TYPE (GINFO)        :: GDIN
@@ -333,7 +338,17 @@
         dy=dx   ! dx should be passed in from MAIN
 
 
-        call vadjust(validpt,unew,vnew,topo_ndfd,dx,dy,im,jm)
+        write(0,*) 'call vadjust'
+        btim=timef()
+        call cpu_time(time_begin)
+        write(0,*) 'btim: ', btim
+
+!        call vadjust(validpt,unew,vnew,topo_ndfd,dx,dy,im,jm)
+        call vadjust(validpt,veg_ndfd,unew,vnew,topo_ndfd,dx,dy,im,jm,gdin)
+
+        call cpu_time(time_end)
+        write(0,*) 'return vadjust'
+        write(0,*) 'time for vadjust: ', time_end-time_begin
 
 
 !============================================
@@ -354,7 +369,7 @@
         print*, ' min/max of rough_mod:  ', minval(rough_mod),maxval(rough_mod)
 
         do J=JM,1,-JM/45
-        write(6,237) (rough_mod(I,J),I=1,IM,IM/30)
+        write(6,237) (min(rough_mod(I,J),99.),I=1,IM,IM/30)
         enddo
 
   237   format(35(f3.0,1x))
