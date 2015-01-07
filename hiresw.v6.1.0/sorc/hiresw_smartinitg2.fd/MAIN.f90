@@ -55,6 +55,10 @@
    REAL,    ALLOCATABLE :: DIRTRANS(:,:),MGTRANS(:,:),LAL(:,:),HAINES(:,:),MIXHGT(:,:)
    REAL,    ALLOCATABLE :: TEMP1(:,:),TEMP2(:,:),HLVL(:,:)
 
+
+   REAL*8 :: btim
+   REAL :: time_begin, time_end
+
    LOGICAL, ALLOCATABLE :: VALIDPT(:,:)
 !
 !   REAL,    ALLOCATABLE   :: GRID(:)
@@ -291,8 +295,8 @@
 
     CALL RDHDRS_g2(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
     IM=GDIN%IMAX;JM=GDIN%JMAX;ITOT=NUMVAL
-    GDIN%KMAX=40       ! HARDWIRE MAXLEVs
-    if (lnest) GDIN%KMAX=40
+    GDIN%KMAX=50       ! HARDWIRE MAXLEVs
+    if (lnest) GDIN%KMAX=50
     KMAX=GDIN%KMAX
 
         write(0,*) 'IM, JM, KMAX: ', IM,JM,KMAX
@@ -349,11 +353,11 @@
         endif
         
 
-        write(6,*) 'veg after GETGRIB'
-
-        do J=JM,1,-JM/45
-        write(6,237) (veg(I,J),I=1,IM,IM/30)
-        enddo
+!        write(6,*) 'veg after GETGRIB'
+!
+!        do J=JM,1,-JM/45
+!        write(6,237) (veg(I,J),I=1,IM,IM/30)
+!        enddo
 
   237   format(35(f3.0,1x))
 
@@ -376,8 +380,15 @@
        ALLOCATE (WGUST(IM,JM),PBLMARK(IM,JM),STAT=kret)
        ALLOCATE (TEMP1(IM,JM),TEMP2(IM,JM),STAT=kret)
 
+
+!          btim=timef()
+        call cpu_time(time_begin)
+        write(0,*) 'call NDFDgrid'
        CALL NDFDgrid(VEG,DOWNT,DOWNDEW,DOWNU,DOWNV,DOWNQ,DOWNP,TOPO,VEG_NDFD, &
                      gdin,VALIDPT,core,dx)
+        call cpu_time(time_end)
+        write(0,*) 'return NDFDgrid'
+        write(0,*) 'elapsed for NDFDgrid: ', time_end-time_begin
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -673,8 +684,11 @@
        print *, 'Calculate RH',FHR
        ALLOCATE (RH(IM,JM,KMAX),STAT=kret)
        ktop=kmax
+
+        write(0,*) 'kmax, ktop: ', kmax, ktop
+
        if (lnest) then 
-         ktop=40
+         ktop=50
 !         RH(:,:,41:kmax)=0.  ! nests only have varbs to level 40 ???
        endif
        DO J=1,JM
@@ -1331,7 +1345,7 @@
 
 !----------------Make into subroutine lal
        RH1TOT=0.; RH1SUM=0.; RH2TOT=0.;  RH2SUM=0.
-       DO L=1,40
+       DO L=1,50
         IF(PSFC(I,J)-PMID(I,J,L).LT.3000.) THEN
           RH1TOT=RH1TOT+RH(I,J,L)
           RH1SUM=RH1SUM+1.
@@ -1753,7 +1767,8 @@
        GFLD8%ipdtnum=8     ! should be superfluous
 
        GFLD8%ipdtmpl(1)=0
-       GFLD8%ipdtmpl(2)=0
+!correct       GFLD8%ipdtmpl(2)=0
+       GFLD8%ipdtmpl(2)=4
        GFLD8%ipdtmpl(9)=FHR12
        GFLD8%ipdtmpl(10)=103
        GFLD8%ipdtmpl(12)=2
@@ -1764,10 +1779,6 @@
 
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! TMAX12
-
-
-
-
 
          ID(8)=16
        ID(9)=105
@@ -1783,7 +1794,8 @@
        GFLD8%ipdtnum=8     ! should be superfluous
 
        GFLD8%ipdtmpl(1)=0
-       GFLD8%ipdtmpl(2)=0
+!tst       GFLD8%ipdtmpl(2)=0
+       GFLD8%ipdtmpl(2)=5
        GFLD8%ipdtmpl(9)=FHR12
        GFLD8%ipdtmpl(10)=103
        GFLD8%ipdtmpl(12)=2
@@ -2397,9 +2409,9 @@
             N=INT(KK/IM) + 1
           ENDIF
           GFLD%FLD(KK)=ARRAY2D(M,N) 
-        if (mod(KK,25000) .eq. 0) then    
-        write(0,*) 'M,N, ARRAY2D from gfld: ', M,N, GFLD%FLD(KK)
-        endif
+!        if (mod(KK,25000) .eq. 0) then    
+!        write(0,*) 'M,N, ARRAY2D from gfld: ', M,N, GFLD%FLD(KK)
+!        endif
         ENDDO
         END SUBROUTINE FILL_FLD
 
@@ -2417,6 +2429,7 @@
 
         if (GFLD%ibmap .eq. 0 .or. GFLD%ibmap .eq. 254) then
         locbmap=GFLD%bmap
+        write(0,*) 'used GFLD bmap'
         else
         write(0,*) 'hardwire locbmap to true'
         locbmap=.true.

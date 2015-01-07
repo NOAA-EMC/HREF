@@ -46,7 +46,7 @@ contains
           ENDIF
           VARB(M,N) = GRID(KK)
         ENDDO
-       IF(JPDS(6).ne.109 .or. JPDS(6).eq.109.and.J.le.40) &
+       IF(JPDS(6).ne.109 .or. JPDS(6).eq.109.and.J.le.50) &
         WRITE(0,100) JPDS(5),JPDS(6),JPDS(7),J,MINVAL(VARB),MAXVAL(VARB)
  100   FORMAT('VARB UNPACKED ', 4I7,2G12.4)
       ELSE
@@ -130,7 +130,7 @@ contains
 
         ENDDO
 
-       IF(JPDT(10).ne.105 .or. JPDT(10).eq.109.and.J.le.40) &
+       IF(JPDT(10).ne.105 .or. JPDT(10).eq.109.and.J.le.50) &
         WRITE(0,100) JPDT(1),JPDT(2),JPDT(10),J,MINVAL(VARB),MAXVAL(VARB)
  100   FORMAT('VARB UNPACKED ', 4I7,2G12.4)
       ELSE
