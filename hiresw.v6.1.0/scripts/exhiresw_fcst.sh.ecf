@@ -51,6 +51,7 @@ runhour=$LENGTH
 
 export tmmark="tm00"
 
+
 rm fort.*
 
 ###
@@ -167,12 +168,6 @@ cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 wrfinput_d01
 fi
 
 export err2=$?
-echo YY $YY
-echo MM $MM
-echo DD $DD
-echo HH $HH
-echo runhour $runhour
-echo restart $restart
 
 cat $COMIN/${NEST}${MODEL}.t${cyc}z.namelist.input | sed s:_YYS_:${YY}:g | \
                                                      sed s:_MMS_:${MM}:g | \
@@ -327,6 +322,16 @@ fi
 
 export pgm=hiresw_${MODEL}_fcst
 . ./prep_step
+
+export FORT_BUFFERED=true
+
+if [ $RUN = "conusarw" ]
+then
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/16 16/4 16/2`"
+elif [ $RUN = "akarw" ]
+then
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 576/16 32/8`"
+fi
 
 ./startmsg
 

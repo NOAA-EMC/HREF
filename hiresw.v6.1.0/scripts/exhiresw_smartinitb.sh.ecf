@@ -67,6 +67,7 @@ $USHhiresw/hiresw_smartinit.sh_justsmartinit
 echo "DONE" > smartinitbdone${hr}
 
 let "hr=hr+3"
+typeset -Z2 hr
 
 done
 
