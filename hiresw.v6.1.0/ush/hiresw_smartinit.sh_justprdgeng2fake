@@ -31,6 +31,12 @@ ffhr=${1}
 echo working ffhr $ffhr
 
 cd  $DATA/smartinit_${ffhr}/
+rm $DATA/smartinit_${ffhr}/*
+
+sh $utilscript/setup.sh
+sh $utilscript/setpdy.sh
+. PDY
+
 
 #=====================================================================
 

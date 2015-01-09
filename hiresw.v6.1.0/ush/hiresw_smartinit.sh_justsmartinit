@@ -268,6 +268,7 @@ echo err1 err2 on copies $err1 $err2
 	echo fhr2 $fhr2
 	echo fhr1 $fhr1
     cp MAXMING2.f${fhr2} MAXMIN2
+	echo copy MAXMING2.f${fhr1} to MAXMIN1
     cp MAXMING2.f${fhr1} MAXMIN1
 
 #	cnvgrib -g12 MAXMIN${fhr2}.tm00 MAXMIN2
@@ -282,6 +283,10 @@ echo err1 err2 on copies $err1 $err2
      cpgbgrd=$grid
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
 
+### always copy
+
+cp $INPUT_DATA/3precip.${fhr} .
+
 	if [ $check6 -eq 0 ]
 	then
 
@@ -290,6 +295,12 @@ err1=$?
 cp $INPUT_DATA/${freq}snow.${fhr} .
 err2=$?
 cp $INPUT_DATA/3precip.${fhr} .
+err3=$?
+
+if [ $err3 -ne 0 ]
+then
+echo did not find 3precip file
+fi
 
 cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
 cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
