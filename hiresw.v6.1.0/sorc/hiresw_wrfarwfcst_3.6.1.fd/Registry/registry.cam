@@ -64,7 +64,7 @@ state  real   cmfmc    ikj    misc      1    Z   rh6   "CMFMC "       "updraft m
 state  real   cmfmc2   ikj    misc      1    Z   rh6   "CMFMC2"       "updraft mass flux for shallow convection"                        "~?"
 state  real   cldfrash ikj    misc      1    -   r     "CLDFRASH"     "shallow convective cloud fraction"                               ""
 state  real   cush     ij     misc      1    -   rh6   "CUSH"         "convective scale height"                                         "~?"
-state  real   evapcsh  ikj    misc      1    -   rh6   "EVAPCSH"      "evaporation of shallow Cu precipitation"                         "kg kg-1 s-1"
+state  real   evapcsh  ikj    misc      1    -   h6   "EVAPCSH"      "evaporation of shallow Cu precipitation"                         "kg kg-1 s-1"
 state  real   icwmrsh  ikj    misc      1    -   rh6   "ICWMRSH"      "shallow cumulus in-cloud water mixing ratio"                     "kg m-2"
 state  real   snowsh   ij     misc      1    -   r     "SNOWSH"       "convective snow at surface from shallow Cu"                      "m s-1"
 #state  real   rprddp   ikj    misc      1    -   r     "RPRDDP"       "dq/dt due to deep convective rainout"                            "~?"
@@ -72,7 +72,7 @@ state  real   rprdsh   ikj    misc      1    -   rh6   "RPRDSH"       "dq/dt due
 state  real   rliq2    ij     misc      1    -   r     "RLIQ2"        "vertically-integrated reserved cloud condensate for shallow Cu"  "m s-1"
 state  real   dlf2     ikj    misc      1    -   rh     "DLF2"         "dq/dt due to export of cloud water into environment by shallow convection"  "kg/kg/s"
 state  real   shfrc3d  ikj    misc      1    -   r     "SHFRC3D"      "Shallow cloud fraction"                                            ""
-state  real   EVAPCSH3D ikj   misc      1    -   r     "EVAPCSH3D"    "Evaporation of shallow convection precipitation"                  "kg/kg/s"
+state  real   EVAPCSH3D ikj   misc      1    -   -     "EVAPCSH3D"    "Evaporation of shallow convection precipitation"                  "kg/kg/s"
 #~~~above here needs to be added to package definition
 state  real   qtflx_cu ikj    misc      1    Z   h6    "QTFLX_CU"     "cumulus qt flux"                                                 "kg m-2 s-1"
 state  real   slflx_cu ikj    misc      1    Z   h6    "SLFLX_CU"     "cumulus sl flux"                                                 "J m-2 s-1"

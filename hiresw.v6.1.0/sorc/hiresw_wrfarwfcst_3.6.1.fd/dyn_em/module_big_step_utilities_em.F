@@ -5483,8 +5483,15 @@ END SUBROUTINE phy_prep
           imin=i
           jmin=j
        endif
-          mpten=min(config_flags%mp_tend_lim*dt, mpten)
-          mpten=max(-config_flags%mp_tend_lim*dt, mpten)
+
+        if (abs(mpten) .gt. config_flags%mp_tend_lim*dt) then
+        write(0,*) 'adjusting mpten downward from ', mpten, ' at i,j,k: ', i,j,k
+        endif
+
+         mpten=min(config_flags%mp_tend_lim*dt, mpten)
+         mpten=max(-config_flags%mp_tend_lim*dt, mpten)
+
+
 
 #if ( WRF_DFI_RADAR == 1 )
        if(k < k_end ) then
