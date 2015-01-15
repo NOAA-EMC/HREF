@@ -1,8 +1,8 @@
 #! /bin/ksh --login
 
-# module load NetCDF/3.6.3
+module load NetCDF/3.6.3
 
-module load NetCDF/4.2/serial
+# module load NetCDF/4.2/serial
 
 ### BUILD ARW
 
@@ -22,6 +22,8 @@ cp ./main/real.exe $TARGDIR/hiresw_arw_real
 cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
 
 ############################
+
+exit
 
 clean -a
 cp configure.wrf_wcoss_precise configure.wrf
