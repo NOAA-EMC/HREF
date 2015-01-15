@@ -1,7 +1,7 @@
 #! /bin/ksh --login
 
 # module load NetCDF/3.6.3
-module load NetCDF/4.2/serial
+# module load NetCDF/4.2/serial
 
 ### BUILD ARW
 
@@ -15,7 +15,7 @@ TARGDIR=../../exec
 
 ./compile em_real > compile_arw.sc.log 2>&1
 
-cp ./main/real.exe $TARGDIR/hiresw_arw_real_new
-cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst_new
+cp ./main/real.exe $TARGDIR/hiresw_arw_real
+cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
 
 exit
