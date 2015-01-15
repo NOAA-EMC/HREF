@@ -38,3 +38,4 @@ VRATE:planetary boundary layer:
 UGRD:planetary boundary layer:
 VGRD:planetary boundary layer:
 VIL:entire atmosphere (considered as a single layer):
+TCDC:entire atmosphere (considered as a single layer):

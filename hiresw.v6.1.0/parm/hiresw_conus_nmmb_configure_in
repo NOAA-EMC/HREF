@@ -27,16 +27,8 @@ sbd:  -17.584                # Grid's southern boundary (rotated degrees)
 #####  Grid Decomposition  #####
 ################################
 
-# prod maybe
-# inpes:  15             # Number of compute tasks in the I direction
-# jnpes:  46            # Number of compute tasks in the J direction
-#
-inpes:  12             # Number of compute tasks in the I direction
+inpes:  15             # Number of compute tasks in the I direction
 jnpes:  42            # Number of compute tasks in the J direction
-
-#retro
-# inpes:  14             # Number of compute tasks in the I direction
-# jnpes:  32            # Number of compute tasks in the J direction
 
 #################################
 ####  Specify the I/O tasks  ####
@@ -47,7 +39,6 @@ read_groups:           0
 read_tasks_per_group:  0
 write_groups:          2
 write_tasks_per_group: 21
-#prodmaybe write_tasks_per_group: 23
 
 
 ############################################
