@@ -275,6 +275,7 @@ contains
       KSKIP = 0
 
       WRITE(FNAME(6:7),FMT='(I2)')LUB
+        write(0,*) 'call baopen: ', lub
       CALL BAOPEN(LUB,FNAME,IRETGB)
         if (IRETGB .ne. 0) then
         write(0,*) 'IRETGB on baopen, LUB: ', IRETGB, LUB
@@ -288,6 +289,7 @@ contains
         write(0,*) 'to getidx call'
 
         CALL GETIDX(LUB,LUI,CBUF,NLEN,NNUM,IRGI)
+        write(0,*) 'NLEN, NNUM from GETIDX: ', NLEN, NNUM
       IF(IRGI .NE. 0) THEN
         WRITE(6,*)' PROBLEMS READING GRIB INDEX FILE SO ABORT'
         ISTAT = IRGI
@@ -316,6 +318,7 @@ contains
                         JGDT,K,GFLD,LPOS,IRGS)
         IF(IRGS .NE. 0) THEN
           WRITE(6,*)' PROBLEMS ON 1ST READ OF GRIB FILE SO ABORT'
+          WRITE(6,*) 'IRGS: ', IRGS
         ENDIF
 
 !        if (K .eq. 1) then
@@ -324,7 +327,7 @@ contains
 !        enddo
 !        endif
 
-!        write(0,*) 'gfld%igdtnum: ', gfld%igdtnum
+        write(0,*) 'gfld%igdtnum: ', gfld%igdtnum
 
           selectcase( gfld%igdtnum )     !  Template number
            case (0:3)   ! Lat/Lon
