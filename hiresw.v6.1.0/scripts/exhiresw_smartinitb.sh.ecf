@@ -48,6 +48,45 @@ then
 lasthour=`ls -1rt smartinitbdone?? | tail -1 | cut -c 15-16`
 let "hr=lasthour+3"
 typeset -Z2 hr
+
+## delete any files +1, +2 , or +3 hours from lasthour
+
+let "delhr1=lasthour+1"
+let "delhr2=lasthour+2"
+let "delhr3=lasthour+3"
+
+typeset -Z2 delhr1
+typeset -Z2 delhr2
+typeset -Z2 delhr3
+
+del=`ls *f${delhr1}*`
+err=$?
+
+if [ $err -eq 0 ]
+then
+echo delete $delhr1
+rm $del
+fi
+
+
+del=`ls *f${delhr2}*`
+err=$?
+
+if [ $err -eq 0 ]
+then
+echo delete $delhr2
+rm $del
+fi
+
+del=`ls *f${delhr3}*`
+err=$?
+
+if [ $err -eq 0 ]
+then
+rm $del
+fi
+
+
 fi
 
 echo start smartinitb with hr $hr
