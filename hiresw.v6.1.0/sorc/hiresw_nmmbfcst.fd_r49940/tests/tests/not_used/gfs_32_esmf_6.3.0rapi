@@ -1,0 +1,17 @@
+###############################################################################
+#
+# TEST   - GFS 
+#        - 30 compute tasks / 1 thread 
+#
+###############################################################################
+
+export TEST_DESCR="Compare GFS results with previous trunk version ESMF6.3.0rAPI"
+
+export CNTL_DIR=GFS_NODFI_ESMF_6.3.0rAPI
+export LIST_FILES="sigf00 sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf00 sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf00 flxf03 flxf06 flxf12 flxf24 flxf48"
+
+export_gsm
+
+RUN_SCRIPT=rt_gfs.sh

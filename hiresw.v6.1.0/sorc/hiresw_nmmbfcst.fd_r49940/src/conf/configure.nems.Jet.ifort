@@ -1,0 +1,40 @@
+SHELL       = /bin/sh
+
+include /misc/whome/vanden/esmf.root/esmf.3.1.0rp2.new/lib/libO/Linux.intel.64.mpich2.default/esmf.mk
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIBS   = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+EXTLIBS     = $(ESMF_LIBS) -L/lfs1/projects/sepp/djovic/nwprod_intel_gaea/libintel \
+               -lnemsio -lw3-2.0_4 -lw3ext_4 -lbacio_4 -lsp_4
+NEMSIO_INC  = -I/lfs1/projects/sepp/djovic/nwprod_intel_gaea/libintel/incmod/nemsio
+
+FC          = mpif90 -openmp -heap-arrays -convert big_endian -assume byterecl
+FPP         = -fpp
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC)
+#TRAPS       = -g -traceback -check all -check noarg_temp_created -ftrapuv
+TRAPS       =
+
+FFLAGS      = $(TRAPS) $(FINCS)
+
+OPTS_NMM    = -O3
+OPTS_GFS    = -O3
+OPTS_GEN    = -O3
+OPTS_FIM    = -O3
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DCHNK_RRTM=8 -DENABLE_SMP -DTHREAD_2D
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm

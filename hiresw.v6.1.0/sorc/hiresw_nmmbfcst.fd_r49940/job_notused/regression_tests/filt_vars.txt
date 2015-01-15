@@ -1,0 +1,23 @@
+#------------------------------------------------------------
+# Name    Filter/              Description
+#            Restore    
+#------------------------------------------------------------
+'PD'         F                'Mass in the sigma domain  (Pa)'
+'CW'         F                ''
+'Q'          F                ''
+'Q2'         F                '2*tke  (m2 s-2)'
+'PINT'       F                'Nonhydrostatic interface pressure (Pa)'
+'DWDT'       F                'Nonhydrostatic correction factor'
+'T'          F                'Sensible temperature  (K)'
+'U'          F                'U wind component  (m s-1)'
+'V'          F                'V wind component  (m s-1)'
+#
+'STC'        R                '3D soil temperature (K)'
+'SMC'        R                '3D total soil moisture content (volumetric fraction)'
+'SH2O'       R                '3D unfrozen soil moisture/soil liquid water'
+'TSKIN'      R                'Skin temperature  (K)'
+'ACPREC'     R                'Accumulated total precipitation'
+'CUPREC'     R                'Accumulated convective precipitation'
+'THS'        R                'Skin potential temperature  (K)'
+'SNO'        R                'Liquid water snow amount  (m)'
+'CMC'        R                'Canopy moisture  (m)'

@@ -1,0 +1,39 @@
+###############################################################################
+#
+#  Global NMM-B with pure binary input under NUOPC
+#  6x5 compute  tasks / 1 thread / opnl physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: NMM-B pure binary input"
+
+export CNTL_DIR=NMMB_glob
+export LIST_FILES=" \
+    nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0003h_00m_00.00s nmmb_hst_01_bin_0006h_00m_00.00s \
+    nmmb_hst_01_bin_0009h_00m_00.00s nmmb_hst_01_bin_0012h_00m_00.00s nmmb_hst_01_bin_0015h_00m_00.00s \
+    nmmb_hst_01_bin_0018h_00m_00.00s nmmb_hst_01_bin_0021h_00m_00.00s nmmb_hst_01_bin_0024h_00m_00.00s \
+    nmmb_hst_01_bin_0027h_00m_00.00s nmmb_hst_01_bin_0030h_00m_00.00s nmmb_hst_01_bin_0033h_00m_00.00s \
+    nmmb_hst_01_bin_0036h_00m_00.00s nmmb_hst_01_bin_0039h_00m_00.00s nmmb_hst_01_bin_0042h_00m_00.00s \
+    nmmb_hst_01_bin_0045h_00m_00.00s nmmb_hst_01_bin_0048h_00m_00.00s \
+    nmmb_hst_01_nio_0000h_00m_00.00s nmmb_hst_01_nio_0003h_00m_00.00s nmmb_hst_01_nio_0006h_00m_00.00s \
+    nmmb_hst_01_nio_0009h_00m_00.00s nmmb_hst_01_nio_0012h_00m_00.00s nmmb_hst_01_nio_0015h_00m_00.00s \
+    nmmb_hst_01_nio_0018h_00m_00.00s nmmb_hst_01_nio_0021h_00m_00.00s nmmb_hst_01_nio_0024h_00m_00.00s \
+    nmmb_hst_01_nio_0027h_00m_00.00s nmmb_hst_01_nio_0030h_00m_00.00s nmmb_hst_01_nio_0033h_00m_00.00s \
+    nmmb_hst_01_nio_0036h_00m_00.00s nmmb_hst_01_nio_0039h_00m_00.00s nmmb_hst_01_nio_0042h_00m_00.00s \
+    nmmb_hst_01_nio_0045h_00m_00.00s nmmb_hst_01_nio_0048h_00m_00.00s \
+    nmmb_rst_01_bin_0024h_00m_00.00s nmmb_rst_01_nio_0024h_00m_00.00s"
+
+
+export_nems
+export_nmm
+export TASKS=48
+export WLCLK=30
+export GBRG=glob
+# - nems.configure ---
+export_nems
+export atm_model=nmm
+export atm_petlist_bounds="0 47"
+export med_model=none
+
+export RTPWD=/scratch1/portfolios/NCEPDEV/nems/noscrub/Gerhard.Theurich/REGRESSION_TEST_NUOPC_mergeworx
+RUN_SCRIPT=rt_nmm.sh

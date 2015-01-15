@@ -1,0 +1,87 @@
+SHELL       = /bin/ksh
+
+include $(ESMFMKFILE)
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+NETCDF_LIB  = $(NETCDF)/lib/libnetcdf.a
+
+NEMSIO_INC  = -I$(NEMS_DIR)/nwprod/lib/incmod/nemsio
+NEMSIO_LIB  = -L$(NEMS_DIR)/nwprod/lib -lnemsio
+
+W3_LIB      = -L$(NEMS_DIR)/nwprod/lib -lw3nco_d -lw3emc_d
+BACIO_LIB   = -L$(NEMS_DIR)/nwprod/lib -lbacio_4
+SP_LIB      = -L$(NEMS_DIR)/nwprod/lib -lsp_d
+SYS_LIB     =
+
+##POSTDIR     = /nwprod/lib
+#POSTDIR    = /global/save/Hui-Ya.Chuang/nceppost/post_tag_2013_GFS_SummerSchool/lib
+POSTDIR     = $(NEMS_DIR)/nwprod/lib
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L$(NEMS_DIR)/nwprod/lib -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L$(NEMS_DIR)/nwprod/lib -lcrtm_v2.0.6
+G2_LIB      = -L$(NEMS_DIR)/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz
+XML_LIB     = -L$(NEMS_DIR)/nwprod/lib -lxmlparse
+SIGIO_LIB   = -L$(NEMS_DIR)/nwprod/lib -lsigio_4
+SFCIO_LIB   = -L$(NEMS_DIR)/nwprod/lib -lsfcio_4
+
+EXTLIBS     = $(NEMSIO_LIB) \
+              $(W3_LIB) \
+              $(BACIO_LIB) \
+              $(SP_LIB) \
+              $(ESMF_LIB) \
+              $(NETCDF_LIB) \
+              $(SYS_LIB)
+
+
+EXTLIBS_POST = $(POST_LIB) \
+               $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+FC          = mpif90 -g -openmp 
+FPP         = -fpp
+CC          = mpcc
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC)
+TRAPS       =
+#TRAPS       = -ftrapuv -check all -fp-stack-check
+#TRAPS       = -ftrapuv -check bounds -check format -check output_conversion -check pointers -check uninit -fp-stack-check
+
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model precise
+
+OPTS_NMM    = -O0
+OPTS_GFS    = -O0
+OPTS_GEN    = -O0
+OPTS_FIM    = -O0
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DCHNK_RRTM=8 -DENABLE_SMP -DTHREAD_2D
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm
