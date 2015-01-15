@@ -1,0 +1,129 @@
+#!/bin/ksh
+
+# w=/nwprod/util/exec
+
+WGRIB2=/nwprod/util/exec/wgrib2
+
+day=$1
+cyc=$2
+fhr=$3
+today=$4
+
+dcom=/dcom/us007003/gsd_hrrr
+hrrrgsd_3d=$dcom/hrrr_3d/hrrr_3d_${day}${cyc}${fhr}.grib2
+hrrrgsd_2d=$dcom/hrrr_2d/hrrr_2d_${day}${cyc}${fhr}.grib2
+
+# DATA=/ptmpp1/Binbin.Zhou/DATA/$today
+
+small=hrrrgsd.t${cyc}z.f${fhr}.small
+
+mkdir -p $DATA/${today}
+cd $DATA/${today}
+
+rm -f $DATA/${today}/$small
+
+for var in DPT ; do                       #for icing
+  for p in  850 700 ; do
+$WGRIB2 $hrrrgsd_3d|grep "${var}:${p} mb"| $WGRIB2 -i $hrrrgsd_3d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+
+for var in TMP RH UGRD VGRD HGT ; do
+  for p in  1000 975 950 925 900 875 850 825 800 775 750 725 700 675 650 625 600 575 550 525 500 475 450 425 400 375 350 325 300 275 250 225 200 175 150 125 100 ; do  
+$WGRIB2  $hrrrgsd_3d|grep "${var}:${p} mb"| $WGRIB2 -i  $hrrrgsd_3d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+for var in VVEL ; do                       #for icing
+  for p in  925 850 700 500 400 ; do
+$WGRIB2  $hrrrgsd_3d|grep "${var}:${p} mb"| $WGRIB2 -i  $hrrrgsd_3d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+
+for var in :RH :TMP ; do
+ for p in 2 10 80 ; do
+  $WGRIB2 $hrrrgsd_2d|grep "${var}:${p} m "| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+for var in :UGRD :VGRD ; do
+ for p in 10 ; do
+  $WGRIB2 $hrrrgsd_2d|grep "${var}:${p} m "| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+for var in UOGRD VOGRD ; do
+ for p in 80 ; do
+  $WGRIB2 $hrrrgsd_2d|grep "${var}:${p} m "| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+for var in :VIS HGT:cloud APCP ACPCP TCDC :PRMSL: :PWAT: ; do  
+  $WGRIB2 $hrrrgsd_2d|grep "${var}"|$WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done  
+
+for var in ABSV ; do                       #WPC's FFaIR 2014 summer experiment
+  for p in  500 ; do
+$WGRIB2  $hrrrgsd_3d|grep "${var}:${p} mb"| $WGRIB2 -i  $hrrrgsd_3d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+done
+done
+
+
+
+#special process for 4 precip types
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=1 parm=192:surface"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=1 parm=193:surface"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=1 parm=194:surface"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=1 parm=195:surface"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+
+#special process for REFC and ETOP 
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=16 parm=196:local level type 200"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+#GSD HRRR has ETOP but use different ID from standard GRIB2 table 
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=3 parm=193:cloud top"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/${today}/$small
+
+
+#$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=16 parm=197:local level type 200"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+#cat output.$cyc >> $DATA/${today}/$small
+
+
+
+#add surface height fix file
+cat  $FIXhiresw/hrrrterrainland.grib2 >>  $DATA/${today}/$small
+
+#special process for 7 storm-related fields
+#1) REFD:1000
+$WGRIB2 $hrrrgsd_2d|grep "var discipline=0 center=59 local_table=1 parmcat=16 parm=195:1000"| $WGRIB2 -i $hrrrgsd_2d -grib output.$cyc
+cat output.$cyc >> $DATA/$small
+#all other 6 fields are missing
+
+rm  output.$cyc
+
+exit
+
+for var in MAXUW MAXVW MAXREF MXUPHL MAXUVV MAXDVV REFD:1000 ; do
+$WGRIB2 $afile|grep "${var}"| $WGRIB2 -i $afile -grib output.$cyc
+cat output.$cyc >> $DATA/namnest.t${cyc}z.small.f${fhr}
+done
+
+for var in PRES:surface ; do
+   $WGRIB2 $afile|grep "${var}"| $WGRIB2 -i $afile -grib output.$cyc
+cat output.$cyc >> $DATA/namnest.t${cyc}z.small.f${fhr}
+done
+
+

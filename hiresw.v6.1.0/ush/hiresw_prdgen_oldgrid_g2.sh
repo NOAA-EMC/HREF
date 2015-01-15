@@ -31,7 +31,11 @@ model=$4
 MEMBER=$5
 subpiece=$6
 
-compress=complex2
+# compress=complex2
+
+## jpeg for AK, complex2 for others??
+
+compress=jpeg
 reflag=1
 
 mkdir ${DATA}/prdgen_5km_${subpiece}
