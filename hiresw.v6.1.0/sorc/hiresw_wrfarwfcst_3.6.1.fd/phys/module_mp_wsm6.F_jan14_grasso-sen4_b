@@ -942,7 +942,12 @@ CONTAINS
           temp = (den(i,k)*max(qci(i,k,2),qmin))
           temp = sqrt(sqrt(temp*temp*temp))
           xni(i,k) = min(max(5.38e7*temp,1.e3),1.e6)
-          eacrs = exp(0.07*(-supcol))
+!
+!-- Reduce PSACI by 50%, SEN4 test in Grasso et al. (WAF, Oct 2014)
+!
+! SEN4b version, retain 75%
+!
+          eacrs = 0.75*exp(0.07*(-supcol))
 !
           xmi = den(i,k)*qci(i,k,2)/xni(i,k)
           diameter  = min(dicon * sqrt(xmi),dimax)

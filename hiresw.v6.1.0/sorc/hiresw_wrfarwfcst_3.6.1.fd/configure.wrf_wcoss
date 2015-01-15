@@ -126,11 +126,11 @@ LD              =       $(FC)
 RWORDSIZE       =       $(NATIVE_RWORDSIZE)
 PROMOTION       =       -i4
 ARCH_LOCAL      =       -DNONSTANDARD_SYSTEM_FUNC -DWRF_USE_CLM -DNO_IEEE_MODULE
-CFLAGS_LOCAL    =       -w -O1 -ip #-xHost -fp-model fast=2 -no-prec-div -no-prec-sqrt -ftz -no-multibyte-chars
+CFLAGS_LOCAL    =       -w -O3 -ip #-xHost -fp-model fast=2 -no-prec-div -no-prec-sqrt -ftz -no-multibyte-chars
 LDFLAGS_LOCAL   =       -ip #-xHost -fp-model fast=2 -no-prec-div -no-prec-sqrt -ftz -align all -fno-alias -fno-common
 CPLUSPLUSLIB    =       
 ESMF_LDFLAG     =       $(CPLUSPLUSLIB)
-FCOPTIM         =       -O1
+FCOPTIM         =       -O3
 FCREDUCEDOPT	=       $(FCOPTIM)
 FCNOOPT		=       -O0 -fno-inline -fno-ip
 FCDEBUG         =       # -g $(FCNOOPT) -traceback # -fpe0 -check all -ftrapuv -unroll0 -u
@@ -209,7 +209,7 @@ CC_TOOLS_CFLAGS = -DNMM_CORE=$(WRF_NMM_CORE)
                       $(WRF_SRC_ROOT_DIR)/frame/pack_utils.o 
 
  LIB_EXTERNAL    = \
-                      $(WRF_SRC_ROOT_DIR)/external/io_netcdf/libwrfio_nf.a -L/usrx/local/NetCDF/4.2/serial/lib -lnetcdf -lnetcdff -L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_fortran    
+                      $(WRF_SRC_ROOT_DIR)/external/io_netcdf/libwrfio_nf.a -L/usrx/local/NetCDF/3.6.3/lib -lnetcdf -lnetcdf_c++ -L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_fortran    
 
 LIB             =    $(LIB_BUNDLED) $(LIB_EXTERNAL) $(LIB_LOCAL) $(LIB_WRF_HYDRO)
 LDFLAGS         =    $(OMP) $(FCFLAGS) $(LDFLAGS_LOCAL) 

@@ -37,7 +37,12 @@ MODULE module_mp_wsm6
    REAL, PARAMETER, PRIVATE :: pfrz1 = 100.       ! constant in Biggs freezing
    REAL, PARAMETER, PRIVATE :: pfrz2 = 0.66       ! constant in Biggs freezing
    REAL, PARAMETER, PRIVATE :: qcrmin = 1.e-9     ! minimun values for qr, qs, and qg
-   REAL, PARAMETER, PRIVATE :: eacrc = 1.0        ! Snow/cloud-water collection efficiency
+!
+!-- Reduce collection of cloud water by snow & graupel by 50%, SEN1 test in Grasso et al. (WAF, Oct 2014)
+!
+!-- SEN1b version, retain 75%
+!
+   REAL, PARAMETER, PRIVATE :: eacrc = 0.75       ! Cloud water collection efficiency by snow & graupel
    REAL, PARAMETER, PRIVATE :: dens  =  100.0     ! Density of snow
    REAL, PARAMETER, PRIVATE :: qs0   =  6.e-4     ! threshold amount for aggretion to occur
    REAL, SAVE ::                                      &
@@ -1548,7 +1553,7 @@ CONTAINS
    g1pbg = rgmma(bvtg1)
    g3pbg = rgmma(bvtg3)
    g4pbg = rgmma(bvtg4)
-   pacrg = pi*n0g*avtg*g3pbg*.25
+   pacrg = eacrc*pi*n0g*avtg*g3pbg*.25
    g5pbgo2 = rgmma(bvtg2)
    pvtg = avtg*g4pbg/6.
    precg1 = 2.*pi*n0g*.78

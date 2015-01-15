@@ -990,14 +990,14 @@ CONTAINS
 ! pgaci: Accretion of cloud ice by graupel [HL A17] [LFO 41]
 !        (T<T0: I->G)
 !-------------------------------------------------------------
-            if(qrs(i,k,3).gt.qcrmin) then
-              egi = exp(0.07*(-supcol))
-              acrfac = 2.*rslope3(i,k,3)+2.*diameter*rslope2(i,k,3)            &
-                      +diameter**2*rslope(i,k,3)
-              pgaci(i,k) = pi*egi*qci(i,k,2)*n0g*abs(vt2ave-vt2i)*acrfac/4.
-              pgaci(i,k) = min(pgaci(i,k),qci(i,k,2)/dtcld)
-            endif
-          endif
+!            if(qrs(i,k,3).gt.qcrmin) then
+!              egi = exp(0.07*(-supcol))
+!              acrfac = 2.*rslope3(i,k,3)+2.*diameter*rslope2(i,k,3)            &
+!                      +diameter**2*rslope(i,k,3)
+!              pgaci(i,k) = pi*egi*qci(i,k,2)*n0g*abs(vt2ave-vt2i)*acrfac/4.
+!              pgaci(i,k) = min(pgaci(i,k),qci(i,k,2)/dtcld)
+!            endif
+!          endif
 !-------------------------------------------------------------
 ! psacw: Accretion of cloud water by snow  [HL A7] [LFO 24]
 !        (T<T0: C->S, and T>=T0: C->R)
@@ -1064,9 +1064,9 @@ CONTAINS
 !        (S->G): This process is eliminated in V3.0 with the 
 !        new combined snow/graupel fall speeds
 !-------------------------------------------------------------
-          if(qrs(i,k,3).gt.qcrmin.and.qrs(i,k,2).gt.qcrmin) then
-            pgacs(i,k) = 0.
-          endif
+!          if(qrs(i,k,3).gt.qcrmin.and.qrs(i,k,2).gt.qcrmin) then
+!            pgacs(i,k) = 0.
+!          endif
           if(supcol.le.0) then
             xlf = xlf0
 !-------------------------------------------------------------
@@ -1161,11 +1161,11 @@ CONTAINS
 ! pgaut: conversion(aggregation) of snow to graupel [HL A4] [LFO 37]
 !        (T<T0: S->G)
 !-------------------------------------------------------------
-            if(qrs(i,k,2).gt.0.) then
-              alpha2 = 1.e-3*exp(0.09*(-supcol))
-              pgaut(i,k) = min(max(0.,alpha2*(qrs(i,k,2)-qs0)),qrs(i,k,2)/dtcld)
-            endif
-          endif
+!            if(qrs(i,k,2).gt.0.) then
+!              alpha2 = 1.e-3*exp(0.09*(-supcol))
+!              pgaut(i,k) = min(max(0.,alpha2*(qrs(i,k,2)-qs0)),qrs(i,k,2)/dtcld)
+!            endif
+!          endif
 !
 !-------------------------------------------------------------
 ! psevp: Evaporation of melting snow [HL A35] [RH83 A27]
