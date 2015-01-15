@@ -32,15 +32,18 @@ fi
 if [ $mksmart -eq 1 ]
 then
 ls -l MESO${RGUSE}${fhr}.tm00
-cnvgrib -g12 -p40 -nv MESO${RGUSE}${fhr}.tm00 smart.grb2
-ls -l smart.grb2
-cp smart.grb2 smart.grb2_was_${fhr}
-# cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smart.grb2  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smartg2.${fhr}  >   alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+#tst cnvgrib -g12 -p40 -nv MESO${RGUSE}${fhr}.tm00 smart.grb2
+#tst cp smart.grb2 smart.grb2_was_${fhr}
 
-cnvgrib -g21 ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 ${mdl}.t${cyc}z.smart${outreg}f${fhr}
-cnvgrib -g21 alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}
+# cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+##tst cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smart.grb2  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+
+cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smartg2.${fhr}  >   alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smartg2.${fhr}  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+
+# cnvgrib -g21 ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 ${mdl}.t${cyc}z.smart${outreg}f${fhr}
+
+## cnvgrib -g21 alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}
 
 rm smart.grb2
 
@@ -61,7 +64,7 @@ if [ $SENDCOM = YES ]
 then
 cp ${mdl}.t${cyc}z.smart${outreg}f${fhr} ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2  $COMOUT
 cp alt_${mdl}.t${cyc}z.smart${outreg}f${fhr} alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2  $COMOUT
-$utilexec/grbindex $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr} $COMOUT/${mdl}.t${cyc}z.smart${outreg}if${fhr}
+# $utilexec/grbindex $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr} $COMOUT/${mdl}.t${cyc}z.smart${outreg}if${fhr}
 $utilexec/wgrib2   $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 -s > $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2.idx
 export err=$?; err_chk
 fi

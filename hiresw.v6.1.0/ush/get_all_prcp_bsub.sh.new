@@ -1,0 +1,19 @@
+#!/bin/ksh
+# Platform: WCOSS (tide/gyre)
+#
+# Author: Binbin Zhou, EMC/NCEP, 03/20/2013
+#         
+#
+
+. /u/Binbin.Zhou/.kshrc
+cyc=$1
+TODAY=$2
+script=/u/Binbin.Zhou/work/HRRRE_TL/grib2_script
+work=/ptmpp1/Binbin.Zhou/nsse/run_dir.${TODAY}${cyc}
+mkdir -p $work
+cd $work
+
+sed -e "s!CYC!$cyc!g" -e "s!TODAY!$TODAY!g" $script/run_prcp.sh.base.new > $work/run_prcp.sh  
+chmod +x $work/run_prcp.sh
+bsub < $work/run_prcp.sh
+

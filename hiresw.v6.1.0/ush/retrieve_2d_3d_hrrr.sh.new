@@ -1,0 +1,221 @@
+#!/bin/ksh
+#
+
+export USHhiresw
+export DATA
+
+# . /u/Binbin.Zhou/.kshrc
+
+#dev=`cat /etc/dev`
+#if [ $dev = 'tide' ] ; then
+#exit
+#fi
+
+typeset -Z2 cyc
+typeset -Z2 run
+run=$1
+
+# T=`date +%Y%m%d`
+
+T=`echo $PDY | cut -c1-8`
+
+# DATA=/ptmpp1/Binbin.Zhou/nsse
+
+YS=`ndate -24 ${T}12`
+Y=`echo ${YS} | cut -c 1-8`
+mkdir -p $DATA/
+mkdir -p $DATA/$T
+mkdir -p $DATA/$Y
+
+dcom=/dcom/us007003/gsd_hrrr
+
+echo $run $T $Y
+
+  if [ $run = '00' ] ; then
+    days="9  $T $Y $Y $Y"
+    cycs="9  00 23 22 21"
+    set -A  day  $days
+    set -A  cyc $cycs
+  fi
+
+  if [ $run = '01' ] ; then
+    days="9  $T $T $Y $Y"
+    cycs="9  01 00 23 22"
+    set -A  day $days
+    set -A  cyc $cycs
+  fi
+
+  if [ $run = '02' ] ; then
+    days="9  $T $T $T $Y"
+    cycs="9  02 01 00 23"
+    set -A  day $days
+    set -A  cyc $cycs
+  fi
+
+  if [ $run = '03' ] ; then
+    days="9 $T $T $T $T"
+    cycs="9 03 02 01 00"
+    set -A  day $days
+    set -A  cyc $cycs
+  fi
+
+  if [ $run = '04' ] ; then
+    days="9 $T $T $T $T"
+    cycs="9 04 03 02 01"
+    set -A  day $days
+    set -A  cyc $cycs
+  fi
+
+  if [ $run = '05' ] ; then
+    days="9 $T $T $T $T"
+    cycs="9 05 04 03 02"
+    set -A  day $days
+    set -A  cyc $cycs
+  fi
+
+  if [ $run = '06' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 06 05 04 03"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '07' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 07 06 05 04"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '08' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 08 07 06 05"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '09' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 09 08 07 06"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '10' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 10 09 08 07"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '11' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 11 10 09 08"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '12' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 12 11 10 09"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '13' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 13 12 11 10"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '14' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 14 13 12 11"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '15' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 15 14 13 12"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '16' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 16 15 14 13"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '17' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 17 16 15 14"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+
+  if [ $run = '18' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 18 17 16 15"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '19' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 19 18 17 16"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '20' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 20 19 18 17"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '21' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 21 20 19 18"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '22' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 22 21 20 19"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+  if [ $run = '23' ] ; then
+     days="9 $T $T $T $T"
+     cycs="9 23 22 21 20"
+     set -A  day $days
+     set -A  cyc $cycs
+  fi
+
+for m in 1 2 3 4 ; do
+  for h in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 ; do
+    if [ ! -s $DATA/${day[$m]}/hrrrgsd.t${cyc[$m]}z.f${h}.small ] ; then
+      echo "Getting " $DATA/${day[$m]}/hrrrgsd.t${cyc[$m]}z.f${h}.combined
+      echo "  from: " $dcom/hrrr_3d/hrrr_3d_${day[$m]}${cyc[$m]}${h}.grib2 
+      echo "   and: " $dcom/hrrr_2d/hrrr_2d_${day[$m]}${cyc[$m]}${h}.grib2
+      if [ -s $dcom/hrrr_3d/hrrr_3d_${day[$m]}${cyc[$m]}${h}.grib2 ] && [ -s $dcom/hrrr_2d/hrrr_2d_${day[$m]}${cyc[$m]}${h}.grib2 ] ; then
+
+	echo USE USHhiresw $USHhiresw 
+
+        $USHhiresw/extract_hrrrgsd.sh.new ${day[$m]} ${cyc[$m]} ${h} ${day[$m]}        
+
+      fi 
+    else
+      echo "$DATA/${day[$m]}/hrrrgsd.t${cyc[$m]}z.f${h}.small already existing ....." 
+    fi
+   done
+done
+echo "Retriev t${run}z 2d_3d_hrrr done" > $DATA/$T/Retriev_2d_3d_hrrr_done.t${run}z
