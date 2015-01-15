@@ -4,10 +4,10 @@
 #BSUB -q "dev_shared"
 #BSUB -J HIRESW_SMARTINIT
 #BSUB -P HRW-T2O
-#BSUB -R "span[ptile=5]"
+#BSUB -R "span[ptile=6]"
 #BSUB -R affinity[core(1)]
-#BSUB -R rusage[mem=3000]
-#BSUB -n 5
+#BSUB -R rusage[mem=3500]
+#BSUB -n 6
 ###BSUB -x
 #BSUB -W 0:39
 #BSUB -a poe
