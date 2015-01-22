@@ -77,6 +77,7 @@ SUBROUTINE microphysics_driver(                                          &
 ! Added the RI_CURR array to the call
                       ,ri_curr                                           &
                       ,diagflag,   do_radar_ref                          &
+                      ,diagflagalt                                       &
                       ,re_cloud, re_ice, re_snow                         & ! G. Thompson
                       ,has_reqc, has_reqi, has_reqs                      & ! G. Thompson
                       ,ccn_conc                                          & ! RAS
@@ -305,6 +306,7 @@ SUBROUTINE microphysics_driver(                                          &
 !-- kte           end index for k in tile
 !-- num_tiles     number of tiles
 !-- diagflag      Logical to tell us when to produce diagnostics for history or restart
+!-- diagflagalt   Logical to tell us when to produce diagnostics for maxfields
 !
 !======================================================================
    TYPE(grid_config_rec_type),  INTENT(IN   ) , OPTIONAL   :: config_flags
@@ -522,7 +524,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                        ,f_qnwfa, f_qnifa                         ! Added by G. Thompson
 
 
-   LOGICAL, OPTIONAL, INTENT(IN) :: diagflag
+   LOGICAL, OPTIONAL, INTENT(IN) :: diagflag, diagflagalt
    REAL, INTENT(IN) :: ccn_conc ! RAS
    INTEGER, OPTIONAL, INTENT(IN) :: do_radar_ref
    REAL, DIMENSION(ims:ime,kms:kme,jms:jme), INTENT(INOUT) ::  & ! G. Thompson
@@ -1490,6 +1492,7 @@ REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                        &
                  ,SR=sr                                             &
                  ,REFL_10CM=refl_10cm                               &  ! added for radar reflectivity
                  ,diagflag=diagflag                                 &  ! added for radar reflectivity
+                 ,diagflagalt=diagflagalt                                 &  ! added for radar reflectivity
                  ,do_radar_ref=do_radar_ref                         &  ! added for radar reflectivity
                  ,GRAUPEL=graupelnc ,GRAUPELNCV=graupelncv          &
                  ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &

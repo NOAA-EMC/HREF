@@ -37,7 +37,10 @@ MODULE module_mp_wsm6
    REAL, PARAMETER, PRIVATE :: pfrz1 = 100.       ! constant in Biggs freezing
    REAL, PARAMETER, PRIVATE :: pfrz2 = 0.66       ! constant in Biggs freezing
    REAL, PARAMETER, PRIVATE :: qcrmin = 1.e-9     ! minimun values for qr, qs, and qg
-   REAL, PARAMETER, PRIVATE :: eacrc = 1.0        ! Snow/cloud-water collection efficiency
+!
+!-- Reduce collection of cloud water by snow & graupel by 50%, SEN1 test in Grasso et al. (WAF, Oct 2014)
+!
+   REAL, PARAMETER, PRIVATE :: eacrc = 0.5        ! Cloud water collection efficiency by snow & graupel
    REAL, PARAMETER, PRIVATE :: dens  =  100.0     ! Density of snow
    REAL, PARAMETER, PRIVATE :: qs0   =  6.e-4     ! threshold amount for aggretion to occur
    REAL, SAVE ::                                      &
@@ -183,10 +186,10 @@ CONTAINS
          ENDDO
 
 !+---+-----------------------------------------------------------------+
-         IF ( PRESENT (diagflag) ) THEN
+    presentflag:  IF ( PRESENT (diagflag) ) THEN
 
          if ( ( diagflag .or. diagflagalt ).and. do_radar_ref == 1) then
-            DO I=its,ite
+          iloop:  DO I=its,ite
                TCOND=0.
                DO K=kts,kte
                   t1d(k)=th(i,k,j)*pii(i,k,j)
@@ -203,19 +206,26 @@ CONTAINS
         IF (TCOND .ge. 1.e-12) THEN
 
           if (diagflag) then
+
+!!! always called?
+
                call refl10cm_wsm6 (qv1d, qr1d, qs1d, qg1d,              &
                        t1d, p1d, dBZ, kts, kte, i, j)
                do k = kts, kte
                   refl_10cm(i,k,j) = MAX(-35., dBZ(k))
                enddo
+
           elseif (diagflagalt) then
 
 ! consider doing from lim_alt:lim_alt, but need the max code to key 
 ! on the same level
 
-               lim_alt=10
+
+!!! what is lim_alt for 50 level configuration??
+
+               lim_alt=14
                call refl10cm_wsm6 (qv1d(lim_alt:lim_alt), qr1d(lim_alt:lim_alt), &
-                      qs1d(lim_alt:lim_alt), qg1d(lim_alt:lim_alt),              &
+                     qs1d(lim_alt:lim_alt), qg1d(lim_alt:lim_alt),              &
                        t1d(lim_alt:lim_alt), p1d(lim_alt:lim_alt),               &
                        dBZ(lim_alt:lim_alt), lim_alt, lim_alt, i, j)
                do k = kts, kte
@@ -234,11 +244,11 @@ CONTAINS
                enddo
         ENDIF
 
-            ENDDO
+            ENDDO iloop
 
          endif   ! if diagflag and do_radar_ref
 
-         ENDIF
+         ENDIF presentflag
 !+---+-----------------------------------------------------------------+
 
       ENDDO
@@ -942,7 +952,10 @@ CONTAINS
           temp = (den(i,k)*max(qci(i,k,2),qmin))
           temp = sqrt(sqrt(temp*temp*temp))
           xni(i,k) = min(max(5.38e7*temp,1.e3),1.e6)
-          eacrs = exp(0.07*(-supcol))
+!
+!-- Reduce PSACI by 50%, SEN4 test in Grasso et al. (WAF, Oct 2014)
+!
+          eacrs = 0.5*exp(0.07*(-supcol))
 !
           xmi = den(i,k)*qci(i,k,2)/xni(i,k)
           diameter  = min(dicon * sqrt(xmi),dimax)
@@ -1548,7 +1561,7 @@ CONTAINS
    g1pbg = rgmma(bvtg1)
    g3pbg = rgmma(bvtg3)
    g4pbg = rgmma(bvtg4)
-   pacrg = pi*n0g*avtg*g3pbg*.25
+   pacrg = eacrc*pi*n0g*avtg*g3pbg*.25
    g5pbgo2 = rgmma(bvtg2)
    pvtg = avtg*g4pbg/6.
    precg1 = 2.*pi*n0g*.78
