@@ -1,8 +1,8 @@
 #! /bin/ksh --login
 
-module load NetCDF/3.6.3
+module unload NetCDF/4.2/serial
 
-# module load NetCDF/4.2/serial
+module load NetCDF/3.6.3
 
 ### BUILD ARW
 

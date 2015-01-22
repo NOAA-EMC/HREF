@@ -133,7 +133,7 @@ ESMF_LDFLAG     =       $(CPLUSPLUSLIB)
 FCOPTIM         =       -O3
 FCREDUCEDOPT	=       $(FCOPTIM)
 FCNOOPT		=       -O0 -fno-inline -fno-ip
-FCDEBUG         =       # -g $(FCNOOPT) -traceback # -fpe0 -check all -ftrapuv -unroll0 -u
+FCDEBUG         =       -g -traceback # $(FCNOOPT) -fpe0 -check all -ftrapuv -unroll0 -u
 FORMAT_FIXED    =       -FI
 FORMAT_FREE     =       -FR
 FCSUFFIX        =
@@ -431,6 +431,7 @@ nl_get_0_routines.o : nl_get_0_routines.F
 nl_get_1_routines.o : nl_get_1_routines.F
 nl_set_0_routines.o : nl_set_0_routines.F
 nl_set_1_routines.o : nl_set_1_routines.F
+module_cumulus_driver.o : module_cumulus_driver.F
 
 mediation_integrate.o \
 track_driver.o \
@@ -457,7 +458,8 @@ solve_interface.o \
 start_domain.o \
 start_em.o \
 wrf_fddaobs_in.o \
-wrf_tsin.o :
+wrf_tsin.o \
+module_cumulus_driver.o :
 	$(RM) $@
 	$(SED_FTN) $*.F > $*.b 
 	$(CPP) -I$(WRF_SRC_ROOT_DIR)/inc $(CPPFLAGS) $(OMPCPP) $*.b  > $*.f90
