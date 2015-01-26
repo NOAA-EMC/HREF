@@ -121,6 +121,7 @@ export pgm=hiresw_prdgen  ;. ./prep_step
 ### extract just needed items
 
 compress_type=jpeg
+# compress_type="c3 -set_bitmap 1"
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
@@ -206,16 +207,18 @@ then
 
 ### do precip buckets if model is ARW
 
-while [ ! -e $DATA/prdgen_5km_west_${subpiece}/$filenamthree$onehrprev.tm00 ]
+echo doing 1h bucket
+
+while [ ! -e $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$onehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_5km_west_${subpiece}/$filenamthree$onehrprev.tm00
+echo waiting for $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$onehrprev.tm00
 sleep 10
 done
 
 
   rm PCP1HR${fhr}.tm00
   rm input.card
-  echo "$DATA/prdgen_5km_west_${subpiece}" > input.card
+  echo "$DATA/prdgen_5km_${region}_${subpiece}" > input.card
   echo $filenamthree >> input.card
   echo $onehrprev >> input.card
   echo $fhr >> input.card
@@ -231,16 +234,16 @@ done
   if [ $fhr%3 -eq 0 ]
   then
 
-while [ ! -e $DATA/prdgen_5km_west_${subpiece}/$filenamthree$threehrprev.tm00 ]
+while [ ! -e $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$threehrprev.tm00 ]
 do
-echo waiting for $DATA/prdgen_5km_west_${subpiece}/$filenamthree$threehrprev.tm00
+echo waiting for $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$threehrprev.tm00
 sleep 10
 done
 
 
   rm PCP3HR${fhr}.tm00
   rm input.card
-  echo "$DATA/prdgen_5km_west_${subpiece}" > input.card
+  echo "$DATA/prdgen_5km_${region}_${subpiece}" > input.card
   echo $filenamthree >> input.card
   echo $threehrprev >> input.card
   echo $fhr >> input.card
@@ -253,17 +256,18 @@ done
 
   fi
 
+
   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
 
   else
 
 ## model = "nmm"
-   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  >                                  $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
 
   fi
 
   else
-  
+
   cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
 
 
