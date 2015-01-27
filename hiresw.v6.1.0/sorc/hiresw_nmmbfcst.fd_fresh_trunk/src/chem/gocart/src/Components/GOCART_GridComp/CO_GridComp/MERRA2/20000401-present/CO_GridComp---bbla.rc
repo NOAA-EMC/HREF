@@ -1,0 +1,52 @@
+#
+# Resource file for CO parameters. 
+#
+
+number_CO_bins: 1 
+CO_regions:  ExtData/AeroCom/sfc/ARCTAS.region_mask.x540_y361.2008.nc
+
+# Indicate regions using a comma-delimited list of integers.
+# To activate all land boxes, use -1, or all or global (not case sensitive)
+# -------------------------------------------------------------------------
+CO_regions_indices: 2,6
+
+# For all land boxes in a latitude range, set doZoneMasking to
+# 1 then specify BOTH the south and north limits in degrees.
+# WARNING: When set, zone masking OVERRIDES regions setting above!
+# ----------------------------------------------------------------
+doZoneMasking: 0
+LatitudeSouth: -90.0
+LatitudeNorth: 45.0
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+# For biomass burning emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+# QFED v2.x - emission file provides kg CO m-2 s-1
+CO_biomass_emission_filename: ExtData/PIESA/sfc/QFED/v2.4r6/Y%y4/M%m2/qfed2.emis_co.005.%y4%m2%d2.nc4
+CO_biomass_emission_factor: 1.
+
+#                               Other External Files
+#                               --------------------
+
+CO_fossilfuel_filename:        /dev/null
+CO_biofuel_filename:           /dev/null
+CO_biogenic_filename:          /dev/null
+CH4_concentration_filename:    /dev/null
+OH_concentration_filename:     ExtData/MERRA2/L72/gmi_ctm_hindcast.oxidants.x144_y91_z72_t14.%y4.nc4 
+
+# Amplification/supression constants
+# ----------------------------------
+CO_fossil_fuel_acceleration: 1.20
+CO_bio_fuel_acceleration: 1.19
+CO_biomass_burning_acceleration: 1.11
+
+# Run-time debug switch (0 off, 1 on)
+# -----------------------------------
+DEBUG: 0

@@ -1,0 +1,9 @@
+# This script is responsible for loading modules that are compatible with
+# the NUOPC Layer version used in NEMS.
+
+module purge
+#module load mpt intel esmf/6.3.0r
+# -> MOM5 needs a NetCDF enabled ESMF
+# -> NEMS now uses methods from the ESMF v7 NUOPC Layer API
+module use /home/Gerhard.Theurich/Modulefiles
+module load mpt intel esmf/7.0.0bs10-netcdf4.1.3

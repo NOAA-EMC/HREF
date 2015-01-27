@@ -1,0 +1,222 @@
+###########################################################
+#    The following list specifies details about the
+#    the use of variables in the Solver internal 
+#    state for use in nests.  The names of the
+#    internal state variables are on the left and
+#    their desciption is on the right.
+###########################################################
+ 
+###########################################################
+#    The first specification column indicates which 
+#    variables on the nest boundaries are updated by
+#    the parent.  An 'H' means the given variable lies
+#    on H points while a 'V' means the variable lies
+#    on a V point.
+###########################################################
+ 
+###########################################################
+#    The second column for each variable indicates 
+#    if it is involved in shifts of moving nests.
+#    Users need to exercise caution if they edit
+#    that column.
+#
+#    Key: H - Shift this mass point variable.
+#         V - Shift this velocity point variable.
+#         F - Shift this mass point variable with intra-
+#             and inter-task routines but read in values
+#             from external nest-resolution datafiles
+#             within the parent update regions.
+#         L - Shift this land sfc variable.
+#         W - Shift this water sfc variable.
+#         x - The parent must execute a halo exchange
+#             for this variable each time one of its 
+#             children moves.
+###########################################################
+
+###########################################################
+#    The third column indicates which variables are
+#    to be used in 2-way exchange of data from a child
+#    to its parent.  An 'H' means the given variable will
+#    be used and lies on H points while a 'V' means the
+#    variable is to be used and lies on a V point.
+###########################################################
+ 
+#------------------------------------------------------------
+# Name          Specifications          Variable Description
+#------------------------------------------------------------
+
+#           BC      Moving     2-way
+
+
+###  2D integer
+
+'ISLTYP'     -         F         -      'Soil type'
+'IVGTYP'     -         F         -      'Vegetation type'
+'NCFRCV'     -         -         -      'Number of times convective cloud fraction >0 between outputs'
+'NCFRST'     -         -         -      'Number of times stratiform cloud fraction >0 between outputs'
+
+
+###  2D real
+
+'FIS'        -         F         -      'Surface geopotential (m2 s-2)'
+'HDACX'      -         -         -      'Horiz diffusion param in X for H pts'
+'HDACY'      -         -         -      'Horiz diffusion param in Y for H pts'
+'GLAT'       -         -         -      'Latitudes of h points  (radians)'
+'GLON'       -         -         -      'Longitudes of h points (radians)'
+'PD'         H         H         -      'Pressure difference, sigma range  (Pa)'
+'F'          -         -         -      'Coriolis parameter (s-1)'
+'HDACVX'     -         -         -      'Lateral diffusion coefficient in X'
+'HDACVY'     -         -         -      'Lateral diffusion coefficient in Y'
+'VLAT'       -         -         -      'Latitudes of V points  (radians)'
+'VLON'       -         -         -      'Longitudes of V points (radians)'
+'PDO'        -         Hx        -      'Previous pressure difference, sigma range  (Pa)'
+
+'ACFRCV'     -         -         -      'Accumulated convective cloud fractions between outputs'
+'ACFRST'     -         -         -      'Accumulated statiform cloud fractions between outputs'
+'ACPREC'     -         Hx        -      'Accumulated precip  (m)'
+'ACSNOM'     -         -         -      'Accumulated melted snow  (?)'
+'ACSNOW'     -         -         -      'Accumulated snow  (?)'
+'AKHS_OUT'   -         -         -      'Sfc exch coeff T and q  (m2 s-1)'
+'AKMS_OUT'   -         -         -      'Sfc exch coeff momentum  (m2 s-1)'
+'ALBASE'     -         F         -      'Base albedo'
+'ALBEDO'     -         Hx        -      'Dynamic albedo'
+'ALWIN'      -         -         -      'Accumulated LW down at surface  (W m-2)'
+'ALWOUT'     -         -         -      'Accumulated LW from the ground  (W m-2)'
+'ALWTOA'     -         -         -      'Accumulated LW at top of atmosphere  (W m-2)'
+'ASWIN'      -         -         -      'Accumulated SW down at surface  (W m-2)'
+'ASWOUT'     -         -         -      'Accumulated SW up at ground  (W m-2)'
+'ASWTOA'     -         -         -      'Accumulated SW at top of atmosphere  (W m-2)'
+'BGROFF'     -         -         -      'Subsurface runoff  (mm)'
+'CFRACH'     -         -         -      'High atmosphere cloud fraction'
+'CFRACL'     -         -         -      'Low atmosphere cloud fraction'
+'CFRACM'     -         -         -      'Mid atmosphere cloud fraction'
+'CLDEFI'     -         Hx        -      'Convective cloud efficiency'
+'CMC'        -         Lx        -      'Canopy moisture  (m)'
+'CNVBOT'     -         Hx        -      'Lowest convec cloud bottom model lyr between outputs'
+'CNVTOP'     -         Hx        -      'Highest convec cloud top model lyr between outputs'
+'CPRATE'     -         Hx        -      'Instantaneous convective precipitation'
+'CUPPT'      -         Hx        -      'Convective precip between radiation calls  (m)'
+'CUPREC'     -         Hx        -      'Conv precip  (m)'
+'CZEN'       -         Hx        -      'Current cosine of solar zenith angle'
+'CZMEAN'     -         Hx        -      'Mean cosine of solar zenith angle between radiation calls'
+'EPSR'       -         Hx        -      'Surface longwave emissivity'
+'GRNFLX'     -         -         -      'Deep soil heat flux  (W m-2)'
+'HBOTD'      -         Hx        -      'Bottom model layer of deep convective cloud for output'
+'HBOTS'      -         Hx        -      'Bottom model layer of shallow convective cloud for output'
+'HTOPD'      -         Hx        -      'Top model layer of deep convective cloud for output'
+'HTOPS'      -         Hx        -      'Top model layer of shallow convective cloud for output'
+'MIXHT'      -         -         -      'Mixed layer height  (m)'
+'MXSNAL'     -         F         -      'Maximum deep snow albedo'
+'PBLH'       -         -         -      'PBL height  (m)'
+'POTEVP'     -         -         -      'Accumulated potential evaporation (m)'
+'PREC'       -         -         -      'Precip within physics timestep  (m)'
+'PSHLTR'     -         Hx        -      'Pressure at 2-m  (Pa)'
+'Q10'        -         -         -      'Specific humidity at 10-m  (kg k-1)'
+'QSH'        -         Hx        -      'Surface specific humidity  (kg kg-1)'
+'QSHLTR'     -         -         -      'Specific humidity at 2-m  (kg kg-1)'
+'QWBS'       -         Hx        -      'Instantaneous latent heat flux (W m-2)'
+'QZ0'        -         Hx        -      'Specific humidity at top of viscous sublayer  (kg kg-1)'
+'RADOT'      -         -         -      'Longwave from the ground  (W m-2)'
+'RLWIN'      -         -         -      'Longwave down at ground  (W m-2)'
+'RLWTOA'     -         -         -      'Longwave at top of atmosphere  (W m-2)'
+'RSWIN'      -         -         -      'Shortwave down at ground  (W m-2)'
+'RSWINC'     -         -         -      'Clear-sky shortwave down at ground  (W m-2)'
+'RSWOUT'     -         -         -      'Shortwave up at ground  (W m-2)'
+'SFCEVP'     -         -         -      'Surface evaporation  (?)'
+'SFCEXC'     -         -         -      'Another surface exchange coefficient for T and q (?) (m2 s-1) (see AKHS_OUT)'
+'SFCLHX'     -         Hx        -      'Accumulated sfc latent heat flux (W m-2)'
+'SFCSHX'     -         Hx        -      'Accumulated sfc sensible heat flux (W m-2)'
+'SI'         -         -         -      'Snow depth  (m)'
+'SICE'       -         Wx        -      'Sea ice fraction'
+'SIGT4'      -         -         -      'Sigma*T**4  (W m-2)'
+'SM'         -         F         -      'Sea mask (1=>sea ; 0=>land)'
+'SMSTAV'     -         -         -      'Soil moisture availability for evapotranspiration'
+'SMSTOT'     -         -         -      'Total soil moisture  (?)'
+'SNO'        -         -         -      'Liquid water snow amount  (m)'
+'SNOPCX'     -         -         -      'Snow phase change heat flux  (W m-2)'
+'SOILTB'     -         Lx        -      'Deep ground soil temperature  (K)'
+'SR'         -         -         -      'Timestep mass ratio of snow:precip'
+'SSROFF'     -         -         -      'Surface runoff  (mm)'
+'SST'        -         Wx        -      'Sea sfc temperature  (K)'
+'SUBSHX'     -         -         -      'Accumulated deep soil heat flux (W m-2)'
+'TG'         -         F         -      'Deep ground soil temperature  (K)'
+'TH10'       -         -         -      'Theta at 10-m  (K)'
+'THS'        -         Hx        -      'Surface theta  (K)'
+'THZ0'       -         Hx        -      'Theta at top of viscous sublayer  (K)'
+'TSHLTR'     -         -         -      'Theta at 2-m again  (K)'
+'TWBS'       -         Hx        -      'Instantaneous sensible heat flux (W m-2)'
+'U10'        -         Hx        -      'U at 10-m  (m s-1)'
+'U10MAX'     -         Hx        -      'Hourly maximum U at 10-m  (m s-1)'
+'USTAR'      -         Hx        -      'Friction velocity  (m s-1)'
+'UZ0'        -         Hx        -      'U component at top of viscous sublayer  (m s-1) (H points)'
+'V10'        -         Hx        -      'V at 10-m  (m s-1)'
+'V10MAX'     -         Hx        -      'Hourly maximum V at 10-m  (m s-1)'
+'VEGFRC'     -         F         -      'Vegetation fraction'
+'VZ0'        -         Hx        -      'V component at top of viscous sublayer  (m s-1) (H points)'
+'Z0'         -         Hx        -      'Roughness length  (m)'
+'TSKIN'      -         Hx        -      'Skin temperature  (K)'
+'AKHS'       -         Hx        -      'Sfc exch coeff T and q divided by delta Z  (m s-1)'
+'AKMS'       -         Hx        -      'Sfc exch coeff momentum divided by delta Z  (m s-1)'
+'HBOT'       -         Hx        -      'Bottom model layer of convective cloud for radiation'
+'HTOP'       -         Hx        -      'Top model layer of convective cloud for radiation'
+'RSWTOA'     -         -         -      'Shortwave at top of atmosphere  (W m-2)'
+'POTFLX'     -         -         -      'Energy equivalent of POTEVP (W m-2)'
+'RMOL'       -         -         -      'Reciprocal of Monin-Obukhov length  (m-1)'
+'T2'         -         -         -      'Temperature 2-m  (K)'
+'Z0BASE'     -         -         -      'Background roughness length  (m)'
+'PSFC'       -         -         -      'Surface Pressure (Pa)'
+'TLMIN'      -         -         -      'Hourly minimum temperature'
+'TLMAX'      -         -         -      'Hourly maximum temperature'
+'LSPA'       -         -         -      'Land surface precipitation accumulation'
+'ACUTIM'     -         -         -      'post0/bufr counter in summing cloud processes (conv, grid)'
+'APHTIM'     -         -         -      'post0/bufr counter in summing other physics (turb, land, rad)'
+'ARDLW'      -         -         -      'Counter in summing LW radiation flux'
+'ARDSW'      -         -         -      'Counter in summing SW radiation flux'
+'ASRFC'      -         -         -      'Counter in summing surface fluxes'
+'AVRAIN'     -         -         -      'Counter in summing latent heating from grid microphysics'
+'AVCNVC'     -         -         -      'Counter in summing latent heating from convection'
+
+
+###  3D real
+
+'T'          H         H         H      'Sensible temperature  (K)'
+'Q'          H         H         H      'Specific humidity  (kg kg-1)'
+'U'          V         V         V      'U wind component  (m s-1)'
+'V'          V         V         V      'V wind component  (m s-1)'
+'Q2'         -         H         -      '2*tke  (m2 s-2)'
+'CW'         H         H         H      'Cloud condensate  (kg kg-1)'
+'W'          -         H         -      'Vertical velocity at midlayers  (m s-1)'
+'DWDT'       -         H         -      'Vertical acceleration, correction factor  (m s-2)'
+'PINT'       -         H         -      'Nonhydrostatic interface pressure  (Pa)'
+'OMGALF'     -         -         -      'Omega-alpha  (K)'
+'O3'         -         H         -      'Ozone'
+'DIV'        -         -         -      'Horizontal mass divergence'
+'TCU'        -         Vx        -      'Time change of U (m s-2)'
+'TCV'        -         Vx        -      'Time change of V (m s-2)'
+'TCT'        -         Hx        -      'Time change of T (K s-1)'
+'TP'         -         Hx        -      'Sensible temperature, previous step  (K)'
+'UP'         -         Vx        -      'U wind component, previous step  (m s-1)'
+'VP'         -         Vx        -      'V wind component, previous step  (m s-1)'
+'PSGDT'      -         -         -      'Specific volume  (m3 kg-1)'
+'Z'          -         Hx        -      'Height at midlayers  (m)'
+
+'CLDFRA'     -         -         -      'Cloud fraction'
+'EXCH_H'     -         Hx        -      'Turbulent exchange coefficient for heat  (m2 s-1)'
+'RLWTT'      -         Hx        -      'Radiative T tendency, longwave  (K s-1)'
+'RSWTT'      -         Hx        -      'Radiative T tendency, shortwave (K s-1)'
+'TCUCN'      -         Hx        -      'Accumulated convective T tendency  (K s-1)'
+'TRAIN'      -         Hx        -      'Accumulated stratiform T tendency  (K s-1)'
+'XLEN_MIX'   -         -         -      'Mixing length  (m)'
+'F_ICE'      -         Hx        -      'Fraction of condensate that is ice'
+'F_RIMEF'    -         Hx        -      'Rime factor'
+'F_RAIN'     -         Hx        -      'Rain fraction of liquid part of CWM'
+'SH2O'       -         Lx        -      '3D unfrozen soil moisture/soil liquid water'
+'SMC'        -         Lx        -      '3D total soil moisture content (volumetric fraction)'
+'STC'        -         Lx        -      '3D soil temperature (K)'
+
+###  4D real
+
+'TRACERS'       -        -        -      'All tracer variables'
+'TRACERS_PREV'  -        -        -      'Previous step tracers'
+
+#EOF
