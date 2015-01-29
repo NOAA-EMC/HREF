@@ -30,7 +30,7 @@ fi
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export DATA=${DATA:-${DATAROOT}/hiresw.nemsinterp_4_${NEST}_${MODEL}_${cyc}_${envir}}
 
 if [ -d $DATA/run_nemsinterp_4 ]; then
    rm -rf $DATA/run_nemsinterp_4
@@ -68,12 +68,15 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
+
+export NDATE=${NDATE:-$EXECutil/ndate}
+
 # Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+sh $USHutil/setpdy.sh
 . PDY
 
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
@@ -86,8 +89,8 @@ mkdir -p -m 775 $COMOUT
 ${HOMEhiresw}/scripts/exhiresw_nemsinterp_4.sh.ecf
 ########################################################
 
-msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY."
+msg="JOB $job FOR NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-cd /tmpnwprd2
+cd $DATAROOT
 rm -rf $DATA

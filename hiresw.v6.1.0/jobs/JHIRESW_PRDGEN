@@ -38,8 +38,8 @@ fi
 # obtain unique process id (pid) and make temp directories
 ############################################################# 
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
-export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export DATA=${DATA:-$DATAROOT/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}}
+export INPUT_DATA=${INPUT_DATA:-$DATAROOT/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}}
 mkdir -p $DATA
 cd $DATA
 
@@ -90,23 +90,26 @@ export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 
+export WGRIB2=${WGRIB2:-$EXEChiresw/hiresw_wgrib2}
+
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
+
+export NDATE=${NDATE:-$EXECutil/ndate}
+
 # Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+sh $USHutil/setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
 mkdir -p $COMOUT
- 
-env
 
 ########################################################
 # Run the ex-script
@@ -119,23 +122,4 @@ postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
 
 date
 
-cd /tmpnwprd2
-
-# Be sure that the wrfbufrsnd job is done before scrubbing $DATA
-#
-#while [ ! -e $DATA/sndpostdone48.tm00 ]
-#do
-#sleep 5
-#done
-#
-#if [ $MODEL = "arw" ]
-#then
-#rm $DATA/wrfo*
-#rm $DATA/wrfi*
-#rm $DATA/wrfb*
-#else
-#rm $DATA/*hst*
-#rm $DATA/*nemsio
-#fi
-#
-#rm $DATA/post/WRFPRS*
+cd $DATAROOT

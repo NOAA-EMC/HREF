@@ -35,8 +35,9 @@ fi
 # obtain unique process id (pid) and make temp directories
 #
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
-export INPUT_DATA=${INPUT_DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export DATA=${DATA:-$DATAROOT/hiresw.smartinitb_${NEST}_${MODEL}_${cyc}_${envir}}
+export INPUT_DATA=${INPUT_DATA:-$DATAROOT/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}}
+export PRDGEN_DATA=${PRDGEN_DATA:-$DATAROOT/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}/prdgen_full}
 
 mkdir -p $DATA
 cd $DATA
@@ -74,14 +75,16 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
+
+export WGRIB2=${WGRIB2:-$HOMEhiresw/exec/hiresw_wgrib2}
 
 # Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+sh $USHutil/setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
@@ -123,5 +126,5 @@ export COMIN_GEFS=${COMIN_GEFS:-$COM_SREF/sref.${GEFS_PDY}/ensprod_gefs}
 $HOMEhiresw/scripts/exhiresw_smartinitb.sh.ecf
 ########################################################
 
-cd /tmpnwprd2
+cd $DATAROOT
 date
