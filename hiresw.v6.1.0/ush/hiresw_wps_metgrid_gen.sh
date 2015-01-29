@@ -37,7 +37,7 @@ MULTINUM_IN=$ICOUNT
 
 ### figure out start and end times for this segment
 
-NDATE=${NDATE:-${utilexec}/ndate}
+## NDATE=${NDATE:-${utilexec}/ndate}
 
 ystart=`echo $PDY | cut -c1-4`
 mstart=`echo $PDY | cut -c5-6`

@@ -19,10 +19,7 @@
 
 set -x
 
-utilexec=${utilexec:-/nwprod/util/exec}
-
-export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
-export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
+# export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
 
 fhr=$1
 DOMIN_SMALL=$2
@@ -32,13 +29,19 @@ MEMBER=$5
 subpiece=${6}
 
 reflag=1
-compress=jpeg
+compress="c3 -set_bitmap 1"
 
-# mkdir ${DATA}/prdgen_full_${subpiece}
-# cd ${DATA}/prdgen_full_${subpiece}/
 mkdir ${DATA}/prdgen_full
-cd ${DATA}/prdgen_full/
-sh $utilscript/setup.sh
+
+if [ $DOMIN_SMALL = "conus" ]
+then
+ mkdir ${DATA}/prdgen_full_${subpiece}
+ cd ${DATA}/prdgen_full_${subpiece}/
+else
+ cd ${DATA}/prdgen_full/
+fi
+
+sh $USHutil/setup.sh
 
 #cd $DATA
 DOMIN=${DOMIN_SMALL}${model}
@@ -187,9 +190,8 @@ cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
 
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
-
 cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
 fi
 use_3h=1
@@ -200,7 +202,7 @@ then
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
 
@@ -212,7 +214,7 @@ else
 cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_1h master${fhr}.ctl
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h_conus hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h hiresw_grid_extract.txt
 fi
@@ -259,23 +261,55 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt \
           | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
+if [ $DOMIN_SMALL = "conus" -a $subpiece = "1" ] 
+then
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+# $WGRIB2 inputs_budget.grb -new_grid_interpolation budget -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+$WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+fi
+
+if [ $DOMIN_SMALL != "conus" ] 
+then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation budget -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+fi
 
      if [ $fhr%3 -ne 0 ]
      then
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
-$WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
 
-cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget  > ${filenamthree}${fhr}.tm00
-     else
-cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
+if [ $DOMIN_SMALL = "conus" ]
+then
+
+if [ $subpiece = "1" ]
+then
+  $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
+  $WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+  cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget  > ${filenamthree}${fhr}.tm00
+else
+  mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
+fi
+
+fi
+
+if [ $DOMIN_SMALL != "conus" ]
+then
+  $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
+  $WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+  cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget  > ${filenamthree}${fhr}.tm00
+fi
+
+
+     else # 3 hour time
+
+if [ [ $DOMIN_SMALL = "conus" -a $subpiece = "1" ] -o  $DOMIN_SMALL != "conus" ] 
+then
+  cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
+else
+  mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
+fi
+
      fi
     
-
-# copygb2 -g"${reg}" -x $INPUT_DATA/WRFPRS${fhr}.tm00 ${filenamthree}${fhr}.tm00
-
-
 export err=$?;./err_chk
 
 cp $INPUT_DATA/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
@@ -303,8 +337,12 @@ if [ $fhr -eq 00 ]
 then
 
 
-
+if [ $DOMIN_SMALL = "conus" ] 
+then
+       cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}_${subpiece}
+else
        cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+fi
 
 
 ### will be cat'd to smartinit generated file in ncoproc script
@@ -314,13 +352,23 @@ then
 else  # (not f00)
 
 
+if [ $subpiece = "1"  -o $DOMIN_SMALL != "conus" ]
+then
+
+
 ### do one hour precip for everyone (arw,nmm)
 
   rm PCP3HR${fhr}.tm00
   rm PCP1HR${fhr}.tm00
   rm input.card
 
+if [ $subpiece = "1" ]
+then
+  echo "$DATA/prdgen_full_1" > input.card
+else
   echo "$DATA/prdgen_full" > input.card
+fi
+
   echo $filenamthree >> input.card
   echo $onehrprev >> input.card
   echo $fhr >> input.card
@@ -328,11 +376,25 @@ else  # (not f00)
   echo $IM $JM >> input.card
 
 
+if [ $subpiece = "1" ]
+then
+
+while [ ! -e $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00 ]
+do
+echo waiting for $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00
+sleep 10
+done
+
+else
+
 while [ ! -e $DATA/prdgen_full/$filenamthree$onehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_full/$filenamthree$onehrprev.tm00
 sleep 10
 done
+
+fi
+
 
    export pgm=hiresw_pcpbucket_${DOMIN_bucket}
    $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
@@ -345,14 +407,32 @@ done
 
 #       create a 3 h bucket as well
 
+if [ $subpiece = "1" ]
+then
+
+while [ ! -e $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00 ]
+do
+echo waiting for $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00
+sleep 10
+done
+
+else
+
 while [ ! -e $DATA/prdgen_full/$filenamthree$threehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_full/$filenamthree$threehrprev.tm00
 sleep 10
 done
 
+fi
+
   rm input.card
+if [ $subpiece = "1" ]
+then
+  echo "$DATA/prdgen_full_1" > input.card
+else
   echo "$DATA/prdgen_full" > input.card
+fi
   echo $filenamthree >> input.card
   echo $threehrprev >> input.card
   echo $fhr >> input.card
@@ -386,11 +466,25 @@ done
 
   fi  # arw/nmm break
 
+else
+
+mv ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+
+fi # subpiece=1 or non-conus
+
 ###### DONE PRECIP BUCKET
 
 fi # f00 or not
 
+echo DOWN HERE
+
 ## temp copy to COMOUT
-       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}
+	if [ $subpiece -gt 0 ]
+        then
+       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}_${subpiece}
+        else
+       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+        fi
+
 ## temp copy to COMOUT
-echo  "done" > $DATA/done_ndfd_f${fhr}
+echo  "done" > $DATA/done_ndfd_${subpiece}_f${fhr}
