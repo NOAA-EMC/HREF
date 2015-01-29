@@ -21,11 +21,6 @@
 
 set -x
 
-utilexec=${utilexec:-/nwprod/util/exec}
-
-export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
-export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
-
 
 fhr=$1
 DOMIN_SMALL=$2
@@ -39,7 +34,7 @@ reflag=1
 
 mkdir ${DATA}/prdgen_5km_${region}_${subpiece}
 cd ${DATA}/prdgen_5km_${region}_${subpiece}/
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
 
@@ -188,8 +183,6 @@ echo "inside f00 test"
   if test $SENDCOM = 'YES'
   then
       cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2_${subpiece}
-#      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpreg${region}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}if${fhr}
-#      $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2
 #       $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2.idx
 ####
 # 3/2014 - Remove alerts for east/west domain; replaced by single conus domain. processing kept for awips only.
@@ -277,8 +270,6 @@ done
   if test $SENDCOM = 'YES'
   then
     cp $DOMOUT.t${CYC}z.awpreg${region}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2_${subpiece}
-#    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpreg${region}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}if${fhr}
-#    $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awpreg${region}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2
 #    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2.idx
 ####
 # 3/2014 - Remove alerts for east/west domain; replaced by single conus domain. processing kept for awips only.

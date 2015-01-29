@@ -19,10 +19,8 @@
 
 set -x
 
-utilexec=${utilexec:-/nwprod/util/exec}
-
-export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
-export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
+# export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
+# export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
 
 fhr=$1
 DOMIN_SMALL=$2
@@ -36,7 +34,7 @@ reflag=1
 
 mkdir ${DATA}/prdgen_5km_${subpiece}
 cd ${DATA}/prdgen_5km_${subpiece}/
-sh $utilscript/setup.sh
+sh ${USHutil}/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
 
@@ -180,7 +178,6 @@ echo "inside f00 test"
   if test $SENDCOM = 'YES'
   then
       cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
-#      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmif${fhr}
   fi
 else
 
@@ -256,7 +253,6 @@ fi # subpiece=1
   if test $SENDCOM = 'YES'
   then
      cp $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
-#    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmif${fhr}
   fi
 
 fi # if f00 test

@@ -19,10 +19,8 @@
 
 set -x
 
-utilexec=${utilexec:-/nwprod/util/exec}
-
-export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
-export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
+# export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
+# export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
 
 fhr=$1
 DOMIN_SMALL=$2
@@ -35,12 +33,14 @@ subpiece=$6
 
 ## jpeg for AK, complex2 for others??
 
-compress=jpeg
+compress="c3 -set_bitmap 1"
 reflag=1
+
+### okay to do here??
 
 mkdir ${DATA}/prdgen_5km_${subpiece}
 cd ${DATA}/prdgen_5km_${subpiece}/
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
 
@@ -194,7 +194,7 @@ export FORT621="input${fhr}.prd"
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
-$WGRIB2 inputs.grb -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+$WGRIB2 inputs.grb -set_grib_type ${compress} -new_grid_vectors UGRD:VGRD -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
 if [ $subpiece =  "0"  -o $subpiece =  "1" ]
 then
@@ -254,7 +254,6 @@ echo "inside f00 test"
   if test $SENDCOM = 'YES'
   then
       cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
-#      $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregif${fhr}
 #      $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2
 #      $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2.idx
       if [ $SENDDBN_GB2 = YES ]; then
@@ -340,7 +339,6 @@ fi # subpiece1
   if test $SENDCOM = 'YES'
   then
     cp $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
-#    $utilexec/grbindex $COMIN/$DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregif${fhr}
 #    $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2
 #    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2.idx
     if [ $SENDDBN_GB2 = YES ]; then

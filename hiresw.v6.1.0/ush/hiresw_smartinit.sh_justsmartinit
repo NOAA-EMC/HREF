@@ -60,7 +60,7 @@ case $RUNTYP in
   guamarw|guamnmmb) rg=guam; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
 esac
 
-WGRIB2=$EXEChiresw/hiresw_wgrib2
+# WGRIB2=$EXEChiresw/hiresw_wgrib2
 compress=complex2
 
 
@@ -242,8 +242,8 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
   ln -sf TOPONDFD     fort.46
   ln -sf LANDNDFD     fort.48
   if [ $ext = grb ];then
-    $utilexec/grbindex TOPONDFD TOPONDFDi
-    $utilexec/grbindex LANDNDFD LANDNDFDi
+    $EXECutil/grbindex TOPONDFD TOPONDFDi
+    $EXECutil/grbindex LANDNDFD LANDNDFDi
     ln -sf TOPONDFDi  fort.47
     ln -sf LANDNDFDi  fort.49
   fi
@@ -253,7 +253,7 @@ err1=$?
 # cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
 # err2=$?
 
-    $utilexec/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+    $EXECutil/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
 echo err1 err2 on copies $err1 $err2
 
@@ -274,8 +274,8 @@ echo err1 err2 on copies $err1 $err2
 #	cnvgrib -g12 MAXMIN${fhr2}.tm00 MAXMIN2
 #        cnvgrib -g12 MAXMIN${fhr1}.tm00 MAXMIN1
 
-    $utilexec/grb2index MAXMIN1 MAXMIN1i
-    $utilexec/grb2index MAXMIN2 MAXMIN2i
+    $EXECutil/grb2index MAXMIN1 MAXMIN1i
+    $EXECutil/grb2index MAXMIN2 MAXMIN2i
   fi
 
   freq=6;fmx=21   #fmx =  maxmin unit number for 1st maxmin file
@@ -285,16 +285,16 @@ echo err1 err2 on copies $err1 $err2
 
 ### always copy
 
-cp $INPUT_DATA/3precip.${fhr} .
+cp $INPUT_DATA/3precip.${fhr}_interp .
 
 	if [ $check6 -eq 0 ]
 	then
 
-cp $INPUT_DATA/${freq}precip.${fhr} .
+cp $INPUT_DATA/${freq}precip.${fhr}_interp .
 err1=$?
-cp $INPUT_DATA/${freq}snow.${fhr} .
+cp $INPUT_DATA/${freq}snow.${fhr}_interp .
 err2=$?
-cp $INPUT_DATA/3precip.${fhr} .
+cp $INPUT_DATA/3precip.${fhr}_interp .
 err3=$?
 
 if [ $err3 -ne 0 ]
@@ -309,22 +309,25 @@ echo copy ${freq}precip.${fhr} $err1
 echo copy ${freq}snow.${fhr} $err2
 
 
-     $WGRIB2 ${freq}precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}precip
-     $utilexec/grb2index ${freq}precip ${freq}precipi
-     $WGRIB2 ${freq}snow.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}snow
-     $utilexec/grb2index ${freq}snow ${freq}snowi
+#      time $WGRIB2 ${freq}precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}precip
 
-#     $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
-#     $utilexec/grbindex ${freq}precip ${freq}precipi
-#     $utilexec/copygb -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
-#     $utilexec/grbindex ${freq}snow ${freq}snowi
+     mv ${freq}precip.${fhr}_interp ${freq}precip
+     $EXECutil/grb2index ${freq}precip ${freq}precipi
+
+#      time $WGRIB2 ${freq}snow.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}snow
+     mv ${freq}snow.${fhr}_interp ${freq}snow
+     $EXECutil/grb2index ${freq}snow ${freq}snowi
 
 	fi
 
 	if [ $MODEL = "arw" -a $check -eq 0 ]
 	then
-#	$utilexec/copygb -g "$cpgbgrd" -i3 -x 3precip.${fhr} 3precip
-     $WGRIB2 3precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} 3precip
+#	$EXECutil/copygb -g "$cpgbgrd" -i3 -x 3precip.${fhr} 3precip
+#     time $WGRIB2 3precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} 3precip
+
+        cp 3precip.${fhr}_interp 3precip
+        $EXECutil/grb2index 3precip 3precipi
+        
 	fi
 
 
@@ -333,7 +336,7 @@ echo copy ${freq}snow.${fhr} $err2
 	then
 	cat 3precip meso${rg}.NDFDf${fhr} > new_meso${rg}.NDFDf${fhr}
 	mv new_meso${rg}.NDFDf${fhr} meso${rg}.NDFDf${fhr}
-        $utilexec/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+        $EXECutil/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
         fi
 
 ls -l meso${rg}.NDFDf${fhr}
@@ -349,10 +352,7 @@ ls -l meso${rg}.NDFDf${fhr}
           rm SREFPCPi
         fi
 
-
-# convert SREF stuff to be GRIB2?
-
-        $utilexec/grb2index SREFPCP SREFPCPi
+        $EXECutil/grb2index SREFPCP SREFPCPi
         ln -sf "SREFPCPi"                 fort.14
 	fi
 
@@ -365,7 +365,7 @@ ls -l meso${rg}.NDFDf${fhr}
 
 mv ${freq}precipi ${freq}precipi_was
 
-$utilexec/grb2index ${freq}precip ${freq}precipi
+$EXECutil/grb2index ${freq}precip ${freq}precipi
 
   ln -sf "${freq}precipi"           fort.16
         fi
@@ -383,9 +383,9 @@ $utilexec/grb2index ${freq}precip ${freq}precipi
     cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2 MAXMIN3
     cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr6}.grib2 MAXMIN4
     cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr9}.grib2 MAXMIN5
-    $utilexec/grb2index MAXMIN3 MAXMIN3i
-    $utilexec/grb2index MAXMIN4 MAXMIN4i
-    $utilexec/grb2index MAXMIN5 MAXMIN5i
+    $EXECutil/grb2index MAXMIN3 MAXMIN3i
+    $EXECutil/grb2index MAXMIN4 MAXMIN4i
+    $EXECutil/grb2index MAXMIN5 MAXMIN5i
 
 
 #     READ 6/12 hr precip from special files created by makeprecip
@@ -393,17 +393,17 @@ $utilexec/grb2index ${freq}precip ${freq}precipi
      cpgbgrd=$grid
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
 
-cp $INPUT_DATA/12precip.${fhr} .
-cp $INPUT_DATA/6snow.${fhr} .
+cp $INPUT_DATA/12precip.${fhr}_interp .
+cp $INPUT_DATA/6snow.${fhr}_interp .
 
 ### change to WGRIB2
-     $WGRIB2 12precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} 12precip
-#     $utilexec/copygb -g "$cpgbgrd" -i3 -x 12precip.${fhr} 12precip
-     $utilexec/grb2index 12precip 12precipi
 
-     $WGRIB2 6snow.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} 6snow
-#     $utilexec/copygb -g "$cpgbgrd" -i3 -x 6snow.${fhr} 6snow
-     $utilexec/grb2index 6snow 6snowi
+     mv 12precip.${fhr}_interp 12precip
+     $EXECutil/grb2index 12precip 12precipi
+
+
+     mv 6snow.${fhr}_interp 6snow
+     $EXECutil/grb2index 6snow 6snowi
 
       ln -sf "6snow"      fort.17
       ln -sf "6snowi"     fort.18
@@ -422,8 +422,8 @@ cp $INPUT_DATA/6snow.${fhr} .
 
     *)   # Not 00/12 UTC valid times
 
-	echo "contents of MAXMIN1 at 12 h"
-    $WGRIB2 MAXMIN1
+#	echo "contents of MAXMIN1 at 12 h"
+#    $WGRIB2 MAXMIN1
 
      if [ $check -eq 0 -a $fhr -ne 00 ];then
 
@@ -442,7 +442,9 @@ cp $INPUT_DATA/6snow.${fhr} .
 
 if [ ! -e ${freq}snow ]
 then
-cp $INPUT_DATA/${freq}snow .
+cp $INPUT_DATA/${freq}snow.${fhr}_interp ${freq}snow
+rm ${freq}snowi
+$EXECutil/grb2index ${freq}snow ${freq}snowi
 fi
 
          ln -fs "${freq}snow"  fort.17
