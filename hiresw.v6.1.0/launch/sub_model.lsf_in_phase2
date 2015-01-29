@@ -1,0 +1,41 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/logs/test_fore.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/logs/test_fore.err__DOM__CORE__CYC_
+#BSUB -R span[ptile=_SPAN_]
+#BSUB -q "dev2"
+#BSUB -J HIRESW_FORECAST__DOM___CORE___CYC_
+#BSUB -P HRW-T2O
+#BSUB -n _NPROC_
+#BSUB -W 1:25
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+module load NetCDF/4.2/serial
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export MEMBER=ctl
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+
+export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMIN=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
+export POSTDATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}
+
+$HOMEhiresw/jobs/JHIRESW_FORECAST

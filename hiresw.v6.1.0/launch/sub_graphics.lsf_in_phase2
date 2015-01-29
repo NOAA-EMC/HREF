@@ -1,0 +1,75 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_graphics.out
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_graphics.err
+#BSUB -R span[ptile=16]
+#BSUB -x
+#BSUB -q "dev2"
+#BSUB -J HIRESW_GRAPHICS
+#BSUB -P HRW-T2O
+#BSUB -n 49
+#BSUB -W 0:29
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+rm -rf poescript__CORE_
+
+hireswscript=/meso/save/Matthew.Pyle/hiresw_vert/scripts
+
+if [ _DOM_ = "conus" ]
+then
+
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/WRFP*
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/OPSWRFP*
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/*.grd
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/*.gif
+
+echo "$hireswscript/degrib_process_conus4km.scr_part_spcprodlike  _CYC_ 00 00 _CORE_ " > poescript__CORE_
+
+elif [ _DOM_ = "ak" ]
+then
+
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/WRFP*
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/OPSWRFP*
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/*.grd
+rm /ptmpd1/Matthew.Pyle/process_4km_hiresw__CORE___CYC_/*.gif
+
+echo "$hireswscript/degrib_process_akhiresw.scr_part_spcprodlike  _CYC_ 00 00 _CORE_ " > poescript__CORE_
+fi
+
+hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+for hr in $hrs
+do
+
+if [ _DOM_ = "conus" ]
+then
+echo "$hireswscript/degrib_process_conus4km.scr_part_spcprodlike  _CYC_ $hr $hr _CORE_ " >> poescript__CORE_
+elif [ _DOM_ = "ak" ]
+then
+echo "$hireswscript/degrib_process_akhiresw.scr_part_spcprodlike  _CYC_ $hr $hr _CORE_ " >> poescript__CORE_
+fi
+
+done
+
+chmod 775 $DATA/poescript__CORE_
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=poescript__CORE_
+export MP_LABELIO=YES
+export MP_INFOLEVEL=3
+export MP_STDOUTMODE=ordered
+
+mpirun.lsf
+
+cd /meso/save/Matthew.Pyle/hiresw_vert/launch/
+
+cat transfer_graphics.lsf_in | sed s:_CORELOC_:_CORE_:g | sed s:_DOMLOC_:_DOM_:g | sed s:_CYCLOC_:_CYC_:g > transfer_graphics__CYC___CORE_
+
+bsub < /meso/save/Matthew.Pyle/hiresw_vert/launch/transfer_graphics__CYC___CORE_
