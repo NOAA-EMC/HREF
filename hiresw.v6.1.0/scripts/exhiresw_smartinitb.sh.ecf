@@ -86,6 +86,22 @@ then
 rm $del
 fi
 
+del=`ls fort.*`
+err=$?
+
+if [ $err -eq 0 ]
+then
+rm $del
+fi
+
+del=`ls MAXMIN? MAXMIN?i SREFPCP SREFPCPi`
+err=$?
+
+if [ $err -eq 0 ]
+then
+rm $del
+fi
+
 
 fi
 
@@ -101,6 +117,7 @@ sleep 10
 done
 
 export ffhr=${hr}
+export FORT_BUFFERED=true
 $USHhiresw/hiresw_smartinit.sh_justsmartinit 
 
 echo "DONE" > smartinitbdone${hr}

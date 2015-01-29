@@ -42,8 +42,6 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-NDATE=${utilexec}/ndate
-
 end=`$NDATE $LENGTH $start`
 
 yend=`echo $end | cut -c1-4`
@@ -115,6 +113,13 @@ then
  suf="df"
  NUMLEVS=41
  
+	elif [ -e ${DATA}/../rap.t${cyc}z.awip32f${whr}df ]
+	then
+ # cp ${COMRAP}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
+ cp ${DATA}/../rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
+ suf="df"
+ NUMLEVS=41
+
         else
            msg="FATAL ERROR: ${COMRAP}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
            err_exit $msg

@@ -42,7 +42,6 @@ postmsg "$jlogfile" "$msg"
 
 ######
 export INCR=01
-NDATE=${NDATE:-${utilexec}/ndate}
 ######
 
 # also done in J-JOB
@@ -309,6 +308,8 @@ export pgm=hiresw_${MODEL}_post
 . ./prep_step
 
 # export FORT14="wrf_cntrl.parm"
+
+export FORT_BUFFERED=true
 
 mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
 # mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile

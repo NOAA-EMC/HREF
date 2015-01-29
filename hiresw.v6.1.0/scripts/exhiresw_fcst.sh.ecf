@@ -19,8 +19,6 @@ set -x
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
-NDATE=${NDATE:-${utilexec}/ndate}
-
 cd $DATA
 
 #
@@ -267,6 +265,7 @@ cp $PARMhiresw/hiresw_solver_state.txt          solver_state.txt
 
 cp $PARMhiresw/hiresw_filt_vars.txt             filt_vars.txt
 cp $PARMhiresw/hiresw_moving_nest_shift.txt     moving_nest_shift.txt
+cp $PARMhiresw/hiresw_nests.txt                 nests.txt
 cp $PARMhiresw/hiresw_atmos.configure_nmm       atmos.configure
 cp $FIXhiresw/hiresw_aerosol.dat                aerosol.dat
 
@@ -327,7 +326,9 @@ export FORT_BUFFERED=true
 
 if [ $RUN = "conusarw" ]
 then
-export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/16 16/4 16/2`"
+#phase1 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/16 16/4 16/2`"
+# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 644/23 20/10 20/5`"
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 660/22 20/10 20/5`"
 elif [ $RUN = "akarw" ]
 then
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 576/16 32/8`"
