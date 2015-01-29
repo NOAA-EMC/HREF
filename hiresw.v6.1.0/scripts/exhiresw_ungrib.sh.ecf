@@ -41,8 +41,6 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-NDATE=${NDATE:-${utilexec}/ndate}
-
 int1=`$NDATE +12 $start`
 yyint1=`echo $int1 | cut -c1-4`
 mmint1=`echo $int1 | cut -c5-6`
@@ -107,27 +105,25 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
+mod=gfs
+type=pgrb2.0p50.f0
+suf=""
+
 
 while [ $whr -le $last ]
 do
 
-#para while [ ! -e ${COMGFS}/gfs.t${cyc}z.pgrb2.0p50.f${whr} ]
-while [ ! -e ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} ]
+while [ ! -e ${COMGFS}/${mod}.t${cyc}z.${type}${whr} ]
 do
 sleep 10
 done
 
-cp ${COMGFS}/gfs.t${cyc}z.pgrb2f${whr} $DATA/.
-#  cp ${COMGFS}/gfs.t${cyc}z.pgrb2.0p50.f${whr} $DATA/.
+cp ${COMGFS}/${mod}.t${cyc}z.${type}${whr} $DATA/.
   export err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_2/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_3/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_4/Vtable 
-  mod=gfs
-#  type=pgrb2.0p50.f
-  type=pgrb2f
-  suf=""
 
 if [ $mod = "rap" ]
 then
@@ -193,11 +189,6 @@ then
 whr=0$whr
 fi
 
-# elif [ $whr -lt 100 ]
-# then
-# whr=0$whr
-# fi
-
 done
 
 
@@ -261,7 +252,6 @@ export pgm=hiresw_wps_ungrib_gen.sh
 mpirun.lsf
 export err=$?; $DATA/err_chk
 
-### but all jobs will output these files.  Potentially problematic
 cd run_ungrib/
 
 files=`ls FILE*`

@@ -40,8 +40,6 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-NDATE=${NDATE:-${utilexec}/ndate}
-
 int1=`$NDATE +12 $start`
 yyint1=`echo $int1 | cut -c1-4`
 mmint1=`echo $int1 | cut -c5-6`

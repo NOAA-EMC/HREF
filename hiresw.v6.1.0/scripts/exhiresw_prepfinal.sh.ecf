@@ -40,8 +40,6 @@ dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
 
-NDATE=${NDATE:-${utilexec}/ndate}
-
 filt_start=`$NDATE -1 $start`
 
 filt_ys=`echo $filt_start | cut -c1-4`

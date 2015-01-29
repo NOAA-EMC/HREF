@@ -21,7 +21,6 @@
 set -x
 
 
-export NDATE=${NDATE:-${utilexec}/ndate}
 mkdir -p $DATA/bufrpost
 cd $DATA/bufrpost
 
