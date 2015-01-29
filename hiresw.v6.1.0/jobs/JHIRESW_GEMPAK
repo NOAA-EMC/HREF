@@ -32,7 +32,7 @@ fi
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/${job}.${pid}}
+export DATA=${DATA:-${DATAROOT}/${job}.${pid}}
 mkdir $DATA
 cd $DATA 
 
@@ -93,15 +93,16 @@ cp $GEMPAKhiresw/fix/*.tbl .
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilities=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
+
+###used? export utilities=/nwprod/util/ush
 
 # Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+sh $USHutil/setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
@@ -118,7 +119,7 @@ env
 $HOMEhiresw/scripts/exnawips_hiresw.sh.ecf
 #################################################################
 
-cd /tmpnwprd2
+cd ${DATAROOT}
 rm -rf $DATA
 
 date

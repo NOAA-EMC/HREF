@@ -31,7 +31,7 @@ fi
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export DATA=${DATA:-${DATAROOT}/hiresw.prepfinal_${NEST}_${MODEL}_${cyc}_${envir}}
 
 mkdir -p $DATA
 cd $DATA 
@@ -66,13 +66,17 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
+
+export NDATE=${NDATE:-${EXECutil}/ndate}
+
 # Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+sh $USHutil/setpdy.sh
 . PDY
 
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
@@ -84,6 +88,6 @@ mkdir -p -m 775 $COMOUT
 ${HOMEhiresw}/scripts/exhiresw_prepfinal.sh.ecf
 ########################################################
 
-cd /tmpnwprd2
+cd $DATAROOT
 rm -rf $DATA
 date

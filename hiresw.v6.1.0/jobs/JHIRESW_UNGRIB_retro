@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/sh 
 
 ########################################
-# Runs HIRESW WRFBUFR and SNDP programs
+# Preliminary data setup step
 ########################################
 set -xa
 export PS4='$SECONDS + ' 
@@ -27,13 +27,18 @@ if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export SENDDBN=NO
 fi
 
-# 
+########################################################### 
 # obtain unique process id (pid) and make temp directories
-#
+###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export DATA=${DATA:-$DATAROOT/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}}
+
+# Remove old forecast data directory if it exists
+if [ -d $DATA ]; then
+   rm -rf $DATA
+fi
 mkdir -p $DATA
-cd $DATA
+cd $DATA 
 
 ####################################
 # File To Log Msgs
@@ -49,8 +54,12 @@ export pgmout="OUTPUT.${pid}"
 
 export cycle=${cycle:-t${cyc}z}
 
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
+export SENDDBN=${SENDDBN:-NO}
 export SENDECF=${SENDECF:-YES}
 
 export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
@@ -62,34 +71,29 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
 
-  if [ -d $DATA ]; then
-    rm -rf $DATA
-  fi
+export NDATE=${NDATE:-$EXECutil/ndate}
 
-  mkdir -p $DATA
+# Run setup to initialize working directory and utility scripts
+sh $USHutil/setup.sh
 
-  cd $DATA
+# Run setpdy and initialize PDY variables
+# sh $USHutil/setpdy.sh
+# . PDY
 
-  # Run setup to initialize working directory and utility scripts
-  sh $utilscript/setup.sh
+export PDY=${DATE}
 
-  # Run setpdy and initialize PDY variables
-  sh $utilscript/setpdy.sh
-  . PDY
+export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMGFS=${COMGFS:-/com/gfs/prod/gfs.${PDY}}
 
-export COMROOT=${COMROOT:-/com}
-export COMIN=${COMIN:-/com/${NET}/${envir}/ncase.${PDY}}
-export COMOUT=${COMOUT:-/com/${NET}/${envir}/ncase.${PDY}}
-
-mkdir -p $COMOUT
-
+mkdir -p -m 775 $COMOUT
+ 
 ########################################################
 # Execute the script.
-$HOMEhiresw/scripts/exhiresw_nsse_all.sh
+${HOMEhiresw}/scripts/exhiresw_ungrib.sh.ecf_retro
 ########################################################
 
-cd /tmpnwprd2
-date
+cd $DATAROOT
+rm -rf $DATA

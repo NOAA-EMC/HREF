@@ -31,7 +31,7 @@ fi
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/hiresw_${NEST}_${MODEL}_${MEMBER}_${cyc}_${envir}}
+export DATA=${DATA:-$DATAROOT/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}}
 
 # if [ -d $DATA ]; then
 #   rm -rf $DATA
@@ -81,14 +81,16 @@ export FIXprod=${FIXprod:-${HOMEprod}/fix}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
+export USHutil=${USHutil:-/nwprod/util/ush}
+export EXECutil=${EXECutil:-/nwprod/util/exec}
+
+export NDATE=${NDATE:-$EXECutil/ndate}
 
 # Run setup to initialize working directory and utility scripts
-sh $utilscript/setup.sh
+sh $USHutil/setup.sh
 
 # Run setpdy and initialize PDY variables
-sh $utilscript/setpdy.sh
+sh $USHutil/setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
@@ -103,16 +105,13 @@ fi
  
 env
 
-### bsub post scripts
-
-# cyc=`echo $CYCLE | cut -c9-10`
+### bsub post scripts  - clean these out before commit
 
 bsub < ${HOMEhiresw}/launch/sub_post.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
-
 
 ### end bsub post scripts
 
@@ -125,7 +124,7 @@ ${HOMEhiresw}/scripts/exhiresw_fcst.sh.ecf
 
 cat $pgmout
 
-msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY."
+msg="JOB $job FOR NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
 date
