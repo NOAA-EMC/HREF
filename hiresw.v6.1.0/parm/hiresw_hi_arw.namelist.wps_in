@@ -26,7 +26,6 @@
  truelat1  =  20.0,
  truelat2  =  20,
  stand_lon = -157.0
- geog_data_path = '/meso/noscrub/wx20py/geog'
 /
  ref_x     = ,
  ref_y     = ,

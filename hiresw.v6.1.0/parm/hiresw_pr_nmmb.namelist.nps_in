@@ -26,9 +26,7 @@
  truelat1  =  18.0
  truelat2  =  18.0
  stand_lon =  -69.0
- geog_data_path = '/meso/noscrub/Matthew.Pyle/geog'
  ncep_processing = .true. 
- ncep_proc_path = '/stmp/wx20py/nmmb_init/ncep'
  ncep_proc_prefix = 'b'
  ncep_proc_domain_type = 'bgrid'
  do_gwd = .false.
