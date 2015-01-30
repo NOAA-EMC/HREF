@@ -1,0 +1,2 @@
+proc_SST_FRACI_ostia_quart.d : proc_SST_FRACI_ostia_quart.F90
+proc_SST_FRACI_ostia_quart.o : proc_SST_FRACI_ostia_quart.F90

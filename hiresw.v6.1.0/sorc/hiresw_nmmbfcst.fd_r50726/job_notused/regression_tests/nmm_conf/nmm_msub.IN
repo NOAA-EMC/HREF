@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Moab options used on Gaea
+
+#MSUB -S /bin/sh
+#MSUB -o out
+#MSUB -e err
+#MSUB -N _JBNME_
+#MSUB -l partition=c1ms
+#MSUB -l size=_TASKS_
+#MSUB -l walltime=00:_WLCLK_:00
+
+set -aeux
+
+echo "Model started:  " `date`
+
+aprun -n _TASKS_ ./NEMS.x
+
+echo "Model ended:    " `date`
+
+exit
