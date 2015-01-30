@@ -1,0 +1,42 @@
+###############################################################################
+#
+#  NMM-B moving nests: Use generational task assignments and 2-way exchange.
+#  Compute tasks - Upper parent 5x18 | Child #1 5x9 | Child #2 5x9 | Grandchild 10x9
+#  1 thread / opnl physics / free fcst / nemsio and pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional with 2-way moving nests"
+
+export CNTL_DIR=NMMB_2way_nests
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0024h_00m_00.00s \
+		   nmmb_hst_01_nio_0000h_00m_00.00s nmmb_hst_01_nio_0024h_00m_00.00s \
+		   nmmb_rst_01_bin_0012h_00m_00.00s nmmb_rst_01_nio_0012h_00m_00.00s \
+		   nmmb_hst_02_bin_0000h_00m_00.00s nmmb_hst_02_bin_0024h_00m_00.00s \
+		   nmmb_hst_02_nio_0000h_00m_00.00s nmmb_hst_02_nio_0024h_00m_00.00s \
+		   nmmb_rst_02_bin_0012h_00m_00.00s nmmb_rst_02_nio_0012h_00m_00.00s \
+		   nmmb_hst_03_bin_0000h_00m_00.00s nmmb_hst_03_bin_0024h_00m_00.00s \
+		   nmmb_hst_03_nio_0000h_00m_00.00s nmmb_hst_03_nio_0024h_00m_00.00s \
+		   nmmb_rst_03_bin_0012h_00m_00.00s nmmb_rst_03_nio_0012h_00m_00.00s \
+		   nmmb_hst_04_bin_0000h_00m_00.00s nmmb_hst_04_bin_0024h_00m_00.00s \
+		   nmmb_hst_04_nio_0000h_00m_00.00s nmmb_hst_04_nio_0024h_00m_00.00s \
+		   nmmb_rst_04_bin_0012h_00m_00.00s nmmb_rst_04_nio_0012h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=mnests_2way
+export FCSTL=24
+export NCHILD=02
+export NEMSI=true
+export WLCLK=15
+export NODE=3
+export AFFN=cpu
+export MODE=2-way
+export TASKS=$TASKS_mvg2
+export TPN=$TPN_mvg2
+export INPES=$INPES_mvg2
+export JNPES=$JNPES_mvg2
+export WTPG=$WTPG_mvg2
+export WGT=1.0
+
+RUN_SCRIPT=rt_nmm.sh

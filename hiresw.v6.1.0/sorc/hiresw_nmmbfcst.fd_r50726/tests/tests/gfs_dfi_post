@@ -1,0 +1,29 @@
+###############################################################################
+#
+#  GFS_GOCART_POST
+#  64 compute tasks / 1 thread
+#
+###############################################################################
+
+export TEST_DESCR="GFS with POST"
+
+export CNTL_DIR=GFS_DFI_POST
+export LIST_FILES="sigf00 sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf00 sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf00 flxf03 flxf06 flxf12 flxf24 flxf48"
+
+export_gsm
+export LDFI_SPECT=.false.
+export FDFI=3
+export QUILT=.true.
+export WRITE_DOPOST=.true.
+export NEMSIOIN=.true.
+export SIGIOIN=.false.
+export NEMSIOOUT=.true.
+export SIGIOOUT=.false.
+export SFCIOOUT=.false.
+export CDATE=2010010100
+#export SIGHDR=$NEMSIOGET
+export WTPG=4
+
+RUN_SCRIPT=rt_gfs.sh
