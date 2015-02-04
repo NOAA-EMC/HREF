@@ -182,7 +182,9 @@ echo "inside f00 test"
 
   if test $SENDCOM = 'YES'
   then
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2_${subpiece}
+#      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2_${subpiece}
+      cp ${filenamthree}${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2_${subpiece}
+
 #       $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2.idx
 ####
 # 3/2014 - Remove alerts for east/west domain; replaced by single conus domain. processing kept for awips only.
@@ -250,18 +252,21 @@ done
   fi
 
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+#  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
 
   else
 
 ## model = "nmm"
-   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  >                                  $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+#   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  >                                  $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  >                                  hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
 
   fi
 
   else
 
-  cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+#  cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awpreg${region}f${fhr}
+  cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
 
 
 ###### DONE PRECIP BUCKET
@@ -269,8 +274,9 @@ done
 
   if test $SENDCOM = 'YES'
   then
-    cp $DOMOUT.t${CYC}z.awpreg${region}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2_${subpiece}
-#    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2.idx
+#    cp $DOMOUT.t${CYC}z.awpreg${region}f${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpreg${region}f${fhr}.grib2_${subpiece}
+    cp hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2 $COMOUT/hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2_${subpiece}
+
 ####
 # 3/2014 - Remove alerts for east/west domain; replaced by single conus domain. processing kept for awips only.
 ####

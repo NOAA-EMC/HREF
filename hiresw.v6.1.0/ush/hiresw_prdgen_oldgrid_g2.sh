@@ -253,13 +253,16 @@ echo "inside f00 test"
 
   if test $SENDCOM = 'YES'
   then
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
-#      $CNVGRIB -g12 -p40 ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2
-#      $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2.idx
-      if [ $SENDDBN_GB2 = YES ]; then
-         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
-         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
-      fi
+#      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
+      cp ${filenamthree}${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+
+
+# save DBN alerting for script where pieces are put back together
+#      if [ $SENDDBN_GB2 = YES ]; then
+#         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
+#         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
+#      fi
+
   fi
 
 else
@@ -319,18 +322,20 @@ mv errfile errfile_${fhr}_3hrly
 
   fi
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > $DOMOUT.t${CYC}z.awpregf${fhr}
+  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
 
   else
 
 ## model = "nmm"
-   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpregf${fhr}
+#   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpregf${fhr}
+   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
 
   fi
 
   else
 
-  cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awpregf${fhr}
+#  cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awpregf${fhr}
+cp ${filenamthree}${fhr}.tm00  hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
 
 fi # subpiece1
 
@@ -338,12 +343,14 @@ fi # subpiece1
 
   if test $SENDCOM = 'YES'
   then
-    cp $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
-#    $CNVGRIB -g12 -p40 $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2
-#    $WGRIB2 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2 -s > $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2.idx
-    if [ $SENDDBN_GB2 = YES ]; then
-       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
-       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
-    fi
+#     cp $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
+    cp  hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2 \
+              $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+
+#    if [ $SENDDBN_GB2 = YES ]; then
+#       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
+#       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
+#    fi
+
   fi
 fi
