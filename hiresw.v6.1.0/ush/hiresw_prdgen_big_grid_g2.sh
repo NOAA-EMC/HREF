@@ -63,7 +63,7 @@ then
   filenamthree="wrf.CONUS04"
   DOMIN_bucket="general_g2"
   rg="conus"
-  gres="2p5"
+  gres="2p5km"
   IM=2145
   JM=1377
   reg="30 6 0 0 0 0 0 0 2145 1377 20192000 238446000 136 25000000 265000000 2540000 2540000 0 64 25000000 25000000"
@@ -84,7 +84,7 @@ then
   filenamthree="wrf.GU04"
   DOMIN_bucket="general_g2"
   rg="guam"
-  gres="2p5"
+  gres="2p5km"
   IM=193
   JM=193
   reg="10 6 0 0 0 0 0 0 193 193 12350000 143687000 136 20000000 16794000 148280000 64 0 2500000 2500000"
@@ -94,7 +94,7 @@ then
   filenamthree="wrf.HI04"
   DOMIN_bucket="general_g2"
   rg="hi"
-  gres="2p5"
+  gres="2p5km"
   IM=321
   JM=225
   reg="10 6 0 0 0 0 0 0 321 225 18073000 198475000 136 20000000 23088000 206131000 64 0 2500000 2500000"
@@ -104,7 +104,7 @@ then
   filenamthree="wrf.PR04"
   DOMIN_bucket="general_g2"
   rg="pr"
-  gres="2p5"
+  gres="2p5km"
   IM=177
   JM=129
   reg="10 6 0 0 0 0 0 0 177 129 16829000 291804000 136 20000000 19747000 296028000 64 0 2500000 2500000"
@@ -127,7 +127,7 @@ then
   filenamthree="wrf.EMCONUS04"
   DOMIN_bucket="general_g2"
   rg="conus"
-  gres="2p5"
+  gres="2p5km"
   IM=2145
   JM=1377
 #  reg="30 6 0 0 0 0 0 0 2145 1377 20192000 -121554000 136 25000000 -95000000 2540000 2540000 0 64 25000000 25000000"
@@ -138,7 +138,7 @@ then
   filenamthree="wrf.EMGU04"
   DOMIN_bucket="general_g2"
   rg="guam"
-  gres="2p5"
+  gres="2p5km"
   IM=193
   JM=193
   reg="10 6 0 0 0 0 0 0 193 193 12350000 143687000 136 20000000 16794000 148280000 64 0 2500000 2500000"
@@ -148,7 +148,7 @@ then
   filenamthree="wrf.EMHI04"
   DOMIN_bucket="general_g2"
   rg="hi"
-  gres="2p5"
+  gres="2p5km"
   IM=321
   JM=225
 #  reg="10 6 0 0 0 0 0 0 321 225 18073000 -161525000 136 20000000 23088000 -153869000 64 0 2500000 2500000"
@@ -159,7 +159,7 @@ then
   filenamthree="wrf.EMPR04"
   DOMIN_bucket="general_g2"
   rg="pr"
-  gres="2p5"
+  gres="2p5km"
   IM=177
   JM=129
 #  reg="10 6 0 0 0 0 0 0 177 129 16829000 -68196000 136 20000000 19747000 -63972000 64 0 2500000 2500000"
@@ -186,37 +186,34 @@ use_3h=0
 if [ $fhr -eq 0 ]
 then
 
-cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
 
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_ndfd.txt_3h hiresw_grid_extract.txt
 fi
 use_3h=1
 
 elif [ $fhr%3 -eq 0 ]
 then
 
-cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_3h master${fhr}.ctl
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_3h hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_ndfd.txt_3h hiresw_grid_extract.txt
 
 fi
 use_3h=1
 
 else
 
-cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_for_1h master${fhr}.ctl
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h_conus_${subpiece} hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_ndfd.txt_1h_conus_${subpiece} hiresw_grid_extract.txt
 else
-cp $PARMhiresw/hiresw_${model}_ndfd.txt_1h hiresw_grid_extract.txt
+cp $PARMhiresw/hiresw_ndfd.txt_1h hiresw_grid_extract.txt
 fi
 use_1h=1
 
@@ -234,25 +231,6 @@ do
 sleep 6
 done
 
-
-if [ $DOMIN_SMALL = "conus" ]
-then
-export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g184"
-elif [ $DOMIN_SMALL = "ak" ]
-then
-export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g91"
-elif [ $DOMIN_SMALL = "pr" ]
-then
-export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g195"
-elif [ $DOMIN_SMALL = "hi" ]
-then
-export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g196"
-elif [ $DOMIN_SMALL = "guam" ]
-then
-export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g199"
-else
-export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255"
-fi
 
 ### extract just needed items
 
@@ -339,9 +317,10 @@ then
 
 if [ $DOMIN_SMALL = "conus" ] 
 then
-       cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}_${subpiece}
+#       cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}_${subpiece}
+       cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 else
-       cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+       cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 fi
 
 
@@ -444,13 +423,14 @@ fi
 #   export err=$?;./err_chk
 
 
-#     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
-     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+#     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 #      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      else # not $fhr%3=0
 
-     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+#     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 #      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      fi
@@ -460,7 +440,7 @@ fi
 
 ## model = "nmm"
 
-     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 #      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
 
@@ -468,7 +448,7 @@ fi
 
 else
 
-mv ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+mv ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 
 fi # subpiece=1 or non-conus
 
@@ -481,7 +461,7 @@ echo DOWN HERE
 ## temp copy to COMOUT
 	if [ $subpiece -gt 0 ]
         then
-       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}_${subpiece}
+       cp hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 ${COMOUT}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
         else
        cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
         fi

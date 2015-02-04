@@ -1,4 +1,5 @@
-!/bin/ksh
+#!/bin/ksh
+
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
@@ -177,7 +178,8 @@ echo "inside f00 test"
 
   if test $SENDCOM = 'YES'
   then
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
+#      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
+      cp ${filenamthree}${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2_${subpiece}
   fi
 else
 
@@ -210,7 +212,12 @@ done
 
   if [ $model = "arw" ] ; then
 
-  if [ $fhr%3 -eq 0 ]
+# let fhr=fhr + 0
+# typeset -Z2 fhr
+	
+	echo what is fhr here $fhr
+
+  if [ ${fhr}%3 -eq 0 ]
   then
 
 echo "3 hourly, do 3H precip bucket"
@@ -236,15 +243,21 @@ done
  export err=$?;./err_chk
 
   fi
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+#  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+	echo DOING THIS LINE
+      cat  ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 > \
+                                       hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+	echo DID THIS LINE
 
   else
-   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+#   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
   fi
 
 else
 
-mv ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awp5kmf${fhr}
+# mv ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awp5kmf${fhr}
+mv ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
 
 fi # subpiece=1
 
@@ -252,7 +265,8 @@ fi # subpiece=1
 
   if test $SENDCOM = 'YES'
   then
-     cp $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
+#     cp $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
+     cp hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2 $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2_${subpiece}
   fi
 
 fi # if f00 test
