@@ -1,0 +1,16 @@
+##################################################################
+# This parameter file set up the environment variables used in
+# the J-Job scripts to run the href
+##################################################################
+export COMHIRESW=/com/hiresw/prod/hiresw
+export COMNAMNEST=/com/nam/prod/nam
+
+export HOMEhref=/meso/save/$LOGNAME/href.v1.0.0
+export EXEChref=$HOMEhref/exec
+export PARMhref=$HOMEhref/parm
+export USHhref=$HOMEhref/ush
+export FIXhref=$HOMEhref/fix
+export SCRIPTShref=$HOMEhref/scripts
+
+export COMOUT=${COMOUT:-/ptmpd1/$LOGNAME/com/${NET}/${RUN_ENVIR}/${RUN}.${PDY}/ensprod}
+
