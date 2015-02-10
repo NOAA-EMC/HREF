@@ -173,6 +173,8 @@ export pgm=hiresw_${MODEL}_real
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
+export FORT_BUFFERED=true
+
 
 mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
