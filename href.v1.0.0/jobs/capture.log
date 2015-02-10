@@ -1,0 +1,2447 @@
++ export RUN_ENVIR=dev
++ RUN_ENVIR=dev
++ export SENDSMS=YES
++ SENDSMS=YES
++ export cyc=00
++ cyc=00
++ export NET=hiresw
++ NET=hiresw
++ export RUN=href
++ RUN=href
++ '[' dev = prod ']'
++ '[' dev = dev ']'
++ . ../parm/href_config.dev
+++ export COMHIRESW=/com/hiresw/prod/hiresw
+++ COMHIRESW=/com/hiresw/prod/hiresw
+++ export COMNAMNEST=/com/nam/prod/nam
+++ COMNAMNEST=/com/nam/prod/nam
+++ export HOMEhref=/meso/save/Matthew.Pyle/href.v1.0.0
+++ HOMEhref=/meso/save/Matthew.Pyle/href.v1.0.0
+++ export EXEChref=/meso/save/Matthew.Pyle/href.v1.0.0/exec
+++ EXEChref=/meso/save/Matthew.Pyle/href.v1.0.0/exec
+++ export PARMhref=/meso/save/Matthew.Pyle/href.v1.0.0/parm
+++ PARMhref=/meso/save/Matthew.Pyle/href.v1.0.0/parm
+++ export USHhref=/meso/save/Matthew.Pyle/href.v1.0.0/ush
+++ USHhref=/meso/save/Matthew.Pyle/href.v1.0.0/ush
+++ export FIXhref=/meso/save/Matthew.Pyle/href.v1.0.0/fix
+++ FIXhref=/meso/save/Matthew.Pyle/href.v1.0.0/fix
+++ export SCRIPTShref=/meso/save/Matthew.Pyle/href.v1.0.0/scripts
+++ SCRIPTShref=/meso/save/Matthew.Pyle/href.v1.0.0/scripts
+++ export COMOUT=/ptmpd1/Matthew.Pyle/com/hiresw/dev/href./ensprod
+++ COMOUT=/ptmpd1/Matthew.Pyle/com/hiresw/dev/href./ensprod
++ export DATA=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev
++ DATA=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev
++ export pid=6419
++ pid=6419
++ export DATA=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
++ DATA=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
++ mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
++ cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
++ '[' dev = dev ']'
++ export jlogfile=
++ jlogfile=
++ '[' YES = YES ']'
++ /smsinit
+./JHREF_RUNALL.ecf: line 65: /smsinit: No such file or directory
++ export 'PS4=$SECONDS + '
++ PS4='$SECONDS + '
+0 + date
+Tue Feb 10 15:40:18 UTC 2015
+0 + export cycle=t00z
+0 + cycle=t00z
+0 + export MP_HOLDTIME=1000
+0 + MP_HOLDTIME=1000
+0 + export MP_LABELIO=YES
+0 + MP_LABELIO=YES
+0 + export outid=LL
+0 + outid=LL
+0 + export jobid=LL.o6419
+0 + jobid=LL.o6419
+0 + export pgmout=OUTPUT.6419
+0 + pgmout=OUTPUT.6419
+0 + export SENDSMS=YES
+0 + SENDSMS=YES
+0 + export SENDCOM=YES
+0 + SENDCOM=YES
+0 + export SENDDBN=NO
+0 + SENDDBN=NO
+0 + export utilscript=/nwprod/util/ush
+0 + utilscript=/nwprod/util/ush
+0 + export utilexec=/nwprod/util/exec
+0 + utilexec=/nwprod/util/exec
+0 + sh /nwprod/util/ush/setup.sh
+0 + msg='JOB  HAS BEGUN'
+0 + postmsg '' 'JOB  HAS BEGUN'
+./postmsg: line 27: /com/logs/jlogfile: Permission denied
+0 + sh /nwprod/util/ush/setpdy.sh
+------------------------------------------------
+setup.sh - Utility to set PDY variables
+           This utility will output a file PDY in
+           the current working directory which can be
+           sourced in the parent script to set
+           PDY PDYm1-9
+------------------------------------------------
+History: Jul 27, 1998 - Implement new script.
+------------------------------------------------
+pdate=P20150210
+DATElne_minus=20150209 20150208 20150207 20150206 20150205 20150204 20150203 20150202 20150201 20150131
+DATElne_plus=20150211 20150212 20150213 20150214 20150215 20150216 20150217 20150218 20150219 20150220
+1 + . PDY
+11 + export PDYm7=20150203
+11 + PDYm7=20150203
+11 + export PDYm6=20150204
+11 + PDYm6=20150204
+11 + export PDYm5=20150205
+11 + PDYm5=20150205
+11 + export PDYm4=20150206
+11 + PDYm4=20150206
+11 + export PDYm3=20150207
+11 + PDYm3=20150207
+11 + export PDYm2=20150208
+11 + PDYm2=20150208
+11 + export PDYm1=20150209
+11 + PDYm1=20150209
+11 + export PDY=20150210
+11 + PDY=20150210
+11 + export PDYp1=20150211
+11 + PDYp1=20150211
+11 + export PDYp2=20150212
+11 + PDYp2=20150212
+11 + export PDYp3=20150213
+11 + PDYp3=20150213
+11 + export PDYp4=20150214
+11 + PDYp4=20150214
+11 + export PDYp5=20150215
+11 + PDYp5=20150215
+11 + export PDYp6=20150216
+11 + PDYp6=20150216
+11 + export PDYp7=20150217
+11 + PDYp7=20150217
+1 + export run_dir=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+1 + run_dir=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+1 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+1 + echo PDY=20150210
+PDY=20150210
+1 + '[' dev = prod ']'
+1 + '[' dev = dev ']'
+1 + export COMOUT=/ptmpp1/Matthew.Pyle/com/hiresw/dev/href.20150210/ensprod
+1 + COMOUT=/ptmpp1/Matthew.Pyle/com/hiresw/dev/href.20150210/ensprod
+1 + '[' '!' -d /ptmpp1/Matthew.Pyle/com/hiresw/dev/href.20150210/ensprod ']'
+1 + export VERBOSE=YES
+1 + VERBOSE=YES
+1 + env
+PDYm6=20150204
+MKLROOT=/usrx/local/intel/composerxe/mkl
+MODULE_VERSION_STACK=3.2.10
+PDYm7=20150203
+OS_ROOT=/nwprod/gempak/nawips/os/linux2.6.32_x86_64
+LDFLAGS=-L/usr/lib64 -L/nwprod/gempak/nawips/os/linux2.6.32_x86_64/lib -s
+AR=ar
+MANPATH=/usrx/local/NetCDF/4.2/serial/share/man:/usrx/local/HDF5/1.8.9/serial/share/man:/usrx/local/lsf/9.1/man:/opt/ibmhpc/pe1308/ppe.man:/usrx/local/intel/itac/8.0.3.007/man:/usrx/local/intel/composer_xe_2011_sp1.11.339/man/en_US:/usrx/local/intel/impi/4.0.3.008/man:/usr/share/man:/usrx/local/intel/inspector_xe_2011/man:/usrx/local/intel/vtune_amplifier_xe_2011/man
+PDYm4=20150206
+LPFLAG=-P
+PDYm5=20150205
+cyc=00
+NETCDF_INCLUDE=-I/usrx/local/NetCDF/4.2/serial/include
+HOSTNAME=t14a1
+PDYm2=20150208
+PDY=20150210
+PDYm3=20150207
+IPPROOT=/usrx/local/intel/composerxe/ipp
+INTEL_LICENSE_FILE=/usrx/local/intel/licenses
+HDF5_INCLUDE=-I/usrx/local/HDF5/1.8.9/serial/include
+HDF5_CXXFLAGS=-I/usrx/local/HDF5/1.8.9/serial/include
+TERM=xterm
+SHELL=/bin/bash
+PDYm1=20150209
+HISTSIZE=1000
+PDYp5=20150215
+SSH_CLIENT=10.90.192.58 49374 22
+PDYp4=20150214
+NET=hiresw
+NETCDF_CFLAGS=-I/usrx/local/NetCDF/4.2/serial/include
+LIBRARY_PATH=/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/lib:/usrx/local/intel/composer_xe_2011_sp1.11.339/compiler/lib/intel64:/usrx/local/intel/composerxe/mkl/lib/intel64:/usrx/local/intel/composerxe/ipp/lib/intel64:/usrx/local/intel/composerxe/tbb/lib/intel64/cc4.1.0_libc2.4_kernel2.6.16.21
+INSTALL_DIR=/usrx/local/intel/composer_xe_2011_sp1.11.339
+PDYp7=20150217
+MP_HOLDTIME=1000
+FIXhref=/meso/save/Matthew.Pyle/href.v1.0.0/fix
+PDYp6=20150216
+msg=JOB  HAS BEGUN
+FPATH=/usrx/local/intel/composerxe/mkl/include
+PDYp1=20150211
+OLDPWD=/meso/save/Matthew.Pyle/href.v1.0.0/jobs
+NETCDF_LDFLAGS_CXX=-L/usrx/local/NetCDF/4.2/serial/lib -lnetcdf -lnetcdf_c++4 -lnetcdf_c++ -L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_cpp
+NA_OS=linux2.6.32_x86_64
+BUFRFLAGS=-DNO_MSG_IPC -ansi -O
+LSF_SERVERDIR=/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/etc
+QTDIR=/usr/lib64/qt-3.3
+SENDSMS=YES
+GEMTBL=/meso/save/Matthew.Pyle/gem_tables_5.11_hiresw
+QTINC=/usr/lib64/qt-3.3/include
+PDYp3=20150213
+OS=Linux
+SSH_TTY=/dev/pts/15
+PDYp2=20150212
+LSF_LIBDIR=/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/lib
+SVN_EDITOR=vi
+USER=Matthew.Pyle
+OS_LIB=/nwprod/gempak/nawips/os/linux2.6.32_x86_64/lib
+MEL_BUFR_TABLES=/nwprod/gempak/nawips/gempak/tables/melbufr
+LD_LIBRARY_PATH=/usrx/local/NetCDF/4.2/serial/lib:/usrx/local/HDF5/1.8.9/serial/lib:/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/lib:/usrx/local/intel/itac/8.0.3.007/itac/slib_impi4:/usrx/local/intel/composer_xe_2011_sp1.11.339/compiler/lib/intel64:/usrx/local/intel/composerxe/mkl/lib/intel64:/usrx/local/intel/impi/4.0.3.008/intel64/lib:/usrx/local/intel/composerxe/ipp/lib/intel64:/usrx/local/intel/composerxe/tbb/lib/intel64/cc4.1.0_libc2.4_kernel2.6.16.21:/usrx/local/intel/composer_xe_2011_sp1.11.339/debugger/lib/intel64:/usrx/local/intel/composer_xe_2011_sp1.11.339/mpirt/lib/intel64:/usr/lib/libX11.so.6:
+USHhref=/meso/save/Matthew.Pyle/href.v1.0.0/ush
+COMHIRESW=/com/hiresw/prod/hiresw
+MKL_TARGET_ARCH=intel64
+EXEChref=/meso/save/Matthew.Pyle/href.v1.0.0/exec
+OS_BIN=/nwprod/gempak/nawips/os/linux2.6.32_x86_64/bin
+HDF5_LDFLAGS_CXX=-L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_cpp
+CPATH=/usrx/local/intel/composerxe/mkl/include:/usrx/local/intel/composerxe/tbb/include
+run_dir=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+utilexec=/nwprod/util/exec
+SCRIPTShref=/meso/save/Matthew.Pyle/href.v1.0.0/scripts
+COMNAMNEST=/com/nam/prod/nam
+GEMPARM=/nwprod/gempak/nawips/gempak/parm
+DATA=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
+NETCDF_CXXFLAGS=-I/usrx/local/NetCDF/4.2/serial/include
+NETCDF_FFLAGS=-I/usrx/local/NetCDF/4.2/serial/include
+RM=rm -f
+NLSPATH=/opt/ibmhpc/pe1308/base/msg/%L/%N:/usr/share/locale/%L/%N:/usrx/local/intel/composerxe/mkl/lib/intel64/locale/%l_%t/%N:/usrx/local/intel/composer_xe_2011_sp1.11.339/compiler/lib/intel64/locale/%l_%t/%N:/usrx/local/intel/composerxe/ipp/lib/intel64/locale/%l_%t/%N:/usrx/local/intel/composer_xe_2011_sp1.11.339/debugger/lib/intel64/locale/%l_%t/%N
+MODULE_VERSION=3.2.10
+MAIL=/var/spool/mail/Matthew.Pyle
+PATH=/usrx/local/NetCDF/4.2/serial/bin:/usrx/local/HDF5/1.8.9/serial/bin:.:/nwprod/gempak/nawips/os/linux2.6.32_x86_64/bin:/usrx/local/hpss:/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/etc:/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/bin:/opt/ibmhpc/pe1308/base/bin:/usrx/local/intel/icsxe/2012.0.032/bin:/usrx/local/intel/vtune_amplifier_xe_2011/bin64:/usrx/local/intel/inspector_xe_2011/bin64:/usrx/local/intel/itac/8.0.3.007/bin:/usrx/local/intel/impi/4.0.3.008/intel64/bin:/usrx/local/intel/composer_xe_2011_sp1.11.339/bin/intel64:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/ibutils/bin:./:/nwprod/util/exec/:/nwprod/ush/:/meso/save/Matthew.Pyle/nmmbprodlike_sochi/util/namsnd/:/usrx/local/intel/composer_xe_2011_sp1.11.339/mpirt/bin/intel64:/nwprod/gempak/nawips/bin:/nwprod/gempak/nawips/scripts/ez:/nwprod/gempak/nawips/scripts/nawips:/nwprod/gempak/nawips/scripts/prnt:/nwprod/gempak/nawips/scripts/decoder:/u/Matthew.Pyle/bin
+HOMEhref=/meso/save/Matthew.Pyle/href.v1.0.0
+HDF5_CFLAGS=-I/usrx/local/HDF5/1.8.9/serial/include
+pid=6419
+LPAODT=mpage -lo1 -zlpr -Z-P
+LD=ld
+TBBROOT=/usrx/local/intel/composerxe/tbb
+PWD=/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
+VERBOSE=YES
+MP_EUILIB=us
+_LMFILES_=/usrx/local/modulefiles/EnvVars/1.0.0:/usrx/local/modulefiles/ics/12.1:/usrx/local/modulefiles/ibmpe/1.3.0.8:/usrx/local/modulefiles/lsf/9.1:/usrx/local/modulefiles/hpss/4.0.1.2:/usrx/local/modulefiles/gempak/ncep:/usrx/local/modulefiles/HDF5/1.8.9/serial:/usrx/local/modulefiles/NetCDF/4.2/serial
+HDF5=/usrx/local/HDF5/1.8.9/serial
+GEMHLP=/nwprod/gempak/nawips/gempak/help
+IDB_HOME=/usrx/local/intel/icsxe/2012.0.032/idb/bin/intel64
+pgmout=OUTPUT.6419
+GEMMAPS=/nwprod/gempak/nawips/gempak/maps
+LANG=en_US
+SENDCOM=YES
+GEMDATA=/nwprod/gempak/nawips/gempak/data
+MODULEPATH=/usrx/local/Modules/versions:/usrx/local/Modules/$MODULE_VERSION/modulefiles:/usrx/local/modulefiles:/nwprod/lib/modulefiles:/nwprod2/modulefiles
+XUSERFILESEARCHPATH=./%N:/u/Matthew.Pyle/%N:/u/Matthew.Pyle/Resource/%N:/nwprod/gempak/nawips/resource/%N
+LPAODTFLAG=-P
+VT_LIB_DIR=/usrx/local/intel/itac/8.0.3.007/itac/lib_impi4
+LOADEDMODULES=EnvVars/1.0.0:ics/12.1:ibmpe/1.3.0.8:lsf/9.1:hpss/4.0.1.2:gempak/ncep:HDF5/1.8.9/serial:NetCDF/4.2/serial
+NMAP_RESTORE=/nwprod/gempak/nawips/gempak/nts/nmap/restore
+INCLUDES=-I/nwprod/gempak/nawips/gempak/include -I/nwprod/gempak/nawips/os/linux2.6.32_x86_64/include
+GEMPAK=/nwprod/gempak/nawips/gempak
+OS_VER=2.6.32_x86_64
+GEMGTXT=/nwprod/gempak/nawips/gempak/txt/gemlib
+MP_CONFIG=1308
+NETCDF_LDFLAGS_F=-L/usrx/local/NetCDF/4.2/serial/lib -lnetcdf -lnetcdff -L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_fortran
+VT_ROOT=/usrx/local/intel/itac/8.0.3.007
+jobid=LL.o6419
+cycle=t00z
+LSF_BINDIR=/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/bin
+HISTCONTROL=ignoredups
+NETCDF_LDFLAGS_C=-L/usrx/local/NetCDF/4.2/serial/lib -lnetcdf -L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5
+COMOUT=/ptmpp1/Matthew.Pyle/com/hiresw/dev/href.20150210/ensprod
+PS4=$SECONDS + 
+SHLVL=3
+HOME=/u/Matthew.Pyle
+NETCDF_LDFLAGS=-L/usrx/local/NetCDF/4.2/serial/lib -lnetcdf -lnetcdff -L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_fortran
+GEMNTS=/meso/save/Matthew.Pyle/gem_tables_5.11_hiresw/nts
+ARFLAGS=rv
+PROD_DIR=/usrx/local/intel/composer_xe_2011_sp1.11.339
+NAWIPS=/nwprod/gempak/nawips
+CFLAGS=-I/nwprod/gempak/nawips/gempak/include -I/nwprod/gempak/nawips/os/linux2.6.32_x86_64/include -DLinux -DUNDERSCORE -I/usr/X11R6/include -DG_64BIT
+MP_CLOCK_SOURCE=OS
+FC=gfortran
+VT_SLIB_DIR=/usrx/local/intel/itac/8.0.3.007/itac/slib_impi4
+NETCDF=/usrx/local/NetCDF/4.2/serial
+outid=LL
+LOGNAME=Matthew.Pyle
+XLIBS=-lXm -lXt -lX11 -lSM -lICE -lXp -lXext -lXmu -lXft -ljpeg -lpng -lz
+LP=lpr
+QTLIB=/usr/lib64/qt-3.3/lib
+CVS_RSH=ssh
+HDF5_FFLAGS=-I/usrx/local/HDF5/1.8.9/serial/include
+GEMPTXT=/nwprod/gempak/nawips/gempak/txt/programs
+GEMPDF=/nwprod/gempak/nawips/gempak/pdf
+XLSF_UIDDIR=/usrx/local/lsf/9.1/linux2.6-glibc2.3-x86_64/lib/uid
+CLASSPATH=/usrx/local/intel/itac/8.0.3.007/itac/lib_impi4
+SSH_CONNECTION=10.90.192.58 49374 192.58.1.3 22
+jlogfile=
+CPRO_PATH=/usrx/local/intel/composer_xe_2011_sp1.11.339
+MODULESHOME=/usrx/local/Modules/3.2.9
+RUN=href
+HDF5_LDFLAGS=-L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_fortran
+XMICONSEARCHPATH=/nwprod/gempak/nawips/icons/%N/%B
+OS_INC=/nwprod/gempak/nawips/os/linux2.6.32_x86_64/include
+MP_MPILIB=mpich2
+OMP_NUM_THREADS=1
+LESSOPEN=|/usr/bin/lesspipe.sh %s
+MP_LABELIO=YES
+HDF5_LDFLAGS_F=-L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5 -lhdf5_fortran
+SENDDBN=NO
+CC=gcc
+DISPLAY=localhost:21.0
+RUN_ENVIR=dev
+LSF_ENVDIR=/usrx/local/lsf/conf
+INCLUDE=/usrx/local/intel/composerxe/mkl/include:/usrx/local/intel/composerxe/ipp/include
+utilscript=/nwprod/util/ush
+PARMhref=/meso/save/Matthew.Pyle/href.v1.0.0/parm
+HDF5_LDFLAGS_C=-L/usrx/local/HDF5/1.8.9/serial/lib -lhdf5
+MP_COMPILER=intel
+GEMERR=/nwprod/gempak/nawips/gempak/error
+G_BROKEN_FILENAMES=1
+GEMINC=/nwprod/gempak/nawips/gempak/include
+FFLAGS=-I/nwprod/gempak/nawips/gempak/include -I/nwprod/gempak/nawips/os/linux2.6.32_x86_64/include -fno-range-check -fno-second-underscore -ffixed-line-length-none
+I_MPI_ROOT=/usrx/local/intel/impi/4.0.3.008
+BASH_FUNC_module()=() {  eval `/usrx/local/Modules/$MODULE_VERSION/bin/modulecmd bash $*`
+}
+_=/bin/env
+1 + wait
+1 + /meso/save/Matthew.Pyle/href.v1.0.0/scripts/exhref_runall.sh.sms 00 20150210
+20 + set +x
+######################################
+  RUN_ALL.OUT 
+######################################
+20 + cat /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/runall.out
+0.001 + cyc=00
+0.001 + TODAY=20150210
+0.001 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419
+0.014 + date
+0.016 + echo '/meso/save/Matthew.Pyle/href.v1.0.0/scripts/exhref_runall.sh.sms STRDATE Tue' Feb 10 15:40:19 UTC 2015
+/meso/save/Matthew.Pyle/href.v1.0.0/scripts/exhref_runall.sh.sms STRDATE Tue Feb 10 15:40:19 UTC 2015
+0.016 + msg=' HAS BEGUN'
+0.016 + postmsg '' ' HAS BEGUN'
+postmsg: line 27: /com/logs/jlogfile: Permission denied
+0.021 + rm -f '/ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/filename.*'
+0.022 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 03 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=03
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.006 + YS=2015020912
+0.007 + echo 2015020912
+0.007 + cut -c 1-8
+0.008 + Y=20150209
+0.008 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.008 + [ 00 -ge 0 ]
+0.008 + [ 00 -le 5 ]
+0.008 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.008 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.008 + [ 00 '=' 00 ]
+0.008 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.008 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.008 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.008 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.008 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.008 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.008 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.008 + [ 00 '=' 03 ]
+0.008 + mbr=0
+0.008 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03
+0.010 + mbr=0
+0.010 + expr 0 + 03
+0.011 + fcst=3
+0.011 + echo ff 03
+ff 03
+0.011 + echo fcst 03
+fcst 03
+0.012 + echo href.m01.t00z.f03
+href.m01.t00z.f03
+0.012 + [ namnest '=' namnest ]
+0.012 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf03.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f03
+0.013 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf03.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m01.t00z.f03
+0.014 + [ namnest '=' conusarw ]
+0.014 + [ namnest '=' conusnmmb ]
+0.014 + expr 6 + 03
+0.016 + fcst=9
+0.016 + echo ff 03
+ff 03
+0.016 + echo fcst 09
+fcst 09
+0.016 + echo href.m02.t00z.f03
+href.m02.t00z.f03
+0.016 + [ namnest '=' namnest ]
+0.016 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf09.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f03
+0.017 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf09.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m02.t00z.f03
+0.018 + [ namnest '=' conusarw ]
+0.018 + [ namnest '=' conusnmmb ]
+0.018 + expr 12 + 03
+0.020 + fcst=15
+0.020 + echo ff 03
+ff 03
+0.020 + echo fcst 15
+fcst 15
+0.020 + echo href.m03.t00z.f03
+href.m03.t00z.f03
+0.020 + [ namnest '=' namnest ]
+0.020 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf15.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f03
+0.021 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf15.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m03.t00z.f03
+0.022 + [ namnest '=' conusarw ]
+0.022 + [ namnest '=' conusnmmb ]
+0.022 + expr 18 + 03
+0.024 + fcst=21
+0.024 + echo ff 03
+ff 03
+0.024 + echo fcst 21
+fcst 21
+0.024 + echo href.m04.t00z.f03
+href.m04.t00z.f03
+0.024 + [ namnest '=' namnest ]
+0.024 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f03
+0.025 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m04.t00z.f03
+0.026 + [ namnest '=' conusarw ]
+0.026 + [ namnest '=' conusnmmb ]
+0.026 + expr 24 + 03
+0.028 + fcst=27
+0.028 + echo ff 03
+ff 03
+0.028 + echo fcst 27
+fcst 27
+0.028 + echo href.m05.t00z.f03
+href.m05.t00z.f03
+0.028 + [ namnest '=' namnest ]
+0.028 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f03
+0.029 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m05.t00z.f03
+0.030 + [ namnest '=' conusarw ]
+0.030 + [ namnest '=' conusnmmb ]
+0.030 + expr 0 + 03
+0.032 + fcst=3
+0.032 + echo ff 03
+ff 03
+0.032 + echo fcst 03
+fcst 03
+0.032 + echo href.m06.t00z.f03
+href.m06.t00z.f03
+0.032 + [ conusarw '=' namnest ]
+0.032 + [ conusarw '=' conusarw ]
+0.032 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf03.grib2 ]
+0.294 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf03.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f03
+0.296 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf03.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m06.t00z.f03
+0.297 + expr 0 + 03
+0.298 + fcst=3
+0.299 + echo ff 03
+ff 03
+0.299 + echo fcst 03
+fcst 03
+0.299 + echo href.m07.t00z.f03
+href.m07.t00z.f03
+0.299 + [ conusnmmb '=' namnest ]
+0.299 + [ conusnmmb '=' conusarw ]
+0.299 + [ conusnmmb '=' conusnmmb ]
+0.299 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf03.grib2 ]
+0.334 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf03.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f03
+0.336 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf03.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m07.t00z.f03
+0.337 + expr 12 + 03
+0.339 + fcst=15
+0.339 + echo ff 03
+ff 03
+0.339 + echo fcst 15
+fcst 15
+0.339 + echo href.m08.t00z.f03
+href.m08.t00z.f03
+0.339 + [ conusarw '=' namnest ]
+0.339 + [ conusarw '=' conusarw ]
+0.339 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf15.grib2 ]
+0.412 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f03
+0.414 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m08.t00z.f03
+0.415 + expr 12 + 03
+0.417 + fcst=15
+0.417 + echo ff 03
+ff 03
+0.417 + echo fcst 15
+fcst 15
+0.417 + echo href.m09.t00z.f03
+href.m09.t00z.f03
+0.417 + [ conusnmmb '=' namnest ]
+0.417 + [ conusnmmb '=' conusarw ]
+0.417 + [ conusnmmb '=' conusnmmb ]
+0.417 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf15.grib2 ]
+0.518 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f03
+0.519 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m09.t00z.f03
+0.521 + expr 24 + 03
+0.530 + fcst=27
+0.530 + echo ff 03
+ff 03
+0.530 + echo fcst 27
+fcst 27
+0.530 + echo href.m10.t00z.f03
+href.m10.t00z.f03
+0.530 + [ conusarw '=' namnest ]
+0.530 + [ conusarw '=' conusarw ]
+0.530 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf27.grib2 ]
+0.574 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f03
+0.575 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m10.t00z.f03
+0.577 + expr 24 + 03
+0.578 + fcst=27
+0.578 + echo ff 03
+ff 03
+0.578 + echo fcst 27
+fcst 27
+0.578 + echo href.m11.t00z.f03
+href.m11.t00z.f03
+0.578 + [ conusnmmb '=' namnest ]
+0.578 + [ conusnmmb '=' conusarw ]
+0.578 + [ conusnmmb '=' conusnmmb ]
+0.578 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf27.grib2 ]
+0.688 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f03
+0.690 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/03/href.m11.t00z.f03
+0.692 + exit
+0.728 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 06 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=06
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.003 + echo 2015020912
+0.003 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06
+0.007 + mbr=0
+0.007 + expr 0 + 06
+0.008 + fcst=6
+0.008 + echo ff 06
+ff 06
+0.008 + echo fcst 06
+fcst 06
+0.008 + echo href.m01.t00z.f06
+href.m01.t00z.f06
+0.008 + [ namnest '=' namnest ]
+0.008 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf06.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f06
+0.010 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf06.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m01.t00z.f06
+0.011 + [ namnest '=' conusarw ]
+0.011 + [ namnest '=' conusnmmb ]
+0.011 + expr 6 + 06
+0.013 + fcst=12
+0.013 + echo ff 06
+ff 06
+0.013 + echo fcst 12
+fcst 12
+0.013 + echo href.m02.t00z.f06
+href.m02.t00z.f06
+0.013 + [ namnest '=' namnest ]
+0.013 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf12.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f06
+0.015 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf12.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m02.t00z.f06
+0.027 + [ namnest '=' conusarw ]
+0.027 + [ namnest '=' conusnmmb ]
+0.027 + expr 12 + 06
+0.029 + fcst=18
+0.029 + echo ff 06
+ff 06
+0.029 + echo fcst 18
+fcst 18
+0.029 + echo href.m03.t00z.f06
+href.m03.t00z.f06
+0.029 + [ namnest '=' namnest ]
+0.029 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf18.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f06
+0.071 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf18.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m03.t00z.f06
+0.100 + [ namnest '=' conusarw ]
+0.100 + [ namnest '=' conusnmmb ]
+0.100 + expr 18 + 06
+0.101 + fcst=24
+0.101 + echo ff 06
+ff 06
+0.101 + echo fcst 24
+fcst 24
+0.101 + echo href.m04.t00z.f06
+href.m04.t00z.f06
+0.101 + [ namnest '=' namnest ]
+0.101 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f06
+0.116 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m04.t00z.f06
+0.137 + [ namnest '=' conusarw ]
+0.137 + [ namnest '=' conusnmmb ]
+0.137 + expr 24 + 06
+0.139 + fcst=30
+0.139 + echo ff 06
+ff 06
+0.139 + echo fcst 30
+fcst 30
+0.139 + echo href.m05.t00z.f06
+href.m05.t00z.f06
+0.139 + [ namnest '=' namnest ]
+0.139 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f06
+0.176 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m05.t00z.f06
+0.190 + [ namnest '=' conusarw ]
+0.190 + [ namnest '=' conusnmmb ]
+0.190 + expr 0 + 06
+0.192 + fcst=6
+0.192 + echo ff 06
+ff 06
+0.192 + echo fcst 06
+fcst 06
+0.192 + echo href.m06.t00z.f06
+href.m06.t00z.f06
+0.192 + [ conusarw '=' namnest ]
+0.192 + [ conusarw '=' conusarw ]
+0.192 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf06.grib2 ]
+0.246 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf06.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f06
+0.248 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf06.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m06.t00z.f06
+0.261 + expr 0 + 06
+0.263 + fcst=6
+0.263 + echo ff 06
+ff 06
+0.263 + echo fcst 06
+fcst 06
+0.263 + echo href.m07.t00z.f06
+href.m07.t00z.f06
+0.263 + [ conusnmmb '=' namnest ]
+0.263 + [ conusnmmb '=' conusarw ]
+0.263 + [ conusnmmb '=' conusnmmb ]
+0.263 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf06.grib2 ]
+0.361 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf06.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f06
+0.363 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf06.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m07.t00z.f06
+0.440 + expr 12 + 06
+0.441 + fcst=18
+0.441 + echo ff 06
+ff 06
+0.441 + echo fcst 18
+fcst 18
+0.441 + echo href.m08.t00z.f06
+href.m08.t00z.f06
+0.441 + [ conusarw '=' namnest ]
+0.441 + [ conusarw '=' conusarw ]
+0.441 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf18.grib2 ]
+0.627 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f06
+0.648 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m08.t00z.f06
+0.733 + expr 12 + 06
+0.735 + fcst=18
+0.735 + echo ff 06
+ff 06
+0.735 + echo fcst 18
+fcst 18
+0.735 + echo href.m09.t00z.f06
+href.m09.t00z.f06
+0.735 + [ conusnmmb '=' namnest ]
+0.735 + [ conusnmmb '=' conusarw ]
+0.735 + [ conusnmmb '=' conusnmmb ]
+0.735 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf18.grib2 ]
+0.749 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f06
+0.758 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m09.t00z.f06
+0.771 + expr 24 + 06
+0.772 + fcst=30
+0.772 + echo ff 06
+ff 06
+0.772 + echo fcst 30
+fcst 30
+0.772 + echo href.m10.t00z.f06
+href.m10.t00z.f06
+0.772 + [ conusarw '=' namnest ]
+0.772 + [ conusarw '=' conusarw ]
+0.772 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf30.grib2 ]
+0.920 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f06
+0.933 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m10.t00z.f06
+0.949 + expr 24 + 06
+0.951 + fcst=30
+0.951 + echo ff 06
+ff 06
+0.951 + echo fcst 30
+fcst 30
+0.951 + echo href.m11.t00z.f06
+href.m11.t00z.f06
+0.951 + [ conusnmmb '=' namnest ]
+0.951 + [ conusnmmb '=' conusarw ]
+0.951 + [ conusnmmb '=' conusnmmb ]
+0.951 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf30.grib2 ]
+0.998 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f06
+1.115 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/06/href.m11.t00z.f06
+1.117 + exit
+1.847 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 09 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=09
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.004 + echo 2015020912
+0.004 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09
+0.089 + mbr=0
+0.089 + expr 0 + 09
+0.090 + fcst=9
+0.090 + echo ff 09
+ff 09
+0.090 + echo fcst 09
+fcst 09
+0.090 + echo href.m01.t00z.f09
+href.m01.t00z.f09
+0.090 + [ namnest '=' namnest ]
+0.090 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf09.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f09
+0.126 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf09.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m01.t00z.f09
+0.139 + [ namnest '=' conusarw ]
+0.139 + [ namnest '=' conusnmmb ]
+0.139 + expr 6 + 09
+0.142 + fcst=15
+0.142 + echo ff 09
+ff 09
+0.142 + echo fcst 15
+fcst 15
+0.142 + echo href.m02.t00z.f09
+href.m02.t00z.f09
+0.143 + [ namnest '=' namnest ]
+0.143 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf15.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f09
+0.150 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf15.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m02.t00z.f09
+0.159 + [ namnest '=' conusarw ]
+0.159 + [ namnest '=' conusnmmb ]
+0.159 + expr 12 + 09
+0.161 + fcst=21
+0.161 + echo ff 09
+ff 09
+0.161 + echo fcst 21
+fcst 21
+0.161 + echo href.m03.t00z.f09
+href.m03.t00z.f09
+0.161 + [ namnest '=' namnest ]
+0.161 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f09
+0.226 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m03.t00z.f09
+0.255 + [ namnest '=' conusarw ]
+0.255 + [ namnest '=' conusnmmb ]
+0.255 + expr 18 + 09
+0.256 + fcst=27
+0.256 + echo ff 09
+ff 09
+0.256 + echo fcst 27
+fcst 27
+0.256 + echo href.m04.t00z.f09
+href.m04.t00z.f09
+0.256 + [ namnest '=' namnest ]
+0.256 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f09
+0.277 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m04.t00z.f09
+0.279 + [ namnest '=' conusarw ]
+0.279 + [ namnest '=' conusnmmb ]
+0.279 + expr 24 + 09
+0.280 + fcst=33
+0.280 + echo ff 09
+ff 09
+0.280 + echo fcst 33
+fcst 33
+0.280 + echo href.m05.t00z.f09
+href.m05.t00z.f09
+0.280 + [ namnest '=' namnest ]
+0.280 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f09
+0.306 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m05.t00z.f09
+0.336 + [ namnest '=' conusarw ]
+0.336 + [ namnest '=' conusnmmb ]
+0.336 + expr 0 + 09
+0.338 + fcst=9
+0.338 + echo ff 09
+ff 09
+0.338 + echo fcst 09
+fcst 09
+0.338 + echo href.m06.t00z.f09
+href.m06.t00z.f09
+0.338 + [ conusarw '=' namnest ]
+0.338 + [ conusarw '=' conusarw ]
+0.338 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf09.grib2 ]
+0.446 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf09.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f09
+0.655 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf09.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m06.t00z.f09
+0.656 + expr 0 + 09
+0.658 + fcst=9
+0.658 + echo ff 09
+ff 09
+0.658 + echo fcst 09
+fcst 09
+0.658 + echo href.m07.t00z.f09
+href.m07.t00z.f09
+0.658 + [ conusnmmb '=' namnest ]
+0.658 + [ conusnmmb '=' conusarw ]
+0.658 + [ conusnmmb '=' conusnmmb ]
+0.658 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf09.grib2 ]
+0.707 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf09.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f09
+0.709 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf09.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m07.t00z.f09
+0.711 + expr 12 + 09
+0.713 + fcst=21
+0.713 + echo ff 09
+ff 09
+0.713 + echo fcst 21
+fcst 21
+0.713 + echo href.m08.t00z.f09
+href.m08.t00z.f09
+0.713 + [ conusarw '=' namnest ]
+0.713 + [ conusarw '=' conusarw ]
+0.713 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf21.grib2 ]
+1.058 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f09
+1.098 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m08.t00z.f09
+1.108 + expr 12 + 09
+1.109 + fcst=21
+1.109 + echo ff 09
+ff 09
+1.109 + echo fcst 21
+fcst 21
+1.109 + echo href.m09.t00z.f09
+href.m09.t00z.f09
+1.109 + [ conusnmmb '=' namnest ]
+1.109 + [ conusnmmb '=' conusarw ]
+1.109 + [ conusnmmb '=' conusnmmb ]
+1.109 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf21.grib2 ]
+1.131 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f09
+1.139 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m09.t00z.f09
+1.141 + expr 24 + 09
+1.142 + fcst=33
+1.142 + echo ff 09
+ff 09
+1.142 + echo fcst 33
+fcst 33
+1.142 + echo href.m10.t00z.f09
+href.m10.t00z.f09
+1.142 + [ conusarw '=' namnest ]
+1.142 + [ conusarw '=' conusarw ]
+1.142 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf33.grib2 ]
+1.153 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f09
+1.187 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m10.t00z.f09
+1.224 + expr 24 + 09
+1.225 + fcst=33
+1.225 + echo ff 09
+ff 09
+1.225 + echo fcst 33
+fcst 33
+1.225 + echo href.m11.t00z.f09
+href.m11.t00z.f09
+1.225 + [ conusnmmb '=' namnest ]
+1.225 + [ conusnmmb '=' conusarw ]
+1.225 + [ conusnmmb '=' conusnmmb ]
+1.225 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf33.grib2 ]
+1.247 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f09
+1.248 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/09/href.m11.t00z.f09
+1.385 + exit
+3.234 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 12 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=12
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.004 + echo 2015020912
+0.004 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12
+0.020 + mbr=0
+0.020 + expr 0 + 12
+0.022 + fcst=12
+0.022 + echo ff 12
+ff 12
+0.022 + echo fcst 12
+fcst 12
+0.022 + echo href.m01.t00z.f12
+href.m01.t00z.f12
+0.022 + [ namnest '=' namnest ]
+0.022 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf12.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f12
+0.030 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf12.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m01.t00z.f12
+0.131 + [ namnest '=' conusarw ]
+0.131 + [ namnest '=' conusnmmb ]
+0.131 + expr 6 + 12
+0.132 + fcst=18
+0.132 + echo ff 12
+ff 12
+0.132 + echo fcst 18
+fcst 18
+0.132 + echo href.m02.t00z.f12
+href.m02.t00z.f12
+0.132 + [ namnest '=' namnest ]
+0.132 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf18.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f12
+0.145 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf18.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m02.t00z.f12
+0.157 + [ namnest '=' conusarw ]
+0.157 + [ namnest '=' conusnmmb ]
+0.157 + expr 12 + 12
+0.158 + fcst=24
+0.158 + echo ff 12
+ff 12
+0.158 + echo fcst 24
+fcst 24
+0.158 + echo href.m03.t00z.f12
+href.m03.t00z.f12
+0.158 + [ namnest '=' namnest ]
+0.158 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f12
+0.571 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m03.t00z.f12
+0.588 + [ namnest '=' conusarw ]
+0.588 + [ namnest '=' conusnmmb ]
+0.588 + expr 18 + 12
+0.589 + fcst=30
+0.589 + echo ff 12
+ff 12
+0.589 + echo fcst 30
+fcst 30
+0.589 + echo href.m04.t00z.f12
+href.m04.t00z.f12
+0.589 + [ namnest '=' namnest ]
+0.589 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f12
+0.635 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m04.t00z.f12
+0.646 + [ namnest '=' conusarw ]
+0.646 + [ namnest '=' conusnmmb ]
+0.646 + expr 24 + 12
+0.647 + fcst=36
+0.647 + echo ff 12
+ff 12
+0.647 + echo fcst 36
+fcst 36
+0.647 + echo href.m05.t00z.f12
+href.m05.t00z.f12
+0.647 + [ namnest '=' namnest ]
+0.647 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f12
+0.652 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m05.t00z.f12
+0.661 + [ namnest '=' conusarw ]
+0.661 + [ namnest '=' conusnmmb ]
+0.661 + expr 0 + 12
+0.663 + fcst=12
+0.663 + echo ff 12
+ff 12
+0.663 + echo fcst 12
+fcst 12
+0.663 + echo href.m06.t00z.f12
+href.m06.t00z.f12
+0.663 + [ conusarw '=' namnest ]
+0.663 + [ conusarw '=' conusarw ]
+0.663 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf12.grib2 ]
+0.799 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf12.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f12
+0.800 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf12.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m06.t00z.f12
+0.812 + expr 0 + 12
+0.813 + fcst=12
+0.813 + echo ff 12
+ff 12
+0.813 + echo fcst 12
+fcst 12
+0.813 + echo href.m07.t00z.f12
+href.m07.t00z.f12
+0.813 + [ conusnmmb '=' namnest ]
+0.813 + [ conusnmmb '=' conusarw ]
+0.813 + [ conusnmmb '=' conusnmmb ]
+0.813 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf12.grib2 ]
+0.854 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf12.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f12
+0.886 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf12.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m07.t00z.f12
+0.966 + expr 12 + 12
+0.967 + fcst=24
+0.967 + echo ff 12
+ff 12
+0.967 + echo fcst 24
+fcst 24
+0.967 + echo href.m08.t00z.f12
+href.m08.t00z.f12
+0.967 + [ conusarw '=' namnest ]
+0.967 + [ conusarw '=' conusarw ]
+0.967 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf24.grib2 ]
+1.005 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f12
+1.030 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m08.t00z.f12
+1.032 + expr 12 + 12
+1.033 + fcst=24
+1.033 + echo ff 12
+ff 12
+1.033 + echo fcst 24
+fcst 24
+1.033 + echo href.m09.t00z.f12
+href.m09.t00z.f12
+1.033 + [ conusnmmb '=' namnest ]
+1.033 + [ conusnmmb '=' conusarw ]
+1.033 + [ conusnmmb '=' conusnmmb ]
+1.033 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf24.grib2 ]
+1.044 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f12
+1.069 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m09.t00z.f12
+1.084 + expr 24 + 12
+1.085 + fcst=36
+1.085 + echo ff 12
+ff 12
+1.085 + echo fcst 36
+fcst 36
+1.085 + echo href.m10.t00z.f12
+href.m10.t00z.f12
+1.085 + [ conusarw '=' namnest ]
+1.085 + [ conusarw '=' conusarw ]
+1.085 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf36.grib2 ]
+1.108 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f12
+1.237 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m10.t00z.f12
+1.242 + expr 24 + 12
+1.244 + fcst=36
+1.244 + echo ff 12
+ff 12
+1.244 + echo fcst 36
+fcst 36
+1.244 + echo href.m11.t00z.f12
+href.m11.t00z.f12
+1.244 + [ conusnmmb '=' namnest ]
+1.244 + [ conusnmmb '=' conusarw ]
+1.244 + [ conusnmmb '=' conusnmmb ]
+1.244 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf36.grib2 ]
+1.283 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f12
+1.324 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/12/href.m11.t00z.f12
+1.369 + exit
+4.604 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 15 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=15
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.003 + cut -c 1-8
+0.003 + echo 2015020912
+0.004 + Y=20150209
+0.004 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15
+0.031 + mbr=0
+0.031 + expr 0 + 15
+0.032 + fcst=15
+0.032 + echo ff 15
+ff 15
+0.032 + echo fcst 15
+fcst 15
+0.032 + echo href.m01.t00z.f15
+href.m01.t00z.f15
+0.032 + [ namnest '=' namnest ]
+0.032 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf15.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f15
+0.048 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf15.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m01.t00z.f15
+0.099 + [ namnest '=' conusarw ]
+0.099 + [ namnest '=' conusnmmb ]
+0.099 + expr 6 + 15
+0.100 + fcst=21
+0.100 + echo ff 15
+ff 15
+0.100 + echo fcst 21
+fcst 21
+0.100 + echo href.m02.t00z.f15
+href.m02.t00z.f15
+0.100 + [ namnest '=' namnest ]
+0.100 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f15
+0.102 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m02.t00z.f15
+0.155 + [ namnest '=' conusarw ]
+0.155 + [ namnest '=' conusnmmb ]
+0.155 + expr 12 + 15
+0.157 + fcst=27
+0.157 + echo ff 15
+ff 15
+0.157 + echo fcst 27
+fcst 27
+0.157 + echo href.m03.t00z.f15
+href.m03.t00z.f15
+0.157 + [ namnest '=' namnest ]
+0.157 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f15
+0.158 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m03.t00z.f15
+0.179 + [ namnest '=' conusarw ]
+0.179 + [ namnest '=' conusnmmb ]
+0.179 + expr 18 + 15
+0.180 + fcst=33
+0.180 + echo ff 15
+ff 15
+0.180 + echo fcst 33
+fcst 33
+0.180 + echo href.m04.t00z.f15
+href.m04.t00z.f15
+0.180 + [ namnest '=' namnest ]
+0.180 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f15
+0.240 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m04.t00z.f15
+0.306 + [ namnest '=' conusarw ]
+0.306 + [ namnest '=' conusnmmb ]
+0.306 + expr 24 + 15
+0.308 + fcst=39
+0.308 + echo ff 15
+ff 15
+0.308 + echo fcst 39
+fcst 39
+0.308 + echo href.m05.t00z.f15
+href.m05.t00z.f15
+0.308 + [ namnest '=' namnest ]
+0.308 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f15
+0.364 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m05.t00z.f15
+0.391 + [ namnest '=' conusarw ]
+0.391 + [ namnest '=' conusnmmb ]
+0.392 + expr 0 + 15
+0.393 + fcst=15
+0.393 + echo ff 15
+ff 15
+0.393 + echo fcst 15
+fcst 15
+0.393 + echo href.m06.t00z.f15
+href.m06.t00z.f15
+0.393 + [ conusarw '=' namnest ]
+0.393 + [ conusarw '=' conusarw ]
+0.393 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf15.grib2 ]
+0.393 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f15
+0.406 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m06.t00z.f15
+0.432 + expr 0 + 15
+0.434 + fcst=15
+0.434 + echo ff 15
+ff 15
+0.434 + echo fcst 15
+fcst 15
+0.434 + echo href.m07.t00z.f15
+href.m07.t00z.f15
+0.434 + [ conusnmmb '=' namnest ]
+0.434 + [ conusnmmb '=' conusarw ]
+0.434 + [ conusnmmb '=' conusnmmb ]
+0.434 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf15.grib2 ]
+0.434 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f15
+0.436 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf15.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m07.t00z.f15
+0.449 + expr 12 + 15
+0.451 + fcst=27
+0.451 + echo ff 15
+ff 15
+0.451 + echo fcst 27
+fcst 27
+0.451 + echo href.m08.t00z.f15
+href.m08.t00z.f15
+0.451 + [ conusarw '=' namnest ]
+0.451 + [ conusarw '=' conusarw ]
+0.451 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf27.grib2 ]
+0.471 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f15
+0.489 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m08.t00z.f15
+0.526 + expr 12 + 15
+0.527 + fcst=27
+0.527 + echo ff 15
+ff 15
+0.527 + echo fcst 27
+fcst 27
+0.527 + echo href.m09.t00z.f15
+href.m09.t00z.f15
+0.527 + [ conusnmmb '=' namnest ]
+0.527 + [ conusnmmb '=' conusarw ]
+0.527 + [ conusnmmb '=' conusnmmb ]
+0.527 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf27.grib2 ]
+0.541 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f15
+0.788 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m09.t00z.f15
+0.824 + expr 24 + 15
+0.826 + fcst=39
+0.826 + echo ff 15
+ff 15
+0.826 + echo fcst 39
+fcst 39
+0.826 + echo href.m10.t00z.f15
+href.m10.t00z.f15
+0.826 + [ conusarw '=' namnest ]
+0.826 + [ conusarw '=' conusarw ]
+0.826 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf39.grib2 ]
+0.848 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f15
+0.906 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m10.t00z.f15
+0.907 + expr 24 + 15
+0.909 + fcst=39
+0.909 + echo ff 15
+ff 15
+0.909 + echo fcst 39
+fcst 39
+0.909 + echo href.m11.t00z.f15
+href.m11.t00z.f15
+0.909 + [ conusnmmb '=' namnest ]
+0.909 + [ conusnmmb '=' conusarw ]
+0.909 + [ conusnmmb '=' conusnmmb ]
+0.909 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf39.grib2 ]
+0.942 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f15
+0.944 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/15/href.m11.t00z.f15
+0.957 + exit
+5.564 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 18 00 20150210
+0.001 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=18
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.004 + YS=2015020912
+0.004 + echo 2015020912
+0.004 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18
+0.008 + mbr=0
+0.008 + expr 0 + 18
+0.009 + fcst=18
+0.009 + echo ff 18
+ff 18
+0.009 + echo fcst 18
+fcst 18
+0.009 + echo href.m01.t00z.f18
+href.m01.t00z.f18
+0.009 + [ namnest '=' namnest ]
+0.009 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf18.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f18
+0.015 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf18.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m01.t00z.f18
+0.238 + [ namnest '=' conusarw ]
+0.238 + [ namnest '=' conusnmmb ]
+0.238 + expr 6 + 18
+0.240 + fcst=24
+0.240 + echo ff 18
+ff 18
+0.240 + echo fcst 24
+fcst 24
+0.240 + echo href.m02.t00z.f18
+href.m02.t00z.f18
+0.240 + [ namnest '=' namnest ]
+0.240 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f18
+0.242 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m02.t00z.f18
+0.444 + [ namnest '=' conusarw ]
+0.444 + [ namnest '=' conusnmmb ]
+0.444 + expr 12 + 18
+0.446 + fcst=30
+0.446 + echo ff 18
+ff 18
+0.446 + echo fcst 30
+fcst 30
+0.446 + echo href.m03.t00z.f18
+href.m03.t00z.f18
+0.446 + [ namnest '=' namnest ]
+0.446 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f18
+0.473 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m03.t00z.f18
+0.475 + [ namnest '=' conusarw ]
+0.475 + [ namnest '=' conusnmmb ]
+0.475 + expr 18 + 18
+0.476 + fcst=36
+0.476 + echo ff 18
+ff 18
+0.476 + echo fcst 36
+fcst 36
+0.476 + echo href.m04.t00z.f18
+href.m04.t00z.f18
+0.476 + [ namnest '=' namnest ]
+0.476 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f18
+0.505 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m04.t00z.f18
+0.516 + [ namnest '=' conusarw ]
+0.516 + [ namnest '=' conusnmmb ]
+0.516 + expr 24 + 18
+0.518 + fcst=42
+0.518 + echo ff 18
+ff 18
+0.518 + echo fcst 42
+fcst 42
+0.518 + echo href.m05.t00z.f18
+href.m05.t00z.f18
+0.518 + [ namnest '=' namnest ]
+0.518 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f18
+0.520 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m05.t00z.f18
+0.557 + [ namnest '=' conusarw ]
+0.557 + [ namnest '=' conusnmmb ]
+0.557 + expr 0 + 18
+0.559 + fcst=18
+0.559 + echo ff 18
+ff 18
+0.559 + echo fcst 18
+fcst 18
+0.559 + echo href.m06.t00z.f18
+href.m06.t00z.f18
+0.559 + [ conusarw '=' namnest ]
+0.559 + [ conusarw '=' conusarw ]
+0.559 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf18.grib2 ]
+0.559 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f18
+0.561 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m06.t00z.f18
+0.573 + expr 0 + 18
+0.575 + fcst=18
+0.575 + echo ff 18
+ff 18
+0.575 + echo fcst 18
+fcst 18
+0.575 + echo href.m07.t00z.f18
+href.m07.t00z.f18
+0.575 + [ conusnmmb '=' namnest ]
+0.575 + [ conusnmmb '=' conusarw ]
+0.575 + [ conusnmmb '=' conusnmmb ]
+0.575 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf18.grib2 ]
+0.575 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f18
+0.614 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf18.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m07.t00z.f18
+0.625 + expr 12 + 18
+0.627 + fcst=30
+0.627 + echo ff 18
+ff 18
+0.627 + echo fcst 30
+fcst 30
+0.627 + echo href.m08.t00z.f18
+href.m08.t00z.f18
+0.627 + [ conusarw '=' namnest ]
+0.627 + [ conusarw '=' conusarw ]
+0.627 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf30.grib2 ]
+0.627 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f18
+0.629 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m08.t00z.f18
+0.630 + expr 12 + 18
+0.632 + fcst=30
+0.632 + echo ff 18
+ff 18
+0.632 + echo fcst 30
+fcst 30
+0.632 + echo href.m09.t00z.f18
+href.m09.t00z.f18
+0.632 + [ conusnmmb '=' namnest ]
+0.632 + [ conusnmmb '=' conusarw ]
+0.632 + [ conusnmmb '=' conusnmmb ]
+0.632 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf30.grib2 ]
+0.750 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f18
+0.779 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m09.t00z.f18
+0.793 + expr 24 + 18
+0.794 + fcst=42
+0.794 + echo ff 18
+ff 18
+0.794 + echo fcst 42
+fcst 42
+0.794 + echo href.m10.t00z.f18
+href.m10.t00z.f18
+0.794 + [ conusarw '=' namnest ]
+0.794 + [ conusarw '=' conusarw ]
+0.794 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf42.grib2 ]
+0.947 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f18
+1.025 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m10.t00z.f18
+1.039 + expr 24 + 18
+1.041 + fcst=42
+1.041 + echo ff 18
+ff 18
+1.041 + echo fcst 42
+fcst 42
+1.041 + echo href.m11.t00z.f18
+href.m11.t00z.f18
+1.041 + [ conusnmmb '=' namnest ]
+1.041 + [ conusnmmb '=' conusarw ]
+1.041 + [ conusnmmb '=' conusnmmb ]
+1.041 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf42.grib2 ]
+1.275 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f18
+1.289 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/18/href.m11.t00z.f18
+1.318 + exit
+6.883 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 21 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=21
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.004 + echo 2015020912
+0.004 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21
+0.025 + mbr=0
+0.025 + expr 0 + 21
+0.027 + fcst=21
+0.027 + echo ff 21
+ff 21
+0.027 + echo fcst 21
+fcst 21
+0.027 + echo href.m01.t00z.f21
+href.m01.t00z.f21
+0.027 + [ namnest '=' namnest ]
+0.027 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f21
+0.045 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf21.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m01.t00z.f21
+0.061 + [ namnest '=' conusarw ]
+0.061 + [ namnest '=' conusnmmb ]
+0.061 + expr 6 + 21
+0.062 + fcst=27
+0.062 + echo ff 21
+ff 21
+0.062 + echo fcst 27
+fcst 27
+0.062 + echo href.m02.t00z.f21
+href.m02.t00z.f21
+0.062 + [ namnest '=' namnest ]
+0.062 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f21
+0.071 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m02.t00z.f21
+0.109 + [ namnest '=' conusarw ]
+0.109 + [ namnest '=' conusnmmb ]
+0.109 + expr 12 + 21
+0.121 + fcst=33
+0.121 + echo ff 21
+ff 21
+0.121 + echo fcst 33
+fcst 33
+0.121 + echo href.m03.t00z.f21
+href.m03.t00z.f21
+0.121 + [ namnest '=' namnest ]
+0.121 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f21
+0.136 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m03.t00z.f21
+0.159 + [ namnest '=' conusarw ]
+0.159 + [ namnest '=' conusnmmb ]
+0.159 + expr 18 + 21
+0.161 + fcst=39
+0.161 + echo ff 21
+ff 21
+0.161 + echo fcst 39
+fcst 39
+0.161 + echo href.m04.t00z.f21
+href.m04.t00z.f21
+0.161 + [ namnest '=' namnest ]
+0.161 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f21
+0.190 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m04.t00z.f21
+0.202 + [ namnest '=' conusarw ]
+0.203 + [ namnest '=' conusnmmb ]
+0.203 + expr 24 + 21
+0.204 + fcst=45
+0.204 + echo ff 21
+ff 21
+0.204 + echo fcst 45
+fcst 45
+0.204 + echo href.m05.t00z.f21
+href.m05.t00z.f21
+0.204 + [ namnest '=' namnest ]
+0.204 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf45.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f21
+0.226 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf45.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m05.t00z.f21
+0.277 + [ namnest '=' conusarw ]
+0.277 + [ namnest '=' conusnmmb ]
+0.277 + expr 0 + 21
+0.279 + fcst=21
+0.279 + echo ff 21
+ff 21
+0.279 + echo fcst 21
+fcst 21
+0.279 + echo href.m06.t00z.f21
+href.m06.t00z.f21
+0.279 + [ conusarw '=' namnest ]
+0.279 + [ conusarw '=' conusarw ]
+0.279 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf21.grib2 ]
+0.441 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f21
+0.443 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m06.t00z.f21
+0.461 + expr 0 + 21
+0.463 + fcst=21
+0.463 + echo ff 21
+ff 21
+0.463 + echo fcst 21
+fcst 21
+0.463 + echo href.m07.t00z.f21
+href.m07.t00z.f21
+0.463 + [ conusnmmb '=' namnest ]
+0.463 + [ conusnmmb '=' conusarw ]
+0.463 + [ conusnmmb '=' conusnmmb ]
+0.463 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf21.grib2 ]
+0.472 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f21
+0.488 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf21.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m07.t00z.f21
+0.490 + expr 12 + 21
+0.491 + fcst=33
+0.491 + echo ff 21
+ff 21
+0.492 + echo fcst 33
+fcst 33
+0.492 + echo href.m08.t00z.f21
+href.m08.t00z.f21
+0.492 + [ conusarw '=' namnest ]
+0.492 + [ conusarw '=' conusarw ]
+0.492 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf33.grib2 ]
+0.492 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f21
+0.512 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m08.t00z.f21
+0.543 + expr 12 + 21
+0.544 + fcst=33
+0.544 + echo ff 21
+ff 21
+0.544 + echo fcst 33
+fcst 33
+0.545 + echo href.m09.t00z.f21
+href.m09.t00z.f21
+0.545 + [ conusnmmb '=' namnest ]
+0.545 + [ conusnmmb '=' conusarw ]
+0.545 + [ conusnmmb '=' conusnmmb ]
+0.545 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf33.grib2 ]
+0.545 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f21
+0.565 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m09.t00z.f21
+0.641 + expr 24 + 21
+0.643 + fcst=45
+0.643 + echo ff 21
+ff 21
+0.643 + echo fcst 45
+fcst 45
+0.643 + echo href.m10.t00z.f21
+href.m10.t00z.f21
+0.643 + [ conusarw '=' namnest ]
+0.643 + [ conusarw '=' conusarw ]
+0.643 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf45.grib2 ]
+0.661 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f21
+0.662 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m10.t00z.f21
+0.715 + expr 24 + 21
+0.717 + fcst=45
+0.717 + echo ff 21
+ff 21
+0.717 + echo fcst 45
+fcst 45
+0.717 + echo href.m11.t00z.f21
+href.m11.t00z.f21
+0.717 + [ conusnmmb '=' namnest ]
+0.717 + [ conusnmmb '=' conusarw ]
+0.717 + [ conusnmmb '=' conusnmmb ]
+0.717 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf45.grib2 ]
+0.797 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f21
+0.799 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/21/href.m11.t00z.f21
+0.801 + exit
+7.686 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 24 00 20150210
+0.001 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=24
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.003 + echo 2015020912
+0.003 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24
+0.013 + mbr=0
+0.013 + expr 0 + 24
+0.015 + fcst=24
+0.015 + echo ff 24
+ff 24
+0.015 + echo fcst 24
+fcst 24
+0.015 + echo href.m01.t00z.f24
+href.m01.t00z.f24
+0.015 + [ namnest '=' namnest ]
+0.015 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f24
+0.034 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf24.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m01.t00z.f24
+0.043 + [ namnest '=' conusarw ]
+0.043 + [ namnest '=' conusnmmb ]
+0.043 + expr 6 + 24
+0.044 + fcst=30
+0.044 + echo ff 24
+ff 24
+0.044 + echo fcst 30
+fcst 30
+0.044 + echo href.m02.t00z.f24
+href.m02.t00z.f24
+0.044 + [ namnest '=' namnest ]
+0.044 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f24
+0.061 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m02.t00z.f24
+0.062 + [ namnest '=' conusarw ]
+0.062 + [ namnest '=' conusnmmb ]
+0.062 + expr 12 + 24
+0.064 + fcst=36
+0.064 + echo ff 24
+ff 24
+0.064 + echo fcst 36
+fcst 36
+0.064 + echo href.m03.t00z.f24
+href.m03.t00z.f24
+0.064 + [ namnest '=' namnest ]
+0.064 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f24
+0.078 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m03.t00z.f24
+0.092 + [ namnest '=' conusarw ]
+0.092 + [ namnest '=' conusnmmb ]
+0.092 + expr 18 + 24
+0.094 + fcst=42
+0.094 + echo ff 24
+ff 24
+0.094 + echo fcst 42
+fcst 42
+0.094 + echo href.m04.t00z.f24
+href.m04.t00z.f24
+0.094 + [ namnest '=' namnest ]
+0.094 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f24
+0.176 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m04.t00z.f24
+0.191 + [ namnest '=' conusarw ]
+0.191 + [ namnest '=' conusnmmb ]
+0.191 + expr 24 + 24
+0.192 + fcst=48
+0.192 + echo ff 24
+ff 24
+0.192 + echo fcst 48
+fcst 48
+0.192 + echo href.m05.t00z.f24
+href.m05.t00z.f24
+0.192 + [ namnest '=' namnest ]
+0.192 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf48.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f24
+0.203 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf48.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m05.t00z.f24
+0.204 + [ namnest '=' conusarw ]
+0.204 + [ namnest '=' conusnmmb ]
+0.204 + expr 0 + 24
+0.206 + fcst=24
+0.206 + echo ff 24
+ff 24
+0.206 + echo fcst 24
+fcst 24
+0.206 + echo href.m06.t00z.f24
+href.m06.t00z.f24
+0.206 + [ conusarw '=' namnest ]
+0.206 + [ conusarw '=' conusarw ]
+0.206 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf24.grib2 ]
+0.206 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f24
+0.229 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m06.t00z.f24
+0.242 + expr 0 + 24
+0.244 + fcst=24
+0.244 + echo ff 24
+ff 24
+0.244 + echo fcst 24
+fcst 24
+0.244 + echo href.m07.t00z.f24
+href.m07.t00z.f24
+0.244 + [ conusnmmb '=' namnest ]
+0.244 + [ conusnmmb '=' conusarw ]
+0.244 + [ conusnmmb '=' conusnmmb ]
+0.244 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf24.grib2 ]
+0.259 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f24
+0.273 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf24.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m07.t00z.f24
+0.285 + expr 12 + 24
+0.286 + fcst=36
+0.286 + echo ff 24
+ff 24
+0.286 + echo fcst 36
+fcst 36
+0.286 + echo href.m08.t00z.f24
+href.m08.t00z.f24
+0.286 + [ conusarw '=' namnest ]
+0.286 + [ conusarw '=' conusarw ]
+0.286 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf36.grib2 ]
+0.381 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f24
+0.393 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m08.t00z.f24
+0.434 + expr 12 + 24
+0.436 + fcst=36
+0.436 + echo ff 24
+ff 24
+0.436 + echo fcst 36
+fcst 36
+0.436 + echo href.m09.t00z.f24
+href.m09.t00z.f24
+0.436 + [ conusnmmb '=' namnest ]
+0.436 + [ conusnmmb '=' conusarw ]
+0.436 + [ conusnmmb '=' conusnmmb ]
+0.436 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf36.grib2 ]
+0.436 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f24
+0.438 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m09.t00z.f24
+0.461 + expr 24 + 24
+0.463 + fcst=48
+0.463 + echo ff 24
+ff 24
+0.463 + echo fcst 48
+fcst 48
+0.463 + echo href.m10.t00z.f24
+href.m10.t00z.f24
+0.463 + [ conusarw '=' namnest ]
+0.463 + [ conusarw '=' conusarw ]
+0.463 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf48.grib2 ]
+0.487 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m10.t00z.f24
+0.504 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m10.t00z.f24
+0.513 + expr 24 + 24
+0.514 + fcst=48
+0.514 + echo ff 24
+ff 24
+0.514 + echo fcst 48
+fcst 48
+0.514 + echo href.m11.t00z.f24
+href.m11.t00z.f24
+0.514 + [ conusnmmb '=' namnest ]
+0.514 + [ conusnmmb '=' conusarw ]
+0.514 + [ conusnmmb '=' conusnmmb ]
+0.514 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf48.grib2 ]
+0.607 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m11.t00z.f24
+0.675 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/24/href.m11.t00z.f24
+0.700 + exit
+8.388 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 27 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=27
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.003 + echo 2015020912
+0.003 + cut -c 1-8
+0.004 + Y=20150209
+0.004 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27
+0.017 + mbr=0
+0.017 + expr 0 + 27
+0.019 + fcst=27
+0.019 + echo ff 27
+ff 27
+0.019 + echo fcst 27
+fcst 27
+0.019 + echo href.m01.t00z.f27
+href.m01.t00z.f27
+0.019 + [ namnest '=' namnest ]
+0.019 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f27
+0.020 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf27.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m01.t00z.f27
+0.042 + [ namnest '=' conusarw ]
+0.042 + [ namnest '=' conusnmmb ]
+0.042 + expr 6 + 27
+0.043 + fcst=33
+0.043 + echo ff 27
+ff 27
+0.043 + echo fcst 33
+fcst 33
+0.043 + echo href.m02.t00z.f27
+href.m02.t00z.f27
+0.043 + [ namnest '=' namnest ]
+0.043 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f27
+0.045 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m02.t00z.f27
+0.047 + [ namnest '=' conusarw ]
+0.047 + [ namnest '=' conusnmmb ]
+0.047 + expr 12 + 27
+0.048 + fcst=39
+0.048 + echo ff 27
+ff 27
+0.048 + echo fcst 39
+fcst 39
+0.048 + echo href.m03.t00z.f27
+href.m03.t00z.f27
+0.048 + [ namnest '=' namnest ]
+0.048 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f27
+0.087 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m03.t00z.f27
+0.098 + [ namnest '=' conusarw ]
+0.098 + [ namnest '=' conusnmmb ]
+0.098 + expr 18 + 27
+0.100 + fcst=45
+0.100 + echo ff 27
+ff 27
+0.100 + echo fcst 45
+fcst 45
+0.100 + echo href.m04.t00z.f27
+href.m04.t00z.f27
+0.100 + [ namnest '=' namnest ]
+0.100 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf45.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f27
+0.115 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf45.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m04.t00z.f27
+0.145 + [ namnest '=' conusarw ]
+0.145 + [ namnest '=' conusnmmb ]
+0.145 + expr 24 + 27
+0.146 + fcst=51
+0.146 + echo ff 27
+ff 27
+0.146 + echo fcst 51
+fcst 51
+0.146 + echo href.m05.t00z.f27
+href.m05.t00z.f27
+0.146 + [ namnest '=' namnest ]
+0.146 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf51.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f27
+0.148 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf51.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m05.t00z.f27
+0.158 + [ namnest '=' conusarw ]
+0.158 + [ namnest '=' conusnmmb ]
+0.158 + expr 0 + 27
+0.159 + fcst=27
+0.159 + echo ff 27
+ff 27
+0.159 + echo fcst 27
+fcst 27
+0.159 + echo href.m06.t00z.f27
+href.m06.t00z.f27
+0.159 + [ conusarw '=' namnest ]
+0.159 + [ conusarw '=' conusarw ]
+0.159 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf27.grib2 ]
+0.234 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f27
+0.328 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m06.t00z.f27
+0.330 + expr 0 + 27
+0.331 + fcst=27
+0.331 + echo ff 27
+ff 27
+0.331 + echo fcst 27
+fcst 27
+0.331 + echo href.m07.t00z.f27
+href.m07.t00z.f27
+0.331 + [ conusnmmb '=' namnest ]
+0.331 + [ conusnmmb '=' conusarw ]
+0.331 + [ conusnmmb '=' conusnmmb ]
+0.331 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf27.grib2 ]
+0.381 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f27
+0.383 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf27.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m07.t00z.f27
+0.384 + expr 12 + 27
+0.385 + fcst=39
+0.385 + echo ff 27
+ff 27
+0.385 + echo fcst 39
+fcst 39
+0.385 + echo href.m08.t00z.f27
+href.m08.t00z.f27
+0.385 + [ conusarw '=' namnest ]
+0.385 + [ conusarw '=' conusarw ]
+0.385 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf39.grib2 ]
+0.509 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f27
+0.578 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m08.t00z.f27
+0.589 + expr 12 + 27
+0.591 + fcst=39
+0.591 + echo ff 27
+ff 27
+0.591 + echo fcst 39
+fcst 39
+0.591 + echo href.m09.t00z.f27
+href.m09.t00z.f27
+0.591 + [ conusnmmb '=' namnest ]
+0.591 + [ conusnmmb '=' conusarw ]
+0.591 + [ conusnmmb '=' conusnmmb ]
+0.591 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf39.grib2 ]
+0.622 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f27
+0.675 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf39.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/27/href.m09.t00z.f27
+0.692 + expr 24 + 27
+0.694 + fcst=51
+0.694 + echo ff 27
+ff 27
+0.694 + echo fcst 51
+fcst 51
+0.694 + echo href.m10.t00z.f27
+href.m10.t00z.f27
+0.694 + [ conusarw '=' namnest ]
+0.694 + [ conusarw '=' conusarw ]
+0.694 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf51.grib2 ]
+0.694 + expr 24 + 27
+0.696 + fcst=51
+0.696 + echo ff 27
+ff 27
+0.696 + echo fcst 51
+fcst 51
+0.696 + echo href.m11.t00z.f27
+href.m11.t00z.f27
+0.696 + [ conusnmmb '=' namnest ]
+0.696 + [ conusnmmb '=' conusarw ]
+0.696 + [ conusnmmb '=' conusnmmb ]
+0.696 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf51.grib2 ]
+0.696 + exit
+9.085 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 30 00 20150210
+0.001 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=30
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.004 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30
+0.019 + mbr=0
+0.019 + expr 0 + 30
+0.020 + fcst=30
+0.020 + echo ff 30
+ff 30
+0.020 + echo fcst 30
+fcst 30
+0.020 + echo href.m01.t00z.f30
+href.m01.t00z.f30
+0.020 + [ namnest '=' namnest ]
+0.020 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f30
+0.045 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf30.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m01.t00z.f30
+0.047 + [ namnest '=' conusarw ]
+0.047 + [ namnest '=' conusnmmb ]
+0.047 + expr 6 + 30
+0.048 + fcst=36
+0.048 + echo ff 30
+ff 30
+0.048 + echo fcst 36
+fcst 36
+0.048 + echo href.m02.t00z.f30
+href.m02.t00z.f30
+0.048 + [ namnest '=' namnest ]
+0.048 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f30
+0.050 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m02.t00z.f30
+0.052 + [ namnest '=' conusarw ]
+0.052 + [ namnest '=' conusnmmb ]
+0.052 + expr 12 + 30
+0.053 + fcst=42
+0.053 + echo ff 30
+ff 30
+0.053 + echo fcst 42
+fcst 42
+0.053 + echo href.m03.t00z.f30
+href.m03.t00z.f30
+0.053 + [ namnest '=' namnest ]
+0.053 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f30
+0.055 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m03.t00z.f30
+0.068 + [ namnest '=' conusarw ]
+0.068 + [ namnest '=' conusnmmb ]
+0.068 + expr 18 + 30
+0.069 + fcst=48
+0.069 + echo ff 30
+ff 30
+0.069 + echo fcst 48
+fcst 48
+0.069 + echo href.m04.t00z.f30
+href.m04.t00z.f30
+0.069 + [ namnest '=' namnest ]
+0.069 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf48.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f30
+0.138 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf48.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m04.t00z.f30
+0.142 + [ namnest '=' conusarw ]
+0.142 + [ namnest '=' conusnmmb ]
+0.143 + expr 24 + 30
+0.145 + fcst=54
+0.145 + echo ff 30
+ff 30
+0.145 + echo fcst 54
+fcst 54
+0.145 + echo href.m05.t00z.f30
+href.m05.t00z.f30
+0.145 + [ namnest '=' namnest ]
+0.145 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf54.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f30
+0.180 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf54.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m05.t00z.f30
+0.209 + [ namnest '=' conusarw ]
+0.209 + [ namnest '=' conusnmmb ]
+0.209 + expr 0 + 30
+0.211 + fcst=30
+0.211 + echo ff 30
+ff 30
+0.211 + echo fcst 30
+fcst 30
+0.211 + echo href.m06.t00z.f30
+href.m06.t00z.f30
+0.211 + [ conusarw '=' namnest ]
+0.211 + [ conusarw '=' conusarw ]
+0.211 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf30.grib2 ]
+0.244 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f30
+0.264 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m06.t00z.f30
+0.266 + expr 0 + 30
+0.267 + fcst=30
+0.267 + echo ff 30
+ff 30
+0.267 + echo fcst 30
+fcst 30
+0.267 + echo href.m07.t00z.f30
+href.m07.t00z.f30
+0.267 + [ conusnmmb '=' namnest ]
+0.267 + [ conusnmmb '=' conusarw ]
+0.267 + [ conusnmmb '=' conusnmmb ]
+0.267 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf30.grib2 ]
+0.281 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f30
+0.282 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf30.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m07.t00z.f30
+0.288 + expr 12 + 30
+0.290 + fcst=42
+0.290 + echo ff 30
+ff 30
+0.290 + echo fcst 42
+fcst 42
+0.290 + echo href.m08.t00z.f30
+href.m08.t00z.f30
+0.290 + [ conusarw '=' namnest ]
+0.290 + [ conusarw '=' conusarw ]
+0.290 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf42.grib2 ]
+0.324 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f30
+0.326 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m08.t00z.f30
+0.346 + expr 12 + 30
+0.347 + fcst=42
+0.347 + echo ff 30
+ff 30
+0.347 + echo fcst 42
+fcst 42
+0.347 + echo href.m09.t00z.f30
+href.m09.t00z.f30
+0.347 + [ conusnmmb '=' namnest ]
+0.347 + [ conusnmmb '=' conusarw ]
+0.347 + [ conusnmmb '=' conusnmmb ]
+0.347 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf42.grib2 ]
+0.407 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f30
+0.409 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf42.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/30/href.m09.t00z.f30
+0.410 + expr 24 + 30
+0.412 + fcst=54
+0.412 + echo ff 30
+ff 30
+0.412 + echo fcst 54
+fcst 54
+0.412 + echo href.m10.t00z.f30
+href.m10.t00z.f30
+0.412 + [ conusarw '=' namnest ]
+0.412 + [ conusarw '=' conusarw ]
+0.412 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf54.grib2 ]
+0.412 + expr 24 + 30
+0.413 + fcst=54
+0.413 + echo ff 30
+ff 30
+0.413 + echo fcst 54
+fcst 54
+0.413 + echo href.m11.t00z.f30
+href.m11.t00z.f30
+0.413 + [ conusnmmb '=' namnest ]
+0.413 + [ conusnmmb '=' conusarw ]
+0.413 + [ conusnmmb '=' conusnmmb ]
+0.413 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf54.grib2 ]
+0.413 + exit
+9.501 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 33 00 20150210
+0.001 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=33
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.004 + YS=2015020912
+0.004 + echo 2015020912
+0.004 + cut -c 1-8
+0.005 + Y=20150209
+0.005 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.005 + [ 00 -ge 0 ]
+0.005 + [ 00 -le 5 ]
+0.005 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.005 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.005 + [ 00 '=' 00 ]
+0.005 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.005 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.005 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.005 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.005 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.005 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33
+0.007 + mbr=0
+0.007 + expr 0 + 33
+0.009 + fcst=33
+0.009 + echo ff 33
+ff 33
+0.009 + echo fcst 33
+fcst 33
+0.009 + echo href.m01.t00z.f33
+href.m01.t00z.f33
+0.009 + [ namnest '=' namnest ]
+0.009 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f33
+0.011 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf33.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m01.t00z.f33
+0.034 + [ namnest '=' conusarw ]
+0.034 + [ namnest '=' conusnmmb ]
+0.034 + expr 6 + 33
+0.035 + fcst=39
+0.035 + echo ff 33
+ff 33
+0.035 + echo fcst 39
+fcst 39
+0.035 + echo href.m02.t00z.f33
+href.m02.t00z.f33
+0.035 + [ namnest '=' namnest ]
+0.035 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f33
+0.057 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf39.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m02.t00z.f33
+0.058 + [ namnest '=' conusarw ]
+0.058 + [ namnest '=' conusnmmb ]
+0.058 + expr 12 + 33
+0.059 + fcst=45
+0.059 + echo ff 33
+ff 33
+0.060 + echo fcst 45
+fcst 45
+0.060 + echo href.m03.t00z.f33
+href.m03.t00z.f33
+0.060 + [ namnest '=' namnest ]
+0.060 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf45.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f33
+0.061 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf45.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m03.t00z.f33
+0.069 + [ namnest '=' conusarw ]
+0.069 + [ namnest '=' conusnmmb ]
+0.069 + expr 18 + 33
+0.071 + fcst=51
+0.071 + echo ff 33
+ff 33
+0.071 + echo fcst 51
+fcst 51
+0.071 + echo href.m04.t00z.f33
+href.m04.t00z.f33
+0.071 + [ namnest '=' namnest ]
+0.071 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf51.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f33
+0.072 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf51.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m04.t00z.f33
+0.081 + [ namnest '=' conusarw ]
+0.081 + [ namnest '=' conusnmmb ]
+0.081 + expr 24 + 33
+0.082 + fcst=57
+0.082 + echo ff 33
+ff 33
+0.082 + echo fcst 57
+fcst 57
+0.082 + echo href.m05.t00z.f33
+href.m05.t00z.f33
+0.082 + [ namnest '=' namnest ]
+0.082 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf57.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f33
+0.084 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf57.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m05.t00z.f33
+0.114 + [ namnest '=' conusarw ]
+0.114 + [ namnest '=' conusnmmb ]
+0.114 + expr 0 + 33
+0.115 + fcst=33
+0.115 + echo ff 33
+ff 33
+0.115 + echo fcst 33
+fcst 33
+0.115 + echo href.m06.t00z.f33
+href.m06.t00z.f33
+0.115 + [ conusarw '=' namnest ]
+0.115 + [ conusarw '=' conusarw ]
+0.115 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf33.grib2 ]
+0.129 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f33
+0.154 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m06.t00z.f33
+0.156 + expr 0 + 33
+0.157 + fcst=33
+0.157 + echo ff 33
+ff 33
+0.157 + echo fcst 33
+fcst 33
+0.157 + echo href.m07.t00z.f33
+href.m07.t00z.f33
+0.157 + [ conusnmmb '=' namnest ]
+0.157 + [ conusnmmb '=' conusarw ]
+0.157 + [ conusnmmb '=' conusnmmb ]
+0.157 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf33.grib2 ]
+0.158 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f33
+0.159 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf33.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m07.t00z.f33
+0.161 + expr 12 + 33
+0.162 + fcst=45
+0.162 + echo ff 33
+ff 33
+0.162 + echo fcst 45
+fcst 45
+0.162 + echo href.m08.t00z.f33
+href.m08.t00z.f33
+0.162 + [ conusarw '=' namnest ]
+0.162 + [ conusarw '=' conusarw ]
+0.162 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf45.grib2 ]
+0.187 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f33
+0.188 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m08.t00z.f33
+0.190 + expr 12 + 33
+0.191 + fcst=45
+0.191 + echo ff 33
+ff 33
+0.191 + echo fcst 45
+fcst 45
+0.191 + echo href.m09.t00z.f33
+href.m09.t00z.f33
+0.191 + [ conusnmmb '=' namnest ]
+0.191 + [ conusnmmb '=' conusarw ]
+0.191 + [ conusnmmb '=' conusnmmb ]
+0.191 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf45.grib2 ]
+0.209 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f33
+0.210 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf45.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/33/href.m09.t00z.f33
+0.212 + expr 24 + 33
+0.213 + fcst=57
+0.213 + echo ff 33
+ff 33
+0.213 + echo fcst 57
+fcst 57
+0.213 + echo href.m10.t00z.f33
+href.m10.t00z.f33
+0.213 + [ conusarw '=' namnest ]
+0.213 + [ conusarw '=' conusarw ]
+0.213 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf57.grib2 ]
+0.237 + expr 24 + 33
+0.238 + fcst=57
+0.238 + echo ff 33
+ff 33
+0.239 + echo fcst 57
+fcst 57
+0.239 + echo href.m11.t00z.f33
+href.m11.t00z.f33
+0.239 + [ conusnmmb '=' namnest ]
+0.239 + [ conusnmmb '=' conusarw ]
+0.239 + [ conusnmmb '=' conusnmmb ]
+0.239 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf57.grib2 ]
+0.239 + exit
+9.741 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_getmbr.sh 36 00 20150210
+0.000 + typeset -Z2 cyc
+0.001 + typeset -Z2 run
+0.001 + typeset -Z2 fcst
+0.001 + typeset -Z2 m
+0.001 + fhr=36
+0.001 + run=00
+0.001 + T=20150210
+0.001 + ndate -24 2015021012
+0.003 + YS=2015020912
+0.003 + cut -c 1-8
+0.004 + Y=20150209
+0.004 + cd /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000
+0.004 + [ 00 -ge 0 ]
+0.004 + [ 00 -le 5 ]
+0.004 + files='9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb'
+0.004 + set -A file 9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb
+0.004 + [ 00 '=' 00 ]
+0.004 + days='9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209'
+0.004 + cycs='9 00 18 12 06 00 00 00 12 12 00 00'
+0.004 + ages='9  0  6 12 18 24  0  0 12 12 24 24'
+0.004 + mbrs='   1  2  3  4  5  6  7  8  9 10 11'
+0.004 + set -A day 9 20150210 20150209 20150209 20150209 20150209 20150210 20150210 20150209 20150209 20150209 20150209
+0.004 + set -A cyc 9 00 18 12 06 00 00 00 12 12 00 00
+0.005 + set -A age 9 0 6 12 18 24 0 0 12 12 24 24
+0.005 + [ 00 '=' 03 ]
+0.005 + mbr=0
+0.005 + mkdir -p /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36
+0.006 + mbr=0
+0.006 + expr 0 + 36
+0.008 + fcst=36
+0.008 + echo ff 36
+ff 36
+0.008 + echo fcst 36
+fcst 36
+0.008 + echo href.m01.t00z.f36
+href.m01.t00z.f36
+0.008 + [ namnest '=' namnest ]
+0.008 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m01.t00z.f36
+0.010 + ln -sf /com/nam/prod/nam.20150210/nam.t00z.conusnest.hiresf36.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m01.t00z.f36
+0.011 + [ namnest '=' conusarw ]
+0.011 + [ namnest '=' conusnmmb ]
+0.011 + expr 6 + 36
+0.013 + fcst=42
+0.013 + echo ff 36
+ff 36
+0.013 + echo fcst 42
+fcst 42
+0.013 + echo href.m02.t00z.f36
+href.m02.t00z.f36
+0.013 + [ namnest '=' namnest ]
+0.013 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m02.t00z.f36
+0.023 + ln -sf /com/nam/prod/nam.20150209/nam.t18z.conusnest.hiresf42.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m02.t00z.f36
+0.047 + [ namnest '=' conusarw ]
+0.047 + [ namnest '=' conusnmmb ]
+0.047 + expr 12 + 36
+0.049 + fcst=48
+0.049 + echo ff 36
+ff 36
+0.049 + echo fcst 48
+fcst 48
+0.049 + echo href.m03.t00z.f36
+href.m03.t00z.f36
+0.049 + [ namnest '=' namnest ]
+0.049 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf48.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m03.t00z.f36
+0.074 + ln -sf /com/nam/prod/nam.20150209/nam.t12z.conusnest.hiresf48.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m03.t00z.f36
+0.076 + [ namnest '=' conusarw ]
+0.076 + [ namnest '=' conusnmmb ]
+0.076 + expr 18 + 36
+0.077 + fcst=54
+0.077 + echo ff 36
+ff 36
+0.077 + echo fcst 54
+fcst 54
+0.077 + echo href.m04.t00z.f36
+href.m04.t00z.f36
+0.077 + [ namnest '=' namnest ]
+0.077 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf54.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m04.t00z.f36
+0.079 + ln -sf /com/nam/prod/nam.20150209/nam.t06z.conusnest.hiresf54.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m04.t00z.f36
+0.082 + [ namnest '=' conusarw ]
+0.082 + [ namnest '=' conusnmmb ]
+0.082 + expr 24 + 36
+0.084 + fcst=60
+0.084 + echo ff 36
+ff 36
+0.084 + echo fcst 60
+fcst 60
+0.084 + echo href.m05.t00z.f36
+href.m05.t00z.f36
+0.084 + [ namnest '=' namnest ]
+0.084 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf60.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m05.t00z.f36
+0.093 + ln -sf /com/nam/prod/nam.20150209/nam.t00z.conusnest.hiresf60.tm00.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m05.t00z.f36
+0.114 + [ namnest '=' conusarw ]
+0.114 + [ namnest '=' conusnmmb ]
+0.114 + expr 0 + 36
+0.116 + fcst=36
+0.116 + echo ff 36
+ff 36
+0.116 + echo fcst 36
+fcst 36
+0.116 + echo href.m06.t00z.f36
+href.m06.t00z.f36
+0.116 + [ conusarw '=' namnest ]
+0.116 + [ conusarw '=' conusarw ]
+0.116 + [ -e /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf36.grib2 ]
+0.131 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m06.t00z.f36
+0.133 + ln -sf /com/hiresw/prod/hiresw.20150210/conusarw.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m06.t00z.f36
+0.212 + expr 0 + 36
+0.214 + fcst=36
+0.214 + echo ff 36
+ff 36
+0.214 + echo fcst 36
+fcst 36
+0.214 + echo href.m07.t00z.f36
+href.m07.t00z.f36
+0.214 + [ conusnmmb '=' namnest ]
+0.214 + [ conusnmmb '=' conusarw ]
+0.214 + [ conusnmmb '=' conusnmmb ]
+0.214 + [ -e /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf36.grib2 ]
+0.222 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m07.t00z.f36
+0.224 + ln -sf /com/hiresw/prod/hiresw.20150210/conusnmmb.t00z.awp5kmf36.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m07.t00z.f36
+0.279 + expr 12 + 36
+0.281 + fcst=48
+0.281 + echo ff 36
+ff 36
+0.281 + echo fcst 48
+fcst 48
+0.281 + echo href.m08.t00z.f36
+href.m08.t00z.f36
+0.281 + [ conusarw '=' namnest ]
+0.281 + [ conusarw '=' conusarw ]
+0.281 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf48.grib2 ]
+0.397 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m08.t00z.f36
+0.422 + ln -sf /com/hiresw/prod/hiresw.20150209/conusarw.t12z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m08.t00z.f36
+0.423 + expr 12 + 36
+0.425 + fcst=48
+0.425 + echo ff 36
+ff 36
+0.425 + echo fcst 48
+fcst 48
+0.425 + echo href.m09.t00z.f36
+href.m09.t00z.f36
+0.425 + [ conusnmmb '=' namnest ]
+0.425 + [ conusnmmb '=' conusarw ]
+0.425 + [ conusnmmb '=' conusnmmb ]
+0.425 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf48.grib2 ]
+0.493 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href.m09.t00z.f36
+0.495 + ln -sf /com/hiresw/prod/hiresw.20150209/conusnmmb.t12z.awp5kmf48.grib2 /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/36/href.m09.t00z.f36
+0.497 + expr 24 + 36
+0.498 + fcst=60
+0.498 + echo ff 36
+ff 36
+0.498 + echo fcst 60
+fcst 60
+0.498 + echo href.m10.t00z.f36
+href.m10.t00z.f36
+0.498 + [ conusarw '=' namnest ]
+0.498 + [ conusarw '=' conusarw ]
+0.498 + [ -e /com/hiresw/prod/hiresw.20150209/conusarw.t00z.awp5kmf60.grib2 ]
+0.498 + expr 24 + 36
+0.499 + fcst=60
+0.499 + echo ff 36
+ff 36
+0.499 + echo fcst 60
+fcst 60
+0.499 + echo href.m11.t00z.f36
+href.m11.t00z.f36
+0.499 + [ conusnmmb '=' namnest ]
+0.499 + [ conusnmmb '=' conusarw ]
+0.499 + [ conusnmmb '=' conusnmmb ]
+0.499 + [ -e /com/hiresw/prod/hiresw.20150209/conusnmmb.t00z.awp5kmf60.grib2 ]
+0.510 + exit
+10.253 + /meso/save/Matthew.Pyle/href.v1.0.0/ush/href_ensprod_prepare.sh 00 20150210
+17.910 + bsub
+17.910 + 0< /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href_enprod_poe_1-6.sh
+ESUB: MEMORY LIMIT RLIMIT_RSS set to 25000 - with rusage set in shared job.
+Job <316552> is submitted to queue <dev>.
+18.619 + bsub
+18.620 + 0< /ptmpp1/Matthew.Pyle/href/tmpnwprd/href_00_dev.6419/run_dir.2015021000/href_enprod_poe_7-12.sh
+ESUB: MEMORY LIMIT RLIMIT_RSS set to 25000 - with rusage set in shared job.
+Job <316553> is submitted to queue <dev>.
+************** COMPLETED NORMALLY on Tue Feb 10 15:40:38 UTC 2015
+19.242 + msg='HAS COMPLETED NORMALLY!'
+19.242 + echo HAS COMPLETED NORMALLY!
+HAS COMPLETED NORMALLY!
+19.242 + postmsg '' 'HAS COMPLETED NORMALLY!'
+postmsg: line 27: /com/logs/jlogfile: Permission denied
+20 + msg='JOB  HAS COMPLETED NORMALLY.'
+20 + postmsg '' 'JOB  HAS COMPLETED NORMALLY.'
+./postmsg: line 27: /com/logs/jlogfile: Permission denied
+20 + date
+Tue Feb 10 15:40:38 UTC 2015
+20 + /smscomplete
+./JHREF_RUNALL.ecf: line 166: /smscomplete: No such file or directory
