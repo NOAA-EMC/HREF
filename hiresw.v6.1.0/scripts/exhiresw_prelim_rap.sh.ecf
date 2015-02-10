@@ -120,6 +120,12 @@ then
  suf="df"
  NUMLEVS=41
 
+        elif [ -e ${COMRAP}/rap.t${cyc}z.awip32f${whr} ]
+        then
+ cp ${COMRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
+ suf=""
+ NUMLEVS=41
+
         else
            msg="FATAL ERROR: ${COMRAP}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
            err_exit $msg
@@ -142,7 +148,7 @@ fi
 if [ $MODEL != "nmmb" ]
 then
 
-  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in_new | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
+  cat $PARMhiresw/hiresw_${NEST}_${MODEL}.namelist.wps_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
  | sed s:MEND:$mend:     | sed s:DEND:$dend: | sed s:HEND:$hend: | sed s:_GRIBSRC_:${GRIBSRC}:g > $DATA/run_ungrib/namelist.wps
 
