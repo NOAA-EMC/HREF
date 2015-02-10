@@ -23,7 +23,7 @@ if [ $outreg = "ak" ]
 then
 res="3km"
 else
-res="2p5"
+res="2p5km"
 fi
 
 # COMBINE PRDGEN NDFD FILE AND SMARTINIT FILE into SMART output (if mksmart=1)
@@ -32,25 +32,20 @@ fi
 if [ $mksmart -eq 1 ]
 then
 ls -l MESO${RGUSE}${fhr}.tm00
+
 #tst cnvgrib -g12 -p40 -nv MESO${RGUSE}${fhr}.tm00 smart.grb2
 #tst cp smart.grb2 smart.grb2_was_${fhr}
 
 # cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 ##tst cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smart.grb2  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 
-cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smartg2.${fhr}  >   alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smartg2.${fhr}  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-
-# cnvgrib -g21 ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 ${mdl}.t${cyc}z.smart${outreg}f${fhr}
-
-## cnvgrib -g21 alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}
+cat $PRDGEN_DATA/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2  smartg2.${fhr}  >   hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2
 
 rm smart.grb2
 
 else
 
-cp $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}                               ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-cp $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}                               alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
+cp $PRDGEN_DATA/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2               hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2
 
 fi
 
@@ -62,15 +57,13 @@ fi
 
 if [ $SENDCOM = YES ]
 then
-cp ${mdl}.t${cyc}z.smart${outreg}f${fhr} ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2  $COMOUT
-cp alt_${mdl}.t${cyc}z.smart${outreg}f${fhr} alt_${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2  $COMOUT
-# $utilexec/grbindex $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr} $COMOUT/${mdl}.t${cyc}z.smart${outreg}if${fhr}
-$utilexec/wgrib2   $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2 -s > $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2.idx
+cp hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2  $COMOUT
+$WGRIB2   $COMOUT/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2.idx
 export err=$?; err_chk
 fi
 
 if [ $SENDDBN = YES ]
 then
-  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_SMART} $job  $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_SMART_WIDX}  $job $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_SMART} $job  $COMOUT/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_SMART_WIDX}  $job $COMOUT/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2.idx
 fi

@@ -458,13 +458,14 @@ fi # f00 or not
 
 echo DOWN HERE
 
-## temp copy to COMOUT
+## temp copy to $DATA
 	if [ $subpiece -gt 0 ]
         then
-       cp hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 ${COMOUT}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+       cp hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 \
+	${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
         else
-       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${COMOUT}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${DATA}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
         fi
+## temp copy to $DATA
 
-## temp copy to COMOUT
 echo  "done" > $DATA/done_ndfd_${subpiece}_f${fhr}

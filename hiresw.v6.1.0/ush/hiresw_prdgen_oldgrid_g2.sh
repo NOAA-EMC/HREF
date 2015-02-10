@@ -251,10 +251,11 @@ echo "inside f00 test"
   # Convert to grib2 format
   ###############################
 
-  if test $SENDCOM = 'YES'
-  then
+#   if test $SENDCOM = 'YES'
+#   then
+
 #      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+      cp ${filenamthree}${fhr}.tm00 $DATA/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 
 
 # save DBN alerting for script where pieces are put back together
@@ -263,7 +264,7 @@ echo "inside f00 test"
 #         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
 #      fi
 
-  fi
+#   fi
 
 else
 
@@ -341,16 +342,18 @@ fi # subpiece1
 
 ###### DONE PRECIP BUCKET
 
-  if test $SENDCOM = 'YES'
-  then
+#  if test $SENDCOM = 'YES'
+#  then
 #     cp $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
+
     cp  hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2 \
-              $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+              $DATA/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 
 #    if [ $SENDDBN_GB2 = YES ]; then
 #       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
 #       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
 #    fi
 
-  fi
+#   fi
+
 fi

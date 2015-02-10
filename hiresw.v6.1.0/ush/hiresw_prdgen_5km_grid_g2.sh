@@ -176,11 +176,11 @@ echo "inside f00 test"
   # Convert to grib2 format
   ###############################
 
-  if test $SENDCOM = 'YES'
-  then
+#  if test $SENDCOM = 'YES'
+#  then
 #      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
-      cp ${filenamthree}${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2_${subpiece}
-  fi
+      cp ${filenamthree}${fhr}.tm00 $DATA/hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2_${subpiece}
+#  fi
 else
 
 if [ $subpiece = "1" ]
@@ -263,11 +263,11 @@ fi # subpiece=1
 
 ###### DONE PRECIP BUCKET
 
-  if test $SENDCOM = 'YES'
-  then
+#  if test $SENDCOM = 'YES'
+#  then
 #     cp $DOMOUT.t${CYC}z.awp5kmf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awp5kmf${fhr}.grib2_${subpiece}
-     cp hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2 $COMOUT/hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2_${subpiece}
-  fi
+     cp hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2 $DATA/hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2_${subpiece}
+#  fi
 
 fi # if f00 test
 
