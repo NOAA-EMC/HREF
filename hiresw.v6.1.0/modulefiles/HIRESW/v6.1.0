@@ -1,0 +1,52 @@
+#%Module######################################################################
+##                                                       Matthew.Pyle@noaa.gov
+##                                                           NOAA/NWS/NCEP/EMC
+## HIRESW v6.1.0
+##_____________________________________________________
+proc ModulesHelp { } {
+puts stderr "Set environment veriables for HIRESW"
+puts stderr "This module initializes the enviro nment "
+puts stderr "for the Intel Compiler Suite $version\n"
+}
+module-whatis " HIRESW whatis description"
+
+set ver v6.1.0
+
+set sys [uname sysname]
+set HIRESW /meso/save/Matthew.Pyle/hiresw.v6.1.0/modulefiles/HIRESW
+set lname HIRESW
+setenv COMP ifort
+setenv COMP_MP mpfort
+setenv COMP_MPI mpiifort
+
+setenv C_COMP icc
+setenv C_COMP_MP mpcc
+
+# Known conflicts ???
+conflict bacio/v2.0.0
+conflict w3nco/v2.0.5
+conflict ics/14.1
+conflict NetCDF/4.2/serial
+
+# Loading Intel Compiler Suite
+module load ics/12.1
+
+# Loading nceplibs modules
+module load ip/v2.0.0
+module load bacio/v2.0.1
+module load w3nco/v2.0.6
+module load w3emc/v2.0.5
+
+module load g2/v2.5.0
+module load g2tmpl/v1.2.1
+module load jasper/v1.900.1
+module load png/v1.2.44
+module load z/v1.2.6
+
+module load nemsio/v2.2.1
+module load bufr/v10.2.5
+module load sfcio/v1.0.0
+module load sp/v2.0.2
+module load landsfcutil/v2.0.0
+module load NetCDF/3.6.3
+module load sigio/v2.0.1
