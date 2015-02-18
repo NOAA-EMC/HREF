@@ -118,3 +118,24 @@ postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
 date
 
 cd $DATAROOT
+
+##
+thiscyc=${PDY}${cyc}
+
+## process the data
+
+dirbase=/stmpd3/Matthew.Pyle/com/hiresw/test/
+dirproc=/stmpd3/Matthew.Pyle/com/hiresw/test/hiresw.${PDY}
+
+cd $dirbase
+./process_dir.scr  hiresw.${PDY} ${MODEL} ${cyc}
+
+###
+
+nextcyc=`$NDATE +12 $thiscyc`
+
+nextday=`echo $nextcyc  | cut -c1-8`
+nexthr=`echo $nextcyc  | cut -c9-10`
+ 
+cd /meso/save/Matthew.Pyle/hiresw.v6.1.0/launch
+./launch_test_retro conus ${MODEL} ${nexthr} ${nextday}
