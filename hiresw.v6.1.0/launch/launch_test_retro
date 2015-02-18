@@ -1,5 +1,7 @@
 #! /bin/ksh
 
+cd /meso/save/Matthew.Pyle/hiresw.v6.1.0/launch/
+
 DOM=${1}
 CORE=${2}
 CYC=${3}
@@ -68,14 +70,14 @@ BUFRSPAN=1
 NPROCBUFR=1
 elif [ $DOM$CORE == "conusnmmb" ]
 then
-MODPROCS=672
-MODSPAN=16
+MODPROCS=704
+MODSPAN=22
 POSTPROCS=48
 POSTSPAN=8
-PRDGENPROCS=10
+PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=56
-BUFRSPAN=8
+BUFRSPAN=14
 elif [ $DOM$CORE == "conusarw" ]
 then
 MODPROCS=792

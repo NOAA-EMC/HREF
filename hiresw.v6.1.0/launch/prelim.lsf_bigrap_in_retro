@@ -30,7 +30,8 @@ export MODEL=_CORE_
 export DATE=_DATE_
 
 export COMRAP=/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
+export GESNAM=/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}_retro
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 
 $HOMEhiresw/jobs/JHIRESW_PREPRAP_retro

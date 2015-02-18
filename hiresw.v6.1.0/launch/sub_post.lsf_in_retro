@@ -32,8 +32,8 @@ export cyc=_CYC_
 export MODEL=_CORE_
 export DATE=_DATE_
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
-export COMIN=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMIN=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export INPUT_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}_retro
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}_retro
 

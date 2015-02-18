@@ -39,8 +39,8 @@ export SENDDBN=NO
 
 # DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
-export COMIN=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMIN=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export INPUT_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.bufrpost_${NEST}_${MODEL}_${cyc}_${envir}
 

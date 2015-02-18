@@ -29,7 +29,7 @@ export MODEL=_CORE_
 export DATE=_DATE_
 
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.prepfinal_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 
