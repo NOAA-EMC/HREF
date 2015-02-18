@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/logs/test_ungrib.out
 #BSUB -eo /meso/save/Matthew.Pyle/logs/test_ungrib.err
-#BSUB -q "dev2_shared"
+#BSUB -q "dev2"
 #BSUB -J HIRESW_UNGRIB
 #BSUB -R "span[ptile=4]"
 #BSUB -R affinity[core(1)]
@@ -31,7 +31,7 @@ export DATE=_DATE_
 
 export COMGFS=/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 types="bufrpost forecast post prdgen smartinit smartinitb"

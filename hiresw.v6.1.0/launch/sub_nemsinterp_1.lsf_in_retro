@@ -27,10 +27,11 @@ export NEST=_DOM_
 export cyc=_CYC_
 export MODEL=_CORE_
 
-DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+# DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+export DATE=_DATE_
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
-export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.nemsinterp_1_${NEST}_${MODEL}_${cyc}_${envir}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.nemsinterp_1_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 
-$HOMEhiresw/jobs/JHIRESW_NEMSINTERP_1
+$HOMEhiresw/jobs/JHIRESW_NEMSINTERP_1_retro

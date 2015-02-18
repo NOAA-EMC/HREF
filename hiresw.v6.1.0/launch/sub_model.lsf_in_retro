@@ -6,7 +6,7 @@
 #BSUB -J HIRESW_FORECAST__DOM___CORE___CYC_
 #BSUB -P HRW-T2O
 #BSUB -n _NPROC_
-#BSUB -W 1:08
+#BSUB -W 1:18
 #BSUB -a poe
 #
 
@@ -32,9 +32,11 @@ export cyc=_CYC_
 export MODEL=_CORE_
 export DATE=_DATE_
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
-export COMIN=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export COMIN=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}_retro
 export POSTDATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}_retro
+
+# rm -rf $DATA $POSTDATA /stmpd3/Matthew.Pyle/tmpnwprd/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 $HOMEhiresw/jobs/JHIRESW_FORECAST_retro
