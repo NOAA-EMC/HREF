@@ -1,8 +1,0 @@
-.o : Srcfiles  
-.o : makefile  
-post_gfs.o : post_gfs.f  
-post_gfs_stub.o : post_gfs_stub.f  
-post_nems_routines.o : post_nems_routines.f  
-post_nems_routines_stub.o : post_nems_routines_stub.f  
-post_nmm.o : post_nmm.f  
-post_nmm_stub.o : post_nmm_stub.f  
