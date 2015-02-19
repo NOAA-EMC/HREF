@@ -8,58 +8,32 @@
 #
 #     The following macros will be of interest:
 #
-#         TARGET   - name of the executable
+#         CMD      - name of the executable
 #         FC       - name of Fortran compiler
 #         CPP      - name of CPP
 #         ARCH     - architecture
 #         CPPFLAGS - CPP flags
 #         OPTS     - compiler code optimizations
-#         LIST     - source listing
-#         SMP      - threading
 #         TRAPS    - runtime traps for floating point exceptions
-#         PROFILE  - source code profiling ( -pg )
 #         DEBUG    - -g
-#         MEM      - user data area and stack size
-#         MAP      - load map
-#         W3LIB    - w3lib
-#         BACIO    - bacio lib
-#         ESSL     - ESSL library
-#         MASS     - MASS library
-#         HPMLIB   - hpm lib
-#         SEARCH   - library search location
 #
 #################################################################################
 #
 # Define the name of the executable
 #
-TARGET = ../../exec/hiresw_wrfbufr
+CMD = ../../exec/hiresw_wrfbufr
 #
 # CPP, Compiler, and Linker Options
 #
 
-NETLIB   = /usrx/local/NetCDF/3.6.3/lib
-
-FC       = mpfort 
+FC       = ${COMP_MP} 
 CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS = 
-# OPTS     = -O0 -assume byterecl
-# OPTS     = -O3 -assume byterecl -convert big_endian
-# OPTS     = -O0   -ftrapuv -check bounds -check format -check output_conversion -check pointers -check uninit -fp-stack-check -convert big_endian -assume noold_ldout_format
 OPTS     = -O2   -convert big_endian -assume noold_ldout_format
-LIST     = 
 FREE     = -FR
 TRAPS    = 
-PROFILE  = 
 DEBUG    = -g # -traceback -fpe0 -ftrapuv # -check all 
-MEM      =
-MAP      =
-ESSL     =
-MASS     =
-W3FLAGS = -I/nwprod/lib
-
-NEMSIO_INC = -I/nwprod/lib/incmod/nemsio
-NEMSIO_LIB = -L/nwprod/lib -lnemsio
 
 WRFLIB    = ./wrflibs/libwrflib.a  \
             ./wrflibs/pack_utils.o  \
@@ -71,17 +45,16 @@ WRFLIB    = ./wrflibs/libwrflib.a  \
             ./wrflibs/libesmf_time.a \
             ./wrflibs/librsl_lite.a
 
-SEARCH   =
 #
 # Assemble Options
 #
-FFLAGS   = $(OPTS) $(LIST) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) $(W3FLAGS) $(NEMSIO_INC)
-FFLAGST  = $(OPTS) $(LIST) $(FREE) $(TRAPS) $(PROFILE) $(DEBUG) $(WRFFLAGS) $(W3FLAGS) $(NEMSIO_INC)
-LDFLAGS  = $(MEM) $(MAP) $(SMP) $(PROFILE)
-LIBS     = $(ESSL) $(MASS) $(SEARCH) $(WRFLIB) \
+FFLAGS   = $(OPTS) $(TRAPS) $(DEBUG) $(WRFFLAGS) -I$(NEMSIO_INC)
+FFLAGST  = $(OPTS) $(FREE) $(TRAPS) $(DEBUG) $(WRFFLAGS) -I$(NEMSIO_INC)
+LDFLAGS  =
+LIBS     = $(WRFLIB) \
            $(NEMSIO_LIB) \
-           -L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4 \
-           -L${NETLIB} -lnetcdf
+           ${W3EMC_LIB4} ${W3NCO_LIB4} ${BACIO_LIB4} \
+           ${NETCDF_LDFLAGS} 
 #
 #
 # free-format object files
@@ -101,22 +74,20 @@ iw3jdn.o w3fs26.o w3movdat.o w3reddat.o gdswiz.o gdswiz01.o \
 gdswiz03.o gdswiz05.o
 #
 SRCS=	PROF_EM.f PROF_NMMB.f WRFBUFR.f
+#
 # Includes
 #
 INCLUDES= parmsoil
 #
-# Common Blocks
-#
-COMMS=
 
-DEPS= $(COMMS) $(INCLUDES)
+DEPS= $(INCLUDES)
 
 .SUFFIXES:	.F .f .o
 
 .F.f:
 	$(CPP) $(CPPFLAGS) $< > $*.f
 
-$(TARGET):	$(OBJST) $(OBJS)
+$(CMD):	$(OBJST) $(OBJS)
 	$(FC) $(LDFLAGS) -o $@ $(OBJST) $(OBJS) $(LIBS) 
 
 $(OBJS):	$(DEPS)

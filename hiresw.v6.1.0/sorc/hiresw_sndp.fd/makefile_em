@@ -16,10 +16,10 @@ OBJS=	BFRHDR.o BFRIZE.o CALHEL.o CALWXT.o SMIX.o SNDPST_EM.o VAP.o \
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-FC =		ifort -convert big_endian
+FC =		${COMP} -convert big_endian
 LDFLAGS = 
 CMD = ../../exec/hiresw_sndp_arw
-LIBS = -L/nwprod/lib -lbufr_4_64
+LIBS = ${BUFR_LIB4}
 
 FFLAGS = -O   
 
