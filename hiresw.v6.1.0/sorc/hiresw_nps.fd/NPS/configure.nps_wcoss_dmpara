@@ -15,11 +15,9 @@
 
 SHELL           	=       /bin/sh
 
-COMPRESSION_LIBS        =       /nwprod/lib/libjasper.a \
-                                /nwprod/lib/libpng.a \
-                                /nwprod/lib/libz.a
+COMPRESSION_LIBS        =       ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
 
-COMPRESSION_INC         =       -I/nwprod/lib/include
+COMPRESSION_INC         =       ${JASPER_INC} ${PNG_INC} ${Z_INC}
 
 NCARG_LIBS              =
 NCARG_LIBS2		=
@@ -28,23 +26,22 @@ DIO                     =       $(DEV_TOP)/dio
 DIO_INC                 =       -I${DIO}
 DIO_LIBS                =       -L${DIO} -ldio
 
-G2_LIBS                 =       -L/nwprod/lib -lg2_4 $(COMPRESSION_LIBS)
-G2_INCMOD               =       -I/nwprod/lib/incmod/g2_4
+G2_LIBS                 =       ${G2_LIB4} $(COMPRESSION_LIBS)
+G2_INCMOD               =       -I${G2_INC4}
 
-W3_LIBS                 =       -L/nwprod/lib -lw3nco_v2.0.3_4 -lw3emc_v2.0.3_4
-W3D_LIBS                =       -L/nwprod/lib -lw3nco_v2.0.3_d -lw3emc_v2.0.3_d
-IP_LIBS                 =       -L/nwprod/lib -lip_d
-SP_LIBS                 =       -L/nwprod/lib -lsp_4
-SIGIO_LIBS              =       -L/nwprod/lib -lsigio_4
-SIGIO_INCMOD            =       -I/nwprod/lib/incmod/sigio_4
+W3_LIBS                 =       ${W3NCO_LIB4} ${W3EMC_LIB4}
+W3D_LIBS                =       ${W3NCO_LIBd} ${W3EMC_LIBd}
+IP_LIBS                 =       ${IP_LIBd}
+SP_LIBS                 =       ${SP_LIB4}
+SIGIO_LIBS              =       ${SIGIO_LIB4}
+SIGIO_INCMOD            =       -I${SIGIO_INC4}
 
-BACIO_LIBS              =       -L/nwprod/lib -lbacio_4
+BACIO_LIBS              =       ${BACIO_LIB4}
 
-NEMSIO_INC              =       -I/nwprod/lib/incmod/nemsio
-NEMSIO_LIBS             =       -L/nwprod/lib -lnemsio_v2.2.0
+NEMSIO_LIBS             =       ${NEMSIO_LIB}
 
-LANDSFCUTIL_INC         =       -I/nwprod/lib/incmod/landsfcutil_d
-LANDSFCUTIL_LIBS        =       -L/nwprod/lib -llandsfcutil_d
+LANDSFCUTIL_INC         =       -I${LANDSFCUTIL_INCd}
+LANDSFCUTIL_LIBS        =       ${LANDSFCUTIL_LIBd}
 
 FDEFS			=	-DUSE_JPEG2000 -DUSE_PNG
 
@@ -61,15 +58,15 @@ RANLIB			=	echo
 
 # Settings for PC Linux x86_64 (wcoss), Intel(ifort) compiler, DM parallel
 #
-FC              =       mpfort -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
-SFC             =       ifort -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+FC              =       ${COMP_MP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+SFC             =       ${COMP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
 FFLAGS          =       -FR -convert big_endian -assume noold_ldout_format
 F77FLAGS        =       -convert big_endian -assume noold_ldout_format
 FNGFLAGS        =       $(FFLAGS)
 R8              =       -r8
 LDFLAGS         =       -openmp -auto
-CC              =       mpcc -O3
-SCC             =       icc -O3
+CC              =       ${C_COMP_MP} -O3
+SCC             =       ${C_COMP} -O3
 CFLAGS          =       -O
 CPP             =       /lib/cpp -C -P -traditional
 CPPFLAGS        =       -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -D_MPI -DBIT32
@@ -96,7 +93,7 @@ AR		=	ar ru
 .f90.o:
 	$(RM) $@ $*.mod
 	$(CP) $< $*.f
-	$(FC) $(FFLAGS) $(DIO_INC) $(NEMSIO_INC) $(G2_INCMOD) -c $*.f
+	$(FC) $(FFLAGS) $(DIO_INC) -I$(NEMSIO_INC) $(G2_INCMOD) -c $*.f
 	$(RM) $*.f
 
 .f.o:
@@ -106,11 +103,11 @@ AR		=	ar ru
 .F90.o:
 	$(RM) $@ $*.mod
 	$(CPP) $(CPPFLAGS) $(FDEFS) $< > $*.f
-	$(FC) $(FFLAGS) $(DIO_INC) $(NEMSIO_INC) $(G2_INCMOD) -c $*.f
+	$(FC) $(FFLAGS) $(DIO_INC) -I$(NEMSIO_INC) $(G2_INCMOD) -c $*.f
 	$(RM) $*.f
 
 .F.o:
 	$(RM) $@ $*.mod
 	$(CPP) $(CPPFLAGS) $(FDEFS) $< > $*.f
-	$(FC) $(F77FLAGS) $(DIO_INC) $(NEMSIO_INC) $(G2_INCMOD) -c $*.f
+	$(FC) $(F77FLAGS) $(DIO_INC) -I$(NEMSIO_INC) $(G2_INCMOD) -c $*.f
 	$(RM) $*.f
