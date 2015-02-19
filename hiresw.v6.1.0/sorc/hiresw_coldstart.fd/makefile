@@ -10,7 +10,16 @@ SHELL=/bin/sh
 #    this program works best with 8 byte floats!!
 #----------------------------------------------------------------
 
-include makefile.conf
+LIBS =  ${NEMSIO_LIB} ${W3NCO_LIBd} ${BACIO_LIB4} ${IP_LIBd} ${SFCIO_LIB4} \
+        ${SP_LIBd}  ${NETCDF_LDFLAGS}
+
+FCOMP=${COMP_MPI}
+FFLAGS = -O0 -I${LANDSFCUTIL_INCd} ${NETCDF_INCLUDE} \
+          -I${SFCIO_INC4} -I${NEMSIO_INC} \
+          -convert big_endian -r8 -i4 -FR
+LFLAGS = -openmp
+FPPFLAGS=-fpp -DGFS=0 -save-temps
+
 
 EXE = ../../exec/hiresw_coldstart
 
@@ -24,7 +33,7 @@ OBJS = program_setup.o \
 
 $(EXE): ${OBJS}
 	$(FCOMP) $(FFLAGS) ${LFLAGS} -o ${EXE} ${OBJS} \
-	${SFC_UTIL_LIB} $(NCEP_LIBS)
+	${LANDSFCUTIL_LIBd} $(LIBS)
 
 coldstart_wrf.o: program_setup.o read_data.o interp_data.o write_data.o coldstart_wrf.f
 	${FCOMP} ${FFLAGS} -c coldstart_wrf.f
