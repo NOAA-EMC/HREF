@@ -195,7 +195,7 @@
 	 
        impf=im+nframe*2
        jmpf=jm+nframe*2	  
-       print*,'nframe,impf,jmpf= ',nframe,impf,jmpf	       
+!       print*,'nframe,impf,jmpf= ',nframe,impf,jmpf	       
        allocate(glat1d(impf*jmpf),glon1d(impf*jmpf) )  
        call nemsio_getfilehead(nfile,dx=glat1d               &
          ,dy=glon1d,iret=iret)
@@ -241,9 +241,9 @@
 !
 !      read(startdate,15)iyear,imn,iday,ihrst,imin       
  15   format(i4,1x,i2,1x,i2,1x,i2,1x,i2)
-      print*,'start yr mo day hr min =',iyear,imn,iday,ihrst,imin
-      print*,'processing yr mo day hr min='                            &
-        ,idat(3),idat(1),idat(2),idat(4),idat(5)
+!      print*,'start yr mo day hr min =',iyear,imn,iday,ihrst,imin
+!      print*,'processing yr mo day hr min='                            &
+!        ,idat(3),idat(1),idat(2),idat(4),idat(5)
 !
       idate(1) = iyear
       idate(2) = imn
@@ -259,23 +259,26 @@
       jdate(5) = idat(4)
       jdate(6) = idat(5)
 !
-      print *,' idate=',idate
-      print *,' jdate=',jdate
+!      print *,' idate=',idate
+!      print *,' jdate=',jdate
 !      CALL W3DIFDAT(JDATE,IDATE,2,RINC)
 !      ifhr=nint(rinc(2))
 !
       CALL W3DIFDAT(JDATE,IDATE,0,RINC)
 !
-      print *,' rinc=',rinc
+!      print *,' rinc=',rinc
       ifhr=nint(rinc(2)+rinc(1)*24.)
-      print *,' ifhr=',ifhr
+!      print *,' ifhr=',ifhr
       ifmin=nint(rinc(3))
 !      if(ifhr /= nfhour)print*,'find wrong Model input file';stop
+
+      if (me == 0)then
       print*,' in INITPOST ifhr ifmin fileName=',ifhr,ifmin,fileName
+      endif
       
 ! Getting tstart
       tstart=0.
-      print*,'tstart= ',tstart
+!      print*,'tstart= ',tstart
       
 ! Getiing restart
       
@@ -322,7 +325,7 @@
         end if
       !end if
       !call mpi_bcast(imp_physics,1,MPI_INTEGER,0,mpi_comm_comp,iret)	
-      print*,'MP_PHYSICS= ',imp_physics
+!      print*,'MP_PHYSICS= ',imp_physics
 
 ! Initializes constants for Ferrier microphysics       
       if(imp_physics==5 .or. imp_physics==85 .or. imp_physics==95)then
@@ -335,7 +338,7 @@
           print*,VarName," not found in file-Assigned 2 for NOAH LSM as default"
           iSF_SURFACE_PHYSICS=2
         end if
-      print*,'SF_SURFACE_PHYSICS= ',iSF_SURFACE_PHYSICS
+!      print*,'SF_SURFACE_PHYSICS= ',iSF_SURFACE_PHYSICS
 
 ! IVEGSRC=1 for IGBP and 0 for USGS
       VarName='IVEGSRC'
@@ -344,7 +347,7 @@
           print*,VarName," not found in file-Assigned 1 for IGBP as default"
           IVEGSRC=1
         end if
-      print*,'IVEGSRC= ',IVEGSRC
+!      print*,'IVEGSRC= ',IVEGSRC
 
 ! set novegtype based on vegetation classification
       if(ivegsrc==1)then
@@ -352,7 +355,7 @@
       else if(ivegsrc==0)then 
        novegtype=24 
       end if
-      print*,'novegtype= ',novegtype
+!      print*,'novegtype= ',novegtype
 
       VarName='CU_PHYSICS'
         call nemsio_getheadvar(nfile,trim(VarName),iCU_PHYSICS,iret)
@@ -1605,7 +1608,7 @@
         end do
        end do
       end if  
-      write(0,*)' after PMIDV'
+!      write(0,*)' after PMIDV'
 
 
 !!!!! COMPUTE Z
@@ -1626,20 +1629,20 @@
          FI(I,J,2)=HTM(I,J,L)*T(I,J,L)*(Q(I,J,L)*D608+1.0)*RD*                &
                    (ALPINT(I,J,L+1)-ALPINT(I,J,L))+FI(I,J,1)
          ZINT(I,J,L)=FI(I,J,2)/G
-         if(i==im/2.and.j==(jsta+jend)/2)                                              &
-        print*,'L,sample HTM,T,Q,ALPINT(L+1),ALPINT(l),ZINT= '                &
-        ,l,HTM(I,J,L),T(I,J,L),Q(I,J,L),ALPINT(I,J,L+1),                      &
-        ALPINT(I,J,L),ZINT(I,J,L)
+!         if(i==im/2.and.j==(jsta+jend)/2)                                              &
+!        print*,'L,sample HTM,T,Q,ALPINT(L+1),ALPINT(l),ZINT= '                &
+!        ,l,HTM(I,J,L),T(I,J,L),Q(I,J,L),ALPINT(I,J,L+1),                      &
+!        ALPINT(I,J,L),ZINT(I,J,L)
          FI(I,J,1)=FI(I,J,2)
         ENDDO
        ENDDO
       END DO
-      print*,'finish deriving geopotential in nmm'
-      write(0,*)' after ZINT lm=',lm,' js=',js,' je=',je,' im=',im
-      write(0,*)' zmid lbounds=',lbound(zmid),' ubounds=',ubound(zmid)
-      write(0,*)' zint lbounds=',lbound(zint),' ubounds=',ubound(zint)
-      write(0,*)' pmid lbounds=',lbound(pmid),' ubounds=',ubound(pmid)
-      write(0,*)' pint lbounds=',lbound(pint),' ubounds=',ubound(pint)
+!     print*,'finish deriving geopotential in nmm'
+!     write(0,*)' after ZINT lm=',lm,' js=',js,' je=',je,' im=',im
+!     write(0,*)' zmid lbounds=',lbound(zmid),' ubounds=',ubound(zmid)
+!     write(0,*)' zint lbounds=',lbound(zint),' ubounds=',ubound(zint)
+!     write(0,*)' pmid lbounds=',lbound(pmid),' ubounds=',ubound(pmid)
+!     write(0,*)' pint lbounds=',lbound(pint),' ubounds=',ubound(pint)
 !
       DO L=1,LM
 !      write(0,*)' zmid l=',l
@@ -2297,7 +2300,7 @@
         end do
        end do
       end do
-      write(0,*)' after OMGA'
+!      write(0,*)' after OMGA'
 
 
       THL=210.
@@ -2307,7 +2310,7 @@
                 RDQ,RDTH,RDP,RDTHE,PL,THL,QS0,SQS,STHE,THE0)
 
       CALL TABLEQ(TTBLQ,RDPQ,RDTHEQ,PLQ,THL,STHEQ,THE0Q)
-      write(0,*)' after TABLEQ'
+!      write(0,*)' after TABLEQ'
 
 
 !     
@@ -2364,7 +2367,7 @@
       DO L = 1,LSM
          ALSL(L) = ALOG(SPL(L))
       END DO
-      write(0,*)' after ALSL'
+!      write(0,*)' after ALSL'
 !
 !HC WRITE IGDS OUT FOR WEIGHTMAKER TO READ IN AS KGDSIN
         if(me.eq.0)then
@@ -2436,7 +2439,7 @@
         call nemsio_close(nfile,iret=status)
         call nemsio_finalize()
 !
-       write(0,*)'end of INIT_NEMS'
+!       write(0,*)'end of INIT_NEMS'
 
       RETURN
       END

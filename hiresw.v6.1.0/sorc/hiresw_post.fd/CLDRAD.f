@@ -1510,11 +1510,11 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
           ENDDO      !--- End I loop
         ENDDO        !--- End J loop
 
-      write(6,*)'No. pts with PBL-cloud  =',npblcld
-      write(6,*)'No. pts to eliminate fog =',nfog
-      do k=2,7
-       write(6,*)'No. pts with fog below lev',k,' =',nfogn(k)
-      end do
+!      write(6,*)'No. pts with PBL-cloud  =',npblcld
+!      write(6,*)'No. pts to eliminate fog =',nfog
+!      do k=2,7
+!       write(6,*)'No. pts with fog below lev',k,' =',nfogn(k)
+!      end do
 
       nlifr = 0
       DO J=JSTA,JEND
@@ -1523,7 +1523,7 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
         if (CLDZ(i,j).ge.0..and.zcld.lt.160.) nlifr = nlifr+1
       end do
       end do
-      write(6,*)'No. pts w/ LIFR ceiling =',nlifr
+!      write(6,*)'No. pts w/ LIFR ceiling =',nlifr
 
 ! GSD CLOUD BOTTOM HEIGHTS
           IF (IGET(408).GT.0) THEN
@@ -1561,7 +1561,7 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
 
 !    B. ZHOU: CEILING
         IF (IGET(260).GT.0) THEN                                                                                                          
-        write(0,*) 'call CALCEILING'
+!        write(0,*) 'call CALCEILING'
             CALL CALCEILING(CLDZ,TCLD,CEILING)                                                                                   
             DO J=JSTA,JEND
              DO I=1,IM
