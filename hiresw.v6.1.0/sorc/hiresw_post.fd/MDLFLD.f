@@ -520,14 +520,14 @@
 
 
 !!! use model produced
-            DBZ(I,J,L)=REFL_MDL(I,J,L)
-        if (mod(I,5) .eq. 0 .and. mod(J,5) .eq. 0 .and. &
-              DBZ(I,J,L) .gt. 40.) then
-        write(0,*) 'used REFL_MDL: ', I,J,L,DBZ(I,J,L)
-        endif
+!            DBZ(I,J,L)=REFL_MDL(I,J,L)
+!        if (mod(I,5) .eq. 0 .and. mod(J,5) .eq. 0 .and. &
+!              DBZ(I,J,L) .gt. 40.) then
+!        write(0,*) 'used REFL_MDL: ', I,J,L,DBZ(I,J,L)
+!        endif
 
 ! use computed
-!            IF (DBZ(I,J,L).GT.0.) DBZ(I,J,L)=10.0*LOG10(DBZ(I,J,L)) ! DBZ
+            IF (DBZ(I,J,L).GT.0.) DBZ(I,J,L)=10.0*LOG10(DBZ(I,J,L)) ! DBZ
 
             IF (DBZR(I,J,L).GT.0.)DBZR(I,J,L)=10.0*LOG10(DBZR(I,J,L)) ! DBZ
             IF (DBZI(I,J,L).GT.0.)      &
@@ -2967,7 +2967,15 @@
             GRID1(I,J)=0.
             DO L=1,NINT(LMH(I,J))
 	      IF(DBZ(I,J,L)>18.3)then
-	        GRID1(I,J)=ZMID(I,J,L)
+
+! consider using L-1 height? or the ZINT above?
+!	        GRID1(I,J)=ZMID(I,J,L)
+	        GRID1(I,J)=ZINT(I,J,L)
+
+	      IF(DBZ(I,J,L)>20.0)then
+	        GRID1(I,J)=0.5*(ZINT(I,J,L)+ZMID(I,J,L-1))
+              ENDIF
+
 		go to 201
 	      END IF  
             ENDDO
