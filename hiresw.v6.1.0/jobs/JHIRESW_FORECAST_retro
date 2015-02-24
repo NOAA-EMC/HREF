@@ -84,10 +84,9 @@ export FIXprod=${FIXprod:-${HOMEprod}/fix}
 export USHutil=${USHutil:-/nwprod/util/ush}
 export EXECutil=${EXECutil:-/nwprod/util/exec}
 
-export NDATE=${NDATE:-$EXECutil/ndate}
+module load prod_util
 
-# Run setup to initialize working directory and utility scripts
-sh $USHutil/setup.sh
+export NDATE=${NDATE:-$EXECutil/ndate}
 
 # Run setpdy and initialize PDY variables
 # sh $USHutil/setpdy.sh
@@ -112,8 +111,14 @@ env
 # cyc=`echo $CYCLE | cut -c9-10`
 
 bsub < ${HOMEhiresw}/launch/sub_post.lsf_${NEST}_${MODEL}_${cyc}
+sleep 7
 bsub < ${HOMEhiresw}/launch/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
+sleep 2
+
 # bsub < ${HOMEhiresw}/launch/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}
+#
+
+### no SREF files to input to smartinit
 # bsub < ${HOMEhiresw}/launch/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
 # bsub < ${HOMEhiresw}/launch/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
 

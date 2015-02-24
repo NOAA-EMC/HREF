@@ -71,10 +71,9 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 export USHutil=${USHutil:-/nwprod/util/ush}
 export EXECutil=${EXECutil:-/nwprod/util/exec}
 
-export NDATE=${NDATE:-$EXECutil/ndate}
+module load prod_util
 
-# Run setup to initialize working directory and utility scripts
-sh $USHutil/setup.sh
+export NDATE=${NDATE:-$EXECutil/ndate}
 
 # Run setpdy and initialize PDY variables
 # sh $USHutil/setpdy.sh
