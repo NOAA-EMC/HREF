@@ -58,7 +58,7 @@ do
 sleep 10
 done
 
-$USHhiresw/hiresw_smartinit.sh_justprdgeng2fake ${hr}
+$USHhiresw/hiresw_smartinit.sh_justprdgeng2 ${hr}
 
 let "hr=hr+3"
 typeset -Z2 hr
