@@ -80,8 +80,7 @@ export EXECutil=${EXECutil:-/nwprod/util/exec}
 
 export WGRIB2=${WGRIB2:-$HOMEhiresw/exec/hiresw_wgrib2}
 
-# Run setup to initialize working directory and utility scripts
-sh $USHutil/setup.sh
+module load prod_util
 
 # Run setpdy and initialize PDY variables
 sh $USHutil/setpdy.sh

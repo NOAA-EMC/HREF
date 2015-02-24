@@ -81,8 +81,7 @@ export PARMutil=${PARMutil:-$HOMEhiresw/util/parm}
 export USHutil=${USHutil:-/nwprod/util/ush}
 export EXECutil=${EXECutil:-/nwprod/util/exec}
 
-# Run setup to initialize working directory and utility scripts
-sh $USHutil/setup.sh
+module load prod_util
 
 # Run setpdy and initialize PDY variables
 sh $USHutil/setpdy.sh
