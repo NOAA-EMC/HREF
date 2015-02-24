@@ -125,9 +125,14 @@ $WGRIB2 inputs.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_gri
 if [ $subpiece =  "1" ]
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN):" -grib nn.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP):" -grib nn.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
-cat nn.grb ceiling.grb > inputs_nn.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:1000 m above ground:" -grib 1000refd.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:4000 m above ground:" -grib 4000refd.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:263 K level:" -grib 263krefd.grb
+cat nn.grb ceiling.grb 1000refd.grb 4000refd.grb 263krefd.grb > inputs_nn.grb
+
+rm nn.grb ceiling.grb 1000refd.grb 4000refd.grb 263krefd.grb
 
 $WGRIB2 inputs_nn.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
 
