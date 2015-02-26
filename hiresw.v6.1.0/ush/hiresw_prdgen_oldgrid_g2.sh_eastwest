@@ -120,12 +120,12 @@ compress_type=jpeg
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
-$WGRIB2 inputs.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+$WGRIB2 inputs.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_vectors default -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
 if [ $subpiece =  "1" ]
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP):" -grib nn.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP):" -grib nn.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:1000 m above ground:" -grib 1000refd.grb
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:4000 m above ground:" -grib 4000refd.grb
