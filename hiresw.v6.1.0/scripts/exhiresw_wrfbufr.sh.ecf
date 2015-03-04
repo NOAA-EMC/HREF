@@ -196,16 +196,13 @@ EOF
 
 export pgm=hiresw_wrfbufr
 
-if [ -e prep_step ]
-then
-. ./prep_step
-fi
+. prep_step
 
 export FORT19="$DATA/bufrpost/hiresw_profdat"
 export FORT79="$DATA/bufrpost/profilm.c1.${tmmark}"
 export FORT11="itag"
 
-./startmsg
+startmsg
 
 # using mpirun.lsf needed after WCOSS SP4.2 upgrade
 
@@ -238,10 +235,7 @@ cd $DATA
 
 export pgm=hiresw_sndp_${RUN}
 
-if [ -e prep_step ]
-then
-. ./prep_step
-fi
+. prep_step
 
 cp $PARMhiresw/hiresw_sndp.parm.mono $DATA/hiresw_sndp.parm.mono
 cp $PARMhiresw/hiresw_bufr.tbl $DATA/hiresw_bufr.tbl
@@ -251,7 +245,7 @@ export FORT32="$DATA/hiresw_bufr.tbl"
 export FORT66="$DATA/profilm.c1.${tmmark}"
 export FORT78="$DATA/class1.bufr"
 
-./startmsg
+startmsg
 $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;./err_chk
 
@@ -288,10 +282,7 @@ EOF
   mkdir -p ${COMOUT}/bufr.${NEST}${MODEL}${cyc}
 
   export pgm=hiresw_stnmlist
-if [ -e prep_step ]
-then
   . prep_step
-fi
 
   export FORT20=$DATA/class1.bufr
   export DIRD=${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr

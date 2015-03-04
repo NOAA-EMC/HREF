@@ -113,7 +113,7 @@ fi
 else
 
 msg="FATAL ERROR: invalid NEST choice $NEST in prepfinal"
-./err_exit $msg
+err_exit $msg
 fi
 
 
@@ -167,9 +167,9 @@ cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
 done
 
 export pgm=hiresw_${MODEL}_real
-. ./prep_step
+. prep_step
 
-./startmsg
+startmsg
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
@@ -192,7 +192,7 @@ then
 
  if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
    msg="FATAL ERROR: WRF initial or boundary condition files needed by WRF-ARW model not copied to $COMOUT"
-   ./err_exit $msg
+   err_exit $msg
  fi
 fi
 

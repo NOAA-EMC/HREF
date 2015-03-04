@@ -213,7 +213,7 @@ fi
 #   Run wrf post.
 
 export pgm=hiresw_${MODEL}_post
-. ./prep_step
+. prep_step
 
 export FORT14="wrf_cntrl.parm"
 
