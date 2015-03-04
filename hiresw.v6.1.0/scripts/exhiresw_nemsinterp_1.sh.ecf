@@ -192,7 +192,7 @@ else
     INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
     msg="FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
-    ./err_exit $msg
+    err_exit $msg
   fi
 fi
 

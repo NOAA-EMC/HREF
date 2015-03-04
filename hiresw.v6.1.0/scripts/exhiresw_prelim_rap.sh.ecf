@@ -140,7 +140,7 @@ then
 else
 
 msg="FATAL ERROR: JHIRESW_PREPRAP attempted to run for non-conus domain."
-./err_exit $msg
+err_exit $msg
 
 fi
 
@@ -327,9 +327,9 @@ if [ $MODEL != nmmb ]
 then
 
 export pgm=hiresw_${MODEL}_real
-. ./prep_step
+. prep_step
 
-./startmsg
+startmsg
 
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
@@ -345,7 +345,7 @@ cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap
 
 if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap ]; then
     msg="FATAL ERROR: WRF initial condition from RAP conditions not produced"
-   ./err_exit $msg
+    err_exit $msg
 fi
 
 # Cat REAL log files and send to COM
@@ -353,7 +353,7 @@ cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.
 
 else # nmmb case
 export pgm=hiresw_nemsinterp
-prep_step
+. prep_step
 startmsg
 
 
@@ -389,7 +389,7 @@ else
     INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
     msg="FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
-    ./err_exit $msg
+    err_exit $msg
   fi
 fi
 
@@ -491,7 +491,7 @@ cat > ${WORK_DIR}/fort.81 << !
 export pgm=hiresw_coldstart
 . prep_step
 
-./startmsg
+startmsg
 $EXEChiresw/hiresw_coldstart >> $pgmout 2>errfile
 export err=$?;err_chk
 
@@ -506,7 +506,7 @@ if [ $err -ne 0 ]
 then
 ls -ltr
 msg="FATAL ERROR: did not copy configure file needed by model to $COMOUT"
-./err_exit $msg
+err_exit $msg
 fi
 
 

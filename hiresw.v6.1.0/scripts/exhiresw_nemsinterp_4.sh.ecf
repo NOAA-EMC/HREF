@@ -118,7 +118,7 @@ if [ $MODEL = "nmmb" ]; then
    cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
  else
    msg="FATAL ERROR: bad NEST selection $NEST in nemsinterp_4"
-   ./err_exit $msg
+   err_exit $msg
  fi
 fi
 
@@ -137,7 +137,7 @@ cp configure_file_01 configure_file
 else
 
 msg="FATAL ERROR: nemsinterp_4 only run for NMMB core"
-./err_exit $msg
+err_exit $msg
 
 fi
 

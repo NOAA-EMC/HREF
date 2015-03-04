@@ -179,7 +179,7 @@ fi
 if [ $err1 -ne 0 ] 
 then
   msg="FATAL ERROR: $whr input GRIB file from $GRIBSRC not found."
-  ./err_exit $msg
+  err_exit $msg
 fi
 
 whr=`expr $whr + $incr`

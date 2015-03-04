@@ -178,7 +178,7 @@ export err3=$?
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
 then
 msg="FATAL ERROR: ARW MODEL is missing a key input file such as wrfinput_d01, wrfbdy_d01, or namelist.input"
-./err_exit $msg
+err_exit $msg
 fi
 
 cp $PARMhiresw/hiresw_LANDUSE.TBL LANDUSE.TBL
@@ -205,7 +205,7 @@ export err1=$?
 if [ $err1 -ne 0 ]
 then
 msg="FATAL ERROR: NMMB MODEL is missing needed boco file for ${hr}"
-./err_exit $msg
+err_exit $msg
 fi
 
 done
@@ -248,7 +248,7 @@ export err3=$?
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
 then
 msg="FATAL ERROR: NMMB MODEL is missing a key input file such as input_domain_01_nemsio, boco.0045, or configure_file"
-./err_exit $msg
+err_exit $msg
 fi
 
 
@@ -320,7 +320,7 @@ fi
 
 
 export pgm=hiresw_${MODEL}_fcst
-. ./prep_step
+. prep_step
 
 export FORT_BUFFERED=true
 
@@ -328,13 +328,14 @@ if [ $RUN = "conusarw" ]
 then
 #phase1 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/16 16/4 16/2`"
 # export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 644/23 20/10 20/5`"
-export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 660/22 20/10 20/5`"
+# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 660/22 20/5`"
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 690/23 20/5`"
 elif [ $RUN = "akarw" ]
 then
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 576/16 32/8`"
 fi
 
-./startmsg
+startmsg
 
 if [ $MODEL = "nmmb" ]
 then
