@@ -75,15 +75,15 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 ###################################
 # Set up the UTILITIES
 ###################################
-export USHutil=${USHutil:-/nwprod/util/ush}
-export EXECutil=${EXECutil:-/nwprod/util/exec}
-
-export WGRIB2=${WGRIB2:-$HOMEhiresw/exec/hiresw_wgrib2}
 
 module load prod_util
+module load grib_util
+
+# keep using local version
+export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
 
 # Run setpdy and initialize PDY variables
-sh $USHutil/setpdy.sh
+sh setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
