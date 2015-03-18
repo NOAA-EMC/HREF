@@ -191,13 +191,13 @@ then
   then
 
 cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_2 \
-    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_4 > \ 
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_4 > \
   $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
   
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_2 \
    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_4
 
-$WGRIB2 $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2 -s > $COMOUT/${NEST}${MODEL}.t${cyc}z.awpregf${fhr}.grib2.idx
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2.idx
 
     if [ $SENDDBN_GB2 = YES ]; then
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
