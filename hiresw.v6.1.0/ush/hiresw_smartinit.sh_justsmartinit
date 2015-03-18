@@ -242,8 +242,8 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
   ln -sf TOPONDFD     fort.46
   ln -sf LANDNDFD     fort.48
   if [ $ext = grb ];then
-    $EXECutil/grbindex TOPONDFD TOPONDFDi
-    $EXECutil/grbindex LANDNDFD LANDNDFDi
+    $GRBINDEX TOPONDFD TOPONDFDi
+    $GRBINDEX LANDNDFD LANDNDFDi
     ln -sf TOPONDFDi  fort.47
     ln -sf LANDNDFDi  fort.49
   fi
@@ -267,12 +267,15 @@ echo err1 err2 on copies $err1 $err2
         fi
 	echo fhr2 $fhr2
 	echo fhr1 $fhr1
+	if [ -e MAXMING2.f${fhr2} ]
+        then
     cp MAXMING2.f${fhr2} MAXMIN2
+        else
+    echo MAXMING2.f${fhr2} is missing
+        fi
+
 	echo copy MAXMING2.f${fhr1} to MAXMIN1
     cp MAXMING2.f${fhr1} MAXMIN1
-
-#	cnvgrib -g12 MAXMIN${fhr2}.tm00 MAXMIN2
-#        cnvgrib -g12 MAXMIN${fhr1}.tm00 MAXMIN1
 
     $GRB2INDEX MAXMIN1 MAXMIN1i
     $GRB2INDEX MAXMIN2 MAXMIN2i
@@ -285,7 +288,10 @@ echo err1 err2 on copies $err1 $err2
 
 ### always copy
 
+ 	if [ $check -eq 0 ]
+        then
 cp $INPUT_DATA/3precip.${fhr}_interp .
+        fi
 
 	if [ $check6 -eq 0 ]
 	then
