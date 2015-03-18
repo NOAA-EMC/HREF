@@ -492,13 +492,17 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
         do i = 1, n
 
          if (miss(i).eq.0) then
-          if (trim(opr).eq.'>') then
+CMP       if (trim(opr).eq.'>') then
+          if (opr(1:1).eq.'>') then
             if (x(i).ge.thrs1)count=count+wgt(i)/wsum
-          else if (trim(opr).eq.'<') then
+CMP       else if (trim(opr).eq.'<') then
+          else if (opr(1:1).eq.'<') then
             if (x(i).le.thrs1) count=count+wgt(i)/wsum
-          else if (trim(opr).eq.'=') then
+CMP       else if (trim(opr).eq.'=') then
+          else if (opr(1:1).eq.'=') then
             if (x(i).eq.thrs1) count=count+wgt(i)/wsum
-          else if (trim(opr).eq.'-') then
+CMP       else if (trim(opr).eq.'-') then
+          else if (opr(1:1).eq.'-') then
             if (x(i).ge.thrs1.and.x(i).lt.thrs2) 
      +       count = count + wgt(i)/wsum
           end if
