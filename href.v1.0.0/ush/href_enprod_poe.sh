@@ -25,3 +25,4 @@ export MP_PGMMODEL=mpmd
 mpirun.lsf 
 
 
+echo "DONE" > RUNDIR/donepoe_PIECE
