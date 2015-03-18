@@ -31,6 +31,9 @@ MEMBER=$5
 subpiece=$6
 
 compress=complex2
+compress=jpeg
+compress="c3 -set_bitmap 1"
+
 reflag=1
 
 mkdir ${DATA}/prdgen_5km_${subpiece}

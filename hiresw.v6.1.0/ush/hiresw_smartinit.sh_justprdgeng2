@@ -185,7 +185,7 @@ if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
     cp $COMIN_GEFS/${gefscyc}/sref.t${gefscyc}z.pgrb${sgrb}.prob_3hrly.grib2 SREFPROB
   fi
 
-  $EXECutil/grb2index SREFPROB SREFPROBI
+  $GRB2INDEX SREFPROB SREFPROBI
   # check for missing sref data
   export err=$?; err_chk
 
@@ -195,12 +195,7 @@ if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
   grbpre="2 0 0 0 0"
   for PHR in $pcphr3 $pcphr6 $pcphr12;do 
 
-
 ### need an offset here to account for the 3 h offset in the SREF data????
-### need an offset here to account for the 3 h offset in the SREF data????
-### need an offset here to account for the 3 h offset in the SREF data????
-### need an offset here to account for the 3 h offset in the SREF data????
-
 
 #   prob of pcp > 0.01
 #    $EXECutil/wgrib -PDS10 SREFPROB |grep "${grbpre} 64 64 0 0"|grep "0 1 $PHR $pcphr 4"|$EXECutil/wgrib -i -grib -o dump SREFPROB
@@ -247,7 +242,7 @@ if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
 ### budget maybe not correct for probabilities here
 ###  $WGRIB2  srefallpcp -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl}
   $WGRIB2  srefallpcp -set_grib_type ${compress} -new_grid ${wgrib2def} srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl}
-  $EXECutil/grb2index srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl}
+  $GRB2INDEX srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl}
 
 fi #fhr -ge 0
 
@@ -373,7 +368,7 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
 	cp NDFD${fhr}.tm00 $prdgfl
 
-  $EXECutil/grb2index WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+  $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 
 # cp $PARMhiresw/hiresw_${MODEL}_mastersmart.${RUNTYP}.ctl  master${fhr}.ctl
 
@@ -513,14 +508,14 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 #why                        |${EXECutil}/wgrib -i -grib -o temp WRFPRS${FHRFRQ}.tm00 > wgrib.out
 #why       mv temp WRFPRS${FHRFRQ}.tm00
 
-      $EXECutil/grb2index WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+      $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 	err1=$?
 	if [ $err1 -ne 0 ]
 	then
 	echo trouble running grb2index on WRFPRS${fhr}.tm00
 	fi
 
-      $EXECutil/grb2index WRFPRS${FHRFRQ}.tm00 WRFPRS${FHRFRQ}i.tm00
+      $GRB2INDEX WRFPRS${FHRFRQ}.tm00 WRFPRS${FHRFRQ}i.tm00
 	err1=$?
 	if [ $err1 -ne 0 ]
 	then
@@ -579,7 +574,7 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 #        echo "contents of redone WRFPRS${fhr3}.tm00"
 #        ${EXECutil}/wgrib WRFPRS${fhr3}.tm00
 
-        $EXECutil/grb2index WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
+        $GRB2INDEX WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
 
 #          cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
 
@@ -598,7 +593,7 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 #why          ${EXECutil}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
 #why                           |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
 #why          mv temp WRFPRS${fhr6}.tm00
-        $EXECutil/grb2index WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
+        $GRB2INDEX WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
 
         ln -sf "WRFPRS${fhr6}.tm00"      fort.15    
         ln -sf "WRFPRS${fhr6}i.tm00"     fort.16
@@ -626,7 +621,7 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 #why          ${EXECutil}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
 #why                          |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
 #why          mv temp WRFPRS${fhr3}.tm00
-        $EXECutil/grb2index WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
+        $GRB2INDEX WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
 
 #          cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
 
@@ -645,7 +640,7 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 #why          ${EXECutil}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
 #why                           |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
 #why          mv temp WRFPRS${fhr6}.tm00
-        $EXECutil/grb2index WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
+        $GRB2INDEX WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
 
 
         ln -sf "WRFPRS${fhr}.tm00"       fort.15
@@ -710,7 +705,7 @@ cp ${freq}precip ${freq}precip.${fhr}_interp
 	fi
 
 	echo here with freq $freq and fhr $fhr
-     $EXECutil/grb2index ${freq}precip ${freq}precipi
+     $GRB2INDEX ${freq}precip ${freq}precipi
 	ls -l  ${freq}precip ${freq}precipi
 #      $EXECutil/copygb2 -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
 # $WGRIB2 ${freq}snow.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def}  ${freq}snow
@@ -720,7 +715,7 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
 	then
 	echo "bad copygb to generate ${freq}snow"
 	fi
-     $EXECutil/grb2index ${freq}snow ${freq}snowi
+     $GRB2INDEX ${freq}snow ${freq}snowi
     fi #MKPCP>0
   done #MKPCP loop
 
@@ -730,7 +725,7 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
 
  if [ -e WRFPRS${fhr}i.tm00 ];then rm WRFPRS${fhr}i.tm00;fi
 
-  $EXECutil/grb2index WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+  $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 
 #   echo creating $prdgfl file for fhr $fhr
 #   cat >input${fhr}.prd <<EOF5
@@ -759,7 +754,7 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
     exit
   fi
 
-  $EXECutil/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+  $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
 echo "DONE" > smartinitprdgendone${fhr}
 datestr=`date`

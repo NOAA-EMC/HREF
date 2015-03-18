@@ -53,11 +53,11 @@ cp $INPUT_DATA/DATE .
 #SMARTINIT OUTPUT grid filename extension
 outreg=$rg
 case $RUNTYP in
-  conusarw|conusnmmb) rg=conus; outreg=conus;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
-  hiarw|hinmmb) rg=hi; outreg=hi;wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
-  prarw|prnmmb) rg=pr; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
-  akarw|aknmmb) rg=ak; outreg=ak; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
-  guamarw|guamnmmb) rg=guam; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
+  conusarw|conusnmmb) rg=conus; outres="2p5km"; outreg=conus;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
+  hiarw|hinmmb) rg=hi; outres="2p5km"; outreg=hi;wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
+  prarw|prnmmb) rg=pr; outres="2p5km"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
+  akarw|aknmmb) rg=ak; outres="3km"; outreg=ak; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
+  guamarw|guamnmmb) rg=guam; outres="2p5km"; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
 esac
 
 # WGRIB2=$EXEChiresw/hiresw_wgrib2
@@ -253,7 +253,7 @@ err1=$?
 # cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
 # err2=$?
 
-    $EXECutil/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+    $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
 echo err1 err2 on copies $err1 $err2
 
@@ -274,8 +274,8 @@ echo err1 err2 on copies $err1 $err2
 #	cnvgrib -g12 MAXMIN${fhr2}.tm00 MAXMIN2
 #        cnvgrib -g12 MAXMIN${fhr1}.tm00 MAXMIN1
 
-    $EXECutil/grb2index MAXMIN1 MAXMIN1i
-    $EXECutil/grb2index MAXMIN2 MAXMIN2i
+    $GRB2INDEX MAXMIN1 MAXMIN1i
+    $GRB2INDEX MAXMIN2 MAXMIN2i
   fi
 
   freq=6;fmx=21   #fmx =  maxmin unit number for 1st maxmin file
@@ -312,11 +312,11 @@ echo copy ${freq}snow.${fhr} $err2
 #      time $WGRIB2 ${freq}precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}precip
 
      mv ${freq}precip.${fhr}_interp ${freq}precip
-     $EXECutil/grb2index ${freq}precip ${freq}precipi
+     $GRB2INDEX ${freq}precip ${freq}precipi
 
 #      time $WGRIB2 ${freq}snow.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}snow
      mv ${freq}snow.${fhr}_interp ${freq}snow
-     $EXECutil/grb2index ${freq}snow ${freq}snowi
+     $GRB2INDEX ${freq}snow ${freq}snowi
 
 	fi
 
@@ -326,7 +326,7 @@ echo copy ${freq}snow.${fhr} $err2
 #     time $WGRIB2 3precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} 3precip
 
         cp 3precip.${fhr}_interp 3precip
-        $EXECutil/grb2index 3precip 3precipi
+        $GRB2INDEX 3precip 3precipi
         
 	fi
 
@@ -336,7 +336,7 @@ echo copy ${freq}snow.${fhr} $err2
 	then
 	cat 3precip meso${rg}.NDFDf${fhr} > new_meso${rg}.NDFDf${fhr}
 	mv new_meso${rg}.NDFDf${fhr} meso${rg}.NDFDf${fhr}
-        $EXECutil/grb2index meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+        $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
         fi
 
 ls -l meso${rg}.NDFDf${fhr}
@@ -352,7 +352,7 @@ ls -l meso${rg}.NDFDf${fhr}
           rm SREFPCPi
         fi
 
-        $EXECutil/grb2index SREFPCP SREFPCPi
+        $GRB2INDEX SREFPCP SREFPCPi
         ln -sf "SREFPCPi"                 fort.14
 	fi
 
@@ -365,7 +365,7 @@ ls -l meso${rg}.NDFDf${fhr}
 
 mv ${freq}precipi ${freq}precipi_was
 
-$EXECutil/grb2index ${freq}precip ${freq}precipi
+$GRB2INDEX ${freq}precip ${freq}precipi
 
   ln -sf "${freq}precipi"           fort.16
         fi
@@ -380,12 +380,22 @@ $EXECutil/grb2index ${freq}precip ${freq}precipi
 
 	fmx=21
 
-    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2 MAXMIN3
-    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr6}.grib2 MAXMIN4
-    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr9}.grib2 MAXMIN5
-    $EXECutil/grb2index MAXMIN3 MAXMIN3i
-    $EXECutil/grb2index MAXMIN4 MAXMIN4i
-    $EXECutil/grb2index MAXMIN5 MAXMIN5i
+#	if [ ! -e $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2 ]
+#	then
+#	err_exit "missing $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2"
+#	fi
+
+#    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2 MAXMIN3
+#    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr6}.grib2 MAXMIN4
+#    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr9}.grib2 MAXMIN5
+
+    cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr3}.${outreg}.grib2 MAXMIN3
+    cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr6}.${outreg}.grib2 MAXMIN4
+    cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr9}.${outreg}.grib2 MAXMIN5
+
+    $GRB2INDEX MAXMIN3 MAXMIN3i
+    $GRB2INDEX MAXMIN4 MAXMIN4i
+    $GRB2INDEX MAXMIN5 MAXMIN5i
 
 
 #     READ 6/12 hr precip from special files created by makeprecip
@@ -399,11 +409,11 @@ cp $INPUT_DATA/6snow.${fhr}_interp .
 ### change to WGRIB2
 
      mv 12precip.${fhr}_interp 12precip
-     $EXECutil/grb2index 12precip 12precipi
+     $GRB2INDEX 12precip 12precipi
 
 
      mv 6snow.${fhr}_interp 6snow
-     $EXECutil/grb2index 6snow 6snowi
+     $GRB2INDEX 6snow 6snowi
 
       ln -sf "6snow"      fort.17
       ln -sf "6snowi"     fort.18
@@ -444,7 +454,7 @@ if [ ! -e ${freq}snow ]
 then
 cp $INPUT_DATA/${freq}snow.${fhr}_interp ${freq}snow
 rm ${freq}snowi
-$EXECutil/grb2index ${freq}snow ${freq}snowi
+$GRB2INDEX ${freq}snow ${freq}snowi
 fi
 
          ln -fs "${freq}snow"  fort.17
