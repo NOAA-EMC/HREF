@@ -67,7 +67,8 @@ endif
 
 CPPFLAGS += $(DEP_FRONTS)
 
-TARGET = ../exe/NEMS.x
+# TARGET = ../exe/NEMS.x
+TARGET = ../../../exec/hiresw_nmmbfcst_r50726
 
 INCS = -Iatmos \
        -Ichem \

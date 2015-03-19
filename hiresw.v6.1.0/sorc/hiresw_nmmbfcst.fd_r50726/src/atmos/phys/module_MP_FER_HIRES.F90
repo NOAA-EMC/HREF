@@ -11,26 +11,26 @@
       PUBLIC :: FERRIER_INIT_HR, GPVS_HR,FPVS,FPVS0,NX
 !-----------------------------------------------------------------------------
       REAL,PRIVATE,SAVE ::  ABFR, CBFR, CIACW, CIACR, C_N0r0,            &
-     &  CRACW, ARAUT, BRAUT, ESW0, RFmax,                                &
+     &  CRACW, ARAUT, BRAUT, ESW0,                                       &
      &  RR_DRmin, RR_DR1, RR_DR2, RR_DR3, RR_DR4, RR_DR5, RR_DRmax
 !
       REAL,PUBLIC,SAVE ::  CN0r0, CN0r_DMRmin, CN0r_DMRmax,             &
-                           RQR_DRmax, RQR_DRmin
+                           RFmax, RQR_DRmax, RQR_DRmin
 !
       INTEGER, PRIVATE,PARAMETER :: MY_T1=1, MY_T2=35
       REAL,PRIVATE,DIMENSION(MY_T1:MY_T2),SAVE :: MY_GROWTH_NMM
 !
       REAL, PRIVATE,PARAMETER :: DMImin=.05e-3, DMImax=1.e-3,            &
      &      DelDMI=1.e-6,XMImin=1.e6*DMImin
-      INTEGER, PUBLIC,PARAMETER :: XMImax=1.e6*DMImax, XMIexp=.0536,     &
-     &                             MDImin=XMImin, MDImax=XMImax
+      REAL, PUBLIC, PARAMETER :: XMIexp=.0536, XMImax=1.e6*DMImax
+      INTEGER, PUBLIC,PARAMETER :: MDImin=XMImin, MDImax=XMImax
       REAL, PRIVATE,DIMENSION(MDImin:MDImax) ::                          &
      &      ACCRI,VSNOWI,VENTI1,VENTI2
       REAL, PUBLIC,DIMENSION(MDImin:MDImax) :: SDENS    !-- For RRTM
 !
       REAL, PRIVATE,PARAMETER :: DMRmin=.05e-3, DMRmax=1.0e-3,           &
      &      DelDMR=1.e-6,XMRmin=1.e6*DMRmin, XMRmax=1.e6*DMRmax
-      INTEGER, PRIVATE,PARAMETER :: MDRmin=XMRmin, MDRmax=XMRmax
+      INTEGER, PUBLIC,PARAMETER :: MDRmin=XMRmin, MDRmax=XMRmax
       REAL, PRIVATE,DIMENSION(MDRmin:MDRmax)::                           &
      &      ACCRR,MASSR,RRATE,VRAIN,VENTR1,VENTR2
 !
@@ -39,8 +39,8 @@
 !
       INTEGER,PARAMETER :: NX=7501
       REAL, PARAMETER :: XMIN=180.0,XMAX=330.0
-      REAL, DIMENSION(NX),PUBLIC,SAVE :: TBPVS,TBPVS0
-      REAL, PUBLIC,SAVE :: C1XPVS0,C2XPVS0,C1XPVS,C2XPVS
+      REAL, DIMENSION(NX),PRIVATE,SAVE :: TBPVS,TBPVS0
+      REAL, PRIVATE,SAVE :: C1XPVS0,C2XPVS0,C1XPVS,C2XPVS
 !
       REAL, PRIVATE,PARAMETER ::                                        &
 !--- Physical constants follow:
