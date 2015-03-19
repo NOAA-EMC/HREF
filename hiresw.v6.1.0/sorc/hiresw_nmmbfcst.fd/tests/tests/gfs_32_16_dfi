@@ -1,0 +1,18 @@
+###############################################################################
+#
+#  GFS digital filter
+#  30 compute tasks / 1 thread
+#
+###############################################################################
+
+export TEST_DESCR="GFS,32 total proc (tasks), 1 thread, quilt, digital filter on reduced grid"
+
+export CNTL_DIR=GFS_DFI_REDUCEDGRID
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf03 flxf06 flxf12 flxf24 flxf48"
+
+export_gsm
+export FDFI=3
+
+RUN_SCRIPT=rt_gfs.sh

@@ -1,0 +1,24 @@
+#!/bin/ksh
+#
+# @ step_name = fim_runtest
+# @ output = out
+# @ error = err
+# @ job_type = parallel
+# @ job_name = _JBNME_
+# @ total_tasks = _TASKS_
+# @ parallel_threads = _THRDS_
+# @ task_affinity = cpu(_THRDS_)
+##@node_usage = shared
+# @ node_usage = not_shared
+#TBH:  need less than 1GB for G4 tests... 
+##@ node_resources= ConsumableMemory(110GB)
+# @ resources= ConsumableMemory (1GB)
+# @ class = _CLASS_
+# @ group = _GROUP_
+# @ wall_clock_limit = 00:_WLCLK_:00
+# @ preferences = Feature == "dev"
+# @ network.MPI = sn_all,not_shared,us
+# @ account_no=_ACCNR_
+##@ blocking=unlimited
+# @ queue
+
