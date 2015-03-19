@@ -1,9 +1,0 @@
-#! /bin/ksh
-
-gmake clean
-
-./esmf_version 3_wcoss
-
-gmake nmm
-
-# cp ../exe/NEMS.x ../../../exec/hiresw_nmmbfcst
