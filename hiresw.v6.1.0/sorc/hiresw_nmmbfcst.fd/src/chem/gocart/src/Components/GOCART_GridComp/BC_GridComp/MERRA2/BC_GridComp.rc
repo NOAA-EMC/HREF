@@ -1,0 +1,64 @@
+#
+# Resource file for BC parameters. 
+# Emission factors in kg species / kg emissions (DM or species)
+#
+
+number_bc_classes:  2 
+
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+# For emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+# QFED-v2.x: emission file provides kg BC m-2 s-1
+# -----------------------------------------------
+bb_srcfilen: ExtData/PIESA/sfc/QFED/v2.4r6/Y%y4/M%m2/qfed2.emis_bc.005.%y4%m2%d2.nc4
+biomass_burning_emission_factor: 1.
+
+# HFED-v1.x: emission file provides kg BC m-2 s-1
+# -----------------------------------------------
+#bb_srcfilen: ExtData/MERRA2/sfc/HFED/v1.0/Y%y4/hfed.emis_bc.x576_y361_t14.%y4.nc4
+#biomass_burning_emission_factor: 1.
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+# Biofuel Source -- Included in AeroCom anthropogenic emissions
+  bf_srcfilen: /dev/null
+  biofuel_emission_factor: 1.
+
+# Anthropogenic (BF & FF) emissions -- allowed to input as two layers
+  ebcant1_srcfilen: ExtData/AeroCom/sfc/AeroCom.noship_BC_src.sfc.x360_y181_t44.19780703_12z_20210703_12z.nc
+  ebcant2_srcfilen: /dev/null
+
+# EDGAR based ship emissions of BC
+  bc_ship_srcfilen: ExtData/MERRA2/sfc/edgar-v41.emis_bc.navigation.x360_y181_t47.19750703T12z_20210703T00z.nc4
+
+# Initially hydrophobic portion
+  hydrophobic_fraction: 0.8
+
+# Scavenging efficiency per bin [km-1]
+fscav: 0.0  0.4   #  
+
+# Dry particle density [kg m-3]
+particle_density: 1000   1000
+
+# Molecular weight of species [kg mole-1]
+molecular_weight: 0.18  0.18
+
+# Number of particles per kg mass
+fnum: 1.50e19  1.50e19
+
+# Number median radius [um]
+particle_radius_number: 0.0118  0.0118
+
+# Sigma of lognormal number distribution
+sigma: 2.0  2.0
+

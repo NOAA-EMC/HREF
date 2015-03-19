@@ -1,0 +1,92 @@
+#
+# Resource file for SU parameters. 
+#
+
+number_su_classes:  4
+
+SU_regions:  ExtData/AeroCom/sfc/ARCTAS.region_mask.x540_y361.2008.nc
+
+# Indicate regions using a comma-delimited list of integers.
+# To activate all land boxes, use -1, or all or global (not case sensitive)
+# -------------------------------------------------------------------------
+SU_regions_indices: global
+
+# For all land boxes in a latitude range, set doZoneMasking to
+# 1 then specify BOTH the south and north limits in degrees.
+# WARNING: When set, zone masking OVERRIDES regions setting above!
+# ----------------------------------------------------------------
+doZoneMasking: 0
+LatitudeSouth: 45.0
+LatitudeNorth: 90.0
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+# For biomass burning emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+# QFED-v2.x: emission file provides kg SO2 m-2 s-1
+# ------------------------------------------------
+bb_srcfilen: ExtData/PIESA/sfc/QFED/v2.4r6/Y%y4/M%m2/qfed2.emis_so2.005.%y4%m2%d2.nc4
+biomass_burning_emission_factor: 1.
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+so2_anthro_l1_srcfilen: ExtData/MERRA2/sfc/edgar-v42.emis_so2.non_energy.x1152_y721.19700703T12z_20200703T00z.nc4
+so2_anthro_l2_srcfilen: ExtData/MERRA2/sfc/edgar-v42.emis_so2.energy.x1152_y721.19700703T12z_20200703T00z.nc4
+
+so2_ship_srcfilen:      ExtData/MERRA2/sfc/edgar-v41.emis_so2.navigation.x360_y181_t47.19750703T12z_20210703T00z.nc4
+so4_ship_srcfilen:      ExtData/MERRA2/sfc/edgar-v41.emis_so4.navigation.x360_y181_t47.19750703T12z_20210703T00z.nc4
+
+aircraft_fuel_srcfilen: ExtData/AeroCom/L72/AeroCom.aircraft_fuel.eta.x288_y181_z72_t14.%y4.nc
+
+dmso_concfilen:         ExtData/MERRA2/sfc/DMSclim_sfcconcentration.x360_y181_t12.Lana2011.nc4
+
+volcano_srcfilen:       ExtData/AeroCom/sfc/volcanic_v4/Aerocom.so2_volcanic.%y4%m2%d2.rc
+
+oh_concfilen: ExtData/MERRA2/L72/gmi_ctm_hindcast.oxidants.x144_y91_z72_t14.%y4.nc4
+no3_mrfilen:  ExtData/MERRA2/L72/gmi_ctm_hindcast.oxidants.x144_y91_z72_t14.%y4.nc4
+h2o2_mrfilen: ExtData/MERRA2/L72/gmi_ctm_hindcast.oxidants.x144_y91_z72_t14.%y4.nc4
+
+so4_anthropogenic_fraction: 0.03
+
+# aircraft emission factor: go from kg fuel to kg SO2
+aircraft_fuel_emission_factor: 0.0008
+
+# Scavenging efficiency per bin [km-1]
+fscav: 0.0  0.0  0.4  0.4   #    
+
+# Dry particle radius [um], used for settling
+particle_radius: 0.0 0.0 0.35 0.0
+
+# Type of settling to use (see Chem_SettlingMod)
+rhFlag: 4
+
+# Dry particle density [kg m-3]
+particle_density: -1  -1  1700  -1
+
+# Molecular weight of species [kg mole-1]
+molecular_weight: -1  -1  0.132  -1
+
+# Number of particles per kg mass
+fnum: -1  -1  9.01e16  -1
+
+# Number median radius [um]
+particle_radius_number: -1  -1  0.0695  -1
+
+# Sigma of lognormal number distribution
+sigma: -1  -1  2.03  -1
+
+
+# OH H2O2 NO3 from GMI Combined Stratosphere Troposphere (Lower case yes to enable)
+# -------------------------------------------------------------------------------------
+using_GMI_OH: no
+using_GMI_NO3: no
+using_GMI_H2O2: no
+export_H2O2: no
