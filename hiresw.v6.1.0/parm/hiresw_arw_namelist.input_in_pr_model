@@ -58,7 +58,7 @@
 
 
  &domains
- time_step                           = 25,
+ time_step                           = 24,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
  max_dom                             = 1,
@@ -93,8 +93,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x=6
- nproc_y=15
+ nproc_x=5
+ nproc_y=20
  /
 
  &physics

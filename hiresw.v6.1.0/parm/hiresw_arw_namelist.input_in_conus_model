@@ -58,9 +58,9 @@
 
 
  &domains
- time_step                           = 26,
- time_step_fract_num                 = 2,
- time_step_fract_den                 = 3,
+ time_step                           = 25,
+ time_step_fract_num                 = 0,
+ time_step_fract_den                 = 1,
  max_dom                             = 1,
  s_we                                = 1,     
  e_we                                = 1545,    
@@ -94,12 +94,12 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x = 15
- nproc_y = 44
+ nproc_y = 46
  /
 
  &physics
  mp_physics                          = 6,  
- mp_tend_lim                         = 0.1,
+ mp_tend_lim                         = 0.10,
  ra_lw_physics                       = 1,  
  ra_sw_physics                       = 1,   
  radt                                = 10,  
@@ -163,5 +163,5 @@ do_radar_ref                        = 1,
 
  &namelist_quilt
  nio_tasks_per_group = 20,
- nio_groups = 2,
+ nio_groups = 1,
  /

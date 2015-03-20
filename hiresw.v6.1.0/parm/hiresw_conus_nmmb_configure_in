@@ -27,8 +27,8 @@ sbd:  -17.584                # Grid's southern boundary (rotated degrees)
 #####  Grid Decomposition  #####
 ################################
 
-inpes:  15             # Number of compute tasks in the I direction
-jnpes:  44            # Number of compute tasks in the J direction
+inpes:  13             # Number of compute tasks in the I direction
+jnpes:  48            # Number of compute tasks in the J direction
 
 #################################
 ####  Specify the I/O tasks  ####
@@ -38,7 +38,7 @@ quilting:              true    # Do you want asynchronous quilting/history write
 read_groups:           0
 read_tasks_per_group:  0
 write_groups:          2
-write_tasks_per_group: 22
+write_tasks_per_group: 24
 
 
 ############################################
@@ -83,7 +83,7 @@ avg_max_length: 3600        # Time in seconds when averaged fields are reset
 object_uphl: 20.0           # Updraft Helicity value used to define convective objects
 
 rst_out_00:          false  # True--> Write 00h history in restarted run
-write_last_restart:  true   # True--> Write last restart file
+write_last_restart:  false   # True--> Write last restart file
 
 freerun:             true   # True--> Original
                             # False--> 5X divergence dumping in NDAS forec.
@@ -313,7 +313,7 @@ write_nemsioctl:     false   # True--> Yes write ctl for nemsio run history file
 write_donefileflag:  true
 write_fsyncflag:     false  # True--> Yes write fsync
 write_dopost:        false     # True--> Yes run post on quilt
-post_gribversion:     2     # grib version for post output
+post_gribversion:    'grib1'     # grib version for post output
 
 io_hst_unit:          -999
 io_rst_unit:          -999
@@ -378,3 +378,22 @@ input_ready:  false          # Nest has pre-generated input file
 nhours_clocktime:   1        # Frequency in hours between clocktime diagnostic prints.
 npe_print:          1        # The MPI task that will provide the clocktimes.
 
+
+#######################
+#####  Hurricane    ####
+########################
+
+run_tc:             false    # true=use hwrf phys
+
+sas_pgcon:          0.55     # convectively forced pressure gradient factor,default=0.55
+sas_shal_pgcon:     -1       # convectively forced pressure gradient factor sas shallow conv,
+                             # '-1' means sas_pgcon is used
+sas_shalconv:       1        # 1=enable shallow conv,better with gfspblhur scheme
+sas_mass_flux:      9.0e9    # mass flux limit,default=9e9
+sas_mommix:         1.0      # SAS momentum mixing coef
+var_ric:            1.0      # 1=use variable critical Ri# in gfspblhur
+coef_ric_l:         0.16     # Regression coef for land Ric,default=0.16
+coef_ric_s:         0.16     # Regression coef for sea Ric,default=0.16
+alpha:              0.7      # adjustment coef for K in gfspblhur
+sfenth:             0.0      # GFDL surface-layer enhancement coef
+disheat:            true     # true='consider diss heating'

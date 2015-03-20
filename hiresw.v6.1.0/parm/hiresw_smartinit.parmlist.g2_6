@@ -1,55 +1,41 @@
-PRES:46 hybrid lev
-HGT:46 hybrid lev
-TMP:46 hybrid lev
-SPFH:46 hybrid lev
-UGRD:46 hybrid lev
-VGRD:46 hybrid lev
-PRES:47 hybrid lev
-HGT:47 hybrid lev
-TMP:47 hybrid lev
-SPFH:47 hybrid lev
-UGRD:47 hybrid lev
-VGRD:47 hybrid lev
-PRES:48 hybrid lev
-HGT:48 hybrid lev
-TMP:48 hybrid lev
-SPFH:48 hybrid lev
-UGRD:48 hybrid lev
-VGRD:48 hybrid lev
-PRES:49 hybrid lev
-HGT:49 hybrid lev
-TMP:49 hybrid lev
-SPFH:49 hybrid lev
-UGRD:49 hybrid lev
-VGRD:49 hybrid lev
-PRES:50 hybrid lev
-HGT:50 hybrid lev
-TMP:50 hybrid lev
-SPFH:50 hybrid lev
-UGRD:50 hybrid lev
-VGRD:50 hybrid lev
-PRES:surface
-HGT:surface
-REFC:
-VIS:surface
-GUST:surface
-TMP:500 mb
-TMP:700 mb
-RH:700 mb
-TMP:850 mb
-RH:850 mb
-TMP:950 mb
-WEASD:surface
-TMP:2 m above ground
-SPFH:2 m above ground
-DPT:2 m above ground
-UGRD:10 m above ground
-VGRD:10 m above ground
-APCP:surface
-HGT:lowest level of the wet bulb zero
-LCDC:low cloud layer
-MCDC:middle cloud layer
-HCDC:high cloud layer
-TCDC:entire atmosphere
-4LFTX:180-0 mb above ground
-HGT:planetary boundary layer
+UGRD:34 hybrid lev
+VGRD:34 hybrid lev
+PRES:35 hybrid lev
+HGT:35 hybrid lev
+TMP:35 hybrid lev
+SPFH:35 hybrid lev
+UGRD:35 hybrid lev
+VGRD:35 hybrid lev
+PRES:36 hybrid lev
+HGT:36 hybrid lev
+TMP:36 hybrid lev
+SPFH:36 hybrid lev
+UGRD:36 hybrid lev
+VGRD:36 hybrid lev
+PRES:37 hybrid lev
+HGT:37 hybrid lev
+TMP:37 hybrid lev
+SPFH:37 hybrid lev
+UGRD:37 hybrid lev
+VGRD:37 hybrid lev
+PRES:38 hybrid lev
+HGT:38 hybrid lev
+TMP:38 hybrid lev
+SPFH:38 hybrid lev
+UGRD:38 hybrid lev
+VGRD:38 hybrid lev
+PRES:39 hybrid lev
+HGT:39 hybrid lev
+TMP:39 hybrid lev
+SPFH:39 hybrid lev
+UGRD:39 hybrid lev
+VGRD:39 hybrid lev
+PRES:40 hybrid lev
+HGT:40 hybrid lev
+TMP:40 hybrid lev
+SPFH:40 hybrid lev
+UGRD:40 hybrid lev
+VGRD:40 hybrid lev
+PRES:41 hybrid lev
+HGT:41 hybrid lev
+TMP:41 hybrid lev

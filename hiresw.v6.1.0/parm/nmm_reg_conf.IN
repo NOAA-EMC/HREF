@@ -79,7 +79,7 @@ minutes_restart:  720       # Frequency of restart output (minutes)
 avg_max_length: 3600        # Time in seconds when averaged fields are reset
 
 rst_out_00:          false  # True--> Write 00h history in restarted run
-write_last_restart:  true   # True--> Write last restart file
+write_last_restart:  false   # True--> Write last restart file
 
 freerun:             true   # True--> Original
                             # False--> 5X divergence dumping in NDAS forec.

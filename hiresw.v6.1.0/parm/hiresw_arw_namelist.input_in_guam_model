@@ -94,7 +94,7 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x=5
- nproc_y=15
+ nproc_y=14
  /
 
  &physics
@@ -162,6 +162,6 @@
 
 
  &namelist_quilt
- nio_tasks_per_group = 5,
+ nio_tasks_per_group = 2,
  nio_groups = 1,
  /
