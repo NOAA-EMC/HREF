@@ -24,8 +24,8 @@ sbd:  -4.604                # Grid's southern boundary (rotated degrees)
 #####  Grid Decomposition  #####
 ################################
 
-inpes:  4             # Number of compute tasks in the I direction
-jnpes:  10             # Number of compute tasks in the J direction
+inpes:  5             # Number of compute tasks in the I direction
+jnpes:  14             # Number of compute tasks in the J direction
 
 
 #################################
@@ -81,7 +81,7 @@ object_uphl: 20.0           # Updraft Helicity value used to define convective o
 
 
 rst_out_00:          false  # True--> Write 00h history in restarted run
-write_last_restart:  true   # True--> Write last restart file
+write_last_restart:  false   # True--> Write last restart file
 
 freerun:             true   # True--> Original
                             # False--> 5X divergence dumping in NDAS forec.
