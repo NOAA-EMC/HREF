@@ -451,19 +451,9 @@
         write(0,*) 'back from set_scale'
        CALL PUTGB2(51,GFLD,IRET) ! DOWNT
 
-
-        write(0,*) 'call normal GRIBIT'
-       CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,70,DEC)
-        write(0,*) 'return normal GRIBIT'
-
 ! ----------------------------------------
 
-       ID(1:25) = 0
-       ID(8)=17
-       ID(9)=105
-       ID(11)=2
        DEC=-2.0
-       CALL GRIBIT(ID,RITEHD,DOWNDEW,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNDEW)
 
@@ -478,12 +468,7 @@
 
 ! ----------------------------------------
 
-       ID(1:25) = 0
-       ID(8)=51
-       ID(9)=105
-       ID(11)=2
        DEC=3.0
-       CALL GRIBIT(ID,RITEHD,DOWNQ,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNQ)
 
@@ -498,12 +483,7 @@
 
 ! ----------------------------------------
 
-       ID(1:25) = 0
-       ID(8)=33
-       ID(9)=105
-       ID(11)=10
        DEC=-2.0
-       CALL GRIBIT(ID,RITEHD,DOWNU,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNU)
 
@@ -517,12 +497,8 @@
 
 ! ----------------------------------------
 
-       ID(1:25) = 0
-       ID(8)=34
-       ID(9)=105
-       ID(11)=10
        DEC=-2.0
-       CALL GRIBIT(ID,RITEHD,DOWNV,GDIN,70,DEC)
+
        print *, 'DOWNU',minval(downu),maxval(downu)
        print *, 'DOWNV',minval(downv),maxval(downv)
 
@@ -539,10 +515,7 @@
 
 ! ----------------------------------------
 
-       ID(1:25) = 0
-       ID(8)=1;ID(9)=1
        DEC=3.0
-       CALL GRIBIT(ID,RITEHD,PSFC,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,PSFC)
 
@@ -558,12 +531,7 @@
 
 !      Output high res topo,land for nests ??
 !      Output topo for all grids 03-07-13
-         ID(1:25) = 0
-         ID(8)=7    !EQ 8 in ndfd ???????
-         ID(9)=1
          DEC=-2.0
-         CALL GRIBIT(ID,RITEHD,TOPO,GDIN,70,DEC)
-        write(0,*) 'region here where doing GRIBIT: ', REGION
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,TOPO)
 
@@ -577,11 +545,8 @@
 
 ! ----------------------------------------
        IF (REGION .NE. 'CS' .and. REGION .NE.'CS2P' )THEN
-         ID(1:25) = 0
-         ID(8)=81
-         ID(9)=1
+
          DEC=1.0
-         CALL GRIBIT(ID,RITEHD,VEG_NDFD,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,VEG_NDFD)
 
@@ -608,10 +573,7 @@
        WGUST=MIN(WGUST,SPVAL)
        print *, 'WGUST',minval(wgust),maxval(wgust)
 
-       ID(1:25) = 0
-       ID(8)=180;ID(9)=1
        DEC=3.0 
-       CALL GRIBIT(ID,RITEHD,WGUST,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,WGUST)
 
@@ -627,10 +589,7 @@
 
 ! ----------------------------------------
 
-       ID(1:25) = 0
-       ID(8)=1;ID(9)=1
        DEC=6.0
-       CALL GRIBIT(ID,RITEHD,DOWNP,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNP)
 
@@ -729,12 +688,7 @@
         CALL MKPOP(PBLMARK,RH,BLI,P3CP01,P3CP10,P12CP01,P12CP10,QPF3,POP3,GDIN,3,VALIDPT)
         CALL BOUND(POP3,0.,100.)
 
-        ID(1:25) = 0
-        ID(8)=193;ID(9)=1
-        ID(18)=FHR3;ID(19)=FHR
-        ID(20)=4
         DEC=3.0
-        CALL GRIBIT(ID,RITEHD,POP3,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,POP3)
 
@@ -760,8 +714,6 @@
 
 ! ----------------------------------------
 
-        ID(8)=61;ID(9)=1
-        CALL GRIBIT(ID,RITEHD,P03M,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,P03M)
 
@@ -794,12 +746,7 @@
          WHERE(POP6.LT.POP3) POP6=POP3
          CALL BOUND(POP6,0.,100.)
 
-         ID(1:25) = 0
-         ID(8)=193;ID(9)=1
-         ID(18)=FHR6;ID(19)=FHR
-         ID(20)=4
          DEC=3.0
-         CALL GRIBIT(ID,RITEHD,POP6,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,POP6)
 
@@ -819,9 +766,6 @@
        CALL PUTGB2(51,GFLD8,IRET) ! POP6
 
 ! ----------------------------------------------------
-
-         ID(8)=61;ID(9)=1
-         CALL GRIBIT(ID,RITEHD,P06M,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,P06M)
 
@@ -850,12 +794,7 @@
          WHERE (POP12.LT.POP6) POP12=POP6
          CALL BOUND(POP12,0.,100.)
 
-         ID(1:25) = 0
-         ID(8)=193;ID(9)=1
-         ID(18)=FHR12;ID(19)=FHR
-         ID(20)=4
          DEC=3.0
-         CALL GRIBIT(ID,RITEHD,POP12,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,POP12)
 
@@ -873,10 +812,6 @@
 
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! POP12
-
-
-         ID(8)=61;ID(9)=1
-         CALL GRIBIT(ID,RITEHD,P12M,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,P12M)
 
@@ -902,10 +837,7 @@
       ALLOCATE (WXSTRING(IM,JM),GRIDWX(IM,JM),STAT=kret)
       CALL MAKESTRING(IRAIN,ISNOW,IZR,IIP,BLI,POP3,GDIN,WXSTRING,GRIDWX,VALIDPT)
 
-      ID(1:25) = 0
-      ID(8)=140;ID(9)=1
       DEC=3.0
-      CALL GRIBIT(ID,RITEHD,GRIDWX,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,GRIDWX)
 
@@ -947,14 +879,7 @@
         ENDWHERE
         CALL BOUND(CWR,0.,100.)
 
-        ID(1:25) = 0
-        ID(2)=129
-        ID(8)=130;ID(9)=1
-        ID(18)=FHR3;ID(19)=FHR
-        ID(20)=4
         DEC=3.0
-        CALL GRIBIT(ID,RITEHD,CWR,GDIN,70,DEC)
-
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,CWR)
 
@@ -983,12 +908,7 @@
 ! HI snowamt3 uses temp < 264 check ????
         SNOWAMT3=SPVAL
         CALL SNOWFALL(SN03,SNOWAMT3,DOWNT,THOLD,GDIN,3.,VALIDPT)
-        ID(1:25) = 0
-        ID(8)=66;ID(9)=1
-        ID(18)=FHR3;ID(19)=FHR
-        ID(20)=4
         DEC=3.0
-        CALL GRIBIT(ID,RITEHD,SNOWAMT3,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,SNOWAMT3)
 
@@ -1020,8 +940,6 @@
           SNOWAMT6=SPVAL
         write(0,*) 'maxval(SN06): ', maxval(SN06)
           CALL SNOWFALL(SN06,SNOWAMT6,DOWNT,THOLD,GDIN,4.,VALIDPT)
-          ID(18)=FHR6;ID(19)=FHR
-          CALL GRIBIT(ID,RITEHD,SNOWAMT6,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,SNOWAMT6)
 
@@ -1065,10 +983,7 @@
 !         endif
         DEALLOCATE (TEMP1,TEMP2,STAT=kret)
 
-        ID(1:25) = 0
-        ID(8)=71;ID(9)=1
         DEC=3.0
-!        CALL GRIBIT(ID,RITEHD,SKY,GDIN,70,DEC)
 
 !       CALL FILL_FLD(GFLD,NUMV,IM,JM,SKY)
 
@@ -1083,11 +998,7 @@
 !       CALL PUTGB2(51,GFLD,IRET) ! SKY
 
 
-        ID(1:25) = 0
-        ID(2)=129
-        ID(8)=212;ID(9)=200
         DEC=3.0
-        CALL GRIBIT(ID,RITEHD,REFC,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,REFC)
 
@@ -1110,10 +1021,7 @@
 !   field straight out of the NAM. 
 !========================================================================
 
-      ID(1:25) = 0
-      ID(8)=7;ID(9)=245
       DEC=3.0
-      CALL GRIBIT(ID,RITEHD,WETFRZ,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,WETFRZ)
 
@@ -1131,10 +1039,7 @@
 
 ! VISIBILITY
 
-      ID(1:25) = 0
-      ID(8)=20;ID(9)=1
       DEC=2.7
-      CALL GRIBIT(ID,RITEHD,VIS,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,VIS)
 
@@ -1190,10 +1095,7 @@
        ENDDO
       ENDDO
 
-      ID(1:25) = 0
-      ID(8)=31;ID(9)=220
       DEC=3.0
-      CALL GRIBIT(ID,RITEHD,DIRTRANS,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DIRTRANS)
 
@@ -1208,10 +1110,7 @@
        CALL PUTGB2(51,GFLD,IRET) ! DIRTRANS
         write(0,*) 'IRET for PBL WINDIR: ', IRET
 
-      ID(1:25) = 0
-      ID(8)=32;ID(9)=220
       DEC=-3.0
-      CALL GRIBIT(ID,RITEHD,MGTRANS,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,MGTRANS)
 
@@ -1243,10 +1142,7 @@
       ENDDO
       CALL BOUND(BLR,0.,100.)
 
-      ID(1:25) = 0
-      ID(8)=52;ID(9)=220
       DEC=3.0
-      CALL GRIBIT(ID,RITEHD,BLR,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,BLR)
 
@@ -1294,24 +1190,16 @@
       ENDDO
       ENDDO
 
-      ID(1:25) = 0
-      ID(8)=8;ID(9)=220
       DEC=-3.0    ! HI = +3.0 ?????
-      CALL GRIBIT(ID,RITEHD,MIXHGT,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,MIXHGT)
 
-!       GFLD%discipline=0
-!       GFLD%ipdtnum=0
-!       GFLD%ipdtmpl(1)=3
-!       GFLD%ipdtmpl(2)=6
-!       GFLD%ipdtmpl(10)=220
-!       GFLD%ipdtmpl(12)=0
-
        GFLD%discipline=0
        GFLD%ipdtnum=0
-       GFLD%ipdtmpl(1)=19
-       GFLD%ipdtmpl(2)=3
+!       GFLD%ipdtmpl(1)=19
+!       GFLD%ipdtmpl(2)=3
+       GFLD%ipdtmpl(1)=3
+       GFLD%ipdtmpl(2)=6
        GFLD%ipdtmpl(10)=220
        GFLD%ipdtmpl(12)=0
 
@@ -1319,9 +1207,6 @@
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! MIXHGT
         write(0,*) 'IRET for PBL MIXHGT: ', IRET
-
-
-
 
 !--------------------------------------------------------------------------
 ! LAL - Based mainly on lifted index.  Adds more when RH at top of BL is
@@ -1383,10 +1268,7 @@
       ENDDO
       ENDDO
 
-      ID(1:25) = 0
-      ID(8)=132;ID(9)=1
       DEC=2.0     ! HI DEC=3.0 ????
-      CALL GRIBIT(ID,RITEHD,LAL,GDIN,70,DEC)
         print*, 'past LAL write'
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,LAL)
@@ -1421,13 +1303,7 @@
 
         NUMV=IM*JM
 
-!      RITEHD = .TRUE.
-!      ID(1:25) = 0
-!      ID(8)=11
-!        ID(9)=105
-!        ID(11)=2
        DEC=-2.0
-!      CALL GRIBIT(ID,RITEHD,DOWNT,GDIN,71,DEC)
 
         write(0,*) 'min,max DOWNT: ', minval(DOWNT),maxval(DOWNT)
 
@@ -1444,12 +1320,7 @@
        CALL PUTGB2(52,GFLD,IRET) ! DOWNT for MAXMIN file
 
  
-!      ID(1:25) = 0
-!      ID(8)=17
-!        ID(9)=105
-!        ID(11)=2
       DEC=-2.0
-!      CALL GRIBIT(ID,RITEHD,DOWNDEW,GDIN,71,DEC)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNDEW)
 
@@ -1469,7 +1340,10 @@
 !   since this files serve as 1st guess for Alaskan RTMA
       IF (TRIM(REGION).EQ.'HI' .or. TRIM(REGION).EQ.'PR'  & 
       .or. TRIM(REGION).EQ.'AKRT' .or. TRIM(REGION).EQ.'AK3')THEN
-        IF(.not.LHR3 .AND. FHR.LT.9) CALL GRIBLIMITED(70,GDIN)
+        IF(.not.LHR3 .AND. FHR.LT.9) then
+        write(0,*) 'calling GRIBLIMITED'
+                CALL GRIBLIMITED(70,GDIN)
+        ENDIF
       ENDIF
 
         write(6,*) 'to write of older T'
@@ -1483,14 +1357,11 @@
 
           DO ivarb=1,2
 
-            ID(1:25) = 0
             DEC=-2.0
             TEMP1=SPVAL;TEMP2=SPVAL
 
             IF(ivarb.eq.1) then
-              ID(8)=11
-        ID(9)=105
-        ID(11)=2
+
               where (VALIDPT) 
                 TEMP1=THOLD(:,:,3) ! 1 hour old Temp
                 TEMP2=THOLD(:,:,2) ! 2 hour old Temp
@@ -1521,9 +1392,6 @@
 
             else
 
-              ID(8)=17
-        ID(9)=105
-        ID(11)=2
               where (VALIDPT) 
                 TEMP1=DHOLD(:,:,3) ! 1 hour old Temp
                 TEMP2=DHOLD(:,:,2)  ! 2 hour old Temp
@@ -1553,10 +1421,8 @@
 
             GDIN%FHR=GDIN%FHR-1  ! change current hr to prev. hr for GRIBIT 
             print *,'OUTPUT MAX-MIN for FHR',GDIN%FHR
-            CALL GRIBIT(ID,RITEHD,TEMP1,GDIN,70,DEC)
             GDIN%FHR=GDIN%FHR-1  ! change current hr to FHR-2
             print *,'OUTPUT MAX-MIN for FHR',GDIN%FHR
-            CALL GRIBIT(ID,RITEHD,TEMP2,GDIN,70,DEC)
             GDIN%FHR=IFHRIN;FHR=IFHRIN;IFHR=IFHRIN
 
           ENDDO 
@@ -1612,15 +1478,7 @@
        CALL BOUND(RHMAX3,0.,100.)
        CALL BOUND(RHMIN3,0.,100.)
  
-       ID(1:25) = 0
-       ID(8)=15
-       ID(9)=105
-       ID(11)=2
-       ID(18)=FHR3;ID(19)=FHR
-       ID(20)=4
        DEC=-2.0
-        print*, 'calling GRIBIT for MAX3'
-       CALL GRIBIT(ID,RITEHD,TMAX3,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,TMAX3)
 
@@ -1643,12 +1501,7 @@
 
 
 
-       ID(8)=16
-       ID(9)=105
-       ID(11)=2
        where(tmin3.eq.0)tmin3=spval
-        print*, 'calling GRIBIT for MIN3'
-       CALL GRIBIT(ID,RITEHD,TMIN3,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,TMIN3)
 
@@ -1669,16 +1522,7 @@
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! TMIN3
 
-       ID(1:25) = 0
-       ID(2)=129
-       ID(8)=218
-       ID(9)=105
-       ID(11)=2
-       ID(18)=FHR3;ID(19)=FHR
-       ID(20)=4
        DEC=3.0
-        print*, 'calling GRIBIT for RHMAX3'
-       CALL GRIBIT(ID,RITEHD,RHMAX3,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,RHMAX3)
 
@@ -1686,7 +1530,7 @@
        GFLD8%ipdtnum=8     ! should be superfluous
 
        GFLD8%ipdtmpl(1)=1
-       GFLD8%ipdtmpl(2)=1
+       GFLD8%ipdtmpl(2)=27 ! maxrh
        GFLD8%ipdtmpl(9)=FHR3
        GFLD8%ipdtmpl(10)=103
        GFLD8%ipdtmpl(12)=2
@@ -1698,19 +1542,13 @@
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! RHMAX3
 
-       ID(8)=217
-       ID(9)=105
-       ID(11)=2
-        print*, 'calling GRIBIT for RHMIN3'
-       CALL GRIBIT(ID,RITEHD,RHMIN3,GDIN,70,DEC)
-
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,RHMIN3)
 
        GFLD8%discipline=0
        GFLD8%ipdtnum=8     ! should be superfluous
 
        GFLD8%ipdtmpl(1)=1
-       GFLD8%ipdtmpl(2)=1
+       GFLD8%ipdtmpl(2)=198 ! minrh
        GFLD8%ipdtmpl(9)=FHR3
        GFLD8%ipdtmpl(10)=103
        GFLD8%ipdtmpl(12)=2
@@ -1752,14 +1590,7 @@
         CALL BOUND(RHMAX12,0.,100.)
         CALL BOUND(RHMIN12,0.,100.)
 
-         ID(1:25) = 0
-         ID(8)=15
-       ID(9)=105
-       ID(11)=2
-         ID(18)=FHR12;ID(19)=FHR
-         ID(20)=4
          DEC=-2.0
-         CALL GRIBIT(ID,RITEHD,TMAX12,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,TMAX12)
 
@@ -1780,15 +1611,13 @@
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! TMAX12
 
-         ID(8)=16
-       ID(9)=105
-       ID(11)=2
-
 !        1-28-13 JTM : check for incorrect tmin even for validpt=true 
          where(tmin12.le.10)tmin12=spval
-         CALL GRIBIT(ID,RITEHD,TMIN12,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,TMIN12)
+
+        write(0,*) 'minval(TMIN12): ', minval(TMIN12)
+        write(0,*) 'maxval(TMIN12): ', maxval(TMIN12)
 
        GFLD8%discipline=0
        GFLD8%ipdtnum=8     ! should be superfluous
@@ -1807,12 +1636,7 @@
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! TMIN12
 
-         ID(2)=129
-         ID(8)=218
-       ID(9)=105
-       ID(11)=2
          DEC=3.0
-         CALL GRIBIT(ID,RITEHD,RHMAX12,GDIN,70,DEC)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,RHMAX12)
 
@@ -1820,7 +1644,7 @@
        GFLD8%ipdtnum=8     ! should be superfluous
 
        GFLD8%ipdtmpl(1)=1
-       GFLD8%ipdtmpl(2)=1
+       GFLD8%ipdtmpl(2)=27 ! rhmax
        GFLD8%ipdtmpl(9)=FHR12
        GFLD8%ipdtmpl(10)=103
        GFLD8%ipdtmpl(12)=2
@@ -1832,18 +1656,13 @@
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! RHMAX12
 
-         ID(8)=217
-       ID(9)=105
-       ID(11)=2
-         CALL GRIBIT(ID,RITEHD,RHMIN12,GDIN,70,DEC)
-
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,RHMIN12)
 
        GFLD8%discipline=0
        GFLD8%ipdtnum=8     ! should be superfluous
 
        GFLD8%ipdtmpl(1)=1
-       GFLD8%ipdtmpl(2)=1
+       GFLD8%ipdtmpl(2)=198 ! minrh
        GFLD8%ipdtmpl(9)=FHR12
        GFLD8%ipdtmpl(10)=103
        GFLD8%ipdtmpl(12)=2
@@ -1864,13 +1683,7 @@
         print*, 'call HINDEX'
       CALL HINDEX(IM,JM,HAINES,HLVL,VALIDPT)
         print*, 'return with min/max: ', minval(HAINES),maxval(HAINES)
-      ID(1:25) = 0
-      ID(2)=129
-      ID(8)=250;ID(9)=1
       DEC=3.0
-        print*, 'calling GRIBIT for HAINES'
-      CALL GRIBIT(ID,RITEHD,HAINES,GDIN,70,DEC)
-
        CALL FILL_FLD(GFLD,NUMV,IM,JM,HAINES)
 
        GFLD%discipline=2
@@ -1887,8 +1700,6 @@
         call baclose(51,iret)
 
 
-      ID(2)=2
-      ID(8)=209;ID(9)=1
       DEC=1.0
 
         endif
@@ -2217,6 +2028,8 @@
     INCLUDE 'DEFGRIBINT.INC'   ! interface statements for gribit subroutines
 
 !! modify here??
+
+        write(0,*) 'need GRIB2 here'
 
        print *,'OUTPUT LIMITED GRIB FILE at FHR ',GDIN%FHR,' for REGION ',GDIN%REGION
        RITEHD = .TRUE.
