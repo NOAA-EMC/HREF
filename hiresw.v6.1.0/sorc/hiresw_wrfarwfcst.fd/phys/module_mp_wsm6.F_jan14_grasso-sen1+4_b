@@ -40,7 +40,9 @@ MODULE module_mp_wsm6
 !
 !-- Reduce collection of cloud water by snow & graupel by 50%, SEN1 test in Grasso et al. (WAF, Oct 2014)
 !
-   REAL, PARAMETER, PRIVATE :: eacrc = 0.5        ! Cloud water collection efficiency by snow & graupel
+! SEN1b, 10% of original efficiency
+!
+   REAL, PARAMETER, PRIVATE :: eacrc = 0.10     ! Cloud water collection efficiency by snow & graupel
    REAL, PARAMETER, PRIVATE :: dens  =  100.0     ! Density of snow
    REAL, PARAMETER, PRIVATE :: qs0   =  6.e-4     ! threshold amount for aggretion to occur
    REAL, SAVE ::                                      &
@@ -216,7 +218,7 @@ CONTAINS
 ! consider doing from lim_alt:lim_alt, but need the max code to key 
 ! on the same level
 
-               lim_alt=14
+               lim_alt=16
                call refl10cm_wsm6 (qv1d(lim_alt:lim_alt), qr1d(lim_alt:lim_alt), &
                       qs1d(lim_alt:lim_alt), qg1d(lim_alt:lim_alt),              &
                        t1d(lim_alt:lim_alt), p1d(lim_alt:lim_alt),               &
@@ -948,7 +950,9 @@ CONTAINS
 !
 !-- Reduce PSACI by 50%, SEN4 test in Grasso et al. (WAF, Oct 2014)
 !
-          eacrs = 0.5*exp(0.07*(-supcol))
+!-- SEN4b, retain 10% of original efficiency
+!
+          eacrs = 0.10*exp(0.07*(-supcol))
 !
           xmi = den(i,k)*qci(i,k,2)/xni(i,k)
           diameter  = min(dicon * sqrt(xmi),dimax)
