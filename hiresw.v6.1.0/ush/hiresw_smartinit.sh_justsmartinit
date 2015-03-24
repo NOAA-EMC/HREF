@@ -250,12 +250,10 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 
 cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
 err1=$?
-# cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
-# err2=$?
 
-    $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+$GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
-echo err1 err2 on copies $err1 $err2
+echo err1 on copy $err1
 
   mksmart=1
   if [ $check -eq 0 -a $fhr -ne 00 ];then 
@@ -267,6 +265,7 @@ echo err1 err2 on copies $err1 $err2
         fi
 	echo fhr2 $fhr2
 	echo fhr1 $fhr1
+
 	if [ -e MAXMING2.f${fhr2} ]
         then
     cp MAXMING2.f${fhr2} MAXMIN2
@@ -513,10 +512,10 @@ fi
 
 	ls -l fort.*
 
+	if [ $fhr -gt 0 ]
+        then
 	ls -l MAXMIN*
-
-	echo "contents of MAXMIN1 at " $fhr
-    $WGRIB2 MAXMIN1
+        fi
 
   $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
   export err=$?; err_chk

@@ -242,19 +242,20 @@ $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid $
 if [ $DOMIN_SMALL = "conus" -a $subpiece = "1" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
-# $WGRIB2 inputs_budget.grb -new_grid_interpolation budget -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
 if [ $DOMIN_SMALL != "conus" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
-$WGRIB2 inputs_budget.grb -new_grid_interpolation budget -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+$WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
      if [ $fhr%3 -ne 0 ]
      then
 
+
+#####
 if [ $DOMIN_SMALL = "conus" ]
 then
 
@@ -268,26 +269,45 @@ else
 fi
 
 fi
+#####
 
 if [ $DOMIN_SMALL != "conus" ]
 then
   $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
   $WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+	ls -l ${filenamthree}${fhr}.tm00_budget
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget  > ${filenamthree}${fhr}.tm00
 fi
 
-
      else # 3 hour time
 
-if [ [ $DOMIN_SMALL = "conus" -a $subpiece = "1" ] -o  $DOMIN_SMALL != "conus" ] 
+	echo DOMIN_SMALL $DOMIN_SMALL 
+	echo subpiece $subpiece
+
+if [ $DOMIN_SMALL = "conus" ]
 then
+
+if [ $subpiece = "1" ]
+then
+        echo COMBINING at 3 h time
+        ls -l  ${filenamthree}${fhr}.tm00_budget
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 else
+        echo MOVING at 3 h time
+        ls -l  ${filenamthree}${fhr}.tm00_budget
   mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
 fi
 
-     fi
-    
+fi
+
+if [ $DOMIN_SMALL != "conus" ] 
+then
+        echo COMBINING properly at 3 h time
+  cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
+fi
+
+fi
+
 export err=$?;./err_chk
 
 cp $INPUT_DATA/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
@@ -317,10 +337,10 @@ then
 
 if [ $DOMIN_SMALL = "conus" ] 
 then
-#       cp ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}_${subpiece}
-       cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+	echo COPYING f00 file to hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+       cp ${filenamthree}${fhr}.tm00 ${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 else
-       cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
+       cp ${filenamthree}${fhr}.tm00 ${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 fi
 
 
@@ -422,26 +442,19 @@ fi
   $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
 #   export err=$?;./err_chk
 
-
-#     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
-#      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      else # not $fhr%3=0
 
-#     cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
-#      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
      fi
-
 
    else
 
 ## model = "nmm"
 
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
-#      cat ${filenamthree}${fhr}.tm00   > $DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
 
 
   fi  # arw/nmm break
@@ -461,10 +474,11 @@ echo DOWN HERE
 ## temp copy to $DATA
 	if [ $subpiece -gt 0 ]
         then
-       cp hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 \
-	${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
+         echo copying a grib2 to DATA $DATA
+         cp hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 \
+	 ${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
         else
-       cp  $DOMOUT.t${CYC}z.ndfd${gres}f${fhr} ${DATA}/$DOMOUT.t${CYC}z.ndfd${gres}f${fhr}
+         cp  hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 ${DATA}/
         fi
 ## temp copy to $DATA
 

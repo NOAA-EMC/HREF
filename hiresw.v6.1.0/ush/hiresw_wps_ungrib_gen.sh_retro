@@ -32,7 +32,12 @@ stream=${5}
 cd $DATA/run_ungrib_${stream}/
 ${utilscript}/setup.sh
 
+if [ $OLD -lt 1 ]
+then
+cp $PARMhiresw/hiresw_Vtable.GFS Vtable
+else
 cp $PARMhiresw/hiresw_Vtable.GFS_old Vtable
+fi
 
 if [ $MODEL != "nmmb" ]
 then
