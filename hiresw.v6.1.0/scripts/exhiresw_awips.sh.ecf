@@ -44,7 +44,7 @@ then
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregeastf${fhr}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregeast_${RUN}f${fhr}
-    $EXECutil/tocgrib2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
+    tocgrib2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
        cp  $FORT51  $pcom
@@ -74,7 +74,7 @@ then
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregwestf${fhr}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregwest_${RUN}f${fhr}
-    $EXECutil/tocgrib2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
+    tocgrib2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
        cp  $FORT51  $pcom
@@ -106,7 +106,7 @@ else
     export FORT11=$COMIN/${RUN}.t${cyc}z.awpregf${fhr}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpreg_${RUN}f${fhr}
-    $EXECutil/tocgrib2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
+    tocgrib2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
        cp  $FORT51  $pcom
