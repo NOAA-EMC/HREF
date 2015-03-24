@@ -41,8 +41,6 @@ else
  cd ${DATA}/prdgen_full/
 fi
 
-sh $USHutil/setup.sh
-
 #cd $DATA
 DOMIN=${DOMIN_SMALL}${model}
 

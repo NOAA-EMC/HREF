@@ -34,7 +34,6 @@ reflag=1
 
 mkdir ${DATA}/prdgen_5km_${region}_${subpiece}
 cd ${DATA}/prdgen_5km_${region}_${subpiece}/
-sh $USHutil/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
 
@@ -111,7 +110,7 @@ EOF5
 
 rm fort.*
 
-export pgm=hiresw_prdgen  ;. ./prep_step
+export pgm=hiresw_prdgen  ; . prep_step
 
 ### extract just needed items
 
