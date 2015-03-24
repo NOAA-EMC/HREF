@@ -2,7 +2,7 @@ MSLET:mean sea level:
 VIS:surface:
 PRES:surface:
 HGT:surface:
-RH:2 m above ground:
+:RH:2 m above ground:
 SPFH:2 m above ground:
 UGRD:10 m above ground:
 VGRD:10 m above ground:
