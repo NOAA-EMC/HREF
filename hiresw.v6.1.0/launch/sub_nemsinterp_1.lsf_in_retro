@@ -33,5 +33,7 @@ export DATE=_DATE_
 export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.nemsinterp_1_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
+export GESNAM=/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
+
 
 $HOMEhiresw/jobs/JHIRESW_NEMSINTERP_1_retro

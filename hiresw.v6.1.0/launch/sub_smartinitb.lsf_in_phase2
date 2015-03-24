@@ -8,7 +8,7 @@
 ###BSUB -R "span[ptile=1]"
 #BSUB -R rusage[mem=11000]
 #BSUB -n 1
-#BSUB -W 1:19
+#BSUB -W 1:49
 #
 
 export MP_EUILIB=us
@@ -34,7 +34,7 @@ DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export COMIN=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export INPUT_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}
-export PRDGEN_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}/prdgen_full
+export PRDGEN_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.smartinitb_${NEST}_${MODEL}_${cyc}_${envir}
 
 $HOMEhiresw/jobs/JHIRESW_SMARTINITB

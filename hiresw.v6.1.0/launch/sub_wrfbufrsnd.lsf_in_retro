@@ -1,6 +1,6 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/logs/test_wrfbufrsnd.out
-#BSUB -eo /meso/save/Matthew.Pyle/logs/test_wrfbufrsnd.err
+#BSUB -oo /meso/save/Matthew.Pyle/logs/hiresw_bufrsnd.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/logs/hiresw_bufrsnd.err__DOM___CORE___CYC_
 #BSUB -R span[ptile=_PTILEBUFR_]
 #BSUB -R affinity[core(1)]
 #BSUB -n _NPROCBUFR_
@@ -41,7 +41,7 @@ export SENDDBN=NO
 
 export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export COMIN=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
-export INPUT_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
-export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.bufrpost_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.bufrpost_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
-$HOMEhiresw/jobs/JHIRESW_WRFBUFRSND
+$HOMEhiresw/jobs/JHIRESW_WRFBUFRSND_retro

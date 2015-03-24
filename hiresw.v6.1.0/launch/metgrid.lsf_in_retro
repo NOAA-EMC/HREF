@@ -41,14 +41,20 @@ then
 
 bsub < sub_prelimfinal.lsf__DOM___CORE___CYC_
 
+sleep 5
+
 rm sub_prelimfinal.lsf__DOM___CORE___CYC_
 
 else
 
 bsub < sub_nemsinterp_1.lsf__DOM___CORE___CYC_
+sleep 5
 bsub < sub_nemsinterp_2.lsf__DOM___CORE___CYC_
+sleep 5
 bsub < sub_nemsinterp_3.lsf__DOM___CORE___CYC_
+sleep 5
 bsub < sub_nemsinterp_4.lsf__DOM___CORE___CYC_
+sleep 5
 
 rm sub_nemsinterp_1.lsf__DOM___CORE___CYC_
 rm sub_nemsinterp_2.lsf__DOM___CORE___CYC_
