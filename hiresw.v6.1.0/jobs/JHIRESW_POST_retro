@@ -83,6 +83,9 @@ export EXECutil=${EXECutil:-/nwprod/util/exec}
 
 module load prod_util
 
+sh $USHutil/setup.sh
+
+
 export NDATE=${NDATE:-$EXECutil/ndate}
 
 # Run setpdy and initialize PDY variables
