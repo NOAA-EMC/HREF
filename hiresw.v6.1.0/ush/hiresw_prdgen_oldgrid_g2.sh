@@ -40,7 +40,6 @@ reflag=1
 
 mkdir ${DATA}/prdgen_5km_${subpiece}
 cd ${DATA}/prdgen_5km_${subpiece}/
-sh $USHutil/setup.sh
 
 DOMIN=${DOMIN_SMALL}${model}
 
@@ -179,7 +178,7 @@ EOF5
 
 rm fort.*
 
-export pgm=hiresw_prdgen  ;. ./prep_step
+export pgm=hiresw_prdgen  ;. prep_step
 
 # export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.${wgt}5km"
 

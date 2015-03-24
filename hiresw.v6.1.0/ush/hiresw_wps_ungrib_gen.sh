@@ -30,7 +30,6 @@ envir=${4}
 stream=${5}
 
 cd $DATA/run_ungrib_${stream}/
-${USHutil}/setup.sh
 
 cp $PARMhiresw/hiresw_Vtable.GFS Vtable
 
