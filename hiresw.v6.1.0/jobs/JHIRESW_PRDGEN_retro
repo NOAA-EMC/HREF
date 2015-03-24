@@ -88,6 +88,7 @@ export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 
 export WGRIB2=${WGRIB2:-$EXEChiresw/hiresw_wgrib2}
+export WGRIB2=$EXEChiresw/hiresw_wgrib2
 
 ###################################
 # Set up the UTILITIES
@@ -96,6 +97,9 @@ export USHutil=${USHutil:-/nwprod/util/ush}
 export EXECutil=${EXECutil:-/nwprod/util/exec}
 
 module load prod_util
+
+sh $USHutil/setup.sh
+
 
 export NDATE=${NDATE:-${EXECutil}/ndate}
 
@@ -132,14 +136,15 @@ cd $dirbase
 
 cp /meso/save/Matthew.Pyle/hiresw.v6.1.0/util/retro/* .
 
-./process_dir.scr  hiresw.${PDY} ${MODEL} ${cyc}
+./process_dir.scr  hiresw.${PDY} ${MODEL} ${cyc} ${NEST}
 
 ###
 
-nextcyc=`$NDATE +12 $thiscyc`
+# nextcyc=`$NDATE +12 $thiscyc`
+nextcyc=`$NDATE +24 $thiscyc`
 
 nextday=`echo $nextcyc  | cut -c1-8`
 nexthr=`echo $nextcyc  | cut -c9-10`
  
 cd /meso/save/Matthew.Pyle/hiresw.v6.1.0/launch
-./launch_test_retro conus ${MODEL} ${nexthr} ${nextday}
+./launch_test_retro ${NEST} ${MODEL} ${nexthr} ${nextday}
