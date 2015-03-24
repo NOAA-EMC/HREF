@@ -18,8 +18,8 @@ cp configure.wrf_wcoss configure.wrf
 
 ./compile em_real > compile_arw_fast.log 2>&1
 
-cp ./main/real.exe $TARGDIR/hiresw_arw_real_v3.6.1
-cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst_v3.6.1
+cp ./main/real.exe $TARGDIR/hiresw_arw_real
+cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
 
 ############################
 
