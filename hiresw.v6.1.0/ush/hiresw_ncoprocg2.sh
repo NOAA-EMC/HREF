@@ -31,29 +31,12 @@ fi
 
 if [ $mksmart -eq 1 ]
 then
-ls -l MESO${RGUSE}${fhr}.tm00
-
-#tst cnvgrib -g12 -p40 -nv MESO${RGUSE}${fhr}.tm00 smart.grb2
-#tst cp smart.grb2 smart.grb2_was_${fhr}
-
-# cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  MESO${RGUSE}${fhr}.tm00 >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-##tst cat $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}  smart.grb2  >   ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
-
 cat $PRDGEN_DATA/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2  smartg2.${fhr}  >   hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2
-
-rm smart.grb2
-
 else
-
-cp $PRDGEN_DATA/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2               hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2
-
+cp  $PRDGEN_DATA/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2                      hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2
 fi
 
 # rm $PRDGEN_DATA/${mdl}.t${cyc}z.ndfd${res}f${fhr}
-
-# CREATE GRIB2 FILE
-
-# # $utilexec/cnvgrib -g12 -p40 ${mdl}.t${cyc}z.smart${outreg}f${fhr}  ${mdl}.t${cyc}z.smart${outreg}f${fhr}.grib2
 
 if [ $SENDCOM = YES ]
 then
