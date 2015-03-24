@@ -30,7 +30,7 @@ PERL			=	perl
 
 RANLIB			=	echo
 
-WRF_DIR			=	../hiresw_wrfarwfcst_3.6.1.fd
+WRF_DIR			=	../hiresw_wrfarwfcst.fd
 
 WRF_INCLUDE     =       -I$(WRF_DIR)/external/io_netcdf \
                         -I$(WRF_DIR)/external/io_grib_share \
