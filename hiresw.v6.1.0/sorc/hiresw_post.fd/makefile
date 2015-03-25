@@ -65,12 +65,12 @@ FFLAGS   = $(OPTS) $(FREE) $(TRAPS) $(DEBUG) \
            $(WRF_INC) \
            $(XML_INC) \
            $(G2_INC) \
-           $(NEMSIO_INC) \
+           -I$(NEMSIO_INC) \
            $(GFSIO_INC) \
            $(SIGIO_INC) \
            $(SFCIO_INC) \
            $(W3_INC) \
-           $(CRTM_INC) \
+           -I$(CRTM_INC) \
            $(NETCDF_INC)
 
 LIBS     = $(WRF_LIB) \
