@@ -25,8 +25,7 @@ fhr=$1
 DOMIN_SMALL=$2
 CYC=$3
 model=$4
-MEMBER=$5
-subpiece=${6}
+subpiece=${5}
 
 reflag=1
 compress="c3 -set_bitmap 1"
