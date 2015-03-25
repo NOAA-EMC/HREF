@@ -33,8 +33,8 @@ if [ "$RUN_ENVIR" = prod ]; then
 
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
   export DBNROOT=/nwprod/spa_util/fakedbn
-  export COMHIRESW=/com/hiresw/prod/hiresw
-  export COMNAMNEST=/com/nam/prod/nam
+  export COMINHIRESW=/com/hiresw/prod/hiresw
+  export COMINNAM=/com/nam/prod/nam
   export HOMEhref=${HOMEhref:-/nw${RUN_ENVIR}/href.${model_ver}} 
   export EXEChref=${EXEChref:-$HOMEhref/exec}
   export PARMhref=${PARMhref:-$HOMEhref/parm}
@@ -44,7 +44,6 @@ if [ "$RUN_ENVIR" = prod ]; then
 fi
 
 if [ "$RUN_ENVIR" = dev ] ; then
-#   . /u/$LOGNAME/work/HREF/parm/href_config.dev
 . ../parm/href_config.dev
   export DATA=/ptmpp1/$LOGNAME/href/tmpnwprd/href_${cyc}_${RUN_ENVIR} 
 fi 
@@ -52,6 +51,7 @@ fi
 # 
 # obtain unique process id (pid) and make temp directory (DATA)
 #
+
 export pid=$$
 export DATA=${DATA:-/tmpnwprd/href_${cyc}_${RUN_ENVIR}}.$$
 mkdir -p $DATA
@@ -98,12 +98,12 @@ export SENDDBN=${SENDDBN:-NO}
 ###################################
 # Set up the UTILITIES
 ###################################
-export utilscript=/nwprod/util/ush
-export utilexec=/nwprod/util/exec
-#
-# Run setup to initialize working directory and utility scripts
-#
-sh $utilscript/setup.sh
+# export utilscript=/nwprod/util/ush
+# export utilexec=/nwprod/util/exec
+
+module load prod_util
+module load grib_util
+
 
 msg="JOB $job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
@@ -111,7 +111,7 @@ postmsg "$jlogfile" "$msg"
 #
 # Run setpdy and initialize PDY variables
 #
-sh $utilscript/setpdy.sh
+setpdy.sh
 . PDY
 
 ##############################################
@@ -144,10 +144,9 @@ env
 ###################################################
 # Execute the Script exhref_runall.sh.sms
 
-$SCRIPTShref/exhref_runall.sh.sms $cyc $PDY >$DATA/runall.out 2>&1 &
+$SCRIPTShref/exhref_runall.sh.sms $cyc $PDY >$DATA/runall.out 2>&1
 
-
-wait
+# wait
 
 set +x
 echo "######################################"
@@ -155,8 +154,6 @@ echo "  RUN_ALL.OUT "
 echo "######################################"
 set -x
 cat $DATA/runall.out
-
-
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"

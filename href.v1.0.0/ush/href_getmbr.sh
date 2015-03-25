@@ -143,17 +143,17 @@ for ff in $fhr ; do
       echo href.m${m}.t${run}z.f${ff} 
 
       if [ ${file[$m]} = 'namnest' ] ; then     
-        ln -sf /com/nam/prod/nam.${day[$m]}/nam.t${cyc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/href.m${m}.t${run}z.f${ff}
-        ln -sf /com/nam/prod/nam.${day[$m]}/nam.t${cyc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/${ff}/href.m${m}.t${run}z.f${ff}
+        ln -sf ${COMINNAM}.${day[$m]}/nam.t${cyc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/href.m${m}.t${run}z.f${ff}
+        ln -sf ${COMINNAM}.${day[$m]}/nam.t${cyc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/${ff}/href.m${m}.t${run}z.f${ff}
       fi
  
 
       if [ ${file[$m]} = 'conusarw' ] || [ ${file[$m]} = 'conusnmmb' ] ; then
 	
-        if [ -e /com/hiresw/prod/hiresw.${day[$m]}/${file[$m]}.t${cyc[$m]}z.awp5kmf${fcst}.grib2 ]
+        if [ -e ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cyc[$m]}z.awp5kmf${fcst}.grib2 ]
         then
-        ln -sf /com/hiresw/prod/hiresw.${day[$m]}/${file[$m]}.t${cyc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${run}z.f${ff}
-        ln -sf /com/hiresw/prod/hiresw.${day[$m]}/${file[$m]}.t${cyc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${run}z.f${ff}
+        ln -sf ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cyc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${run}z.f${ff}
+        ln -sf ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cyc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${run}z.f${ff}
         fi
       fi
 
