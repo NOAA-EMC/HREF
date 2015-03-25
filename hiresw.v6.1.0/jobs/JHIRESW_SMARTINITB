@@ -26,7 +26,7 @@ export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
 ###############################################################
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export jlogfile=/com/logs/${envir}/jlogfile
-  #export SENDDBN=NO
+  export SENDDBN=NO
   export DBN_ALERT_TYPE_SMART=HIRESW_${DBN_NEST}_NDFD_GB2_PARA
   export DBN_ALERT_TYPE_SMART_WIDX=HIRESW_${DBN_NEST}_NDFD_GB2_WIDX_PARA
 fi
@@ -83,7 +83,7 @@ module load grib_util
 export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
 
 # Run setpdy and initialize PDY variables
-sh setpdy.sh
+setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}

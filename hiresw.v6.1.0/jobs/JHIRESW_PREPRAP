@@ -31,7 +31,7 @@ fi
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}_rap}
+export DATA=${DATA:-${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}}
 
 # Remove old forecast data directory if it exists
 if [ -d $DATA ]; then
@@ -81,7 +81,7 @@ setpdy.sh
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
 
 export GESNAM=${GESNAM:-/nwges/prod/nam.${PDY}}
-export COMRAP=${COMRAP:-/com/rap/prod/rap.${PDY}}
+export COMINRAP=${COMINRAP:-/com/rap/prod/rap.${PDY}}
 
 mkdir -p -m 775 $COMOUT
  

@@ -33,14 +33,8 @@ fi
 export pid=$$
 export DATA=${DATA:-$DATAROOT/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}}
 
-# if [ -d $DATA ]; then
-#   rm -rf $DATA
-# fi
-
 mkdir $DATA
 cd $DATA 
-
-# rm $DATA/*
 
 ecflow_client --event release_downstream
 
@@ -84,7 +78,6 @@ export FIXprod=${FIXprod:-${HOMEprod}/fix}
 
 module load prod_util
 
-
 # Run setpdy and initialize PDY variables
 setpdy.sh
 . PDY
@@ -102,13 +95,11 @@ fi
 env
 
 ### bsub post scripts  - clean these out before commit
-
 bsub < ${HOMEhiresw}/launch/sub_post.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
-
 ### end bsub post scripts
 
 ###################################################

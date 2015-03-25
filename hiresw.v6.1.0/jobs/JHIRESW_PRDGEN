@@ -90,13 +90,15 @@ export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 
-export WGRIB2=${WGRIB2:-$EXEChiresw/hiresw_wgrib2}
-
 ###################################
 # Set up the UTILITIES
 ###################################
 
 module load prod_util
+module load grib_util
+
+# keep using local version
+export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
 
 # Run setpdy and initialize PDY variables
 setpdy.sh
