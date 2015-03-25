@@ -1,5 +1,4 @@
-module unload NetCDF/4.2/serial
-# module purge
+module purge
 
 module load HIRESW/v6.1.0
 
@@ -41,7 +40,7 @@ make
 
 cd ${BASE}/sorc/hiresw_nps.fd/NPS/
 ./build.scr
-
+ 
 ##############################
 
 cd ${BASE}/sorc/hiresw_smartinitg2.fd
@@ -76,6 +75,7 @@ make
 
 cd ${BASE}/sorc/hiresw_nmmbfcst.fd/src
 gmake clean
+module unload ibmpe
 ./esmf_version 6.3r_nmm_wcoss
 gmake nmm > makenmm.log  2>&1
 
