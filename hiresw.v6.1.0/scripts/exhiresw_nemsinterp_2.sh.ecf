@@ -27,7 +27,7 @@ LENGTH=48
 ### NEST options are east, west, ak, hi, pr, or conus
 ### MODEL is arw or nmm or nmmb
 
-msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
 yy=`echo $PDY | cut -c1-4`
@@ -178,5 +178,5 @@ echo "DONE" > ../nemsinterpdone2
 
 cd $DATA
 
-msg="JOB $job FOR NEST=${NEST}${MODEL}_${MEMBER} HAS COMPLETED NORMALLY"
+msg="JOB $job FOR NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

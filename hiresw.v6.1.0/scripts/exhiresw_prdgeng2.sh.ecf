@@ -25,7 +25,6 @@
 set -x
 
 ######
-export MEMBER=ctl
 export INCR=01
 ######
 
@@ -74,35 +73,35 @@ do
 if [ $NEST = "conus" ]
 then
 
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 1" > $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 2" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 3" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 1" > $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 2" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 3" >> $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 2" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 3" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 4" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 5" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL $MEMBER 6" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 1" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 2" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 3" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 4" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 5" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 6" >> $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 1 east" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 2 east" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 1 west" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL $MEMBER 2 west" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 east" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 east" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 west" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 west" >> $DATA/poescript_${fhr}
 
 elif [ $NEST = "ak" ]
 then
 
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 0" > $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 0" > $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 1" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 2" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 3" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 4" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 1" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 2" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 3" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 4" >> $DATA/poescript_${fhr}
 
 else
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 0" > $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL $MEMBER 0" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 0" > $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 0" >> $DATA/poescript_${fhr}
 fi
 
 chmod 775 $DATA/poescript_${fhr}
@@ -232,7 +231,7 @@ rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_0
 fi
 
 echo "done executing prdgen" > $DATA/prdgendone${fhr}
-postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} PRDGEN done for F${fhr}"
+postmsg "$jlogfile" "HIRESW ${NEST}${MODEL} PRDGEN done for F${fhr}"
 
 let fhr=fhr+1
 
