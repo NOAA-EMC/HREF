@@ -113,28 +113,19 @@ suf=""
 while [ $whr -le $last ]
 do
 
-while [ ! -e ${COMGFS}/${mod}.t${cyc}z.${type}${whr} ]
+while [ ! -e ${COMINGFS}/${mod}.t${cyc}z.${type}${whr} ]
 do
 sleep 10
 done
 
-cp ${COMGFS}/${mod}.t${cyc}z.${type}${whr} $DATA/.
+cp ${COMINGFS}/${mod}.t${cyc}z.${type}${whr} $DATA/.
   export err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_2/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_3/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_4/Vtable 
 
-if [ $mod = "rap" ]
-then
-GRIBSRC=RAP
-elif [ $mod = "gfs" ]
-then
 GRIBSRC=GFS
-elif [ $mod = "nam" ]
-then
-GRIBSRC=NAM
-fi
 
 
 if [ $MODEL != "nmmb" ]
@@ -194,8 +185,6 @@ done
 
 ### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
-if [ $GRIBSRC != "RAP" ]
-then
 
 mv ${mod}.t${cyc}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
 mv ${mod}.t${cyc}z.${type}03${suf} ./run_ungrib_1/GRIBFILE.AAB
@@ -220,13 +209,6 @@ mv ${mod}.t${cyc}z.${type}39${suf} ./run_ungrib_4/GRIBFILE.AAB
 mv ${mod}.t${cyc}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAC
 mv ${mod}.t${cyc}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAD
 mv ${mod}.t${cyc}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAE
-
-else
-
-mv ${mod}.t${cyc}z.${type}00${suf} GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}03${suf} GRIBFILE.AAB
-
-fi
 
 pwd
 
