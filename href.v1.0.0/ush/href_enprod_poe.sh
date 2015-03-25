@@ -11,7 +11,7 @@
 #BSUB -W 00:30
 ##BSUB -q "transfer"
 #BSUB -q "RUNENVIR"
-#BSUB -P HREF
+#BSUB -P HRW-T2O
 
 typeset -Z2 run
 
