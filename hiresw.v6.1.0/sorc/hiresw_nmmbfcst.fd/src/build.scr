@@ -4,6 +4,7 @@ gmake clean
 
 module purge
 module load HIRESW
+module unload ibmpe
 
 ./configure 6.3r_nmm_wcoss
 

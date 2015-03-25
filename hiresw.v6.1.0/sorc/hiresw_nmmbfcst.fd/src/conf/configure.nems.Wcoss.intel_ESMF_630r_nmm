@@ -76,7 +76,7 @@ FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
 FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
 
 CPP         = /lib/cpp -P -traditional
-CPPFLAGS    = -DENABLE_SMP -DTHREAD_2D -DCHNK_RRTM=8
+CPPFLAGS    = -DTHREAD_2D -DCHNK_RRTM=8
 
 AR          = ar
 ARFLAGS     = -r
