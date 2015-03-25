@@ -6,7 +6,7 @@ TARGET   = ../../exec/hiresw_post
 #
 # CPP, Compiler, and Linker Options
 #
-FC       = mpfort -compiler ifort
+FC       = ${COMP_MP} -compiler ${COMP}
 CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
 OPTS     = -O3 -fp-model fast -assume noold_ldout_format 
@@ -18,16 +18,13 @@ DEBUG    = -g  # -traceback
 # Now the hard part. NCEPPOST needs 19 libraries, WOW!!!!!
 #
 
-SFCIO_INC  = -I/nwprod/lib/incmod/sfcio_4
-SFCIO_LIB  = /nwprod/lib/libsfcio_4.a
+SFCIO_INC  = -I${SFCIO_INC4}
+SFCIO_LIB  = ${SFCIO_LIB4}
 
-NEMSIO_INC = -I/nwprod/lib/incmod/nemsio
-NEMSIO_LIB = -L/nwprod/lib -lnemsio
+BACIO_LIB  = ${BACIO_LIB4}
 
-BACIO_LIB  = -L/nwprod/lib -lbacio_4
-
-SIGIO_INC  = -I/nwprod/lib/incmod/sigio_v1.0.1_4
-SIGIO_LIB  = /nwprod/lib/libsigio_v1.0.1_4.a
+SIGIO_INC  = -I${SIGIO_INC4}
+SIGIO_LIB  = ${SIGIO_LIB4}
 
 WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
 WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
@@ -41,26 +38,21 @@ WRF_LIB    = $(WRFPATH)/main/libwrflib.a  \
              $(WRFPATH)/external/esmf_time_f90/libesmf_time.a \
              $(WRFPATH)/external/RSL_LITE/librsl_lite.a
 
-G2_INC     = -I/nwprod/lib/incmod/g2_4 -I/nwprod/lib/incmod/g2tmpl
-G2_LIB     = -L/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz
+G2_INC     = -I${G2_INC4} -I${G2TMPL_INC}
+G2_LIB     = ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
 
-XML_INC    = -I/nwprod/lib/incmod/xmlparse
-XML_LIB    = -L/nwprod/lib -lxmlparse
+XML_INC    = -I${XMLPARSE_INC}
+XML_LIB    = ${XMLPARSE_LIB}
 
-GFSIO_INC  = -I/nwprod/lib/incmod/gfsio_v1.1.0_4
-GFSIO_LIB  = -L/nwprod/lib -lgfsio_v1.1.0_4 
-#GFSIO_INC  = -I/usrx/local/nceplibs/incmod/gfsio_v1.1.0_alpha
-#GFSIO_LIB  = /usrx/local/nceplibs/libgfsio_v1.1.0_alpha.a
+GFSIO_INC  = -I${GFSIO_INC4}
+GFSIO_LIB  = ${GFSIO_LIB4}
 
-IP_LIB     = -L/nwprod/lib -lip_4
+IP_LIB     = ${IP_LIB4}
 
-SP_LIB     = -L/nwprod/lib -lsp_4
+SP_LIB     = ${SP_LIB4}
 
-W3_INC     = -I/nwprod/lib/incmod/w3emc_v2.0.3_4
-W3_LIB     = -L/nwprod/lib -lw3nco_v2.0.3_4 -lw3emc_v2.0.3_4
-
-CRTM_INC   = -I/nwprod/lib/incmod/crtm_2.0.6
-CRTM_LIB   = -L/nwprod/lib -lcrtm_v2.0.6
+W3_INC     = -I${W3EMC_INC4}
+W3_LIB     = ${W3NCO_LIB4} ${W3EMC_LIB4}
 
 NETCDFPATH = /usrx/local/NetCDF/3.6.3/
 NETCDF_LIB = $(NETCDFPATH)/lib/libnetcdf_c++.a $(NETCDFPATH)/lib/libnetcdf.a
