@@ -88,7 +88,7 @@ export NDATE=${NDATE:-$EXECutil/ndate}
 export PDY=${DATE}
 
 export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
-export COMGFS=${COMGFS:-/com/gfs/prod/gfs.${PDY}}
+export COMINGFS=${COMINGFS:-/com/gfs/prod/gfs.${PDY}}
 
 mkdir -p -m 775 $COMOUT
  

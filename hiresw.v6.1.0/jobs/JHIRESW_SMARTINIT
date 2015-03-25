@@ -117,8 +117,6 @@ if [ $gefscyc2 -lt 10 ];then gefscyc2="0"${gefscyc2};fi
 export COMIN_SREF=${COMIN_SREF:-$COM_SREF/sref.${SREF_PDY}/${srefcyc2}/ensprod}
 export COMIN_GEFS=${COMIN_GEFS:-$COM_SREF/sref.${GEFS_PDY}/ensprod_gefs}
 
-echo COMIN_GEFS is $COMIN_GEFS
-
 ########################################################
 # Execute the script.
 $HOMEhiresw/scripts/exhiresw_smartinit.sh.ecf
