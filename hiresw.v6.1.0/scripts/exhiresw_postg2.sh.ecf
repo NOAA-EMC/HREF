@@ -34,9 +34,8 @@
 #                             exist
 
 set -x
-export MEMBER=ctl
 
-msg="JOB $job FOR WRF NEST=${NEST}${MODEL}_${MEMBER} HAS BEGUN"
+msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
 
@@ -319,7 +318,7 @@ cp $pgmout ${pgmout}_${fhr}
 cp errfile errfile_${fhr}
 
 echo "done executing the post" > $DATA/postdone${fhr}
-# postmsg "$jlogfile" "HIRESW ${NEST}${MODEL}_${MEMBER} POST done for F${fhr}"
+# postmsg "$jlogfile" "HIRESW ${NEST}${MODEL} POST done for F${fhr}"
 
 fhr=`expr $fhr + $INCR`
 
