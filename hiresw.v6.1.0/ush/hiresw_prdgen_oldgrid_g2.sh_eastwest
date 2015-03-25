@@ -26,9 +26,8 @@ fhr=$1
 DOMIN_SMALL=$2
 CYC=${3}
 model=$4
-MEMBER=$5
-subpiece=$6
-region=$7
+subpiece=$5
+region=$6
 
 reflag=1
 
