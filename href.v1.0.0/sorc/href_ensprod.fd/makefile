@@ -7,10 +7,11 @@
 #
 
 
-FC=     ifort -convert big_endian
-INC= /nwprod/lib/incmod/g2_4
-LIBS=   -L/nwprod/lib -lip_4 -lw3nco_4 -lw3emc_4  -lbacio_4 -lsp_4 -lg2_4 -ljasper -lpng -lz
-#FFLAGS = -O2 -g -convert big_endian -openmp -auto  -I $(INC)
+FC=     ${COMP} -convert big_endian
+INC=  ${G2_INC4} 
+LIBS=   ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \
+        ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
+#FFLAGS = -O2 -g -convert big_endian -openmp -auto  -I$(INC)
 FFLAGS = -O3 -openmp -auto -I $(INC)
 
 SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
@@ -28,6 +29,6 @@ href_ensprod: $(OBJ)
 clean:
 	/bin/rm  *.o href_ensprod
 copy:
-	/bin/cp href_ensprod ../../exec//href_ensprod
+	/bin/cp href_ensprod ../../exec/href_ensprod
 #
 
