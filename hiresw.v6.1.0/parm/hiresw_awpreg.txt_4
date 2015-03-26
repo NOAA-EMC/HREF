@@ -59,11 +59,11 @@ UGRD:planetary boundary layer:
 VGRD:planetary boundary layer:
 GUST:surface:
 VIL:entire atmosphere (considered as a single layer):
-TCOLW:entire atmosphere:
-TCOLI:entire atmosphere:
-TCOLR:entire atmosphere:
-TCOLS:entire atmosphere:
-TCOLC:entire atmosphere:
+TCOLW:entire atmosphere
+TCOLI:entire atmosphere
+TCOLR:entire atmosphere
+TCOLS:entire atmosphere
+TCOLC:entire atmosphere
 LCDC:low cloud layer:
 MCDC:middle cloud layer:
 HCDC:high cloud layer:
