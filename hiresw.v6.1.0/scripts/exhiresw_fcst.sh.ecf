@@ -327,15 +327,14 @@ export FORT_BUFFERED=true
 if [ $RUN = "conusarw" ]
 then
 # export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 644/23 20/10 20/5`"
-# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 660/22 20/5`"
-export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 720/24 24/6`"
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 756/24 24/24 24/6`"
 elif [ $RUN = "conusnmmb" ]
 then
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/16`"
 elif [ $RUN = "akarw" ]
 then
 # export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 24/12 24/6`"
-export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/12`"
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 672/24 48/12`"
 fi
 
 startmsg
