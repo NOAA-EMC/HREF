@@ -1741,41 +1741,41 @@
 
     <param>
        <post_avblfldidx>200</post_avblfldidx>
-       <shortname>TCOLW_ON_ENTIRE_ATMOS</shortname>
+       <shortname>TCOLW_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCOLW</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 3.0</scale>
     </param>
 
     <param>
        <post_avblfldidx>201</post_avblfldidx>
-       <shortname>TCOLI_ON_ENTIRE_ATMOS</shortname>
+       <shortname>TCOLI_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCOLI</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 5.0</scale>
     </param>
 
     <param>
        <post_avblfldidx>202</post_avblfldidx>
-       <shortname>TCOLR_ON_ENTIRE_ATMOS</shortname>
+       <shortname>TCOLR_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCOLR</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 5.0</scale>
     </param>
 
     <param>
        <post_avblfldidx>203</post_avblfldidx>
-       <shortname>TCOLS_ON_ENTIRE_ATMOS</shortname>
+       <shortname>TCOLS_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCOLS</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 5.0</scale>
     </param>
 
     <param>
        <post_avblfldidx>204</post_avblfldidx>
-       <shortname>TCOLC_ON_ENTIRE_ATMOS</shortname>
+       <shortname>TCOLC_ON_ENTIRE_ATMOS_SINGLE_LYR</shortname>
        <pname>TCOLC</pname>
-       <fixed_sfc1_type>entire_atmos</fixed_sfc1_type>
+       <fixed_sfc1_type>entire_atmos_single_lyr</fixed_sfc1_type>
        <scale> 5.0</scale>
     </param>
 
