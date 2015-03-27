@@ -14,7 +14,7 @@ postmsg "$jlogfile" "$msg"
 
 #
 NAGRIB_TABLE=/nwprod/gempak/fix/nagrib.tbl
-NAGRIB=nagrib_nc
+NAGRIB=nagrib2_nc
 #
 
 entry=`grep "^$RUN " $NAGRIB_TABLE | awk 'index($1,"#") != 1 {print $0}'`
@@ -53,9 +53,10 @@ while [ $fhcnt -le $fend ] ; do
   fhr3=$fhcnt
   typeset -Z3 fhr3
 
-  GRIBIN=$COMIN/${model}.t${cyc}z.${GRIB}f${fhr}${EXT}
+  GRIBIN=$COMIN/${NET}.t${cyc}z.${MODEL}_${GRIB}.f${fhr}.${NEST}.grib2${EXT}
   GEMGRD=hiresw_${model}_${PDY}${cyc}f${fhr3} 
-  GRIBIN_chk=$COMIN/${model}.t${cyc}z.${GRIB}f${fhr}${EXT}
+#  GRIBIN_chk=$COMIN/${model}.t${cyc}z.${GRIB}f${fhr}${EXT}
+  GRIBIN_chk=$COMIN/${NET}.t${cyc}z.${MODEL}_${GRIB}.f${fhr}.${NEST}.grib2${EXT}
 
   icnt=1
   while [ $icnt -lt 1000 ]
@@ -76,7 +77,7 @@ while [ $fhcnt -le $fend ] ; do
 
   cp $GRIBIN grib$fhr
 
-  export pgm="nagrib_nc F$fhr"
+  export pgm="nagrib2_nc F$fhr"
 
  startmsg
 
