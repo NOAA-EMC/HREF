@@ -8,6 +8,7 @@
 #
 #  History: April 8, 2008 - Original script from Boi Vuong at NCO
 #           Feb 27, 2014 - Update for HiresW v6 domain changes by Matthew Pyle
+#           March 27, 2015 - Update for HiresW v6.1 filename changes by Matthew Pyle
 #
 ##################################################################################
 
@@ -29,7 +30,7 @@ then
   maxtries=100
   while [ $icnt -lt $maxtries ]
   do
-    if [ -f $COMIN/${RUN}.t${cyc}z.awpregeastf${fhr}.grib2.idx ] ; then
+    if [ -f $COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2.idx ] ; then
       break
     else
       let "icnt=icnt+1"
@@ -37,11 +38,11 @@ then
     fi
   done
   if [ $icnt -ge $maxtries ]; then
-     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for awpregeast F$fhr to become available."
+     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for conuseast F$fhr to become available."
      err_exit $msg
   fi
 
-    export FORT11=$COMIN/${RUN}.t${cyc}z.awpregeastf${fhr}.grib2
+    export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregeast_${RUN}f${fhr}
     tocgrib2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
@@ -60,7 +61,7 @@ then
   maxtries=100
   while [ $icnt -lt $maxtries ]
   do
-    if [ -f $COMIN/${RUN}.t${cyc}z.awpregwestf${fhr}.grib2.idx ]; then 
+    if [ -f $COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2.idx ]; then 
       break
     else
       let "icnt=icnt+1"
@@ -68,10 +69,10 @@ then
     fi
   done
   if [ $icnt -ge $maxtries ]; then
-     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for awpregwest F$fhr to become available."
+     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for conuswest F$fhr to become available."
      err_exit $msg
   fi
-    export FORT11=$COMIN/${RUN}.t${cyc}z.awpregwestf${fhr}.grib2
+    export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregwest_${RUN}f${fhr}
     tocgrib2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
@@ -92,7 +93,7 @@ else
   maxtries=100
   while [ $icnt -lt $maxtries ]
   do
-    if [ -f $COMIN/${RUN}.t${cyc}z.awpregf${fhr}.grib2.idx ]; then
+    if [ -f $COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2.idx ]; then
       break
     else
       let "icnt=icnt+1"
@@ -100,10 +101,10 @@ else
     fi
   done
   if [ $icnt -ge $maxtries ]; then
-     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for awpreg F$fhr to become available."
+     msg="FATAL ERROR - ABORTING after 50 minutes of waiting for ${NEST}${MODEL} 5km  F$fhr to become available."
      err_exit $msg
   fi
-    export FORT11=$COMIN/${RUN}.t${cyc}z.awpregf${fhr}.grib2
+    export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpreg_${RUN}f${fhr}
     tocgrib2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
