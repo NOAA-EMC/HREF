@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/sh
 
 set -xa
 # #### 08/25/1999 ###################
@@ -70,13 +70,7 @@ export fend=48
 export fstart=00
 export model=${NEST}${MODEL}
 
-if [ $NEST = "conus" ]
-then
-  export GRIB=awp5km
-else
-  export GRIB=awpreg
-fi
-
+export GRIB=5km
 export EXT=
 export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_GEMPAK}
 
