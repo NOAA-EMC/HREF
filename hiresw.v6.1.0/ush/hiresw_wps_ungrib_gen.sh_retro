@@ -30,7 +30,9 @@ envir=${4}
 stream=${5}
 
 cd $DATA/run_ungrib_${stream}/
-${utilscript}/setup.sh
+# ${utilscript}/setup.sh
+
+module load prod_util
 
 if [ $OLD -lt 1 ]
 then

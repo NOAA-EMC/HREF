@@ -120,7 +120,8 @@ if [ -e ../FILE:${yy}-${mm}-${dd}_${hh} ]
 then
 mv ../FILE:${yy}-${mm}-${dd}_${hh} .
 else
-cp $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
+# cp $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
+cp $COMOUT/hiresw.t${CYC}z.${DOMNAM}${MODEL}.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
 fi
 export err=$?
 
@@ -151,7 +152,8 @@ fi
 if [ $SENDCOM = 1 ] ; then
 for fl in $files
 do
-cp ${fl} $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.${fl}
+# cp ${fl} $COMOUT/${DOMNAM}${MODEL}.t${CYC}z.${fl}
+cp ${fl} $COMOUT/hiresw.t${CYC}z.${DOMNAM}${MODEL}.${fl}
 done
 fi
 
