@@ -99,7 +99,7 @@ export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
 ################################################
 # Copy Forecast files from com
 ################################################
-. $COMIN/${NEST}${MODEL}.t${cyc}z.envir.sh
+. $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.envir.sh
 export tmmark=tm00
 
 ########################################################
