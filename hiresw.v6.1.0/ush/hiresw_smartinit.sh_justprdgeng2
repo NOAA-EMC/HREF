@@ -284,7 +284,8 @@ fi
 # do in five pieces (conus only??)
 
 
-INF=$COMIN/$mdl.t${cyc}z.${natgrd}${fhr}
+# INF=$COMIN/$mdl.t${cyc}z.${natgrd}${fhr}
+INF=${COMIN}/hiresw.t${cyc}z.$mdl.${natgrd}${fhr}
 
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_1 list_1.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_2 list_2.txt
