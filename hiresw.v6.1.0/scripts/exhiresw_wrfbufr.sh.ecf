@@ -25,7 +25,7 @@ mkdir -p $DATA/bufrpost
 cd $DATA/bufrpost
 
 export tmmark=tm00
-. $COMIN/${RUN}.t${cyc}z.envir.sh
+. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
 
 cp $FIXhiresw/hiresw_${RUN}_profdat hiresw_profdat
 

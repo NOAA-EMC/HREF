@@ -24,7 +24,7 @@ cd $DATA
 #
 # Get needed variables from exhiresw_prelim.sh.sms
 #
-. $COMIN/${RUN}.t${cyc}z.envir.sh
+. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
 
 START=00
 LENGTH=48
@@ -155,19 +155,19 @@ fi
 
 if [ $MODEL != "nmmb" ]
 then
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 wrfbdy_d01
+cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.wrfbdy_d01 wrfbdy_d01
 export err1=$?
 
 if [ $NEST = "conus" ]
 then
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap wrfinput_d01
+cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01_rap wrfinput_d01
 else
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 wrfinput_d01
+cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01 wrfinput_d01
 fi
 
 export err2=$?
 
-cat $COMIN/${NEST}${MODEL}.t${cyc}z.namelist.input | sed s:_YYS_:${YY}:g | \
+cat $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.namelist.input | sed s:_YYS_:${YY}:g | \
                                                      sed s:_MMS_:${MM}:g | \
                                                      sed s:_DDS_:${DD}:g | \
                                                      sed s:_HHS_:${HH}:g | \
@@ -199,7 +199,7 @@ else
 hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45"
 for hr in $hrs
 do
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.boco.00${hr} boco.00${hr}
+cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.boco.00${hr} boco.00${hr}
 export err1=$?
 
 if [ $err1 -ne 0 ]
@@ -219,14 +219,14 @@ then
 
 icnt=0
 
-if [ ! -e $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap ]
+if [ ! -e $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_rap ]
 then
 
 while [ $icnt -lt 30 ]
 do
-if [ ! -e $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap ]
+if [ ! -e $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_rap ]
 then
-echo "$COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap still not available"
+echo "$COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_rap still not available"
 sleep 45
 fi
 let icnt=icnt+1
@@ -236,13 +236,13 @@ fi
 
 
 
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap input_domain_01_nemsio
+cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_rap input_domain_01_nemsio
 else
-cp $COMIN/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio input_domain_01_nemsio
+cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio input_domain_01_nemsio
 fi
 
 export err2=$?
-cat $COMIN/${NEST}${MODEL}.t${cyc}z.configure_file | sed s:_RESTART_:${restart}:g >  configure_file
+cat $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.configure_file | sed s:_RESTART_:${restart}:g >  configure_file
 export err3=$?
 
 if [ $err1 -ne 0 -o $err2 -ne 0 -o $err3 -ne 0 ]
