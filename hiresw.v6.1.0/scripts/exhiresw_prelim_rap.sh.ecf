@@ -81,12 +81,12 @@ incr=3
   #if [ $err -eq 99 ] ; then
   #  exit
   #fi
-  echo "export NEST=$NEST" > $COMOUT/${RUN}.t${cyc}z.envir.sh
-  echo "export MODEL=$MODEL" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
+  echo "export NEST=$NEST" > $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
+  echo "export MODEL=$MODEL" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
 #fi
 
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
 
 # Puerto Rico : Use grid #221 (awip32)
 # Hawaii : Use grid #243 (awiphi)
@@ -222,7 +222,7 @@ $USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL $send
 # fi
 
 
-cat $DATA/metgrid.log.0000_* > $COMOUT/${NEST}${MODEL}.t${cyc}z.metgrid.log
+cat $DATA/metgrid.log.0000_* > $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.metgrid.log
 
 #########################################################
 # RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES
@@ -341,15 +341,15 @@ err_chk
 
 # Copy input file needed to make model forecast to COM
 
-cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap
+cp wrfinput_d01 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01_rap
 
-if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01_rap ]; then
+if [ ! -f $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01_rap ]; then
     msg="FATAL ERROR: WRF initial condition from RAP conditions not produced"
     err_exit $msg
 fi
 
 # Cat REAL log files and send to COM
-cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
+cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.real.log
 
 else # nmmb case
 export pgm=hiresw_nemsinterp
@@ -373,7 +373,7 @@ echo err from hiresw_nemsinterp $err
 if [ $NEST != "guamnew" ]
 then
 
-cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_precoldstart
+cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_precoldstart
 
 
 # nmmb file with the land states you want
@@ -498,8 +498,8 @@ export err=$?;err_chk
 fi
 
 
-cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_rap
-cp configure_file $COMOUT/${NEST}${MODEL}.t${cyc}z.configure_file
+cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_rap
+cp configure_file $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.configure_file
 err=$?
 
 if [ $err -ne 0 ]

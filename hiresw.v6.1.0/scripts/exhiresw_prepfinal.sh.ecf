@@ -53,7 +53,7 @@ filt_de=$dstart
 filt_he=$cyc
 
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
 
 #########################################################
 # RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)
@@ -163,7 +163,8 @@ yy=`echo $newdate | cut -c1-4`
 mm=`echo $newdate | cut -c5-6`
 dd=`echo $newdate | cut -c7-8`
 hh=`echo $newdate | cut -c9-10`
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
+# cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
+cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
 done
 
 export pgm=hiresw_${MODEL}_real
@@ -183,20 +184,20 @@ export err=$?; err_chk
 # Copy 3 files needed to run WRF forecast to COM (two in case of CONUS domain)
 # CONUS domain input file produced by separate JHIRESW_PREPRAP job
 
-cp wrfbdy_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01
-cp namelist.input_model $COMOUT/${NEST}${MODEL}.t${cyc}z.namelist.input
+cp wrfbdy_d01 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfbdy_d01
+cp namelist.input_model $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.namelist.input
 
 if [ $NEST != "conus" ]
 then
- cp wrfinput_d01 $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01
+ cp wrfinput_d01 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01
 
- if [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfbdy_d01 ] || [ ! -f $COMOUT/${NEST}${MODEL}.t${cyc}z.wrfinput_d01 ]; then
+ if [ ! -f $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfbdy_d01 ] || [ ! -f $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01 ]; then
    msg="FATAL ERROR: WRF initial or boundary condition files needed by WRF-ARW model not copied to $COMOUT"
    err_exit $msg
  fi
 fi
 
-cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/${NEST}${MODEL}.t${cyc}z.real.log
+cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.real.log
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

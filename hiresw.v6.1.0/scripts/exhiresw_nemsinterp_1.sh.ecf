@@ -83,7 +83,7 @@ filt_de=$dstart
 filt_he=$cyc
 
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/${RUN}.t${cyc}z.envir.sh
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
 
 #########################################################
 # RUN NEMSINTERP PROGRAM to generate input/boco files (NMMB)
@@ -126,7 +126,7 @@ mm1=`echo $cycstart | cut -c5-6`
 dd1=`echo $cycstart | cut -c7-8`
 hh1=`echo $cycstart | cut -c9-10`
 
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio
+cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio
 
 t2=`$NDATE +3 $cycstart`
 
@@ -135,7 +135,7 @@ mm2=`echo $t2 | cut -c5-6`
 dd2=`echo $t2 | cut -c7-8`
 hh2=`echo $t2 | cut -c9-10`
 
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio
+cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio
 
 t3=`$NDATE +3 $t2`
 
@@ -144,7 +144,7 @@ mm3=`echo $t3 | cut -c5-6`
 dd3=`echo $t3 | cut -c7-8`
 hh3=`echo $t3 | cut -c9-10`
 
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio
+cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio
 
 t4=`$NDATE +3 $t3`
 
@@ -153,7 +153,7 @@ mm4=`echo $t4 | cut -c5-6`
 dd4=`echo $t4 | cut -c7-8`
 hh4=`echo $t4 | cut -c9-10`
 
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio
+cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio
 
 t5=`$NDATE +3 $t4`
 
@@ -162,7 +162,7 @@ mm5=`echo $t5 | cut -c5-6`
 dd5=`echo $t5 | cut -c7-8`
 hh5=`echo $t5 | cut -c9-10`
 
-cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio
+cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio
 
 export pgm=hiresw_nemsinterp
 cp $EXEChiresw/hiresw_nemsinterp .
@@ -175,7 +175,7 @@ export err=$?; err_chk
 if [ $NEST != "guam" -a $NEST != "conus" ]
 then
 
-cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio_precoldstart
+cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio_precoldstart
 
 
 # NAM nmmb file with the land states you want
@@ -306,14 +306,14 @@ fi
 
 # cp boco.* ../
 
-cp boco.0000 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0000
-cp boco.0003 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0003
-cp boco.0006 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0006
-cp boco.0009 $COMOUT/${NEST}${MODEL}.t${cyc}z.boco.0009
+cp boco.0000 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.0000
+cp boco.0003 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.0003
+cp boco.0006 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.0006
+cp boco.0009 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.0009
 
 if [ $NEST != "conus" ]
 then
-cp input_domain_01_nemsio $COMOUT/${NEST}${MODEL}.t${cyc}z.input_domain_01_nemsio
+cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_01_nemsio
 export err=$?; err_chk
 fi
 

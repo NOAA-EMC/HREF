@@ -56,7 +56,7 @@ cp hiresw_micro_lookup.dat eta_micro_lookup.dat
 # Get needed variables from exhiresw_prelim.sh.sms
 #
 
-. $COMIN/${RUN}.t${cyc}z.envir.sh
+. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
 
 fhr=00
 fhrend=48
