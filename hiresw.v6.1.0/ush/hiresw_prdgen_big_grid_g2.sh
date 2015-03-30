@@ -286,12 +286,8 @@ then
 
 if [ $subpiece = "1" ]
 then
-        echo COMBINING at 3 h time
-        ls -l  ${filenamthree}${fhr}.tm00_budget
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 else
-        echo MOVING at 3 h time
-        ls -l  ${filenamthree}${fhr}.tm00_budget
   mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
 fi
 
@@ -299,7 +295,6 @@ fi
 
 if [ $DOMIN_SMALL != "conus" ] 
 then
-        echo COMBINING properly at 3 h time
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 fi
 
@@ -307,7 +302,7 @@ fi
 
 export err=$?;./err_chk
 
-cp $INPUT_DATA/WRFPRS${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.wrfprs${fhr}
+cp $INPUT_DATA/WRFPRS${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.$DOMOUT.wrfprs${fhr}
 
 ###############################################################
 ###############################################################
