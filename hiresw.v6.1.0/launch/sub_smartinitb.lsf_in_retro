@@ -29,7 +29,8 @@ export NEST=_DOM_
 export cyc=_CYC_
 export MODEL=_CORE_
 
-DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+# DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+export DATE=_DATE_
 
 export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export COMIN=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
@@ -37,5 +38,5 @@ export INPUT_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.smartinit_${NEST}_${MODEL
 export PRDGEN_DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.smartinitb_${NEST}_${MODEL}_${cyc}_${envir}
 
-$HOMEhiresw/jobs/JHIRESW_SMARTINITB
+$HOMEhiresw/jobs/JHIRESW_SMARTINITB_retro
 
