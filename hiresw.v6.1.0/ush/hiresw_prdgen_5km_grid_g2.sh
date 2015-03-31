@@ -143,7 +143,7 @@ else
 mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
 fi
 
-export err=$?;./err_chk
+export err=$?; err_chk
 
 
 ###############################################################
@@ -209,7 +209,7 @@ done
 
  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;./err_chk
+ export err=$?; err_chk
 
   if [ $model = "arw" ] ; then
 
@@ -241,7 +241,7 @@ done
 
  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;./err_chk
+ export err=$?; err_chk
 
   fi
 #  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}

@@ -130,7 +130,7 @@ then
 echo "MISSING UNGRIB FILE - ABORT"
 fi
 
-$DATA/err_chk
+err_chk
 
 FHR=`expr $FHR + $INT`
 done
@@ -138,7 +138,7 @@ done
 ./metgrid.exe
 
 export err=$?
-$DATA/err_chk
+err_chk
 
 echo "DONE" > wpsdone.${ICOUNT}
 
