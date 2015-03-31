@@ -277,14 +277,9 @@ fi
   let fhr12=fhr-12
   typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 
-#      cp $COMIN/$mdl.t${cyc}z.${natgrd}${fhr} WRFPRS${fhr}.tm00
 
-## do not convert whole file.  Strip out what is needed first
+# do in 8-9 pieces (conus only??)
 
-# do in five pieces (conus only??)
-
-
-# INF=$COMIN/$mdl.t${cyc}z.${natgrd}${fhr}
 INF=${COMIN}/hiresw.t${cyc}z.$mdl.${natgrd}${fhr}
 
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_1 list_1.txt
@@ -361,7 +356,7 @@ chmod 775 wgrib2.poe
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=wgrib2.poe
 time mpirun.lsf
-export err=$?; ./err_chk
+export err=$?;  err_chk
 
 $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
@@ -370,7 +365,6 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
     model.ndfd_7 model.ndfd_8 model.ndfd_nn > NDFD${fhr}.tm00
 
 
-### needed?
 ###	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
 	cp NDFD${fhr}.tm00 $prdgfl
 
@@ -484,35 +478,18 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
       esac
 
 
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr}.tm00.g2 $INF
 
-#         cnvgrib -g21  WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
        mv WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
-# 	echo "contents of WRFPRS${fhr}.tm00"
-#	${EXECutil}/wgrib WRFPRS${fhr}.tm00
    
-#mp        cp $COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ} WRFPRS${FHRFRQ}.tm00
-
-	if [ -e $COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ}.g1 ]
-	then
-	cp $COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ}.g1 WRFPRS${FHRFRQ}.tm00
-	else
-
 
 	echo here with FHRFRQ $FHRFRQ
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${FHRFRQ}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${FHRFRQ}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${FHRFRQ}.tm00.g2 $INF
 
-#        cnvgrib -g21  WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
          mv WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
-#	echo "contents of WRFPRS${FHRFRQ}.tm00"
-#	${EXECutil}/wgrib WRFPRS${FHRFRQ}.tm00
-	fi
 
-#why        ${EXECutil}/wgrib -s WRFPRS${FHRFRQ}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-#why                        |${EXECutil}/wgrib -i -grib -o temp WRFPRS${FHRFRQ}.tm00 > wgrib.out
-#why       mv temp WRFPRS${FHRFRQ}.tm00
 
       $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
 	err1=$?
@@ -540,14 +517,10 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 
       if [ $MKPCP -eq $mk12p ];then
 
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr9}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr9}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr9}.tm00.g2 $INF
 
-#        cnvgrib -g21  WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
       mv WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
-#	echo "contents of WRFPRS${fhr9}.tm00"
-#	${EXECutil}/wgrib WRFPRS${fhr9}.tm00
-
 
 	if [ $MODEL = "nmmb" ]
 	then
@@ -558,47 +531,29 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
            then
 	    cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}.g1 WRFPRS${fhr3}.tm00
 	   else
-#            cnvgrib -g21  $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3} WRFPRS${fhr3}.tm00
 
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr3}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
 
-#        cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
 	mv  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
-#        echo "contents of WRFPRS${fhr3}.tm00"
-#        ${EXECutil}/wgrib WRFPRS${fhr3}.tm00
-
 
            fi
 #####
 
 	ls -l  WRFPRS${fhr3}.tm00
 
-#          ${EXECutil}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-#                          |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
-#          mv temp WRFPRS${fhr3}.tm00
-#        echo "contents of redone WRFPRS${fhr3}.tm00"
-#        ${EXECutil}/wgrib WRFPRS${fhr3}.tm00
-
         $GRB2INDEX WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
-
-#          cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
 
 	   if [ -e $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}.g1 ] 
            then
 	     cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}.g1 WRFPRS${fhr6}.tm00
            else
-#             cnvgrib -g21 $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr6}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
-#        cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
        mv WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
            fi
 
 #####
-#why          ${EXECutil}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-#why                           |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
-#why          mv temp WRFPRS${fhr6}.tm00
         $GRB2INDEX WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
 
         ln -sf "WRFPRS${fhr6}.tm00"      fort.15    
@@ -616,17 +571,12 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
            then
             cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}.g1 WRFPRS${fhr3}.tm00
 	   else
-#             cnvgrib -g21  $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3} WRFPRS${fhr3}.tm00
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr3}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr3}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
-#        cnvgrib -g21  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
 	mv  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
            fi
 
 #####
-#why          ${EXECutil}/wgrib -s WRFPRS${fhr3}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-#why                          |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr3}.tm00 > wgrib.out
-#why          mv temp WRFPRS${fhr3}.tm00
         $GRB2INDEX WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00
 
 #          cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
@@ -635,17 +585,12 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
            then
             cp $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}.g1 WRFPRS${fhr6}.tm00
            else
-#             cnvgrib -g21 $COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6} WRFPRS${fhr6}.tm00
-        INF=$COMIN/${mdl}.t${cyc}z.${natgrd}${fhr6}
+        INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr6}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
-#        cnvgrib -g21  WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
 	mv WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
            fi
 
 #####
-#why          ${EXECutil}/wgrib -s WRFPRS${fhr6}.tm00 |grep -f ${PARMhiresw}/hiresw_smartinit.parmlist \
-#why                           |${EXECutil}/wgrib -i -grib -o temp WRFPRS${fhr6}.tm00 > wgrib.out
-#why          mv temp WRFPRS${fhr6}.tm00
         $GRB2INDEX WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00
 
 
@@ -687,18 +632,13 @@ export err=$?; err_chk
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
      if [ $RUNTYP = aknest3 ];then cpgbgrd=$grid;fi
 
-   
-# $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
-# echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe
-#     $EXECutil/copygb2 -g "$cpgbgrd" -i3 -x ${freq}precip.${fhr} ${freq}precip
-
-
-## does it get used?
-
 #was budget
+
+echo WGRIB2 for ${freq}precip
 
 $WGRIB2 ${freq}precip.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def}  ${freq}precip
 
+echo copy to ${freq}precip.${fhr}_interp
 cp ${freq}precip ${freq}precip.${fhr}_interp
 	err=$?
 
@@ -713,8 +653,6 @@ cp ${freq}precip ${freq}precip.${fhr}_interp
 	echo here with freq $freq and fhr $fhr
      $GRB2INDEX ${freq}precip ${freq}precipi
 	ls -l  ${freq}precip ${freq}precipi
-#      $EXECutil/copygb2 -g "$cpgbgrd" -i3 -x ${freq}snow.${fhr} ${freq}snow
-# $WGRIB2 ${freq}snow.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def}  ${freq}snow
 $WGRIB2 ${freq}snow.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def}  ${freq}snow
 cp ${freq}snow ${freq}snow.${fhr}_interp
 	if [ $err -ne 0 ]
@@ -732,20 +670,6 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
  if [ -e WRFPRS${fhr}i.tm00 ];then rm WRFPRS${fhr}i.tm00;fi
 
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
-
-#   echo creating $prdgfl file for fhr $fhr
-#   cat >input${fhr}.prd <<EOF5
-# WRFPRS${fhr}.tm00
-# EOF5
-
-#  export pgm=hiresw_prdgen;. prep_step
-#  ln -sf $FIXhiresw/hiresw_wgt_${mdl}.g${ogrd}     fort.21
-
-#  ln -sf master${fhr}.ctl            fort.10
-#  ln -sf input${fhr}.prd             fort.621   #WCOSS CHANGE
- 
-#  ${EXEChiresw}/hiresw_prdgen < input${fhr}.prd > prdgen.out${fhr} 2>errfile
-#  export err=$?; err_chk
 
   cp ${COMROOT}/date/t${cyc}z DATE
 

@@ -287,7 +287,7 @@ echo err1 on copy $err1
 
 ### always copy
 
- 	if [ $check -eq 0 ]
+ 	if [ $check -eq 0 -a -e $INPUT_DATA/3precip.${fhr}_interp ]
         then
 cp $INPUT_DATA/3precip.${fhr}_interp .
         fi
@@ -302,9 +302,9 @@ err2=$?
 cp $INPUT_DATA/3precip.${fhr}_interp .
 err3=$?
 
-if [ $err3 -ne 0 ]
+if [ $err3 -ne 0 -a $MODEL = "arw" ]
 then
-echo did not find 3precip file
+echo did not find 3precip file that was expected for ARW run
 fi
 
 cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
@@ -314,12 +314,9 @@ echo copy ${freq}precip.${fhr} $err1
 echo copy ${freq}snow.${fhr} $err2
 
 
-#      time $WGRIB2 ${freq}precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}precip
-
      mv ${freq}precip.${fhr}_interp ${freq}precip
      $GRB2INDEX ${freq}precip ${freq}precipi
 
-#      time $WGRIB2 ${freq}snow.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} ${freq}snow
      mv ${freq}snow.${fhr}_interp ${freq}snow
      $GRB2INDEX ${freq}snow ${freq}snowi
 
@@ -327,8 +324,6 @@ echo copy ${freq}snow.${fhr} $err2
 
 	if [ $MODEL = "arw" -a $check -eq 0 ]
 	then
-#	$EXECutil/copygb -g "$cpgbgrd" -i3 -x 3precip.${fhr} 3precip
-#     time $WGRIB2 3precip.${fhr}  -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} 3precip
 
         cp 3precip.${fhr}_interp 3precip
         $GRB2INDEX 3precip 3precipi
@@ -390,10 +385,6 @@ $GRB2INDEX ${freq}precip ${freq}precipi
 #	err_exit "missing $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2"
 #	fi
 
-#    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2 MAXMIN3
-#    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr6}.grib2 MAXMIN4
-#    cp $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr9}.grib2 MAXMIN5
-
     cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr3}.${outreg}.grib2 MAXMIN3
     cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr6}.${outreg}.grib2 MAXMIN4
     cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr9}.${outreg}.grib2 MAXMIN5
@@ -436,9 +427,6 @@ cp $INPUT_DATA/6snow.${fhr}_interp .
     ln -sf "MAXMIN5i"  fort.$((fmx+9));;
 
     *)   # Not 00/12 UTC valid times
-
-#	echo "contents of MAXMIN1 at 12 h"
-#    $WGRIB2 MAXMIN1
 
      if [ $check -eq 0 -a $fhr -ne 00 ];then
 
