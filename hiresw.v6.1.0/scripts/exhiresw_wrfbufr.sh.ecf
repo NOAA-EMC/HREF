@@ -256,9 +256,9 @@ ${USHprod}/cwordsh block class1.bufr.unb class1.bufr.wcoss
 
 if [ $SENDCOM == "YES" ]
 then
-cp $DATA/class1.bufr $COMOUT/${RUN}.t${cyc}z.class1.bufr
-cp $DATA/class1.bufr.wcoss $COMOUT/${RUN}.t${cyc}z.class1.bufr.wcoss
-cp $DATA/profilm.c1.${tmmark} ${COMOUT}/${RUN}.t${cyc}z.profilm.c1
+cp $DATA/class1.bufr $COMOUT/hiresw.t${cyc}z.${RUN}.class1.bufr
+cp $DATA/class1.bufr.wcoss $COMOUT/hiresw.t${cyc}z.${RUN}.class1.bufr.wcoss
+cp $DATA/profilm.c1.${tmmark} ${COMOUT}/hiresw.t${cyc}z.${RUN}.profilm.c1
 fi
 
 # remove bufr file breakout directory in $COMOUT if it exists
