@@ -248,7 +248,14 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budge
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
-     if [ $fhr%3 -ne 0 ]
+     if [ $fhr -ne 0 ]
+     then
+     check=$fhr%3
+     else
+     check=9
+     fi
+
+     if [ $check -ne 0 ]
      then
 
 
@@ -300,7 +307,7 @@ fi
 
 fi
 
-export err=$?;./err_chk
+export err=$?; err_chk
 
 cp $INPUT_DATA/WRFPRS${fhr}.tm00 $COMOUT/hiresw.t${CYC}z.$DOMOUT.wrfprs${fhr}
 
@@ -389,7 +396,7 @@ fi
 
    export pgm=hiresw_pcpbucket_${DOMIN_bucket}
    $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
-#   export err=$?;./err_chk
+#   export err=$?; err_chk
 
      if [ $model = "arw" ] ; then
 
@@ -432,7 +439,7 @@ fi
 
   export pgm=hiresw_pcpbucket_${DOMIN_bucket}
   $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
-#   export err=$?;./err_chk
+#   export err=$?; err_chk
 
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
 
@@ -470,7 +477,10 @@ echo DOWN HERE
          cp hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 \
 	 ${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
         else
+	if [ -e hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 ] 
+        then
          cp  hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2 ${DATA}/
+	fi
         fi
 ## temp copy to $DATA
 

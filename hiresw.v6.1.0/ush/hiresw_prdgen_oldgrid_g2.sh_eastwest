@@ -226,7 +226,7 @@ done
 
  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;./err_chk
+ export err=$?; err_chk
 
   if [ $model = "arw" ] ; then
 
@@ -251,7 +251,7 @@ done
 
  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;./err_chk
+ export err=$?; err_chk
 
   fi
 

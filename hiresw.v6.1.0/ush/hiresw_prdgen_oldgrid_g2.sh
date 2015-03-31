@@ -213,7 +213,7 @@ mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
 fi
 
 
-export err=$?;./err_chk
+export err=$?; err_chk
 
 ###############################################################
 ###############################################################
@@ -289,7 +289,7 @@ done
 
  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;./err_chk
+ export err=$?; err_chk
 
 mv errfile errfile_${fhr}
 
@@ -316,7 +316,7 @@ done
 
  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
- export err=$?;./err_chk
+ export err=$?; err_chk
 mv errfile errfile_${fhr}_3hrly
 
   fi
