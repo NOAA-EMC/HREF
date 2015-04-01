@@ -26,8 +26,8 @@ export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
 ###############################################################
 if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
   export jlogfile=/com/logs/${envir}/jlogfile
-  #export SENDDBN=NO
-  #export SENDDBN_GB2=NO
+  export SENDDBN=NO
+  export SENDDBN_GB2=NO
   export DBN_ALERT_TYPE=HIRESW_${DBN_NEST}_GB2_PARA
   export DBN_ALERT_TYPE_WIDX=HIRESW_${DBN_NEST}_GB2_WIDX_PARA
   export DBN_ALERT_TYPE_SMART=HIRESW_${DBN_NEST}_NDFD_GB2_PARA
