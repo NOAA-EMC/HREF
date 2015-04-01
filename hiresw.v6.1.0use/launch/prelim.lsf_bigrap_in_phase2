@@ -1,6 +1,6 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.out__DOM___CORE___CYC_
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_prelimrap.err__DOM___CORE___CYC_
+#BSUB -oo /meso/save/Matthew.Pyle/logs/test_prelimrap.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/logs/test_prelimrap.err__DOM___CORE___CYC_
 #BSUB -q "dev2"
 #BSUB -J HIRESW_PREP_RAP
 #BSUB -W 0:15
