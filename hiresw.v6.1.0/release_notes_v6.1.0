@@ -1,0 +1,101 @@
+v6.1.0 - released April ?, 2015
+
+The modulefile used for the build is in modulefiles/HIRESW/v6.1.0
+
+Running build_hiresw.scr should produce all needed executables (it does a module purge and module load of HIRESW/v6.1.0)
+
+Details that are better formatted on the google doc:
+
+Updates the NMMB forecast code using a January 2015 version, yet retains the microphysics from the v6.0.x code..  WRF-ARW code is updated from v3.5 to v3.6.1, but with a local modification to the microphysics discussed below.
+Number of vertical levels increased from 40 to 50 for both models.
+Physics changes for the ARW
+The WSM6 microphysics routine was modified to expand the anvil region in clouds.  This was achieved by slowing graupel production processes, allowing more production of snow aloft.
+
+Output changes:
+New fields only for lower-resolution, non-NDFD grid output:
+Cloud ceiling height
+Simulated radar reflectivity at -10 C level
+The Shuell sea level pressure reduction now is defined as a pressure at the mean sea level, and not as pressure reduced to sea level at the mean sea level.
+Changes in the content of the 2.5-3 km NDFD output grids 
+Removes duplicate fields of surface height, land-sea mask, and Haines Index in the three hourly files
+The surface total cloud percentage in the three hourly files is removed, and replaced by the total cloud percentage over the entire atmosphere, which was already in the non-three hourly files.
+The one and two hour old 2 m temperature and dew point temperature fields are included for forecasts valid at 00Z and 12Z (previously was included for all three hour output except those valid times).
+Adds a best CAPE field to the three hourly output (previously was just in the non-three hourly output)
+Removes precipitation type and 2 m temperature and dew point temperature fields from the non-three hourly output in the NMMB run over Hawaii.  
+Corrects a bug that was leading to incomplete Guam output files every six hours.  
+
+Changes to the filename structure
+
+A uniform naming convention is applied to all gridded output
+All output now has “hiresw” as the leading string
+Legacy “awpreg”, “awp5km”, and “smart” strings are discontinued
+Output file resolution in kilometers is given in the file name, with decimals represented with a “p” (2.5 km is 2p5km in a file name)
+Examples showing the current operational file on the left and the new file name on the right:
+
+    
+hinmmb.t12z.awpregf24.grib2 → hiresw.t12z.nmmb_5km.f24.hi.grib2
+
+    prarw.t18z.smartprf18.grib2 → hiresw.t18z.arw_2p5km.f18.pr.grib2
+      akarw.t18z.smartakf18.grib2 → hiresw.t18z.arw_3km.f18.ak.grib2
+
+conusnmmb.t00z.awp5kmf24.grib → hiresw.t00z.nmmb_5km.f24.conus.grib2
+
+conusarw.t12z.awpregeastf24.grib2 → hiresw.t12z.arw_5km.f24.conuseast.grib2
+conusarw.t12z.awpregwestf24.grib2 → hiresw.t12z.arw_5km.f24.conuswest.grib2
+
+
+ 
+
+                        
+ 
+◦      BUFR output changes:
+▪      In addition to the single monolithic files output for each model run, the BUFR output is split out by station
+
+Individual stations have names of the format:
+        ${dom}${core}bufr.${station}.${cycle}
+where $dom is conus, ak, guam, hi, or pr
+where $core is arw or nmmb
+where $station is the 6-digit identifier
+and where $cycle is the YYYYMMDDHH formatted time of the model initial time
+
+ 
+◦      A new High Resolution Ensemble Forecast (HREF) suite of products is introduced.  Despite the same name, this product has little in common with the HREF system previously within HiresWindow.  This new HREF is a set of probabilistic products generated from the three most recent HiresW runs (3 WRF-ARW runs, 3 NMMB runs) and the five most recent NAM nest runs.  In this initial implementation, products are only generated for the CONUS.  
+
+Mean, spread, and probability products are produced every 3 h to 36 h.
+
+Mean/spread fields: 
+sea level pressure
+500 hPa height
+850 hPa height, temperature, U and V winds, and wind speed
+700 hPa vertical velocity and relative humidity
+500 hPa absolute vorticity
+Precipitable water (column total)
+surface visibility
+3 h accumulated precipitation
+cloud ceiling height
+surface vertical speed shear
+
+Probability fields:
+1000 m AGL simulated reflectivity > 40 dBZ
+Hourly maximum 1000 m AGL simulated reflectivity > 40 dBZ
+Hourly maximum 2-5 km AGL updraft helicity > 25 m^2/s^2
+Hourly maximum updraft over 400-1000 hPa layer (m/s) >  (1, 5, 10)
+Hourly maximum downdraft over 400-1000 hPa layer (m/s) >  (1, 5, 10)
+Hourly maximum 10 m AGL U wind component > 15.4 m/s
+Hourly maximum 10 m AGL V wind component > 15.4 m/s
+Precipitable water (column total, kg/m^2) > (25, 37.5, 50)
+Surface visibility (m) < (400, 800, 1600, 3200, 6400)
+Column maximum (composite) simulated reflectivity (dBZ) > (10, 20, 30, 40, 50)
+Echo top height (m) > (1000,, 3000, 5000, 7600, 10000)
+3 h precipitation (kg/m^2) > (0.24, 6.34, 12.4, 25.1, 50, 75)
+Precipitation type : rain, freezing rain, ice pellets, snow
+10 m AGL wind speed (m/s) > (10.3, 15.4, 20.6)
+80 m AGL wind speed (m/s) > (10.3, 15.4, 20.6)
+850 hPa wind speed (m/s) > (10.3, 20.6, 30.9, 41.2, 51.5)
+500 hPa wind speed (m/s) > (10.3, 20.6, 30.9, 41.2, 51.5)
+250 hPa wind speed (m/s) > (10.3, 20.6, 30.9, 41.2, 51.5)
+Flight category?? (1-4?)
+Haines Index  (2-5, 5-6, 6-7)
+Cloud ceiling height (m) < (305, 610, 915, 1372, 1830, 3050)
+surface vertical speed shear (1/s)  > 20
+wind speed over 300 to 850 hPa above ground < 5 m/s
