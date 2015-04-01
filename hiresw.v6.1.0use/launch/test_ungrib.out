@@ -1,0 +1,111 @@
+Tue Jul 15 16:05:49 UTC 2014
+------------------------------------------------
+setup.sh - Utility to set PDY variables
+           This utility will output a file PDY in
+           the current working directory which can be
+           sourced in the parent script to set
+           PDY PDYm1-9
+------------------------------------------------
+History: Jul 27, 1998 - Implement new script.
+------------------------------------------------
+pdate=P20140715
+DATElne_minus=20140714 20140713 20140712 20140711 20140710 20140709 20140708 20140707 20140706 20140705
+DATElne_plus=20140716 20140717 20140718 20140719 20140720 20140721 20140722 20140723 20140724 20140725
+/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.ungrib_guam_nmmb_00_test
+Execute poe command line: poe 
+   0: --------------------------------------------- 
+   0: ********** COMPLETED PROGRAM ungrib  **********
+   0: --------------------------------------------- 
+   1: --------------------------------------------- 
+   1: ********** COMPLETED PROGRAM ungrib  **********
+   1: --------------------------------------------- 
+   2: --------------------------------------------- 
+   2: ********** COMPLETED PROGRAM ungrib  **********
+   2: --------------------------------------------- 
+   3: --------------------------------------------- 
+   3: ********** COMPLETED PROGRAM ungrib  **********
+   3: --------------------------------------------- 
+ --------------------------------------------- 
+ ********** COMPLETED PROGRAM hiresw_wps_ungrib_gen.sh  **********
+ --------------------------------------------- 
+Tue Jul 15 16:07:04 UTC 2014
+Job <3722298> is submitted to queue <dev>.
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@t1c37f>
+Subject: Job 3722269: <HIRESW_UNGRIB> in cluster <tide> Done
+
+Job <HIRESW_UNGRIB> was submitted from host <t10a1f> by user <Matthew.Pyle> in cluster <tide>.
+Job was executed on host(s) <4*t1c37f>, in queue <dev_shared>, as user <Matthew.Pyle> in cluster <tide>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.0.10/launch> was used as the working directory.
+Started at Tue Jul 15 16:05:49 2014
+Results reported on Tue Jul 15 16:07:05 2014
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo test_ungrib.out
+#BSUB -eo test_ungrib.err
+#BSUB -q "dev_shared"
+#BSUB -J HIRESW_UNGRIB
+#BSUB -R "span[ptile=4]"
+#BSUB -R affinity[core(1)]
+#BSUB -R rusage[mem=2000]
+#BSUB -W 0:25
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -n 4
+
+module load ics
+module load ibmpe
+
+export MP_LABELIO=yes
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export MEMBER=ctl
+
+export NEST=guam
+export cyc=00
+export MODEL=nmmb
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+
+export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}
+
+$HOMEhiresw/jobs/JHIRESW_UNGRIB
+
+bsub < sub_metgrid.lsf_guam_nmmb_00
+# rm sub_metgrid.lsf_guam_nmmb_00
+
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               389.87 sec.
+    Max Memory :             3732 MB
+    Average Memory :         1568.00 MB
+    Total Requested Memory : 8000.00 MB
+    Delta Memory :           4268.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          15
+    Max Threads :            39
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <test_ungrib.err> for stderr output of this job.
+

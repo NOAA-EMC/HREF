@@ -1,0 +1,18 @@
+###############################################################################
+#
+#  Global NMM-B restart from pure binary input
+#  6x5 compute tasks / 1 thread / opnl physics / restart / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-global restart run"
+
+export CNTL_DIR=NMMB_glob
+export LIST_FILES="nmmb_hst_01_bin_0048h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=glob
+export RSTRT=true
+
+RUN_SCRIPT=rt_nmm.sh
