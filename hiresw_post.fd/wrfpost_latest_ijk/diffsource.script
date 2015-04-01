@@ -1,7 +1,0 @@
-#
-for i in `ls *.f`
-do
-# diff $i /nfsuser/g01.1/weather/wx20gk/IDEALV2/WRFPOST/$i  >  $i.diff
-# diff $i /nfsuser/g01/emcsrc/wx20hc/WRF/wrfpost_v2.1_dynallocation_exp/$i > $i.diff
-diff $i ../wrfpost_latest/$i > $i.diff
-done
