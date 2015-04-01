@@ -1,0 +1,30 @@
+#! /bin/ksh --login
+#
+#BSUB -o /ptmp/Matthew.Pyle/nps_metgrid.log.%J
+#BSUB -e /ptmp/Matthew.Pyle/nps_metgrid.log.%J
+#BSUB -q "dev"
+#BSUB -W 0:39
+#BSUB -J METGRID
+#BSUB -a poe
+#BSUB -n 8
+#
+module load ics
+module load ibmpe
+#
+
+PACKDIR=/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_nps.fd
+WORKDIR=/stmp/Matthew.Pyle/nmmb_init
+
+cd $WORKDIR
+
+mkdir metgrid
+
+cp $PACKDIR/namelist.nps .
+cp $PACKDIR/NPS/metgrid/METGRID.TBL.NMB ./metgrid/METGRID.TBL
+cp $PACKDIR/NPS/metgrid.exe .
+
+mpirun.lsf ./metgrid.exe
+
+cd $PACKDIR
+
+bsub < run_nemsinterp.lsf

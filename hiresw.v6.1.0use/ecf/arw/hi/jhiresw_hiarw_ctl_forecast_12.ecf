@@ -1,0 +1,56 @@
+#BSUB -J jhiresw_hiarw_ctl_forecast_12
+#BSUB -o /com/output/prod/today/hiresw_hiarw_ctl_forecast_12.o%J
+#BSUB -e /com/output/prod/today/hiresw_hiarw_ctl_forecast_12.o%J
+#BSUB -L /bin/sh
+#BSUB -q prod
+#BSUB -cwd /tmpnwprd
+#BSUB -x
+#BSUB -R span[ptile=9] -R affinity[core]
+#BSUB -n 12
+#BSUB -W 01:30
+#BSUB -P HRW-OPS
+#BSUB -a poe
+
+%include "/ecf/ecfnets/scripts/head.h"
+
+set -x
+
+export envir=prod
+export job=hiresw_hiarw_ctl_forecast_12
+export cyc=12
+export tmmark=tm00
+export MODEL="arw"
+export NEST="hi"
+export MEMBER="ctl"
+
+VERSION_FILE=/nw${envir}/versions/hiresw.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ecflow_client --msg="***JOB ${SMSNAME} ERROR: Version File $VERSION_FILE
+does not exist ***"
+  ecflow_client --abort
+  exit
+fi
+
+
+
+
+/nw$envir/hiresw.${model_ver}/jobs/JHIRESW_FORECAST
+
+%include "/ecf/ecfnets/scripts/tail.h"
+%manual
+######################################################################
+#
+#  PURPOSE:  To execute the job that runs ETA Forecast.
+#
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

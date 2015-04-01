@@ -1,0 +1,114 @@
+#!/bin/sh
+
+set -xa
+# #### 08/25/1999 ###################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + ' 
+date
+
+######################################################
+# Default to NCO production run environment
+#######################################################
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-hiresw} 
+  
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export jlogfile=/com/logs/${envir}/jlogfile
+  export SENDDBN=NO
+  export DBN_ALERT_TYPE=HIRESW_GEMPAK_PARA
+fi
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/${job}.${pid}}
+mkdir $DATA
+cd $DATA 
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${job}.${pid}}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+# RERUN    - Rerun fcst from beginning (default no)
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-YES}
+
+export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
+export GEMPAKhiresw=${GEMPAKhiresw:-$HOMEhiresw/gempak}
+
+export finc=1
+export fend=48
+
+export fstart=00
+export model=${NEST}${MODEL}
+
+export GRIB=5km
+export EXT=
+export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_GEMPAK}
+
+#
+# Copy model specific GEMPAK tables into working directory
+#
+cp $GEMPAKhiresw/fix/*.tbl .
+
+#
+# Now set up GEMPAK/NTRANS environment
+#
+. /nwprod/gempak/.gempak
+
+###################################
+# Set up the UTILITIES
+###################################
+
+module load prod_util
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. PDY
+
+export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMOUT=${COMOUT:-/com/nawips/${envir}/hiresw.${PDY}}
+
+if [ ! -f $COMOUT ] ; then
+  mkdir -p -m 775 $COMOUT
+fi
+ 
+env
+
+#################################################################
+# Execute the script
+$HOMEhiresw/scripts/exnawips_hiresw.sh.ecf
+#################################################################
+
+cd ${DATAROOT}
+rm -rf $DATA
+
+date

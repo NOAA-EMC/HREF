@@ -1,0 +1,23 @@
+###############################################################################
+#
+#  Global NMM-B with NEMSIO input
+#  6x5 compute tasks / 1 thread / opnl physics / free fcst / nemsio input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-global NEMSIO as input file"
+
+export CNTL_DIR=NMMB_glob
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s \
+        	   nmmb_hst_01_bin_0048h_00m_00.00s \
+        	   nmmb_hst_01_nio_0000h_00m_00.00s \
+        	   nmmb_hst_01_nio_0048h_00m_00.00s \
+        	   nmmb_rst_01_bin_0024h_00m_00.00s \
+        	   nmmb_rst_01_nio_0024h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=glob
+export NEMSI=true
+
+RUN_SCRIPT=rt_nmm.sh

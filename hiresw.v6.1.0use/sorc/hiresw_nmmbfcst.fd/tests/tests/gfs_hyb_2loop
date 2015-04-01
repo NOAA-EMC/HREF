@@ -1,0 +1,30 @@
+###############################################################################
+#
+#  GFS hyb 2 loop with digital filter
+#  12 compute tasks / 2 thread ,2 WrtGrp x 2 WrtPePerGrp
+#
+###############################################################################
+
+export TEST_DESCR="GFS,16 total proc (tasks), 2 thread, quilt,2x2 wrt pe, HYB 2loop digital filter on reduced grid"
+
+export CNTL_DIR=GFS_DFI_hyb_2loop
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 \
+                   flxf03 flxf06 flxf12 flxf24"
+
+export_gsm
+export TASKS=16
+export PE1=12
+export WRTGP=1
+export WTPG=1
+export THRD=2
+export FDFI=3
+export CP2=.true.
+export IDVC=2
+export THERMODYN_ID=0
+export SFCPRESS_ID=0
+export SPECTRALLOOP=2
+export NDAYS=1
+export TPN=8
+
+RUN_SCRIPT=rt_gfs.sh

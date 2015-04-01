@@ -1,0 +1,316 @@
+#!/bin/ksh
+######################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:         exhiresw_wrfbufr.sh
+# Script description:  Trigger hiresw sounding post job
+#
+# Author:        Eric Rogers       Org: NP22         Date: 1999-06-23
+#
+# Abstract: This script triggers the hiresw sounding post job, which
+#           creates a piece of the model sounding profile whose
+#           time interval is determined by the input forecast hours.
+#
+# Script history log:
+# 2000-05-16  Eric Rogers
+# 2006-01-20  Eric Rogers -- extended to 84-h and modified for WRF-NMM NAM
+# 2009-12-18  Matthew Pyle -- shortened to 48-h and generalized for multiple domains
+#                             and diferent dynamical cores
+#
+
+set -x
+
+
+mkdir -p $DATA/bufrpost
+cd $DATA/bufrpost
+
+export tmmark=tm00
+. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
+
+cp $FIXhiresw/hiresw_${RUN}_profdat hiresw_profdat
+
+OUTTYP=binary
+
+if [ $MODEL == "arw" ]
+then
+model=NCAR
+else
+model=$MODEL
+fi
+
+INCR=01
+
+let NFILE=1
+
+YYYY=`echo $PDY | cut -c1-4`
+MM=`echo $PDY | cut -c5-6`
+DD=`echo $PDY | cut -c7-8`
+CYCLE=$PDY$cyc
+
+startd=$YYYY$MM$DD
+startdate=$CYCLE
+
+endtime=`$NDATE 48 $CYCLE`
+
+STARTDATE=${YYYY}-${MM}-${DD}_${cyc}:00:00
+
+YYYY=`echo $endtime | cut -c1-4`
+MM=`echo $endtime | cut -c5-6`
+DD=`echo $endtime | cut -c7-8`
+
+FINALDATE=${YYYY}-${MM}-${DD}_${cyc}:00:00
+
+wyr=`echo $STARTDATE | cut -c1-4`
+wmn=`echo $STARTDATE | cut -c6-7`
+wdy=`echo $STARTDATE | cut -c9-10`
+whr=`echo $STARTDATE | cut -c12-13`
+
+eyr=`echo $FINALDATE | cut -c1-4`
+emn=`echo $FINALDATE | cut -c6-7`
+edy=`echo $FINALDATE | cut -c9-10`
+ehr=`echo $FINALDATE | cut -c12-13`
+
+edate=$eyr$emn$edy$ehr
+
+
+# check for existence of sndpostdone files
+
+cd $DATA
+
+if [ -e sndpostdone00.tm00 ]
+then
+
+lasthour=`ls -1rt sndpostdone??.tm00 | tail -1 | cut -c 12-13`
+typeset -Z2 lasthour
+
+let "fhr=lasthour+1"
+typeset -Z2 fhr
+
+else
+
+fhr=00
+
+fi
+
+timeform=$STARTDATE
+
+export fhr
+
+wdate=`$NDATE +${fhr} $startdate`
+
+echo starting with fhr $fhr
+echo starting with wdate $wdate
+
+cd $DATA/bufrpost
+
+########################################################
+
+while [ $wdate -le $edate ]
+do
+
+datestr=`date`
+echo top of loop at $datestr
+
+date=`$NDATE $fhr $CYCLE`
+
+wyr=`echo $date | cut -c1-4`
+wmn=`echo $date | cut -c5-6`
+wdy=`echo $date | cut -c7-8`
+whr=`echo $date | cut -c9-10`
+
+let fhrold="$fhr - 1"
+dateold=`$NDATE $fhrold $CYCLE`
+
+oyr=`echo $dateold | cut -c1-4`
+omn=`echo $dateold | cut -c5-6`
+ody=`echo $dateold | cut -c7-8`
+ohr=`echo $dateold | cut -c9-10`
+
+timeform=${wyr}"-"${wmn}"-"${wdy}"_"${whr}":00:00"
+timeformold=${oyr}"-"${omn}"-"${ody}"_"${ohr}":00:00"
+
+if [ $model == "NCAR" ]
+then
+
+OUTFIL=$INPUT_DATA/wrfout_d01_${timeform}
+OLDOUTFIL=$INPUT_DATA/wrfout_d01_${timeformold}
+
+icnt=1
+
+# wait for model restart file
+while [ $icnt -lt 1000 ]
+do
+   if [ -s $INPUT_DATA/fcstdone${fhr}.${tmmark} ]
+   then
+      break
+   else
+      icnt=$((icnt + 1))
+      sleep 9
+   fi
+if [ $icnt -ge 200 ]
+then
+    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    err_exit $msg
+fi
+done
+
+
+else
+
+OUTFIL=$INPUT_DATA/nmmb_hst_01_nio_00${fhr}h_00m_00.00s
+OLDOUTFIL=$INPUT_DATA/nmmb_hst_01_nio_00${fhrold}h_00m_00.00s
+
+icnt=1
+
+# wait for model restart file
+while [ $icnt -lt 1000 ]
+do
+   if [ -s $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
+   then
+      break
+   else
+      icnt=$((icnt + 1))
+      sleep 9
+   fi
+if [ $icnt -ge 200 ]
+then
+    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    err_exit $msg
+fi
+done
+
+fi
+
+datestr=`date`
+
+cat > itag <<EOF
+$OUTFIL
+$model
+$OUTTYP
+$STARTDATE
+$NFILE
+$INCR
+$fhr
+$OLDOUTFIL
+EOF
+
+export pgm=hiresw_wrfbufr
+
+. prep_step
+
+export FORT19="$DATA/bufrpost/hiresw_profdat"
+export FORT79="$DATA/bufrpost/profilm.c1.${tmmark}"
+export FORT11="itag"
+
+startmsg
+
+# using mpirun.lsf needed after WCOSS SP4.2 upgrade
+
+mpirun.lsf $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
+export err=$?;./err_chk
+
+mv $DATA/bufrpost/profilm.c1.${tmmark} $DATA/profilm.c1.${tmmark}.f${fhr}
+echo done > $DATA/sndpostdone${fhr}.${tmmark}
+
+cat $DATA/profilm.c1.${tmmark}  $DATA/profilm.c1.${tmmark}.f${fhr} > $DATA/profilm_int
+mv $DATA/profilm_int $DATA/profilm.c1.${tmmark}
+
+fhr=`expr $fhr + $INCR`
+
+
+if [ $fhr -lt 10 ]
+then
+fhr=0$fhr
+fi
+
+wdate=`$NDATE ${fhr} $CYCLE`
+
+done
+
+cd $DATA
+
+########################################################
+############### SNDP code
+########################################################
+
+export pgm=hiresw_sndp_${RUN}
+
+. prep_step
+
+cp $PARMhiresw/hiresw_sndp.parm.mono $DATA/hiresw_sndp.parm.mono
+cp $PARMhiresw/hiresw_bufr.tbl $DATA/hiresw_bufr.tbl
+
+export FORT11="$DATA/hiresw_sndp.parm.mono"
+export FORT32="$DATA/hiresw_bufr.tbl"
+export FORT66="$DATA/profilm.c1.${tmmark}"
+export FORT78="$DATA/class1.bufr"
+
+startmsg
+$EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+export err=$?;./err_chk
+
+############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS
+
+${USHprod}/cwordsh unblk class1.bufr class1.bufr.unb
+${USHprod}/cwordsh block class1.bufr.unb class1.bufr.wcoss
+
+if [ $SENDCOM == "YES" ]
+then
+cp $DATA/class1.bufr $COMOUT/hiresw.t${cyc}z.${RUN}.class1.bufr
+cp $DATA/class1.bufr.wcoss $COMOUT/hiresw.t${cyc}z.${RUN}.class1.bufr.wcoss
+cp $DATA/profilm.c1.${tmmark} ${COMOUT}/hiresw.t${cyc}z.${RUN}.profilm.c1
+fi
+
+# remove bufr file breakout directory in $COMOUT if it exists
+
+if [ -d ${COMOUT}/bufr.${NEST}${MODEL}${cyc} ]
+then
+  cd $COMOUT
+  rm -r bufr.${NEST}${MODEL}${cyc}
+  cd $DATA
+fi
+
+
+rm stnmlist_input
+
+cat <<EOF > stnmlist_input
+1
+$DATA/class1.bufr
+${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr
+EOF
+
+  mkdir -p ${COMOUT}/bufr.${NEST}${MODEL}${cyc}
+
+  export pgm=hiresw_stnmlist
+  . prep_step
+
+  export FORT20=$DATA/class1.bufr
+  export DIRD=${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr
+
+  startmsg
+  $EXEChiresw/hiresw_stnmlist < stnmlist_input >> $pgmout 2>errfile
+  export err=$?;err_chk
+
+  echo ${COMOUT}/bufr.${NEST}${MODEL}${cyc} > ${COMOUT}/bufr.${NEST}${MODEL}${cyc}/bufrloc
+
+#   cp class1.bufr.tm00 $COMOUT/${RUN}.${cyc}.class1.bufr
+
+cd ${COMOUT}/bufr.${NEST}${MODEL}${cyc}
+files=`ls`
+for fl in $files
+do
+${USHprod}/cwordsh unblk ${fl} ${fl}.unb
+${USHprod}/cwordsh block ${fl}.unb ${fl}.wcoss
+rm ${fl}.unb
+done
+
+# Make an upper case version of the ${RUN} variable for the alert
+#export DBN_NEST=`echo ${RUN} | tr '[a-z]' '[A-Z]'`
+
+if [ $SENDDBN == "YES" ]
+then
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/${RUN}.t${cyc}z.class1.bufr
+fi
+
+echo EXITING $0 with return code $err
+exit $err

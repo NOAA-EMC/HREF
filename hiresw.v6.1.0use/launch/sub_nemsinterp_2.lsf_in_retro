@@ -1,0 +1,36 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/logs/test_nemsinterp_2.out__DOM___CORE___CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/logs/test_nemsinterp_2.err__DOM___CORE___CYC_
+#BSUB -q "dev2"
+#BSUB -J HIRESW_NEMSINTERP_2
+#BSUB -R "span[ptile=4]"
+#BSUB -W 0:12
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -x
+#BSUB -n 4
+
+module load ics
+module load ibmpe
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export MEMBER=ctl
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+# DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+export DATE=_DATE_
+
+export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.nemsinterp_2_${NEST}_${MODEL}_${cyc}_${envir}_retro
+
+$HOMEhiresw/jobs/JHIRESW_NEMSINTERP_2_retro
