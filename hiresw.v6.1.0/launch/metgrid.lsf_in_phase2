@@ -3,7 +3,7 @@
 #BSUB -eo /meso/save/Matthew.Pyle/logs/test_metgrid.err__DOM___CORE___CYC_
 #BSUB -q "dev2"
 #BSUB -J HIRESW_METGRID
-#BSUB -R "span[ptile=9]"
+#BSUB -R "span[ptile=5]"
 #BSUB -W 0:12
 #BSUB -a poe
 #BSUB -P HRW-T2O
