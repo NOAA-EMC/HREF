@@ -80,6 +80,7 @@ module unload ibmpe
 gmake nmm > makenmm.log  2>&1
 
 cp ${BASE}/sorc/hiresw_nmmbfcst.fd/exe/NEMS.x ${BASE}/exec/hiresw_nmmbfcst
+module load ibmpe
 
 ##############################
 
