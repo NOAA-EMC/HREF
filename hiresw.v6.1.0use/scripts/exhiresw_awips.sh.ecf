@@ -20,11 +20,13 @@ msg="Hiresw post-processing for AWIPS has begun on `hostname` at `date`"
 postmsg "$jlogfile" "$msg"
 startmsg
 
+RUNLOC=${NEST}${MODEL}
+
 for fhr in 00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 ;
 do
     export FORTREPORTS="unit_vars=yes"     # Allow overriding default names.
 
-if [ $RUN = "conusarw" -o $RUN = "conusnmmb" ]
+if [ $RUNLOC = "conusarw" -o $RUNLOC = "conusnmmb" ]
 then
   icnt=1
   maxtries=100
@@ -44,7 +46,7 @@ then
 
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2
     export FORT31=""
-    export FORT51=grib2.t${cyc}z.awpregeast_${RUN}f${fhr}
+    export FORT51=grib2.t${cyc}z.awpregeast_${RUNLOC}f${fhr}
     tocgrib2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
@@ -52,7 +54,7 @@ then
     fi
 
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpregeast_${RUN}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpregeast_${RUNLOC}f${fhr}
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
@@ -74,7 +76,7 @@ then
   fi
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2
     export FORT31=""
-    export FORT51=grib2.t${cyc}z.awpregwest_${RUN}f${fhr}
+    export FORT51=grib2.t${cyc}z.awpregwest_${RUNLOC}f${fhr}
     tocgrib2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
@@ -82,7 +84,7 @@ then
     fi
 
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpregwest_${RUN}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpregwest_${RUNLOC}f${fhr}
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
@@ -106,7 +108,7 @@ else
   fi
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
     export FORT31=""
-    export FORT51=grib2.t${cyc}z.awpreg_${RUN}f${fhr}
+    export FORT51=grib2.t${cyc}z.awpreg_${RUNLOC}f${fhr}
     tocgrib2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
@@ -114,7 +116,7 @@ else
     fi
 
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpreg_${RUN}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpreg_${RUNLOC}f${fhr}
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"

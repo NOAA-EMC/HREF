@@ -24,10 +24,12 @@ set -x
 mkdir -p $DATA/bufrpost
 cd $DATA/bufrpost
 
-export tmmark=tm00
-. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
+RUNLOC=${NEST}${MODEL}
 
-cp $FIXhiresw/hiresw_${RUN}_profdat hiresw_profdat
+export tmmark=tm00
+. $COMIN/hiresw.t${cyc}z.${RUNLOC}.envir.sh
+
+cp $FIXhiresw/hiresw_${RUNLOC}_profdat hiresw_profdat
 
 OUTTYP=binary
 
@@ -149,7 +151,7 @@ do
    fi
 if [ $icnt -ge 200 ]
 then
-    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUNLOC} FCST F${fhr} to end."
     err_exit $msg
 fi
 done
@@ -174,7 +176,7 @@ do
    fi
 if [ $icnt -ge 200 ]
 then
-    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUN} FCST F${fhr} to end."
+    msg="FATAL ERROR: ABORTING after 30 minutes of waiting for HIRESW ${RUNLOC} FCST F${fhr} to end."
     err_exit $msg
 fi
 done
@@ -233,7 +235,7 @@ cd $DATA
 ############### SNDP code
 ########################################################
 
-export pgm=hiresw_sndp_${RUN}
+export pgm=hiresw_sndp_${RUNLOC}
 
 . prep_step
 
@@ -256,9 +258,9 @@ ${USHprod}/cwordsh block class1.bufr.unb class1.bufr.wcoss
 
 if [ $SENDCOM == "YES" ]
 then
-cp $DATA/class1.bufr $COMOUT/hiresw.t${cyc}z.${RUN}.class1.bufr
-cp $DATA/class1.bufr.wcoss $COMOUT/hiresw.t${cyc}z.${RUN}.class1.bufr.wcoss
-cp $DATA/profilm.c1.${tmmark} ${COMOUT}/hiresw.t${cyc}z.${RUN}.profilm.c1
+cp $DATA/class1.bufr $COMOUT/hiresw.t${cyc}z.${RUNLOC}.class1.bufr
+cp $DATA/class1.bufr.wcoss $COMOUT/hiresw.t${cyc}z.${RUNLOC}.class1.bufr.wcoss
+cp $DATA/profilm.c1.${tmmark} ${COMOUT}/hiresw.t${cyc}z.${RUNLOC}.profilm.c1
 fi
 
 # remove bufr file breakout directory in $COMOUT if it exists
@@ -304,12 +306,12 @@ ${USHprod}/cwordsh block ${fl}.unb ${fl}.wcoss
 rm ${fl}.unb
 done
 
-# Make an upper case version of the ${RUN} variable for the alert
-#export DBN_NEST=`echo ${RUN} | tr '[a-z]' '[A-Z]'`
+# Make an upper case version of the ${RUNLOC} variable for the alert
+#export DBN_NEST=`echo ${RUNLOC} | tr '[a-z]' '[A-Z]'`
 
 if [ $SENDDBN == "YES" ]
 then
-  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/${RUN}.t${cyc}z.class1.bufr
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/${RUN}.t${cyc}z.${RUNLOC}.class1.bufr
 fi
 
 echo EXITING $0 with return code $err
