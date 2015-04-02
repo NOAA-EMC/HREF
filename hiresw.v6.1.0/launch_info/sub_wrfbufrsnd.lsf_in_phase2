@@ -39,9 +39,9 @@ export SENDDBN=NO
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
-export COMROOT=/ptmpd3/Matthew.Pyle/com
-export COMOUT=${COMROOT}/${NET}/$envir/${RUN}.${DATE}
-export COMIN=${COMROOT}/${NET}/$envir/${RUN}.${DATE}
+export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 
 export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}

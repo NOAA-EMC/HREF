@@ -36,14 +36,14 @@ export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export PCOMROOT=/ptmpd3/Matthew.Pyle/pcom
-export COMROOT=/ptmpd3/Matthew.Pyle/com
+export PMYCOMROOT=/ptmpd3/Matthew.Pyle/pcom
+export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
 
-export COMOUT=${COMROOT}/${NET}/$envir/${RUN}.${DATE}
-export COM=${COMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COM=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
-export pcom=${PCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export pcom=${PMYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export DATA=${DATAROOT}/hiresw.awips_${NEST}_${MODEL}_${cyc}_${envir}
 

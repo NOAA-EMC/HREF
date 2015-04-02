@@ -32,8 +32,8 @@ export MODEL=_CORE_
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
-export COMROOT=/ptmpd3/Matthew.Pyle/com
-export COMOUT=${COMROOT}/${NET}/$envir/${RUN}.${DATE}
+export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export DATA=${DATAROOT}/hiresw.nemsinterp_1_${NEST}_${MODEL}_${cyc}_${envir}
 
