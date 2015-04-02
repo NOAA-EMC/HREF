@@ -30,6 +30,8 @@ LENGTH=48
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
+RUNLOC=${NEST}${MODEL}
+
 yy=`echo $PDY | cut -c1-4`
 mm=`echo $PDY | cut -c5-6`
 dd=`echo $PDY | cut -c7-8`
@@ -53,7 +55,7 @@ filt_de=$dstart
 filt_he=$cyc
 
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 #########################################################
 # RUN REAL PROGRAM TO GENERATE WRFINPUT/WRFBDY FILES (ARW)

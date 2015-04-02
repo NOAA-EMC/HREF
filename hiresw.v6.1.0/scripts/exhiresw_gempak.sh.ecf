@@ -17,7 +17,9 @@ NAGRIB_TABLE=/nwprod/gempak/fix/nagrib.tbl
 NAGRIB=nagrib2_nc
 #
 
-entry=`grep "^$RUN " $NAGRIB_TABLE | awk 'index($1,"#") != 1 {print $0}'`
+RUNLOC=${NEST}${MODEL}
+
+entry=`grep "^$RUNLOC " $NAGRIB_TABLE | awk 'index($1,"#") != 1 {print $0}'`
 
 if [ "$entry" != "" ] ; then
   cpyfil=`echo $entry  | awk 'BEGIN {FS="|"} {print $2}'`
@@ -129,9 +131,9 @@ done
 #####################################################################
 # GOOD RUN
 set +x
-echo "**************JOB $RUN NAWIPS COMPLETED NORMALLY ON THE IBM"
-echo "**************JOB $RUN NAWIPS COMPLETED NORMALLY ON THE IBM"
-echo "**************JOB $RUN NAWIPS COMPLETED NORMALLY ON THE IBM"
+echo "**************JOB $RUNLOC NAWIPS COMPLETED NORMALLY ON THE IBM"
+echo "**************JOB $RUNLOC NAWIPS COMPLETED NORMALLY ON THE IBM"
+echo "**************JOB $RUNLOC NAWIPS COMPLETED NORMALLY ON THE IBM"
 set -x
 #####################################################################
 

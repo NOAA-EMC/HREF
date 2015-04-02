@@ -24,8 +24,10 @@ set -x
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
+RUNLOC=${NEST}${MODEL}
+
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 
 #########################################################
@@ -62,41 +64,7 @@ mpirun.lsf
 export err=$?
 ${DATA}/err_chk
 
-# wait for all 9 WPS codes to finish to proceed
-
-ic=0
-
-
-
-### clean or remove this block
-while [ $ic -lt 1000 ] ; do
-
- icntb=1
- itest=1
- while [ $icntb -le 9 ] ; do
-  ls -l $DATA/wpsdone.$icntb
-  export err1=$?
-  if [ $err1 -eq 0 ] ; then
-   let "itest=itest+1"
-  fi
-  let "icntb=icntb+1"
- done
- 
- if [ $itest -eq 10 ] ; then
-   break
- else
-   let "ic=ic+1"
-   sleep 10
- fi
- 
- if [ $ic -ge 1000 ] ; then
-  exit 1
- fi
- 
-done
-
 cat $DATA/metgrid.log.0000_* > $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.metgrid.log
-
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"
