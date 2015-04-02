@@ -16,7 +16,7 @@ export RUN_ENVIR=${RUN_ENVIR:-prod}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-${NEST}${MODEL}}
+export RUN=${RUN:-hiresw}
 
 ###############################################################
 # This block can be modified for different Production test
@@ -84,13 +84,12 @@ module load prod_util
 setpdy.sh
 . PDY
 
-export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMROOT=${COMROOT:-/com2}
+export COMIN=${COMIN:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export pcom=${pcom:-/pcom/${NET}}
 
 mkdir -p $COMOUT $pcom
  
-env
-
 ########################################################
 # Run the ex-script
 #
@@ -102,5 +101,4 @@ postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
 
 cd $DATAROOT
 rm -rf $DATA
-
 date

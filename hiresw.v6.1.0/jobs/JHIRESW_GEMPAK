@@ -94,7 +94,9 @@ module load prod_util
 setpdy.sh
 . PDY
 
-export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMROOT=${COMROOT:-/com2}
+
+export COMIN=${COMIN:-/${COMROOT}/${NET}/${envir}/hiresw.${PDY}}
 export COMOUT=${COMOUT:-/com/nawips/${envir}/hiresw.${PDY}}
 
 if [ ! -f $COMOUT ] ; then
@@ -110,5 +112,4 @@ $HOMEhiresw/scripts/exnawips_hiresw.sh.ecf
 
 cd ${DATAROOT}
 rm -rf $DATA
-
 date

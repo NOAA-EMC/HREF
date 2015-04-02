@@ -16,7 +16,7 @@ export RUN_ENVIR=${RUN_ENVIR:-prod}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-${NEST}${MODEL}}
+export RUN=${RUN:-hiresw}
 
 ###############################################################
 # This block can be modified for different Production test
@@ -82,9 +82,9 @@ do
   . PDY
 done
 
-export COMROOT=${COMROOT:-/com}
-export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
-export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMROOT=${COMROOT:-/com2}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/hiresw.${PDY}}
+export COMOUT=${COMOUT:-/${COMROOT}/${NET}/${envir}/hiresw.${PDY}}
 export COM_SREF=${COM_SREF:-/com/sref/prod}
 
 mkdir -p $COMOUT
