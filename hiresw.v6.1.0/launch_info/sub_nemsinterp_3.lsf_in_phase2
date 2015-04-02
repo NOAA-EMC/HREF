@@ -21,7 +21,8 @@ vers=`cat /u/Matthew.Pyle/hiresw_version`
 export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
 export envir=test
-export MEMBER=ctl
+export NET=hiresw
+export RUN=hiresw
 
 export NEST=_DOM_
 export cyc=_CYC_
@@ -29,7 +30,9 @@ export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
-export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.nemsinterp_3_${NEST}_${MODEL}_${cyc}_${envir}
+export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
+export COMROOT=/ptmpd3/Matthew.Pyle/com
+export COMOUT=${COMROOT}/${NET}/$envir/${RUN}.${DATE}
+export DATA=${DATAROOT}//hiresw.nemsinterp_3_${NEST}_${MODEL}_${cyc}_${envir}
 
 $HOMEhiresw/jobs/JHIRESW_NEMSINTERP_3
