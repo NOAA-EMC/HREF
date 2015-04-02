@@ -38,14 +38,12 @@ set -x
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
+RUNLOC=${NEST}${MODEL}
+
 
 ######
 export INCR=01
 ######
-
-# also done in J-JOB
-
-# cd $DATA/post
 
 rm OUTPUT* errfil*
 
@@ -56,7 +54,7 @@ cp hiresw_micro_lookup.dat eta_micro_lookup.dat
 # Get needed variables from exhiresw_prelim.sh.sms
 #
 
-. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
+. $COMIN/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 fhr=00
 fhrend=48

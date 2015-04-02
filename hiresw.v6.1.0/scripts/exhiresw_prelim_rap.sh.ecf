@@ -32,6 +32,8 @@ LENGTH=00
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
+RUNLOC=${NEST}${MODEL}
+
 yy=`echo $PDY | cut -c1-4`
 mm=`echo $PDY | cut -c5-6`
 dd=`echo $PDY | cut -c7-8`
@@ -81,12 +83,12 @@ incr=3
   #if [ $err -eq 99 ] ; then
   #  exit
   #fi
-  echo "export NEST=$NEST" > $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
-  echo "export MODEL=$MODEL" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
+  echo "export NEST=$NEST" > $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
+  echo "export MODEL=$MODEL" >> $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 #fi
 
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 # Puerto Rico : Use grid #221 (awip32)
 # Hawaii : Use grid #243 (awiphi)

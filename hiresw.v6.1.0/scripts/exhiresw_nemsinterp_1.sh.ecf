@@ -83,7 +83,9 @@ filt_de=$dstart
 filt_he=$cyc
 
 export CYCLE=$PDY$cyc
-echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUN}.envir.sh
+RUNLOC=${NEST}${MODEL}
+
+echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 #########################################################
 # RUN NEMSINTERP PROGRAM to generate input/boco files (NMMB)

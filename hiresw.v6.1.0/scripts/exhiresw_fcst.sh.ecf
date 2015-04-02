@@ -21,10 +21,13 @@ postmsg "$jlogfile" "$msg"
 
 cd $DATA
 
+RUNLOC=${NEST}${MODEL}
+
+
 #
 # Get needed variables from exhiresw_prelim.sh.sms
 #
-. $COMIN/hiresw.t${cyc}z.${RUN}.envir.sh
+. $COMIN/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 START=00
 LENGTH=48
@@ -324,14 +327,14 @@ export pgm=hiresw_${MODEL}_fcst
 
 export FORT_BUFFERED=true
 
-if [ $RUN = "conusarw" ]
+if [ $RUNLOC = "conusarw" ]
 then
 # export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 644/23 20/10 20/5`"
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 756/24 24/24 24/6`"
-elif [ $RUN = "conusnmmb" ]
+elif [ $RUNLOC = "conusnmmb" ]
 then
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/16`"
-elif [ $RUN = "akarw" ]
+elif [ $RUNLOC = "akarw" ]
 then
 # export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 24/12 24/6`"
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 728/24 24/12 24/8`"

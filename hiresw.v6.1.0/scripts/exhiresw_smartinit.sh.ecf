@@ -30,9 +30,11 @@ postmsg "$jlogfile" "$msg"
 
 cd $DATA
 
+RUNLOC=${NEST}${MODEL}
+
 # 00/12 UTC CYCLE smartinit CONFIGURE
   export ENDHR=48
-  export RUNTYP=${RUN}
+  export RUNTYP=${RUNLOC}
 
 
 hr=00
