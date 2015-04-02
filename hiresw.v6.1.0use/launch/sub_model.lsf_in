@@ -36,6 +36,5 @@ DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export COMIN=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
-export POSTDATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}
 
 $HOMEhiresw/jobs/JHIRESW_FORECAST
