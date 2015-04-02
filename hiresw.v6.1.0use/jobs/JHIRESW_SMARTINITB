@@ -16,7 +16,7 @@ export RUN_ENVIR=${RUN_ENVIR:-prod}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-${NEST}${MODEL}}
+export RUN=${RUN:-hiresw}
 
 export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
 
@@ -86,8 +86,9 @@ export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
 setpdy.sh
 . PDY
 
-export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
-export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMROOT=${COMROOT:-/com2}
+export COMIN=${COMIN:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COM_SREF=${COM_SREF:-/com/sref/prod}
 
 mkdir -p $COMOUT

@@ -16,7 +16,7 @@ export RUN_ENVIR=${RUN_ENVIR:-prod}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-${NEST}${MODEL}}
+export RUN=${RUN:-hiresw}
 
 ###############################################################
 # This block can be modified for different Production test
@@ -82,8 +82,9 @@ module load prod_util
 setpdy.sh
 . PDY
 
-export COMIN=${COMIN:-/com/${NET}/${envir}/hiresw.${PDY}}
-export COMOUT=${COMOUT:-/com/${NET}/${envir}/hiresw.${PDY}}
+export COMROOT=${COMROOT:-/com2}
+export COMIN=${COMIN:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 
 if [ ${MODEL} = "arw" ]
 then
@@ -91,10 +92,8 @@ export MP_SHARED_MEMORY=yes
 export MP_USE_TOKEN_FLOW_CONTROL=yes
 export MP_INSTANCES=2
 fi
- 
-env
 
-### bsub post scripts  - clean these out before commit
+# bsub post scripts  - clean these out before commit
 bsub < ${HOMEhiresw}/launch/sub_post.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}
@@ -102,6 +101,7 @@ bsub < ${HOMEhiresw}/launch/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
 ### end bsub post scripts
 
+ 
 ###################################################
 # Execute the Script
 #
@@ -113,5 +113,4 @@ cat $pgmout
 
 msg="JOB $job FOR NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
-
 date
