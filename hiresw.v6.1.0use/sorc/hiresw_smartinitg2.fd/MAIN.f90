@@ -468,7 +468,22 @@
 
 ! ----------------------------------------
 
-       DEC=3.0
+       DEC=6.0
+
+        do J=1,JM
+        do I=1,IM
+        if (DOWNQ(I,J) .le. 1.e-12) then
+        write(0,*) 'bad DOWNQ: ', I,J, DOWNQ(I,J)
+        DOWNQ(I,J)=1.e-8
+        endif
+
+        if (DOWNQ(I,J) .ge. 50.e-3) then
+        write(0,*) 'bad large DOWNQ: ', I,J, DOWNQ(I,J)
+        DOWNQ(I,J)=10.e-3
+        endif
+
+        enddo
+        enddo
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNQ)
 
@@ -2342,7 +2357,7 @@
           GMIN = 0.
         ENDIF
       ENDIF
-!     write(0,*)' GMIN=',GMIN,' GMAX=',GMAX
+      write(0,*)' GMIN=',GMIN,' GMAX=',GMAX
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !  COMPUTE NUMBER OF BITS
       icnt = 0
