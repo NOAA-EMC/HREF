@@ -942,7 +942,8 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,Q(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
         J=K
-        write(0,*) 'Q(50,50,LL): ', LL, Q(50,50,LL)
+        write(0,*) 'min/max of Q: ',LL, minval(Q(:,:,LL)), maxval(Q(:,:,LL))
+!        write(0,*) 'Q(50,50,LL): ', LL, Q(50,50,LL)
 
 
       ENDDO
