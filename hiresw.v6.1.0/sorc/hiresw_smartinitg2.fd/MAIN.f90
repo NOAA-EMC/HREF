@@ -472,6 +472,9 @@
 
         do J=1,JM
         do I=1,IM
+
+        if (validpt(I,J)) then
+
         if (DOWNQ(I,J) .le. 1.e-12) then
         write(0,*) 'bad DOWNQ: ', I,J, DOWNQ(I,J)
         DOWNQ(I,J)=1.e-8
@@ -480,6 +483,8 @@
         if (DOWNQ(I,J) .ge. 50.e-3) then
         write(0,*) 'bad large DOWNQ: ', I,J, DOWNQ(I,J)
         DOWNQ(I,J)=10.e-3
+        endif
+
         endif
 
         enddo
