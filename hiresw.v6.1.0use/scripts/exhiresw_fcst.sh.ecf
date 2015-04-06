@@ -338,7 +338,7 @@ export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/16`"
 elif [ $RUNLOC = "akarw" ]
 then
 # export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 728/24 24/12 24/8`"
-export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 816/24 24/12 24/8`"
+export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 784/24 24/12 24/8`"
 fi
 
 startmsg
