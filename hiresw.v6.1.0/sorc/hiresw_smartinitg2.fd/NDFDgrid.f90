@@ -204,11 +204,23 @@
 !      theory for derivation of 2m T at topomini elevation
           tsfc = t2(i,j) + (zs-topo_ndfd(i,j))*gam
 
+!        if (I .eq. 534 .and. J .eq. 826) then
+!        write(0,*) 'zs, topo_ndfd, gam: ', zs, topo_ndfd(i,j),gam
+!        write(0,*) 't2, tsfc: ', t2(i,j), tsfc
+!        endif
+
+
 !  Don't let reduced valley temps be
 !     any lower than NAM 2m temp minus 10K.
           tsfc = max(t2(i,j)-10.,tsfc)
+!        if (I .eq. 534 .and. J .eq. 826) then
+!        write(0,*) 'tsfc now(a): ', tsfc
+!        endif
 !  Can't let valley temps go below NAM dewpoint temps.
           tsfc = max (tsfc,td_orig)
+!        if (I .eq. 534 .and. J .eq. 826) then
+!        write(0,*) 'tsfc now(b): ', tsfc
+!        endif
 
 ! --- pressure at NDFD topo
           tmean = (tsfc+t2(i,j)) * 0.5
@@ -217,6 +229,11 @@
 
 ! --- temperature
           tnew(i,j) = tsfc
+
+!        if (I .eq. 534 .and. J .eq. 826) then
+!        write(0,*) 'tnew defined: ', tnew(i,j)
+!        endif
+
     if (i.eq.251.and. j.eq.100)print *,'**tnew(a) tnew, t2, ',validpt(i,j),tnew(i,j), &
      t2(i,j), topo_ndfd(i,j),zs
 
@@ -271,13 +288,23 @@
 ! GSM changed the tup computation, as it appears to give
 !   a better-looking product.  need to revisit at some point 
           tup=t2(i,j)+frac*(t(i,j,k)-t2(i,j))
+        
+        if (tup .lt. 0) then
+        write(0,*) 'I,J, t2(I,J): ', I,J,t2(i,j)
+        write(0,*) 'frac, k, t(i,j,k): ', frac, k, t(i,j,k)
+        endif
 
 ! Is Tup already Temperature for nests ???????  
-          if (.not.lconus) &
-          tup = thetavc*(pnew(i,j)/P1000)**rovcp_p/(1.+0.6078*qc)
+!?          if (.not.lconus) &
+!?          tup = thetavc*(pnew(i,j)/P1000)**rovcp_p/(1.+0.6078*qc)
             
 !  provisional 2m temp at NDFD topo
           tnew(i,j) = t2(i,j) + (tup-tp1)
+
+!        if (I .eq. 534 .and. J .eq. 826) then
+!        write(0,*) 'tnew RDdefined: ', tnew(i,j)
+!        write(0,*) 't2, tup, tp1: ', t2(i,j), tup, tp1
+!        endif
 
 ! --- Dont let extrapolated temp to be any larger than
 !     the value at the NAM terrain level.
@@ -287,6 +314,9 @@
       tsfc=t2(i,j) + (zs-topo_ndfd(i,j))*gam
 
       if (tnew(i,j) .gt. t2(i,j))  tnew(i,j) = min(tnew(i,j),tsfc)
+!        if (I .eq. 534 .and. J .eq. 826) then
+!        write(0,*) 'tnew RDdefined(b): ', tnew(i,j)
+!        endif
 
     if (i.eq.251.and. j.eq.100)print *,'**tnew(b)',validpt(i,j),tnew(i,j), &
      topo_ndfd(i,j),zs
