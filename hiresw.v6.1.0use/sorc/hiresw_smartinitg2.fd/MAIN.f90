@@ -430,6 +430,26 @@
 
         NUMV=IM*JM
 
+        do J=1,JM
+        do I=1,IM
+
+        if (validpt(I,J)) then
+
+        if (DOWNT(I,J) .le. 200.) then
+        write(0,*) 'bad small DOWNT: ', I,J, DOWNT(I,J)
+        DOWNT(I,J)=230.
+        endif
+
+        if (DOWNT(I,J) .ge. 330.) then
+        write(0,*) 'bad large DOWNT: ', I,J, DOWNT(I,J)
+        DOWNT(I,J)=310.
+        endif
+
+        endif
+
+        enddo
+        enddo
+
         CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNT)
 
        GFLD%ipdtnum=0
