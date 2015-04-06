@@ -132,7 +132,7 @@ $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -s > $COMOUT/hi
 ## subset the full CONUS grid to approximate the CAM common grid list
 
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 \
--match ":(REFC|RETOP|VIS|REFD|GUST|MAXUVV|MAXDVV|PRMSL|MAXREF|MXUPHL|WEASD|SNOWC|SNOWD|APCP|CSNOW|CICEP|CFRZR|CRAIN|VGTYP|CAPE|CIN|PWAT|TCDC|LCDC|MCDC|HCDC|4LFTX|LFTX|HLCY|USTM|VSTM):" \
+-match ":(REFC|RETOP|VIS|REFD|GUST|MAXUVV|MAXDVV|MAXUW|MAXVW|PRMSL|MAXREF|MXUPHL|WEASD|SNOWC|SNOWD|APCP|CSNOW|CICEP|CFRZR|CRAIN|VGTYP|CAPE|CIN|PWAT|TCDC|LCDC|MCDC|HCDC|4LFTX|LFTX|HLCY|USTM|VSTM):" \
 -grib hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset1
 
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -match "(500|700|850|925|1000) mb" -match ":(HGT|TMP|DPT|UGRD|VGRD):" \
