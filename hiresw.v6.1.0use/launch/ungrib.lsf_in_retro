@@ -30,6 +30,7 @@ export DATE=_DATE_
 
 
 export COMGFS=/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
+export COMINGFS=/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
 
 export COMOUT=/stmpd3/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
 export DATA=/stmpd3/Matthew.Pyle/tmpnwprd/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}_retro

@@ -1,6 +1,6 @@
 #! /bin/ksh
 
-cd /meso/save/Matthew.Pyle/hiresw.v6.1.0/launch/
+cd /meso/save/Matthew.Pyle/hiresw.v6.1.0use/launch/
 
 DOM=${1}
 CORE=${2}
@@ -101,7 +101,7 @@ NPROCBUFR=48
 BUFRSPAN=16
 elif [ $DOM$CORE == "akarw" ]
 then
-MODPROCS=720
+MODPROCS=912
 MODSPAN=24
 POSTPROCS=16
 POSTSPAN=8

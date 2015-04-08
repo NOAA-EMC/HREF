@@ -35,7 +35,7 @@ export MODEL=_CORE_
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 DATEM1=`/nwprod/util/exec/ndate -24 ${DATE}${cyc} | cut -c1-8`
 
-export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
+export DATAROOT=/_DISK_/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
