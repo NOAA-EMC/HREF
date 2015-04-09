@@ -26,9 +26,6 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
     days="9 $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
     cycs="9 00 18 12 06 00 00 00 12 12 00 00"
     ages="9  0  6 12 18 24  0  0 12 12 24 24"
-    set -A  day  $days
-    set -A  cycloc $cycs
-    set -A  age  $ages
   fi
 
 
@@ -36,11 +33,11 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
     days="9 $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
     cycs="9 00 18 12 06 00 00 00 12 12 00 00"
     ages="9  3  9 15 21 27  3  3 15 15 27 27"
-    set -A  day $days
-    set -A  cycloc $cycs
-    set -A  age $ages
   fi
 
+    set -A  day  $days
+    set -A  cycloc $cycs
+    set -A  age  $ages
     mbrs="   1  2  3  4  5  6  7  8  9 10 11"
 
 elif [ $cyc -ge 6 ] ; then
@@ -53,9 +50,6 @@ elif [ $cyc -ge 6 ] ; then
      days="9 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
      cycs="9 06 00 18 12 06 00 00 00 12 12 00 00"
      ages="9  0  6 12 18 24 30  6  6 18 18 30 30"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '09' ] ; then
