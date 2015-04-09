@@ -5,12 +5,12 @@
 #  (2) href_ensprod.sh to get final ensemble products 
 # Arguments: cycle, date(YYYYMMDD)  
 # Author: Binbin Zhou, EMC/NCEP, 02/02/2015
+          Matthew Pyle, 9 April 2015 - eliminated most arguments in USH calls
 #         
 ###########################################################
 set -x
 
-cyc=$1
-TODAY=$2
+
 cd $DATA
 
 echo "$0 STRDATE "`date`
@@ -23,15 +23,16 @@ rm -f $run_dir/filename.*
 #
 # Get members or their softlinks
 #
+
 for fhr in 03 06 09 12 15 18 21 24 27 30 33 36 ; do
-  $USHhref/href_getmbr.sh $fhr $cyc $TODAY
+  $USHhref/href_getmbr.sh $fhr
 done
 
 #
 # Prepare to run ensemble product generator
 #
 
-$USHhref/href_ensprod_prepare.sh $cyc $TODAY
+$USHhref/href_ensprod_prepare.sh
 
 
 #
@@ -39,19 +40,24 @@ $USHhref/href_ensprod_prepare.sh $cyc $TODAY
 #
 
 bsub < $run_dir/href_enprod_poe_1-6.sh
-bsub < $run_dir/href_enprod_poe_7-12.sh
+export err=$? ; err_chk
 
-countmax=200
+bsub < $run_dir/href_enprod_poe_7-12.sh
+export err=$? ; err_chk
+
+## wait for donepoe_? files 
+sleep 480
+
+countmax=184
 count=1
 while [ ! -e ${run_dir}/donepoe_1 -o ! -e ${run_dir}/donepoe_2 ]
 do
 
 if [ $count -lt $countmax ]
 then
-   sleep 30
    echo "still looking for donepoe_1 and or donepoe_2"
-   date
    let count=count+1
+   sleep 30
 else
    err_exit "waiting for href poe jobs to complete for 100 minutes, quitting"
 fi
