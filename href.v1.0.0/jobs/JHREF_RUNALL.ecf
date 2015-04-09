@@ -46,8 +46,9 @@ export DATA=${DATA:-${DATAROOT}/href_${cyc}_${RUN_ENVIR}}.$$
 mkdir -p $DATA
 cd $DATA
 
-## export MP_HOLDTIME=1000
-## export MP_LABELIO=YES
+# Appears to help slightly with code speed.
+
+export MP_HOLDTIME=1000
 
 ####################################
 # File To Log Msgs
