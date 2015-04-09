@@ -152,9 +152,12 @@ for ff in 03 06 09 12 15 18; do
  #define procedures in each tasks
  echo "cd $rundir/$ff" > run_ensprod_poe_one.$ff
  echo "$rundir/$ff/href_ensprod > $rundir/$ff/output_ensprod.$ff " >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.t${cyc}z.mean.f$ff $COMOUT" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.t${cyc}z.prob.f$ff $COMOUT" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.t${cyc}z.sprd.f$ff $COMOUT" >> $rundir/run_ensprod_poe_one.$ff
+if [ $SENDCOM = YES ]
+then
+ echo "cp $rundir/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+fi
  chmod +x run_ensprod_poe_one.$ff
  #list this task into poe task-list 
  echo "$rundir/run_ensprod_poe_one.$ff" >> $rundir/run_ensprod_poe_1-6.sh
@@ -169,9 +172,12 @@ for ff in 21 24 27 30 33 36 ; do
  #define procedures in each tasks
  echo "cd $rundir/$ff" > run_ensprod_poe_one.$ff
  echo "$rundir/$ff/href_ensprod > $rundir/$ff/output_ensprod.$ff " >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.t${cyc}z.mean.f$ff $COMOUT" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.t${cyc}z.prob.f$ff $COMOUT" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.t${cyc}z.sprd.f$ff $COMOUT" >> $rundir/run_ensprod_poe_one.$ff
+if [ $SENDCOM = YES ]
+then
+ echo "cp $rundir/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+fi
  chmod +x run_ensprod_poe_one.$ff
  #list this task into poe task-list
  echo "$rundir/run_ensprod_poe_one.$ff" >> $rundir/run_ensprod_poe_7-12.sh
