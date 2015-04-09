@@ -27,34 +27,22 @@ export RUN=${RUN:-href}
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMINHIRESW=${COMINHIRESW:-/${COMROOT}/${NET}/${envir}/hiresw}
-export COMINNAM=${COMINNAM:-/com/nam/prod/nam}
+export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
+export COMINnam=${COMINnam:-/com/nam/prod/nam}
 
-export HOMEhref=${HOMEhref:-/nw${envir}/href.${model_ver}} 
+export HOMEhref=${HOMEhref:-/nw${envir}/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
 export USHhref=${USHhref:-$HOMEhref/ush}
 export FIXhref=${FIXhref:-$HOMEhref/fix}
 export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 
-if [ "$RUN_ENVIR" = nco ]; then
-  export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
-fi
-
-if [ "$RUN_ENVIR" = dev ] ; then
-  export jlogfile=${jlogfile:$/DATA/jlogfile}
-fi 
-
-if [ "$RUN_ENVIR" = test ] ; then
-  export jlogfile=${jlogfile:$/DATA/jlogfile}
-fi 
-
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 
 export pid=$$
-export DATA=${DATA:-/${DATAROOT}/href_${cyc}_${RUN_ENVIR}}.$$
+export DATA=${DATA:-${DATAROOT}/href_${cyc}_${RUN_ENVIR}}.$$
 mkdir -p $DATA
 cd $DATA
 
@@ -97,6 +85,7 @@ postmsg "$jlogfile" "$msg"
 #
 # Run setpdy and initialize PDY variables
 #
+
 setpdy.sh
 . PDY
 
@@ -123,7 +112,7 @@ fi
 # Pass information which is needed to run the Script
 #######################################################
 
-export VERBOSE=YES
+# export VERBOSE=YES
 
 ###################################################
 # Execute the Script exhref_runall.sh.ecf

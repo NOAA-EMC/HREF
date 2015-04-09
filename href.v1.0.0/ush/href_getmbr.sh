@@ -134,8 +134,8 @@ for ff in $fhr ; do
       echo href.m${m}.t${cyc}z.f${ff} 
 
       if [ ${file[$m]} = 'namnest' ] ; then     
-        ln -sf ${COMINNAM}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINNAM}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
       fi
  
 ### for conusarw and conusnmmb, the current operational filenames are linked
@@ -143,15 +143,15 @@ for ff in $fhr ; do
 
       if [ ${file[$m]} = 'conusarw' ] ; then
 	
-        if [ -e ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 ]
-#        if [ -e ${COMINHIRESW}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
+        if [ -e ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 ]
+#        if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
 
         then
-        ln -sf ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
 
-#        ln -sf ${COMINHIRESW}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-#        ln -sf ${COMINHIRESW}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
 
         fi
 
@@ -159,15 +159,15 @@ for ff in $fhr ; do
 
       if [ ${file[$m]} = 'conusnmmb' ] ; then
 	
-        if [ -e ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 ]
-#        if [ -e ${COMINHIRESW}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 ]
+        if [ -e ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 ]
+#        if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 ]
         then
 
-        ln -sf ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINHIRESW}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
 
-#        ln -sf ${COMINHIRESW}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-#        ln -sf ${COMINHIRESW}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
 
         fi
 
