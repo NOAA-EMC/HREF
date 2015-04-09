@@ -1,0 +1,28 @@
+#BSUB -oo /meso/save/Matthew.Pyle/logs/test_href_00.out
+#BSUB -eo /meso/save/Matthew.Pyle/logs/test_href_00.err
+#BSUB -R span[ptile=1]
+#BSUB -R affinity[core(1)]
+#BSUB -R rusage[mem=500]
+#BSUB -n 1
+#BSUB -q "dev2_shared"
+#BSUB -J HREF_00
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -W 0:29
+
+export RUN_ENVIR=test
+export envir=test
+export SUB_ENVIR=dev2
+export cyc=00
+
+export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
+
+export MYCOMROOT=/ptmpd3/Matthew.Pyle/com/
+export COMINhiresw=/com/hiresw/prod/hiresw
+export COMINnam=/com/nam/prod/nam
+
+href_ver=`cat /u/$LOGNAME/href_version`
+
+export HOMEhref=/meso/save/$LOGNAME/href.${href_ver}
+
+${HOMEhref}/jobs/JHREF_RUNALL.ecf
