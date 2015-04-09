@@ -17,8 +17,6 @@ fhr=$1
 
 cd $run_dir
 
-
-
 if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then 
 
   files="9 namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb"
@@ -28,7 +26,6 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
     days="9 $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
     cycs="9 00 18 12 06 00 00 00 12 12 00 00"
     ages="9  0  6 12 18 24  0  0 12 12 24 24"
-    mbrs="   1  2  3  4  5  6  7  8  9 10 11"
     set -A  day  $days
     set -A  cycloc $cycs
     set -A  age  $ages
@@ -39,22 +36,23 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
     days="9 $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
     cycs="9 00 18 12 06 00 00 00 12 12 00 00"
     ages="9  3  9 15 21 27  3  3 15 15 27 27"
-    mbrs="   1  2  3  4  5  6  7  8  9 10 11"
     set -A  day $days
     set -A  cycloc $cycs
     set -A  age $ages
   fi
 
+    mbrs="   1  2  3  4  5  6  7  8  9 10 11"
+
 elif [ $cyc -ge 6 ] ; then
 
   files="9 namnest namnest namnest namnest namnest namnest conusarw conusnmmb conusarw conusnmmb conusarw conusnmmb"
   set -A file  $files
+     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
 
   if [ $cyc = '06' ] ; then
      days="9 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
      cycs="9 06 00 18 12 06 00 00 00 12 12 00 00"
      ages="9  0  6 12 18 24 30  6  6 18 18 30 30"
-     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
      set -A  day $days
      set -A  cycloc $cycs
      set -A  age $ages
@@ -64,53 +62,35 @@ elif [ $cyc -ge 6 ] ; then
      days="9 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
      cycs="9 06 00 18 12 06 00 00 00 12 12 00 00"
      ages="9  3  9 15 21 27 33  9  9 21 21 33 33"
-     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '12' ] ; then
      days="9 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 12 06 00 18 12 06 12 12 00 00 12 12"
      ages="9  0  6 12 18 24 30  0  0 12 12 24 24"
-     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
-     
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '15' ] ; then
      days="9 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 12 06 00 18 12 06 12 12 00 00 12 12"
      ages="9  3  9 15 21 27 33  3  3 15 15 27 27"
-     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '18' ] ; then
      days="9 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 18 12 06 00 18 12 12 12 00 00 12 12"
      ages="9  0  6 12 18 24 30  6  6 18 18 30 30"
-     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '21' ] ; then
      days="9 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 18 12 06 00 18 12 12 12 00 00 12 12"
      ages="9  3  9 15 21 27 33  9  9 21 21 33 33"
-     mbrs="   1  2  3  4  5  6  7  8  9 10 11 12"
+  fi
+
      set -A  day $days
      set -A  cycloc $cycs
      set -A  age $ages
-  fi
-
 
 else
 
