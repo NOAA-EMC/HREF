@@ -10,7 +10,7 @@
 #  Author: B. Zhou IMSG/EMC/NCEP
 #          10/19/2011
 #    Modification: B. Zhou IMSG/EMC/NCEP 3/21/2013  
-#          Transfered to WCOSS as parrell runs
+#          Transfered to WCOSS as parallel runs
 #          Run 12 fhr parallel runs with one poe 
 
 
@@ -33,13 +33,11 @@ rm -f poescript.run_post  poescript.post filename.*
 cp $PARMhref/href_variable_grib2.tbl variable.tbl
 
 
-
 ###############################
 
 typeset -Z2 cycloc     #temp variable here
 typeset -Z2 fcst    
 typeset -Z2 m
-
 
 if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
 
@@ -76,56 +74,41 @@ elif [ $cyc -ge 6 ] ; then
      days="9 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
      cycs="9 06 00 18 12 06 00 00 00 12 12 00 00"
      ages="9  0  6 12 18 24 30  6  6 18 18 30 30"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '09' ] ; then
      days="9 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1"
      cycs="9 06 00 18 12 06 00 00 00 12 12 00 00"
      ages="9  3  9 15 21 27 33  9  9 21 21 33 33"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '12' ] ; then
      days="9 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 12 06 00 18 12 06 12 12 00 00 12 12"
      ages="9  0  6 12 18 24 30  0  0 12 12 24 24"
-
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '15' ] ; then
      days="9 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 12 06 00 18 12 06 12 12 00 00 12 12"
      ages="9  3  9 15 21 27 33  3  3 15 15 27 27"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '18' ] ; then
      days="9 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 18 12 06 00 18 12 12 12 00 00 12 12"
      ages="9  0  6 12 18 24 30  6  6 18 18 30 30"
-     set -A  day $days
-     set -A  cycloc $cycs
-     set -A  age $ages
   fi
 
   if [ $cyc = '21' ] ; then
      days="9 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1"
      cycs="9 18 12 06 00 18 12 12 12 00 00 12 12"
      ages="9  3  9 15 21 27 33  9  9 21 21 33 33"
+  fi
+
      set -A  day $days
      set -A  cycloc $cycs
      set -A  age $ages
-  fi
 
 else
 
