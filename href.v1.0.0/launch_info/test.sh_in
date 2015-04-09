@@ -16,7 +16,6 @@ export SUB_ENVIR=dev2
 export cyc=_CYC_
 
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
-
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com/
 export COMINhiresw=/com/hiresw/prod/hiresw
 export COMINnam=/com/nam/prod/nam
