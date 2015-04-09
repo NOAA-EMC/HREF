@@ -1,90 +1,70 @@
 #!/bin/sh
-set -xa
 
 #############################################################
 # HREF RUNALL 
 # 02/02/2015 Binbin Zhou, create for run all scripts 
 #############################################################
 
-######################################################
-# The following two variable could be defined in the
-# loadleveler submission script (the ecflow script), if
-# not they will take the default values which is set
-# for the NCO running enviroment
-#######################################################
+########################################
+# Preliminary data setup step
+########################################
 
-export RUN_ENVIR=${RUN_ENVIR:-prod}
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
-export SENDECF=${SENDECF:-YES}
-
-export cyc=$1 
+set -xa
+export PS4='$SECONDS + ' 
+date
 
 ###################################
 # Specify NET and RUN Name and model
 ####################################
-#export NET=${NET:-hiresw}
-#export RUN=${RUN:-href}
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href}
 
-export NET=hiresw
-export RUN=href
 
 ###############################################################
 # This block can be modified for different Production test
 # environment. This is used for operational testings
 ###############################################################
-if [ "$RUN_ENVIR" = prod ]; then
 
+## PDY not included here as pull data from PDYm1 as well
+
+export COMINHIRESW=${COMINHIRESW:-/${COMROOT}/${NET}/${envir}/hiresw}
+export COMINNAM=${COMINNAM:-/com/nam/prod/nam}
+
+export HOMEhref=${HOMEhref:-/nw${envir}/href.${model_ver}} 
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+export PARMhref=${PARMhref:-$HOMEhref/parm}
+export USHhref=${USHhref:-$HOMEhref/ush}
+export FIXhref=${FIXhref:-$HOMEhref/fix}
+export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
+
+if [ "$RUN_ENVIR" = nco ]; then
   export jlogfile=${jlogfile:-/com/logs/${envir}/jlogfile}
-  export DBNROOT=/nwprod/spa_util/fakedbn
-  export COMINHIRESW=/com/hiresw/prod/hiresw
-  export COMINNAM=/com/nam/prod/nam
-  export HOMEhref=${HOMEhref:-/nw${RUN_ENVIR}/href.${model_ver}} 
-  export EXEChref=${EXEChref:-$HOMEhref/exec}
-  export PARMhref=${PARMhref:-$HOMEhref/parm}
-  export USHhref=${USHhref:-$HOMEhref/ush}
-  export FIXhref=${FIXhref:-$HOMEhref/fix}
-  export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 fi
 
 if [ "$RUN_ENVIR" = dev ] ; then
-. ../parm/href_config.dev
-  export DATA=/ptmpp1/$LOGNAME/href/tmpnwprd/href_${cyc}_${RUN_ENVIR} 
+  export jlogfile=${jlogfile:$/DATA/jlogfile}
 fi 
 
-if [ "$RUN_ENVIR" = dev2 ] ; then
-. ../parm/href_config.dev2
-  export DATA=/ptmpd3/$LOGNAME/href/tmpnwprd/href_${cyc}_${RUN_ENVIR} 
+if [ "$RUN_ENVIR" = test ] ; then
+  export jlogfile=${jlogfile:$/DATA/jlogfile}
 fi 
 
-# 
-# obtain unique process id (pid) and make temp directory (DATA)
-#
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
 
 export pid=$$
-export DATA=${DATA:-/tmpnwprd/href_${cyc}_${RUN_ENVIR}}.$$
+export DATA=${DATA:-/${DATAROOT}/href_${cyc}_${RUN_ENVIR}}.$$
 mkdir -p $DATA
 cd $DATA
 
-if [ "$RUN_ENVIR" = dev ] ; then
- export jlogfile=${jlogfile:$/DATA/jlogfile}
-fi
-
-
-# ###################################
-# SET SHELL PROCESSING VARIABLES
-# ###################################
-export PS4='$SECONDS + ' 
-date
-
-export cycle=t${cyc}z
-export MP_HOLDTIME=1000
-export MP_LABELIO=YES
+## export MP_HOLDTIME=1000
+## export MP_LABELIO=YES
 
 ####################################
 # File To Log Msgs
 ####################################
-#export jlogfile=${jlogfile:-/com/logs/jlogfile}
+export jlogfile=${jlogfile:-/com/logs/jlogfile}
 
 ####################################
 # Determine Job Output Name on System
@@ -93,16 +73,23 @@ export outid="LL$job"
 export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDECF=${SENDECF:-YES}
 
 ###################################
 # Set up the UTILITIES
 ###################################
-# export utilscript=/nwprod/util/ush
-# export utilexec=/nwprod/util/exec
 
 module load prod_util
 module load grib_util
-
 
 msg="JOB $job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
@@ -116,21 +103,18 @@ setpdy.sh
 ##############################################
 # Define running directory and COM directories
 ##############################################
-#export HIRESWprod=${HIRESWprod:-/com/hiresw/prod}
+
 export run_dir=$DATA/run_dir.${PDY}${cyc}
 mkdir -p $run_dir
 
-echo PDY=$PDY
+export COMROOT=${COMROOT:-/com2}
 
-if [ $RUN_ENVIR = prod ] ; then
- export COMOUT=/com/${NET}/${RUN_ENVIR}/${RUN}.${PDY}/ensprod
+if [ "$RUN_ENVIR" = test ] ; then
+export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod
+else
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod
 fi
-if [ $RUN_ENVIR = dev ] ; then
- export COMOUT=/ptmpp1/$LOGNAME/com/${NET}/${RUN_ENVIR}/${RUN}.${PDY}/ensprod
-fi
-if [ $RUN_ENVIR = dev2 ] ; then
- export COMOUT=/ptmpd3/$LOGNAME/com/${NET}/${RUN_ENVIR}/${RUN}.${PDY}/ensprod
-fi
+
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT
 fi
@@ -141,21 +125,10 @@ fi
 
 export VERBOSE=YES
 
-env
-
 ###################################################
 # Execute the Script exhref_runall.sh.ecf
 
-$SCRIPTShref/exhref_runall.sh.ecf $cyc $PDY >$DATA/runall.out 2>&1
-
-# wait
-
-set +x
-echo "######################################"
-echo "  RUN_ALL.OUT "
-echo "######################################"
-set -x
-cat $DATA/runall.out
+$SCRIPTShref/exhref_runall.sh.ecf 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
