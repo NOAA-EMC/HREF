@@ -5,7 +5,7 @@
 #  (2) href_ensprod.sh to get final ensemble products 
 # Arguments: cycle, date(YYYYMMDD)  
 # Author: Binbin Zhou, EMC/NCEP, 02/02/2015
-          Matthew Pyle, 9 April 2015 - eliminated most arguments in USH calls
+#         Matthew Pyle, 9 April 2015 - eliminated most arguments in USH calls
 #         
 ###########################################################
 set -x
