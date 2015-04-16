@@ -39,7 +39,7 @@ cd $DATA
 rm -rf poescript
 
 
-# copy metgrid output files to /com
+# Rename metgrid files with /com type names
 export send=1
 
 echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send" > poescript

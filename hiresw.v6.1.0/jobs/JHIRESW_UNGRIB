@@ -91,5 +91,5 @@ ${HOMEhiresw}/scripts/exhiresw_ungrib.sh.ecf
 ########################################################
 
 cd $DATAROOT
-rm -rf $DATA
+# rm -rf $DATA
 date

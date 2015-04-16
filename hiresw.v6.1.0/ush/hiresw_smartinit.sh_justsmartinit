@@ -28,12 +28,6 @@ export rg=$RUNTYP
 # mdl input file         : mdlgrd,natgrd
 # eg: nam.t12z.conusnest.bsmart.tm00
 
-# prdgen master ctl file : RUNTYPE
-# eg: nam_smartmasteraknest3.ctl     
-
-# prdgen wgt ctl file    : mdlgrd, ogrd
-# eg: nam_wgt_184_conusnest
-
 # smartinit in/out file  : rg / outreg
 # eg: MESOAK.NDFD
 # eg: nam.t12z.smartconus2p5.f03
@@ -45,8 +39,6 @@ export mdl=$RUNTYP
 
 # cd $DATA/smartinit
 cd $DATA
-
-echo have INPUT_DATA as $INPUT_DATA
 
 cp $INPUT_DATA/DATE .
 
@@ -519,7 +511,7 @@ fi
    export fhr=$fhr
    export ogrd 
    export mksmart
-#   ${USHhiresw}/hiresw_ncoproc.sh
+
    ${USHhiresw}/hiresw_ncoprocg2.sh
 
 

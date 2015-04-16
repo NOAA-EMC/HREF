@@ -81,11 +81,9 @@ export tmmark=tm00
 
 if [ $DOMIN_SMALL = "conus" ]
 then
-cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km_g227 master${fhr}.ctl
 cp $PARMhiresw/hiresw_conus_awp5km.txt_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_conus_awp5km.txt hiresw_grid_extract.txt
-cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
 fi
 
 
@@ -93,29 +91,6 @@ while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
 sleep 6
 done
-
-cat >input${fhr}.prd <<EOF5
-$INPUT_DATA/WRFPRS${fhr}.tm00
-EOF5
-
-rm fort.*
-
-# export pgm=hiresw_prdgen  ;. prep_step
-
-
-# if [ $DOMIN_SMALL = "conus" ]
-# then
-# export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g227"
-# else
-# export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.g255_5km"
-# fi
-
-export FORT10="master${fhr}.ctl"
-
-echo EXECUTING hiresw_prdgen  for 5 km
-
-# export FORT621="input${fhr}.prd"
-# $EXEChiresw/hiresw_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
 
 ### extract just needed items
 
