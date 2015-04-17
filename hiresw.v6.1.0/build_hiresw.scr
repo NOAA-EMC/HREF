@@ -1,6 +1,6 @@
 module purge
 
-module load HIRESW/v6.1.0
+module load HIRESW/v6.1.1
 
 module list
 
