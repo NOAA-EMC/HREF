@@ -174,7 +174,7 @@ mm1=`echo $int3 | cut -c5-6`
 dd1=`echo $int3 | cut -c7-8`
 hh1=`echo $int3 | cut -c9-10`
 
-cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio
+cp $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio met_nmb.d01.${yy1}-${mm1}-${dd1}_${hh1}:00:00.dio
 
 t2=`$NDATE +3 $int3`
 
@@ -183,7 +183,7 @@ mm2=`echo $t2 | cut -c5-6`
 dd2=`echo $t2 | cut -c7-8`
 hh2=`echo $t2 | cut -c9-10`
 
-cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio
+mv $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio met_nmb.d01.${yy2}-${mm2}-${dd2}_${hh2}:00:00.dio
 
 t3=`$NDATE +3 $t2`
 
@@ -192,7 +192,7 @@ mm3=`echo $t3 | cut -c5-6`
 dd3=`echo $t3 | cut -c7-8`
 hh3=`echo $t3 | cut -c9-10`
 
-cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio
+mv $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio met_nmb.d01.${yy3}-${mm3}-${dd3}_${hh3}:00:00.dio
 
 t4=`$NDATE +3 $t3`
 
@@ -201,7 +201,7 @@ mm4=`echo $t4 | cut -c5-6`
 dd4=`echo $t4 | cut -c7-8`
 hh4=`echo $t4 | cut -c9-10`
 
-cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio
+mv $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio met_nmb.d01.${yy4}-${mm4}-${dd4}_${hh4}:00:00.dio
 
 t5=`$NDATE +3 $t4`
 
@@ -210,7 +210,7 @@ mm5=`echo $t5 | cut -c5-6`
 dd5=`echo $t5 | cut -c7-8`
 hh5=`echo $t5 | cut -c9-10`
 
-cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio
+cp $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio
 
 export pgm=hiresw_nemsinterp
 cp $EXEChiresw/hiresw_nemsinterp .

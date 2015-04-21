@@ -337,7 +337,6 @@ export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/16`"
 
 elif [ $RUNLOC = "akarw" ]
 then
-# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 728/24 24/12 24/8`"
 export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 784/24 24/12 24/8`"
 fi
 
@@ -346,14 +345,14 @@ startmsg
 if [ $MODEL = "nmmb" ]
 then
 
-mpirun.lsf $EXEChiresw/hiresw_nmmbfcst
+cp $EXEChiresw/hiresw_nmmbfcst .
+mpirun.lsf ./hiresw_nmmbfcst
 export err=$?;./err_chk
 
 else
 
 cp $EXEChiresw/hiresw_${MODEL}_fcst .
 mpirun.lsf ./hiresw_${MODEL}_fcst
-
 export err=$?;./err_chk
 
 cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 > $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.fcst.log
