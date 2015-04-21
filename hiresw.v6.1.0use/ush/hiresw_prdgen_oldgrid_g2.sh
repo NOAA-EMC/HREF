@@ -19,23 +19,14 @@
 
 set -x
 
-# export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
-# export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
-
 fhr=$1
 DOMIN_SMALL=$2
 CYC=${3}
 model=$4
 subpiece=$5
 
-# compress=complex2
-
-## jpeg for AK, complex2 for others??
-
 compress="c3 -set_bitmap 1"
 reflag=1
-
-### okay to do here??
 
 mkdir ${DATA}/prdgen_5km_${subpiece}
 cd ${DATA}/prdgen_5km_${subpiece}/
@@ -157,8 +148,6 @@ export tmmark=tm00
 # make GRIB file with pressure data every 25 mb for EMC's FVS
 # verification
 
-cp $PARMhiresw/hiresw_${model}_master.${DOMIN}.ctl_5km master${fhr}.ctl
-
 if [ $DOMIN_SMALL = "ak" ]
 then
 cp $PARMhiresw/hiresw_awpreg.txt_${subpiece} hiresw_grid_extract.txt
@@ -170,23 +159,6 @@ while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
 sleep 6
 done
-
-cat >input${fhr}.prd <<EOF5
-$INPUT_DATA/WRFPRS${fhr}.tm00
-EOF5
-
-rm fort.*
-
-export pgm=hiresw_prdgen  ;. prep_step
-
-# export FORT21="$FIXhiresw/hiresw_wgt_${DOMIN}.${wgt}5km"
-
-# export FORT10="master${fhr}.ctl"
-
-echo EXECUTING hiresw_prdgen  for 5 km
-
-export FORT621="input${fhr}.prd"
-# $EXEChiresw/hiresw_prdgen  > prdgen.out${fhr}_5km 2>errfile_5km
 
 ### extract just needed items
 
@@ -245,14 +217,6 @@ if [ $fhr -eq 00 ]
 then
 echo "inside f00 test"
 
-  ###############################
-  # Convert to grib2 format
-  ###############################
-
-#   if test $SENDCOM = 'YES'
-#   then
-
-#      cp ${filenamthree}${fhr}.tm00 $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
       cp ${filenamthree}${fhr}.tm00 $DATA/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 
 
@@ -261,8 +225,6 @@ echo "inside f00 test"
 #         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
 #         $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
 #      fi
-
-#   fi
 
 else
 
@@ -340,18 +302,7 @@ fi # subpiece1
 
 ###### DONE PRECIP BUCKET
 
-#  if test $SENDCOM = 'YES'
-#  then
-#     cp $DOMOUT.t${CYC}z.awpregf${fhr} $COMOUT/$DOMOUT.t${CYC}z.awpregf${fhr}.grib2_${subpiece}
-
     cp  hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2 \
               $DATA/hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
-
-#    if [ $SENDDBN_GB2 = YES ]; then
-#       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2
-#       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/$DOMIN.t${CYC}z.awpregf${fhr}.grib2.idx
-#    fi
-
-#   fi
 
 fi

@@ -22,8 +22,7 @@ set -x
 inest=1  # treat hiresw domains like they are nests
 
 export rg=$RUNTYP
-## WGRIB2=$EXEChiresw/hiresw_wgrib2
-# compress=complex2
+
 compress="c3 -set_bitmap 1"
 
 ffhr=${1}
@@ -369,8 +368,6 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 	cp NDFD${fhr}.tm00 $prdgfl
 
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
-
-# cp $PARMhiresw/hiresw_${MODEL}_mastersmart.${RUNTYP}.ctl  master${fhr}.ctl
 
   if [ $fhr -gt 0 ];then
 #-------------------------------------------------------------
