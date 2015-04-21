@@ -165,8 +165,7 @@ yy=`echo $newdate | cut -c1-4`
 mm=`echo $newdate | cut -c5-6`
 dd=`echo $newdate | cut -c7-8`
 hh=`echo $newdate | cut -c9-10`
-# cp $COMOUT/${NEST}${MODEL}.t${cyc}z.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
-cp $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
+mv $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin met_em.d01.${yy}-${mm}-${dd}_${hh}:00:00.bin
 done
 
 export pgm=hiresw_${MODEL}_real

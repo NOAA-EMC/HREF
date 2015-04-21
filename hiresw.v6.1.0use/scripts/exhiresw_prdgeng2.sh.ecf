@@ -131,34 +131,15 @@ $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -s > $COMOUT/hi
 
 ## subset the full CONUS grid to approximate the CAM common grid list
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 \
--match ":(REFC|RETOP|VIS|REFD|GUST|MAXUVV|MAXDVV|MAXUW|MAXVW|PRMSL|MAXREF|MXUPHL|WEASD|SNOWC|SNOWD|APCP|CSNOW|CICEP|CFRZR|CRAIN|VGTYP|CAPE|CIN|PWAT|TCDC|LCDC|MCDC|HCDC|4LFTX|LFTX|HLCY|USTM|VSTM):" \
--grib hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset1
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -match "(500|700|850|925|1000) mb" -match ":(HGT|TMP|DPT|UGRD|VGRD):" \
--grib  hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset2
+### change to use a PARM .txt file, and do for CONUS and AK
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -match "(10|80) m above ground" -match ":(UGRD|VGRD):" \
--grib  hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset3
+cp $PARMhiresw/hiresw_subset.txt .
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -match "2 m above ground" -match ":(TMP|SPFH|DPT):" \
--grib  hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset4
-
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -match "surface" -match ":(PRES|HGT|TMP):" \
--grib hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset5
-
-
-cat hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset1 hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset2 \
-hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset3 hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset4 \
-hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset5 > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2
-
-rm hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset1 hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset2 \
-hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset3 hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset4 \
-hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.subset5
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 |  grep -F -f hiresw_subset.txt | \
+$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 
 
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2.idx
-
-
 
     if [ $SENDDBN_GB2 = YES ]; then
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
@@ -238,6 +219,14 @@ $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 -s > $COMOUT/
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2.idx
     fi
+
+
+cp $PARMhiresw/hiresw_subset.txt .
+
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 |  grep -F -f hiresw_subset.txt | \
+$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 
+
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.subset.grib2.idx
 
   fi
 

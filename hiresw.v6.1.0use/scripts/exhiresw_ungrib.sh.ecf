@@ -242,8 +242,7 @@ files=`ls FILE*`
 
 for fl in $files
 do
-# cp ${fl} $COMOUT/${NEST}${MODEL}.t${cyc}z.${fl}
-cp ${fl} $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.${fl}
+mv ${fl} $DATA/hiresw.t${cyc}z.${NEST}${MODEL}.${fl}
 done
 
 msg="JOB $job FOR WRF NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY"
