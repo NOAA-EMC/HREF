@@ -134,7 +134,7 @@ dirproc=/stmpd3/Matthew.Pyle/com/hiresw/test/hiresw.${PDY}
 
 cd $dirbase
 
-cp /meso/save/Matthew.Pyle/hiresw.v6.1.0/util/retro/* .
+cp /meso/save/Matthew.Pyle/hiresw.v6.1.0use/util/retro/* .
 
 ./process_dir.scr  hiresw.${PDY} ${MODEL} ${cyc} ${NEST}
 
@@ -146,5 +146,5 @@ nextcyc=`$NDATE +24 $thiscyc`
 nextday=`echo $nextcyc  | cut -c1-8`
 nexthr=`echo $nextcyc  | cut -c9-10`
  
-cd /meso/save/Matthew.Pyle/hiresw.v6.1.0/launch
+cd /meso/save/Matthew.Pyle/hiresw.v6.1.0use/launch
 ./launch_test_retro ${NEST} ${MODEL} ${nexthr} ${nextday}
