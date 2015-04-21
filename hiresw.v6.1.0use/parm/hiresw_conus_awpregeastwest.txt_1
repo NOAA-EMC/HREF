@@ -12,7 +12,7 @@ VVEL:850 mb:
 VVEL:925 mb:
 VVEL:1000 mb:
 MSLET:mean sea level:
-PRES:mean sea level:
+PRMSL:mean sea level:
 PRES:surface:
 HGT:surface:
 TMP:2 m above ground:

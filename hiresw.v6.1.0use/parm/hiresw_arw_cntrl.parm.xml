@@ -141,8 +141,8 @@
 
        <param>
        <shortname>PRES_ON_MEAN_SEA_LVL</shortname>
-       <pname>PRES</pname>
-         <scale>-0.1</scale>
+       <pname>PRMSL</pname>
+         <scale>6.0</scale>
       </param>
 
        <param>
