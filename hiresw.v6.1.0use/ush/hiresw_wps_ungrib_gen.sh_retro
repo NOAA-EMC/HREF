@@ -34,6 +34,8 @@ cd $DATA/run_ungrib_${stream}/
 
 module load prod_util
 
+echo OLD is $OLD
+
 if [ $OLD -lt 1 ]
 then
 cp $PARMhiresw/hiresw_Vtable.GFS Vtable
