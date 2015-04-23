@@ -73,9 +73,6 @@ export SENDECF=${SENDECF:-YES}
 # Set up the UTILITIES
 ###################################
 
-module load prod_util
-module load grib_util
-
 msg="JOB $job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
@@ -105,16 +102,10 @@ if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT
 fi
 
-#######################################################
-# Pass information which is needed to run the Script
-#######################################################
-
-# export VERBOSE=YES
-
 ###################################################
 # Execute the Script exhref_runprep.sh.ecf
 
-$SCRIPTShref/exhref_runprep.sh.ecf 
+$SCRIPTShref/exhref_runpoe.sh.ecf 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"

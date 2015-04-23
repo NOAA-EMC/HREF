@@ -2,7 +2,8 @@
 cyc=$1
 
 cat test.sh_in | sed s:_CYC_:${cyc}:g > launch_href_${cyc}
+cat runpoe.sh_in | sed s:_CYC_:${cyc}:g > launch_hrefrunpoe_${cyc}
 
 bsub < launch_href_${cyc}
 
-rm launch_href_${cyc}
+# rm launch_href_${cyc}
