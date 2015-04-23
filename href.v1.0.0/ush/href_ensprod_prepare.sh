@@ -148,45 +148,20 @@ done  #done for $ff
 
 
 #Create POE script files to run all 12 fhrs's jobs
-for ff in 03 06 09 12 15 18; do
+for ff in 03 06 09 12 15 18 21 24 27 30 33 36; do
+
  #define procedures in each tasks
  echo "cd $rundir/$ff" > run_ensprod_poe_one.$ff
  echo "$rundir/$ff/href_ensprod > $rundir/$ff/output_ensprod.$ff " >> $rundir/run_ensprod_poe_one.$ff
 if [ $SENDCOM = YES ]
 then
- echo "cp $rundir/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff.grib2" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff.grib2" >> $rundir/run_ensprod_poe_one.$ff
+ echo "cp $rundir/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff.grib2" >> $rundir/run_ensprod_poe_one.$ff
 fi
  chmod +x run_ensprod_poe_one.$ff
  #list this task into poe task-list 
- echo "$rundir/run_ensprod_poe_one.$ff" >> $rundir/run_ensprod_poe_1-6.sh
+ echo "$rundir/run_ensprod_poe_one.$ff" >> $rundir/run_ensprod_poe.sh
 done
-
-# prepare poe script for bsub 
-chmod +x $rundir/run_ensprod_poe_1-6.sh
-sed -e "s!FHR!6!g" -e "s!RUNDIR!$rundir!g" -e "s!RUNENVIR!$SUB_ENVIR!g" -e "s!ALL!1-6!g" -e "s!PIECE!1!g"  $USHhref/href_enprod_poe.sh > $rundir/href_enprod_poe_1-6.sh
-chmod +x $rundir/href_enprod_poe_1-6.sh
-
-for ff in 21 24 27 30 33 36 ; do
- #define procedures in each tasks
- echo "cd $rundir/$ff" > run_ensprod_poe_one.$ff
- echo "$rundir/$ff/href_ensprod > $rundir/$ff/output_ensprod.$ff " >> $rundir/run_ensprod_poe_one.$ff
-if [ $SENDCOM = YES ]
-then
- echo "cp $rundir/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff" >> $rundir/run_ensprod_poe_one.$ff
- echo "cp $rundir/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff" >> $rundir/run_ensprod_poe_one.$ff
-fi
- chmod +x run_ensprod_poe_one.$ff
- #list this task into poe task-list
- echo "$rundir/run_ensprod_poe_one.$ff" >> $rundir/run_ensprod_poe_7-12.sh
-done
-
-# prepare poe script for bsub
-chmod +x $rundir/run_ensprod_poe_7-12.sh
-sed -e "s!FHR!6!g" -e "s!RUNDIR!$rundir!g" -e "s!RUNENVIR!$SUB_ENVIR!g" -e "s!ALL!7-12!g" -e "s!PIECE!2!g" $USHhref/href_enprod_poe.sh > $rundir/href_enprod_poe_7-12.sh
-chmod +x $rundir/href_enprod_poe_7-12.sh
 
 exit
-
