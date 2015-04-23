@@ -96,7 +96,8 @@ fi
 mbr=0
 #NAMnest grid 227
 #grid="30 6 0 0 0 0 0 0 1473 1025 12190000 226541000 8 25000000 265000000 5079000 5079000 0 64 25000000 25000000 0 0"  #grid277 namnest grid
-for ff in $fhr ; do
+#for ff in $fhr ; do
+ff=$fhr
   mkdir -p $run_dir/${ff} 
    mbr=0
    for m in $mbrs ; do
@@ -149,10 +150,6 @@ for ff in $fhr ; do
 
 
    done
-done
-
-
+#done
 
 exit
-
-
