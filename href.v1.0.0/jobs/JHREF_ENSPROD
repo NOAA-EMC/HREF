@@ -44,6 +44,7 @@ export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 export pid=$$
 export DATA=${DATA:-${DATAROOT}/href_ensprod_${cyc}_${envir}}
 mkdir -p $DATA
+rm -rf $DATA/*
 cd $DATA
 
 ####################################
@@ -88,12 +89,13 @@ setpdy.sh
 # Define running directory and COM directories
 ##############################################
 
-export run_dir=$DATA/run_dir.${PDY}${cyc}
-mkdir -p $run_dir
-
 export COMROOT=${COMROOT:-/com2}
 
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+if [ "$RUN_ENVIR" = test ] ; then
+export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}
+else
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
+fi
 
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT

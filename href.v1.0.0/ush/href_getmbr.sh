@@ -15,7 +15,7 @@ typeset -Z2 m
 
 fhr=$1
 
-cd $run_dir
+cd $DATA
 
 if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then 
 
@@ -98,7 +98,7 @@ mbr=0
 #grid="30 6 0 0 0 0 0 0 1473 1025 12190000 226541000 8 25000000 265000000 5079000 5079000 0 64 25000000 25000000 0 0"  #grid277 namnest grid
 #for ff in $fhr ; do
 ff=$fhr
-  mkdir -p $run_dir/${ff} 
+  mkdir -p $DATA/${ff} 
    mbr=0
    for m in $mbrs ; do
       fcst=` expr ${age[$m]} + $ff`   #$ff is forecast hours of ensemble member to be built, $fcst is forecast hours of base model requested
@@ -109,8 +109,8 @@ ff=$fhr
       echo href.m${m}.t${cyc}z.f${ff} 
 
       if [ ${file[$m]} = 'namnest' ] ; then     
-        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
       fi
  
 ### for conusarw and conusnmmb, the current operational filenames are linked
@@ -122,11 +122,11 @@ ff=$fhr
         if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
 
         then
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
         fi
 
@@ -138,11 +138,11 @@ ff=$fhr
         if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 ]
         then
 
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $run_dir/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $run_dir/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
         fi
 
