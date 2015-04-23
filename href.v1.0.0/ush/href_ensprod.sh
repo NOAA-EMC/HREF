@@ -25,9 +25,6 @@ mm=`echo ${PDY} | cut -c 5-6`
 dd=`echo ${PDY} | cut -c 7-8`
 
 
-rundir=$run_dir
-cd $rundir
-
 rm -f poescript.run_post  poescript.post filename.* 
 
 cp $PARMhref/href_variable_grib2.tbl variable.tbl
@@ -127,11 +124,11 @@ ff=$fhr
         weight='0'$weight
       fi
 
-   if [ -s $rundir/href.m${m}.t${cyc}z.f$ff ] ; then
+   if [ -s $DATA/href.m${m}.t${cyc}z.f$ff ] ; then
        nmbr=` expr $nmbr + 1`
        echo "   "$weight href.m${m}.t${cyc}z.f$ff "->" ${file[$m]}.t${cycloc[$m]}z.f${fcst} >> temp.f${ff}
-       ln -sf $rundir/href.m${m}.t${cyc}z.f$ff $rundir/$ff/href.m${m}.t${cyc}z.f$ff
-       ln -sf $rundir/href.m${m}.t${cyc}z.f$ff $rundir/$ff/prcip.m${m}.t${cyc}z.f$ff
+       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/href.m${m}.t${cyc}z.f$ff
+       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/prcip.m${m}.t${cyc}z.f$ff
    fi
  done
 
@@ -140,21 +137,22 @@ ff=$fhr
   rm -f temp.f${ff}
 
 rm -f fhrs.input.$ff
-ln -fs $rundir/filename.f$ff $rundir/$ff/filename
-ln -fs $rundir/variable.tbl $rundir/$ff/variable.tbl
-ln -fs $EXEChref/href_ensprod $rundir/$ff/href_ensprod
+ln -fs $DATA/filename.f$ff $DATA/$ff/filename
+ln -fs $DATA/variable.tbl $DATA/$ff/variable.tbl
+ln -fs $EXEChref/href_ensprod $DATA/$ff/href_ensprod
 
 #done  #done for $ff 
 
-
-cd $rundir/$ff
-#$rundir/$ff/href_ensprod > $rundir/$ff/output_ensprod.$ff 
-$EXEChref/href_ensprod > $rundir/$ff/output_ensprod.$ff 
+cd $DATA/$ff
+$EXEChref/href_ensprod > $DATA/$ff/output_ensprod.$ff 
 
 if [ $SENDCOM = YES ]; then
- cp $rundir/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff
- cp $rundir/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff
- cp $rundir/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff
+ cp $DATA/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff.grib2
+ $WGRIB2 $COMOUT/href.t${cyc}z.mean.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.mean.f$ff.grib2.idx
+ cp $DATA/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.prob.f$ff.grib2
+ $WGRIB2 $COMOUT/href.t${cyc}z.prob.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.prob.f$ff.grib2.idx
+ cp $DATA/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff.grib2
+ $WGRIB2 $COMOUT/href.t${cyc}z.sprd.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.sprd.f$ff.grib2.idx
 fi
 
 exit

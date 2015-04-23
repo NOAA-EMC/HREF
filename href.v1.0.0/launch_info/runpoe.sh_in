@@ -16,8 +16,11 @@ export cyc=_CYC_
 
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com/
-export COMINhiresw=/com/hiresw/prod/hiresw
+export COMINhiresw=/ptmpd3/Matthew.Pyle/com/hiresw/test/hiresw
 export COMINnam=/com/nam/prod/nam
+
+module load grib_util
+module load prod_util
 
 href_ver=`cat /u/$LOGNAME/href_version`
 
@@ -25,4 +28,4 @@ export HOMEhref=/meso/save/$LOGNAME/href.${href_ver}
 
 export SENDCOM=YES
 
-${HOMEhref}/jobs/JHREF_RUNPOE.ecf
+${HOMEhref}/jobs/JHREF_ENSPROD

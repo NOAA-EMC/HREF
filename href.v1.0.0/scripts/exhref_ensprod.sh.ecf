@@ -20,8 +20,6 @@ echo "$0 STRDATE "`date`
 msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
-rm -f $run_dir/filename.* 
-
 #
 # Get members or their softlinks
 #
