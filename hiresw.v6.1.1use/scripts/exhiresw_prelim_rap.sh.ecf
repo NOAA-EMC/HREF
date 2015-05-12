@@ -108,28 +108,28 @@ then
 
 # grab post-digital filter analysis file if available
 
-	if [ -e  ${COMINRAP}/rap.t${cyc}z.awip32f${whr}df ]
+	if [ -e  ${COMINrap}/rap.t${cyc}z.awip32f${whr}df ]
 	then
 
- cp ${COMINRAP}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
+ cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
  suf="df"
  NUMLEVS=41
  
 	elif [ -e ${DATA}/../rap.t${cyc}z.awip32f${whr}df ]
 	then
- # cp ${COMINRAP}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
+ # cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
  cp ${DATA}/../rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
  suf="df"
  NUMLEVS=41
 
-        elif [ -e ${COMINRAP}/rap.t${cyc}z.awip32f${whr} ]
+        elif [ -e ${COMINrap}/rap.t${cyc}z.awip32f${whr} ]
         then
- cp ${COMINRAP}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
+ cp ${COMINrap}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
  suf=""
  NUMLEVS=41
 
         else
-           msg="FATAL ERROR: ${COMINRAP}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
+           msg="FATAL ERROR: ${COMINrap}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
            err_exit $msg
         fi
 
@@ -187,12 +187,12 @@ cp $EXEChiresw/hiresw_ungrib ungrib.exe
 
 export pgm=ungrib
 ./ungrib.exe >> $pgmout 2>errfile
-export err=$?; $DATA/err_chk
+export err=$?; err_chk
 else
 cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
 export pgm=ungrib
 ./ungrib.exe
-export err=$?; $DATA/err_chk
+export err=$?; err_chk
 fi
 
 files=`ls FILE*`
@@ -267,7 +267,7 @@ fi
 
 if [ $err -ne 0 ]; then
    echo EXIT FROM RAP prelim job with err $err
-   ./err_chk
+   err_chk
 fi
 
 
@@ -382,15 +382,15 @@ cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_0
 # make sure 00 h NAM restart file exists; use cold-start input 
 # file if it does not
 
-if [ -e $GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
+if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
 then
-  INPUT_FILE="$GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+  INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 else
-  if [ -e $GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00 ]
+  if [ -e $GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00 ]
   then
-    INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
+    INPUT_FILE="$GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
-    msg="FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
+    msg="FATAL ERROR: NEITHER $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 NOR $GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00 EXIST!"
     err_exit $msg
   fi
 fi

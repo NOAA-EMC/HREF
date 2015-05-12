@@ -209,7 +209,7 @@ startmsg
 # using mpirun.lsf needed after WCOSS SP4.2 upgrade
 
 mpirun.lsf $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
-export err=$?;./err_chk
+export err=$?;err_chk
 
 mv $DATA/bufrpost/profilm.c1.${tmmark} $DATA/profilm.c1.${tmmark}.f${fhr}
 echo done > $DATA/sndpostdone${fhr}.${tmmark}
@@ -249,12 +249,12 @@ export FORT78="$DATA/class1.bufr"
 
 startmsg
 $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
-export err=$?;./err_chk
+export err=$?;err_chk
 
 ############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS
 
-${USHprod}/cwordsh unblk class1.bufr class1.bufr.unb
-${USHprod}/cwordsh block class1.bufr.unb class1.bufr.wcoss
+${USHobsproc_shared_bufr_cword}/bufr_cword.sh unblk class1.bufr class1.bufr.unb
+${USHobsprod_shared_bufr_cword}/bufr_cword.sh block class1.bufr.unb class1.bufr.wcoss
 
 if [ $SENDCOM == "YES" ]
 then
@@ -298,13 +298,18 @@ EOF
 #   cp class1.bufr.tm00 $COMOUT/${RUN}.${cyc}.class1.bufr
 
 cd ${COMOUT}/bufr.${NEST}${MODEL}${cyc}
+
+# Tar and gzip the individual bufr files and send them to /com
+  tar -cf - . | /usr/bin/gzip > ../${RUN}.t${cyc}z.${RUNLOC}.bufrsnd.tar.gz
+
 files=`ls`
 for fl in $files
 do
-${USHprod}/cwordsh unblk ${fl} ${fl}.unb
-${USHprod}/cwordsh block ${fl}.unb ${fl}.wcoss
+${USHobsprod_shared_bufr_cword}/bufr_cword.sh unblk ${fl} ${fl}.unb
+${USHobsprod_shared_bufr_cword}/bufr_cword.sh block ${fl}.unb ${fl}.wcoss
 rm ${fl}.unb
 done
+
 
 # Make an upper case version of the ${RUNLOC} variable for the alert
 #export DBN_NEST=`echo ${RUNLOC} | tr '[a-z]' '[A-Z]'`
@@ -312,6 +317,7 @@ done
 if [ $SENDDBN == "YES" ]
 then
   $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job $COMOUT/${RUN}.t${cyc}z.${RUNLOC}.class1.bufr
+  $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}_TAR $job $COMOUT/${RUN}.t${cyc}z.${RUNLOC}.bufrsnd.tar.gz
 fi
 
 echo EXITING $0 with return code $err

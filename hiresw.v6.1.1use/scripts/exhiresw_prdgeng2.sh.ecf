@@ -111,7 +111,7 @@ export MP_CMDFILE=$DATA/poescript_${fhr}
 
 # Execute the script.
 time mpirun.lsf
-export err=$?; ./err_chk
+export err=$?; err_chk
 
 if [ $NEST = "conus" ]
 then

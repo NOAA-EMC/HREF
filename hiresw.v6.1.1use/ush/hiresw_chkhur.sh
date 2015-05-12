@@ -27,7 +27,7 @@ then
    exit
 fi
 
-export COMHUR=${COMHUR:-/com/hur/prod/inpdata}
+export COMHUR=${COMHUR:-$COMROOTp1/hur/prod/inpdata}
 
 prodcyc=$cyc
 

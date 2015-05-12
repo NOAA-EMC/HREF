@@ -281,15 +281,36 @@ done
  export err=$?; err_chk
 mv errfile errfile_${fhr}_3hrly
 
+  if [ $fhr -ne 3 ]
+  then
+    cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
+  else
+    cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
   fi
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
+  fi # ARW 3 h 
+
+  if [ $fhr%3 -ne 0 ] 
+  then
+
+  if [ $fhr -ne 1 ]
+  then
+    cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
+  else
+    cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
+  fi
+
+  fi
 
   else
-
 ## model = "nmm"
-#   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awpregf${fhr}
+
+    if [ $fhr%3 -ne 1 ]
+    then
    cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
+    else
+   cat ${filenamthree}${fhr}.tm00                     > hiresw.t${CYC}z.${model}_5km.f${fhr}.${DOMIN_SMALL}.grib2
+    fi
 
   fi
 

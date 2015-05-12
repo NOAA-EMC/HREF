@@ -140,17 +140,11 @@ fi
 # compute precip buckets
 
 threehrprev=`expr $fhr - 3`
-sixhrprev=`expr $fhr - 6`
 onehrprev=`expr $fhr - 1`
 
 if [ $threehrprev -lt 10 ]
 then
 threehrprev=0$threehrprev
-fi
-
-if [ $sixhrprev -lt 10 ]
-then
-sixhrprev=0$sixhrprev
 fi
 
 if [ $onehrprev -lt 10 ]
@@ -220,15 +214,34 @@ done
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
  export err=$?; err_chk
 
+  if [ $fhr -ne 3 ]
+  then
+   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  else
+   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
   fi
 
+  fi # ARW 3 h
 
-  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 PCP6HR${fhr}.tm00 > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  if [ $fhr%3 -ne 0 ]
+  then
+  if [ $fhr -ne 1 ]
+  then
+   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  else
+   cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  fi
+  fi
 
   else
-
 ## model = "nmm"
+
+   if [ $fhr%3 -ne 1 ]
+   then
    cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  >                                  hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+   else
+   cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+   fi
 
   fi
 

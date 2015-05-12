@@ -47,14 +47,14 @@ then
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregeast_${RUNLOC}f${fhr}
-    tocgrib2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
+    $TOCGRIB2 < $PARMutil/grib2_${NEST}east_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
-       cp  $FORT51  $pcom
+       cp  $FORT51  $PCOM
     fi
 
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpregeast_${RUNLOC}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $PCOM/grib2.t${cyc}z.awpregeast_${RUNLOC}f${fhr}
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
@@ -77,14 +77,14 @@ then
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpregwest_${RUNLOC}f${fhr}
-    tocgrib2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
+    $TOCGRIB2 < $PARMutil/grib2_${NEST}west_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
-       cp  $FORT51  $pcom
+       cp  $FORT51  $PCOM
     fi
 
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpregwest_${RUNLOC}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $PCOM/grib2.t${cyc}z.awpregwest_${RUNLOC}f${fhr}
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"
@@ -109,14 +109,14 @@ else
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpreg_${RUNLOC}f${fhr}
-    tocgrib2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
+    $TOCGRIB2 < $PARMutil/grib2_${NEST}_hiresw.awpreg_f${fhr}
 
     if [ $SENDCOM = "YES" ] ; then
-       cp  $FORT51  $pcom
+       cp  $FORT51  $PCOM
     fi
 
     if [ $SENDDBN = "YES" ] ; then
-       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $pcom/grib2.t${cyc}z.awpreg_${RUNLOC}f${fhr}
+       $DBNROOT/bin/dbn_alert NTC_LOW ${DBN_ALERT_TYPE} $job $PCOM/grib2.t${cyc}z.awpreg_${RUNLOC}f${fhr}
     else
        msg="File $output_grb.$job not posted to db_net."
        postmsg "$jlogfile" "$msg"

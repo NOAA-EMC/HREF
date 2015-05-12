@@ -115,12 +115,19 @@ suf=""
 while [ $whr -le $last ]
 do
 
-while [ ! -e ${COMINGFS}/${mod}.t${cyc}z.${type}${whr} ]
+icnt=0
+while [ ! -e ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} ]
 do
-sleep 10
+  sleep 10
+  if [ $icnt -gt 90 ]; then 
+    msg="FATAL ERROR: ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} STILL NOT AVAILABLE after 15 minutes waiting."
+    export err=911; err_chk
+   else 
+     icnt=$((icnt + 1))
+   fi 
 done
 
-cp ${COMINGFS}/${mod}.t${cyc}z.${type}${whr} $DATA/.
+cp ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} $DATA/.
   export err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_2/Vtable 
@@ -234,7 +241,7 @@ export MP_STDOUTMODE=ordered
 
 export pgm=hiresw_wps_ungrib_gen.sh
 mpirun.lsf
-export err=$?; $DATA/err_chk
+export err=$?; err_chk
 
 cd run_ungrib/
 
