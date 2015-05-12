@@ -1,0 +1,19 @@
+###############################################################################
+#
+# TEST   - GFS as two copies
+#        - 30 compute tasks / 1 thread  2 copy
+#
+###############################################################################
+
+export TEST_DESCR="Test GFS with 2-copy option"
+
+export CNTL_DIR=GFS_NODFI
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 \
+                   flxf03 flxf06 flxf12 flxf24"
+
+export_gsm
+export NDAYS=1
+export CP2=.true.
+
+RUN_SCRIPT=rt_gfs.sh

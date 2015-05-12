@@ -1,0 +1,69 @@
+#
+#   ngac_para_config
+#   Description: This config file sets up variables for the developers
+#
+#   REVISION HISTORY:
+#   29Mar2012 Sarah Lu       First crack.
+#   21Jul2012 Sarah Lu       Modified for NEMS regression test
+#
+set -x
+
+##
+#----------------------------------------------------------------------------
+# DATA_IN: Location of working directory, default to /tmpnwprd
+# COM_IN:  Directory for input files, default to /com/$NET/${envir}
+# COM_OUT: Directory for output file, default to /com/$NET/${envir}
+# gespath: Directory for the guess or restart files, default to /nwges/${envir}
+# DEV_SMS: If the job is to be running using SMS, default to YES
+# SENDDBN: Set to NO for developers, default to YES
+
+  export HOMEngac=${HOMEngac:-/global/save/wx23lu/NGAC/Q4FY12_v1.0.0}  # location of ngac package
+  export HOMEGLOBAL=${HOMEGLOBAL:-/nwprod}
+  export DATA_IN=${DATA_IN:-/ptmp/$LOGNAME}
+  export COM_IN=${COM_IN:-${DATA_IN}/${RUN}}                           # location of input files
+  export COM_OUT=${COM_OUT:-${DATA_IN}/${RUN}}                         # location of output files
+  export gespath=${gespath:-/ptmp/wx23lu/${RUN}.GESdir}                # location of guess files
+  export DEV_SMS=NO
+  export SENDDBN=NO
+  usergroup=${usergroup:-dev}
+  userid=${userid:-$LOGNAME}
+
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+### --------  Revision for NEMS regression test  ------- ###
+
+## NEMSDIR, WORKDIR, REGSDIR are specified in the driver script rt_gocart.sh
+##export NEMSDIR=${PATHTR}
+##export WORKDIR=${RUNDIR}
+##export REGSDIR=${RTPWD}/GFS_GOCART_POST
+
+  export LOGDIR=${WORKDIR}
+  export DATA=${WORKDIR}
+  export COMOUT=${WORKDIR}
+  export GESdir=${REGSDIR}
+
+  export HOMEGLOBAL=/nwprod                          #### only work for CCS
+### for ICS
+  export PDY=${PDY:-20120717}                        #### hardwired the sdate
+
+### for NGAC_FCST
+  if [ $SCHEDULER = 'pbs' ]; then
+     export nemsioget=/scratch1/portfolios/NCEPDEV/nems/save/Jun.Wang/nems/util/nemsio_get
+   elif [ $SCHEDULER = 'lsf' ]; then
+     export nemsioget=/nems/save/Jun.Wang/util/nemsio_get
+  fi
+
+  export FCSTEXEC=${NEMSDIR}/exe/NEMS.x
+  export FCST_SCRIPT=${NEMSDIR}/job/exngac_fcst.sh.sms
+
+  export FHMAX=24                                    #### reduce from 120 to 24 
+
+### for ngac parm/fix directory
+  export PARMngac=${REGSDIR}
+  export FIXngac=${REGSDIR}
+
+### for POST_quilting
+  export POST_NCEPGRB2TBL=${REGSDIR}/params_grib2_tbl_new
+  export POST_AVBLFLDSXML=${REGSDIR}/post_avblflds.xml
+  export POST_PARM=${REGSDIR}/postcntrl.xml
+

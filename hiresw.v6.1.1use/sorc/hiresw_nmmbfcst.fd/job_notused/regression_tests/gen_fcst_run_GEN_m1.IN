@@ -1,0 +1,81 @@
+# #!/bin/ksh
+#
+set -x
+#
+ echo "Start to run gen_fcst_run_GEN"
+
+ export CDATE=2008082500
+
+#
+#  This script is NOT complete for running multiple ensemble members
+#
+ export ENS_NUM=1
+ export ENS_SPS=.false.
+#
+
+c=1
+while [ $c -le $ENS_NUM ] ; do
+ eval export PE$c=\${PE$c:-0}
+ c=$((c+1))
+done
+
+export MP_STDOUTMODE=ordered
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+export MEMORY_AFFINITY=MCM
+##export BIND_TASKS=yes
+export NTHREADS=1
+export XLSMPOPTS="parthds=$NTHREADS:spins=0:yields=0:stack=512000000"
+export SPINLOOPTIME=500
+export YIELDLOOPTIME=500
+export AIXTHREAD_SCOPE=S
+export MALLOCMULTIHEAP=true
+#
+#    Set up experiment and directory names
+#
+ export NSCDIR=/global/noscrub
+ export TOPDIR=/global/save
+ export DUMPDIR=/global/shared/dump
+# export MP_COREFILE_FORMAT=lite 
+
+ export fcst_begin=${fcst_begin:-YES}
+#
+ NCP=cp
+ export NCP=${NCP:-/u/wx20mi/bin/ncp}
+#
+#
+#
+#    nhourb is the beginig hour.  If nhourb=0, then initial condition
+#    needs to be specified. ndays is the Length of #orecast in days
+#    begining from nhourb
+#
+#
+export MEMBER_NAMES="p01 p02 p03 c00"
+# export MEMBER_NAMES="p01 p02 p03 p04 p05 p06 p07 p08 p09 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 c00"
+
+export nsout=${nsout:-0}
+export lsm=${lsm:-1}
+
+ export SCHEDULER=_SCHEDULER_
+echo 'SCHEDULER=' $SCHEDULER
+ export FCSTSCRIPT=_SRCDIR_/job/gen_fcst.sh.sms_nems
+echo 'FCSTSCRIPT=' $FCSTSCRIPT
+ export FCSTEXEC=_SRCDIR_/exe/NEMS.x
+echo 'FCSTEXEC=' $FCSTEXEC
+#
+ export MACHINE_ID=${MACHINE_ID:-wcoss}
+
+#
+#
+# ***************************************************************
+#    Below here no change needed most of the time
+#    ____________________________________________
+#
+
+cp _SRCDIR_/job/regression_tests/gen_configfile_190 _RUNDIR_/configure_file
+
+cd _RUNDIR_
+ export COMOUT=_RUNDIR_
+#
+  $FCSTSCRIPT > gen_fcst.sh.sms_nems.out 2>&1 || exit
+#

@@ -1,0 +1,49 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/logs/test_ungrib.out
+#BSUB -eo /meso/save/Matthew.Pyle/logs/test_ungrib.err
+#BSUB -q "dev_shared"
+#BSUB -J HIRESW_UNGRIB
+#BSUB -R "span[ptile=4]"
+#BSUB -R affinity[core(1)]
+#BSUB -R rusage[mem=2000]
+#BSUB -W 0:08
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -n 4
+
+module load ics
+module load ibmpe
+
+export MP_LABELIO=yes
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export MEMBER=ctl
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+# export COMGFS=/global/noscrub/emc.glopara/com/gfs/para/gfs.${DATE}
+export COMGFS=/com/gfs/prod/gfs.${DATE}
+
+export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hiresw.${DATE}
+export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}
+
+types="bufrpost forecast post prdgen smartinit smartinitb"
+
+for typ in $types
+do
+echo delete $typ
+rm -rf /stmpd1/Matthew.Pyle/tmpnwprd/hiresw.${typ}_${NEST}_${MODEL}_${cyc}_${envir}
+done
+
+$HOMEhiresw/jobs/JHIRESW_UNGRIB
+
+bsub < sub_metgrid.lsf__DOM___CORE___CYC_
+# rm sub_metgrid.lsf__DOM___CORE___CYC_
+
