@@ -7,27 +7,12 @@ set -xa
 export PS4='$SECONDS + ' 
 date
 
-######################################################
-# Default to NCO production run environment
-#######################################################
-export RUN_ENVIR=${RUN_ENVIR:-prod}
-
 ###############################
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
 export RUN=${RUN:-hiresw} 
   
-###############################################################
-# This block can be modified for different Production test
-# environment. This is used for operational testings
-###############################################################
-if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
-  export jlogfile=/com/logs/${envir}/jlogfile
-  export SENDDBN=NO
-  export DBN_ALERT_TYPE=HIRESW_GEMPAK_PARA
-fi
-
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
@@ -51,17 +36,15 @@ export pgmout="OUTPUT.${pid}"
 export cycle=${cycle:-t${cyc}z}
 
 ##################################################
-# SAVEGES  - Copy Files From TMPDIR to $GESdir
 # SENDECF  - Flag Events on ecFLOW
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
-# RERUN    - Rerun fcst from beginning (default no)
 ##################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
-export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
+export HOMEhiresw=${HOMEhiresw:-$NWROOT/hiresw.${hiresw_ver}}
 export GEMPAKhiresw=${GEMPAKhiresw:-$HOMEhiresw/gempak}
 
 export finc=1
@@ -84,20 +67,13 @@ cp $GEMPAKhiresw/fix/*.tbl .
 #
 . /nwprod/gempak/.gempak
 
-###################################
-# Set up the UTILITIES
-###################################
-
-module load prod_util
-
 # Run setpdy and initialize PDY variables
 setpdy.sh
 . PDY
 
 export COMROOT=${COMROOT:-/com2}
-
-export COMIN=${COMIN:-/${COMROOT}/${NET}/${envir}/hiresw.${PDY}}
-export COMOUT=${COMOUT:-/com/nawips/${envir}/hiresw.${PDY}}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/hiresw.${PDY}}
+export COMOUT=${COMOUT:-${COMROOT}/nawips/${envir}/hiresw.${PDY}}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -111,5 +87,5 @@ $HOMEhiresw/scripts/exnawips_hiresw.sh.ecf
 #################################################################
 
 cd ${DATAROOT}
-rm -rf $DATA
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 date

@@ -185,15 +185,15 @@ cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_0
 # make sure 00 h NAM restart file exists; use cold-start input
 # file if it does not
 
-if [ -e $GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
+if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
 then
-  INPUT_FILE="$GESNAM/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+  INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 else
-  if [ -e $GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00 ]
+  if [ -e $GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00 ]
   then
-    INPUT_FILE="$GESNAM/nam.t${cyc}z.input_nemsio.anl.tm00"
+    INPUT_FILE="$GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00"
   else
-    msg="FATAL ERROR: ${INPUT_FILE} DOES NOT EXIST"
+    msg="FATAL ERROR: NEITHER $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 NOR $GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00 EXIST!"
     err_exit $msg
   fi
 fi

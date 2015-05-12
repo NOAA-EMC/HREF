@@ -178,10 +178,10 @@ let pcphr3=pcphr-3
 if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
 
 # get the sref precip fields that we need
-  cp $COMIN_SREF/sref.t${srefcyc}z.pgrb${sgrb}.prob_3hrly.grib2 SREFPROB
+  cp $COMINsref/sref.t${srefcyc}z.pgrb${sgrb}.prob_3hrly.grib2 SREFPROB
 
   if [ ! -s SREFPROB ]; then
-    cp $COMIN_GEFS/${gefscyc}/sref.t${gefscyc}z.pgrb${sgrb}.prob_3hrly.grib2 SREFPROB
+    cp $COMINgefs/${gefscyc}/sref.t${gefscyc}z.pgrb${sgrb}.prob_3hrly.grib2 SREFPROB
   fi
 
   $GRB2INDEX SREFPROB SREFPROBI
@@ -696,7 +696,7 @@ done  #fhr loop
 if [ ${fhr} -eq 0 ]
 then
 # cp PDY NMCDATE ncepdate startmsg postmsg null break err_exit errexit errchk err_chk prep_step tracer ../smartinit/
-cp PDY NMCDATE ncepdate startmsg postmsg null break err_exit errexit errchk err_chk prep_step tracer ../
+#XXW cp PDY NMCDATE ncepdate startmsg postmsg null break err_exit errexit errchk err_chk prep_step tracer ../
 # cp DATE ../smartinit/
 cp DATE ../
 fi

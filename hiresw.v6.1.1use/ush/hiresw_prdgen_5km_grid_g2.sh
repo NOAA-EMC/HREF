@@ -20,17 +20,12 @@
 
 set -x
 
-# export CNVGRIB=${CNVGRIB:-${utilexec}/cnvgrib}
-# export WGRIB2=${WGRIB2:-${utilexec}/wgrib2}
-
 fhr=$1
 DOMIN_SMALL=$2
 CYC=${3}
 model=$4
 subpiece=$5
 
-compress=complex2
-compress=jpeg
 compress="c3 -set_bitmap 1"
 
 reflag=1
@@ -218,22 +213,43 @@ done
  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
  export err=$?; err_chk
 
-  fi
-#  cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
-	echo DOING THIS LINE
-      cat  ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 > \
+	if [ $fhr -ne 3 ]
+        then
+         cat  ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 > \
                                        hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
-	echo DID THIS LINE
+        else
+         cat  ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > \
+                                       hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+        fi
 
+  fi # if 3hourly ARW
+
+## all ARW will see this 
+        if [ ${fhr}%3 -ne 0 ]
+        then
+        if [ $fhr -ne 1 ]
+        then
+        cat  ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > \
+                                       hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+        else
+        cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+        fi
+        fi
+     
   else
-#   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > $DOMOUT.t${CYC}z.awp5kmf${fhr}
+# not ARW
+
+        if [ ${fhr}%3 -ne 1 ]
+        then
    cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+        else
+   cp ${filenamthree}${fhr}.tm00   hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+        fi
   fi
 
 else
 
-# mv ${filenamthree}${fhr}.tm00 $DOMOUT.t${CYC}z.awp5kmf${fhr}
-mv ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
+cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${model}_5km.f${fhr}.conus.grib2
 
 fi # subpiece=1
 

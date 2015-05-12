@@ -310,7 +310,7 @@ export FORT_BUFFERED=true
 
 mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
 # mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
-export err=$?;./err_chk
+export err=$?;err_chk
 
 cp $pgmout ${pgmout}_${fhr}
 cp errfile errfile_${fhr}
