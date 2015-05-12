@@ -1,0 +1,22 @@
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_cnvgrib.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_cnvgrib.err__DOM__CORE__CYC_
+#BSUB -R rusage[mem=5000]
+#BSUB -R affinity[core(1)]
+#BSUB -q "dev_shared"
+#BSUB -J HIRESW_CNVGRIB__DOM__CORE_
+#BSUB -n 1
+#BSUB -P HRW-T2O
+#BSUB -W 1:59
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+/meso/save/Matthew.Pyle/hiresw_vert/jobs/JHIRESW_CNVGRIB.sms.test _DOM_ _CORE_ _CYC_

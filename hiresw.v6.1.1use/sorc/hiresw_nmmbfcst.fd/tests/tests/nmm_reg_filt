@@ -1,0 +1,29 @@
+###############################################################################
+#
+#  Regional NMM-B static nests with filter
+#  Compute tasks - Upper parent 2x2 | Child #1 3x5 | Grandchild 6x7
+#  1 thread / opnl physics / free fcst / nemsio binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional digital filter with static nests"
+
+export CNTL_DIR=NMMB_reg_filt
+export LIST_FILES="nmmb_hst_01_bin_0003h_00m_00.00s nmmb_hst_01_nio_0003h_00m_00.00s \
+        	   nmmb_hst_02_bin_0003h_00m_00.00s nmmb_hst_02_nio_0003h_00m_00.00s \
+        	   nmmb_hst_03_bin_0003h_00m_00.00s nmmb_hst_03_nio_0003h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=fltr
+export FCSTL=03
+export AFFN=cpu
+export NEMSI=true
+export NCHILD=01
+export TASKS=$TASKS_fltr
+export TPN=$TPN_fltr
+export INPES=$INPES_fltr
+export JNPES=$JNPES_fltr
+export WTPG=$WTPG_fltr
+
+RUN_SCRIPT=rt_nmm.sh

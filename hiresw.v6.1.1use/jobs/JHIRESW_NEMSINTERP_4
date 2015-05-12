@@ -1,0 +1,95 @@
+#!/bin/sh 
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+######################################################
+# Default to NCO production run environment
+#######################################################
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-hiresw}
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export jlogfile=/com/logs/${envir}/jlogfile
+fi
+
+########################################################### 
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+export INPUT_DATA=${INPUT_DATA:-${DATAROOT}/hiresw.metgrid_${NEST}_${MODEL}_${cyc}_${envir}}
+export DATA=${DATA:-${DATAROOT}/hiresw.nemsinterp_4_${NEST}_${MODEL}_${cyc}_${envir}}
+
+if [ -d $DATA/run_nemsinterp_4 ]; then
+   rm -rf $DATA/run_nemsinterp_4
+fi
+mkdir -p $DATA/run_nemsinterp_4
+cd $DATA/run_nemsinterp_4 
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${job}.${pid}}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+export HOMEhiresw=${HOMEhiresw:-/nw${envir}/hiresw.${model_ver}}
+export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
+export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
+export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
+export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
+
+###################################
+# Set up the UTILITIES
+###################################
+
+module load prod_util
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. PDY
+
+export COMROOT=${COMROOT:-/com2}
+export COMOUT=${COMOUT:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export GESNAM=${GESNAM:-/nwges/prod}
+
+mkdir -p -m 775 $COMOUT
+
+########################################################
+# Execute the script.
+${HOMEhiresw}/scripts/exhiresw_nemsinterp_4.sh.ecf
+########################################################
+
+msg="JOB $job FOR NEST=${NEST}${MODEL} HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+cd $DATAROOT
+rm -rf $DATA
+date

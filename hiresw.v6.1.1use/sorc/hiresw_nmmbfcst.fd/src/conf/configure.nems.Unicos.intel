@@ -1,0 +1,39 @@
+SHELL     = /bin/sh
+
+include /tmp/proj/atm001/dusan/ESMF/esmf/lib/libg/Unicos.intel.64.mpi.default/esmf.mk
+ESMF_INC  = $(ESMF_F90COMPILEPATHS)
+ESMF_LIBS = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+EXTLIBS   = $(ESMF_LIBS) -L/tmp/proj/atm001/dusan/nwprod/lib -lw3_4 -lbacio_4 -lsp_4
+
+FC        = ftn
+FPP       = -eZ
+FREE      = -free
+FIXED     = -fixed
+R8        = -r8
+
+FINCS     = $(ESMF_INC)
+#TRAPS     = -g -CB -CU -CA -ftrapuv
+TRAPS     = -g -CB -CA -ftrapuv -traceback
+#TRAPS     = -g
+
+FFLAGS    = $(TRAPS) $(FINCS) -convert big_endian
+
+OPTS_NMM  = -O0
+OPTS_GFS  = -O0
+OPTS_GEN  = -O0
+OPTS_FIM  = -O0
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP       = /lib/cpp -P -traditional
+CPPFLAGS  = -DCHNK_RRTM=8
+
+AR        = ar
+ARFLAGS   = -r
+
+RM        = rm
