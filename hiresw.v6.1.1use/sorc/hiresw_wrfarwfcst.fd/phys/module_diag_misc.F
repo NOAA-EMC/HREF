@@ -434,6 +434,10 @@ CONTAINS
          w_mean(i,j)      = 0.
          grpl_max(i,j)    = 0.
          refd_max(i,j)    = 0.
+         t2max(i,j) = -9999.
+         t2min(i,j) = 9999.
+         rh2max(i,j) = -9999.
+         rh2min(i,j) = 9999.
        ENDDO
        ENDDO
      ENDDO
@@ -543,7 +547,7 @@ CONTAINS
        rh2=max(rh2,0.01)
 
 
-       if (rh2 .lt. 0 .or. rh2 .gt. 105.) then
+       if (rh2 .lt. 0 .or. rh2 .gt. 1.05) then
        write(0,*) 'i,j,rh2: ',i,j, rh2
        call wrf_error_fatal("bad rh2 value")
        endif
