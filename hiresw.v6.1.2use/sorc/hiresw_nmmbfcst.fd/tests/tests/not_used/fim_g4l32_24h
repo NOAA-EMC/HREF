@@ -1,0 +1,30 @@
+#############################################################################
+#
+#  FIM
+#  40 compute tasks / 1 thread, 1 node.  
+#
+#############################################################################
+
+export TEST_DESCR="Compare FIM results with previous trunk version, only FIM compiled"
+
+export TASKS=40
+export GLVL=4
+export CNTL_DIR=FIM_G${GLVL}L38_24hr
+export LIST_FILES=" \
+        fim_out_2D__000000hr fim_out_2D__000003hr fim_out_2D__000006hr \
+        fim_out_2D__000009hr fim_out_2D__000012hr fim_out_2D__000015hr \
+        fim_out_2D__000018hr fim_out_2D__000021hr fim_out_2D__000024hr \
+        fim_out_da3D000024hr fim_out_db3D000024hr fim_out_dp3D000024hr \
+        fim_out_hgtP000024hr fim_out_mp3D000024hr fim_out_oz3D000024hr \
+        fim_out_ph3D000024hr fim_out_pr3D000024hr fim_out_qv3D000024hr \
+        fim_out_qw3D000024hr fim_out_rh3D000024hr fim_out_rp3P000024hr \
+        fim_out_td3D000024hr fim_out_th3D000024hr fim_out_tk3D000024hr \
+        fim_out_tmpP000024hr fim_out_up3P000024hr fim_out_us3D000024hr \
+        fim_out_vo3D000024hr fim_out_vp3P000024hr fim_out_vs3D000024hr \
+        fim_out_ws3D000024hr"
+
+export_fim
+
+export WLCLK=15
+
+RUN_SCRIPT=rt_fim.sh

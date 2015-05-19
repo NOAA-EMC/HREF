@@ -1,0 +1,92 @@
+scp to TARGDIR /home/www/emc/htdocs/mmb/mpyle/hiresw/_REGION__CYC_
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@t19e4f>
+Subject: Job 3097228: <HIRESW_TRANSFER_4> in cluster <tide> Done
+
+Job <HIRESW_TRANSFER_4> was submitted from host <t14a2f> by user <Matthew.Pyle> in cluster <tide>.
+Job was executed on host(s) <t19e4f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <tide>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Fri Apr 17 11:00:09 2015
+Results reported on Fri Apr 17 11:00:25 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out__CYC__DATE__4
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err__CYC__DATE__4
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_4
+#BSUB -n 1
+#BSUB -W 0:29
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd1/Matthew.Pyle/process_4km__REGION__compare__CYC_/
+cd /ptmpd1/Matthew.Pyle/process_4km__REGION__compare__CYC_/
+
+hrs="37 38 39 40 41 42 43 44 45 46 47 48"
+
+### montage block
+
+if [ _REGION_ = "conus" ]
+then
+
+types="1h 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se 300z 500z 850rh 925winds \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw mx1000refd echotop tcolc pwtr refc pblli 48h_total"
+
+elif [  _REGION_ = "ak" ]
+then
+
+types="1h 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape"
+
+fi
+
+
+
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               3.07 sec.
+    Max Memory :             11 MB
+    Average Memory :         9.00 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           489.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          6
+    Max Threads :            7
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err__CYC__DATE__4> for stderr output of this job.
+

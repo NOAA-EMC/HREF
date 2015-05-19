@@ -1,0 +1,1170 @@
+#! /bin/ksh
+# @ output = /ptmpd1/Matthew.Pyle/test.out
+# @ error = /ptmpd1/Matthew.Pyle/test.out
+# @ notification = never
+# @ wall_clock_limit = 00:30:00
+# @ group=devonprod
+# @ account_no=HRW-T2O
+# @ job_type = serial
+# @ class = dev
+# @ queue
+
+cyc=${1}
+hr_start=${2}
+hr_end=${3}
+dom=${4}
+core=${5}
+date=${6}
+type=both
+
+echo $cyc 
+echo $hr_start
+echo $hr_end
+echo $core
+
+size1=600
+size2=480
+
+export GEMTBL=/meso/save/Matthew.Pyle/gem_tables_5.11_hiresw
+
+rm  /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/*.grd
+mkdir -p /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/${hr_end}_${type}
+
+cd /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/${hr_end}_${type}
+
+rm /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/${hr_end}_${type}/*.grd
+rm /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/${hr_end}_${type}/*.grb
+rm /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/${hr_end}_${type}/*.gif
+
+rm /ptmpd1/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/${hr_end}_${type}/*
+
+DATE=${date}${cyc}
+ETADATE=${date}
+echo $DATE
+
+hr=$hr_start
+
+EMSL=emsl
+
+if [ $core = "arw" ]
+then
+EMSL="sm5s(emsl)"
+fi
+
+
+
+if [ $dom  = "conus" ]
+then
+gtype=awp5km
+else
+gtype=awpreg
+fi
+
+hgtcint=60
+
+
+if [ $dom  = "ak" ]
+then
+LLAT=47.0
+LLON=-175.0
+ULAT=68.0
+ULON=-109
+mproj=str
+lat1=90
+cenlon=-150
+lat2=0
+t2mfint="-24;-21;-18;-15;-12;-9;-6;-3;0;3;6;9;12;15;18;21;24"
+dwpcfint="-30;-27;-24;-21;-18;-15;-12;-9;-6;-3;0;3;6;9;12;15;18"
+SKIP=0
+windskip=10
+emslcint=4
+
+LLAT_ALEU=44.0
+LLON_ALEU=-174.0
+ULAT_ALEU=60.0
+ULON_ALEU=-152.0
+
+LLAT_CENT=57.0
+LLON_CENT=-160.0
+ULAT_CENT=67.0
+ULON_CENT=-140.0
+
+LLAT_JUN=52.0
+LLON_JUN=-150.0
+ULAT_JUN=59.0
+ULON_JUN=-120.0
+
+elif [ $dom = "conus" ]
+
+then
+t2mfint="-6;-3;0;3;6;9;12;15;18;21;24;27;30;33;36;39;42"
+t2mfint="-18;-15;-12;-9;-6;-3;0;3;6;9;12;15;18;21;24;27;30"
+dwpcfint="-18;-15;-12;-9;-6;-3;0;3;6;9;12;15;18;21;24;27"
+mproj=lcc
+lat1=25
+cenlon=-95
+lat2=25
+
+
+LLAT=21.0
+LLON=-121.0
+ULAT=49.0
+ULON=-62.6
+
+LLAT_SW=21.0
+LLON_SW=-121.0
+ULAT_SW=42.0
+ULON_SW=-90.0
+
+LLAT_NW=32.0
+LLON_NW=-125.0
+ULAT_NW=52.0
+ULON_NW=-87.0
+
+LLAT_NE=35.0
+LLON_NE=-90.0
+ULAT_NE=48.0
+ULON_NE=-62.0
+
+LLAT_SE=23.0
+LLON_SE=-95.0
+ULAT_SE=40.0
+ULON_SE=-70.0
+
+LLAT_MIDLAND=29.5
+LLON_MIDLAND=-105.0
+ULAT_MIDLAND=34.5
+ULON_MIDLAND=-99
+
+SKIP=1
+windskip=12
+emslcint=4
+
+
+elif [ $dom = "hi" ]
+
+then
+LLAT=16.5
+LLON=-162.3
+ULAT=24.0
+ULON=-152.5
+mproj=ced
+lat1=0
+cenlon=0
+lat2=0
+t2mfint="6;8;10;12;14;16;18;20;22;24;26;28;30;32;34"
+dwpcfint="0;2;4;6;8;10;12;14;16;18;20;22;24;26;28"
+SKIP=0
+windskip=4
+emslcint=2
+hgtcint=30
+
+elif [ $dom = "guam" ]
+
+then
+LLAT=11.8
+LLON=141.1
+ULAT=19.2
+ULON=150.9
+mproj=ced
+lat1=0
+cenlon=0
+lat2=0
+t2mfint="16;17;18;19;20;21;22;23;24;25;26;27;28;29;30;31;32;33;34"
+dwpcfint="4;6;8;10;12;14;16;18;20;22;24;26"
+SKIP=0
+windskip=4
+emslcint=1
+hgtcint=30
+
+elif [ $dom = "pr" ]
+
+then
+LLAT=13.5
+LLON=-76.55
+ULAT=22.8
+ULON=-61.4
+mproj=ced
+lat1=0
+cenlon=0
+lat2=0
+t2mfint="14;16;18;20;22;24;26;28;30;32;34;36"
+dwpcfint="4;6;8;10;12;14;16;18;20;22;24;26;28"
+SKIP=0
+windskip=5
+emslcint=2
+hgtcint=30
+
+fi
+
+let "hgt850cint = hgtcint / 2"
+
+echo $hgtcint $hgt850cint
+
+types="para prod"
+
+while [ $hr -le $hr_end ]
+do
+
+for type in $types
+do
+
+
+getnam=no
+
+
+if [ $type = "para" ]
+then
+GRIB_PARA=/meso/noscrub/Matthew.Pyle/com/hiresw/test/hiresw.${ETADATE}/hiresw.t${cyc}z.${core}_5km.f${hr}.conus.grib2
+GRIB_PARA=/ptmpd3/Matthew.Pyle/com/hiresw/test/hiresw.${ETADATE}/hiresw.t${cyc}z.${core}_5km.f${hr}.${dom}.grib2
+GRIBFILE=$GRIB_PARA
+
+coreloc=${core}
+
+else
+
+coreloc=${core}
+domloc=${dom}
+
+if [ $core = "nmmb" ]
+then
+coreloc=nmmb
+fi
+
+echo here with dom $dom and core $core
+
+if [ $dom = "conus" ]
+then
+echo setting domloc to east
+domloc=conus
+getnam=yes
+fi
+
+GRIB_PROD=/com/hiresw/prod/hiresw.${ETADATE}/${domloc}${coreloc}.t${cyc}z.${gtype}f${hr}.grib2
+
+# GRIB_PROD=/com/hiresw/para/hiresw.${ETADATE}/${dom}${core}.t${cyc}z.${gtype}f${hr}
+# GRIB_PROD=/meso/noscrub/Matthew.Pyle/opshiresw/hiresw.${ETADATE}/${dom}${core}.t${cyc}z.${gtype}f${hr}.grib2
+
+if [ $getnam = "yes" ]
+then
+GRIB_PROD_NAM=/com/nam/prod/nam.${ETADATE}/nam.t${cyc}z.conusnest.hiresf${hr}.tm00
+fi
+
+echo $GRIB_PROD
+
+GRIBFILE=$GRIB_PROD
+fi
+
+while [ ! -e $GRIBFILE ]
+do
+datevar=`date`
+echo "seeking " $GRIBFILE
+echo "sleep 10 seconds from" $datevar
+sleep 10
+done
+
+threehrold=`expr $hr - 3`
+onehrold=`expr $hr - 1`
+
+typeset Z2 threehrold
+typeset Z2 onehrold
+
+WGRIB2=/nwprod/util/exec/wgrib2
+
+${WGRIB2} $GRIBFILE -match "APCP" -grib apcp.grb2
+
+cnvgrib -g21 apcp.grb2 apcp.grb1
+
+wgrib apcp.grb1 | grep APCP |  grep P1=$onehrold | wgrib -i -grib apcp.grb1 -o SPCPCP${hr}.tm00
+wgrib apcp.grb1 | grep APCP |  grep P1=$threehrold | wgrib -i -grib apcp.grb1 -o WRFPCP${hr}.tm00
+
+cp WRFPCP${hr}.tm00 WRFPCP${hr}.tm00_${type}
+
+ls -l WRFPCP${hr}.tm00_${type}
+
+cat  SPCPCP${hr}.tm00 WRFPCP${hr}.tm00 > apcp_subset.grb
+cnvgrib -g12 apcp_subset.grb apcp_subset.grb2
+
+
+datestr=`date`
+echo START WGRIB2bing $hr at $datestr
+
+
+${WGRIB2} $GRIBFILE  -match ":(REFD|REFC|TCOLC|TCOLR|TCOLS|MSLET):"  -grib wrfcent4km_radar1_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":2 m above ground:" -grib  wrfcent4km_t2ms_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":RH:" -grib wrfcent4km_850rh_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":10 m above ground:" -grib wrfcent4km_ugrd_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":UGRD:300 mb:" -grib ugrd2_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":UGRD:850 mb:" -grib ugrd3_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":UGRD:925 mb:" -grib ugrd4_${hr}.grb
+
+${WGRIB2} $GRIBFILE  -match ":VGRD:300 mb:" -grib vgrd2_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":VGRD:850 mb:" -grib vgrd3_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":VGRD:925 mb:" -grib vgrd4_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":HGT:300 mb:" -grib hgt1_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":HGT:500 mb:" -grib hgt2_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":HGT:850 mb:" -grib hgt3_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":HGT:925 mb:" -grib hgt4_${hr}.grb
+
+
+# ${WGRIB2} $GRIBFILE -match "PWAT:entire atmosphere (considered as a single layer):" -grib pwat_${hr}.grb
+${WGRIB2} $GRIBFILE -match "PWAT" -grib pwat_${hr}.grb
+
+if [ ! -e pwat_${hr}.grb ]
+then
+exit
+fi
+
+${WGRIB2} $GRIBFILE -match "PLI" -grib li_${hr}.grb
+${WGRIB2} $GRIBFILE -match "UPHL" -grib updhel_${hr}.grb
+${WGRIB2} $GRIBFILE -match "MAXREF" -grib maxref_${hr}.grb
+${WGRIB2} $GRIBFILE -match "GUST" -grib gust_${hr}.grb
+${WGRIB2} $GRIBFILE -match "CAPE:surface:" -grib sfccape_${hr}.grb
+${WGRIB2} $GRIBFILE -match "CAPE:180-0 mb above ground:" -grib 180_0_cape.grb
+${WGRIB2} $GRIBFILE -match "RETOP" -grib retop.grb
+
+
+cat apcp_subset.grb2 wrfcent4km_radar1_${hr}.grb wrfcent4km_t2ms_${hr}.grb wrfcent4km_850rh_${hr}.grb wrfcent4km_ugrd_${hr}.grb \
+ugrd2_${hr}.grb ugrd3_${hr}.grb  ugrd4_${hr}.grb vgrd2_${hr}.grb vgrd3_${hr}.grb vgrd4_${hr}.grb \
+hgt1_${hr}.grb hgt2_${hr}.grb hgt3_${hr}.grb hgt4_${hr}.grb pwat_${hr}.grb li_${hr}.grb updhel_${hr}.grb \
+maxref_${hr}.grb gust_${hr}.grb sfccape_${hr}.grb 180_0_cape.grb retop.grb > SPCPCP_radar.grb
+
+
+datestr=`date`
+echo DONE WGRIB2ing $hr at $datestr
+
+rm today_1hprecip_${type}.grd
+
+nagrib2 << endgrib
+ GBFILE   = SPCPCP_radar.grb
+ INDXFL   =
+ GDOUTF   = today_1hprecip_${type}.grd
+ PROJ     =
+ GRDAREA  =
+ KXKY     =
+ MAXGRD   = 4999
+ CPYFIL   = GDS
+ GAREA    = dset
+ OUTPUT   = T
+ GBTBLS   =
+ GBDIAG   =
+ PDSEXT   = NO
+
+r
+
+ex
+
+endgrib
+
+rm wrfcent4km_radar1_${hr}.grb wrfcent4km_radar2_${hr}.grb
+
+datestr=`date`
+echo DONE nagribbing $hr at $datestr
+
+gdplot << endplot
+
+ GDFILE = today_1hprecip_${type}.grd
+ GDATTIM  = f${hr}
+ GLEVEL   = 0
+ GVCORD   = none
+ PANEL    = 0/4//1
+ SKIP     = /$windskip
+ SCALE    = 0
+ GFUNC    = p01i
+ CTYPE    = f
+ CONTUR   = 0
+ CINT     = 2
+ LINE     = 2/-12/1/1
+ FINT     = 0.01;5;10;15;20;25;30;35;50;75;100;125;150;175
+ FINT     = 0.01;.05;.1;.15;.2;.3;.5;.75;1;1.5;2
+ FLINE    = 0;23;22;21;20;19;10;17;16;15;14;29;28;24;25
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+ GVECT    =
+ REFVEC   =
+ TITLE    = 32/0/ ^ P01I, EMSL, 10 m winds
+  title=32/0/ ^ ${type} ${coreloc} EMSL,U10,P01i
+ TEXT     = 1/1//SW
+ TEXT     = 1.6/23/2.0/SW
+ CLEAR    = y
+ GAREA    = dset
+ garea    = $LLAT;$LLON;$ULAT;$ULON 
+ IJSKIP   = $SKIP
+ PROJ     = $mproj/$lat1;$cenlon;$lat2
+ MAP      = 32/12/1
+ LATLON   = 0
+ DEVICE   = gif|${type}_${core}_1h_f${hr}.gif|$size1;$size2|C
+ STNPLT   =
+
+r
+
+cle=n
+ctype=c
+gfun=$EMSL
+cint=$emslcint
+line=4/-12/1/0/1/0/T
+gvect=obs@10%hght
+WIND     = bk32/.35/.35/122/.4
+REFVEC   = 20.;.01;.01;1.0
+title=0
+
+r
+
+gfun=relh
+glev=2
+gvcord=hght
+fint=10;15;20;25;30;35;40;45;50;60;70;80;90
+fline=14;13;15;16;17;27;26;25;28;29;0;21;22;23
+ctype=f
+device=gif|${type}_${core}_2mrh_f${hr}.gif|$size1;$size2|C
+gvect=obs@10
+WIND     = bk32/.35/.35/122/.4
+REFVEC   = 20.;.01;.01;1.0
+
+GFUN    = REFC
+gvcord=none
+glev=0
+cle=y
+ctype=f
+gvect=
+ PROJ     = $mproj/$lat1;$cenlon;$lat2
+GAREA    = $LLAT;$LLON;$ULAT;$ULON 
+fint=5;10;15;20;25;30;35;40;45;50;55;60;65
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+DEVICE = gif|${type}_${core}_refc_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} _
+r
+
+GFUN    = REFD
+gvcord=hght
+glev=1000
+fint=5;10;15;20;25;30;35;40;45;50;55;60;65
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+gfun=REFD
+DEVICE = gif|${type}_${core}_refd_1000m_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=TCOLC
+glev=0
+gvcord=none
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+fint=.3;1;2;3;4;6;8;10;14;18;23;28
+fint=.1;.5;1;2;4;6;8;10;15;20;30;40
+fint=.001;.01;.1;.5;1;2;4;6;8;10;15;20
+DEVICE = gif|${type}_${core}_tcolc_f${hr}.gif|$size1;$size2|C
+r
+
+glev=2
+gvcord=hght
+gfun=tmpc
+fint=$t2mfint
+fline=30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+DEVICE=gif|${type}_${core}_t2ms_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=dwpc
+fint=$dwpcfint
+fline=30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+title=32/0/ ^ ${type} ${coreloc} _
+DEVICE=gif|${type}_${core}_dwpc_f${hr}.gif|$size1;$size2|C
+r
+
+GFUN    = MXUPDR01
+glev=400:1000
+gvcord=pres
+cle=y
+ctype=f
+gvect=
+fint=0.5;1;1.5;2;3;4;5;6;7;8;9;10;12
+fint=2;4;6;8;10;12;14;16;18;20;22;24
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+DEVICE = gif|${type}_${core}_mxupdr_f${hr}.gif|$size1;$size2|C
+
+gfun=CAPE
+glev=180:0
+gvcord=PDLY
+fint=500;750;1000;1250;1500;1750;2000;2500;3000;3500;4000;4500;5000
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+title=32/0/ ^ ${type} ${coreloc} MU PBL CAPE
+DEVICE = gif|${type}_${core}_mucape_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=sm5s(LIFT)
+cle=y
+gvcord=PDLY
+glev=30:0
+ctyp=f
+FINT     = -8;-6;-4;-2
+FLINE    = 2;17;15;13;0
+fline    = 28;25;23;21;0
+DEVICE = gif|${type}_${core}_pblli_f${hr}.gif|$size1;$size2|C
+title=0
+r
+
+ctype=c
+cle=n
+cint=2/2/20
+line=32/-12/2/2/1/0/T
+title=32/0/ ^ ${type} ${coreloc} PBL LI
+r
+
+cle=y
+glev=0
+gvcord=none
+gfun=sm9s(quo(pwtr,25.4))
+ctype=f
+fint=1;1.25;1.5;1.75;2;2.5
+fline=0;21;23;25;27;29;30
+DEVICE = gif|${type}_${core}_pwtr_f${hr}.gif|$size1;$size2|C
+title=0
+r
+
+cle=n
+ctype=c
+cint=.25/.5/1
+line=32/-12/1/2/1/0/T
+title=32/0/ ^ ${type} ${coreloc} PWTR(in.)
+r
+
+
+cle=y
+ctype=f
+gvcord=hght
+glev=10
+fint=1;2;3;4;5;6;7;8;10;12;14;16;18;20;25
+fint=15;17.5;20.0;22.5;25;27.5;30;32.5;35;40
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+fline=0;4;23;3;5;17;14;15;16;29;2
+gfun=mag(vecr(mx10u01,mx10v01))
+title=32/0/ ^ ${type} ${coreloc} _
+DEVICE = gif|${type}_${core}_mx10w_f${hr}.gif|$size1;$size2|C
+
+gvcord=hght
+glev=5000:2000
+fint=2;4;8;12;20;30;40;50;75;100;125;150
+fline=0;21-27;2;14-18
+gfun=MXUPHL01
+DEVICE = gif|${type}_${core}_mxuphl_f${hr}.gif|$size1;$size2|C
+
+gfun=MXDBZ01
+glev=1000
+gvcord=hght
+fint=5;10;15;20;25;30;35;40;45;50;55;60;65
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+DEVICE = gif|${type}_${core}_mx1000refd_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=mul(echtop,3.28084)
+glev=0
+gvcord=none
+fint=1000;3000;5000;7000;9000;11000;13000;15000;17000
+fint=10;5000;10000;15000;20000;25000;30000;35000;40000;45000;50000;55000
+fline=0;20;21-27;2;5;18;7
+DEVICE = gif|${type}_${core}_echotop_f${hr}.gif|$size1;$size2|C
+r
+
+glev=0
+gvcord=none
+gfun=mul(GUST,1.944)
+fint=12.5;15;17.5;20;22.5;25;30
+fint=25.0;30;35;40;45;50;60;70;80;90
+fline=0;4;3;5;18;17;15;14;26;29;30
+DEVICE = gif|${type}_${core}_gust_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} Gust pot(kt)
+r
+
+gvcord=pres
+glev=300
+cle=y
+gfun=mag(obs)
+fint=25;30;35;40;45;50;60;70;80;90
+fline=0;4;3;5;18;17;15;14;26;29;30
+ctype=f
+DEVICE = gif|${type}_${core}_300z_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} _
+TITLE=0
+r
+
+cle=n
+gfun=sm5s(hght)
+ctype=c
+cint=$hgtcint
+line=32/-12/2/2/1/0/T
+DEVICE = gif|${type}_${core}_300z_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} 300 Z,isotachs(m/s)
+r
+
+cle=y
+glev=500
+gfun=sm5s(hght)
+cint=$hgtcint
+ctype=c
+line=32/-12/2/2/1/0/T
+DEVICE = gif|${type}_${core}_500z_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} 500 Z
+r
+
+glev=850
+gfun=relh
+fint=70;80;90;98
+fline=0;21-24
+ctype=f
+gvect=obs
+DEVICE = gif|${type}_${core}_850rh_f${hr}.gif|$size1;$size2|C
+title=0
+r
+
+cle=n
+ctype=c
+gfun=sm5s(hght)
+cint=$hgt850cint
+title=32/0/ ^ ${type} ${coreloc} 850 Z,RH
+r
+
+
+cle=y
+glev=925
+ctype=c
+gfun=sm5s(hght)
+line=32/-12/1/0/1/0/T
+cint=$hgt850cint
+title=32/0/ ^ ${type} ${coreloc} 925 Z,winds
+DEVICE = gif|${type}_${core}_925winds_f${hr}.gif|$size1;$size2|C
+r
+
+ex
+
+endplot
+
+gpend
+
+if [ $dom = "conus" ]
+then
+## bonus regional plots
+
+gdplot << endplot
+
+glev=2
+gvcord=hght
+ctype=f
+gfun=tmpc
+gvect=obs@10
+WIND     = bk32/.4/.6/122/.6
+SKIP     = /12
+IJSKIP=0
+fint=$t2mfint
+fline=30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+CLRBAR   = 32/H/LL/.07;.005/.85;.009|.82/2/.82/111/SW
+garea    = $LLAT_SW;$LLON_SW;$ULAT_SW;$ULON_SW 
+DEVICE=gif|${type}_${core}_t2ms_sw_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} _
+r
+
+garea=$LLAT_SE;$LLON_SE;$ULAT_SE;$ULON_SE
+CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+DEVICE=gif|${type}_${core}_t2ms_se_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_NE;$LLON_NE;$ULAT_NE;$ULON_NE
+DEVICE=gif|${type}_${core}_t2ms_ne_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_NW;$LLON_NW;$ULAT_NW;$ULON_NW
+DEVICE=gif|${type}_${core}_t2ms_nw_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=dwpc
+glev=2
+fint=$dwpcfint
+fline=30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+CLRBAR   = 32/H/LL/.07;.005/.85;.009|.82/2/.82/111/SW
+DEVICE=gif|${type}_${core}_dwpc_f${hr}.gif|$size1;$size2|C
+garea    = $LLAT_SW;$LLON_SW;$ULAT_SW;$ULON_SW 
+DEVICE=gif|${type}_${core}_dwpc_sw_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_SE;$LLON_SE;$ULAT_SE;$ULON_SE
+CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+DEVICE=gif|${type}_${core}_dwpc_se_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_NE;$LLON_NE;$ULAT_NE;$ULON_NE
+DEVICE=gif|${type}_${core}_dwpc_ne_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_NW;$LLON_NW;$ULAT_NW;$ULON_NW
+DEVICE=gif|${type}_${core}_dwpc_nw_f${hr}.gif|$size1;$size2|C
+r
+
+skip=/3
+garea=$LLAT_MIDLAND;$LLON_MIDLAND;$ULAT_MIDLAND;$ULON_MIDLAND
+DEVICE=gif|${type}_${core}_dwpc_midland_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=relh
+glev=2
+gvcord=hght
+fint=10;15;20;25;30;35;40;45;50;60;70;80;90
+fline=14;13;15;16;17;27;26;25;28;29;0;21;22;23
+ctype=f
+SKIP     = /3
+device=gif|${type}_${core}_2mrh_midland_f${hr}.gif|$size1;$size2|C
+gvect=obs@10
+WIND     = bk32/.35/.35/122/.4
+r
+
+glev=1000
+gvcord=hght
+gfun=refd
+gvect=
+fint=5;10;15;20;25;30;35;40;45;50;55;60;65
+CLRBAR   = 32/H/LL/.07;.005/.85;.009|.82/2/.82/111/SW
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+garea    = $LLAT_SW;$LLON_SW;$ULAT_SW;$ULON_SW 
+DEVICE=gif|${type}_${core}_refd_1000m_sw_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_SE;$LLON_SE;$ULAT_SE;$ULON_SE
+CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+DEVICE=gif|${type}_${core}_refd_1000m_se_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_NE;$LLON_NE;$ULAT_NE;$ULON_NE
+DEVICE=gif|${type}_${core}_refd_1000m_ne_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_NW;$LLON_NW;$ULAT_NW;$ULON_NW
+DEVICE=gif|${type}_${core}_refd_1000m_nw_f${hr}.gif|$size1;$size2|C
+r
+
+ex
+
+endplot
+
+gpend
+
+### difference plots
+
+if [ $type = "prod" ]
+then
+
+gdplot << endplot
+
+GDFILE = today_1hprecip_para.grd + today_1hprecip_prod.grd
+skip=/3
+garea=$LLAT_MIDLAND;$LLON_MIDLAND;$ULAT_MIDLAND;$ULON_MIDLAND
+glev=2
+gfun=sub(dwpc,dwpc+2)
+DEVICE=gif|${type}_${core}_dwpcdiff_midland_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${coreloc} para-prod 2 m DWPC
+fint=-6;-4;-2;-1;1;2;4;6
+fline=14;2;17;5;0;3;23;26;4
+r
+
+gfun=sub(dwpc,dwpc+2)
+garea=$LLAT;$LLON;$ULAT;$ULON
+DEVICE=gif|${type}_${core}_dwpcdiff_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${coreloc} para-prod 2 m DWPC
+fint=-6;-4;-2;-1;1;2;4;6
+fline=14;2;17;5;0;3;23;26;4
+r
+
+ex
+
+endplot
+
+gpend
+
+fi
+
+fi
+
+if [ $dom = "hi" -o $dom = "guam" ]
+then
+# special hi/guam plots
+echo HI GUAM PLOTS
+
+gdplot2 << endplot2
+glev=0
+gvcord=none
+type=f
+gdpfun=CAPE
+gvect=
+fint=200;500;750;1000;1250;1500;1750;2000;2500;3000;3500;4000;4500
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+title=32/0/ ^ ${type} ${coreloc} sfcCAPE
+DEVICE = gif|${type}_${core}_sfccape_f${hr}.gif|$size1;$size2|C
+r
+
+gvcord=pres
+glev=500:700
+gdpfun=LAV(RELH)
+type=c/f
+FINT     = 50;60;70;80;90;98
+FLINE    = 0;21-26
+cint=10/10/50
+line=32/-12/1/2/1/0/T
+DEVICE = gif|${type}_${core}_500700rh_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} 500:700 hPa RH
+r
+
+cle=y
+glev=500:850
+DEVICE = gif|${type}_${core}_500850rh_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} 500:850 hPa RH
+r
+
+
+ex
+
+endplot2
+
+gpend
+
+fi
+# 
+
+if [ $dom = "ak" ]
+then
+## bonus regional plots
+
+gdplot << endplot
+
+glev=2
+gvcord=hght
+ctype=f
+gfun=tmpc
+gvect=obs@10
+SKIP     = /7
+WIND     = bk32/.4/.6/122/.6
+IJSKIP=0
+fint=$t2mfint
+fline=30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+garea    = $LLAT_ALEU;$LLON_ALEU;$ULAT_ALEU;$ULON_ALEU
+DEVICE=gif|${type}_${core}_t2ms_aleu_f${hr}.gif|$size1;$size2|C
+title=32/0/ ^ ${type} ${coreloc} _
+r
+
+garea=$LLAT_CENT;$LLON_CENT;$ULAT_CENT;$ULON_CENT
+DEVICE=gif|${type}_${core}_t2ms_cent_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_JUN;$LLON_JUN;$ULAT_JUN;$ULON_JUN
+DEVICE=gif|${type}_${core}_t2ms_jun_f${hr}.gif|$size1;$size2|C
+r
+
+gfun=dwpc
+fint=$dwpcfint
+fline=30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+DEVICE=gif|${type}_${core}_dwpc_f${hr}.gif|$size1;$size2|C
+garea    = $LLAT_ALEU;$LLON_ALEU;$ULAT_ALEU;$ULON_ALEU
+DEVICE=gif|${type}_${core}_dwpc_aleu_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_CENT;$LLON_CENT;$ULAT_CENT;$ULON_CENT
+DEVICE=gif|${type}_${core}_dwpc_cent_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_JUN;$LLON_JUN;$ULAT_JUN;$ULON_JUN
+DEVICE=gif|${type}_${core}_dwpc_jun_f${hr}.gif|$size1;$size2|C
+r
+
+glev=1000
+gvcord=hght
+gfun=refd
+gvect=
+fint=5;10;15;20;25;30;35;40;45;50;55;60;65
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+garea    = $LLAT_ALEU;$LLON_ALEU;$ULAT_ALEU;$ULON_ALEU
+DEVICE=gif|${type}_${core}_refd_1000m_aleu_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_CENT;$LLON_CENT;$ULAT_CENT;$ULON_CENT
+DEVICE=gif|${type}_${core}_refd_1000m_cent_f${hr}.gif|$size1;$size2|C
+r
+
+garea=$LLAT_JUN;$LLON_JUN;$ULAT_JUN;$ULON_JUN
+DEVICE=gif|${type}_${core}_refd_1000m_jun_f${hr}.gif|$size1;$size2|C
+r
+
+ex
+
+endplot
+
+gpend
+
+fi
+
+datestr=`date`
+echo DONE plotting $hr at $datestr
+
+# rm wrfcent4km*${hr}.grb
+
+
+############################################
+
+
+if [ ${hr} -gt 0 ]
+then
+if [ ${hr}%3 -eq 0 ]
+then
+
+echo IN THIS AREA
+
+ls -l WRFPCP${hr}.tm00_${type}
+
+if [ ! -e  WRFPCP${hr}.tm00_${type} ]
+then
+exit
+fi
+
+
+for type in $types
+do
+
+nagrib << endgrib
+ GBFILE   = WRFPCP${hr}.tm00_${type}
+ INDXFL   =
+ GDOUTF   = 3hprecip_${type}.grd
+ PROJ     =
+ GRDAREA  =
+ KXKY     =
+ MAXGRD   = 4999
+ CPYFIL   = GDS
+ GAREA    = dset
+ OUTPUT   = T
+ GBTBLS   =
+ GBDIAG   =
+ PDSEXT   = NO
+r
+
+
+ex
+
+endgrib
+
+gdplot << endplot
+
+ GDFILE = 3hprecip_${type}.grd
+ GDATTIM  = f${hr}
+ GLEVEL   = 0
+ GVCORD   = none
+ SKIP     = /8
+ SCALE    = 0
+ GFUNC    = p03i
+ CTYPE    = f
+ CONTUR   = 3
+ CINT     = 2
+ LINE     = 2/-12/1/1
+ FINT     = 0.01;5;10;15;20;25;30;35;50;75;100;125;150;175
+ FINT     = 0.01;.05;.1;.2;.3;.5;.75;1;1.5;2;2.5;3
+ FLINE    = 0;23;22;21;20;19;10;17;16;15;14;29;28;24;25
+ CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+ IJSKIP   = $SKIP
+ HILO     =
+ HLSYM    =
+ GVECT    =
+ WIND     = bm2/.45/.45/122/.5
+ REFVEC   =
+ CLEAR    = y
+ GAREA    = dset
+TITLE=32/0/ ${coreloc} ${type} P03I ^
+ garea    = $LLAT;$LLON;$ULAT;$ULON
+ PROJ     = $mproj/$lat1;$cenlon;$lat2
+ LATLON   = 0
+ DEVICE   = gif|${type}_${core}_3h_f${hr}.gif|${size1};${size2}|C
+ STNPLT   =
+
+r
+
+ex
+
+endplot
+
+gpend
+
+
+done
+
+# montage -geometry 550x412 today_3h_f${hr}.gif eta_3h_f${hr}.gif combined_3h_f${hr}.gif
+
+cp WRFPCP${hr}.tm00*  ../
+
+sleep 5
+
+fi
+fi
+
+cp *f${hr}.gif  ../
+
+done
+
+let "hr = hr + 1"
+typeset -Z2 hr
+
+done
+
+if [ ${hr} -eq 49 ] 
+then
+
+
+cd ../
+
+if [ $type = "para" ]
+then
+
+coreloc=${core}
+
+else
+
+coreloc=${core}
+domloc=${dom}
+
+if [ $core = "nmmb" ]
+then
+coreloc=nmm
+fi
+
+fi
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+
+sleep 90
+
+for type in $types
+do
+
+for hr in $hrs
+do
+
+while [ ! -e WRFPCP${hr}.tm00_${type} ] 
+do
+sleep 10
+done
+sleep 2
+
+nagrib << endgrib
+ GBFILE   = WRFPCP${hr}.tm00_${type}
+ INDXFL   =
+ GDOUTF   = 3hprecip_${type}.grd
+ PROJ     =
+ GRDAREA  =
+ KXKY     =
+ MAXGRD   = 4999
+ CPYFIL   = GDS
+ GAREA    = dset
+ OUTPUT   = T
+ GBTBLS   =
+ GBDIAG   =
+ PDSEXT   = NO
+r
+
+ex
+
+endgrib
+
+done
+
+
+
+gdplot << endplot
+
+ GDFILE   = 3hprecip_${type}.grd
+ GDATTIM  = f48
+ GLEVEL   = 0
+ GVCORD   = none
+ SKIP     = /8
+ SCALE    = 0
+ GFUNC    = p48i
+ CTYPE    = f
+ MAP      = 32/12/1
+ CONTUR   = 3
+ CINT     = 2
+ LINE     = 2/-12/1/1
+ FINT     = 0.01;5;10;15;20;25;30;35;50;75;100;125;150;175
+ FINT     = 0.01;.05;.1;.15;.2;.25;.3;.4;.5;.75;1;1.5;2;3
+ FINT     = .01;.1;.25;.5;.75;1;1.25;1.5;2;3;4;5;6;7
+ FLINE    = 0;23;22;21;20;19;10;17;16;15;14;29;28;24;25
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+ GVECT    =
+ WIND     = bm2/.45/.45/122/.5
+ REFVEC   =
+ CLEAR    = y
+ GAREA    = dset
+garea    = $LLAT;$LLON;$ULAT;$ULON
+ PROJ     = $mproj/$lat1;$cenlon;$lat2
+TITLE=32/0/ ${coreloc} ${type} P48I ^
+ LATLON   = 0
+ DEVICE   = gif|${type}_${core}_48h_total.gif|600;480|C
+ STNPLT   =
+r
+
+
+ex
+
+endplot
+
+hours="06 12 18 24 30 36 42 48"
+
+for hr in $hours
+do
+
+gdplot << endplot
+
+ GDFILE   = 3hprecip_${type}.grd
+ GDATTIM  = f${hr}
+ GLEVEL   = 0
+ GVCORD   = none
+ SKIP     = /8
+ SCALE    = 0
+ GFUNC    = p06i
+ CTYPE    = f
+ MAP      = 32/12/1
+ CONTUR   = 3
+ CINT     = 2
+ LINE     = 2/-12/1/1
+ FINT     = 0.01;5;10;15;20;25;30;35;50;75;100;125;150;175
+ FINT     = 0.01;.05;.1;.15;.2;.25;.3;.4;.5;.75;1;1.5;2;3
+ FINT     = .01;.1;.25;.5;.75;1;1.25;1.5;2;3;4;5;6;7
+ FLINE    = 0;23;22;21;20;19;10;17;16;15;14;29;28;24;25
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32/H/LL/.07;.035/.85;.009|.82/2/.82/111/SW
+ GVECT    =
+ WIND     = bm2/.45/.45/122/.5
+ REFVEC   =
+ CLEAR    = y
+ GAREA    = dset
+garea    = $LLAT;$LLON;$ULAT;$ULON
+ PROJ     = $mproj/$lat1;$cenlon;$lat2
+TITLE=32/0/ ${coreloc} ${type} ^ P06I
+ LATLON   = 0
+ DEVICE   = gif|${type}_${core}_6hprec_f${hr}.gif|$size1;$size2|C
+ STNPLT   =
+r
+
+ex
+
+endplot
+
+done
+
+done
+
+gpend
+
+
+echo cant send from this job
+
+mkdir -p /meso/noscrub/Matthew.Pyle/com/hiresw/prod/hiresw.${ETADATE}/${dom}gifs_${cyc}/
+cp *.gif /meso/noscrub/Matthew.Pyle/com/hiresw/prod/hiresw.${ETADATE}/${dom}gifs_${cyc}/
+
+mkdir -p /ptmpd1/Matthew.Pyle/process_4km_${dom}_compare_${cyc}
+cp *.gif  /ptmpd1/Matthew.Pyle/process_4km_${dom}_compare_${cyc}
+
+fi
+
+echo all done

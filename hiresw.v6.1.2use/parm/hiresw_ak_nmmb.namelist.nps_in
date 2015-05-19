@@ -1,0 +1,65 @@
+&share
+ wrf_core = 'NMB',
+ max_dom = 1,
+ start_date = 'YSTART-MSTART-DSTART_HSTART:00:00'
+ end_date   = 'YEND-MEND-DEND_HEND:00:00'
+ interval_seconds = 10800
+ io_form_geogrid = 2,
+ debug_level = 50 
+/
+
+&geogrid
+ parent_id =           0, 1, 2
+ parent_grid_ratio =   1, 3, 3
+ s_we           = 1, 1, 1
+ e_we           = 1350, 97, 349
+ s_sn           = 1, 1, 1
+ e_sn           = 1110, 97, 199
+ geog_data_res  = '2m', '2m', '2m'
+ dx = 0.028
+ dy = 0.027
+ map_proj = 'rotated_llb'
+ ref_lat   = 61.0
+ ref_lon   = -153.0
+ dom_cen_lat = 61.0, 40.0, 38.0
+ dom_cen_lon = -153.0, -100.0, -119.0
+ truelat1  =  61.0
+ truelat2  =  61.0
+ stand_lon =  -153.0
+ ncep_processing = .true. 
+ ncep_proc_prefix = 'b'
+ ncep_proc_domain_type = 'bgrid'
+ do_gwd = .false.
+ just_last = .false.
+ use_igbp = .true.
+/
+
+&ungrib
+ out_format = 'WPS'
+ spectral = .false.
+/
+
+&metgrid
+ fg_name = './FILE'
+ io_form_metgrid = 2, 
+ opt_metgrid_tbl_path         = './',
+ opt_output_from_metgrid_path = './',
+/
+ opt_output_from_metgrid_path = './',
+ opt_ignore_dom_center        = .false.
+ constants_name = './TAVGSFC'
+
+&nemsinterp
+ pt = 5000.
+ ptsgm = 30000.
+ nz = 50 
+ direct_temp = .true.
+ global = .false.
+ do_clouds = .false.
+ grib_src = 'GFS'
+ boundary_flux = .true.
+ lnsh = 5
+ lnsv = 5
+ vcoord = 1
+ coord_levs = 0.00,0.008005803,0.016543405,0.025547907,0.03491926, 0.044690812,0.055029315,0.066101517,0.07804082,0.090813874,0.104487377,0.119094681,0.134569085,0.150810539,0.167785693,0.185494547,0.203970452,0.223346807,0.243590262,0.264934267,0.287945773,0.31585973,0.349609938,0.389529898,0.433852059,0.482643122,0.534935935,0.588762848,0.642456362,0.694649125,0.743440187,0.786628448,0.822312956,0.850226913,0.871404169,0.888079173,0.902186226,0.914292279,0.924697482,0.933768684,0.941872736,0.949309788,0.95624659,0.963049992,0.969619943,0.975923095,0.981759346,0.987162048,0.992064499,0.9964,1.00
+/
