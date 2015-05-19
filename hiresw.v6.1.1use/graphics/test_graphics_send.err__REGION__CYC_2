@@ -1,0 +1,1742 @@
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+montage: unable to open image `prod_arw_1h_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f37.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f37.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f37.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f13.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f14.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f14.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f14.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f14.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f15.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f15.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f15.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f15.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f16.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f16.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f16.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f40.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f41.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f41.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f41.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f41.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f42.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f42.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f42.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f18.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f19.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f19.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f19.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f19.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f20.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f20.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f20.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f20.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f21.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f21.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f21.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f33.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f46.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f46.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f46.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f22.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f22.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f22.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f34.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f35.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f35.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f35.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f35.gif: No such file or directory
+montage: unable to open image `prod_arw_1h_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_1h_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_1h_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_1h_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_1h_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_1h_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_3hprec_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_3hprec_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_3hprec_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_3hprec_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_3hprec_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_3hprec_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mucape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mucape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mucape_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mucape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mucape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mucape_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refd_1000m_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refd_1000m_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refd_1000m_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refd_1000m_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refd_1000m_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refd_1000m_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_t2ms_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_t2ms_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_t2ms_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_t2ms_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_t2ms_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_t2ms_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_dwpc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_dwpc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_dwpc_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_dwpc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_dwpc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_dwpc_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_300z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_300z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_300z_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_300z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_300z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_300z_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500z_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500z_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500z_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_850rh_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_850rh_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_925winds_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_925winds_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_925winds_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_925winds_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_925winds_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_925winds_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_mx1000refd_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_mx1000refd_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_mx1000refd_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_mx1000refd_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_mx1000refd_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_mx1000refd_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_echotop_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_echotop_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_echotop_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_echotop_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_echotop_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_echotop_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_tcolc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_tcolc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_tcolc_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_tcolc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_tcolc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_tcolc_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pwtr_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pwtr_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pwtr_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pwtr_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pwtr_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pwtr_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_refc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_refc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_refc_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_refc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_refc_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_refc_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_pblli_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_pblli_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_pblli_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_pblli_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_pblli_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_pblli_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_48h_total_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_48h_total_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_48h_total_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_48h_total_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_48h_total_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_48h_total_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500850rh_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500850rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500850rh_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_500700rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_500700rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_500700rh_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_500700rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_500700rh_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_500700rh_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_arw_sfccape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_arw_sfccape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `comboarw_sfccape_f36.gif' @ montage.c/MontageImageCommand/1649.
+montage: unable to open image `prod_nmmb_sfccape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: unable to open image `para_nmmb_sfccape_f36.gif': No such file or directory @ blob.c/OpenBlob/2480.
+montage: missing an image filename `combonmmb_sfccape_f36.gif' @ montage.c/MontageImageCommand/1649.
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+combo*_f36.gif: No such file or directory
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+*48h_tot*.gif: No such file or directory
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************
+/com/date/t_CYC_z: No such file or directory
+******************WARNING**WARNING**WARNING******************
+
+This is a National Weather Service (NWS) computer system. NWS 
+computer systems are provided for the processing of Official 
+U.S. Government information only. All data contained on NWS 
+computer systems is owned by the NWS and may be monitored, 
+intercepted, recorded, read, copied, or captured in any manner 
+and disclosed in any manner, by authorized personnel.
+
+	THERE IS NO RIGHT OF PRIVACY IN THIS SYSTEM
+
+System personnel may give to law enforcement officials any 
+potential evidence of crime found on NWS computer systems. 
+USE OF THIS SYSTEM BY ANY USER, AUTHORIZED OR UNAUTHORIZED, 
+CONSTITUTES CONSENT TO THIS MONITORING, INTERCEPTION, RECORDING, 
+READING, COPYING, OR CAPTURING and DISCLOSURE.
+
+******************WARNING**WARNING**WARNING******************

@@ -1,0 +1,98 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_hi122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_hi122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_4
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_hi_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_hi_compare_12/
+
+hrs="37 38 39 40 41 42 43 44 45 46 47 48"
+
+### montage block
+
+if [ hi = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  hi = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+fi
+
+
+
+m1=600
+m2=480
+
+TARGDIR=/home/www/emc/htdocs/mmb/mpyle/hiresw/retro/2015051712/hi/
+TARGDIR=/home/www/emc/htdocs/mmb/mpyle/hiresw/hi12
+ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir -p $TARGDIR"
+echo scp to TARGDIR $TARGDIR
+
+for hr in $hrs
+do
+for typ in $types
+do
+
+# cd $hr
+
+
+
+montage prod_arw_${typ}_f${hr}.gif para_arw_${typ}_f${hr}.gif -geometry ${m1}x${m2}+1+1 comboarw_${typ}_f${hr}.gif
+# mv  comboarw_${typ}_f${hr}.gif ../
+
+montage prod_nmmb_${typ}_f${hr}.gif para_nmmb_${typ}_f${hr}.gif -geometry ${m1}x${m2}+1+1 combonmmb_${typ}_f${hr}.gif
+# mv  combonmmb_${typ}_f${hr}.gif ../
+
+# cd ..
+
+done
+
+scp combo*_f${hr}.gif mpyle@emcrzdm.ncep.noaa.gov:${TARGDIR}/
+
+done
+
+
+scp *48h_tot*.gif mpyle@emcrzdm.ncep.noaa.gov:${TARGDIR}/
+
+scp /com/date/t12z mpyle@emcrzdm.ncep.noaa.gov:${TARGDIR}/
+
+# ssh mpyle@emcrzdm.ncep.noaa.gov "cp /home/www/emc/htdocs/mmb/mpyle/hiresw/retro/html/*.html $TARGDIR"
+
+datenow=`date +%Y%m%d`
+timenow=`date +%H%M`
+ssh mpyle@emcrzdm.ncep.noaa.gov "cat /home/www/emc/htdocs/mmb/mpyle/hiresw/retro/html/info.html \
+                                  | sed s:_WEBCYC_:12:g | sed s:_WEBDATE_:20150517:g  \
+                                  | sed s:_WEBLOC_:hi:g \
+                                  | sed s:_DATESTR_:${datenow}:g | sed s:_TIMESTR_:${timenow}:g > $TARGDIR/info.html"
+                      

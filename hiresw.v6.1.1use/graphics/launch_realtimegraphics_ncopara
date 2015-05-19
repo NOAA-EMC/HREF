@@ -1,0 +1,30 @@
+#! /bin/ksh
+
+REGION=${1}
+CYC=${2}
+# DATE=${3}
+
+echo REGION $REGION
+echo CYC $CYC
+
+DATE=`cat /com/date/t${CYC}z | cut -c7-14`
+
+echo DATE $DATE
+
+while [ ! -f /com2/hiresw/para/hiresw.${DATE}/hiresw.t${CYC}z.arw_5km.f48.${REGION}.grib2 ]
+do
+echo STILL LOOKING FOR ARW OUTPUT
+sleep 30
+done
+
+while [ ! -f /com2/hiresw/para/hiresw.${DATE}/hiresw.t${CYC}z.nmmb_5km.f48.${REGION}.grib2 ]
+do
+echo STILL LOOKING FOR NMMB OUTPUT
+sleep 30
+done
+
+cat sub_graphics_ncoparaweb.lsf_in_realtime_nco | sed s:_REGION_:${REGION}:g | sed s:_CYC_:${CYC}:g  | sed s:_DATE_:${DATE}:g   > \
+sub_graphics.lsf
+
+bsub < sub_graphics.lsf
+

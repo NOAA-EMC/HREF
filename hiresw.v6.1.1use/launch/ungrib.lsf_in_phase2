@@ -30,7 +30,7 @@ export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export COMGFS=/com/gfs/prod/gfs.${DATE}
+export COMINgfs=/com/gfs/prod/gfs.${DATE}
 export DATAROOT=/_DISK_/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
 

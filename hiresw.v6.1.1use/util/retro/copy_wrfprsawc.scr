@@ -1,0 +1,12 @@
+#! /bin/bash
+
+dname=$1
+core=$2
+cyc=$3
+
+mkdir /meso/noscrub/Matthew.Pyle/com/hiresw/test/${dname}
+
+tdir=/meso/noscrub/Matthew.Pyle/com/hiresw/test/${dname}
+
+cp ./${dname}/conus${core}.t${cyc}z.wrfprs??.grib1.awcspc $tdir/
+
