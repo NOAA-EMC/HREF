@@ -1,0 +1,23 @@
+###############################################################################
+#
+#  Regional NMM-B with pure binary input
+#  6x5 compute tasks / 1 thread / opnl physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Compare NMMB-regional results with previous trunk version"
+
+export CNTL_DIR=NMMB_reg
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_nio_0000h_00m_00.00s \
+		   nmmb_hst_01_bin_0012h_00m_00.00s nmmb_hst_01_nio_0012h_00m_00.00s \
+		   nmmb_hst_01_bin_0048h_00m_00.00s nmmb_hst_01_nio_0048h_00m_00.00s \
+		   nmmb_rst_01_bin_0024h_00m_00.00s nmmb_rst_01_nio_0024h_00m_00.00s \
+		   pcp.hr1.01.bin  pcp.hr2.01.bin  pcp.hr3.01.bin  pcp.hr4.01.bin    \
+		   pcp.hr5.01.bin  pcp.hr6.01.bin  pcp.hr7.01.bin"
+
+export_nems
+export_nmm
+export GBRG=reg
+export WPREC=true
+
+RUN_SCRIPT=rt_nmm.sh

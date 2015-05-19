@@ -1,0 +1,20 @@
+###############################################################################
+#
+#  Regional NMM-B with NEMSIO input
+#  6x5 compute tasks / 1 thread / opnl physics / free fcst / nemsio input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional NEMSIO as input file"
+
+export CNTL_DIR=NMMB_reg
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0012h_00m_00.00s \
+        	   nmmb_hst_01_nio_0000h_00m_00.00s nmmb_hst_01_nio_0012h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=reg
+export NEMSI=true
+export FCSTL=12
+
+RUN_SCRIPT=rt_nmm.sh

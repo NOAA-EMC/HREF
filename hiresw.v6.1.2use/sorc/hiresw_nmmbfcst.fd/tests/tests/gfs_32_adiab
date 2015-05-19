@@ -1,0 +1,17 @@
+###############################################################################
+#
+# TEST   - GFS  adiabatic run
+#        - 30 compute tasks / 1 thread
+#
+###############################################################################
+
+export TEST_DESCR="Compare GFS adiabatic results with previous trunk version"
+
+export CNTL_DIR=GFS_ADIAB
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24"
+
+export_gsm
+export NDAYS=1
+export ADIAB=.true.
+
+RUN_SCRIPT=rt_gfs.sh

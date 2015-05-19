@@ -1,0 +1,84 @@
+SHELL       = /bin/ksh
+
+include       $(ESMFMKFILE)
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+NETCDF_INC  = $(NETCDF_INCLUDE)
+NETCDF_LIB  = $(NETCDF_LDFLAGS)
+
+NEMSIO_INC  = -I/nems/save/Jun.Wang/nceplibs/nemsio/nemsgfs_newrad/incmod
+NEMSIO_LIB  = -L/nems/save/Jun.Wang/nceplibs/nemsio/nemsgfs_newrad -lnemsio
+
+W3_LIB      = ${W3NCO_LIBd} ${W3EMC_LIBd}
+BACIO_LIB   = ${BACIO_LIB4}
+SP_LIB      = ${SP_LIBd}
+SYS_LIB     =
+
+POSTDIR     = /global/save/Shrinivas.Moorthi/nceppost_moorthi/sorc/ncep_post.fd
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+
+W3_POST_LIB = ${W3NCO_LIB4} ${W3EMC_LIB4}
+G2_LIB      = ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
+XML_LIB     = ${XMLPARSE_LIB}
+SIGIO_LIB   = ${SIGIO_LIB4}
+SFCIO_LIB   = ${SFCIO_LIB4}
+
+EXTLIBS     = $(NEMSIO_LIB) \
+              $(W3_LIB) \
+              $(BACIO_LIB) \
+              $(SP_LIB) \
+              $(ESMF_LIB) \
+              $(NETCDF_LIB) \
+              $(SYS_LIB)
+
+
+EXTLIBS_POST = $(POST_LIB) \
+               $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+FC          = ${COMP_MPI} -g  -mkl=sequential
+FPP         = -fpp
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC) $(NETCDF_INC)
+TRAPS       =
+#TRAPS       = -ftrapuv -fno-inline -no-ip -traceback -fpe0 -ftz -check all -check noarg_temp_created -fp-stack-check
+
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model precise -xAVX
+
+OPTS_NMM    = -O2 
+OPTS_GFS    = -O3
+OPTS_GEN    = -O2
+OPTS_FIM    = -O2
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DTHREAD_2D -DCHNK_RRTM=8
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm

@@ -1,0 +1,36 @@
+#! /bin/sh
+
+
+targdir=/meso/noscrub/Matthew.Pyle/com/hiresw/test/
+
+dir=${1}
+core=${2}
+cyc=${3}
+dom=${4}
+
+
+hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+
+mkdir -p $targdir/${dir}/
+
+for hr in $hrs
+do
+
+f1=hiresw.t${cyc}z.${core}_5km.f${hr}.${dom}.grib2
+flout=hiresw.t${cyc}z.${core}_5km.f${hr}.${dom}.grib2
+
+if [ ! -e $targdir/${dir}/$flout ]
+then
+
+if [ -e ${dir}/$f1 ]
+then
+cp ${dir}/$f1  $targdir/${dir}/$flout
+
+else
+echo NOTHING FOUND
+
+fi
+
+fi
+
+done

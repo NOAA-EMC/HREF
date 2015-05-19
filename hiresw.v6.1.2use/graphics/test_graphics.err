@@ -1,0 +1,786 @@
+chmod: cannot access `/poescript__pr06': No such file or directory
+D1<L1>: POE start main, Mallinfo Heap: 139264 bytes
+
+D1<L1>: ./host.list file did not exist
+ATTENTION: 0031-408  100 tasks allocated by Resource Manager, continuing...
+D1<L1>: 05/19 11:55:06.800478  The job key from RM is: 1441701
+D1<L1>: 05/19 11:55:06.800488  The job name is: 1441701
+D1<L1>: 05/19 11:55:06.800495  job_info->host_count:5
+D1<L1>: Jobid = 1441701
+  40:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  41:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  42:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  43:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  44:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  45:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  46:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  47:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  48:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  49:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  50:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  51:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  52:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  53:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  54:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  55:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  56:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  57:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  58:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  59:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   0:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   1:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   2:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   3:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   4:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   5:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   6:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   7:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   8:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+   9:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  10:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  11:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  12:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  13:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  14:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  15:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  16:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  18:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  19:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  17:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  60:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  61:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  80:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  81:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  62:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  63:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  82:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  83:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  84:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  64:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  85:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  65:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  66:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  86:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  67:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  87:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  88:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  89:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  90:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  91:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  68:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  92:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  93:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  69:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  70:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  94:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  71:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  95:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  72:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  96:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  73:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  97:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  74:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  98:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  75:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  99:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  76:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  77:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  78:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  79:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  20:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  21:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  22:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  23:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  24:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  25:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  26:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  27:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  28:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  29:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  30:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  31:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  32:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  33:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  34:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/deg_late_precip.scr>
+  35:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/deg_late_precip.scr>
+  36:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  37:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  38:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  39:INFO: 0031-724  Executing program: </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco>
+  20:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd'   1:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+: No such file or directory
+  87:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+   2:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  27:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  60:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  67:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  80:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  42:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd'   7:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd'   5:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+  24:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  26:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  25:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd'  29:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd'  83:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+  91:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  31:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  65:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd'   8:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+: No such file or directory
+  69:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  65:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+   2:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  20:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  42:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  76:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'   1:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+  67:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  71:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  73:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  71:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  73:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  63:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  64:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  64:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  62:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  66:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  66:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  78:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  80:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  87:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  84:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  94:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  98:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  84:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  60:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  27:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  24:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  26:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  28:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  28:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  22:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  25:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  45:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  47:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  51:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  31:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory  29:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+
+  23:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  33:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  33:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory  51:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+
+   5:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+   7:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+   9:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  91:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  85:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+   9:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory  89:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+
+  83:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  89:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+   3:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  93:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  86:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd'  82:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+  69:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  40:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'  44:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'  61:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  75:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+  46:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd': No such file or directory
+  45:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  46:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  47:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  48:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'  49:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  50:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'  53:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_para.grd': No such file or directory
+  53:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+   8:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+   4:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_para.grd'  18:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  86:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory: No such file or directory
+
+  90:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd'  96:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd'   4:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  88:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+   6:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'  10:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+  36:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory  38:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory
+  30:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+
+  52:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  81:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd'  95:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd'  97:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+  12:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  55:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd'  41:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+: No such file or directory
+  57:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+  79:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd'  68:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+  70:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  72:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  74:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory
+  99:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+  13:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  35:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd'  11:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+: No such file or directory
+  37:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  19:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd'  39:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd': No such file or directory
+  77:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/3hprecip_prod.grd'  17:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+: No such file or directory
+: No such file or directory
+  15:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+  21:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+  32:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd'  34:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory
+: No such file or directory
+  59:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+  56:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  58:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd'  54:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory
+: No such file or directory
+  14:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/3hprecip_prod.grd': No such file or directory
+  16:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd'   0:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd': No such file or directory
+: No such file or directory
+   0:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/*.grd'   1:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/*.grd': No such file or directory
+: No such file or directory
+   1:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prnmmb_comp_06/WRFP*'   0:rm: cannot remove `/ptmpd3/Matthew.Pyle/process_prarw_comp_06/WRFP*': No such file or directory
+: No such file or directory
+   1:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   0:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   0:rm: cannot remove `wrfcent4km_radar2_00.grb': No such file or directory
+   1:rm: cannot remove `wrfcent4km_radar2_00.grb': No such file or directory
+  17:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  19:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   3:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  15:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   4:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   7:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   9:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   5:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  10:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  18:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  16:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   2:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  13:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  11:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  14:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  12:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   8:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+   6:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  51:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  33:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  21:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  44:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  31:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  39:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  59:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  23:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  37:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  30:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  32:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  36:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  24:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  26:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  28:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  27:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  38:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  20:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  25:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  22:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  29:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  45:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  53:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  50:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  75:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  46:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  40:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  43:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  41:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  49:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  55:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  57:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  52:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  58:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  48:rm: cannot remove `today_1hprecip_para.grd'  47:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+: No such file or directory
+  42:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  54:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  56:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  70:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  67:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  79:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  72:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  65:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  71:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  77:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  78:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  76:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  73:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  62:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  61:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  69:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  87:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  60:rm: cannot remove `today_1hprecip_para.grd'  68:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+: No such file or directory
+  63:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  64:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  74:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  66:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  80:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  90:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  83:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  85:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  81:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  88:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  92:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  86:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  99:rm: cannot remove `today_1hprecip_para.grd'  97:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+: No such file or directory
+  89:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  93:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  91:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  95:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  82:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  94:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  84:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+  98:rm: cannot remove `today_1hprecip_para.grd'  96:rm: cannot remove `today_1hprecip_para.grd': No such file or directory
+: No such file or directory
+   1:/meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco[1026]: [: %3: arithmetic syntax error
+  17:rm: cannot remove `wrfcent4km_radar2_24.grb': No such file or directory
+   0:/meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco[1026]: [: %3: arithmetic syntax error
+  19:rm: cannot remove `wrfcent4km_radar2_27.grb': No such file or directory
+   1:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   3:rm: cannot remove `wrfcent4km_radar2_03.grb': No such file or directory
+   0:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  15:rm: cannot remove `wrfcent4km_radar2_21.grb'   4:rm: cannot remove `wrfcent4km_radar2_06.grb': No such file or directory
+: No such file or directory
+   5:rm: cannot remove `wrfcent4km_radar2_06.grb': No such file or directory
+   9:rm: cannot remove `wrfcent4km_radar2_12.grb': No such file or directory
+   7:rm: cannot remove `wrfcent4km_radar2_09.grb': No such file or directory
+   2:rm: cannot remove `wrfcent4km_radar2_03.grb': No such file or directory
+  13:rm: cannot remove `wrfcent4km_radar2_18.grb': No such file or directory
+  10:rm: cannot remove `wrfcent4km_radar2_15.grb': No such file or directory
+  16:rm: cannot remove `wrfcent4km_radar2_24.grb': No such file or directory
+  11:rm: cannot remove `wrfcent4km_radar2_15.grb': No such file or directory
+   6:rm: cannot remove `wrfcent4km_radar2_09.grb': No such file or directory
+  18:rm: cannot remove `wrfcent4km_radar2_27.grb': No such file or directory
+  12:rm: cannot remove `wrfcent4km_radar2_18.grb': No such file or directory
+  14:rm: cannot remove `wrfcent4km_radar2_21.grb': No such file or directory
+   8:rm: cannot remove `wrfcent4km_radar2_12.grb': No such file or directory
+  38:rm: cannot remove `wrfcent4km_radar2_02.grb': No such file or directory
+  37:rm: cannot remove `wrfcent4km_radar2_01.grb': No such file or directory
+  36:rm: cannot remove `wrfcent4km_radar2_01.grb': No such file or directory
+  25:rm: cannot remove `wrfcent4km_radar2_36.grb': No such file or directory
+  31:rm: cannot remove `wrfcent4km_radar2_45.grb': No such file or directory
+  27:rm: cannot remove `wrfcent4km_radar2_39.grb': No such file or directory
+  33:rm: cannot remove `wrfcent4km_radar2_48.grb'  39:rm: cannot remove `wrfcent4km_radar2_02.grb': No such file or directory
+: No such file or directory
+  24:rm: cannot remove `wrfcent4km_radar2_36.grb': No such file or directory
+  20:rm: cannot remove `wrfcent4km_radar2_30.grb': No such file or directory
+  26:rm: cannot remove `wrfcent4km_radar2_39.grb': No such file or directory
+  28:rm: cannot remove `wrfcent4km_radar2_42.grb': No such file or directory
+  32:rm: cannot remove `wrfcent4km_radar2_48.grb': No such file or directory
+  30:rm: cannot remove `wrfcent4km_radar2_45.grb': No such file or directory
+  29:rm: cannot remove `wrfcent4km_radar2_42.grb': No such file or directory
+  22:rm: cannot remove `wrfcent4km_radar2_33.grb': No such file or directory
+  23:rm: cannot remove `wrfcent4km_radar2_33.grb': No such file or directory
+  21:rm: cannot remove `wrfcent4km_radar2_30.grb': No such file or directory
+  87:rm: cannot remove `wrfcent4km_radar2_38.grb': No such file or directory
+  65:rm: cannot remove `wrfcent4km_radar2_22.grb': No such file or directory
+  75:rm: cannot remove `wrfcent4km_radar2_29.grb': No such file or directory
+  45:rm: cannot remove `wrfcent4km_radar2_07.grb': No such file or directory
+  43:rm: cannot remove `wrfcent4km_radar2_05.grb': No such file or directory
+  80:rm: cannot remove `wrfcent4km_radar2_34.grb': No such file or directory
+  67:rm: cannot remove `wrfcent4km_radar2_23.grb': No such file or directory
+  90:rm: cannot remove `wrfcent4km_radar2_41.grb': No such file or directory
+  78:rm: cannot remove `wrfcent4km_radar2_32.grb': No such file or directory
+  71:rm: cannot remove `wrfcent4km_radar2_26.grb': No such file or directory
+  85:rm: cannot remove `wrfcent4km_radar2_37.grb'  83:rm: cannot remove `wrfcent4km_radar2_35.grb': No such file or directory
+: No such file or directory
+  81:rm: cannot remove `wrfcent4km_radar2_34.grb': No such file or directory
+  69:rm: cannot remove `wrfcent4km_radar2_25.grb': No such file or directory
+  40:rm: cannot remove `wrfcent4km_radar2_04.grb': No such file or directory
+  79:rm: cannot remove `wrfcent4km_radar2_32.grb': No such file or directory
+  77:rm: cannot remove `wrfcent4km_radar2_31.grb': No such file or directory
+  74:rm: cannot remove `wrfcent4km_radar2_29.grb': No such file or directory
+  55:rm: cannot remove `wrfcent4km_radar2_14.grb': No such file or directory
+  76:rm: cannot remove `wrfcent4km_radar2_31.grb': No such file or directory
+  73:rm: cannot remove `wrfcent4km_radar2_28.grb': No such file or directory
+  62:rm: cannot remove `wrfcent4km_radar2_20.grb': No such file or directory
+  64:rm: cannot remove `wrfcent4km_radar2_22.grb': No such file or directory
+  60:rm: cannot remove `wrfcent4km_radar2_19.grb': No such file or directory
+  97:rm: cannot remove `wrfcent4km_radar2_46.grb': No such file or directory
+  66:rm: cannot remove `wrfcent4km_radar2_23.grb': No such file or directory
+  63:rm: cannot remove `wrfcent4km_radar2_20.grb': No such file or directory
+  72:rm: cannot remove `wrfcent4km_radar2_28.grb': No such file or directory
+  70:rm: cannot remove `wrfcent4km_radar2_26.grb': No such file or directory
+  93:rm: cannot remove `wrfcent4km_radar2_43.grb': No such file or directory
+  47:rm: cannot remove `wrfcent4km_radar2_08.grb'  95:rm: cannot remove `wrfcent4km_radar2_44.grb': No such file or directory
+: No such file or directory
+  49:rm: cannot remove `wrfcent4km_radar2_10.grb': No such file or directory
+  41:rm: cannot remove `wrfcent4km_radar2_04.grb': No such file or directory
+  68:rm: cannot remove `wrfcent4km_radar2_25.grb': No such file or directory
+  44:rm: cannot remove `wrfcent4km_radar2_07.grb': No such file or directory
+  42:rm: cannot remove `wrfcent4km_radar2_05.grb': No such file or directory
+  61:rm: cannot remove `wrfcent4km_radar2_19.grb': No such file or directory
+  56:rm: cannot remove `wrfcent4km_radar2_16.grb': No such file or directory
+  54:rm: cannot remove `wrfcent4km_radar2_14.grb': No such file or directory
+  46:rm: cannot remove `wrfcent4km_radar2_08.grb': No such file or directory
+  53:rm: cannot remove `wrfcent4km_radar2_13.grb': No such file or directory
+  91:rm: cannot remove `wrfcent4km_radar2_41.grb'  48:rm: cannot remove `wrfcent4km_radar2_10.grb': No such file or directory
+: No such file or directory
+  57:rm: cannot remove `wrfcent4km_radar2_16.grb': No such file or directory
+  50:rm: cannot remove `wrfcent4km_radar2_11.grb': No such file or directory
+  58:rm: cannot remove `wrfcent4km_radar2_17.grb': No such file or directory
+  99:rm: cannot remove `wrfcent4km_radar2_47.grb': No such file or directory
+  59:rm: cannot remove `wrfcent4km_radar2_17.grb': No such file or directory
+  89:rm: cannot remove `wrfcent4km_radar2_40.grb': No such file or directory
+  88:rm: cannot remove `wrfcent4km_radar2_40.grb': No such file or directory
+  84:rm: cannot remove `wrfcent4km_radar2_37.grb': No such file or directory
+  94:rm: cannot remove `wrfcent4km_radar2_44.grb': No such file or directory
+  52:rm: cannot remove `wrfcent4km_radar2_13.grb': No such file or directory
+  82:rm: cannot remove `wrfcent4km_radar2_35.grb': No such file or directory
+  86:rm: cannot remove `wrfcent4km_radar2_38.grb': No such file or directory
+  51:rm: cannot remove `wrfcent4km_radar2_11.grb': No such file or directory
+  92:rm: cannot remove `wrfcent4km_radar2_43.grb': No such file or directory
+  96:rm: cannot remove `wrfcent4km_radar2_46.grb': No such file or directory
+  98:rm: cannot remove `wrfcent4km_radar2_47.grb': No such file or directory
+   1:rm: cannot remove `wrfcent4km_radar2_00.grb': No such file or directory
+   0:rm: cannot remove `wrfcent4km_radar2_00.grb': No such file or directory
+  37:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  39:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  36:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  43:rm: cannot remove `today_1hprecip_prod.grd'  41:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+: No such file or directory
+  45:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  38:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  47:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  67:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  49:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  65:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  71:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  61:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  63:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  81:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  69:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  83:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  75:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  97:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  85:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  91:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  87:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  57:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  89:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  51:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  59:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  73:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  95:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  99:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  58:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  60:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  77:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  93:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  55:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  79:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  53:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  40:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  62:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  37:rm: cannot remove `wrfcent4km_radar2_01.grb': No such file or directory
+  80:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  64:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  56:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  48:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  78:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  84:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  44:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  36:rm: cannot remove `wrfcent4km_radar2_01.grb': No such file or directory
+  39:rm: cannot remove `wrfcent4km_radar2_02.grb': No such file or directory
+  54:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  82:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  86:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  92:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  88:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  46:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  52:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  90:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  42:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  74:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   3:ls: cannot access WRFPCP03.tm00_prod: No such file or directory
+  43:rm: cannot remove `wrfcent4km_radar2_05.grb': No such file or directory
+  41:rm: cannot remove `wrfcent4km_radar2_04.grb': No such file or directory
+  66:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  76:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  68:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  38:rm: cannot remove `wrfcent4km_radar2_02.grb': No such file or directory
+  45:rm: cannot remove `wrfcent4km_radar2_07.grb': No such file or directory
+  47:rm: cannot remove `wrfcent4km_radar2_08.grb': No such file or directory
+  50:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  94:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  96:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  72:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   5:ls: cannot access WRFPCP06.tm00_prod: No such file or directory
+  70:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  67:rm: cannot remove `wrfcent4km_radar2_23.grb': No such file or directory
+  49:rm: cannot remove `wrfcent4km_radar2_10.grb': No such file or directory
+   7:ls: cannot access WRFPCP09.tm00_prod: No such file or directory
+  65:rm: cannot remove `wrfcent4km_radar2_22.grb': No such file or directory
+   1:/meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco[1026]: [: %3: arithmetic syntax error
+   2:ls: cannot access WRFPCP03.tm00_prod: No such file or directory
+  98:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 1 exited: rc=0
+  61:rm: cannot remove `wrfcent4km_radar2_19.grb': No such file or directory
+  63:rm: cannot remove `wrfcent4km_radar2_20.grb': No such file or directory
+  71:rm: cannot remove `wrfcent4km_radar2_26.grb': No such file or directory
+  81:rm: cannot remove `wrfcent4km_radar2_34.grb': No such file or directory
+  69:rm: cannot remove `wrfcent4km_radar2_25.grb': No such file or directory
+   0:/meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/degrib_process_hireswcompare.scr_part_nco[1026]: [: %3: arithmetic syntax error
+INFO: 0031-251  task 0 exited: rc=0
+  83:rm: cannot remove `wrfcent4km_radar2_35.grb': No such file or directory
+  97:rm: cannot remove `wrfcent4km_radar2_46.grb': No such file or directory
+  85:rm: cannot remove `wrfcent4km_radar2_37.grb': No such file or directory
+  17:ls: cannot access WRFPCP24.tm00_prod: No such file or directory
+  91:rm: cannot remove `wrfcent4km_radar2_41.grb': No such file or directory
+  57:rm: cannot remove `wrfcent4km_radar2_16.grb': No such file or directory
+  87:rm: cannot remove `wrfcent4km_radar2_38.grb': No such file or directory
+  75:rm: cannot remove `wrfcent4km_radar2_29.grb': No such file or directory
+  89:rm: cannot remove `wrfcent4km_radar2_40.grb': No such file or directory
+  51:rm: cannot remove `wrfcent4km_radar2_11.grb': No such file or directory
+  59:rm: cannot remove `wrfcent4km_radar2_17.grb': No such file or directory
+  73:rm: cannot remove `wrfcent4km_radar2_28.grb': No such file or directory
+  95:rm: cannot remove `wrfcent4km_radar2_44.grb': No such file or directory
+  15:ls: cannot access WRFPCP21.tm00_prod: No such file or directory
+   9:ls: cannot access WRFPCP12.tm00_prod: No such file or directory
+  99:rm: cannot remove `wrfcent4km_radar2_47.grb': No such file or directory
+  58:rm: cannot remove `wrfcent4km_radar2_17.grb': No such file or directory
+  19:ls: cannot access WRFPCP27.tm00_prod: No such file or directory
+  60:rm: cannot remove `wrfcent4km_radar2_19.grb': No such file or directory
+  77:rm: cannot remove `wrfcent4km_radar2_31.grb': No such file or directory
+  55:rm: cannot remove `wrfcent4km_radar2_14.grb': No such file or directory
+  93:rm: cannot remove `wrfcent4km_radar2_43.grb': No such file or directory
+  79:rm: cannot remove `wrfcent4km_radar2_32.grb': No such file or directory
+  53:rm: cannot remove `wrfcent4km_radar2_13.grb': No such file or directory
+  40:rm: cannot remove `wrfcent4km_radar2_04.grb': No such file or directory
+  62:rm: cannot remove `wrfcent4km_radar2_20.grb': No such file or directory
+  13:ls: cannot access WRFPCP18.tm00_prod: No such file or directory
+  25:ls: cannot access WRFPCP36.tm00_prod: No such file or directory
+  80:rm: cannot remove `wrfcent4km_radar2_34.grb': No such file or directory
+  48:rm: cannot remove `wrfcent4km_radar2_10.grb': No such file or directory
+  56:rm: cannot remove `wrfcent4km_radar2_16.grb': No such file or directory
+  23:ls: cannot access WRFPCP33.tm00_prod: No such file or directory
+  64:rm: cannot remove `wrfcent4km_radar2_22.grb': No such file or directory
+  27:ls: cannot access WRFPCP39.tm00_prod: No such file or directory
+  29:ls: cannot access WRFPCP42.tm00_prod: No such file or directory
+  78:rm: cannot remove `wrfcent4km_radar2_32.grb': No such file or directory
+  12:ls: cannot access WRFPCP18.tm00_prod: No such file or directory
+  21:ls: cannot access WRFPCP30.tm00_prod: No such file or directory
+  11:ls: cannot access WRFPCP15.tm00_prod: No such file or directory
+  84:rm: cannot remove `wrfcent4km_radar2_37.grb': No such file or directory
+  44:rm: cannot remove `wrfcent4km_radar2_07.grb': No such file or directory
+  54:rm: cannot remove `wrfcent4km_radar2_14.grb': No such file or directory
+  82:rm: cannot remove `wrfcent4km_radar2_35.grb': No such file or directory
+  86:rm: cannot remove `wrfcent4km_radar2_38.grb': No such file or directory
+  92:rm: cannot remove `wrfcent4km_radar2_43.grb': No such file or directory
+  46:rm: cannot remove `wrfcent4km_radar2_08.grb': No such file or directory
+  88:rm: cannot remove `wrfcent4km_radar2_40.grb': No such file or directory
+  52:rm: cannot remove `wrfcent4km_radar2_13.grb': No such file or directory
+  42:rm: cannot remove `wrfcent4km_radar2_05.grb': No such file or directory
+  90:rm: cannot remove `wrfcent4km_radar2_41.grb': No such file or directory
+  31:ls: cannot access WRFPCP45.tm00_prod: No such file or directory
+  74:rm: cannot remove `wrfcent4km_radar2_29.grb': No such file or directory
+   6:ls: cannot access WRFPCP09.tm00_prod: No such file or directory
+  33:ls: cannot access WRFPCP48.tm00_prod: No such file or directory
+  10:ls: cannot access WRFPCP15.tm00_prod: No such file or directory
+  66:rm: cannot remove `wrfcent4km_radar2_23.grb': No such file or directory
+  76:rm: cannot remove `wrfcent4km_radar2_31.grb': No such file or directory
+   8:ls: cannot access WRFPCP12.tm00_prod: No such file or directory
+  68:rm: cannot remove `wrfcent4km_radar2_25.grb': No such file or directory
+  14:ls: cannot access WRFPCP21.tm00_prod: No such file or directory
+  50:rm: cannot remove `wrfcent4km_radar2_11.grb': No such file or directory
+  94:rm: cannot remove `wrfcent4km_radar2_44.grb'  96:rm: cannot remove `wrfcent4km_radar2_46.grb': No such file or directory
+: No such file or directory
+  72:rm: cannot remove `wrfcent4km_radar2_28.grb': No such file or directory
+   4:ls: cannot access WRFPCP06.tm00_prod: No such file or directory
+  70:rm: cannot remove `wrfcent4km_radar2_26.grb': No such file or directory
+  22:ls: cannot access WRFPCP33.tm00_prod: No such file or directory
+  26:ls: cannot access WRFPCP39.tm00_prod: No such file or directory
+  24:ls: cannot access WRFPCP36.tm00_prod: No such file or directory
+  20:ls: cannot access WRFPCP30.tm00_prod: No such file or directory
+  98:rm: cannot remove `wrfcent4km_radar2_47.grb': No such file or directory
+  16:ls: cannot access WRFPCP24.tm00_prod: No such file or directory
+  28:ls: cannot access WRFPCP42.tm00_prod: No such file or directory
+  30:ls: cannot access WRFPCP45.tm00_prod: No such file or directory
+  18:ls: cannot access WRFPCP27.tm00_prod: No such file or directory
+  32:ls: cannot access WRFPCP48.tm00_prod: No such file or directory
+   3:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   5:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   7:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   2:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  17:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  15:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   9:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  19:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 37 exited: rc=0
+  13:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  25:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  11:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 36 exited: rc=0
+INFO: 0031-251  task 39 exited: rc=0
+  27:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  12:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  23:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  29:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  21:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   3:rm: cannot remove `wrfcent4km_radar2_03.grb': No such file or directory
+   6:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  31:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  33:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 38 exited: rc=0
+  10:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   8:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 43 exited: rc=0
+INFO: 0031-251  task 41 exited: rc=0
+  14:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   5:rm: cannot remove `wrfcent4km_radar2_06.grb': No such file or directory
+   4:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 47 exited: rc=0
+INFO: 0031-251  task 45 exited: rc=0
+  22:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  26:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+   2:rm: cannot remove `wrfcent4km_radar2_03.grb': No such file or directory
+   7:rm: cannot remove `wrfcent4km_radar2_09.grb': No such file or directory
+  16:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 67 exited: rc=0
+  17:rm: cannot remove `wrfcent4km_radar2_24.grb': No such file or directory
+  28:rm: cannot remove `today_1hprecip_prod.grd'  24:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+: No such file or directory
+  30:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  18:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 49 exited: rc=0
+  20:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+  15:rm: cannot remove `wrfcent4km_radar2_21.grb': No such file or directory
+INFO: 0031-251  task 65 exited: rc=0
+   9:rm: cannot remove `wrfcent4km_radar2_12.grb': No such file or directory
+  19:rm: cannot remove `wrfcent4km_radar2_27.grb': No such file or directory
+INFO: 0031-251  task 63 exited: rc=0
+INFO: 0031-251  task 81 exited: rc=0
+INFO: 0031-251  task 69 exited: rc=0
+INFO: 0031-251  task 61 exited: rc=0
+INFO: 0031-251  task 83 exited: rc=0
+INFO: 0031-251  task 71 exited: rc=0
+  13:rm: cannot remove `wrfcent4km_radar2_18.grb': No such file or directory
+INFO: 0031-251  task 85 exited: rc=0
+INFO: 0031-251  task 87 exited: rc=0
+  25:rm: cannot remove `wrfcent4km_radar2_36.grb': No such file or directory
+INFO: 0031-251  task 91 exited: rc=0
+INFO: 0031-251  task 89 exited: rc=0
+INFO: 0031-251  task 75 exited: rc=0
+INFO: 0031-251  task 73 exited: rc=0
+  11:rm: cannot remove `wrfcent4km_radar2_15.grb': No such file or directory
+INFO: 0031-251  task 95 exited: rc=0
+  27:rm: cannot remove `wrfcent4km_radar2_39.grb': No such file or directory
+  23:rm: cannot remove `wrfcent4km_radar2_33.grb': No such file or directory
+  12:rm: cannot remove `wrfcent4km_radar2_18.grb': No such file or directory
+INFO: 0031-251  task 97 exited: rc=0
+  29:rm: cannot remove `wrfcent4km_radar2_42.grb': No such file or directory
+  21:rm: cannot remove `wrfcent4km_radar2_30.grb': No such file or directory
+INFO: 0031-251  task 59 exited: rc=0
+INFO: 0031-251  task 51 exited: rc=0
+  32:rm: cannot remove `today_1hprecip_prod.grd': No such file or directory
+INFO: 0031-251  task 79 exited: rc=0
+INFO: 0031-251  task 77 exited: rc=0
+INFO: 0031-251  task 57 exited: rc=0
+INFO: 0031-251  task 93 exited: rc=0
+INFO: 0031-251  task 99 exited: rc=0
+   6:rm: cannot remove `wrfcent4km_radar2_09.grb': No such file or directory
+  33:rm: cannot remove `wrfcent4km_radar2_48.grb': No such file or directory
+INFO: 0031-251  task 40 exited: rc=0
+  31:rm: cannot remove `wrfcent4km_radar2_45.grb': No such file or directory
+INFO: 0031-251  task 60 exited: rc=0
+  10:rm: cannot remove `wrfcent4km_radar2_15.grb': No such file or directory
+   8:rm: cannot remove `wrfcent4km_radar2_12.grb': No such file or directory
+  14:rm: cannot remove `wrfcent4km_radar2_21.grb': No such file or directory
+INFO: 0031-251  task 58 exited: rc=0
+INFO: 0031-251  task 53 exited: rc=0
+INFO: 0031-251  task 55 exited: rc=0
+   4:rm: cannot remove `wrfcent4km_radar2_06.grb': No such file or directory
+INFO: 0031-251  task 62 exited: rc=0
+  22:rm: cannot remove `wrfcent4km_radar2_33.grb': No such file or directory
+  26:rm: cannot remove `wrfcent4km_radar2_39.grb': No such file or directory
+INFO: 0031-251  task 56 exited: rc=0
+  16:rm: cannot remove `wrfcent4km_radar2_24.grb': No such file or directory
+INFO: 0031-251  task 64 exited: rc=0
+  24:rm: cannot remove `wrfcent4km_radar2_36.grb': No such file or directory
+  30:rm: cannot remove `wrfcent4km_radar2_45.grb': No such file or directory
+  28:rm: cannot remove `wrfcent4km_radar2_42.grb': No such file or directory
+  18:rm: cannot remove `wrfcent4km_radar2_27.grb': No such file or directory
+INFO: 0031-251  task 48 exited: rc=0
+INFO: 0031-251  task 78 exited: rc=0
+  20:rm: cannot remove `wrfcent4km_radar2_30.grb': No such file or directory
+INFO: 0031-251  task 54 exited: rc=0
+INFO: 0031-251  task 42 exited: rc=0
+INFO: 0031-251  task 80 exited: rc=0
+INFO: 0031-251  task 44 exited: rc=0
+INFO: 0031-251  task 46 exited: rc=0
+INFO: 0031-251  task 52 exited: rc=0
+INFO: 0031-251  task 84 exited: rc=0
+INFO: 0031-251  task 88 exited: rc=0
+INFO: 0031-251  task 86 exited: rc=0
+INFO: 0031-251  task 82 exited: rc=0
+INFO: 0031-251  task 66 exited: rc=0
+INFO: 0031-251  task 92 exited: rc=0
+INFO: 0031-251  task 74 exited: rc=0
+INFO: 0031-251  task 68 exited: rc=0
+INFO: 0031-251  task 76 exited: rc=0
+INFO: 0031-251  task 50 exited: rc=0
+INFO: 0031-251  task 90 exited: rc=0
+INFO: 0031-251  task 72 exited: rc=0
+  32:rm: cannot remove `wrfcent4km_radar2_48.grb': No such file or directory
+INFO: 0031-251  task 94 exited: rc=0
+INFO: 0031-251  task 96 exited: rc=0
+INFO: 0031-251  task 70 exited: rc=0
+INFO: 0031-251  task 98 exited: rc=0
+INFO: 0031-251  task 3 exited: rc=0
+INFO: 0031-251  task 5 exited: rc=0
+INFO: 0031-251  task 2 exited: rc=0
+INFO: 0031-251  task 7 exited: rc=0
+INFO: 0031-251  task 17 exited: rc=0
+INFO: 0031-251  task 15 exited: rc=0
+INFO: 0031-251  task 19 exited: rc=0
+INFO: 0031-251  task 9 exited: rc=0
+INFO: 0031-251  task 13 exited: rc=0
+INFO: 0031-251  task 23 exited: rc=0
+INFO: 0031-251  task 27 exited: rc=0
+INFO: 0031-251  task 21 exited: rc=0
+INFO: 0031-251  task 11 exited: rc=0
+INFO: 0031-251  task 25 exited: rc=0
+INFO: 0031-251  task 29 exited: rc=0
+INFO: 0031-251  task 31 exited: rc=0
+INFO: 0031-251  task 12 exited: rc=0
+INFO: 0031-251  task 33 exited: rc=0
+INFO: 0031-251  task 14 exited: rc=0
+INFO: 0031-251  task 6 exited: rc=0
+INFO: 0031-251  task 8 exited: rc=0
+INFO: 0031-251  task 4 exited: rc=0
+INFO: 0031-251  task 10 exited: rc=0
+INFO: 0031-251  task 22 exited: rc=0
+INFO: 0031-251  task 26 exited: rc=0
+INFO: 0031-251  task 24 exited: rc=0
+INFO: 0031-251  task 28 exited: rc=0
+INFO: 0031-251  task 16 exited: rc=0
+INFO: 0031-251  task 20 exited: rc=0
+INFO: 0031-251  task 18 exited: rc=0
+INFO: 0031-251  task 30 exited: rc=0
+INFO: 0031-251  task 32 exited: rc=0
+INFO: 0031-251  task 35 exited: rc=0
+INFO: 0031-251  task 34 exited: rc=0
+D1<L1>: All remote tasks have exited: maxx_errcode = 0
+D1<L1>: POE ends , Mallinfo Heap: 10588160 bytes
+
+D1<L1>: POE Memory Usage , Mallinfo Heap: 10448896 bytes
+
+INFO: 0031-639  Exit status from pm_respond = 0
+ESUB: MEMORY LIMIT RLIMIT_RSS set to 500 - with rusage set in shared job.
+ESUB: MEMORY LIMIT RLIMIT_RSS set to 500 - with rusage set in shared job.
+ESUB: MEMORY LIMIT RLIMIT_RSS set to 500 - with rusage set in shared job.
+ESUB: MEMORY LIMIT RLIMIT_RSS set to 500 - with rusage set in shared job.

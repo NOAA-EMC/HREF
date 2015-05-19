@@ -1,0 +1,98 @@
+#!/bin/sh
+
+########################################
+# RUNS HIRESW_PRDGEN JOB
+########################################
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-hiresw}
+
+export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
+
+############################################################# 
+# obtain unique process id (pid) and make temp directories
+############################################################# 
+export pid=$$
+export DATA=${DATA:-$DATAROOT/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}}
+export INPUT_DATA=${INPUT_DATA:-$DATAROOT/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.$job.$pid}
+
+##################################################
+# SENDECF  - Flag Events on ecFlow
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_${DBN_NEST}_GB2}
+export DBN_ALERT_TYPE_WIDX=${DBN_ALERT_TYPE_WIDX:-HIRESW_${DBN_NEST}_GB2_WIDX}
+export DBN_ALERT_TYPE_SMART=${DBN_ALERT_TYPE_SMART:-HIRESW_${DBN_NEST}_NDFD_GB2}
+export DBN_ALERT_TYPE_SMART_WIDX=${DBN_ALERT_TYPE_SMART_WIDX:-HIRESW_${DBN_NEST}_NDFD_GB2_WIDX}
+
+# Do not send alerts if DBNROOT is set to DBNROOT_OFF
+# The alerts cause an error to be returned from the ush script that is
+# poe'd when the DBNROOT path is not resolved
+
+if [ $DBNROOT = "DBNROOT_OFF" ]; then
+   export SENDDBN_GB2=${SENDDBN_GB2:-NO}
+else
+   export SENDDBN_GB2=${SENDDBN_GB2:-YES}
+fi
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+                                                                                                             
+export HOMEhiresw=${HOMEhiresw:-$NWROOT/hiresw.${hiresw_ver}}
+export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
+export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
+export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
+export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
+
+###################################
+# Set up the UTILITIES
+###################################
+module load grib_util
+
+# keep using local version
+export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. PDY
+
+export COMROOT=${COMROOT:-/com2}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+
+mkdir -p $COMOUT
+
+########################################################
+# Run the ex-script
+#
+${HOMEhiresw}/scripts/exhiresw_prdgeng2.sh.ecf
+#
+########################################################
+
+postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
+
+date
