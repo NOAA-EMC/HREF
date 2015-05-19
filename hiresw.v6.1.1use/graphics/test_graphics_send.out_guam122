@@ -1,0 +1,548 @@
+scp to TARGDIR /home/www/emc/htdocs/mmb/mpyle/hiresw/guam12
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@g19e7f>
+Subject: Job 1397408: <HIRESW_TRANSFER_2> in cluster <gyre> Done
+
+Job <HIRESW_TRANSFER_2> was submitted from host <g33c31f> by user <Matthew.Pyle> in cluster <gyre>.
+Job was executed on host(s) <g19e7f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <gyre>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Mon May 18 17:45:14 2015
+Results reported on Mon May 18 17:51:16 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_guam122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_2
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+
+hrs="13 14 15 16 17 18 19 20 21 22 23 24"
+
+### montage block
+
+if [ guam = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  guam = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               262.18 sec.
+    Max Memory :             172 MB
+    Average Memory :         16.08 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           328.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@g19e7f>
+Subject: Job 1397416: <HIRESW_TRANSFER_2> in cluster <gyre> Done
+
+Job <HIRESW_TRANSFER_2> was submitted from host <g30c31f> by user <Matthew.Pyle> in cluster <gyre>.
+Job was executed on host(s) <g19e7f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <gyre>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Mon May 18 17:45:30 2015
+Results reported on Mon May 18 17:51:17 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_guam122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_2
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+
+hrs="13 14 15 16 17 18 19 20 21 22 23 24"
+
+### montage block
+
+if [ guam = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  guam = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               261.96 sec.
+    Max Memory :             171 MB
+    Average Memory :         51.08 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           329.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@g19e7f>
+Subject: Job 1397409: <HIRESW_TRANSFER_3> in cluster <gyre> Done
+
+Job <HIRESW_TRANSFER_3> was submitted from host <g33c31f> by user <Matthew.Pyle> in cluster <gyre>.
+Job was executed on host(s) <g19e7f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <gyre>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Mon May 18 17:45:14 2015
+Results reported on Mon May 18 17:51:27 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_guam122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_3
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+
+hrs="25 26 27 28 29 30 31 32 33 34 35 36"
+
+### montage block
+
+if [ guam = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  guam = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+fi
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               271.02 sec.
+    Max Memory :             172 MB
+    Average Memory :         86.83 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           328.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@g19e7f>
+Subject: Job 1397410: <HIRESW_TRANSFER_4> in cluster <gyre> Done
+
+Job <HIRESW_TRANSFER_4> was submitted from host <g33c31f> by user <Matthew.Pyle> in cluster <gyre>.
+Job was executed on host(s) <g19e7f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <gyre>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Mon May 18 17:45:14 2015
+Results reported on Mon May 18 17:51:27 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_guam122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_4
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+
+hrs="37 38 39 40 41 42 43 44 45 46 47 48"
+
+### montage block
+
+if [ guam = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  guam = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+fi
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               261.09 sec.
+    Max Memory :             171 MB
+    Average Memory :         50.83 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           329.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@g19e8f>
+Subject: Job 1397418: <HIRESW_TRANSFER_4> in cluster <gyre> Done
+
+Job <HIRESW_TRANSFER_4> was submitted from host <g30c31f> by user <Matthew.Pyle> in cluster <gyre>.
+Job was executed on host(s) <g19e8f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <gyre>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Mon May 18 17:45:32 2015
+Results reported on Mon May 18 17:51:27 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_guam122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_4
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+
+hrs="37 38 39 40 41 42 43 44 45 46 47 48"
+
+### montage block
+
+if [ guam = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  guam = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+fi
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               261.37 sec.
+    Max Memory :             170 MB
+    Average Memory :         83.75 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           330.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Swap :               2 MB
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@g19e8f>
+Subject: Job 1397417: <HIRESW_TRANSFER_3> in cluster <gyre> Done
+
+Job <HIRESW_TRANSFER_3> was submitted from host <g30c31f> by user <Matthew.Pyle> in cluster <gyre>.
+Job was executed on host(s) <g19e8f>, in queue <transfer>, as user <Matthew.Pyle> in cluster <gyre>.
+</u/Matthew.Pyle> was used as the home directory.
+</meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics> was used as the working directory.
+Started at Mon May 18 17:45:32 2015
+Results reported on Mon May 18 17:51:27 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.out_guam122
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER_3
+#BSUB -n 1
+#BSUB -W 0:39
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+cd /ptmpd3/Matthew.Pyle/process_4km_guam_compare_12/
+
+hrs="25 26 27 28 29 30 31 32 33 34 35 36"
+
+### montage block
+
+if [ guam = "conus" ]
+then
+
+types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
+dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
+refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+
+
+elif [  guam = "ak" ]
+then
+
+types="1h 1h_jun 1h_cent 1h_aleu 3hprec mucape refd_1000m t2ms t2ms_jun t2ms_cent t2ms_aleu dwpc dwpc_jun dwpc_cent dwpc_aleu 300z 500z 850rh 925winds \
+refd_1000m_jun refd_1000m_cent refd_1000m_aleu mx1000refd echotop tcolc pwtr refc pblli 48h_total rhmn01 rhmx01 ptyp"
+
+
+else
+
+types="1h 3hprec mucape refd_1000m t2ms dwpc 300z 500z 850rh 925winds \
+mx1000refd echotop tcolc pwtr refc pblli 48h_total 500850rh 500700rh sfccape rhmn01 rhmx01 ptyp"
+
+fi
+
+(... more ...)
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               273.44 sec.
+    Max Memory :             170 MB
+    Average Memory :         89.83 MB
+    Total Requested Memory : 500.00 MB
+    Delta Memory :           330.00 MB
+    (Delta: the difference between Total Requested Memory and Max Memory.)
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics_send.err_guam122> for stderr output of this job.
+

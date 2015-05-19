@@ -1,0 +1,60 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/spcprodlike/jobs/test_graphics_send.out_12_DATELOC_
+#BSUB -eo /meso/save/Matthew.Pyle/spcprodlike/jobs/test_graphics_send.err_12_DATELOC_
+#BSUB -R rusage[mem=500]
+#BSUB -R affinity[core(1)]
+#BSUB -q "transfer"
+#BSUB -P HRW-T2O
+#BSUB -J HIRESW_TRANSFER
+#BSUB -n 1
+#BSUB -W 0:23
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+
+mkdir -p /ptmpd1/Matthew.Pyle/process_4km_conus_compare_12/
+cd /ptmpd1/Matthew.Pyle/process_4km_conus_compare_12/
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+
+### montage block
+
+types="3hprec mucape mx1000refd mx10w mxdndr mxupdr mxuphl refd_1000m t2ms uphl"
+types="1h mucape refd_1000m t2ms"
+m1=600
+m2=480
+
+for hr in $hrs
+do
+for typ in $types
+do
+
+cd $hr
+
+
+
+montage prod_arw_${typ}_f${hr}.gif para_arw_${typ}_f${hr}.gif -geometry ${m1}x${m2}+1+1 comboarw_${typ}_f${hr}.gif
+mv  comboarw_${typ}_f${hr}.gif ../
+
+montage prod_nmm_${typ}_f${hr}.gif para_nmmb_${typ}_f${hr}.gif -geometry ${m1}x${m2}+1+1 combonmmb_${typ}_f${hr}.gif
+mv  combonmmb_${typ}_f${hr}.gif ../
+
+cd ..
+
+done
+
+done
+
+
+TARGDIR=/home/www/emc/htdocs/mmb/mpyle/hiresw/retro/_DATELOC_/conus/
+
+ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir -p $TARGDIR"
+
+scp *.gif mpyle@emcrzdm.ncep.noaa.gov:${TARGDIR}/

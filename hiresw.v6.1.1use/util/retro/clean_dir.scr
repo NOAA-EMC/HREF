@@ -1,0 +1,31 @@
+#! /bin/ksh
+
+hrslim=48
+hr=01
+
+dir=${1}
+core=${2}
+cyc=${3}
+
+rm ./${dir}/*met_em*bin
+rm ./${dir}/*met*dio_
+rm ./${dir}/*FILE*
+rm ./${dir}/*wrfinput*
+rm ./${dir}/*wrfbdy*
+rm ./${dir}/*nemsio*
+
+while [ $hr -le $hrslim ]
+do
+
+if [ $hr%3 -ne 0 ]
+then
+echo delete $hr
+rm ./${dir}/*.t${cyc}z.${core}_5km.f${hr}.*
+rm ./${dir}/*t${cyc}z*.wrfprs${hr}
+fi
+
+let hr=hr+1
+
+typeset -Z2 hr
+
+done
