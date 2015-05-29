@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/logs/test_prepfinal.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/logs/test_prepfinal.err__DOM___CORE___CYC_
-#BSUB -q "dev2"
+#BSUB -q "_Q_"
 #BSUB -J HIRESW_PREPFINAL
 #BSUB -R "span[ptile=3]"
 #BSUB -W 0:18
@@ -12,6 +12,9 @@
 
 module load ics
 module load ibmpe
+module load prod_util
+module load grib_util
+
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes

@@ -4,7 +4,7 @@
 #BSUB -R span[ptile=_POSTSPAN_]
 #BSUB -J HIRESW_POST
 #BSUB -x
-#BSUB -q "dev2"
+#BSUB -q "_Q_"
 #BSUB -n _NPROC_
 #BSUB -P HRW-T2O
 #BSUB -W 1:25
@@ -21,6 +21,9 @@ export MP_MPILIB=mpich2
 
 module load ics
 module load ibmpe
+module load prod_util
+module load grib_util
+
 
 export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test

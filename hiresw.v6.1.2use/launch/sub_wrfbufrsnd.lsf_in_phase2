@@ -5,7 +5,7 @@
 #BSUB -R affinity[core(1)]
 #BSUB -n _NPROCBUFR_
 #BSUB -x 
-#BSUB -q "dev2"
+#BSUB -q "_Q_"
 #BSUB -J HIRESW_BUFR
 #BSUB -a poe
 #BSUB -P HRW-T2O
@@ -13,6 +13,9 @@
 
 module load ics
 module load ibmpe
+module load prod_util
+module load grib_util
+
 
 export MP_EUILIB=us
 
@@ -42,6 +45,9 @@ export DATAROOT=/_DISK_/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export HOMEobsproc_shared_bufr_cword=/nwprod/obsproc_shared/bufr_cword.v1.0.0
+export USHobsproc_shared_bufr_cword=/nwprod/obsproc_shared/bufr_cword.v1.0.0/ush
 
 
 export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}

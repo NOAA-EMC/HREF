@@ -16,6 +16,7 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
+QUE=dev2
 elif [ $DOM$CORE == "hiarw" ]
 then
 MODPROCS=67
@@ -26,6 +27,7 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
+QUE=dev2
 elif [ $DOM$CORE == "prnmmb"  ]
 then
 MODPROCS=120
@@ -36,6 +38,7 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=2
+QUE=dev2
 elif [ $DOM$CORE == "prarw" ]
 then
 MODPROCS=105
@@ -46,6 +49,7 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
+QUE=dev2
 elif [ $DOM$CORE == "guamnmmb"  ]
 then
 MODPROCS=72
@@ -56,6 +60,7 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
+QUE=dev2
 elif [ $DOM$CORE == "guamarw" ]
 then
 MODPROCS=72
@@ -66,6 +71,7 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
+QUE=dev2
 elif [ $DOM$CORE == "conusnmmb" ]
 then
 MODPROCS=696
@@ -76,6 +82,7 @@ PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=56
 BUFRSPAN=14
+QUE=devhigh2
 elif [ $DOM$CORE == "conusarw" ]
 then
 MODPROCS=888
@@ -86,6 +93,7 @@ PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
+QUE=devhigh2
 elif [ $DOM$CORE == "aknmmb" ]
 then
 MODPROCS=672
@@ -96,6 +104,7 @@ PRDGENPROCS=5
 PRDGENSPAN=5
 NPROCBUFR=48
 BUFRSPAN=8
+QUE=devhigh2
 elif [ $DOM$CORE == "akarw" ]
 then
 MODPROCS=912
@@ -106,61 +115,62 @@ PRDGENPROCS=5
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
+QUE=devhigh2
 fi
 
 
 
-cat ungrib.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > \
+cat ungrib.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g | sed s:_Q_:${QUE}:g  > \
 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 
-cat metgrid.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > \
+cat metgrid.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g | sed s:_Q_:${QUE}:g > \
 sub_metgrid.lsf_${DOM}_${CORE}_${CYC}
 
 
 if [ $CORE == "nmmb" ]
 then
 
-cat sub_nemsinterp_1.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat sub_nemsinterp_1.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
 sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_nemsinterp_1.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_nemsinterp_2.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat sub_nemsinterp_2.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
  sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_nemsinterp_2.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_nemsinterp_3.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat sub_nemsinterp_3.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
 sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_nemsinterp_3.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_nemsinterp_4.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat sub_nemsinterp_4.lsf_in_phase2 |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
 sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_nemsinterp_4.lsf_${DOM}_${CORE}_${CYC}
 
-cat prelim.lsf_bigrap_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat prelim.lsf_bigrap_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
 sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
 
 else
 
-cat prelimfinal.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat prelimfinal.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
 sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_prelimfinal.lsf_${DOM}_${CORE}_${CYC}
 
-cat prelim.lsf_bigrap_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+cat prelim.lsf_bigrap_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_Q_:${QUE}:g | \
 sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
 
 fi
 
-cat sub_model.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+cat sub_model.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_Q_:${QUE}:g | \
   sed s:_SPAN_:${MODSPAN}:g |  sed s:_NPROC_:${MODPROCS}:g | sed s:_DISK_:${DISKUSE}:g  > sub_model.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_post.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+cat sub_post.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_Q_:${QUE}:g | \
   sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g | sed s:_DISK_:${DISKUSE}:g > sub_post.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_prdgen.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+cat sub_prdgen.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_Q_:${QUE}:g | \
   sed s:_SPAN_:${PRDGENSPAN}:g |  sed s:_NPROC_:${PRDGENPROCS}:g | sed s:_DISK_:${DISKUSE}:g > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_wrfbufrsnd.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+cat sub_wrfbufrsnd.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_Q_:${QUE}:g | \
   sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g | sed s:_DISK_:${DISKUSE}:g > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_smartinit.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > \
+cat sub_smartinit.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_Q_:${QUE}:g | sed s:_DISK_:${DISKUSE}:g > \
 sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
 
-cat sub_smartinitb.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_DISK_:${DISKUSE}:g > \
+cat sub_smartinitb.lsf_in_phase2 | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | sed s:_Q_:${QUE}:g | sed s:_DISK_:${DISKUSE}:g > \
 sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 
 bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}

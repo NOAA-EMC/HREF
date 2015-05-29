@@ -1,7 +1,7 @@
 
 #BSUB -oo /meso/save/Matthew.Pyle/logs/test_nemsinterp_1.out__DOM___CORE___CYC_
 #BSUB -eo /meso/save/Matthew.Pyle/logs/test_nemsinterp_1.err__DOM___CORE___CYC_
-#BSUB -q "dev2"
+#BSUB -q "_Q_"
 #BSUB -J HIRESW_NEMSINTERP_1
 #BSUB -R "span[ptile=4]"
 #BSUB -W 0:12
@@ -12,6 +12,9 @@
 
 module load ics
 module load ibmpe
+module load prod_util
+module load grib_util
+
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
@@ -31,6 +34,7 @@ export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
+export GESROOTp1=/nwges
 export DATAROOT=/_DISK_/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}

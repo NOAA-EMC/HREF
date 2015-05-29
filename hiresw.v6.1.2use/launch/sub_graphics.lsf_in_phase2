@@ -3,7 +3,7 @@
 #BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/logs/test_graphics.err
 #BSUB -R span[ptile=16]
 #BSUB -x
-#BSUB -q "dev2"
+#BSUB -q "_Q_"
 #BSUB -J HIRESW_GRAPHICS
 #BSUB -P HRW-T2O
 #BSUB -n 49
