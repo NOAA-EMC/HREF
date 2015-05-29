@@ -254,7 +254,7 @@ export err=$?;err_chk
 ############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS
 
 ${USHobsproc_shared_bufr_cword}/bufr_cword.sh unblk class1.bufr class1.bufr.unb
-${USHobsprod_shared_bufr_cword}/bufr_cword.sh block class1.bufr.unb class1.bufr.wcoss
+${USHobsproc_shared_bufr_cword}/bufr_cword.sh block class1.bufr.unb class1.bufr.wcoss
 
 if [ $SENDCOM == "YES" ]
 then
@@ -305,8 +305,8 @@ cd ${COMOUT}/bufr.${NEST}${MODEL}${cyc}
 files=`ls`
 for fl in $files
 do
-${USHobsprod_shared_bufr_cword}/bufr_cword.sh unblk ${fl} ${fl}.unb
-${USHobsprod_shared_bufr_cword}/bufr_cword.sh block ${fl}.unb ${fl}.wcoss
+${USHobsproc_shared_bufr_cword}/bufr_cword.sh unblk ${fl} ${fl}.unb
+${USHobsproc_shared_bufr_cword}/bufr_cword.sh block ${fl}.unb ${fl}.wcoss
 rm ${fl}.unb
 done
 
