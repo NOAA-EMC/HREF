@@ -1863,14 +1863,17 @@
 !        end do
 !       end do
        
-!       VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!        IM,1,JM,1,IM,JS,JE,1)
-!       do j = jsta_2l, jend_2u
-!        do i = 1, im
-!            prec ( i, j ) = (dummy ( i, j )+dummy2(i,j))* 0.001
-!        end do
-!       end do
+
+!!! here maybe?
+
+       VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+        IM,1,JM,1,IM,JS,JE,1)
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            prec ( i, j ) = (cprate ( i, j )+dummy2(i,j))* 0.001
+        end do
+       end do
 
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
