@@ -1240,9 +1240,9 @@ c
 !      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
 !     +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
@@ -2616,9 +2616,9 @@ c
 !       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
 !     +  IM,1,JM,1,IM,JS,JE,1)
 
-!      VarName='RAINNCV'
-!      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
-!     +  IM,1,JM,1,IM,JS,JE,1)
+      VarName='RAINNCV'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY2,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
 
       VarName='SNOWNC'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
