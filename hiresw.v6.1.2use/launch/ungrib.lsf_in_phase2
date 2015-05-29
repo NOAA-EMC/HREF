@@ -13,6 +13,9 @@
 
 module load ics
 module load ibmpe
+module load prod_util
+module load grib_util
+
 
 export MP_LABELIO=yes
 
@@ -30,7 +33,7 @@ export MODEL=_CORE_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export COMINgfs=/com/gfs/prod/gfs.${DATE}
+export COMGFS=/com/gfs/prod/gfs.${DATE}
 export DATAROOT=/_DISK_/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
 

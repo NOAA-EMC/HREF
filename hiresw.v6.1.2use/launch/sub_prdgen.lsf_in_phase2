@@ -15,6 +15,9 @@ export MP_EUILIB=us
 
 module load ics
 module load ibmpe
+module load prod_util
+module load grib_util
+
 
 vers=`cat /u/Matthew.Pyle/hiresw_version`
 
