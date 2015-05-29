@@ -1,6 +1,6 @@
 
-#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics.out
-#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.0use/graphics/test_graphics.err
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw.v6.1.2use/graphics/test_graphics.out___REGION__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw.v6.1.2use/graphics/test_graphics.err___REGION__CYC_
 #BSUB -R span[ptile=20]
 #BSUB -x
 #BSUB -q "dev2"
