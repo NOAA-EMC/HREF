@@ -32,7 +32,7 @@ then
 types="1h 1h_nw 1h_ne 1h_sw 1h_se 1h_centplains 3hprec mucape refd_1000m t2ms t2ms_nw t2ms_ne t2ms_sw t2ms_se t2ms_centplains \
 dwpc dwpc_nw dwpc_ne dwpc_sw dwpc_se dwpc_centplains 300z 500z 850rh 925winds rhmn01 rhmx01 ptyp \
 refd_1000m_nw refd_1000m_ne refd_1000m_se refd_1000m_sw refd_1000m_centplains mx1000refd mx1000refd_nw mx1000refd_ne mx1000refd_sw mx1000refd_se  \
-mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc pblli 48h_total"
+mx1000refd_centplains echotop echotop_nw echotop_ne echotop_sw echotop_se  echotop_centplains tcolc pwtr refc  mxupdr mxdndr pblli 48h_total"
 
 
 elif [  _REGLOC_ = "ak" ]

@@ -49,7 +49,7 @@ rm /ptmpd3/Matthew.Pyle/process_${dom}${core}_comp_${cyc}/WRFP*
 
 else
 
-sleep 90
+sleep 50
 
 fi
 
@@ -302,7 +302,7 @@ datestr=`date`
 echo START WGRIB2bing $hr at $datestr
 
 
-${WGRIB2} $GRIBFILE  -match ":(REFD|REFC|TCOLC|TCOLR|TCOLS|MSLET):"  -grib wrfcent4km_radar1_${hr}.grb
+${WGRIB2} $GRIBFILE  -match ":(REFD|REFC|MAXUVV|MAXDVV|TCOLC|TCOLR|TCOLS|MSLET):"  -grib wrfcent4km_radar1_${hr}.grb
 ${WGRIB2} $GRIBFILE  -match ":2 m above ground:" -grib  wrfcent4km_t2ms_${hr}.grb
 ${WGRIB2} $GRIBFILE  -match ":RH:" -grib wrfcent4km_850rh_${hr}.grb
 ${WGRIB2} $GRIBFILE  -match ":10 m above ground:" -grib wrfcent4km_ugrd_${hr}.grb
@@ -524,6 +524,13 @@ fint=0.5;1;1.5;2;3;4;5;6;7;8;9;10;12
 fint=2;4;6;8;10;12;14;16;18;20;22;24
 fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
 DEVICE = gif|${type}_${core}_mxupdr_f${hr}.gif|$size1;$size2|C
+r
+
+GFUN    = abs(MXDNDR01)
+fint=0.5;1;1.5;2;3;4;5;6;7;8;9;10;12
+DEVICE = gif|${type}_${core}_mxdndr_f${hr}.gif|$size1;$size2|C
+r
+
 
 gfun=CAPE
 glev=180:0
