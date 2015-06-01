@@ -1,0 +1,142 @@
+#!/bin/sh
+
+#############################################################
+# HREF RUNALL 
+# 02/02/2015 Binbin Zhou, create for run all scripts 
+#############################################################
+
+########################################
+# Preliminary data setup step
+########################################
+
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+###################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href}
+
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+
+## PDY not included here as pull data from PDYm1 as well
+
+export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
+export COMINnam=${COMINnam:-${COMROOTp1}/nam/prod/nam}
+
+export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+export PARMhref=${PARMhref:-$HOMEhref/parm}
+export USHhref=${USHhref:-$HOMEhref/ush}
+export FIXhref=${FIXhref:-$HOMEhref/fix}
+export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/href_ensprod_${cyc}_${envir}}
+mkdir -p $DATA
+rm -rf $DATA/*
+cd $DATA
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-$COMROOT/logs/jlogfile}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=NO
+
+###################################
+# Set up the UTILITIES
+###################################
+module load grib_util
+
+msg="JOB $job HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+#
+# Run setpdy and initialize PDY variables
+#
+
+setpdy.sh
+. PDY
+
+##############################################
+# Define running directory and COM directories
+##############################################
+
+export COMROOT=${COMROOT:-/com2}
+
+if [ "$RUN_ENVIR" = test ] ; then
+export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}
+else
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
+fi
+
+if [ ! -d $COMOUT ] ; then 
+ mkdir -p $COMOUT
+fi
+
+#######################################################
+# Pass information which is needed to run the Script
+#######################################################
+
+# export VERBOSE=YES
+
+###################################################
+# Execute the Script exhref_ensprod.sh.ecf
+
+rm -rf poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 09" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 12" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 15" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 18" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 21" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 24" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 27" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 30" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33" >>poescript
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36" >>poescript
+
+export MP_CMDFILE=poescript
+export MP_PGMMODEL=mpmd
+export MP_EUILIB=us
+export MP_LABELIO=YES
+export MP_INFOLEVEL=3
+
+mpirun.lsf
+
+export err=$?; err_chk
+
+msg"JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+cd $DATAROOT
+#if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+date

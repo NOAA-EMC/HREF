@@ -1,0 +1,21 @@
+#! /bin/sh
+
+module purge
+
+module load HREF
+
+
+module list
+
+sleep 1
+
+BASE=/meso/save/Matthew.Pyle/href.v1.0.0
+
+#########################
+
+cd ${BASE}/sorc/href_ensprod.fd
+make clean
+make
+make copy
+
+#########################
