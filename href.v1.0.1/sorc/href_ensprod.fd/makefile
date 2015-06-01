@@ -20,7 +20,7 @@ SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
 	new_fog.f get_new_fog.f thickness.f llws.f getconv.f \
 	get_mxp.f mxp.f packGB2_mxp.f \
 	get_cptp_severe.f calibrate2_hrly_rgn3.f calibrate2_dryt.f  calibrate2_svr.f calibrate2.f \
-	meanwind.f
+	meanwind.f get_time_packGB2.f
 
 OBJ=${SRCS:.f=.o}
 

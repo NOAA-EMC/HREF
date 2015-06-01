@@ -108,9 +108,12 @@ ff=$fhr
 
       echo href.m${m}.t${cyc}z.f${ff} 
 
-      if [ ${file[$m]} = 'namnest' ] ; then     
+if [ ${file[$m]} = 'namnest' ] && [ -e /com/nam/prod/nam.${day[$m]}/nam.t${cyc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 ] ; then
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        echo href.m${m}.t${run}z. $ff |$EXEChref/href_get_prcip > $run_dir/output.href_get_prcip.m${m}.f${ff}
+        ln -sf $run_dir/prcip.m${m}.t${run}z.f${ff} $run_dir/${ff}/prcip.m${m}.t${run}z.f${ff}
+
       fi
  
 ### for conusarw and conusnmmb, the current operational filenames are linked
@@ -127,6 +130,9 @@ ff=$fhr
 
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        echo href.m${m}.t${run}z. $ff |$EXEChref/href_get_prcip > $run_dir/output.href_get_prcip.m${m}.f${ff}
+        ln -sf $run_dir/prcip.m${m}.t${run}z.f${ff} $run_dir/${ff}/prcip.m${m}.t${run}z.f${ff}
 
         fi
 
