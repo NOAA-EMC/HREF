@@ -151,7 +151,10 @@ c        write(*,*) 'Plvl Tlvl=',Plvl(nv),Tlvl(nv)
               ipdtmpl(23)=iyr   !year
               ipdtmpl(24)=imon  !mon 
               ipdtmpl(25)=idy   !day
-              ipdtmpl(9)= ihr+ifhr-jpd27   !overwite for APCP, begin time of accumulation
+!              ipdtmpl(9)= ihr+ifhr-jpd27   !overwite for APCP, begin time of accumulation
+!              ipdtmpl(26)=ihr+ifhr         !end time of accumulation 
+
+              ipdtmpl(9)= ifhr-jpd27   !overwite for APCP, begin time of accumulation
               ipdtmpl(26)=ihr+ifhr         !end time of accumulation 
               ipdtmpl(27)=0
               ipdtmpl(28)=0
