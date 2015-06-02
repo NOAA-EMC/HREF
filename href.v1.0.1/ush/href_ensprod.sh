@@ -25,7 +25,7 @@ mm=`echo ${PDY} | cut -c 5-6`
 dd=`echo ${PDY} | cut -c 7-8`
 
 
-rm -f poescript.run_post  poescript.post filename.* 
+rm -f poescript.run_post  poescript.post filename.${fhr} 
 
 cp $PARMhref/href_variable_grib2.tbl variable.tbl
 

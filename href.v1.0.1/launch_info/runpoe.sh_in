@@ -26,6 +26,8 @@ href_ver=`cat /u/$LOGNAME/href_version`
 
 export HOMEhref=/meso/save/$LOGNAME/href.${href_ver}
 
+export jlogfile=/stmpd3/Matthew.Pyle/jlogfile
+
 export SENDCOM=YES
 
 ${HOMEhref}/jobs/JHREF_ENSPROD
