@@ -3,11 +3,11 @@
 #BSUB -R span[ptile=1]
 #BSUB -R affinity[core(1)]
 #BSUB -n 12
-#BSUB -q "dev2"
+#BSUB -q "devhigh2"
 #BSUB -J HREF__CYC_
 #BSUB -a poe
 #BSUB -P HRW-T2O
-#BSUB -W 0:29
+#BSUB -W 0:39
 
 export RUN_ENVIR=test
 export envir=test
