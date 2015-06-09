@@ -197,6 +197,8 @@ c   for max,min,10,25,50,90% mean products
         character*2 cycle(24)
         character*7 mbrname(50)
 
+        logical*1, allocatable:: bmap_f(:)
+
         integer jptyp2(4)                           !for precip type jpd2
         integer iqout(8) 
 
@@ -243,7 +245,7 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
         close(nunit)
 
-        write(*,*) 'Check rirect variable reading:'
+        write(*,*) 'Check direct variable reading:'
         do i = 1, numvar
           write(*,*) vname(i),k4(i),k5(i), k6(i),Msignal(i), Mlvl(i),
      +                 (MeanLevel(i,j),j=1,Mlvl(i)),
@@ -539,6 +541,28 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
 
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld, jret)
+
+
+        if (jret .eq. 0) then
+
+        if ( .not. allocated(bmap_f)) then
+          allocate(bmap_f(jf))
+          write(*,*) 'setting initial bmap_f ', jf
+          bmap_f=gfld%bmap
+        endif
+
+          do J=1,jf
+            if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
+        if (mod(J,1200) .eq. 0) then
+        write(*,*) 'flip to false for irun, J: ', irun, j
+        endif
+              bmap_f(J)=.false.
+            endif
+          enddo
+
+        endif
+
+
             if (jret.ne.0) goto 501
             rawdata_mn(:,irun,lv)=gfld%fld
 501      continue
@@ -557,6 +581,26 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
 
            call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld,kret)
+
+        if (kret .eq. 0) then
+
+        if ( .not. allocated(bmap_f)) then
+        allocate(bmap_f(jf))
+        write(*,*) 'setting initial bmap_f'
+                bmap_f=gfld%bmap
+        endif
+
+          do J=1,jf
+            if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
+        if (mod(J,1200) .eq. 0) then
+        write(*,*) 'flip to false for irun, J: ', irun, j
+        endif
+              bmap_f(J)=.false.
+            endif
+          enddo
+
+        endif
+
            if (kret.ne.0) goto 502
             rawdata_pr(:,irun,lv)=gfld%fld
 502       continue 
@@ -769,6 +813,9 @@ c        write(*,'(a4,10f9.2)')'PROB',(vrbl_pr(i,lv,lt),i=10001,10010)
         write(*,*) 'Ensemble computation done for direct var ', nv
 c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
+!! insert combined bmap_f
+        gfld%bmap=bmap_f
+
       call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)           !gfld is used to send in other info 
@@ -863,11 +910,13 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
                derv_pr(:,1,1)=ptype_pr(:,jp)
 
                gfld_temp=gfld
+               gfld_temp%bmap=bmap_f
                call packGB2_mean_derv(imean,isprd,derv_mn,
      +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables 
 
               gfld_temp=gfld                           !some of idrtmpl() fields have been changed after packGB2_prob,
+              gfld_temp%bmap=bmap_f
 
                call packGB2_prob_derv(iprob,derv_pr,
      +              nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
