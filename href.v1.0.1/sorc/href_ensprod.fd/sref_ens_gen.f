@@ -95,6 +95,10 @@ c 2014-03-15: Binbin Z. Add Storm-related fileds requested by Jacob Caley of EMC
 c
 c 2014-04-21: Binbin Z. Add Flash Flood and Intense Rain (FFaIR) summer experiment fields
 c
+c 2015-06-10: Matthew P. Considers the bitmap from all ingested grids,
+c                        and outputs only for points where all source
+c                        grids have valid data.
+c
 c$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 C$$$
 C
@@ -553,9 +557,9 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
 
           do J=1,jf
             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-        if (mod(J,1200) .eq. 0) then
-        write(*,*) 'flip to false for irun, J: ', irun, j
-        endif
+!             if (mod(J,1200) .eq. 0) then
+!               write(*,*) 'flip to false for irun, J: ', irun, j
+!             endif
               bmap_f(J)=.false.
             endif
           enddo
@@ -592,9 +596,9 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
 
           do J=1,jf
             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-        if (mod(J,1200) .eq. 0) then
-        write(*,*) 'flip to false for irun, J: ', irun, j
-        endif
+!             if (mod(J,1200) .eq. 0) then
+!               write(*,*) 'flip to false for irun, J: ', irun, j
+!             endif
               bmap_f(J)=.false.
             endif
           enddo
