@@ -555,6 +555,8 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
           bmap_f=gfld%bmap
         endif
 
+! avoid accounting for echo top bitmap
+        if (jpd2 .ne. 197) then
           do J=1,jf
             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
 !             if (mod(J,1200) .eq. 0) then
@@ -563,6 +565,7 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
               bmap_f(J)=.false.
             endif
           enddo
+        endif
 
         endif
 
@@ -594,6 +597,8 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
                 bmap_f=gfld%bmap
         endif
 
+! avoid accounting for echo top bitmap
+        if (jpd2 .ne. 197) then
           do J=1,jf
             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
 !             if (mod(J,1200) .eq. 0) then
@@ -602,6 +607,7 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
               bmap_f(J)=.false.
             endif
           enddo
+        endif
 
         endif
 
@@ -726,8 +732,8 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
 
             end do 
   
-         write(*,'(a4,10f9.2)')'MEAN',(vrbl_mn(i,lv),i=10001,10010)
-         write(*,'(a4,10f9.2)')'SPRD',(vrbl_sp(i,lv),i=10001,10010)
+         write(*,'(a4,10f9.2)')'MEAN',(vrbl_mn(i,lv),i=jf/2,jf/2+9)
+         write(*,'(a4,10f9.2)')'SPRD',(vrbl_sp(i,lv),i=jf/2,jf/2+9)
 
            end do  !end if Mlvl
 
