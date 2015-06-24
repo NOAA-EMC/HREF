@@ -1904,7 +1904,9 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(087))
             if(ITPREC==0) then
-              fld_info(cfld)%ntrange=0
+!              fld_info(cfld)%ntrange=0
+              fld_info(cfld)%ntrange=1
+        write(0,*) '(a) ntrange hardwired: ', fld_info(cfld)%ntrange
             else
 !mptest              fld_info(cfld)%ntrange=(IFHR-ID(18))/ITPREC
               fld_info(cfld)%ntrange=(IFHR-ID(18))
