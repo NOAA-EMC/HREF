@@ -1,0 +1,22 @@
+#! /bin/sh
+
+module purge
+
+module load /nwpara2/modulefiles/HREF/v1.0.2
+
+
+module list
+
+sleep 1
+
+BASE=`pwd`
+
+#########################
+
+cd href_ensprod.fd
+make clean
+make
+make copy
+make clean
+
+#########################
