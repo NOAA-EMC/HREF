@@ -84,7 +84,7 @@ C for variable table:
              ipdtmpl(6)=0
              ipdtmpl(7)=0
              ipdtmpl(8)=1
-             ipdtmpl(9)=ifhr             !fcst time    
+             ipdtmpl(9)=ifhr             !fcst hours
              ipdtmpl(10)=jpd10
              ipdtmpl(11)=gfld%ipdtmpl(11)
              !ipdtmpl(12)= see below 
@@ -95,11 +95,14 @@ C for variable table:
              ipdtmpl(17)=iens            !number of members
          
             if (jpd1.eq.1.and.jpd2.eq.8 ) then  !Template 4.12 has extra elements than Template 4.2
-              ipdtmpl(18)=iyr   !year
-              ipdtmpl(19)=imon  !mon 
-              ipdtmpl(20)=idy   !day
-              ipdtmpl(9) =ihr+ifhr-jpd27    !overwrite for APCP: Beginning time of accumulation
-              ipdtmpl(21)=ihr+ifhr         !end time of accumulation   
+              call get_time_GB2(iyr,imon,idy,ihr,ifhr,
+     +            iyr1,imon1,idy1,ihr1)
+
+              ipdtmpl(18)=iyr1   !year
+              ipdtmpl(19)=imon1  !mon 
+              ipdtmpl(20)=idy1   !day
+              ipdtmpl(9) =ifhr-jpd27    !overwrite for APCP: Beginning fcst time of accumulation
+              ipdtmpl(21)=ihr1          !end of fcst time of accumulation   
               ipdtmpl(22)=0   
               ipdtmpl(23)=0  
               ipdtmpl(24)=1   
