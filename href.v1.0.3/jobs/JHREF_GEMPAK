@@ -56,7 +56,10 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_GEMPAK}
 #
 # Copy model specific GEMPAK tables into working directory
 #
+
 cp $GEMPAKhref/fix/*.tbl .
+
+# export GEMTBL=/meso/save/Matthew.Pyle/gem_tables_5.11_hiresw
 
 #
 # Now set up GEMPAK/NTRANS environment

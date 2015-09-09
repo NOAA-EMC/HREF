@@ -7,7 +7,7 @@
 #BSUB -J HREF_NAWIPS_CYC_
 #BSUB -a poe
 #BSUB -P HRW-T2O
-#BSUB -W 0:11
+#BSUB -W 0:21
 
 export RUN_ENVIR=test
 export envir=prod
@@ -16,7 +16,7 @@ export cyc=_CYC_
 
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com/
-export COMOUT=/ptmpd3/Matthew.Pyle/com/href.gempak.test
+export COMOUT=/ptmpd3/Matthew.Pyle/com/hiresw/test/href.gempak.test
 
 module load grib_util
 module load prod_util
