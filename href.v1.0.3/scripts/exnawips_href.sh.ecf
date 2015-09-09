@@ -122,7 +122,7 @@ EOF
 
   if [ $SENDCOM = "YES" ] ; then
     cp $GEMGRD $COMOUT/.${GEMGRD}
-    export err=$?;err_chk
+#tst_need_restore    export err=$?;err_chk
     mv $COMOUT/.${GEMGRD} $COMOUT/${GEMGRD}
 
     if [ $SENDDBN = "YES" ] ; then
