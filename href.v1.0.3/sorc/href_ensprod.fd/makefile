@@ -7,12 +7,11 @@
 #
 
 
-FC=     ${COMP} -convert big_endian
 INC=  ${G2_INC4} 
 LIBS=   ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \
         ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
 #FFLAGS = -O2 -g -convert big_endian -openmp -auto  -I$(INC)
-FFLAGS = -O3 -openmp -auto -I $(INC) -assume noold_ldout_format
+FFLAGS = -O3 -convert big_endian -openmp -auto -I $(INC) -assume noold_ldout_format
 
 SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
 	packGB2_mean.f packGB2_prob.f packGB2_mean_derv.f packGB2_prob_derv.f \
