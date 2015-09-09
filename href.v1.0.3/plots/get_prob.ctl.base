@@ -1,0 +1,96 @@
+dset href.prob.tTIMEz.f%f2
+index href.prob.tTIMEz.indx
+undef 9.999E+20
+title href.mean.tTIMEz
+* produced by g2ctl v0.0.4q
+* command line options: href.prob.tTIMEz.f%f2
+* griddef=1:0:(1473 x 1025):grid_template=30:winds(grid): Lambert Conformal: (1473 x 1025) input WE:SN output WE:SN res 8 Lat1 12.190000 Lon1 226.541000 LoV 265.000000 LatD 25.000000 Latin1 25.000000 Latin2 25.000000 LatSP 0.000000 LonSP 0.000000 Nor
+dtype grib2
+options template
+pdef 1473 1025 lccr 12.190000 -133.459 1 1 25.000000 25.000000 -95 5079.000000 5079.000000
+xdef 2191 linear 207.15 0.0472378093784381
+ydef 1063 linear 12.202469 0.0461727272727273
+tdef 13 linear TIMEzDDMMMYYYY 3hr
+zdef 5 levels 92500 85000 70000 50000 40000
+options pascals
+vars 78
+APCP1250GTsfc  0,1,0 a1,12.5   0,1,8,1 ** surface prob >12.5 Total Precipitation [prob]
+APCP2500GTsfc  0,1,0 a1,25   0,1,8,1 ** surface prob >25 Total Precipitation [prob]
+APCP25GTsfc  0,1,0 a1,0.25   0,1,8,1 ** surface prob >0.25 Total Precipitation [prob]
+APCP635GTsfc  0,1,0 a1,6.35   0,1,8,1 ** surface prob >6.35 Total Precipitation [prob]
+APCP5000GTsfc  0,1,0 a1,50   0,1,8,1 ** surface prob >50 Total Precipitation [prob]
+APCP5010GTsfc  0,1,0 a1,50.1   0,1,8,1 ** surface prob >50.1 Total Precipitation [prob]
+APCP7500GTsfc  0,1,0 a1,75   0,1,8,1 ** surface prob >75 Total Precipitation [prob]
+APCP7510GTsfc  0,1,0 a1,75.1   0,1,8,1 ** surface prob >75.1 Total Precipitation [prob]
+CFRZR1TO0sfc  0,1,0 a2,1,0   0,1,193 ** surface prob >=1 <0 Categorical Freezing Rain [prob]
+CICEP1TO0sfc  0,1,0 a2,1,0   0,1,194 ** surface prob >=1 <0 Categorical Ice Pellets [prob]
+CRAIN1TO0sfc  0,1,0 a2,1,0   0,1,192 ** surface prob >=1 <0 Categorical Rain [prob]
+CSNOW1TO0sfc  0,1,0 a2,1,0   0,1,195 ** surface prob >=1 <0 Categorical Snow [prob]
+CONVAPCPsfc  0,200,1 a2,1,0  0,1,196 ** entire atmosphere (considered as a single layer) prob >=1 <0 Convective Precip
+FLGHT1TO2sfc  0,1,0 a2,1,2   0,19,205 ** surface prob >=1 <2 Flight Category [prob]
+FLGHT2TO3sfc  0,1,0 a2,2,3   0,19,205 ** surface prob >=2 <3 Flight Category [prob]
+FLGHT3TO4sfc  0,1,0 a2,3,4   0,19,205 ** surface prob >=3 <4 Flight Category [prob]
+FLGHT4TO0sfc  0,1,0 a2,4,0   0,19,205 ** surface prob >=4 <0 Flight Category [prob]
+HGT1372LTceil  0,215,0 a0,1372   0,3,5 ** cloud ceiling prob <1372 Geopotential Height [prob]
+HGT1830LTceil  0,215,0 a0,1830   0,3,5 ** cloud ceiling prob <1830 Geopotential Height [prob]
+HGT3050LTceil  0,215,0 a0,3050   0,3,5 ** cloud ceiling prob <3050 Geopotential Height [prob]
+HGT305LTceil  0,215,0 a0,305   0,3,5 ** cloud ceiling prob <305 Geopotential Height [prob]
+HGT610LTceil  0,215,0 a0,610   0,3,5 ** cloud ceiling prob <610 Geopotential Height [prob]
+HGT915LTceil  0,215,0 a0,915   0,3,5 ** cloud ceiling prob <915 Geopotential Height [prob]
+HINDEXlowsfc  0,1,0 a2,2,5   2,4,2 ** surface prob >=2 <5 Haines Index [prob]
+HINDEXmidsfc  0,1,0 a2,5,6   2,4,2 ** surface prob >=4 <6 Haines Index [prob]
+HINDEXhigsfc  0,1,0 a2,6,7   2,4,2 ** surface prob >=6 <7 Haines Index [prob]
+MAXDVV10GT 0,100,40000,100000 a1,10   0,2,221 ** 400-1000 mb prob >10 Hourly Maximum of Downward Vertical Velocity  in the lowest 400hPa [prob]
+MAXDVV1GT  0,100,40000,100000 a1,1   0,2,221 ** 400-1000 mb prob >1.01 Hourly Maximum of Downward Vertical Velocity  in the lowest 400hPa [prob]
+MAXDVV5GT  0,100,40000,100000 a1,5   0,2,221 ** 400-1000 mb prob >5 Hourly Maximum of Downward Vertical Velocity  in the lowest 400hPa [prob]
+MAXREF40GT  0,103,1000 a1,40   0,16,198 ** 1000 m above ground prob >40 Hourly Maximum of Simulated Reflectivity at 1 km AGL [prob]
+MAXUVV10GT  0,100,40000,100000 a1,10   0,2,220 ** 400-1000 mb prob >10 Hourly Maximum of Upward Vertical Velocity  in the lowest 400hPa [prob]
+MAXUVV1GT  0,100,40000,100000 a1,1   0,2,220 ** 400-1000 mb prob >1.01 Hourly Maximum of Upward Vertical Velocity  in the lowest 400hPa [prob]
+MAXUVV5GT  0,100,40000,100000 a1,5   0,2,220 ** 400-1000 mb prob >5 Hourly Maximum of Upward Vertical Velocity  in the lowest 400hPa [prob]
+MAXUW154GT10m  0,103,10 a1,15.4   0,2,222 ** 10 m above ground prob >15.4 U Component of Hourly Maximum 10m Wind Speed [prob]
+MAXVW154GT10m  0,103,10 a1,15.4   0,2,223 ** 10 m above ground prob >15.4 V Component of Hourly Maximum 10m Wind Speed [prob]
+MXUPHL25GT  0,103,5000,2000 a1,25   0,7,199 ** 5000-2000 m above ground prob >25 Hourly Maximum of Updraft Helicity over Layer 2km to 5 km AGL [prob]
+PWAT250GTclm  0,200,0 a1,25   0,1,3 ** entire atmosphere (considered as a single layer) prob >25 Precipitable Water [prob]
+PWAT375GTclm  0,200,0 a1,37.5   0,1,3 ** entire atmosphere (considered as a single layer) prob >37.5 Precipitable Water [prob]
+PWAT500GTclm  0,200,0 a1,50   0,1,3 ** entire atmosphere (considered as a single layer) prob >50 Precipitable Water [prob]
+REFC10GTclm  0,200,0 a1,10   0,16,196 ** entire atmosphere (considered as a single layer) prob >10 Composite reflectivity [prob]
+REFC20GTclm  0,200,0 a1,20   0,16,196 ** entire atmosphere (considered as a single layer) prob >20 Composite reflectivity [prob]
+REFC30GTclm  0,200,0 a1,30   0,16,196 ** entire atmosphere (considered as a single layer) prob >30 Composite reflectivity [prob]
+REFC40GTclm  0,200,0 a1,40   0,16,196 ** entire atmosphere (considered as a single layer) prob >40 Composite reflectivity [prob]
+REFC50GTclm  0,200,0 a1,50   0,16,196 ** entire atmosphere (considered as a single layer) prob >50 Composite reflectivity [prob]
+REFD40GT1000m  0,103,1000 a1,40   0,16,195 ** 1000 m above ground prob >40 Reflectivity [prob]
+RETOP10000GT  0,200,0 a1,10000   0,16,197 ** entire atmosphere (considered as a single layer) prob >10000 Echo Top [prob]
+RETOP1000GT   0,200,0 a1,1000   0,16,197 ** entire atmosphere (considered as a single layer) prob >1001 Echo Top [prob]
+RETOP3000GT   0,200,0 a1,3000   0,16,197 ** entire atmosphere (considered as a single layer) prob >3000 Echo Top [prob]
+RETOP5000GT   0,200,0 a1,5000   0,16,197 ** entire atmosphere (considered as a single layer) prob >5000 Echo Top [prob]
+RETOP7000GT   0,200,0 a1,7000   0,16,197 ** entire atmosphere (considered as a single layer) prob >7000 Echo Top [prob]
+VIS1600LTsfc  0,1,0 a0,1600   0,19,0 ** surface prob <1600 Visibility [prob]
+VIS3200LTsfc  0,1,0 a0,3200   0,19,0 ** surface prob <3200 Visibility [prob]
+VIS400LTsfc   0,1,0 a0,400   0,19,0 ** surface prob <400 Visibility [prob]
+VIS6400LTsfc  0,1,0 a0,6400   0,19,0 ** surface prob <6400 Visibility [prob]
+VIS800LTsfc   0,1,0 a0,800   0,19,0 ** surface prob <800 Visibility [prob]
+LLWS20GT2000  0,1,0 a1,20   0,2,192 ** surface prob >20 Vertical Speed Shear [prob]
+WIND103GT850  0,100,85000 a1,10.3   0,2,1 ** 850 mb prob >10.3 Wind Speed [prob]
+WIND103GT500  0,100,50000 a1,10.3   0,2,1 ** 500 mb prob >10.3 Wind Speed [prob]
+WIND103GT250  0,100,25000 a1,10.3   0,2,1 ** 250 mb prob >10.3 Wind Speed [prob]
+WIND103GT10m  0,103,10 a1,10.3   0,2,1 ** 10 m above ground prob >10.3 Wind Speed [prob]
+WIND154GT10m  0,103,10 a1,15.4   0,2,1 ** 10 m above ground prob >15.4 Wind Speed [prob]
+WND850300mb   0,108,85000,30000 a0,5   0,2,1 ** 850-300 mb above ground prob <5 Wind Speed [prob]
+WIND206GT850  0,100,85000 a1,20.6   0,2,1 ** 850 mb prob >20.6 Wind Speed [prob]
+WIND206GT500  0,100,50000 a1,20.6   0,2,1 ** 500 mb prob >20.6 Wind Speed [prob]
+WIND206GT250  0,100,25000 a1,20.6   0,2,1 ** 250 mb prob >20.6 Wind Speed [prob]
+WIND206GT10m  0,103,10 a1,20.6   0,2,1 ** 10 m above ground prob >20.6 Wind Speed [prob]
+WIND309GT850  0,100,85000 a1,30.9   0,2,1 ** 850 mb prob >30.9 Wind Speed [prob]
+WIND309GT500  0,100,50000 a1,30.9   0,2,1 ** 500 mb prob >30.9 Wind Speed [prob]
+WIND309GT250  0,100,25000 a1,30.9   0,2,1 ** 250 mb prob >30.9 Wind Speed [prob]
+WIND412GT850  0,100,85000 a1,41.2   0,2,1 ** 850 mb prob >41.2 Wind Speed [prob]
+WIND412GT500  0,100,50000 a1,41.2   0,2,1 ** 500 mb prob >41.2 Wind Speed [prob]
+WIND412GT250  0,100,25000 a1,41.2   0,2,1 ** 250 mb prob >41.2 Wind Speed [prob]
+WIND515GT850  0,100,85000 a1,51.5   0,2,1 ** 850 mb prob >51.5 Wind Speed [prob]
+WIND515GT500  0,100,50000 a1,51.5   0,2,1 ** 500 mb prob >51.5 Wind Speed [prob]
+WIND515GT250  0,100,25000 a1,51.5   0,2,1 ** 250 mb prob >51.5 Wind Speed [prob]
+WIND103GT80m  0,103,80 a1,10.3   0,2,1 ** 80 m above ground prob >10.3 Wind Speed [prob]
+WIND154GT80m  0,103,80 a1,15.4   0,2,1 ** 80 m above ground prob >15.4 Wind Speed [prob]
+WIND206GT80m  0,103,80 a1,20.6   0,2,1 ** 80 m above ground prob >20.6 Wind Speed [prob]
+ENDVARS
+
