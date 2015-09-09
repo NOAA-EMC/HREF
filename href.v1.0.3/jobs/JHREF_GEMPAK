@@ -47,14 +47,10 @@ export SENDDBN=${SENDDBN:-YES}
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export GEMPAKhref=${GEMPAKhref:-$HOMEhref/gempak}
 
-export finc=1
-export fend=48
+export finc=3
+export fend=36
+export fstart=03
 
-export fstart=00
-export model=${NEST}${MODEL}
-
-export GRIB=5km
-export EXT=
 export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_GEMPAK}
 
 #
