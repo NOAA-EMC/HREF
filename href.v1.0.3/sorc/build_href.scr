@@ -17,8 +17,3 @@ make copy
 make clean
 
 #########################
-
-cd ${BASE}/href_get_prcip.fd
-make href_get_prcip
-make copy
-make clean
