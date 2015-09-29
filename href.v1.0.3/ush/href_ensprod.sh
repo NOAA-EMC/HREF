@@ -113,7 +113,6 @@ fi
 
 
 
-#for ff in 03 06 09 12 15 18 21 24 27 30 33 36 ; do
 ff=$fhr
  nmbr=0
  for m in $mbrs ; do              
@@ -140,8 +139,6 @@ rm -f fhrs.input.$ff
 ln -fs $DATA/filename.f$ff $DATA/$ff/filename
 ln -fs $DATA/variable.tbl $DATA/$ff/variable.tbl
 ln -fs $EXEChref/href_ensprod $DATA/$ff/href_ensprod
-
-#done  #done for $ff 
 
 cd $DATA/$ff
 $EXEChref/href_ensprod > $DATA/$ff/output_ensprod.$ff 

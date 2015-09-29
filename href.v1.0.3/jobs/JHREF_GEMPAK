@@ -59,20 +59,24 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_GEMPAK}
 
 cp $GEMPAKhref/fix/*.tbl .
 
-# export GEMTBL=/meso/save/Matthew.Pyle/gem_tables_5.11_hiresw
 
 #
 # Now set up GEMPAK/NTRANS environment
 #
+
 . /nwprod/gempak/.gempak
 
 # Run setpdy and initialize PDY variables
 setpdy.sh
 . PDY
 
-export COMROOT=${COMROOT:-/com2}
-export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT}/nawips/${envir}/href.${PDY}}
+if [ "$RUN_ENVIR" != nco ] ; then
+ export COMOUT=${COMOUT:-${MYCOMROOT}/nawips/${envir}/${RUN}.${PDY}}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}}
+else
+ export COMOUT=${COMOUT:-${COMROOT}/nawips/${envir}/href.${PDY}}
+ export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}}
+fi
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT

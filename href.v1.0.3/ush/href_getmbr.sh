@@ -94,9 +94,7 @@ fi
 
 
 mbr=0
-#NAMnest grid 227
-#grid="30 6 0 0 0 0 0 0 1473 1025 12190000 226541000 8 25000000 265000000 5079000 5079000 0 64 25000000 25000000 0 0"  #grid277 namnest grid
-#for ff in $fhr ; do
+
 ff=$fhr
   mkdir -p $DATA/${ff} 
    mbr=0
@@ -113,43 +111,16 @@ ff=$fhr
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
       fi
  
-### for conusarw and conusnmmb, the current operational filenames are linked
-### the commented out lines have the appropriate names for the parallel HiresW system.
-
       if [ ${file[$m]} = 'conusarw' ] ; then
-	
-#        if [ -e ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 ]
-        if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
-
-        then
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-
-        fi
-
       fi
 
       if [ ${file[$m]} = 'conusnmmb' ] ; then
-	
-#        if [ -e ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 ]
-        if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 ]
-        then
-
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-#        ln -sf ${COMINhiresw}.${day[$m]}/${file[$m]}.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-
-        fi
-
       fi
 
-
    done
-#done
 
 exit

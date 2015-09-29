@@ -89,9 +89,7 @@ setpdy.sh
 # Define running directory and COM directories
 ##############################################
 
-export COMROOT=${COMROOT:-/com2}
-
-if [ "$RUN_ENVIR" = test ] ; then
+if [ "$RUN_ENVIR" != nco ] ; then
   export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}
 else
   export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
