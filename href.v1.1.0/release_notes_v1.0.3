@@ -1,0 +1,140 @@
+v1.0.3 - released October ??, 2015
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.0.3/
+
+Load the contents of the modulefile modulefiles/HREF/v1.0.3
+
+Running the script build_href.scr will load the HREF modulefile (assuming it is visible in $MODULEPATH)
+and make the single HREF executable: href_ensprod
+
+Update details:
+
+Primary change is to add the generation of NAWIPS/GEMPAK products from the HREF.  This adds
+a new job (JHREF_GEMPAK) and script.  It could be triggered at the end of the HREF product
+generation job (JHREF_ENSPROD).  Runs on a single task 
+
+Fixes a bug in the time labeling of accumulated precipitation for non-00Z cycles
+
+Cleans up some scripts, deleting some commented out, relic lines.
+
+###################################
+
+
+v1.0.2 - released June 19, 2015
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.0.2/
+
+Load the contents of the modulefile modulefiles/HREF/v1.0.0
+
+Running the script build_href.scr will load the HREF modulefile (assuming it is visible in $MODULEPATH) 
+and make the single HREF executable: href_ensprod
+
+Update details:
+
+Includes a code change to sorc/href_ensprod.fd/sref_ens_gen.f to account for the different
+sized bitmaps, and limiting output to the minimum region for which all source models
+have valid data.
+
+
+###############################
+
+v1.0.1 - released April 23, 2015
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.0.1/
+
+Load the contents of the modulefile modulefiles/HREF/v1.0.0
+
+Running the script build_href.scr will load the HREF modulefile (assuming it is visible in $MODULEPATH) 
+and make the single HREF executable: href_ensprod
+
+Update details:
+
+Includes Xiaoxue's redesign so the looping over time is done at a high level, making it a
+clean single job.  Also cleans up certain script items.
+
+
+###############################
+
+
+v1.0.0 - released April 9, 2015
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.0.0/
+
+Load the contents of the modulefile modulefiles/HREF/v1.0.0
+
+Running the script build_href.scr will load the HREF modulefile (assuming it is visible in $MODULEPATH) 
+and make the single HREF executable: href_ensprod
+
+###############################
+Update details:
+
+* A new High Resolution Ensemble Forecast (HREF) suite of products is
+introduced.  Despite using the same name, this product has very little in common with
+the HREF output previously provided by HiresWindow v5.  
+
+This new HREF is a set of probabilistic products generated from the three most 
+recent HiresW runs (3 WRF-ARW runs, 3 NMMB runs) and the five most recent 
+NAM nest runs. In this initial implementation, products are generated only for the CONUS
+domain.
+
+The HREF is run every 6 h (00Z, 06Z, …).   Mean, spread, and probability products are produced every 3 h to 36 h.
+
+Output is placed in /com/hiresw/prod/href.${PDY}/ensprod/
+
+Mean (href.t${cyc}z.mean.f${ff}.grib2) and spread (href.t${cyc}z.sprd.tf${ff}.grib2) field file contents:
+
+sea level pressure
+500 hPa height
+850 hPa height, temperature, U and V winds, and wind speed
+700 hPa vertical velocity and relative humidity
+500 hPa absolute vorticity
+Precipitable water (column total)
+surface visibility
+3 h accumulated precipitation
+cloud ceiling height
+surface vertical speed shear
+
+
+Probability ((href.t${cyc}z.prob.f${ff}.grib2)  fields:
+
+1000 m AGL simulated reflectivity > 40 dBZ
+Hourly maximum 1000 m AGL simulated reflectivity > 40 dBZ
+Hourly maximum 2-5 km AGL updraft helicity > 25 m^2/s^2
+Hourly maximum updraft over 400-1000 hPa layer (m/s) >  (1, 5, 10)
+Hourly maximum downdraft over 400-1000 hPa layer (m/s) >  (1, 5, 10)
+Hourly maximum 10 m AGL U wind component > 15.4 m/s
+Hourly maximum 10 m AGL V wind component > 15.4 m/s
+Precipitable water (column total, kg/m^2) > (25, 37.5, 50)
+Surface visibility (m) < (400, 800, 1600, 3200, 6400)
+Column maximum (composite) simulated reflectivity (dBZ) > (10, 20, 30, 40, 50)
+Echo top height (m) > (1000,, 3000, 5000, 7600, 10000)
+3 h precipitation (kg/m^2) > (0.24, 6.34, 12.4, 25.1, 50, 75)
+Precipitation type : rain, freezing rain, ice pellets, snow
+10 m AGL wind speed (m/s) > (10.3, 15.4, 20.6)
+80 m AGL wind speed (m/s) > (10.3, 15.4, 20.6)
+850 hPa wind speed (m/s) > (10.3, 20.6, 30.9, 41.2, 51.5)
+500 hPa wind speed (m/s) > (10.3, 20.6, 30.9, 41.2, 51.5)
+250 hPa wind speed (m/s) > (10.3, 20.6, 30.9, 41.2, 51.5)
+Flight category (1-4)
+Haines Index  (2-5, 5-6, 6-7)
+Cloud ceiling height (m) < (305, 610, 915, 1372, 1830, 3050)
+surface vertical speed shear (1/s)  > 20
+wind speed over 300 to 850 hPa above ground < 5 m/s
+
+################
+
+###################################
+Resource usage:
+###################################
+
+The JHREF_RUNALL job runs serially on a single task, but submits two six node jobs.  These six node jobs run in roughly 12-20 minutes.  Timings seemed quite variable in testing, but this system is I/O intensive so may be more sensitive than most to filesystem activity.  In theory it could be redesigned to run on fewer nodes for a longer time.  Each node currently is processing just a single hour of forecast time, so each hour is independent making the system flexible.
+
+Approximate 580 mb of GRIB2 output per cycle time is sent to /com/hiresw/${envir}/href.${PDY}/ensprod/
+
+So if four cycles per day are run, roughly 2.3 GB/day will be added to /com/.
