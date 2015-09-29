@@ -14,9 +14,11 @@ export envir=test
 export SUB_ENVIR=dev2
 export cyc=_CYC_
 
+export COMROOT=/com2
+export COMROOTp1=/com
 export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/ptmpd3/Matthew.Pyle/com/
-export COMINhiresw=/ptmpd3/Matthew.Pyle/com/hiresw/test/hiresw
+export COMINhiresw=/com2/hiresw/prod/hiresw
 export COMINnam=/com/nam/prod/nam
 
 module load grib_util
