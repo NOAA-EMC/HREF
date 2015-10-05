@@ -2,7 +2,7 @@
 
 module purge
 
-module load /meso/save/Matthew.Pyle/href.v1.0.3/modulefiles/HREF/v1.0.3
+module load ../modulefiles/HREF/v1.1.0
 # module load /nwpara2/modulefiles/HREF/v1.0.2
 
 sleep 1
