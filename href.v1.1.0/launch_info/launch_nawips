@@ -5,4 +5,4 @@ cat run_nawips.sh_in | sed s:_CYC_:${cyc}:g > launch_hrefnawips_${cyc}
 
 bsub < launch_hrefnawips_${cyc}
 
-# rm launch_hrefnawips_${cyc}
+rm launch_hrefnawips_${cyc}
