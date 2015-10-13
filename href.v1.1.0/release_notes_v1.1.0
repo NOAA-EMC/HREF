@@ -15,7 +15,8 @@ generation job (JHREF_ENSPROD).  Runs on a single task
 
 Fixes a bug in the time labeling of accumulated precipitation for non-00Z cycles.  
 
-Cleans up some scripts, deleting some commented out, relic lines.
+Cleans up some scripts, deleting some commented out lines from when time looping was done
+in USH scripts.
 
 ###################################
 
