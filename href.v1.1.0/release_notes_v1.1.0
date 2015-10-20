@@ -9,14 +9,24 @@ and make the single HREF executable: href_ensprod
 
 Update details:
 
-Primary change is to add the generation of NAWIPS/GEMPAK products from the HREF.  This adds
-a new job (JHREF_GEMPAK) and script.  It could be triggered at the end of the HREF product
-generation job (JHREF_ENSPROD).  Runs on a single task 
+Primary change is to add the generation of NAWIPS/GEMPAK products from the 
+HREF.  This adds a new job (JHREF_GEMPAK) and script.  It could be 
+triggered at the end of the HREF product generation job (JHREF_ENSPROD).  
 
-Fixes a bug in the time labeling of accumulated precipitation for non-00Z cycles.  
+Fixes a bug in the time labeling of accumulated precipitation for non-00Z cycles.
 
 Cleans up some scripts, deleting some commented out lines from when time looping was done
 in USH scripts.
+
+###################################
+Resource usage changes:
+###################################
+
+The new JHREF_GEMPAK job runs on a single task in roughly 15-20 minutes.
+
+Output is directed to /com2/nawips/${envir}/href.${PDY}
+
+Four cycles of the new GEMPAK output is roughly 8.4 GB/day of additional storage on disk
 
 ###################################
 
