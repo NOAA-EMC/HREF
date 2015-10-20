@@ -202,7 +202,6 @@ c   for max,min,10,25,50,90% mean products
         character*7 mbrname(50)
 
         logical*1, allocatable:: bmap_f(:)
-
         integer jptyp2(4)                           !for precip type jpd2
         integer iqout(8) 
 
@@ -551,7 +550,6 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
 
         if ( .not. allocated(bmap_f)) then
           allocate(bmap_f(jf))
-          write(*,*) 'setting initial bmap_f ', jf
           bmap_f=gfld%bmap
         endif
 
@@ -559,9 +557,6 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
         if (jpd2 .ne. 197) then
           do J=1,jf
             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-!             if (mod(J,1200) .eq. 0) then
-!               write(*,*) 'flip to false for irun, J: ', irun, j
-!             endif
               bmap_f(J)=.false.
             endif
           enddo
@@ -593,7 +588,6 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
 
         if ( .not. allocated(bmap_f)) then
         allocate(bmap_f(jf))
-        write(*,*) 'setting initial bmap_f'
                 bmap_f=gfld%bmap
         endif
 
@@ -601,9 +595,6 @@ c         write(*,*) 'get APCP GRIB2 data for member ', irun
         if (jpd2 .ne. 197) then
           do J=1,jf
             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-!             if (mod(J,1200) .eq. 0) then
-!               write(*,*) 'flip to false for irun, J: ', irun, j
-!             endif
               bmap_f(J)=.false.
             endif
           enddo
@@ -823,7 +814,7 @@ c        write(*,'(a4,10f9.2)')'PROB',(vrbl_pr(i,lv,lt),i=10001,10010)
         write(*,*) 'Ensemble computation done for direct var ', nv
 c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
-!! insert combined bmap_f
+! Reset gfld%bmap with the combined version bmap_f
         gfld%bmap=bmap_f
 
       call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
