@@ -4,7 +4,7 @@ Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.1.0/
 
 Load the contents of the modulefile modulefiles/HREF/v1.1.0
 
-Running the script build_href.scr will load the HREF modulefile
+Running the script sorc/build_href.scr will load the HREF modulefile
 and make the single HREF executable: href_ensprod
 
 Update details:
