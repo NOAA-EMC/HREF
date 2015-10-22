@@ -62,12 +62,6 @@ while [ $fhcnt -le $fend ] ; do
   GEMGRD=${RUN}_${TYPE}_${PDY}${cyc}f${fhr3} 
   GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${TYPE}.f${fhr}.grib2.idx
 
-  if [ $TYPE -ne "prob" ]
-  then
-   $WGRIB2 ${GRIBIN} -match "(UGRD|VGRD|RH|VVEL|APCP|PWAT|PRMSL)" -grib ${RUN}.t${cyc}z.${TYPE}.f${fhr}.grib2
-   GRIBIN=${RUN}.t${cyc}z.${TYPE}.f${fhr}.grib2
-  fi
-
   icnt=1
   while [ $icnt -lt 1000 ]
   do
@@ -141,9 +135,9 @@ done # $TYPE
 #####################################################################
 # GOOD RUN
 set +x
-echo "**************JOB HREF NAWIPS COMPLETED NORMALLY ON THE IBM"
-echo "**************JOB HREF NAWIPS COMPLETED NORMALLY ON THE IBM"
-echo "**************JOB HREF NAWIPS COMPLETED NORMALLY ON THE IBM"
+echo "**************JOB HREF NAWIPS COMPLETED NORMALLY "
+echo "**************JOB HREF NAWIPS COMPLETED NORMALLY "
+echo "**************JOB HREF NAWIPS COMPLETED NORMALLY "
 set -x
 #####################################################################
 
