@@ -5,6 +5,9 @@
 ########################################
 set -xa
 
+module load prod_util
+
+
 export PS4='$SECONDS + ' 
 date
 

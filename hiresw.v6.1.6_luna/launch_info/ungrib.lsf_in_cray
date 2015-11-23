@@ -31,9 +31,8 @@ export NEST=_DOM_
 export cyc=_CYC_
 export MODEL=_CORE_
 
-# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
-export DATEroot=/gpfs/tp1/nco/ops/com/date
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 
 # export COMGFS=/gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}

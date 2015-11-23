@@ -39,9 +39,8 @@ export MODEL=_CORE_
 
 export SENDDBN=NO
 
-# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
-export DATEroot=/gpfs/tp1/nco/ops/com/date
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com

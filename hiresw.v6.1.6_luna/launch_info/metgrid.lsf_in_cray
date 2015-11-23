@@ -25,10 +25,9 @@ export MODEL=_CORE_
 export KMP_AFFINITY=disabled
 export OMP_NUM_THREADS=1
 
-# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export DATEroot=/gpfs/tp1/nco/ops/com/date
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com

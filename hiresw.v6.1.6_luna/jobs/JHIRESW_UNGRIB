@@ -62,8 +62,15 @@ module load prod_util
 
 
 # Run setpdy and initialize PDY variables
+echo run setpdy.sh
 setpdy.sh
+echo past setpdy.sh
+
+ls -l PDY
+
 . PDY
+
+echo have PDY as $PDY
 
 export COMROOT=${COMROOT:-/com2}
 export COMOUT=${COMOUT:-/${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
