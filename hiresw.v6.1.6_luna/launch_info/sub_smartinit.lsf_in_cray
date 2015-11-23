@@ -32,9 +32,8 @@ export MODEL=_CORE_
 
 module load prod_util
 
-# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
-export DATEroot=/gpfs/tp1/nco/ops/com/date
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/${cyc}z | cut -c7-14`
 
 DATEM1=`$NDATE -24 ${DATE}${cyc} | cut -c1-8`
 

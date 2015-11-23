@@ -77,30 +77,36 @@ export COMsref=${COMsref:-${COMROOT}/sref/prod}
 
 mkdir -p $COMOUT
 
-let srefcyc=$cyc-3
-if [ $srefcyc -lt 0 ] ; then
-  let srefcyc=$srefcyc+24
-  export SREF_PDY=$PDYm1
-else
-  export SREF_PDY=$PDY
-fi
+# let srefcyc=$cyc-3
+# if [ $srefcyc -lt 0 ] ; then
+#   let srefcyc=$srefcyc+24
 
-let gefscyc=$cyc-6
-if [ $gefscyc -lt 0 ] ; then
-  let gefscyc=$gefscyc+24
-  export GEFS_PDY=$PDYm1
-else
-  export GEFS_PDY=$PDY
-fi
+  if [ $srefcyc -eq 21 ] ; then
+   export SREF_PDY=$PDYm1
+  else
+   export SREF_PDY=$PDY
+  fi
 
-export srefcyc
-let srefcyc2=$srefcyc
+# let gefscyc=$cyc-6
+# if [ $gefscyc -lt 0 ] ; then
+#   let gefscyc=$gefscyc+24
+#   export GEFS_PDY=$PDYm1
+# else
+#   export GEFS_PDY=$PDY
+# fi
 
-export gefscyc
-let gefscyc2=$gefscyc
+# export srefcyc
+# let srefcyc2=$srefcyc
 
-if [ $srefcyc2 -lt 10 ];then srefcyc2="0"${srefcyc2};fi
-if [ $gefscyc2 -lt 10 ];then gefscyc2="0"${gefscyc2};fi
+# export gefscyc
+# let gefscyc2=$gefscyc
+
+# if [ $srefcyc2 -lt 10 ];then srefcyc2="0"${srefcyc2};fi
+# if [ $gefscyc2 -lt 10 ];then gefscyc2="0"${gefscyc2};fi
+
+# export srefcyc=$srefcyc2
+
+echo srefcyc is $srefcyc
 
 export COMINsref=${COMINsref:-$COMsref/sref.${SREF_PDY}/${srefcyc2}/ensprod}
 export COMINgefs=${COMINgefs:-$COMsref/sref.${GEFS_PDY}/ensprod_gefs}
