@@ -6,7 +6,7 @@ TARGDIR=../../../exec/
 
 ./clean
 
-cp configure.nps_wcoss_dmpara configure.nps
+cp configure.nps_cray_dmpara configure.nps
 
 ./compile nemsinterp
 
@@ -14,7 +14,7 @@ cp nemsinterp.exe $TARGDIR/hiresw_nemsinterp
 
 ./clean
 
-cp configure.nps_wcoss_serial configure.nps
+cp configure.nps_cray_serial configure.nps
 
 ./compile ungrib
 ./compile metgrid

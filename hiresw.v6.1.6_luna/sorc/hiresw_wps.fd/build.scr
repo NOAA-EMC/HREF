@@ -2,7 +2,7 @@
 
 ./clean -a
 
-cp configure.wps_serial configure.wps
+cp configure.wps_serial_cray configure.wps
 
 ./compile ungrib >& build_ungrib.log
 cp ungrib.exe ../../exec/hiresw_ungrib
