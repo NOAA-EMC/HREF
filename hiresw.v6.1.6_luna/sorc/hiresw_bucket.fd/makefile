@@ -11,10 +11,10 @@ OBJS=	WRFBUCKETG2.o
 #
 CMD = ../../exec/hiresw_pcpbucket_general_g2
 
-LIBS =   ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} 
+LIBS =   ${G2TMPL_LIB} ${G2_LIB4}  ${PNG_LIB} ${JASPER_LIB} ${Z_LIB} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} 
 INC =  -I${G2_INC4} -I${G2TMPL_INC}
 
-FFLAGS = -O   
+FFLAGS = -O2 -xAVX   
 
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.
@@ -22,9 +22,9 @@ FFLAGS = -O
 all:	 $(CMD) delete
 
 $(CMD):		$(OBJS)
-	$(COMP) ${INC} -o $(@) $(OBJS) $(LIBS)
+	$(FC) ${INC} -o $(@) $(OBJS) $(LIBS)
 
 $(OBJS):       
-	$(COMP) ${INC} -c $(FFLAGS) $(@:.o=.f)
+	$(FC) ${INC} -c $(FFLAGS) $(@:.o=.f)
 delete:
 	@rm  *.o

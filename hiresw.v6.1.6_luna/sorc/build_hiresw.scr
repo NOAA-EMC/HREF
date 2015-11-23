@@ -1,47 +1,50 @@
 set -x
 module purge
 
-module load /nwpara2/modulefiles/HIRESW/v6.1.3
+BASE=`pwd`
+
+module load /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/modulefiles/HIRESW/v6.1.6.luna
 
 module list
 
-sleep 1
+env
 
-BASE=`pwd`
-
-##############################
-
-cd ${BASE}/hiresw_wrfarwfcst.fd
-./compile_arw.sc
+sleep 9
 
 ##############################
 
-cd ${BASE}/hiresw_bucket.fd
-make
+# cd ${BASE}/hiresw_wrfarwfcst.fd
+# ./compile_arw.sc
 
 ##############################
 
-cd ${BASE}/hiresw_wrfbufr.fd
-make clean
-./fill_wrflibs.scr
-make
+# cd ${BASE}/hiresw_bucket.fd
+# make
+
 
 ##############################
 
-cd ${BASE}/hiresw_wps.fd
-./build.scr
+# cd ${BASE}/hiresw_wrfbufr.fd
+# make clean
+# ./fill_wrflibs.scr
+# make
 
 ##############################
 
-cd ${BASE}/hiresw_post.fd
-make clean
-make
+# cd ${BASE}/hiresw_wps.fd
+# ./build.scr
 
 ##############################
 
-cd ${BASE}/hiresw_nps.fd/NPS/
-./build.scr
- 
+# cd ${BASE}/hiresw_post.fd
+# make clean
+# make
+
+##############################
+
+# cd ${BASE}/hiresw_nps.fd/NPS/
+# ./build.scr
+
 ##############################
 
 cd ${BASE}/hiresw_smartinitg2.fd
@@ -54,37 +57,50 @@ cd ${BASE}/hiresw_smartprecipg2.fd
 make clean
 make
 
-##############################
-
-cd ${BASE}/hiresw_coldstart.fd
-make clean
-make
+exit
 
 ##############################
 
-cd ${BASE}/hiresw_sndp.fd
-make -f makefile_nmm
-make -f makefile_em
+# cd ${BASE}/hiresw_coldstart.fd
+# make clean
+# make
 
 ##############################
 
-cd ${BASE}/hiresw_stnmlist.fd
-make clean
-make
+# cd ${BASE}/hiresw_sndp.fd
+# make -f makefile_nmm
+# make -f makefile_em
+
+##############################
+
+# cd ${BASE}/hiresw_stnmlist.fd
+# make clean
+# make
 
 ##############################
 
 cd ${BASE}/hiresw_nmmbfcst.fd/src
 gmake clean
-module unload ibmpe
-./esmf_version 6.3r_nmm_wcoss
-gmake nmm > makenmm.log  2>&1
+
+## module unload ibmpe
+## ./esmf_version 6.3r_nmm_wcoss
+
+cp ${BASE}/hiresw_nmmbfcst.fd/src/conf/configure.nems.Wcoss.intel_ESMF_630r_nmm_luna \
+   ${BASE}/hiresw_nmmbfcst.fd/src/conf/configure.nems
+
+# make nmm > makenmm.log  2>&1
+
+make nmm >& makenmm.log
 
 cp ${BASE}/hiresw_nmmbfcst.fd/exe/NEMS.x ${BASE}/../exec/hiresw_nmmbfcst
-module load ibmpe
+
+# module load ibmpe
+
+exit
 
 ##############################
 
+module swap PrgEnv-intel/5.2.40 PrgEnv-gnu/5.2.40
 cd ${BASE}/hiresw_wgrib2.cd
 make
 

@@ -26,24 +26,39 @@ CMD = ../../exec/hiresw_wrfbufr
 # CPP, Compiler, and Linker Options
 #
 
-FC       = ${COMP_MP} 
+# FC       = ${FC} 
+
 CPP      = /lib/cpp -P
 ARCH     =
 CPPFLAGS = 
-OPTS     = -O2   -convert big_endian -assume noold_ldout_format
+OPTS     = -O2 -xAVX  -convert big_endian -assume noold_ldout_format
 FREE     = -FR
 TRAPS    = 
 DEBUG    = -g # -traceback -fpe0 -ftrapuv # -check all 
 
-WRFLIB    = ./wrflibs/libwrflib.a  \
-            ./wrflibs/pack_utils.o  \
-            ./wrflibs/libfftpack.a \
-            ./wrflibs/libio_grib1.a \
-            ./wrflibs/libio_grib_share.a \
-            ./wrflibs/libwrfio_int.a \
-            ./wrflibs/libwrfio_nf.a \
-            ./wrflibs/libesmf_time.a \
-            ./wrflibs/librsl_lite.a
+# WRFLIB    = ./wrflibs/libwrflib.a  \
+#             ./wrflibs/pack_utils.o  \
+#             ./wrflibs/libfftpack.a \
+#            ./wrflibs/libio_grib1.a \
+#            ./wrflibs/libio_grib_share.a \
+#            ./wrflibs/libwrfio_int.a \
+#            ./wrflibs/libwrfio_nf.a \
+#            ./wrflibs/libesmf_time.a \
+#            ./wrflibs/librsl_lite.a
+
+WRFPATH = ../hiresw_wrfarwfcst.fd
+
+WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
+WRFLIB    = $(WRFPATH)/main/libwrflib.a $(WRFPATH)/frame/pack_utils.o  \
+             $(WRFPATH)/main/libwrflib.a \
+             $(WRFPATH)/external/fftpack/fftpack5/libfftpack.a \
+             $(WRFPATH)/external/io_grib1/libio_grib1.a \
+             $(WRFPATH)/external/io_grib_share/libio_grib_share.a \
+             $(WRFPATH)/external/io_int/libwrfio_int.a \
+             $(WRFPATH)/external/io_netcdf/libwrfio_nf.a \
+             $(WRFPATH)/external/esmf_time_f90/libesmf_time.a \
+             $(WRFPATH)/external/RSL_LITE/librsl_lite.a
+
 
 #
 # Assemble Options
@@ -53,8 +68,8 @@ FFLAGST  = $(OPTS) $(FREE) $(TRAPS) $(DEBUG) $(WRFFLAGS) -I$(NEMSIO_INC)
 LDFLAGS  =
 LIBS     = $(WRFLIB) \
            $(NEMSIO_LIB) \
-           ${W3EMC_LIB4} ${W3NCO_LIB4} ${BACIO_LIB4} \
-           ${NETCDF_LDFLAGS} 
+           $(W3EMC_LIB4) $(W3NCO_LIB4) $(BACIO_LIB4) \
+           $(NETCDF_LDFLAGS_F)
 #
 #
 # free-format object files
