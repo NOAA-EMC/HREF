@@ -1,0 +1,25 @@
+###############################################################################
+#
+#  GFS_nemsio
+#
+###############################################################################
+
+export TEST_DESCR="GFS with NEMSIO"
+
+export CNTL_DIR=GFS_DFI_NEMSIO
+export LIST_FILES="sigf00 sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf00 sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf00 flxf03 flxf06 flxf12 flxf24 flxf48"
+
+export_gsm
+export FDFI=3
+export QUILT=.true.
+export NEMSIOIN=.true.
+export SIGIOIN=.false.
+export NEMSIOOUT=.true.
+export SIGIOOUT=.false.
+export SFCIOOUT=.false.
+export CDATE=2010010100
+export WTPG=4
+
+RUN_SCRIPT=rt_gfs.sh

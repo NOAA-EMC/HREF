@@ -1,0 +1,48 @@
+#!/bin/ksh
+
+RUNDIR=_RUND_
+SRCDIR=_SRCD_
+
+mkdir -p $RUNDIR
+cd $RUNDIR
+rm -rf $RUNDIR/*
+
+cp _RTPWD_/NMMB_nests/input_nmmb_regional.d01           input_domain_01
+cp _RTPWD_/NMMB_nests/input_nmmb_regional.d01_nemsio    input_domain_01_nemsio
+cp _RTPWD_/NMMB_nests/nmmb_rst_01_bin_0012h_00m_00.00s  restart_file_01
+cp _RTPWD_/NMMB_nests/nmmb_rst_02_bin_0012h_00m_00.00s  restart_file_02
+cp _RTPWD_/NMMB_nests/nmmb_rst_03_bin_0012h_00m_00.00s  restart_file_03
+cp _RTPWD_/NMMB_nests/nmmb_rst_04_bin_0012h_00m_00.00s  restart_file_04
+cp _RTPWD_/NMMB_nests/boco.* .
+cp _RTPWD_/data/* .
+cp _RTPWD_/NMMB_nests/GWD_bin_* .
+cp IGBP_VEGPARM.TBL VEGPARM.TBL
+cp IGBP_LANDUSE.TBL LANDUSE.TBL
+cp ETAMPNEW_DATA.expanded_rain ETAMPNEW_DATA
+
+cp $SRCDIR/job/regression_tests/atmos.configure_nmm atmos.configure
+cp $SRCDIR/job/regression_tests/configure_file_0* .
+cp configure_file_01 model_configure
+ln -sf global_o3prdlos.f77 fort.28
+ln -sf global_o3clim.txt fort.48
+
+cp $SRCDIR/job/regression_tests/solver_state.txt .
+cp $SRCDIR/job/regression_tests/nests.txt .
+if [ $TS = true ]; then
+  cp $SRCDIR/job/regression_tests/ts_locations.nml .
+fi
+
+cp $SRCDIR/exe/NEMS.x .
+
+if [ $SCHEDULER = 'moab' ]; then
+  cp $SRCDIR/job/regression_tests/nmm_msub .
+  msub nmm_msub > /dev/null
+elif [ $SCHEDULER = 'pbs' ]; then
+  cp $SRCDIR/job/regression_tests/nmm_qsub .
+  qsub nmm_qsub > /dev/null
+elif [ $SCHEDULER = 'lsf' ]; then
+  cp $SRCDIR/job/regression_tests/nmm_bsub .
+  bsub < nmm_bsub > /dev/null 2>&1
+fi
+
+exit

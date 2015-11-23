@@ -1,0 +1,80 @@
+#!/bin/ksh
+
+set -eu
+
+RUNDIR=_RUND_
+SRCDIR=_SRCD_
+
+mkdir -p $RUNDIR
+cd $RUNDIR
+rm -rf $RUNDIR/*
+
+cp _RTPWD_/NMMB_reg/input_nmmb_regional.d01               input_domain_01
+cp _RTPWD_/NMMB_reg/input_nmmb_regional.d01_nemsio        input_domain_01_nemsio
+cp _RTPWD_/NMMB_reg/nmmb_rst_01_bin_0024h_00m_00.00s  restart_file_01
+cp _RTPWD_/NMMB_reg/nmmb_rst_01_nio_0024h_00m_00.00s  restart_file_01_nemsio
+cp _RTPWD_/NMMB_reg/GWD_bin_01 .
+cp _RTPWD_/NMMB_reg/boco.* .
+if [ $PCPFLG = true ]; then
+  cp ../nmm_reg_ctl/pcp.hr* .
+fi
+if [ $SPEC_ADV = true -a $RSTRT = true ]; then
+  cp _RTPWD_/NMMB_reg_spec_adv/nmmb_rst_01_bin_0012h_00m_00.00s  restart_file_01
+  cp _RTPWD_/NMMB_reg_spec_adv/nmmb_rst_01_nio_0012h_00m_00.00s  restart_file_01_nemsio
+fi
+
+cp $SRCDIR/tests/atmos.configure_nmm atmos.configure
+cp $SRCDIR/tests/configure_file_01 .
+cp configure_file_01 model_configure
+cp _RTPWD_/data/* .
+cp IGBP_VEGPARM.TBL VEGPARM.TBL
+cp IGBP_LANDUSE.TBL LANDUSE.TBL
+cp ETAMPNEW_DATA.expanded_rain ETAMPNEW_DATA
+ln -sf global_o3prdlos.f77 fort.28
+ln -sf global_o3clim.txt fort.48
+
+cp $SRCDIR/tests/solver_state.txt .
+cp $SRCDIR/tests/nests.txt .
+if [ $TS = true ]; then
+  cp $SRCDIR/tests/ts_locations.nml .
+fi
+
+#for post
+export WRITE_DOPOST=_wrtdopost_
+export WRITE_DOPOST=${WRITE_DOPOST:-.false.}
+export POST_GRIBVERSION=_postgrbvs_
+export POST_GRIBVERSION=${POST_GRIBVERSION:-'"grib1"'}
+if  [[ $WRITE_DOPOST = .true. ]]; then
+export PGBOUT=nmm_pgb
+export IGEN=82
+#cat <<EOF >postgp.inp.nml$$
+# &NAMPGB
+# $POSTGPVARS
+#  /
+#EOF
+cp ${SRCDIR}/tests/nmmb_cntrl.parm ./nmmb_cntrl.parm
+ln -sf ./nmmb_cntrl.parm fort.14
+ln -sf griddef.out fort.110
+if [ $SCHEDULER = 'loadleveler' ]; then
+  cp /nwprod/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+elif [ $SCHEDULER = 'pbs' ]; then
+  cp _RTPWD_/data_POST/eta_micro_lookup.dat ./eta_micro_lookup.dat
+elif [ $SCHEDULER = 'lsf' ]; then
+  cp /nwprod/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+fi
+
+fi
+
+
+cp $SRCDIR/exe/NEMS.x .
+
+if [ $SCHEDULER = 'moab' ]; then
+  cp $SRCDIR/tests/nmm_msub .
+  msub nmm_msub
+elif [ $SCHEDULER = 'pbs' ]; then
+  cp $SRCDIR/tests/nmm_qsub .
+  qsub nmm_qsub
+elif [ $SCHEDULER = 'lsf' ]; then
+  cp $SRCDIR/tests/nmm_bsub .
+  bsub < nmm_bsub
+fi

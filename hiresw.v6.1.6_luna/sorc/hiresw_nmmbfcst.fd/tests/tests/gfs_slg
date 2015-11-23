@@ -1,0 +1,59 @@
+###############################################################################
+#
+#  GFS Semi-Lagrangian model
+#  96 tasks, T574L64, 24 hours forecast. Adiabatic version.
+#  No digital filter.
+#
+##############################################################################
+
+export TEST_DESCR="Run Semi-lagrangian test"
+
+export CNTL_DIR=GFS_SLG_adiab
+export LIST_FILES="sigf00 sigf06 sigf12 sigf18 sigf24"
+
+export_gsm
+
+export CDATE=2013010100
+export LDFI_SPECT=.false.
+export NDAYS=1
+export wave=574
+export TASKS=96
+export TPN=8
+export THRD=1
+export ADIAB=.true.
+export IAER=111
+export LD_PRELOAD=/nems/save/Weiyu.Yang/libmpitrace.so
+export WLCLK=55
+export SLG=.true.
+export PE1=96
+export NEMSIOIN=.false.
+export NEMSIOOUT=.false.
+export SIGIOIN=.true.
+export SIGIOOUT=.true.
+export SFCIOOUT=.true.
+export WTPG=1
+export WRTGP=1
+export WRITE_DOPOST=.false.
+export POST_GRIBVERSION='"grib1"'
+export GOCART_AER2POST=.false.
+export NSOUT=36
+export QUILT=.true.
+export MEMBER_NAMES=c00
+export CP2=1 # one copy in the dynamics and physics, and another one popints the copy.
+export FDFI=0 # no digital filter.
+export FHRES=264
+export REDUCEDGRID=.true.
+export NST_FCST=0
+export GOCART=0
+export TRACER=.false.
+export SFCPRESS_ID=1
+export THERMODYN_ID=1
+export IDVC=2  # the vertical coord - 2 means hybrid
+export NDSLFV=.false.
+export SPECTRALLOOP=3
+export IEMS=0
+export ISOL=1
+export ICO2=1
+
+
+RUN_SCRIPT=rt_gfs.sh_slg

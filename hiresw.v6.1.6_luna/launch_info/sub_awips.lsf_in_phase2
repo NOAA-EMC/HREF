@@ -1,0 +1,52 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/logs/test_awips.out__DOM__CORE__CYC_
+#BSUB -eo /meso/save/Matthew.Pyle/logs/test_awips.err__DOM__CORE__CYC_
+#BSUB -R span[ptile=1]
+#BSUB -q "dev2_shared"
+#BSUB -J HIRESW_AWIPS__DOM___CORE___CYC_
+#BSUB -R rusage[mem=5000]
+#BSUB -R affinity[core(1)]
+#BSUB -P HRW-T2O
+#BSUB -n 1
+#BSUB -W 1:25
+#BSUB -a poe
+#
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+module load ics
+module load ibmpe
+module load NetCDF/4.2/serial
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+
+export PMYCOMROOT=/ptmpd3/Matthew.Pyle/pcom
+export MYCOMROOT=/ptmpd3/Matthew.Pyle/com
+export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
+
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COM=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export pcom=${PMYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export DATA=${DATAROOT}/hiresw.awips_${NEST}_${MODEL}_${cyc}_${envir}
+
+mkdir -p $pcom
+
+$HOMEhiresw/jobs/JHIRESW_AWIPS

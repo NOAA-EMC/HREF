@@ -1,0 +1,25 @@
+#! /bin/ksh
+
+
+TARGDIR=../../../exec/
+
+
+./clean
+
+cp configure.nps_wcoss_dmpara configure.nps
+
+./compile nemsinterp
+
+cp nemsinterp.exe $TARGDIR/hiresw_nemsinterp
+
+./clean
+
+cp configure.nps_wcoss_serial configure.nps
+
+./compile ungrib
+./compile metgrid
+
+cp ungrib.exe $TARGDIR/hiresw_nps_ungrib
+cp metgrid.exe $TARGDIR/hiresw_nps_metgrid
+
+
