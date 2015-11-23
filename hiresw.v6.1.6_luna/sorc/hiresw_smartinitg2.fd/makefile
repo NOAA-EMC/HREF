@@ -3,8 +3,8 @@ SHELL=/bin/sh
 OBJS1= aset3d.o aset2d.o grddef.o constants.o asetdown.o rdgrib.o GETGRIB.o
 OBJS2= MAIN.o BOUND.o GRIBIT.o GET_BITS.o MAKESTRING.o NDFDgrid.o VADJUST.o
 
-FCA =   ${COMP} -convert big_endian -assume noold_ldout_format -g -traceback # -assume noold_ldout_format # -ftrapuv  -check all  -fp-stack-check  -fstack-protector	
-FCB =   ${COMP} -O3 -convert big_endian -assume noold_ldout_format -g -traceback # -assume noold_ldout_format # -ftrapuv  -check all  -fp-stack-check  -fstack-protector	
+FCA =   ${FC} -convert big_endian -xAVX -assume noold_ldout_format -g -traceback # -assume noold_ldout_format # -ftrapuv  -check all  -fp-stack-check  -fstack-protector	
+FCB =   ${FC} -O3 -convert big_endian -xAVX -assume noold_ldout_format -g -traceback # -assume noold_ldout_format # -ftrapuv  -check all  -fp-stack-check  -fstack-protector	
 
 LIBS = ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB} ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4}
 INC= -I${G2_INC4} -I${G2TMPL_INC}

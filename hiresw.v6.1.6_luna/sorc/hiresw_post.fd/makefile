@@ -6,7 +6,7 @@ TARGET   = ../../exec/hiresw_post
 #
 # CPP, Compiler, and Linker Options
 #
-FC       = ${COMP_MP} -compiler ${COMP}
+# FC       = ${COMP_MP} -compiler ${COMP}
 CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
 OPTS     = -O3 -fp-model fast -assume noold_ldout_format 
@@ -26,11 +26,15 @@ BACIO_LIB  = ${BACIO_LIB4}
 SIGIO_INC  = -I${SIGIO_INC4}
 SIGIO_LIB  = ${SIGIO_LIB4}
 
-WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
+## WRFPATH    = /nwprod/sorc/wrf_shared.v1.1.0
+
+WRFPATH = ../hiresw_wrfarwfcst.fd
+
 WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
-WRF_LIB    = $(WRFPATH)/main/libwrflib.a  \
-             $(WRFPATH)/frame/pack_utils.o  \
+WRF_LIB    = $(WRFPATH)/main/libwrflib.a $(WRFPATH)/frame/pack_utils.o  \
              $(WRFPATH)/frame/module_internal_header_util.o \
+             $(WRFPATH)/main/libwrflib.a \
+             $(WRFPATH)/external/fftpack/fftpack5/libfftpack.a \
              $(WRFPATH)/external/io_grib1/libio_grib1.a \
              $(WRFPATH)/external/io_grib_share/libio_grib_share.a \
              $(WRFPATH)/external/io_int/libwrfio_int.a \
@@ -54,7 +58,8 @@ SP_LIB     = ${SP_LIB4}
 W3_INC     = -I${W3EMC_INC4}
 W3_LIB     = ${W3NCO_LIB4} ${W3EMC_LIB4}
 
-NETCDFPATH = /usrx/local/NetCDF/3.6.3/
+NETCDFPATH = /gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/haswell
+
 NETCDF_LIB = $(NETCDFPATH)/lib/libnetcdf_c++.a $(NETCDFPATH)/lib/libnetcdf.a
 NETCDF_INC = -I$(NETCDFPATH)/include
 
@@ -116,7 +121,7 @@ OBJS =  wrf_io_flags.o getVariable.o getIVariable.o getIVariableN.o \
         ETCALC.o CANRES.o CALGUST.o WETFRZLVL.o SNFRAC.o MDL2AGL.o SNFRAC_GFS.o \
         AVIATION.o DEALLOCATE.o INITPOST_NMM_BIN_MPIIO.o INITPOST_BIN.o \
         CALPBL.o MDL2SIGMA2.o INITPOST_GFS.o CALRH_GFS.o LFMFLD_GFS.o \
-        CALRAD_WCLOUD_newcrtm.o MDL2THANDPV.o CALPBLREGIME.o POLEAVG.o \
+        MDL2THANDPV.o CALPBLREGIME.o POLEAVG.o \
         INITPOST_NEMS.o GETNEMSNDSCATTER.o ICAOHEIGHT.o INITPOST_GFS_NEMS.o \
         INITPOST_BIN_MPIIO.o GEO_ZENITH_ANGLE.o GFIP3.o GRIDAVG.o CALUPDHEL.o INITPOST_GFS_SIGIO.o \
         AllGETHERV_GSD.o MSFPS.o SELECT_CHANNELS.o ALLOCATE_ALL.o INITPOST_NEMS_MPIIO.o ASSIGNNEMSIOVAR.o
