@@ -33,7 +33,6 @@ OBJS=	stnmlist.o
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-FC =		${COMP}
 LDFLAGS =	
 LIBS = ${W3NCO_LIB4} ${W3EMC_LIB4} ${BUFR_LIB4}
 

@@ -122,7 +122,7 @@
 !
 !     POST RADIANCE AND BRIGHTNESS FIELDS.
       btim = timef()
-      CALL CALRAD_WCLOUD
+!mp      CALL CALRAD_WCLOUD
 !     
 !     END OF ROUTINE.
 !     
