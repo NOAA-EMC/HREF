@@ -39,7 +39,10 @@ cp ${DATA}/namelist.wps.${stream} namelist.wps
 cp $EXEChiresw/hiresw_ungrib ungrib.exe
 export pgm=ungrib
 startmsg
-./ungrib.exe >> $pgmout 2>errfile
+
+echo about to run 
+
+aprun -n 1 ./ungrib.exe >> $pgmout 2>errfile
 export err=$?
 err_chk
 cp ${DATA}/namelist.wps.${stream} ../run_ungrib/

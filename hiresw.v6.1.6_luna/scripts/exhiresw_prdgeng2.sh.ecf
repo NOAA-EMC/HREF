@@ -73,44 +73,65 @@ do
 if [ $NEST = "conus" ]
 then
 
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 1" > $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 2" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 3" >> $DATA/poescript_${fhr}
+echo "#! /bin/sh " > $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 1 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 2 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 3 &" >> $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 1" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 2" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 3" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 4" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 5" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 6" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 1 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 2 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 3 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 4 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 5 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_5km_grid_g2.sh     $fhr $NEST $cyc $MODEL 6 &" >> $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 east" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 east" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 west" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 west" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 east &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 east &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 west &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 west &" >> $DATA/poescript_${fhr}
+echo "wait" >> $DATA/poescript_${fhr}
+
 
 elif [ $NEST = "ak" ]
 then
 
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 0" > $DATA/poescript_${fhr}
+echo "#! /bin/sh " > $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 0 &" >> $DATA/poescript_${fhr}
 
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 1" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 2" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 3" >> $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 4" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 1 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 2 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 3 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 4 &" >> $DATA/poescript_${fhr}
+
+echo "wait" >> $DATA/poescript_${fhr}
+
 
 else
-echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 0" > $DATA/poescript_${fhr}
-echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 0" >> $DATA/poescript_${fhr}
+echo "#! /bin/sh " > $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_big_grid_g2.sh $fhr $NEST $cyc $MODEL 0 &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh $fhr $NEST $cyc $MODEL 0 &" >> $DATA/poescript_${fhr}
+echo "wait" >> $DATA/poescript_${fhr}
 fi
 
 chmod 775 $DATA/poescript_${fhr}
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=$DATA/poescript_${fhr}
+
+# export MP_PGMMODEL=mpmd
+# export MP_CMDFILE=$DATA/poescript_${fhr}
 #
 
 # Execute the script.
-time mpirun.lsf
+# time mpirun.lsf
+
+# aprun -n ${numprocs} -N ${spanprocs} ${DATA}/poescript_${fhr}
+
+aprun -n 1 -N 1 -d ${numprocs}  ${DATA}/poescript_${fhr}
+
+
+
+# currently running serially.  aprun the whole script??
+
+# $DATA/poescript_${fhr}
+
 export err=$?; err_chk
 
 if [ $NEST = "conus" ]

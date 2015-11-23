@@ -184,6 +184,8 @@ fi
 
 whr=`expr $whr + $incr`
 
+echo whr now $whr
+
 if [ $whr -lt 10 ]
 then
 whr=0$whr
@@ -227,20 +229,28 @@ cd $DATA
 
 rm -rf poescript
 
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 2"  > poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 1" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 3" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 4" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 2 &"  > poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 1 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 3 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 4 &" >> poescript
+echo "wait" >> poescript
 
-chmod 775 $DATA/poescript
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=poescript
-export MP_LABELIO=YES
-export MP_INFOLEVEL=3
-export MP_STDOUTMODE=ordered
+$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 2 
+$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 1
+$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 3
+$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 4
+
+export err=$?; err_chk
+
+# chmod 775 $DATA/poescript
+# export MP_PGMMODEL=mpmd
+# export MP_CMDFILE=poescript
+# export MP_LABELIO=YES
+# export MP_INFOLEVEL=3
+# export MP_STDOUTMODE=ordered
 
 export pgm=hiresw_wps_ungrib_gen.sh
-mpirun.lsf
+# aprun -n 1 -N 1 -d 4  ./poescript
 export err=$?; err_chk
 
 cd run_ungrib/

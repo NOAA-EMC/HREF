@@ -314,7 +314,7 @@ export pgm=hiresw_${MODEL}_post
 
 export FORT_BUFFERED=true
 
-mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
+aprun -n ${numprocs} -N ${spanprocs}  $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
 # mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
 export err=$?;err_chk
 

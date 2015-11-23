@@ -168,7 +168,8 @@ cp $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy5}-${mm5}-${dd5}_
 
 export pgm=hiresw_nemsinterp
 cp $EXEChiresw/hiresw_nemsinterp .
-mpirun.lsf ./hiresw_nemsinterp
+# mpirun.lsf ./hiresw_nemsinterp
+aprun -n $numprocs -N $spanprocs ./hiresw_nemsinterp
 export err=$?; err_chk
 
 ### avoided for Guam as not in NAM domain
@@ -299,7 +300,10 @@ export pgm=hiresw_coldstart
 . prep_step
 
 ./startmsg
-$EXEChiresw/hiresw_coldstart >> $pgmout 2>errfile
+#? $EXEChiresw/hiresw_coldstart >> $pgmout 2>errfile
+
+aprun -n 1 $EXEChiresw/hiresw_coldstart >> $pgmout 2>errfile
+
 export err=$?;err_chk
 
 fi

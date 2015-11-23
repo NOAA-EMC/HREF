@@ -37,7 +37,10 @@ MULTINUM_IN=$ICOUNT
 
 ### figure out start and end times for this segment
 
-## NDATE=${NDATE:-${utilexec}/ndate}
+NDATE=${NDATE:-${utilexec}/ndate}
+
+
+echo in ush script with NDATE as $NDATE
 
 ystart=`echo $PDY | cut -c1-4`
 mstart=`echo $PDY | cut -c5-6`
@@ -45,6 +48,10 @@ dstart=`echo $PDY | cut -c7-8`
 hstart=$CYC
 
 orig_start=$ystart$mstart$dstart${CYC}
+
+
+echo orig_start is $orig_start
+
 start=`$NDATE +${STARTHR} ${orig_start}`
 
 ystart=`echo $start | cut -c1-4`
@@ -120,7 +127,7 @@ if [ -e ../FILE:${yy}-${mm}-${dd}_${hh} ]
 then
 mv ../FILE:${yy}-${mm}-${dd}_${hh} .
 else
-mv $INPUT_DATA/hiresw.t${CYC}z.${DOMNAM}${MODEL}.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
+cp $INPUT_DATA/hiresw.t${CYC}z.${DOMNAM}${MODEL}.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
 fi
 export err=$?
 
@@ -134,7 +141,9 @@ err_chk
 FHR=`expr $FHR + $INT`
 done
 
-./metgrid.exe
+# aprun -n 1 ./metgrid.exe
+
+ ./metgrid.exe
 
 export err=$?
 err_chk

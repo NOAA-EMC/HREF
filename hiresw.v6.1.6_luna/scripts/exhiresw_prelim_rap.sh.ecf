@@ -214,7 +214,12 @@ cd $DATA
 #
 export send=0
 #
-$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL $send
+echo "#! /bin/sh" > poe.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 00 1 $MODEL $send" >> poe.sh
+
+chmod 775 poe.sh
+
+aprun -n 1 -N 1 -d 1 poe.sh
 
 # if [ $MODEL == "nmmb" ]
 # then
@@ -336,7 +341,8 @@ startmsg
 export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+# mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+aprun -n ${numprocs} -N ${spanprocs} $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
 export err=$?
 err_chk
@@ -366,7 +372,9 @@ echo NEED TO RUN NEMSINTERP
 cp $DATA/run_ungrib/namelist.nps .
 
 cp $EXEChiresw/hiresw_nemsinterp .
-mpirun.lsf ./hiresw_nemsinterp
+# mpirun.lsf ./hiresw_nemsinterp
+aprun -n ${numprocs} -N ${spanprocs} ./hiresw_nemsinterp
+
 
 export err=$?; err_chk
 
@@ -494,7 +502,7 @@ export pgm=hiresw_coldstart
 . prep_step
 
 startmsg
-$EXEChiresw/hiresw_coldstart >> $pgmout 2>errfile
+aprun -n 1 $EXEChiresw/hiresw_coldstart >> $pgmout 2>errfile
 export err=$?;err_chk
 
 fi

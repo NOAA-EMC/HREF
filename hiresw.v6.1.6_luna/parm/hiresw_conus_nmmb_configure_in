@@ -27,7 +27,7 @@ sbd:  -17.584                # Grid's southern boundary (rotated degrees)
 #####  Grid Decomposition  #####
 ################################
 
-inpes:  13             # Number of compute tasks in the I direction
+inpes:  12             # Number of compute tasks in the I direction
 jnpes:  48            # Number of compute tasks in the J direction
 
 #################################
@@ -37,7 +37,7 @@ jnpes:  48            # Number of compute tasks in the J direction
 quilting:              true    # Do you want asynchronous quilting/history writes?
 read_groups:           0
 read_tasks_per_group:  0
-write_groups:          2
+write_groups:          3
 write_tasks_per_group: 24
 
 
