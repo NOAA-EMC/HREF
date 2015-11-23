@@ -13,37 +13,37 @@ sleep 9
 
 ##############################
 
-# cd ${BASE}/hiresw_wrfarwfcst.fd
-# ./compile_arw.sc
+cd ${BASE}/hiresw_wrfarwfcst.fd
+./compile_arw.sc
 
 ##############################
 
-# cd ${BASE}/hiresw_bucket.fd
-# make
+cd ${BASE}/hiresw_bucket.fd
+make
 
 
 ##############################
 
-# cd ${BASE}/hiresw_wrfbufr.fd
-# make clean
-# ./fill_wrflibs.scr
-# make
+cd ${BASE}/hiresw_wrfbufr.fd
+make clean
+./fill_wrflibs.scr
+make
 
 ##############################
 
-# cd ${BASE}/hiresw_wps.fd
-# ./build.scr
+cd ${BASE}/hiresw_wps.fd
+./build.scr
 
 ##############################
 
-# cd ${BASE}/hiresw_post.fd
-# make clean
-# make
+cd ${BASE}/hiresw_post.fd
+make clean
+make
 
 ##############################
 
-# cd ${BASE}/hiresw_nps.fd/NPS/
-# ./build.scr
+cd ${BASE}/hiresw_nps.fd/NPS/
+./build.scr
 
 ##############################
 
@@ -57,25 +57,23 @@ cd ${BASE}/hiresw_smartprecipg2.fd
 make clean
 make
 
-exit
+##############################
+
+cd ${BASE}/hiresw_coldstart.fd
+make clean
+make
 
 ##############################
 
-# cd ${BASE}/hiresw_coldstart.fd
-# make clean
-# make
+cd ${BASE}/hiresw_sndp.fd
+make -f makefile_nmm
+make -f makefile_em
 
 ##############################
 
-# cd ${BASE}/hiresw_sndp.fd
-# make -f makefile_nmm
-# make -f makefile_em
-
-##############################
-
-# cd ${BASE}/hiresw_stnmlist.fd
-# make clean
-# make
+cd ${BASE}/hiresw_stnmlist.fd
+make clean
+make
 
 ##############################
 
@@ -95,8 +93,6 @@ make nmm >& makenmm.log
 cp ${BASE}/hiresw_nmmbfcst.fd/exe/NEMS.x ${BASE}/../exec/hiresw_nmmbfcst
 
 # module load ibmpe
-
-exit
 
 ##############################
 
