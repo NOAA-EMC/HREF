@@ -178,7 +178,7 @@ unset MP_CMDFILE
 export FORT_BUFFERED=true
 
 
-mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+aprun -n 9 -N 3 $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
 
 export err=$?; err_chk
 

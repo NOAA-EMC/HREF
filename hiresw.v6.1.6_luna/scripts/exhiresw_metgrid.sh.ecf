@@ -36,31 +36,37 @@ echo "export CYCLE=$CYCLE" >> $COMOUT/hiresw.t${cyc}z.${RUNLOC}.envir.sh
 
 # Create a script to be poe'd
 cd $DATA
-rm -rf poescript
+rm -rf poescript.sh
 
 
 # Rename metgrid files with /com type names
 export send=1
 
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send" > poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL $send" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL $send" >> poescript
+echo "#!/bin/sh  " > poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL $send &" >> poescript.sh
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL $send &" >> poescript.sh
+echo "wait " >> poescript.sh
 
  
-chmod 775 $DATA/poescript
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=poescript
-export MP_LABELIO=YES
-export MP_INFOLEVEL=3
-export MP_STDOUTMODE=ordered
+chmod 775 $DATA/poescript.sh
+# export MP_PGMMODEL=mpmd
+# export MP_CMDFILE=poescript.sh
+# export MP_LABELIO=YES
+# export MP_INFOLEVEL=3
+# export MP_STDOUTMODE=ordered
 
-mpirun.lsf 
+# mpirun.lsf 
+aprun -n 1 -N 1 -d 9 $DATA/poescript.sh
+
+# ./poescript.sh
+
 export err=$?
 ${DATA}/err_chk
 

@@ -1,0 +1,48 @@
+
+#BSUB -oo test_nemsinterp_4.out__DOM___CORE___CYC_
+#BSUB -eo test_nemsinterp_4.err__DOM___CORE___CYC_
+#BSUB -q "dev"
+#BSUB -J HIRESW_NEMSINTERP_4
+#BSUB -W 0:19
+#BSUB -P HRW-T2O
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}'
+
+# module load ics
+# module load ibmpe
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+export numprocs=4
+export spanprocs=4
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+# export HOMEhiresw=/meso/save/Matthew.Pyle/hiresw.${vers}
+module load prod_util
+export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
+export DATEroot=/gpfs/tp1/nco/ops/com/date
+
+export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export MYDATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export DATA=${MYDATAROOT}/hiresw.nemsinterp_4_${NEST}_${MODEL}_${cyc}_${envir}
+
+$HOMEhiresw/jobs/JHIRESW_NEMSINTERP_4
+
+bsub < sub_model.lsf__DOM___CORE___CYC_

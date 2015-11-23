@@ -57,8 +57,11 @@ case $cyc in
   * )    set -A A6HR 18 30 42 999;;
 esac
 
+echo here with srefcyc $srefcyc
+
 # srefcyc and gefscyc set in parent job (JNAM_SMINIT)
-typeset -Z2 srefcyc gefscyc pcphrl
+# typeset -Z2 srefcyc gefscyc pcphrl
+typeset -Z2 pcphrl
 
 
 #======================================================================
@@ -171,6 +174,9 @@ let pcphr3=pcphr-3
 # fhr should be gt 0 since precip is not available at initial time
 if [ $ffhr -gt 0 -a $sgrb -ne 999 ]; then
 
+	echo COMINsref is  $COMINsref
+	echo srefcyc is $srefcyc
+
 # get the sref precip fields that we need
   cp $COMINsref/sref.t${srefcyc}z.pgrb${sgrb}.prob_3hrly.grib2 SREFPROB
 
@@ -242,6 +248,9 @@ fi #fhr -ge 0
 let ffhr1=ffhr-1
 let ffhr2=ffhr-2
 hours="${ffhr}"
+
+echo here with ffhr as $ffhr
+
 if [ $ffhr -ge 3 ];then hours="${ffhr2} ${ffhr1} ${ffhr}";fi
 
 #===========================================================
@@ -273,7 +282,11 @@ fi
 
 # do in 8-9 pieces (conus only??)
 
+echo COMIN here is $COMIN
+
 INF=${COMIN}/hiresw.t${cyc}z.$mdl.${natgrd}${fhr}
+
+ls -l $INF
 
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_1 list_1.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_2 list_2.txt
@@ -301,54 +314,59 @@ $WGRIB2 $INF | grep -F -f list_7.txt | $WGRIB2 -i -grib inputs.grb2_7 $INF
 $WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8 $INF
 $WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
 
-rm wgrib2.poe
+if [ -e wgrib2.poe.${fhr} ]
+then
+rm wgrib2.poe.${fhr}
+fi
 
+#### is this happening prematurely??
 if [ -e model.ndfd_1 ]
 then
 rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_6 model.ndfd_nn
 rm  model.ndfd_7 model.ndfd_8
 fi
 
-echo "#! /bin/ksh" > a.poe
-echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe
-echo "#! /bin/ksh" > b.poe
-echo "$WGRIB2  inputs.grb2_2  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_2" >> b.poe
-echo "#! /bin/ksh" > c.poe
-echo "$WGRIB2  inputs.grb2_3  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_3" >> c.poe
-echo "#! /bin/ksh" > d.poe
-echo "$WGRIB2  inputs.grb2_4  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_4" >> d.poe
-echo "#! /bin/ksh" > e.poe
-echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe
-echo "#! /bin/ksh" > f.poe
-echo "$WGRIB2  inputs.grb2_6  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_6" >> f.poe
-echo "#! /bin/ksh" > g.poe
-echo "$WGRIB2  inputs.grb2_7  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_7" >> g.poe
-echo "#! /bin/ksh" > h.poe
-echo "$WGRIB2  inputs.grb2_8  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_8" >> h.poe
+echo "#! /bin/ksh" > a.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe.${fhr}
+echo "#! /bin/ksh" > b.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_2  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_2" >> b.poe.${fhr}
+echo "#! /bin/ksh" > c.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_3  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_3" >> c.poe.${fhr}
+echo "#! /bin/ksh" > d.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_4  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_4" >> d.poe.${fhr}
+echo "#! /bin/ksh" > e.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe.${fhr}
+echo "#! /bin/ksh" > f.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_6  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_6" >> f.poe.${fhr}
+echo "#! /bin/ksh" > g.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_7  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_7" >> g.poe.${fhr}
+echo "#! /bin/ksh" > h.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_8  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_8" >> h.poe.${fhr}
 
 
-chmod 775 a.poe
-chmod 775 b.poe
-chmod 775 c.poe
-chmod 775 d.poe
-chmod 775 e.poe
-chmod 775 f.poe
-chmod 775 g.poe
-chmod 775 h.poe
+chmod 775 a.poe.${fhr}
+chmod 775 b.poe.${fhr}
+chmod 775 c.poe.${fhr}
+chmod 775 d.poe.${fhr}
+chmod 775 e.poe.${fhr}
+chmod 775 f.poe.${fhr}
+chmod 775 g.poe.${fhr}
+chmod 775 h.poe.${fhr}
 
-echo "a.poe" > wgrib2.poe
-echo "b.poe" >> wgrib2.poe
-echo "c.poe" >> wgrib2.poe
-echo "d.poe" >> wgrib2.poe
-echo "e.poe" >> wgrib2.poe
-echo "f.poe" >> wgrib2.poe
-echo "g.poe" >> wgrib2.poe
-echo "h.poe" >> wgrib2.poe
+echo "#! /bin/ksh" > wgrib2.poe.${fhr}
+echo "a.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "b.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "c.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "d.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "e.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "f.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "g.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "h.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "wait" >> wgrib2.poe.${fhr}
 
-chmod 775 wgrib2.poe
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=wgrib2.poe
-time mpirun.lsf
+chmod 775 wgrib2.poe.${fhr}
+# time mpirun.lsf
+aprun -n 1 -N 1 -d 8 wgrib2.poe.${fhr}
 export err=$?;  err_chk
 
 $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
@@ -609,6 +627,8 @@ cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_
 
 	echo about to execute hiresw_smartprecipg2
 	ls -l fort.*
+	
+	ls -l $EXEChiresw/hiresw_smartprecipg2
 
      $EXEChiresw/hiresw_smartprecipg2 <<EOF > ${ppgm}precip${freq}${fhr}.out 2>errfile_${freq}${fhr}
 $pfhr1 $pfhr2 $pfhr3 $pfhr4 $IARW

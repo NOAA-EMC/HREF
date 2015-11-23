@@ -1,0 +1,56 @@
+#BSUB -oo test_wrfbufrsnd.out
+#BSUB -eo test_wrfbufrsnd.err
+####BSUB -R span[ptile=_PTILEBUFR_]
+#BSUB -q "dev"
+#BSUB -J HIRESW_BUFR
+#BSUB -P HRW-T2O
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}'
+#BSUB -W 1:29
+
+
+export numprocs=_NPROCBUFR_
+export spanprocs=_PTILEBUFR_
+
+module load prod_util
+
+# module load ics
+# module load ibmpe
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+
+# export MP_IOAGENT_CNT=all
+#
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+export SENDDBN=NO
+
+# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
+export DATEroot=/gpfs/tp1/nco/ops/com/date
+
+export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export COMROOT=/gpfs/hps/nco/ops/com
+
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
+export DATA=${DATAROOT}/hiresw.bufrpost_${NEST}_${MODEL}_${cyc}_${envir}
+
+$HOMEhiresw/jobs/JHIRESW_WRFBUFRSND

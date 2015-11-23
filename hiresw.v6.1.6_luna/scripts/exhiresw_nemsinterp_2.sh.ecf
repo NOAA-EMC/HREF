@@ -165,7 +165,7 @@ cp $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy5}-${mm5}-${dd5}_
 
 export pgm=hiresw_nemsinterp
 cp $EXEChiresw/hiresw_nemsinterp .
-mpirun.lsf ./hiresw_nemsinterp
+aprun -n $numprocs -N $spanprocs  ./hiresw_nemsinterp
 export err=$?; err_chk
 
 cp boco.0000 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.0012

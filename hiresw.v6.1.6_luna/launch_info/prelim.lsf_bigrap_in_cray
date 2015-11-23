@@ -1,0 +1,48 @@
+
+#BSUB -oo test_prelimrap.out__DOM___CORE___CYC_
+#BSUB -eo test_prelimrap.err__DOM___CORE___CYC_
+#BSUB -q "dev"
+#BSUB -J HIRESW_PREP_RAP
+#BSUB -W 0:15
+#BSUB -P HRW-T2O
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}'
+
+export numprocs=9
+export spanprocs=3
+
+module load prod_util
+
+# module load ics
+# module load ibmpe
+# module load NetCDF/4.2/serial
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
+export DATEroot=/gpfs/tp1/nco/ops/com/date
+
+export GESINnam=/gpfs/tp1/nco/ops/nwges/prod/nam.${DATE}
+
+export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export DATA=${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}
+export COMROOT=/gpfs/hps/nco/ops/com
+export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export COMINrap=/gpfs/hps/ptmp/Matthew.Pyle/com/rap/prod/rap.${DATE}
+
+$HOMEhiresw/jobs/JHIRESW_PREPRAP

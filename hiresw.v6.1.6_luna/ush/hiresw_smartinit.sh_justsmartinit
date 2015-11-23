@@ -66,8 +66,11 @@ case $cyc in
   * )    set -A A6HR 18 30 42 999;;
 esac
 
+echo here with srefcyc $srefcyc
+
 # srefcyc and gefscyc set in parent job (JNAM_SMINIT)
-typeset -Z2 srefcyc gefscyc pcphrl
+# typeset -Z2 srefcyc gefscyc pcphrl
+typeset -Z2 pcphrl
 
 
 #======================================================================
@@ -157,7 +160,7 @@ maskfl=${maskpre}.${ext}
 topofl=${topopre}.${ext}
 
 
-typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
+typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr # ffhr
 
 echo
 echo "============================================================"
@@ -179,6 +182,9 @@ let pcphr3=pcphr-3
 let ffhr1=ffhr-1
 let ffhr2=ffhr-2
 hours="${ffhr}"
+
+echo here with ffhr as $ffhr
+
 if [ $ffhr -ge 3 ];then hours="${ffhr2} ${ffhr1} ${ffhr}";fi
 
 
@@ -497,7 +503,7 @@ fi
 	ls -l MAXMIN*
         fi
 
-  $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+aprun -n 1  $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
   export err=$?; err_chk
 
 

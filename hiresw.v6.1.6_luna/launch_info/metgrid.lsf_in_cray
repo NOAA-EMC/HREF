@@ -1,0 +1,63 @@
+
+#BSUB -oo test_metgrid.out__DOM___CORE___CYC_
+#BSUB -eo test_metgrid.err__DOM___CORE___CYC_
+#BSUB -q "dev"
+#BSUB -J HIRESW_METGRID
+#BSUB -W 0:29
+#BSUB -P HRW-T2O
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=9] cu[type=cabinet]}'
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+vers=`cat /u/Matthew.Pyle/hiresw_version`
+
+export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+# DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
+
+export DATEroot=/gpfs/tp1/nco/ops/com/date
+
+export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export COMROOT=/gpfs/tp1/nco/ops/com
+export COMROOT=/gpfs/hps/nco/ops/com
+
+
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export DATA=${DATAROOT}/hiresw.metgrid_${NEST}_${MODEL}_${cyc}_${envir}
+
+$HOMEhiresw/jobs/JHIRESW_METGRID
+
+if [ _CORE_ == "arw" ]
+then
+
+bsub < sub_prelimfinal.lsf__DOM___CORE___CYC_
+
+rm sub_prelimfinal.lsf__DOM___CORE___CYC_
+
+else
+
+bsub < sub_nemsinterp_1.lsf__DOM___CORE___CYC_
+bsub < sub_nemsinterp_2.lsf__DOM___CORE___CYC_
+bsub < sub_nemsinterp_3.lsf__DOM___CORE___CYC_
+bsub < sub_nemsinterp_4.lsf__DOM___CORE___CYC_
+
+rm sub_nemsinterp_1.lsf__DOM___CORE___CYC_
+rm sub_nemsinterp_2.lsf__DOM___CORE___CYC_
+rm sub_nemsinterp_3.lsf__DOM___CORE___CYC_
+rm sub_nemsinterp_4.lsf__DOM___CORE___CYC_
+
+fi
