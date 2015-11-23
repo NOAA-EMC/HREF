@@ -11,10 +11,10 @@ SHELL=/bin/sh
 #----------------------------------------------------------------
 
 LIBS =  ${NEMSIO_LIB} ${W3NCO_LIBd} ${BACIO_LIB4} ${IP_LIBd} ${SFCIO_LIB4} \
-        ${SP_LIBd}  ${NETCDF_LIB}/libnetcdf.a
+        ${SP_LIBd}  ${NETCDF_LDFLAGS_F}
 
 FCOMP=${FC}
-FFLAGS = -O0 -I${LANDSFCUTIL_INCd} -I${NETCDF_INC} \
+FFLAGS = -O0 -I${LANDSFCUTIL_INCd} ${NETCDF_INCLUDE} \
           -I${SFCIO_INC4} -I${NEMSIO_INC} \
           -convert big_endian -r8 -i4 -FR
 LFLAGS = -openmp

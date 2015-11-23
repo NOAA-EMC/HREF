@@ -13,8 +13,8 @@ sleep 9
 
 ##############################
 
-cd ${BASE}/hiresw_wrfarwfcst.fd
-./compile_arw.sc
+# cd ${BASE}/hiresw_wrfarwfcst.fd
+# ./compile_arw.sc
 
 ##############################
 
@@ -31,14 +31,14 @@ make
 
 ##############################
 
-cd ${BASE}/hiresw_wps.fd
-./build.scr
+# cd ${BASE}/hiresw_wps.fd
+# ./build.scr
 
 ##############################
 
-cd ${BASE}/hiresw_post.fd
-make clean
-make
+# cd ${BASE}/hiresw_post.fd
+# make clean
+# make
 
 ##############################
 
@@ -76,6 +76,8 @@ make clean
 make
 
 ##############################
+
+exit
 
 cd ${BASE}/hiresw_nmmbfcst.fd/src
 gmake clean

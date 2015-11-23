@@ -1,4 +1,18 @@
 400:0xSec:inv:1:Hex dump of section X (0..8)
+105:MM:inv:0:reference time MM
+200:N_ens:inv:0:number of ensemble members
+110:RT:inv:0:type of reference Time
+100:S:inv:0:simple inventory with minutes and seconds (subject to change)
+200:Sec0:inv:0:contents of section0
+200:Sec3:inv:0:contents of section 3 (Grid Definition Section)
+400:Sec4:inv:0:Sec 4 values (Product definition section)
+400:Sec5:inv:0:Sec 5 values (Data representation section)
+700:Sec6:inv:0:show bit-map section
+700:Sec_len:inv:0:length of various grib sections
+101:T:inv:0:reference time YYYYMMDDHHMMSS
+100:V:inv:0:diagnostic output
+400:VT:inv:0:verf time = reference_time + forecast_time (YYYYMMDDHHMMSS)
+103:YY:inv:0:reference time YYYY
 200:aerosol_size:inv:0:optical properties of an aerosol
 200:aerosol_wavelength:inv:0:optical properties of an aerosol
 700:bitmap:inv:0:bitmap mode
@@ -54,8 +68,8 @@
 -1:cyclic:inv:0:is grid cyclic? (not for for mercator and thinned grids)
 200:disc=f_code_table_0_0:inv:0:discipline (code table 0.0)
 100:domain:inv:0:find rectangular domain for g2ctl/GrADS plots
-400:end_ft:inv:0:verf time = reference_time + forecast_time + stat. proc time (YYYYMMDDHH) (same as -vt)
 400:end_FT:inv:0:verf time = reference_time + forecast_time + stat. proc time (YYYYMMDDHHMMSS) (same as -VT)
+400:end_ft:inv:0:verf time = reference_time + forecast_time + stat. proc time (YYYYMMDDHH) (same as -vt)
 200:ens:inv:0:ensemble information
 400:ext_name:inv:0:extended name, var+qualifiers
 -1:flag_table_3.10:inv:0:flag table 3.10 scanning mode for one diamond
@@ -86,10 +100,8 @@
 100:max:inv:0:print maximum value
 100:min:inv:0:print minimum value
 100:misc:inv:0:variable name qualifiers like chemical, ensemble, probability, etc
-105:MM:inv:0:reference time MM
 100:model_version_date:inv:0:prints model date code
 100:n:inv:0:prints out inventory number
-200:N_ens:inv:0:number of ensemble members
 100:nl:inv:0:inserts new line into inventory
 200:nlons:inv:0:number of longitudes for each latitude
 500:npts:inv:0:number of grid points
@@ -107,38 +119,26 @@
 100:proj4_ll2ij:inv:2:x=lon y=lat, converts lon-lat (i,j) using proj.4 (experimental)
 100:radius:inv:0:radius of Earth
 100:range:inv:0:print out location of record in bytes, 0 = first byte
-110:RT:inv:0:type of reference Time
 100:s:inv:0:simple inventory
-100:S:inv:0:simple inventory with minutes and seconds (subject to change)
 510:scale:inv:0:scale for packing
 510:scaling:inv:0:scaling for packing (old format)
 200:scan:inv:0:scan order of grid
-200:Sec0:inv:0:contents of section0
-200:Sec3:inv:0:contents of section 3 (Grid Definition Section)
-400:Sec4:inv:0:Sec 4 values (Product definition section)
-400:Sec5:inv:0:Sec 5 values (Data representation section)
-700:Sec6:inv:0:show bit-map section
-700:Sec_len:inv:0:length of various grib sections
 400:spatial_proc:inv:0:show spacial processing, pdt=4.15
 400:spectral:inv:0:show spectral bands
 400:spectral_bands:inv:0:spectral bands for satellite, pdt=4.31
-400:start_ft:inv:0:verf time = reference_time + forecast_time (YYYYMMDDHH) : no stat. proc time
 400:start_FT:inv:0:verf time = reference_time + forecast_time (YYYYMMDDHHMMSS) - no stat. proc time
+400:start_ft:inv:0:verf time = reference_time + forecast_time (YYYYMMDDHH) : no stat. proc time
 100:stats:inv:0:statistical summary of data values
 110:subcenter:inv:0:subcenter 
 100:t:inv:0:reference time YYYYMMDDHH, -v2 for alt format
-101:T:inv:0:reference time YYYYMMDDHHMMSS
 200:table:inv:0:parameter table
 100:unix_time:inv:0:print unix timestamp for rt & vt
-100:V:inv:0:diagnostic output
 400:var:inv:0:short variable name
 400:varX:inv:0:raw variable name - discipline mastertab localtab center parmcat parmnum
 1:vector_dir:inv:0:grid or earth relative winds
 100:verf:inv:0:simple inventory using verification time
 400:vt:inv:0:verf time = reference_time + forecast_time, -v2 for alt format
-400:VT:inv:0:verf time = reference_time + forecast_time (YYYYMMDDHHMMSS)
 200:wave_partition:inv:0:ocean surface wave partition (pdt=52)
-103:YY:inv:0:reference time YYYY
 100:inv_f77:inv_output:3:match inventory written to Z with character*(Y) and options X
 100:last:inv_output:1:write last inv item to file X
 100:last2mem:inv_output:2:write last inv item to memory X=address of data Y=max # characters
@@ -189,8 +189,8 @@
 100:set_byte:misc:3:set bytes in Section X, Octet Y, bytes Z (a|a:b:c)
 -1:set_center:misc:1:changes center X = C or C:S     C and S are center/subcenter numbers
 100:set_date:misc:1:changes date code .. keep old date code if not specified completely
-100:set_ensm_derived_fcst:misc:2:convert PDT 0,1,2 -> 2, 8,11,12 -> 12, X=code table 4.7 Y=num ens members
 100:set_ens_num:misc:3:convert PDT 0,1 -> 1,  8,11 -> 11, X=code table 4.6 Y=pert num Z=num ens members -1=No Change
+100:set_ensm_derived_fcst:misc:2:convert PDT 0,1,2 -> 2, 8,11,12 -> 12, X=code table 4.7 Y=num ens members
 -1:set_flag_table_3.3:misc:1:flag table 3.3 = X
 -1:set_flag_table_3.4:misc:1:flag table 3.4 = X
 100:set_ftime:misc:1:set ftime
@@ -228,6 +228,7 @@
 -1:v99:misc:0:verbose mode for debugging only (v=99) 
 100:version:misc:0:print version
 100:AAIG:output:0:writes Ascii ArcInfo Grid file, lat-lon grid only (alpha)
+100:GRIB:output:1:writes entire GRIB record (all submessages)
 000:ave:output:2:average X=time step, Y=output grib file needs file is special order
 100:bin:output:1:write binary data to X
 111:cress_lola:output:4:lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN
@@ -235,7 +236,6 @@
 000:fcst_ave:output:2:average X=time step, Y=output grib file needs file is special order
 100:fi:output:0:null output operation
 100:grib:output:1:writes GRIB record (one submessage) to X
-100:GRIB:output:1:writes entire GRIB record (all submessages)
 100:grib_ieee:output:1:writes data[] to X.grb, X.head, X.tail, and X.h
 100:grib_out:output:1:writes decoded/modified data in grib-2 format to file X
 100:grib_out_irr:output:2:writes irregular grid grib  X=(all|defined) Y=(output file)
@@ -285,9 +285,9 @@
 100:nc_grads:setup:0:require netcdf file to be grads v1.9b4 compatible (fixed time step only)
 100:nc_nlev:setup:1:netcdf, X = max LEV dimension for {TIME,LEV,LAT,LON} data
 100:nc_pack:setup:1:pack/check limits of all NEW input variables, X=min:max[:byte|short|float]
-100:ncpu:setup:1:number of threads, default is environment variable OMP_NUM_THREADS/number of cpus
 100:nc_table:setup:1:X is conversion_to_netcdf_table file name
 100:nc_time:setup:1:netcdf, [[-]yyyymmddhhnnss]:[dt{s[ec]|m[in]|h[our]|d[ay]}], [-] is for time alignment only
+100:ncpu:setup:1:number of threads, default is environment variable OMP_NUM_THREADS/number of cpus
 100:no_append:setup:0:not append mode, write to new output files (default)
 -1:no_flush:setup:0:flush output buffers when full (default)
 100:no_nc_grads:setup:0:netcdf file may be not grads v1.9b4 compatible, variable time step

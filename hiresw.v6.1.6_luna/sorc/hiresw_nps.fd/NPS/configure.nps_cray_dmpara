@@ -20,7 +20,7 @@ COMPRESSION_LIBS        =       ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
 COMPRESSION_INC         =       ${JASPER_INC} ${PNG_INC} ${Z_INC}
 
 NCARG_LIBS              =
-NCARG_LIBS2             =
+NCARG_LIBS2		=
 
 DIO                     =       $(DEV_TOP)/dio
 DIO_INC                 =       -I${DIO}
@@ -58,18 +58,18 @@ RANLIB			=	echo
 
 # Settings for PC Linux x86_64 (wcoss), Intel(ifort) compiler, DM parallel
 #
-# FC              =       ${COMP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
-SFC             =       ${FC} -O2  -xAVX -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
-FFLAGS          =       -FR -convert big_endian -xAVX -assume noold_ldout_format  -O3 -fp-model strict -g -traceback
-F77FLAGS        =       -convert big_endian -xAVX -assume noold_ldout_format  -O3 -fp-model strict -g -traceback
+# FC              =       ${COMP_MP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+SFC             =       ${FC} -O2 -xAVX -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+FFLAGS          =       -FR -convert big_endian -xAVX -assume noold_ldout_format -O3 -fp-model strict -g -traceback
+F77FLAGS        =       -convert big_endian -xAVX -assume noold_ldout_format -O3 -fp-model strict -g -traceback
 FNGFLAGS        =       $(FFLAGS)
 R8              =       -r8
-LDFLAGS         =      
-# CC              =       ${C_COMP} -O3
+LDFLAGS         =       -openmp -auto
+# CC              =       ${C_COMP_MP} -O3
 SCC             =       ${CC} -O3
 CFLAGS          =       -O
 CPP             =       /lib/cpp -C -P -traditional
-CPPFLAGS        =       -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -DBIT32
+CPPFLAGS        =       -D_UNDERSCORE -DBYTESWAP -DLINUX -DIO_NETCDF -DIO_BINARY -DIO_GRIB1 -D_MPI -DBIT32
 
 ###########################################################
 #
