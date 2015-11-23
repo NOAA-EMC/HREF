@@ -1,0 +1,36 @@
+####################################################################################################
+#
+#  NMM-B 1-way moving nests: (RESTART) Regional parent with two children and one grandchild
+#  Compute tasks - Upper parent 8x8 | Child #1 2x6 | Child #2 2x6 | Grandchild 5x6
+#  1 thread / opnl physics / free fcst / nemsio input
+#
+####################################################################################################
+
+export TEST_DESCR="Test NMMB-regional with moving nests - RESTART"
+
+export CNTL_DIR=NMMB_mvg_nests
+export LIST_FILES="nmmb_hst_01_bin_0024h_00m_00.00s \
+                   nmmb_hst_01_nio_0024h_00m_00.00s \
+                   nmmb_hst_02_bin_0024h_00m_00.00s \
+                   nmmb_hst_02_nio_0024h_00m_00.00s \
+                   nmmb_hst_03_bin_0024h_00m_00.00s \
+                   nmmb_hst_03_nio_0024h_00m_00.00s \
+                   nmmb_hst_04_bin_0024h_00m_00.00s \
+                   nmmb_hst_04_nio_0024h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=mnests
+export FCSTL=24
+export NCHILD=02
+export NEMSI=true
+export WLCLK=20
+export NODE=3
+export TASKS=$TASKS_mvg1
+export TPN=$TPN_mvg1
+export INPES=$INPES_mvg1
+export JNPES=$JNPES_mvg1
+export WTPG=$WTPG_mvg1
+export RSTRT=true
+
+RUN_SCRIPT=rt_nmm.sh

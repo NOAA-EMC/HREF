@@ -1,0 +1,48 @@
+#!/bin/ksh
+
+set -eu
+
+RUNDIR=_RUND_
+SRCDIR=_SRCD_
+
+mkdir -p $RUNDIR
+cd $RUNDIR
+rm -rf $RUNDIR/*
+
+cp _RTPWD_/NMMB_glob/test_input_nmmb_global            input_domain_01
+cp _RTPWD_/NMMB_glob/test_input_nmmb_global.nemsio     input_domain_01_nemsio
+cp _RTPWD_/NMMB_glob/nmmb_rst_01_bin_0024h_00m_00.00s  restart_file_01
+cp _RTPWD_/NMMB_glob/nmmb_rst_01_nio_0024h_00m_00.00s  restart_file_01_nemsio
+cp _RTPWD_/NMMB_glob/GWD_bin_01 .
+
+cp $SRCDIR/tests/atmos.configure_nmm atmos.configure
+cp $SRCDIR/tests/configure_file_01 .
+cp $SRCDIR/tests/nems.configure .
+cp configure_file_01 model_configure
+cp _RTPWD_/data/* .
+cp IGBP_VEGPARM.TBL VEGPARM.TBL
+cp IGBP_LANDUSE.TBL LANDUSE.TBL
+cp ETAMPNEW_DATA.expanded_rain ETAMPNEW_DATA
+ln -sf global_o3prdlos.f77 fort.28
+ln -sf global_o3clim.txt fort.48
+
+cp $SRCDIR/tests/solver_state.txt .
+cp $SRCDIR/tests/nests.txt .
+if [ $TS = true ]; then
+  cp $SRCDIR/tests/ts_locations.nml .
+fi
+
+cp $SRCDIR/exe/NEMS.x .
+
+if [ $SCHEDULER = 'moab' ]; then
+  cp $SRCDIR/tests/nmm_msub .
+  msub nmm_msub > /dev/null
+elif [ $SCHEDULER = 'pbs' ]; then
+  cp $SRCDIR/tests/nmm_qsub .
+  qsub nmm_qsub > /dev/null
+elif [ $SCHEDULER = 'lsf' ]; then
+  cp $SRCDIR/tests/nmm_bsub .
+  bsub < nmm_bsub > /dev/null 2>&1
+fi
+
+exit

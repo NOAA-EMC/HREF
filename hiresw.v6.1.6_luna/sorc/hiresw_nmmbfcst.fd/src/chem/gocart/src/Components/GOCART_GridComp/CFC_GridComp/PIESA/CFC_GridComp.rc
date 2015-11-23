@@ -1,0 +1,10 @@
+#
+# Resource file for CFC parameters. 
+#
+
+number_CFC_bins: 1
+CFC_emission_filename: ExtData/g5chem/sfc/ARCTAS.CFC12.emission.x540_y361.2008.hdf
+photolysisFile: ExtData/g5chem/x/SC.J_20_12_79_72_200_33.nc4
+phot_Equation_number: 25
+
+DEBUG: 0
