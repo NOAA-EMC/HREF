@@ -5,7 +5,7 @@
 #BSUB -J HIRESW_NEMSINTERP_2
 #BSUB -W 0:12
 #BSUB -P HRW-T2O
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}' rusage[mem=9000]
 
 
 # module load ics
