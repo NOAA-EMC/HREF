@@ -1,0 +1,17 @@
+#! /bin/ksh
+
+cyc=${1}
+
+
+DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+
+targdir=/gpfs/hps/ptmp/Matthew.Pyle/com/rap/prod/rap.${DATE}
+
+echo $DATE $cyc
+
+mkdir -p $targdir
+
+cd $targdir
+
+cp /gpfs/tp1/nco/ops/com/rap/prod/rap.${DATE}/rap.t${cyc}z.awip32f00df .
+
