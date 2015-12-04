@@ -1,10 +1,9 @@
 #BSUB -oo test_wrfbufrsnd.out
 #BSUB -eo test_wrfbufrsnd.err
-####BSUB -R span[ptile=_PTILEBUFR_]
 #BSUB -q "dev"
 #BSUB -J HIRESW_BUFR
 #BSUB -P HRW-T2O
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}' rusage[mem=3000]
 #BSUB -W 1:29
 
 

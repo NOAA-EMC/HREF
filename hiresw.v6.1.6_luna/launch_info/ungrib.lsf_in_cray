@@ -5,7 +5,7 @@
 #BSUB -J HIRESW_UNGRIB
 #BSUB -W 0:08
 #BSUB -P HRW-T2O
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}' rusage[mem=3000]
 
 # module load ics
 # module load ibmpe

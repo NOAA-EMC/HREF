@@ -1,17 +1,18 @@
-
-#BSUB -oo test_smartinitb.out__DOM__CORE__CYC_
-#BSUB -eo test_smartinitb.err__DOM__CORE__CYC_
-#BSUB -q "dev"
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/launch_info/test_smartinitb.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/launch_info/test_smartinitb.err__DOM__CORE__CYC_
+#BSUB -q "dev_serv"
 #BSUB -J HIRESW_SMARTINITB
 #BSUB -P HRW-T2O
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
-#BSUB -W 1:49
+#BSUB -R rusage[mem=9000]
+#####BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
+#BSUB -W 1:29
 #
 
-export MP_EUILIB=us
-
+# export MP_EUILIB=us
 export OMP_NUM_THREADS=1
-export MP_TASK_AFFINITY=core:1
+# export MP_TASK_AFFINITY=core:1
+
+## module load PrgEnv-intel
 
 # module load ics
 # module load ibmpe
