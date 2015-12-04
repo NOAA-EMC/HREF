@@ -299,20 +299,16 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_8 list_8.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_nn list_nn.txt
 
 
-if [ -e inputs.grb2_1 ]
-then
-rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_6 inputs.grb2_7 inputs.grb2_8 inputs.grb2_nn
-fi
 
-$WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1 $INF
-$WGRIB2 $INF | grep -F -f list_2.txt | $WGRIB2 -i -grib inputs.grb2_2 $INF
-$WGRIB2 $INF | grep -F -f list_3.txt | $WGRIB2 -i -grib inputs.grb2_3 $INF
-$WGRIB2 $INF | grep -F -f list_4.txt | $WGRIB2 -i -grib inputs.grb2_4 $INF
-$WGRIB2 $INF | grep -F -f list_5.txt | $WGRIB2 -i -grib inputs.grb2_5 $INF
-$WGRIB2 $INF | grep -F -f list_6.txt | $WGRIB2 -i -grib inputs.grb2_6 $INF
-$WGRIB2 $INF | grep -F -f list_7.txt | $WGRIB2 -i -grib inputs.grb2_7 $INF
-$WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8 $INF
-$WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
+$WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_2.txt | $WGRIB2 -i -grib inputs.grb2_2.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_3.txt | $WGRIB2 -i -grib inputs.grb2_3.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_4.txt | $WGRIB2 -i -grib inputs.grb2_4.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_5.txt | $WGRIB2 -i -grib inputs.grb2_5.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_6.txt | $WGRIB2 -i -grib inputs.grb2_6.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_7.txt | $WGRIB2 -i -grib inputs.grb2_7.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8.${fhr} $INF
+$WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn.${fhr} $INF
 
 if [ -e wgrib2.poe.${fhr} ]
 then
@@ -320,28 +316,30 @@ rm wgrib2.poe.${fhr}
 fi
 
 #### is this happening prematurely??
-if [ -e model.ndfd_1 ]
-then
-rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_6 model.ndfd_nn
-rm  model.ndfd_7 model.ndfd_8
-fi
+# if [ -e model.ndfd_1 ]
+# then
+# rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_6 model.ndfd_nn
+# rm  model.ndfd_7 model.ndfd_8
+# fi
 
 echo "#! /bin/ksh" > a.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_1  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1" >> a.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_1.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_1.${fhr}" >> a.poe.${fhr}
 echo "#! /bin/ksh" > b.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_2  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_2" >> b.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_2.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_2.${fhr}" >> b.poe.${fhr}
 echo "#! /bin/ksh" > c.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_3  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_3" >> c.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_3.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_3.${fhr}" >> c.poe.${fhr}
 echo "#! /bin/ksh" > d.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_4  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_4" >> d.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_4.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_4.${fhr}" >> d.poe.${fhr}
 echo "#! /bin/ksh" > e.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_5  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5" >> e.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_5.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_5.${fhr}" >> e.poe.${fhr}
 echo "#! /bin/ksh" > f.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_6  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_6" >> f.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_6.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_6.${fhr}" >> f.poe.${fhr}
 echo "#! /bin/ksh" > g.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_7  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_7" >> g.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_7.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_7.${fhr}" >> g.poe.${fhr}
 echo "#! /bin/ksh" > h.poe.${fhr}
-echo "$WGRIB2  inputs.grb2_8  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_8" >> h.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_8.${fhr}  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_8.${fhr}" >> h.poe.${fhr}
+echo "#! /bin/ksh" > i.poe.${fhr}
+echo "$WGRIB2  inputs.grb2_nn.${fhr}  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn.${fhr}" >> i.poe.${fhr}
 
 
 chmod 775 a.poe.${fhr}
@@ -352,6 +350,7 @@ chmod 775 e.poe.${fhr}
 chmod 775 f.poe.${fhr}
 chmod 775 g.poe.${fhr}
 chmod 775 h.poe.${fhr}
+chmod 775 i.poe.${fhr}
 
 echo "#! /bin/ksh" > wgrib2.poe.${fhr}
 echo "a.poe.${fhr} &" >> wgrib2.poe.${fhr}
@@ -362,24 +361,35 @@ echo "e.poe.${fhr} &" >> wgrib2.poe.${fhr}
 echo "f.poe.${fhr} &" >> wgrib2.poe.${fhr}
 echo "g.poe.${fhr} &" >> wgrib2.poe.${fhr}
 echo "h.poe.${fhr} &" >> wgrib2.poe.${fhr}
+echo "i.poe.${fhr} &" >> wgrib2.poe.${fhr}
 echo "wait" >> wgrib2.poe.${fhr}
 
 chmod 775 wgrib2.poe.${fhr}
 # time mpirun.lsf
-aprun -n 1 -N 1 -d 8 wgrib2.poe.${fhr}
+aprun -n 1 -N 1 -d 9 wgrib2.poe.${fhr}
 export err=$?;  err_chk
 
-$WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
+ls -l model.ndfd_?
+
+# why not in poe??
+## $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
 
-cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_6 \
-    model.ndfd_7 model.ndfd_8 model.ndfd_nn > NDFD${fhr}.tm00
+cat model.ndfd_1.${fhr} model.ndfd_2.${fhr} model.ndfd_3.${fhr} model.ndfd_4.${fhr} model.ndfd_5.${fhr} model.ndfd_6.${fhr} \
+    model.ndfd_7.${fhr} model.ndfd_8.${fhr} model.ndfd_nn.${fhr} > NDFD${fhr}.tm00
 
 
 ###	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
 	cp NDFD${fhr}.tm00 $prdgfl
 
+### WRFPRS??
+
+	if [ -e WRFPRS${fhr}.tm00 ]
+then
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+else
+  echo do nothing as no WRFPRS${fhr}.tm00 exists
+fi
 
   if [ $fhr -gt 0 ];then
 #-------------------------------------------------------------
@@ -664,6 +674,14 @@ cp ${freq}precip ${freq}precip.${fhr}_interp
 	echo here with freq $freq and fhr $fhr
      $GRB2INDEX ${freq}precip ${freq}precipi
 	ls -l  ${freq}precip ${freq}precipi
+
+if [ ! -e ${freq}snow.${fhr} ]
+then
+ls -ltr
+sleep 3
+exit
+fi
+
 $WGRIB2 ${freq}snow.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def}  ${freq}snow
 cp ${freq}snow ${freq}snow.${fhr}_interp
 	if [ $err -ne 0 ]

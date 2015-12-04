@@ -215,7 +215,8 @@ pwd
 ls -l $EXEChiresw/hiresw_wrfbufr
 echo numprocs $numprocs
 
-aprun -n ${numprocs} $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
+# aprun -n ${numprocs} -N ${spanprocs} -D 4 $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
+aprun -n ${numprocs} -N ${spanprocs} $EXEChiresw/hiresw_wrfbufr  > pgmout.log_${fhr} 2>&1 
 export err=$?;err_chk
 
 mv $DATA/bufrpost/profilm.c1.${tmmark} $DATA/profilm.c1.${tmmark}.f${fhr}

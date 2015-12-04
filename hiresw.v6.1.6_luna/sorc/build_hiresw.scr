@@ -3,53 +3,68 @@ module purge
 
 BASE=`pwd`
 
+# module load /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/modulefiles/HIRESW/v6.1.6.luna_cray
 module load /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/modulefiles/HIRESW/v6.1.6.luna
 
 module list
 
 env
 
-sleep 9
+sleep 1
 
 ##############################
 
-cd ${BASE}/hiresw_wrfarwfcst.fd
-./compile_arw.sc
+# cd ${BASE}/hiresw_wrfarwfcst.fd
+# ./compile_arw.sc
 
 ##############################
 
-cd ${BASE}/hiresw_bucket.fd
-make
-
-
-##############################
-
-cd ${BASE}/hiresw_wrfbufr.fd
-make clean
-./fill_wrflibs.scr
-make
-
-##############################
-
-cd ${BASE}/hiresw_wps.fd
-./build.scr
-
-##############################
-
-cd ${BASE}/hiresw_post.fd
-make clean
-make
-
-##############################
-
-cd ${BASE}/hiresw_nps.fd/NPS/
-./build.scr
-
-##############################
+# cd ${BASE}/hiresw_bucket.fd
+# make
 
 cd ${BASE}/hiresw_smartinitg2.fd
 make clean
 make
+
+##############################
+
+module load atp
+
+cd ${BASE}/hiresw_wrfbufr.fd
+make clean
+# ./fill_wrflibs.scr
+make
+
+exit
+
+##############################
+
+# cd ${BASE}/hiresw_wps.fd
+# ./build.scr
+
+##############################
+
+# cd ${BASE}/hiresw_post.fd
+# make clean
+# make
+
+##############################
+
+# cd ${BASE}/hiresw_nps.fd/NPS/
+# ./build.scr
+
+##############################
+
+module load iobuf
+
+cd ${BASE}/hiresw_smartinitg2.fd
+make clean
+make
+
+module unload iobuf
+
+exit
+
 
 ##############################
 

@@ -19,7 +19,20 @@
 
 set -x 
 
+echo what is my environment like in ush script
+echo " " 
+
+# env
+
+module list > filename 2>&1  
+
+echo " "
+echo done what is my environment like in ush script
+
 inest=1  # treat hiresw domains like they are nests
+
+tval=`date`
+echo enter ush script at $tval
 
 export rg=$RUNTYP
 
@@ -162,6 +175,9 @@ topofl=${topopre}.${ext}
 
 typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr # ffhr
 
+tval=`date`
+echo start processing at $tval
+
 echo
 echo "============================================================"
 echo BEGIN SMARTINIT PROCESSING FOR FFHR $ffhr  CYCLE $cyc
@@ -193,6 +209,9 @@ if [ $ffhr -ge 3 ];then hours="${ffhr2} ${ffhr1} ${ffhr}";fi
 for fhr in $hours
 do
 #####
+
+tval=`date`
+echo start $fhr at $tval
 
   mk3p=0;mk6p=0;mk12p=0
   let check=fhr%3
@@ -235,11 +254,12 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 #=================================================================
 
 # CHANGE : for non-conus look in FIXnam for topo,land files
-  cp $FIXhiresw/${topofl} TOPONDFD
-  cp $FIXhiresw/${maskfl} LANDNDFD
+  cpfs $FIXhiresw/${topofl} TOPONDFD
+  cpfs $FIXhiresw/${maskfl} LANDNDFD
   ln -sf TOPONDFD     fort.46
   ln -sf LANDNDFD     fort.48
   if [ $ext = grb ];then
+	echo running GRBINDEX
     $GRBINDEX TOPONDFD TOPONDFDi
     $GRBINDEX LANDNDFD LANDNDFDi
     ln -sf TOPONDFDi  fort.47
@@ -248,6 +268,9 @@ typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 
 cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
 err1=$?
+
+tval=`date`
+echo most data copied at $tval
 
 $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
 
@@ -258,24 +281,30 @@ echo err1 on copy $err1
 
 
 	if [ $sgrb -ne 999 ] ; then
-    cp $INPUT_DATA/srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCP
-    cp $INPUT_DATA/srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCPi
+    cpfs $INPUT_DATA/srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCP
+#     cpfs $INPUT_DATA/srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl} SREFPCPi
+    $GRB2INDEX SREFPCP SREFPCPi
+    $FSYNC SREFPCPi
         fi
 	echo fhr2 $fhr2
 	echo fhr1 $fhr1
 
 	if [ -e MAXMING2.f${fhr2} ]
         then
-    cp MAXMING2.f${fhr2} MAXMIN2
+    cpfs MAXMING2.f${fhr2} MAXMIN2
         else
     echo MAXMING2.f${fhr2} is missing
         fi
 
 	echo copy MAXMING2.f${fhr1} to MAXMIN1
-    cp MAXMING2.f${fhr1} MAXMIN1
+    cpfs MAXMING2.f${fhr1} MAXMIN1
 
     $GRB2INDEX MAXMIN1 MAXMIN1i
+	$FSYNC MAXMIN1i
     $GRB2INDEX MAXMIN2 MAXMIN2i
+	$FSYNC MAXMIN2i
+
+
   fi
 
   freq=6;fmx=21   #fmx =  maxmin unit number for 1st maxmin file
@@ -287,17 +316,17 @@ echo err1 on copy $err1
 
  	if [ $check -eq 0 -a -e $INPUT_DATA/3precip.${fhr}_interp ]
         then
-cp $INPUT_DATA/3precip.${fhr}_interp .
+cpfs $INPUT_DATA/3precip.${fhr}_interp .
         fi
 
 	if [ $check6 -eq 0 ]
 	then
 
-cp $INPUT_DATA/${freq}precip.${fhr}_interp .
+cpfs $INPUT_DATA/${freq}precip.${fhr}_interp .
 err1=$?
-cp $INPUT_DATA/${freq}snow.${fhr}_interp .
+cpfs $INPUT_DATA/${freq}snow.${fhr}_interp .
 err2=$?
-cp $INPUT_DATA/3precip.${fhr}_interp .
+cpfs $INPUT_DATA/3precip.${fhr}_interp .
 err3=$?
 
 if [ $err3 -ne 0 -a $MODEL = "arw" ]
@@ -305,8 +334,8 @@ then
 echo did not find 3precip file that was expected for ARW run
 fi
 
-cp $INPUT_DATA/meso${rg}.NDFDf${fhr} .
-cp $INPUT_DATA/meso${rg}.NDFDif${fhr} .
+cpfs $INPUT_DATA/meso${rg}.NDFDf${fhr} .
+cpfs $INPUT_DATA/meso${rg}.NDFDif${fhr} .
 
 echo copy ${freq}precip.${fhr} $err1
 echo copy ${freq}snow.${fhr} $err2
@@ -314,17 +343,20 @@ echo copy ${freq}snow.${fhr} $err2
 
      mv ${freq}precip.${fhr}_interp ${freq}precip
      $GRB2INDEX ${freq}precip ${freq}precipi
+     $FSYNC ${freq}precipi
 
      mv ${freq}snow.${fhr}_interp ${freq}snow
      $GRB2INDEX ${freq}snow ${freq}snowi
+     $FSYNC ${freq}snowi
 
 	fi
 
 	if [ $MODEL = "arw" -a $check -eq 0 ]
 	then
 
-        cp 3precip.${fhr}_interp 3precip
+        cpfs 3precip.${fhr}_interp 3precip
         $GRB2INDEX 3precip 3precipi
+        $FSYNC 3precipi
         
 	fi
 
@@ -335,6 +367,7 @@ echo copy ${freq}snow.${fhr} $err2
 	cat 3precip meso${rg}.NDFDf${fhr} > new_meso${rg}.NDFDf${fhr}
 	mv new_meso${rg}.NDFDf${fhr} meso${rg}.NDFDf${fhr}
         $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+        $FSYNC meso${rg}.NDFDif${fhr}
         fi
 
 ls -l meso${rg}.NDFDf${fhr}
@@ -364,6 +397,7 @@ ls -l meso${rg}.NDFDf${fhr}
 mv ${freq}precipi ${freq}precipi_was
 
 $GRB2INDEX ${freq}precip ${freq}precipi
+$FSYNC ${freq}precipi
 
   ln -sf "${freq}precipi"           fort.16
         fi
@@ -383,13 +417,17 @@ $GRB2INDEX ${freq}precip ${freq}precipi
 #	err_exit "missing $COMOUT/${mdl}.t${cyc}z.smart${outreg}f${fhr3}.grib2"
 #	fi
 
-    cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr3}.${outreg}.grib2 MAXMIN3
-    cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr6}.${outreg}.grib2 MAXMIN4
-    cp $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr9}.${outreg}.grib2 MAXMIN5
+    cpfs $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr3}.${outreg}.grib2 MAXMIN3
+    cpfs $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr6}.${outreg}.grib2 MAXMIN4
+    cpfs $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr9}.${outreg}.grib2 MAXMIN5
 
     $GRB2INDEX MAXMIN3 MAXMIN3i
     $GRB2INDEX MAXMIN4 MAXMIN4i
     $GRB2INDEX MAXMIN5 MAXMIN5i
+
+    $FSYNC MAXMIN3i
+    $FSYNC MAXMIN4i
+    $FSYNC MAXMIN5i
 
 
 #     READ 6/12 hr precip from special files created by makeprecip
@@ -397,8 +435,8 @@ $GRB2INDEX ${freq}precip ${freq}precipi
      cpgbgrd=$grid
      if [ $inest -gt 0 ];then cpgbgrd=$ogrd;fi
 
-cp $INPUT_DATA/12precip.${fhr}_interp .
-cp $INPUT_DATA/6snow.${fhr}_interp .
+cpfs $INPUT_DATA/12precip.${fhr}_interp .
+cpfs $INPUT_DATA/6snow.${fhr}_interp .
 
 ### change to WGRIB2
 
@@ -443,7 +481,7 @@ cp $INPUT_DATA/6snow.${fhr}_interp .
 
 if [ ! -e ${freq}snow ]
 then
-cp $INPUT_DATA/${freq}snow.${fhr}_interp ${freq}snow
+cpfs $INPUT_DATA/${freq}snow.${fhr}_interp ${freq}snow
 rm ${freq}snowi
 $GRB2INDEX ${freq}snow ${freq}snowi
 fi
@@ -503,8 +541,30 @@ fi
 	ls -l MAXMIN*
         fi
 
-aprun -n 1  $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
-  export err=$?; err_chk
+tval=`date`
+echo to run of hiresw_smartinit_g2 at $tval
+
+# aprun -n 1 $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+
+# time aprun -N 1 -n 1 -d 1 $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+time $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+
+export err=$?
+
+tval=`date`
+echo return initial run of hiresw_smartinit_g2 at $tval
+
+if [ $err -ne 0 ]
+then
+tval=`date`
+echo to 2nd run of hiresw_smartinit_g2 at $tval
+aprun -n 1 $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr}_redo 2>&1
+export err=$?
+tval=`date`
+echo past 2nd run of hiresw_smartinit_g2 at $tval
+fi
+
+err_chk
 
 
 # ncoproc all hours now
@@ -520,6 +580,8 @@ aprun -n 1  $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL 
 
    ${USHhiresw}/hiresw_ncoprocg2.sh
 
+tval=`date`
+echo past hiresw_ncoprocg2.sh for $fhr at $tval
 
 done  #fhr loop
 
