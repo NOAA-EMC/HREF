@@ -87,8 +87,8 @@ C------------------------------------------------------------------------
      & IDSTN(NSTAT),IHINDX(NSTAT),JHINDX(NSTAT)
      &,             IVINDX(NSTAT),JVINDX(NSTAT)
 
-        REAL, ALLOCATABLE:: DETA(:),RDETA(:),AETA(:),UL(:)
-     &,RES(:),FIS(:),THS(:),HBOT(:)
+        REAL, ALLOCATABLE:: UL(:)
+     &,FIS(:),THS(:),HBOT(:)
      &,CFRACL(:),CFRACM(:),CFRACH(:),SNO(:)
      &,SOILTB(:),SFCEXC(:),SMSTAV(:),SMSTOT(:)
      &,Z0(:),CZEN(:),CZMEAN(:),SR(:)
@@ -105,7 +105,7 @@ C------------------------------------------------------------------------
      &,HBM2(:),FACTR(:)
      &,PTBL(:,:),TTBL(:,:),VEGFRA(:)
      &,T(:,:),Q(:,:),U(:,:),V(:,:),Q2(:,:)
-     &,OMGALF(:,:),CWM(:,:),TRAIN(:,:),TCUCN(:,:)
+     &,CWM(:,:),TRAIN(:,:),TCUCN(:,:)
      &,F_RAIN(:,:),F_ICE(:,:),CLDFRA(:,:)
      &,F_RIMEF(:,:)
      &,RSWTT(:,:),RLWTT(:,:),RTOP(:,:)
@@ -231,38 +231,6 @@ c	endif
 	write(0,*) 'filename after open: ', filename
         endif
 
-!!!!
-!        if (ITAG .gt. 0) then
-!
-!        ITAGPREV=ITAG-INCR
-!
-!        write(ITAGLAB,302) ITAGPREV
-!        if (MYPE .eq. 0) then
-!        write(0,*) 'produced ITAGLAB: ', itaglab
-!        endif
-!         len=lnblnk(filename)
-!
-!        if (MYPE .eq. 0) then
-!        write(0,*) 'carried over part: ', filename(1:len-15)
-!        endif
-!
-!        filename_prev=filename(1:len-15)//ITAGLAB//hrp//IMINLAB//minp
-!
-!        if (MYPE .eq. 0) then
-!        write(0,*) 'filename_prev: ', filename_prev(len-16:len)
-!        endif
-!
-!       call nemsio_open(nfile_old,trim(filename_prev),'read',
-!     &                  MPI_COMM_WORLD,iret=iret)
-!
-!        if (MYPE .eq. 0) then
-!        write(0,*) 'open of filename_prev iret: ', iret
-!        endif
-!
-!
-!        endif
-!
-!!!!
 
        call nemsio_getfilehead(nfile,iret=iret,nrec=nrec)
 
@@ -287,36 +255,8 @@ c	endif
 
 C Getting start time
 
-!!!! MAP THESE PROPERLY FROM file header info
-
-!         IDATE(2)=imn
-!         IDATE(3)=iday
-!         IDATE(1)=iyear
-!         IDATE(5)=ihrst
-
 C Getting tstart
 
-!      tstart=0.
-!      call ext_int_get_dom_ti_real(DataHandle,'TSTART',tmp
-!     + ,1,ioutcount,istatus)
-!      tstart=tmp
-!      print*,'status for getting TSTART= ',istatus
-!      IF( abs(istatus-0) .GT. 1)THEN
-!       PRINT*,'you do not have tstart in your WRF output,
-!     + many grid navigation will be read in incorrectly, STOPPING'
-!       TOP
-!      END IF
-!        print*,'TSTART= ',TSTART
-!
-!        if(tstart.gt. 1.E-2) THEN
-!          itstart=nint(tstart)
-!          rinc(2)=-1.0*tstart
-!          call w3movdat(rinc,idate,idatenew)
-!          print *," old start date= ",idate, tstart
-!          print *," new start date= ",idatenew, tstart
-!          do ier=1,8
-!             idate(ier)=idatenew(ier)
-!          enddo
 C
 C reset imn,iyear,iday,ihrst since they are packed into IDAT which
 C is written into the profile output file!
@@ -375,21 +315,6 @@ C
        JEV=JEND_2U
       ENDIF
 
-!        call ext_int_get_dom_ti_real(DataHandle,'DX',tmp
-!     + ,1,ioutcount,istatus)
-!        dxval=nint(tmp*1000.) ! E-grid dlamda in degree
-!        write(0,*) 'dxval= ', dxval
-
-!        call ext_int_get_dom_ti_real(DataHandle,'DY',tmp
-!     + ,1,ioutcount,istatus)
-!        dyval=nint(1000.*tmp)
-!        write(0,*) 'dyval= ', dyval
-
-!        call ext_int_get_dom_ti_real(DataHandle,'DT',tmp
-!     + ,1,ioutcount,istatus)
-!        DT=tmp
-!        write(0,*) 'DT= ', DT
-
 	me=0
       VarName='dt'
       if(me == 0)then
@@ -422,8 +347,8 @@ C
 
 ! former parameter statements
 
-       ALLOCATE( DETA(LM),RDETA(LM),AETA(LM),UL(2*LM)
-     &,RES(NUMSTA),FIS(NUMSTA),THS(NUMSTA),HBOT(NUMSTA)
+       ALLOCATE( UL(2*LM)
+     &,FIS(NUMSTA),THS(NUMSTA),HBOT(NUMSTA)
      &,CFRACL(NUMSTA),CFRACM(NUMSTA),CFRACH(NUMSTA),SNO(NUMSTA)
      &,SOILTB(NUMSTA),SFCEXC(NUMSTA),SMSTAV(NUMSTA),SMSTOT(NUMSTA)
      &,Z0(NUMSTA),CZEN(NUMSTA),CZMEAN(NUMSTA),SR(NUMSTA))
@@ -446,7 +371,7 @@ C
      &,PTBL(ITB,JTB),TTBL(JTB,ITB),VEGFRA(NUMSTA)
      &,T(NUMSTA,LM),Q(NUMSTA,LM),U(NUMSTA,LM),V(NUMSTA,LM)
      &,Q2(NUMSTA,LM)
-     &,OMGALF(NUMSTA,LM),CWM(NUMSTA,LM),TRAIN(NUMSTA,LM)
+     &,CWM(NUMSTA,LM),TRAIN(NUMSTA,LM)
      &,F_RAIN(NUMSTA,LM),F_ICE(NUMSTA,LM),CLDFRA(NUMSTA,LM)
      &,TCUCN(NUMSTA,LM),F_RIMEF(NUMSTA,LM)
      &,RSWTT(NUMSTA,LM),RLWTT(NUMSTA,LM)
@@ -672,10 +597,6 @@ C
       VcoordName='sfc'
       l=1
 
-!	write(0,*) 'call getnemsandplace for SM'
-!        write(0,*) 'size(SM): ', size(sm)
-!        write(0,*) 'have NUMSTA into getnemsandplace_para: ', NUMSTA
-
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
      &                    icnt,idsp,
      &                    tmp,fldsize,recname,reclevtyp,
@@ -694,7 +615,6 @@ C
       VarName='sice'
       VcoordName='sfc'
       l=1
-!	write(0,*) 'call getnemsandplace_para for SICE'
 
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
      &                    icnt,idsp,
@@ -743,30 +663,10 @@ C
 
 !-------------------------------------------------------------------
 
-          DO N=1,NUMSTA
-	   RES(N)=1.0
-          END DO
-
-
-!-------------------------------------------------------------------
-
-
       VarName='tmp'
       VcoordName='mid layer'
 !	write(0,*) 'calling getnemsandplace for tmp'
       do L=1,LM
-
-!        write(0,*) 'im,jsta,jend,jsta_2l,jend_2u : ', 
-!     &              im,jsta,jend,jsta_2l,jend_2u
-!        write(0,*) 'lm, size(tmp),fldsize, size(recname): ', 
-!     &              lm, size(tmp),fldsize, size(recname)
-!        write(0,*) 'size(reclevtyp,reclev): ', size(reclevtyp), 
-!     &            size(reclev)
-!        write(0,*) 'nrec, spval: ', nrec, spval
-!        write(0,*) 'L, varname, vcoordname: ', L, varname, vcoordname
-!        write(0,*) 'NUMSTA: ', NUMSTA
-!        write(0,*) 'shape(t): ', shape(T)
-!        write(0,*) '------------------- '
 
       call getnemsandplace_3d_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
      &               lm,icnt,idsp,tmp,fldsize,recname,
@@ -1070,11 +970,6 @@ C
 !        write(0,*) 'past cldfra'
 
 
-!        call mpi_barrier(mpi_comm_world, ierr)
-!        write(0,*) 'past post-cldfra barrier'
-
-!        STOP
-
 !-------------------------------------------------------------------
 
       varname='sr'
@@ -1085,9 +980,6 @@ C
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SR) 
-
-!        call mpi_barrier(mpi_comm_world, ierr)
-!        write(0,*) 'past post-sr barrier'
 
 !-------------------------------------------------------------------
 
@@ -1100,9 +992,6 @@ C
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACH) 
 
-!        call mpi_barrier(mpi_comm_world, ierr)
-!        write(0,*) 'past post-cfrach barrier'
-
 !-------------------------------------------------------------------
 
       varname='cfracl'
@@ -1113,24 +1002,18 @@ C
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName, 
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACL) 
-!        call mpi_barrier(mpi_comm_world, ierr)
-!        write(0,*) 'past post-cfracl barrier'
 
 !-------------------------------------------------------------------
 
       varname='cfracm'
       VcoordName='sfc'
       L=1
-!        write(0,*) 'work CFRACM'
-!        write(0,*) 'NUMSTA: ', NUMSTA
       call getnemsandplace_para(nfile,im,jsta,jend,jsta_2l,jend_2u,
      &                    icnt,idsp,
      &               tmp,fldsize,recname,
      &               reclevtyp,reclev,nrec,spval,VarName,VcoordName,
      &          l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,CFRACM) 
 
-!        call mpi_barrier(mpi_comm_world, ierr)
-!        write(0,*) 'past post-cfracm barrier'
 
 !-------------------------------------------------------------------
 
@@ -2281,7 +2164,7 @@ C------------------------------------------------------------------------
 C-----------------------------------------------------------------------
 !$OMP parallel do 
       DO N=1,NUMSTA
-        PDSL1(N)=PD(N)*RES(N)
+        PDSL1(N)=PD(N)
       ENDDO
 C----------------------------------------------------------------------
 C----------------------------------------------------------------------
@@ -2570,7 +2453,6 @@ C
 !$OMP parallel do
       DO L=1,LM
         DO N=1,NUMSTA
-!          APEL=PT+AETA(L)*PDSL1(N)
           APEL=PMID(N,L)
           RTOP(N,L)=RD*T(N,L)*(1.+0.608*Q(N,L))/APEL
         ENDDO
@@ -2837,7 +2719,6 @@ C------------------------------------------------------------------
 C
       DO LV=1,LMHK
         LVL=LMHK-LV+1
-!        PRODAT(LVL)      = PDSL1(N)*AETA(LV)+PT
         PRODAT(LVL)      = PMID(N,LV)
         PRODAT(LMHK+LVL) = T(N,LV)
 
@@ -3050,8 +2931,8 @@ C
       PRLWOUT  = PRODAT(NWORD15+17) - STALWO(N)
 
 	if (N .eq. 1) then
-	write(0,*) 'PRODAT(NWORD15+17), STALWO(N), PRLOWOUT: ', 
-     &      PRODAT(NWORD15+17), STALWO(N), PRLOWOUT
+	write(0,*) 'PRODAT(NWORD15+17), STALWO(N), PRLWOUT: ', 
+     &      PRODAT(NWORD15+17), STALWO(N), PRLWOUT
 	endif
 
       PRLWTOA  = PRODAT(NWORD15+18) - STALWT(N)
@@ -3185,8 +3066,8 @@ C
 C***  END PROFILE POSTING CODE.
 C---------------------------------------------------------------------
         write(0,*) 'to deallocate block'
-        DEALLOCATE( DETA,RDETA,AETA,UL
-     &,RES,FIS,THS,HBOT
+        DEALLOCATE( UL
+     &,FIS,THS,HBOT
      &,CFRACL,CFRACM,CFRACH,SNO
      &,SOILTB,SFCEXC,SMSTAV,SMSTOT
      &,Z0,CZEN,CZMEAN,SR
@@ -3203,7 +3084,7 @@ C---------------------------------------------------------------------
      &,HBM2,FACTR
      &,PTBL,TTBL,VEGFRA
      &,T,Q,U,V,Q2
-     &,OMGALF,CWM,TRAIN,TCUCN
+     &,CWM,TRAIN,TCUCN
      &,F_RAIN,F_ICE,CLDFRA
      &,RSWTT,RLWTT,RTOP
      &,OMGA
@@ -3223,9 +3104,6 @@ C---------------------------------------------------------------------
 
         deallocate(tmp) ! icnt,idsp)
    
-!      call mpi_file_close(iunit,ierr)
-!      call mpi_finalize(mpi_comm_world, ierr)
-
 	write(0,*) 'end of routine PROF_NMMB'
 
       RETURN
