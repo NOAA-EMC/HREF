@@ -176,8 +176,7 @@ c20080707	filename=filename(1:len-19)//DateStr
 
 	write(0,*) 'back from prof'
 	END DO
-
-
+	write(0,*) 'back end do, next line is STOP0'
       STOP0
       END
 
