@@ -36,28 +36,28 @@ FREE     = -FR
 TRAPS    = 
 DEBUG    = -g # -traceback -fpe0 -ftrapuv # -check all 
 
-# WRFLIB    = ./wrflibs/libwrflib.a  \
-#             ./wrflibs/pack_utils.o  \
-#             ./wrflibs/libfftpack.a \
-#            ./wrflibs/libio_grib1.a \
-#            ./wrflibs/libio_grib_share.a \
-#            ./wrflibs/libwrfio_int.a \
-#            ./wrflibs/libwrfio_nf.a \
-#            ./wrflibs/libesmf_time.a \
-#            ./wrflibs/librsl_lite.a
+ WRFLIB    = ./wrflibs/libwrflib.a  \
+             ./wrflibs/pack_utils.o  \
+             ./wrflibs/libfftpack.a \
+            ./wrflibs/libio_grib1.a \
+            ./wrflibs/libio_grib_share.a \
+            ./wrflibs/libwrfio_int.a \
+            ./wrflibs/libwrfio_nf.a \
+            ./wrflibs/libesmf_time.a \
+            ./wrflibs/librsl_lite.a
 
-WRFPATH = ../hiresw_wrfarwfcst.fd
+# WRFPATH = ../hiresw_wrfarwfcst.fd
 
-WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
-WRFLIB    = $(WRFPATH)/main/libwrflib.a $(WRFPATH)/frame/pack_utils.o  \
-             $(WRFPATH)/main/libwrflib.a \
-             $(WRFPATH)/external/fftpack/fftpack5/libfftpack.a \
-             $(WRFPATH)/external/io_grib1/libio_grib1.a \
-             $(WRFPATH)/external/io_grib_share/libio_grib_share.a \
-             $(WRFPATH)/external/io_int/libwrfio_int.a \
-             $(WRFPATH)/external/io_netcdf/libwrfio_nf.a \
-             $(WRFPATH)/external/esmf_time_f90/libesmf_time.a \
-             $(WRFPATH)/external/RSL_LITE/librsl_lite.a
+# WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
+# WRFLIB    = $(WRFPATH)/main/libwrflib.a $(WRFPATH)/frame/pack_utils.o  \
+#              $(WRFPATH)/main/libwrflib.a \
+#              $(WRFPATH)/external/fftpack/fftpack5/libfftpack.a \
+#              $(WRFPATH)/external/io_grib1/libio_grib1.a \
+#              $(WRFPATH)/external/io_grib_share/libio_grib_share.a \
+#              $(WRFPATH)/external/io_int/libwrfio_int.a \
+#              $(WRFPATH)/external/io_netcdf/libwrfio_nf.a \
+#              $(WRFPATH)/external/esmf_time_f90/libesmf_time.a \
+#              $(WRFPATH)/external/RSL_LITE/librsl_lite.a
 
 
 #
@@ -77,18 +77,18 @@ LIBS     = $(WRFLIB) \
 OBJST= module_internal_header_util.o getIVariableB.o getIVariable.o getVariableB.o getVariable.o \
         kinds_mod.o \
         count_recs_wrf_binary_file.o inventory_wrf_binary_file.o \
-        next_buf.o retrieve_index.o GETNEMSANDPLACE.o PARA_RANGE.o ASSIGNNEMSIOVAR.o
+        next_buf.o retrieve_index.o GETNEMSANDPLACE.o PARA_RANGE.o
 
 
 #
 # fixed-format object files
 #
 OBJS=	VRBLS2D_mod.o VRBLS3D_mod.o MASKS_mod.o SOIL_mod.o \
- WRFBUFR.o PROF_EM.o PROF_NMM.o  PROF_NMM_NET.o PROF_EM_NET.o PROF_NMMB.o \
+ WRFBUFR.o PROF_EM.o PROF_NMM.o  PROF_NMM_NET.o PROF_EM_NET.o PROF_NMMB_SERIAL.o \
 iw3jdn.o w3fs26.o w3movdat.o w3reddat.o gdswiz.o gdswiz01.o \
 gdswiz03.o gdswiz05.o
 #
-SRCS=	PROF_EM.f PROF_NMMB.f WRFBUFR.f
+SRCS=	PROF_EM.f PROF_NMMB_SERIAL.f WRFBUFR.f
 #
 # Includes
 #
