@@ -1,4 +1,4 @@
-      SUBROUTINE PROF_NMMB(filename,ITAG,INCR)
+      SUBROUTINE PROF_NMMB_SERIAL(filename,ITAG,INCR)
 C
 C$$$  SUBPROGRAM DOCUMENTATION BLOCK
 C                .      .    .
@@ -2884,4 +2884,4 @@ C---------------------------------------------------------------------
 	write(0,*) 'end of routine PROF_NMMB'
 
       RETURN
-      END
+      END SUBROUTINE PROF_NMMB_SERIAL

@@ -46,19 +46,6 @@ DEBUG    = -g # -traceback -fpe0 -ftrapuv # -check all
             ./wrflibs/libesmf_time.a \
             ./wrflibs/librsl_lite.a
 
-# WRFPATH = ../hiresw_wrfarwfcst.fd
-
-# WRF_INC    = -I$(WRFPATH)/external/io_quilt -I$(WRFPATH)/frame
-# WRFLIB    = $(WRFPATH)/main/libwrflib.a $(WRFPATH)/frame/pack_utils.o  \
-#              $(WRFPATH)/main/libwrflib.a \
-#              $(WRFPATH)/external/fftpack/fftpack5/libfftpack.a \
-#              $(WRFPATH)/external/io_grib1/libio_grib1.a \
-#              $(WRFPATH)/external/io_grib_share/libio_grib_share.a \
-#              $(WRFPATH)/external/io_int/libwrfio_int.a \
-#              $(WRFPATH)/external/io_netcdf/libwrfio_nf.a \
-#              $(WRFPATH)/external/esmf_time_f90/libesmf_time.a \
-#              $(WRFPATH)/external/RSL_LITE/librsl_lite.a
-
 
 #
 # Assemble Options
