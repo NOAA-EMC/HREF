@@ -27,7 +27,7 @@ export RUN=${RUN:-href}
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
+export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/prod/hiresw}
 export COMINnam=${COMINnam:-${COMROOTp1}/nam/prod/nam}
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
@@ -42,7 +42,7 @@ export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 ###########################################################
 
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/href_ensprod_${cyc}_${envir}}
+export DATA=${DATA:-${DATAROOT}/href_ensprod_${cyc}_${envir}.${pid}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
