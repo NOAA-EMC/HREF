@@ -366,7 +366,7 @@ aprun -n 720 -N 24  ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst 
 #notwithstrict aprun -n 624 -N 24  ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 6  ./hiresw_${MODEL}_fcst
 elif [ $RUNLOC = "akarw" ]
 then
-aprun -n 624 -N 24  ./hiresw_${MODEL}_fcst : -n 48 -N 16 ./hiresw_${MODEL}_fcst 
+aprun -n 672 -N 24  ./hiresw_${MODEL}_fcst : -n 48 -N 16 ./hiresw_${MODEL}_fcst 
 else
 aprun -n ${numprocs} ./hiresw_${MODEL}_fcst
 fi

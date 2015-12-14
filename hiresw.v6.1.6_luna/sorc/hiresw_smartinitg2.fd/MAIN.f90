@@ -58,6 +58,7 @@
 
    REAL*8 :: btim
    REAL :: time_begin, time_end
+   REAL :: overall_time_begin, overall_time_end
 
    LOGICAL, ALLOCATABLE :: VALIDPT(:,:)
 !
@@ -208,33 +209,34 @@
 
    END INTERFACE
 !-----------------------------------------------------------------------------------------
-        write(0,*) 'start program'
-        write(6,*) 'start program'
+!        write(0,*) 'start program'
+!        write(6,*) 'start program'
       LNEST=.FALSE.
       LCYCON=.FALSE.
       LHR12=.FALSE.
       LHR3=.FALSE.
+        call cpu_time(overall_time_begin)
 
       call getarg(1,CTMP)
-        write(0,*) 'CTMP(1): ' , CTMP
+!        write(0,*) 'CTMP(1): ' , CTMP
       READ (ctmp,*) GDIN%CYC
 
       call getarg(2,CTMP)
-        write(0,*) 'CTMP: ' , CTMP
+!        write(0,*) 'CTMP: ' , CTMP
       READ (ctmp,*) GDIN%FHR
 
       call getarg(3,CTMP)
-        write(0,*) 'CTMP: ' , CTMP
+!        write(0,*) 'CTMP: ' , CTMP
       READ (ctmp,*) GDIN%OGRD
 
       call getarg(4,GDIN%REGION)
 
       call getarg(5,ctmp)
-        write(0,*) 'CTMP(5): ' , CTMP
+!        write(0,*) 'CTMP(5): ' , CTMP
       READ (ctmp,*) INEST
 
       call getarg(6,CORE)
-        write(0,*) 'read CORE: ', CORE
+!        write(0,*) 'read CORE: ', CORE
 
         if  (GDIN%REGION .eq. 'GUAM' .or.  GDIN%REGION .eq. 'guam') then
          HAVESREF=0
@@ -328,19 +330,23 @@
 
 
         write(0,*) 'allocated stuff'
+        call cpu_time(time_end)
+	write(0,*) 'running total to here post alloc, before GETGRIB: ', time_end-overall_time_begin
 
         write(0,*) 'call GETGRIB with HAVESREF: ', HAVESREF
     CALL GETGRIB(ISNOW,IZR,IIP,IRAIN,VEG,WETFRZ,  &
     P03M,P06M,P12M,SN03,SN06,P3CP01,P3CP10,P3CP50,P6CP01,  &
     P6CP10,P6CP50,P12CP01,P12CP10,P12CP50, THOLD,DHOLD,GDIN,&
     VALIDPT,HAVESREF,GFLD,GFLD8)
+        call cpu_time(time_end)
+	write(0,*) 'running total to here after GETGRIB: ', time_end-overall_time_begin
 
-        write(0,*) 'minval(WETFRZ),maxval(WETFRZ): ', &
-                    minval(WETFRZ),maxval(WETFRZ)
-        print*, 'maval(VEG): ', maxval(veg)
+!        write(0,*) 'minval(WETFRZ),maxval(WETFRZ): ', &
+!                    minval(WETFRZ),maxval(WETFRZ)
+!        print*, 'maval(VEG): ', maxval(veg)
 
-        write(0,*) 'GFLD%igdtmpl(8): ', GFLD%igdtmpl(8)
-        write(0,*) 'GFLD%igdtmpl(9): ', GFLD%igdtmpl(9)
+!        write(0,*) 'GFLD%igdtmpl(8): ', GFLD%igdtmpl(8)
+!        write(0,*) 'GFLD%igdtmpl(9): ', GFLD%igdtmpl(9)
 
 
 !!! print VEG here
@@ -362,7 +368,7 @@
   237   format(35(f3.0,1x))
 
 
-    print *,'MAIN VALIDPT, Temperature ',validpt(50,50),T(50,50,1)
+!    print *,'MAIN VALIDPT, Temperature ',validpt(50,50),T(50,50,1)
 
 !   Initialize varbs to spval (for nests)
     where (.not. validpt)
@@ -372,6 +378,9 @@
 
 
 !  CALL THE DOWNSCALING CODE 
+
+        call cpu_time(time_end)
+	write(0,*) 'running total to here(aaa): ', time_end-overall_time_begin
 
        ALLOCATE (DOWNT(IM,JM),DOWNDEW(IM,JM),STAT=kret)
        ALLOCATE (DOWNU(IM,JM),DOWNV(IM,JM),STAT=kret)
@@ -383,12 +392,14 @@
 
 !          btim=timef()
         call cpu_time(time_begin)
-        write(0,*) 'call NDFDgrid'
+!        write(0,*) 'call NDFDgrid'
        CALL NDFDgrid(VEG,DOWNT,DOWNDEW,DOWNU,DOWNV,DOWNQ,DOWNP,TOPO,VEG_NDFD, &
                      gdin,VALIDPT,core,dx)
         call cpu_time(time_end)
         write(0,*) 'return NDFDgrid'
         write(0,*) 'elapsed for NDFDgrid: ', time_end-time_begin
+
+	write(0,*) 'running total to here(aa): ', time_end-overall_time_begin
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -421,12 +432,12 @@
 !! need to use a GRIBI2 routine like is available in grib2_module
 
        FNAMEOUT='smartg2.xx'
-        write(0,*) 'FHR known as: ', FHR
+!        write(0,*) 'FHR known as: ', FHR
        WRITE(FNAMEOUT(9:10),FMT='(I2.2)')FHR
         write(0,*) 'FNAMEOUT(1:10): ', FNAMEOUT(1:10)
 
        CALL BAOPEN(51,FNAMEOUT,IRET)
-        write(0,*) 'IRET from BAOPEN of 51: ', IRET
+!        write(0,*) 'IRET from BAOPEN of 51: ', IRET
 
         NUMV=IM*JM
 
@@ -450,6 +461,7 @@
         enddo
         enddo
 
+
         CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNT)
 
        GFLD%ipdtnum=0
@@ -466,10 +478,13 @@
 
        gfld%idrtmpl(1)=0
     
+        call cpu_time(time_begin)
        
        CALL set_scale(gfld, DEC)
-        write(0,*) 'back from set_scale'
        CALL PUTGB2(51,GFLD,IRET) ! DOWNT
+        call cpu_time(time_end)
+        write(0,*) 'elapsed for set_scale,PUTGB2: ', time_end-time_begin
+	write(0,*) 'running total to here(a): ', time_end-overall_time_begin
 
 ! ----------------------------------------
 
@@ -539,8 +554,8 @@
 
        DEC=-2.0
 
-       print *, 'DOWNU',minval(downu),maxval(downu)
-       print *, 'DOWNV',minval(downv),maxval(downv)
+!       print *, 'DOWNU',minval(downu),maxval(downu)
+!       print *, 'DOWNV',minval(downv),maxval(downv)
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,DOWNV)
 
@@ -548,7 +563,7 @@
        GFLD%ipdtmpl(2)=3
        GFLD%ipdtmpl(10)=103
        GFLD%ipdtmpl(12)=10
-        write(0,*) 'gfld%idrtmpl: ', gfld%idrtmpl
+!        write(0,*) 'gfld%idrtmpl: ', gfld%idrtmpl
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! DOWNV
@@ -597,8 +612,8 @@
        GFLD%ipdtmpl(10)=1
        GFLD%ipdtmpl(12)=0
 
-        write(0,*) 'min,max(VEG_NDFD): ', minval(VEG_NDFD), &
-                                          maxval(VEG_NDFD)
+!        write(0,*) 'min,max(VEG_NDFD): ', minval(VEG_NDFD), &
+!                                          maxval(VEG_NDFD)
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! VEG_NDFD
@@ -611,7 +626,7 @@
          WGUST=MAX(GUST,TEMP1)
        endwhere
        WGUST=MIN(WGUST,SPVAL)
-       print *, 'WGUST',minval(wgust),maxval(wgust)
+!       print *, 'WGUST',minval(wgust),maxval(wgust)
 
        DEC=3.0 
 
@@ -641,7 +656,7 @@
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! DOWNP
 
-        write(0,*) 'IRET for DOWNP PUTGB2: ', IRET
+!        write(0,*) 'IRET for DOWNP PUTGB2: ', IRET
 
 !      Output high res topo,land for nests ??
 !      Output topo for all grids 03-07-13
@@ -680,11 +695,11 @@
        ENDDO
 
 !  Compute RH
-       print *, 'Calculate RH',FHR
+!       print *, 'Calculate RH',FHR
        ALLOCATE (RH(IM,JM,KMAX),STAT=kret)
        ktop=kmax
 
-        write(0,*) 'kmax, ktop: ', kmax, ktop
+!        write(0,*) 'kmax, ktop: ', kmax, ktop
 
        if (lnest) then 
          ktop=50
@@ -700,13 +715,16 @@
        ENDDO
        ENDDO
 
+        call cpu_time(time_end)
+	write(0,*) 'running total to here(b): ', time_end-overall_time_begin
+
 !  skip precip fields if FHR=0
        IF (FHR .EQ. 0) GOTO 444
 !--------------------------------------------------------------------------
 ! QPF - simply take model QPF and change units to inches
 !---------------------------------------- --------------------------------
   
-       print *, 'Calculate QPF',FHR
+!       print *, 'Calculate QPF',FHR
         ALLOCATE (QPF3(IM,JM),QPF6(IM,JM),QPF12(IM,JM),STAT=kret)
          QPF3  = P03M / 25.4   ! convert from millimeters to inches
          QPF6  = P06M / 25.4
@@ -720,7 +738,7 @@
 !--------------------------------------------------------------------------
 !     COMPUTE POPS
 !--------------------------------------------------------------------------
-        print *, 'Compute POPs',FHR
+!        print *, 'Compute POPs',FHR
         ALLOCATE (POP3(IM,JM),POP6(IM,JM),POP12(IM,JM),STAT=kret)
         POP3=SPVAL;POP6=SPVAL;POP12=SPVAL
 
@@ -757,10 +775,10 @@
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,P03M)
 
-        write(0,*) 'maxval(P03M) at write: ', maxval(P03m)
-        write(0,*) 'sum(P03M) at write: ', sum(P03M)
-        write(0,*) 'maxval(gfld8%fld) : ', maxval(gfld8%fld)
-        write(0,*) 'sum(gfld8%fld): ', sum(gfld8%fld)
+!        write(0,*) 'maxval(P03M) at write: ', maxval(P03m)
+!        write(0,*) 'sum(P03M) at write: ', sum(P03M)
+!        write(0,*) 'maxval(gfld8%fld) : ', maxval(gfld8%fld)
+!        write(0,*) 'sum(gfld8%fld): ', sum(gfld8%fld)
 
        GFLD8%discipline=0
        GFLD8%ipdtnum=8
@@ -890,6 +908,8 @@
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! GRIDWX
+        call cpu_time(time_end)
+	write(0,*) 'running total to here(c): ', time_end-overall_time_begin
 
 !    #--------------------------------------------------------------------------
 !    #  Chance of Wetting Rain (0.1 inch).  Same algorithm as PoP, but requires
@@ -1007,7 +1027,7 @@
 !======================================================================
 !--->   COMPUTE SKY COVER
 !======================================================================
-        print *, 'Compute SKYCVR',FHR
+!        print *, 'Compute SKYCVR',FHR
         ALLOCATE (TEMP1(IM,JM),TEMP2(IM,JM),STAT=kret)
         ALLOCATE (SKY(IM,JM),STAT=kret)
 
@@ -1074,7 +1094,7 @@
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! WETFRZ
-       write(0,*) 'IRET for WETFRZ: ', IRET
+!       write(0,*) 'IRET for WETFRZ: ', IRET
 
 
 ! VISIBILITY
@@ -1092,14 +1112,14 @@
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET)  ! VIS
-        write(0,*) 'IRET for VIS: ', IRET
+!        write(0,*) 'IRET for VIS: ', IRET
 
 !==========================================================================
 !  TransWind - the average winds in the layer between the surface
 !              and the mixing height.
 !--------------------------------------------------------------------------
 
-      print *, 'Compute TransWind',FHR
+!      print *, 'Compute TransWind',FHR
       ALLOCATE (MGTRANS(IM,JM),DIRTRANS(IM,JM),STAT=kret)
       MGTRANS=SPVAL;DIRTRANS=SPVAL
       DO J=1,JM
@@ -1112,14 +1132,13 @@
          UTOT=SUM(UWND(I,J,1:LMBL))
          VTOT=SUM(VWND(I,J,1:LMBL))
         
-        if (I .eq. 293 .and. J .eq. 132) then
-        write(0,*) 'LMBL: ', LMBL
-        write(0,*) 'UTOT, VTOT: ', UTOT, VTOT
-        do L=1,LMBL
-        write(0,*) 'L, UWND,VWND: ', L, UWND(I,J,L),VWND(I,J,L)
-        enddo
-
-        endif
+!        if (I .eq. 293 .and. J .eq. 132) then
+!        write(0,*) 'LMBL: ', LMBL
+!        write(0,*) 'UTOT, VTOT: ', UTOT, VTOT
+!        do L=1,LMBL
+!        write(0,*) 'L, UWND,VWND: ', L, UWND(I,J,L),VWND(I,J,L)
+!        enddo
+!        endif
 
         UTRANS=UTOT/LMBL
         VTRANS=VTOT/LMBL
@@ -1167,7 +1186,7 @@
 
 !  compute PBL RH
 
-      print *, 'Compute PBL RH',FHR
+!      print *, 'Compute PBL RH',FHR
       ALLOCATE (BLR(IM,JM),STAT=kret)
       BLR=SPVAL
       DO J=1,JM
@@ -1195,7 +1214,7 @@
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! BLR
-        write(0,*) 'IRET for PBL RH: ', IRET
+!        write(0,*) 'IRET for PBL RH: ', IRET
 
 !========================================================================
 !  MixHgt - the height to which a parcel above a 'fire' would rise
@@ -1207,7 +1226,7 @@
 !  and entrainment - but this is a very simple first guess.
 !========================================================================
 
-      print *, 'Compute MIXHGT',FHR
+!      print *, 'Compute MIXHGT',FHR
       ALLOCATE (MIXHGT(IM,JM),STAT=kret)
       MIXHGT=SPVAL
       ktop=kmax
@@ -1253,7 +1272,7 @@
 !       high, but RH at bottom of BL is low.
 !--------------------------------------------------------------------------
 
-      print *, 'Compute LAL',FHR
+!      print *, 'Compute LAL',FHR
       ALLOCATE (LAL(IM,JM),STAT=kret)
       LAL=SPVAL
       DO J=1,JM
@@ -1309,7 +1328,7 @@
       ENDDO
 
       DEC=2.0     ! HI DEC=3.0 ????
-        print*, 'past LAL write'
+!        print*, 'past LAL write'
 
        CALL FILL_FLD(GFLD,NUMV,IM,JM,LAL)
 
@@ -1322,24 +1341,26 @@
 
        CALL set_scale(gfld, DEC)
        CALL PUTGB2(51,GFLD,IRET) ! LAL
-        write(0,*) 'IRET for LAL: ', IRET
+!        write(0,*) 'IRET for LAL: ', IRET
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ENDIF  ! 3 hour writes
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        call cpu_time(time_end)
+	write(0,*) 'running total to here(d): ', time_end-overall_time_begin
 
-        print*, 'here checking LCYCON'
+!        print*, 'here checking LCYCON'
     IF(LCYCON .AND. .NOT.LHR12 .OR.             &
       .NOT.LCYCON.AND.MOD(FHR-6,12).NE.0) THEN 
-      print *, 'going to write minmax ', fhr
+!      print *, 'going to write minmax ', fhr
 
        FNAME2OUT='MAXMING2.fxx'
        WRITE(FNAME2OUT(11:12),FMT='(I2.2)')FHR
        write(0,*) 'FNAME2OUT(1:12): ', FNAME2OUT(1:12)
        CALL BAOPEN(52,FNAME2OUT,IRET)
-       write(0,*) 'IRET from BAOPEN of 52: ', IRET
+!       write(0,*) 'IRET from BAOPEN of 52: ', IRET
 
         NUMV=IM*JM
 
@@ -1386,7 +1407,7 @@
         ENDIF
       ENDIF
 
-        write(6,*) 'to write of older T'
+!        write(6,*) 'to write of older T'
 !  write older T/Td data for max/min to grib file
       ALLOCATE (TEMP1(IM,JM),TEMP2(IM,JM),STAT=kret)
 
@@ -1469,15 +1490,15 @@
 
 !mptest        ENDIF
       ENDIF
-        write(6,*) 'past write of older T'
+!        write(6,*) 'past write of older T'
       DEALLOCATE (TEMP1,TEMP2,STAT=kret)
-        write(6,*) 'past dealloc of TEMP1, TEMP2'
+!        write(6,*) 'past dealloc of TEMP1, TEMP2'
 
 !  compute max/min temps for 3,6,9,12.....
      ALLOCATE(TMAX3(IM,JM),RHMAX3(IM,JM),STAT=kret)
      ALLOCATE(TMIN3(IM,JM),RHMIN3(IM,JM),STAT=kret)
       IF (LHR3 .AND. FHR .NE. 0) THEN
-       print *, 'computing maxmin3 for fhr',FHR
+!       print *, 'computing maxmin3 for fhr',FHR
 !----------------Make into subroutine CalcMAX
 !       calcmax(psfc,thold,dhold,downt,downdew,tmax,tmin,rhmax,rhmin)
        TMAX3=SPVAL;TMIN3=SPVAL
@@ -1538,6 +1559,8 @@
 
        CALL set_scale(gfld8, DEC)
        CALL PUTGB2(51,GFLD8,IRET) ! TMAX3
+        call cpu_time(time_end)
+	write(0,*) 'running total to here(e): ', time_end-overall_time_begin
 
 
 
@@ -1656,8 +1679,8 @@
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,TMIN12)
 
-        write(0,*) 'minval(TMIN12): ', minval(TMIN12)
-        write(0,*) 'maxval(TMIN12): ', maxval(TMIN12)
+!        write(0,*) 'minval(TMIN12): ', minval(TMIN12)
+!        write(0,*) 'maxval(TMIN12): ', maxval(TMIN12)
 
        GFLD8%discipline=0
        GFLD8%ipdtnum=8     ! should be superfluous
@@ -1720,9 +1743,9 @@
         if (LHR3) then  ! only on 3 hourly times
       ALLOCATE (HAINES(IM,JM),HLVL(IM,JM),STAT=kret)
 
-        print*, 'call HINDEX'
+!        print*, 'call HINDEX'
       CALL HINDEX(IM,JM,HAINES,HLVL,VALIDPT)
-        print*, 'return with min/max: ', minval(HAINES),maxval(HAINES)
+!        print*, 'return with min/max: ', minval(HAINES),maxval(HAINES)
       DEC=3.0
        CALL FILL_FLD(GFLD,NUMV,IM,JM,HAINES)
 
@@ -1744,6 +1767,8 @@
 
         endif
 !jtm not needed      CALL GRIBIT(ID,RITEHD,HLVL,GDIN,70,DEC)
+        call cpu_time(time_end)
+	write(0,*) 'running total to here(f) at end: ', time_end-overall_time_begin
 
 
        print *, 'completed main'
@@ -1857,8 +1882,8 @@
          idiv=1
          IF (avg.gt.3.) idiv=2    !for 6 hr snow depths
         
-        write(0,*) 'what is SN0: ', maxval(SN0)
-        write(0,*) 'avg: ', avg
+!        write(0,*) 'what is SN0: ', maxval(SN0)
+!        write(0,*) 'avg: ', avg
 
         do J=1,JM
         do I=1,IM
@@ -1963,16 +1988,16 @@
 
       print *,'Compute ',IAHR,' HR BUCKET    FHR=',IFHR 
 
-        if (IM .ge. 139 .and. JM .ge. 154) then
-        write(0,*) 'PBLMARK: ', PBLMARK(139,154)
-        write(0,*) 'RH: ', RH(139,154,1:6)
-        write(0,*) 'BLI: ', BLI(139,154)
-        write(0,*) 'QPF: ', QPF(139,154)
-        write(0,*) 'PCP01: ', PCP01(139,154)
-        write(0,*) 'PCP10: ', PCP10(139,154)
-        write(0,*) 'PXCP01: ', PXCP01(139,154)
-        write(0,*) 'PXCP10: ', PXCP10(139,154)
-        endif
+!        if (IM .ge. 139 .and. JM .ge. 154) then
+!        write(0,*) 'PBLMARK: ', PBLMARK(139,154)
+!        write(0,*) 'RH: ', RH(139,154,1:6)
+!        write(0,*) 'BLI: ', BLI(139,154)
+!        write(0,*) 'QPF: ', QPF(139,154)
+!        write(0,*) 'PCP01: ', PCP01(139,154)
+!        write(0,*) 'PCP10: ', PCP10(139,154)
+!        write(0,*) 'PXCP01: ', PXCP01(139,154)
+!        write(0,*) 'PXCP10: ', PXCP10(139,154)
+!        endif
 
       IF (IAHR.EQ.3 .AND. IFHR .GT. 11) THEN
         ALLOCATE(TMPPCP(IM,JM))
@@ -2069,7 +2094,7 @@
 
 !! modify here??
 
-        write(0,*) 'need GRIB2 here'
+!        write(0,*) 'need GRIB2 here'
 
        print *,'OUTPUT LIMITED GRIB FILE at FHR ',GDIN%FHR,' for REGION ',GDIN%REGION
        RITEHD = .TRUE.
@@ -2170,10 +2195,10 @@
       DO J=1,JM
       DO I=1,IM
 
-        if (I .eq. 1 .and. J .eq. 1) then
-        write(0,*) 'TOPO, T950, RH850: ', &
-         TOPO(I,J),T950(I,J),RH850(I,J)
-        endif
+!        if (I .eq. 1 .and. J .eq. 1) then
+!        write(0,*) 'TOPO, T950, RH850: ', &
+!         TOPO(I,J),T950(I,J),RH850(I,J)
+!        endif
 
        if (validpt(i,j)) then
 !       IF(DOWNP(I,J).GT.95000.) THEN
@@ -2282,9 +2307,9 @@
 
         if (GFLD%ibmap .eq. 0 .or. GFLD%ibmap .eq. 254) then
         locbmap=GFLD%bmap
-        write(0,*) 'used GFLD bmap'
+!        write(0,*) 'used GFLD bmap'
         else
-        write(0,*) 'hardwire locbmap to true'
+!        write(0,*) 'hardwire locbmap to true'
         locbmap=.true.
         endif
 
@@ -2305,7 +2330,7 @@
         call g2getbits(GFLD%ibmap,DEC,size(GFLD%fld),locbmap,GFLD%fld, &
                       GFLD%idrtmpl(1),GFLD%idrtmpl(2),GFLD%idrtmpl(3),GFLD%idrtmpl(4))
 
-        write(0,*) 'gfld%idrtmpl(2:3) defined, inumbits: ', gfld%idrtmpl(2:4)
+!        write(0,*) 'gfld%idrtmpl(2:3) defined, inumbits: ', gfld%idrtmpl(2:4)
 
         END SUBROUTINE SET_SCALE
 
@@ -2474,7 +2499,7 @@
         endif
 !
       endif
-        write(0,*) 'leave g2getbits with GMIN: ', GMIN
+!        write(0,*) 'leave g2getbits with GMIN: ', GMIN
 !        GFLD%idrtmpl(1)=GMIN
 !     write(0,*)'in g2getnits,2ibs=',ibs,'ids=',ids,'nbits=',nbits,'range=',&
 !                range, 'scl=',scl,'data=',maxval(g),minval(g)

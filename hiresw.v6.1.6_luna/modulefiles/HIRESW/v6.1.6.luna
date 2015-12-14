@@ -22,9 +22,6 @@ setenv FC ftn
 module load ncep
 module load PrgEnv-intel
 
-# very unsure about this craype load
-# module load craype-network-aries
-
 setenv COMP_MP ftn
 setenv COMP_MPI ftn
 
@@ -32,18 +29,6 @@ setenv C_COMP cc
 setenv C_COMP_MP cc
 
 # Known conflicts ???
-# conflict bacio/v2.0.0
-# conflict w3nco/v2.0.5
-# conflict ics/14.1
-# conflict ics/15.0.1
-# conflict NetCDF/4.2/serial
-# conflict crtm/v2.1.3
-
-# Loading Intel Compiler Suite
-# module load ics/12.1
-
-### is ibmpe needed?  Seems needed for ARW, but kills NMMB build 
-# module load ibmpe
 
 # setenv BASEDIR /gpfs/hps/nco/ops/nwprod/lib/modulefiles
 
@@ -78,9 +63,4 @@ module load /usrx/local/prod/modulefiles/ESMF-intel-sandybridge/6_3_0rp1
 module load /gpfs/hps/nco/ops/nwprod/lib/modulefiles/crtm-intel-sandybridge/2.1.3
 module load /usrx/local/prod/modulefiles/xmlparse-intel-sandybridge/2.0.0
 
-# setenv Z_LIB /usrx/local/prod/zlib/1.2.7/intel/haswell/lib/libz.a
-# setenv NETCDF /usrx/local/prod/NetCDF/3.6.3/intel/haswell/src/netcdf-3.6.3-beta1/libsrc/.libs/libnetcdf.a
 setenv NETCDF /usrx/local/prod/NetCDF/3.6.3/intel/sandybridge
-# setenv NETCDF_INC /usrx/local/prod/NetCDF/3.6.3/intel/haswell//src//netcdf-3.6.3-beta1/libsrc4
-
-# setenv NETCDF ${NETCDF_LIB}/../

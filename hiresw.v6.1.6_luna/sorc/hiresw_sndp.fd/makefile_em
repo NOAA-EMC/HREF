@@ -16,12 +16,12 @@ OBJS=	BFRHDR.o BFRIZE.o CALHEL.o CALWXT.o SMIX.o SNDPST_EM.o VAP.o \
 # CMD		Name of the executable
 # PROFLIB	Library needed for profiling
 #
-# FC =		${COMP} -convert big_endian
+
 LDFLAGS = 
 CMD = ../../exec/hiresw_sndp_arw
 LIBS = ${BUFR_LIB4}
 
-FFLAGS = -O   
+FFLAGS = -O2 -xAVX -convert big_endian   
 
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.
@@ -29,7 +29,7 @@ FFLAGS = -O
 all:	 $(CMD) delete
 
 $(CMD):		$(OBJS)
-	$(FC) -convert big_endian  $(LDFLAGS) -o $(@) $(OBJS) $(LIBS)
+	$(FC) ${FFLAGS} $(LDFLAGS) -o $(@) $(OBJS) $(LIBS)
 
 delete:
 	@rm  *.o

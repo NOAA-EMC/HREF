@@ -22,20 +22,17 @@ sleep 1
 # cd ${BASE}/hiresw_bucket.fd
 # make
 
-cd ${BASE}/hiresw_smartinitg2.fd
-make clean
-make
-
 ##############################
 
-module load atp
+# module load iobuf
 
 cd ${BASE}/hiresw_wrfbufr.fd
 make clean
 # ./fill_wrflibs.scr
 make
 
-exit
+# module load iobuf
+
 
 ##############################
 
@@ -57,13 +54,13 @@ exit
 
 module load iobuf
 
+module list
+
 cd ${BASE}/hiresw_smartinitg2.fd
 make clean
 make
 
 module unload iobuf
-
-exit
 
 
 ##############################

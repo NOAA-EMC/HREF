@@ -43,7 +43,7 @@ PROFLIB =
 # To compile with flowtracing turned on, use the second line
 # To compile giving profile additonal information, use the third line
 # WARNING:  SIMULTANEOUSLY PROFILING AND FLOWTRACING IS NOT RECOMMENDED 
-FFLAGS =        -O
+FFLAGS =        -O -xAVX
 
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.

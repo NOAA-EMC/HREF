@@ -286,13 +286,19 @@ contains
         write(0,*) 'IRETGI on baopen, LUI: ', IRETGi, LUI
         endif
 
-        write(0,*) 'to getidx call'
+!        write(0,*) 'to getidx call'
 
+!	write(0,*) 'LUB, LUI: ', LUB, LUI
+
+	call flush(lub)
+	call flush(lui)
         CALL GETIDX(LUB,LUI,CBUF,NLEN,NNUM,IRGI)
         write(0,*) 'NLEN, NNUM from GETIDX: ', NLEN, NNUM
       IF(IRGI .NE. 0) THEN
         WRITE(6,*)' PROBLEMS READING GRIB INDEX FILE SO ABORT'
+        WRITE(0,*)' PROBLEMS READING GRIB INDEX FILE SO ABORT'
         ISTAT = IRGI
+	write(0,*) 'IRGI: ', IRGI
         STOP 'ABORT RDHDRS: GRIB INDEX FILE READ ERROR '
       ENDIF
 
@@ -313,7 +319,7 @@ contains
         JGDTN=-1
         JGDT=-9999
 
-        write(0,*) 'to GETGB2S call: '
+!        write(0,*) 'to GETGB2S call: '
         call GETGB2S(CBUF,NLEN,NNUM,J,JDISC,JIDS,JPDTN,JPDT,JGDTN, &
                         JGDT,K,GFLD,LPOS,IRGS)
         IF(IRGS .NE. 0) THEN

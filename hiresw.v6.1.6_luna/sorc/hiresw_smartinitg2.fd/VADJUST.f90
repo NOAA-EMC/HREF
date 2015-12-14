@@ -187,8 +187,8 @@
          write(0,*) 'exiting after IT, AVEERR: ', IT, AVEERR/NCOUNT
          exit
         ENDIF
-	write(0,*) 'IT, ERROR: ', IT, ERROR
-        write(0,*) 'IT, AVEERR: ', IT, AVEERR/NCOUNT
+!	write(0,*) 'IT, ERROR: ', IT, ERROR
+!        write(0,*) 'IT, AVEERR: ', IT, AVEERR/NCOUNT
         if (mod(IT,10) .eq. 0) then
         call cpu_time(tend)
         write(0,*) 'elapsed to this point: ', tend-tstart
@@ -255,8 +255,8 @@
         endif
       enddo
       enddo
-      print *,'VADJUST UWND  :',  MINVAL(U(:,:)),MAXVAL(U(:,:))
-      print *,'VADJUST VWND  :',  MINVAL(V(:,:)),MAXVAL(V(:,:))
+!      print *,'VADJUST UWND  :',  MINVAL(U(:,:)),MAXVAL(U(:,:))
+!      print *,'VADJUST VWND  :',  MINVAL(V(:,:)),MAXVAL(V(:,:))
 
       RETURN
       END

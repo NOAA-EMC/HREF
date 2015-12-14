@@ -66,6 +66,8 @@
       LOGICAL LNEST   ! for nests
       INTEGER JENS(200),KENS(200),CYC
 
+	real:: start_routine, end_time
+
 !   REAL,        ALLOCATABLE   :: GRID(:)
 !   LOGICAL*1,   ALLOCATABLE   :: MASK(:)
 !-----------------------------------------------------------------------------------------
@@ -108,6 +110,8 @@
       IHROFF=0;LHR12=.FALSE.; LHR6=.FALSE.; LHR3=.FALSE.
       LFULL=.FALSE.;LANL=.FALSE.;LLIMITED=.FALSE.;LCYCON=.FALSE.
 
+      call cpu_time(start_routine)
+
       FHR=GDIN%FHR;IFHR=FHR;CYC=GDIN%CYC;LNEST=GDIN%LNEST
       LHR9=.false.
 
@@ -125,8 +129,8 @@
 
         IGDNUMT=0
 
-        write(0,*) 'inside GETGRIB'
-        write(0,*) 'LNEST: ', LNEST
+!        write(0,*) 'inside GETGRIB'
+!        write(0,*) 'LNEST: ', LNEST
        
 !    SET LOGICALS FOR when to read precip or max/min from special files
 
@@ -236,7 +240,7 @@
        print *,'====================================================='
       ENDIF
 
-        write(0,*) 'here a'
+!        write(0,*) 'here a'
 
       OPEN(49,file='DATE',form='formatted')
       READ(49,200) DUM1,GDIN%DATE
@@ -248,60 +252,70 @@
       day=int(mod(date,10000)/100)
       ihr=mod(date,100)
       print *, 'date ', DATE,YEAR,MON,DAY,IHR 
-        write(0,*) 'here b'
+!        write(0,*) 'here b'
 
 !==========================================================
 !     READ INDEX FILE TO GET GRID SPECS
 !==========================================================
-        write(0,*) 'here c - call RDHDRS'
+!        write(0,*) 'here c - call RDHDRS'
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed: ', end_time-start_routine
       CALL RDHDRS_g2(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
       IMAX=GDIN%IMAX;JMAX=GDIN%JMAX;KMAX=GDIN%KMAX
       NUMLEV=GDIN%KMAX
       ITOT=IMAX*JMAX
       print *,gdin%imax,jmax,kmax,numlev,itot
-        write(0,*) 'here d - past RDHDRS'
-        write(0,*) 'see NUMLEV: ', NUMLEV
+!        write(0,*) 'here d - past RDHDRS'
+!        write(0,*) 'see NUMLEV: ', NUMLEV
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(b): ', end_time-start_routine
 
       if (lfull) then
 
         if (HAVESREF .eq. 1) then
-      print *, ' READING SREF HDRS',LUGB2,LUGI2
+!      print *, ' READING SREF HDRS',LUGB2,LUGI2
       CALL RDHDRS_g2(LUGB2,LUGI2,IGDNUM2,GDIN,NUMVAL2)
         endif
 
-        write(0,*) 'here e - past RDHDRS'
+!        write(0,*) 'here e - past RDHDRS'
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(c): ', end_time-start_routine
 
 ! GSM  READ 3-HR PRECIP AND SNOW FILES WHICH ARE NEEDED
 !      IF NOT A 3-HR ACCUMULATION TIME (F15,F27,F39...) 
 !      OR AN "OFF-TIME" (F13,F14,F16....)
 
-        write(0,*) 'READ 3-hr precip HDRS from Unit ', LUGP3,LUGP3I
-      print *, 'READ 3-hr precip HDRS from Unit ', LUGP3,LUGP3I
+!        write(0,*) 'READ 3-hr precip HDRS from Unit ', LUGP3,LUGP3I
+!      print *, 'READ 3-hr precip HDRS from Unit ', LUGP3,LUGP3I
       CALL RDHDRS_g2(LUGP3,LUGP3I,IGDNUM3,GDIN,NUMVAL3)
-        write(0,*) 'here f - past RDHDRS'
-      print *, 'READ 3-hr snow HDRS from Unit ', LUGS3,LUGS3I
+!        write(0,*) 'here f - past RDHDRS'
+!      print *, 'READ 3-hr snow HDRS from Unit ', LUGS3,LUGS3I
       CALL RDHDRS_g2(LUGS3,LUGS3I,IGDNUMSN3,GDIN,NUMVALSN3)
-        write(0,*) 'here g - past RDHDRS'
+!        write(0,*) 'here g - past RDHDRS'
       IGDNUM5=IGDNUMSN3
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(d): ', end_time-start_routine
 
 !     READ 6-HR PRECIP/SNOW FILES AT F12,F24,F36.....
 !     OR 12-hr PRECIP FOR OFF-CYCLE RUNS
       IF (LHR6.OR.LHR9.OR.LHR12) THEN
-        print *, 'READING 6 hr precip HDR from Unit ', LUGP6,LUGP6I
-        write(0,*) 'here ga - '
+!        print *, 'READING 6 hr precip HDR from Unit ', LUGP6,LUGP6I
+!        write(0,*) 'here ga - '
         CALL RDHDRS_g2(LUGP6,LUGP6I,IGDNUM6,GDIN,NUMVAL6)
-        write(0,*) 'here gb - '
-        print *, 'READING 6 hr SNOW HDR from Unit ', LUGS6,LUGS6I
+!        write(0,*) 'here gb - '
+!        print *, 'READING 6 hr SNOW HDR from Unit ', LUGS6,LUGS6I
         CALL RDHDRS_g2(LUGS6,LUGS6I,IGDNUMSN6,GDIN,NUMVALSN6)
-        write(0,*) 'here gc - '
+!        write(0,*) 'here gc - '
         IF(LHR12) THEN
-          print *, 'READING 12 hr precip HDR from Unit ', LUGP12,LUGP12I
-        write(0,*) 'here gd - '
+!          print *, 'READING 12 hr precip HDR from Unit ', LUGP12,LUGP12I
+!        write(0,*) 'here gd - '
           CALL RDHDRS_g2(LUGP12,LUGP12I,IGDNUM12,GDIN,NUMVAL12)
-        write(0,*) 'here ge - '
+!        write(0,*) 'here ge - '
         ENDIF
       ENDIF
-        write(0,*) 'here h '
+!        write(0,*) 'here h '
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(e): ', end_time-start_routine
 
 !==================================================================
 ! GSM  READ TEMPERATURE HDR FILES FOR 12-HR MIN/MAX
@@ -311,9 +325,11 @@
 !     NOTE: WE'LL ASSUME THE GRID NUMBER IS THE SAME FOR
 !     ALL OF THESE MIN/MAX FILES AND NOT DO THIS FOR EACH
 
-      print *, "Reading min/max Temp HDR from UNIT:",LUGT1, LUGT1I
+!      print *, "Reading min/max Temp HDR from UNIT:",LUGT1, LUGT1I
       CALL RDHDRS_g2(LUGT1,LUGT1I,IGDNUMT,GDIN,NUMVALT)
-        write(0,*) 'past RDHDRS_g2(aa) call'
+!        write(0,*) 'past RDHDRS_g2(aa) call'
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(f): ', end_time-start_routine
 
 !     Fill the max/min T/Td holders with 0's to
 !      1) account for this array at times other than f12,24,36...
@@ -321,17 +337,17 @@
       THOLD=0.
       DHOLD=0.
 
-      print *, "Reading min/max Temp HDR from UNIT:",LUGT2, LUGT2I, NUMVALT
+!      print *, "Reading min/max Temp HDR from UNIT:",LUGT2, LUGT2I, NUMVALT
       CALL RDHDRS_g2(LUGT2,LUGT2I,IGDNUMT,GDIN,NUMVALT)
-        write(0,*) 'past RDHDRS_g2(a) call'
+!        write(0,*) 'past RDHDRS_g2(a) call'
 
       IF (LHR12) THEN
         LUGT=LUGT3    
         LUGTI=LUGT3I   
         DO  IT=3,5
-          print *, "Reading min/max Temp  UNIT:",IT, LUGT, LUGTI
+!          print *, "Reading min/max Temp  UNIT:",IT, LUGT, LUGTI
           CALL RDHDRS_g2(LUGT,LUGTI,IGDNUMT,GDIN,NUMVALT)
-        write(0,*) 'past RDHDRS_g2(b) call'
+!        write(0,*) 'past RDHDRS_g2(b) call'
           LUGT=LUGT+1
           LUGTI=LUGTI+1
         ENDDO 
@@ -353,21 +369,26 @@
        JPDTN   = 0
        JDISC = 0
 
-        write(0,*) 'call SETVAR_g2 for ZSFC'
-        write(0,*) 'NUMVAL into SETVAR_g2: ', NUMVAL
+!        write(0,*) 'call SETVAR_g2 for ZSFC'
+!        write(0,*) 'NUMVAL into SETVAR_g2: ', NUMVAL
 
 ! is it SREF data?
         ISSREF=0
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(g): ', end_time-start_routine
 
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K, &
                      KPDS,KGDS,MASK,GRID,ZSFC,GFLD_S,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'GFLD_S%ibmap: ', GFLD_S%ibmap
+!        write(0,*) 'GFLD_S%ibmap: ', GFLD_S%ibmap
+
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(h - post setvar_g2): ', end_time-start_routine
         
       WHERE (ZSFC < 0.0) ZSFC=0.0
 
-        write(0,*) 'minval(zsfc),maxval(zsfc): ', minval(zsfc),maxval(zsfc)
+!        write(0,*) 'minval(zsfc),maxval(zsfc): ', minval(zsfc),maxval(zsfc)
 
 ! get surface pressure
 
@@ -376,14 +397,14 @@
        JPDT(10) = 1
        JPDTN   = 0
 
-        write(0,*) 'call for pressure'
+!        write(0,*) 'call for pressure'
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,PSFC,GFLD,ISSREF,IRET,ISTAT)
 
-        if (IRET .eq. 0) then
-        write(0,*) 'minval(psfc),maxval(psfc); ', minval(psfc),maxval(psfc)
-        endif
+!        if (IRET .eq. 0) then
+!        write(0,*) 'minval(psfc),maxval(psfc); ', minval(psfc),maxval(psfc)
+!        endif
 
 
 ! get 4 INTEGER precip types 
@@ -447,13 +468,13 @@
        JPDT(2) = 194 ! 035
        JPDT(10) = 1
 
-        write(0,*) 'to ice pellets'
+!        write(0,*) 'to ice pellets'
 
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,RTYPE,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET from snow cat: ', IRET
+!        write(0,*) 'IRET from snow cat: ', IRET
 
         do J=1,JMAX
         do I=1,IMAX
@@ -509,7 +530,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,RTYPE,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET from freezing rain cat: ', IRET
+!        write(0,*) 'IRET from freezing rain cat: ', IRET
 
         do J=1,JMAX
         do I=1,IMAX
@@ -545,7 +566,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,RTYPE,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET from freezing rain cat: ', IRET
+!        write(0,*) 'IRET from freezing rain cat: ', IRET
 
         do J=1,JMAX
         do I=1,IMAX
@@ -568,7 +589,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,WETFRZ,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET for lowest wet bulb zero level: ', IRET
+!        write(0,*) 'IRET for lowest wet bulb zero level: ', IRET
 
 ! visibility 
        JPDT(1) = 19
@@ -578,7 +599,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,VIS,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET for vis: ', IRET
+!        write(0,*) 'IRET for vis: ', IRET
 
       endif
 
@@ -592,7 +613,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,T2,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET for t2m: ', IRET
+!        write(0,*) 'IRET for t2m: ', IRET
 
 !        print*, 'T2(251,100): ', T2(251,100)
 !        print*, 'T2(253,131): ', T2(253,131)
@@ -606,7 +627,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,Q2,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET for q2m: ', IRET
+!        write(0,*) 'IRET for q2m: ', IRET
 
 ! 2-m dew point 
 
@@ -618,7 +639,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,D2,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET for td2m: ', IRET
+!        write(0,*) 'IRET for td2m: ', IRET
 
 ! 10-m U
 
@@ -630,6 +651,8 @@
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,U10,GFLD,ISSREF,IRET,ISTAT)
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(i - post setvar_g2 for U10): ', end_time-start_routine
 
 ! 10-m V
 
@@ -642,7 +665,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,V10,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'U10(1,1),V10(1,1): ', U10(1,1),V10(1,1)
+!        write(0,*) 'U10(1,1),V10(1,1): ', U10(1,1),V10(1,1)
 
 
 ! vegetation fraction
@@ -659,7 +682,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,VEG,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'VEG(1,1): ', VEG(1,1)
+!        write(0,*) 'VEG(1,1): ', VEG(1,1)
 
 
 ! Best Liftex Index 
@@ -673,7 +696,7 @@
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,BLI,GFLD,ISSREF,IRET,ISTAT)
-        write(0,*) 'IRET  for BLI: ', IRET, minval(BLI),MAXVAL(BLI)
+!        write(0,*) 'IRET  for BLI: ', IRET, minval(BLI),MAXVAL(BLI)
 
 
       endif
@@ -741,7 +764,7 @@
 
 ! Read  12-hr Precip
         IF(LHR12) THEN
-          print *, LCYCON,IFHR,'READ 12 hr PRECIP from file ',LUGP12,IGDNUM12
+!          print *, LCYCON,IFHR,'READ 12 hr PRECIP from file ',LUGP12,IGDNUM12
 
        JPDTN=8
        JPDT(1) = 1
@@ -809,7 +832,7 @@
            LUGTB=LUGT5I
          ENDIF
  
-         print *, 'READING TEMP for hr', IIH, LUGTA,LUGTB,KT
+!         print *, 'READING TEMP for hr', IIH, LUGTA,LUGTB,KT
 
        JPDT(1) = 0
        JPDT(2) = 000
@@ -819,7 +842,7 @@
       CALL SETVAR_g2(LUGTA,LUGTB,NUMVALT,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,THOLD(:,:,KT),GFLD,ISSREF,IRET,ISTAT)
 
-         print *, 'READING  DPT for hr', IIH, LUGTA,LUGTB,KT 
+!         print *, 'READING  DPT for hr', IIH, LUGTA,LUGTB,KT 
 
        JPDT(1) = 0
        JPDT(2) = 006
@@ -835,10 +858,12 @@
       ENDIF
       endif !lfull
 
-        write(0,*) 'here 27'
+!        write(0,*) 'here 27'
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(j): ', end_time-start_routine
 
 !   get the vertical profile of pressure 
-      print *,'READ UPPER LEVEL fields from unit ', LUGB,'KMAX',KMAX
+!      print *,'READ UPPER LEVEL fields from unit ', LUGB,'KMAX',KMAX
 
         JDISC=0
 
@@ -859,9 +884,9 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,PMID(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
 
-        if (IRET .eq. 0) then
-        write(0,*) 'PMID(1,1,LL): ', LL, PMID(1,1,LL)
-        endif
+!        if (IRET .eq. 0) then
+!        write(0,*) 'PMID(1,1,LL): ', LL, PMID(1,1,LL)
+!        endif
 
         if (IRET .ne. 0) then
         write(0,*) 'IRET from pressure column : ', IRET
@@ -870,6 +895,8 @@
 
 !mptest       J=K
       ENDDO
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(jj): ', end_time-start_routine
 
 !   get the vertical profile of height 
       J=0
@@ -883,13 +910,15 @@
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,HGHT(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
-        if (IRET .eq. 0) then
-        write(0,*) 'HGHT(1,1,LL): ', HGHT(1,1,LL)
-        endif
+!        if (IRET .eq. 0) then
+!        write(0,*) 'HGHT(1,1,LL): ', HGHT(1,1,LL)
+!        endif
 
 !mptest       J=K
       ENDDO
 
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(jjj): ', end_time-start_routine
 
 !   get the vertical profile of temperature
       J=0
@@ -904,7 +933,7 @@
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,T(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
-        write(0,*) 'T(1,1,LL): ', T(1,1,LL)
+!        write(0,*) 'T(1,1,LL): ', T(1,1,LL)
 
       ENDDO
 
@@ -942,11 +971,13 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,Q(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
         J=K
-        write(0,*) 'min/max of Q: ',LL, minval(Q(:,:,LL)), maxval(Q(:,:,LL))
+!        write(0,*) 'min/max of Q: ',LL, minval(Q(:,:,LL)), maxval(Q(:,:,LL))
 !        write(0,*) 'Q(50,50,LL): ', LL, Q(50,50,LL)
 
 
       ENDDO
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(jjjj): ', end_time-start_routine
 
 !   get the vertical profile of u 
       J=0
@@ -960,9 +991,9 @@
                      KPDS,KGDS,MASK,GRID,UWND(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
 
        J=K
-        if (I .eq. 293 .and. J .eq. 132) then
-        write(0,*) 'I,J, LL, UWND(I,J,LL): ', I,J, LL, UWND(I,J,LL)
-        endif
+!        if (I .eq. 293 .and. J .eq. 132) then
+!        write(0,*) 'I,J, LL, UWND(I,J,LL): ', I,J, LL, UWND(I,J,LL)
+!        endif
 
       ENDDO
 
@@ -977,18 +1008,18 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,VWND(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
        J=K
-        if (I .eq. 293 .and. J .eq. 132) then
-        write(0,*) 'I,J, LL, VWND(I,J,LL): ', I,J, LL, VWND(I,J,LL)
-        endif
+!        if (I .eq. 293 .and. J .eq. 132) then
+!        write(0,*) 'I,J, LL, VWND(I,J,LL): ', I,J, LL, VWND(I,J,LL)
+!        endif
       ENDDO
-        write(0,*) 'is llimited true....will avoid T850, etc: ', llimited
+!        write(0,*) 'is llimited true....will avoid T850, etc: ', llimited
       if (llimited) return
 
 !   get the vertical profile of cloud fraction for non-nests
       if (.not. lnest) then
       J=0
       DO LL=1,KMAX  
-        write(0,*) 'vertical column of cloud fraction'
+!        write(0,*) 'vertical column of cloud fraction'
        JPDT(1) = 006
        JPDT(2) = 032
        JPDT(10) = 105
@@ -1011,7 +1042,7 @@
        JPDT(10) = 100
        JPDT(12) = 95000
 
-       write(0,*) '950 T get'
+!       write(0,*) '950 T get'
 
       J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
@@ -1049,7 +1080,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,RH850,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'min/max of RH850: ', minval(RH850),maxval(RH850)
+!        write(0,*) 'min/max of RH850: ', minval(RH850),maxval(RH850)
 
 !   700 mb RH
 
@@ -1058,10 +1089,10 @@
       J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,RH700,GFLD,ISSREF,IRET,ISTAT)
-        write(0,*) 'min/max of RH700: ', minval(RH700),maxval(RH700)
+!        write(0,*) 'min/max of RH700: ', minval(RH700),maxval(RH700)
 
-        write(0,*) 'T850, T700, T500: ', T850(1,1), T700(1,1), T500(1,1)
-        write(0,*) 'RH850, RH700: ', RH850(1,1), RH700(1,1)
+!        write(0,*) 'T850, T700, T500: ', T850(1,1), T700(1,1), T500(1,1)
+!        write(0,*) 'RH850, RH700: ', RH850(1,1), RH700(1,1)
 
 !  sfc wind gust 
 
@@ -1086,7 +1117,7 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,REFC,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'here good'
+!        write(0,*) 'here good'
 
       if (lanl) return
 
@@ -1103,9 +1134,9 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,TCLD,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET from SETVAR_g2 for TCLD ', IRET
+!        write(0,*) 'IRET from SETVAR_g2 for TCLD ', IRET
 
-        write(0,*) 'maxval(TCLD): ', maxval(TCLD)
+!        write(0,*) 'maxval(TCLD): ', maxval(TCLD)
 
 
 !        JPDS(5) = 73
@@ -1123,9 +1154,9 @@
 ! is it SREF data?
         ISSREF=1
 
-        write(0,*) 'to read of SREF precip'
+!        write(0,*) 'to read of SREF precip'
 !  READ SREF precip
-      print*; print *,'READ SREF Precip Probs', LUGB2
+!      print*; print *,'READ SREF Precip Probs', LUGB2
 
 ! 3-hr probability of .01"
 
@@ -1147,15 +1178,18 @@
        JPDT(10) = 1
        JDISC = 0
 
-        write(0,*) 'LUGB2, LUGI2 for SREF prob: ', LUGB2, LUGI2
+!        write(0,*) 'LUGB2, LUGI2 for SREF prob: ', LUGB2, LUGI2
       CALL SETVAR_g2(LUGB2,LUGI2,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K, &
                      KPDS,KGDS,MASK,GRID,S3REF01,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'IRET from SETVAR_g2: ', IRET
+!        write(0,*) 'IRET from SETVAR_g2: ', IRET
 
         
-        write(0,*) 'min,max S3REF01: ', minval(S3REF01),maxval(S3REF01)
-        write(0,*) 'sum(S3REF01): ', sum(S3REF01)
+!        write(0,*) 'min,max S3REF01: ', minval(S3REF01),maxval(S3REF01)
+!        write(0,*) 'sum(S3REF01): ', sum(S3REF01)
+
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(k): ', end_time-start_routine
 
 ! probability of .1"
 !      J = 2
@@ -1190,12 +1224,12 @@
       CALL SETVAR_g2(LUGB2,LUGI2,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K, &
                      KPDS,KGDS,MASK,GRID,S3REF50,GFLD,ISSREF,IRET,ISTAT)
 
-        write(0,*) 'minval(S3REF50),maxval(S3REF50): ', &
-                    minval(S3REF50),maxval(S3REF50)
+!        write(0,*) 'minval(S3REF50),maxval(S3REF50): ', &
+!                    minval(S3REF50),maxval(S3REF50)
 
       IF (IFHR .EQ. 3) THEN
         IF (.NOT.LCYCON) THEN
-          print *, 'FHR=3 so zero 6 and 12-hr sref probabilities'
+!          print *, 'FHR=3 so zero 6 and 12-hr sref probabilities'
           S6REF01(:,:) = 0.0
           S6REF10(:,:) = 0.0
           S6REF50(:,:) = 0.0
@@ -1203,7 +1237,7 @@
           S12REF10(:,:) = 0.0
           S12REF50(:,:) = 0.0
         ENDIF
-       print *, 'bailing out of sref pcp early IFHR=',IFHR
+!       print *, 'bailing out of sref pcp early IFHR=',IFHR
        RETURN
       ENDIF
 
@@ -1288,6 +1322,8 @@
 
       CALL SETVAR_g2(LUGB2,LUGI2,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K, &
                      KPDS,KGDS,MASK,GRID,S12REF50,GFLD,ISSREF,IRET,ISTAT)
+      call cpu_time(end_time)
+	write(0,*) ' routine elapsed(l): ', end_time-start_routine
 
 ! is it SREF data?
         ISSREF=0
