@@ -1,10 +1,9 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/launch_info/test_smartinitb.out__DOM__CORE__CYC_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/launch_info/test_smartinitb.err__DOM__CORE__CYC_
-#BSUB -q "dev_serv"
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_smartinitb.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_smartinitb.err__DOM__CORE__CYC_
+#BSUB -q "dev"
 #BSUB -J HIRESW_SMARTINITB
 #BSUB -P HRW-T2O
-#BSUB -R rusage[mem=9000]
-#####BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=9000]
 #BSUB -W 1:29
 #
 

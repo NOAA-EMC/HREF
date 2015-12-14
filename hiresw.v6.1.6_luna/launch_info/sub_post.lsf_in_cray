@@ -1,6 +1,6 @@
 
-#BSUB -oo test_post.out_DOM__CORE__CYC_
-#BSUB -eo test_post.err_DOM__CORE__CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_post.out_DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_post.err_DOM__CORE__CYC_
 #BSUB -J HIRESW_POST
 #BSUB -q "dev"
 #BSUB -P HRW-T2O

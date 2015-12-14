@@ -1,6 +1,6 @@
 
-#BSUB -oo test_prdgen.out__DOM__CORE__CYC_
-#BSUB -eo test_prdgen.err__DOM__CORE__CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_prdgen.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_prdgen.err__DOM__CORE__CYC_
 #BSUB -q "dev"
 #BSUB -J HIRESW_PRDGEN
 #BSUB -P HRW-T2O

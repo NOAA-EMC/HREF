@@ -1,6 +1,6 @@
 
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/launch_info/test_smartinit.out__DOM__CORE__CYC_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/launch_info/test_smartinit.err__DOM__CORE__CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_smartinit.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_smartinit.err__DOM__CORE__CYC_
 #BSUB -q "dev"
 #BSUB -J HIRESW_SMARTINIT
 #BSUB -P HRW-T2O
