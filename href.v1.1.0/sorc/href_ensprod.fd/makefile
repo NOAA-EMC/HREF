@@ -9,7 +9,7 @@
 
 INC=  ${G2_INC4} 
 LIBS=   ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \
-        ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
+        ${PNG_LIB} ${JASPER_LIB} ${Z_LIB}
 #FFLAGS = -O2 -g -convert big_endian -openmp -auto  -I$(INC)
 FFLAGS = -O3 -convert big_endian -openmp -auto -I $(INC) -assume noold_ldout_format
 

@@ -51,7 +51,7 @@ export finc=3
 export fend=36
 export fstart=03
 
-export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_GEMPAK}
+export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 
 #
 # Copy model specific GEMPAK tables into working directory
