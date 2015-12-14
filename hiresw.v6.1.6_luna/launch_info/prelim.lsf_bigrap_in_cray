@@ -1,6 +1,6 @@
 
-#BSUB -oo test_prelimrap.out__DOM___CORE___CYC_
-#BSUB -eo test_prelimrap.err__DOM___CORE___CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_prelimrap.out__DOM___CORE___CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_prelimrap.err__DOM___CORE___CYC_
 #BSUB -q "dev"
 #BSUB -J HIRESW_PREP_RAP
 #BSUB -W 0:15

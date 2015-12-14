@@ -1,6 +1,6 @@
 
-#BSUB -oo test_prepfinal.out__DOM___CORE___CYC_
-#BSUB -eo test_prepfinal.err__DOM___CORE___CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_prepfinal.out__DOM___CORE___CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_prepfinal.err__DOM___CORE___CYC_
 #BSUB -q "dev"
 #BSUB -J HIRESW_PREPFINAL
 #BSUB -W 0:18

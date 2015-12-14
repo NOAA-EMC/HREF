@@ -1,6 +1,6 @@
 
-#BSUB -oo test_fore.out__DOM__CORE__CYC_
-#BSUB -eo test_fore.err__DOM__CORE__CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_fore.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_fore.err__DOM__CORE__CYC_
 #BSUB -q "dev"
 #BSUB -J HIRESW_FORECAST__DOM___CORE___CYC_
 #BSUB -P HRW-T2O

@@ -1,6 +1,6 @@
 
-#BSUB -oo test_nemsinterp_4.out__DOM___CORE___CYC_
-#BSUB -eo test_nemsinterp_4.err__DOM___CORE___CYC_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_nemsinterp_4.out__DOM___CORE___CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_nemsinterp_4.err__DOM___CORE___CYC_
 #BSUB -q "dev"
 #BSUB -J HIRESW_NEMSINTERP_4
 #BSUB -W 0:19

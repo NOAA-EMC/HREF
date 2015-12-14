@@ -1,15 +1,19 @@
-#BSUB -oo test_wrfbufrsnd.out
-#BSUB -eo test_wrfbufrsnd.err
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_wrfbufrsnd.out__DOM___CYC___CORE_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/logs/test_wrfbufrsnd.err__DOM___CYC___CORE_
 #BSUB -q "dev"
 #BSUB -J HIRESW_BUFR
 #BSUB -P HRW-T2O
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}' rusage[mem=3000]
+###BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}' rusage[mem=3000]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=50000]
 #BSUB -W 1:29
 
 
-export numprocs=_NPROCBUFR_
-export spanprocs=_PTILEBUFR_
+export numprocs=1
+export spanprocs=1
 
+export obsproc_shared_bufr_cword_ver=v1.0.0
+
+module load prod_envir
 module load prod_util
 
 # module load ics
