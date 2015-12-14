@@ -377,7 +377,7 @@
         call vadjust(validpt,veg_ndfd,unew,vnew,topo_ndfd,dx,dy,im,jm,gdin)
 
         call cpu_time(time_end)
-        write(0,*) 'return vadjust'
+!        write(0,*) 'return vadjust'
         write(0,*) 'time for vadjust: ', time_end-time_begin
 
 
@@ -396,11 +396,11 @@
          vtmp=vnew
          rough_mod = veg_nam_ndfd
 
-        print*, ' min/max of rough_mod:  ', minval(rough_mod),maxval(rough_mod)
+!        print*, ' min/max of rough_mod:  ', minval(rough_mod),maxval(rough_mod)
 
-        do J=JM,1,-JM/45
-        write(6,237) (min(rough_mod(I,J),99.),I=1,IM,IM/30)
-        enddo
+!        do J=JM,1,-JM/45
+!        write(6,237) (min(rough_mod(I,J),99.),I=1,IM,IM/30)
+!        enddo
 
   237   format(35(f3.0,1x))
 
@@ -423,22 +423,22 @@
 !         endif
 !        endif
 
-        if (I .eq. 251 .and. J .eq. 100) then
-        print*, 'i,j,lconus, veg_ndfd, veglim: ', i,j,lconus, &
-                   veg_ndfd(i,j),veglim
-        endif
+!        if (I .eq. 251 .and. J .eq. 100) then
+!        print*, 'i,j,lconus, veg_ndfd, veglim: ', i,j,lconus, &
+!                   veg_ndfd(i,j),veglim
+!        endif
 
-        if (I .eq. 253 .and. J .eq. 131) then
-        print*, 'i,j,lconus, veg_ndfd, veglim: ', i,j,lconus, &
-                   veg_ndfd(i,j),veglim
-        endif
+!        if (I .eq. 253 .and. J .eq. 131) then
+!        print*, 'i,j,lconus, veg_ndfd, veglim: ', i,j,lconus, &
+!                   veg_ndfd(i,j),veglim
+!        endif
 
         if (lconus .and. veg_ndfd(i,j).eq.veglim) ladjland=.true.
 
         if (.not.lconus .and. veg_ndfd(i,j).lt.veglim) then
-        if ( (I .eq. 251 .and. J .eq. 100) .or. (I .eq. 253 .and. J .eq. 131)) then     
-        print*, 'adjusting to land: ', I,J
-        endif
+!        if ( (I .eq. 251 .and. J .eq. 100) .or. (I .eq. 253 .and. J .eq. 131)) then     
+!        print*, 'adjusting to land: ', I,J
+!        endif
                 ladjland=.true.
         endif
 
@@ -469,18 +469,20 @@
         write (6,*)k,' No. pts changed water-to-land',nmod(2)
        end do
 
-        print*, 'modified rough_mod after switching'
+!        print*, 'modified rough_mod after switching'
 
-        do J=JM,1,-JM/45
-        write(6,237) (rough_mod(I,J),I=1,IM,IM/30)
-        enddo
+!        do J=JM,1,-JM/45
+!        write(6,237) (rough_mod(I,J),I=1,IM,IM/30)
+!        enddo
 
        do j=1,jm
        do i=1,im
-        if (I .eq. 251 .and. J .eq. 100) then
-        write(6,*) 'I,J,veg_NAM, rghlim: ', I,J,veg_nam_ndfd(i,J),rghlim
-        write(6,*) 'I,J,rough_mod: ', I,J,rough_mod(i,J)
-        endif
+
+!        if (I .eq. 251 .and. J .eq. 100) then
+!        write(6,*) 'I,J,veg_NAM, rghlim: ', I,J,veg_nam_ndfd(i,J),rghlim
+!        write(6,*) 'I,J,rough_mod: ', I,J,rough_mod(i,J)
+!        endif
+
          if (veg_nam_ndfd(i,j).gt.rghlim) then
           if (rough_mod(i,j).lt.rghlim) then
 ! -----------------------------------------------------------------

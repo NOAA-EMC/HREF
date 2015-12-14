@@ -169,14 +169,14 @@ C
 C
         IFCSTL=-99
         JHR=0
-       write(*,*) 'NFCST=',NFCST
+       write(0,*) 'NFCST=',NFCST
 C----------------------------------------------------------------------
 C---READ STATION DATA--------------------------------------------------
 C----------------------------------------------------------------------
       LUNIT=66
       LRECPR=4*(8+9+LCL1ML*LM1+LCL1SL)         !Binbin: LRECPR is total bytes of one record (one record for one station) 
                                                !(8+9+LCL1ML*LM1+LCL1SL) is  # of one record for each station from input file
-      write(*,*)'LRECPR=',LRECPR
+      write(0,*)'LRECPR=',LRECPR
       OPEN(UNIT=LUNIT,ACCESS='DIRECT',RECL=LRECPR,IOSTAT=IER)
 
       NREC=0
@@ -437,7 +437,7 @@ c        write(*,*) 'NREC=',NREC,' done'
 c       write(*,*) 'STATION#', NST,' done!' 
 3000    CONTINUE 
 
-        write(*,*) 'READ FCST ', JHR, 'done !'
+        write(0,*) 'READ FCST ', JHR, 'done !'
 4000    CONTINUE 
 
  999    CONTINUE

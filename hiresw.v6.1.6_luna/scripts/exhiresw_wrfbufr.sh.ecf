@@ -256,7 +256,7 @@ export FORT66="$DATA/profilm.c1.${tmmark}"
 export FORT78="$DATA/class1.bufr"
 
 startmsg
-$EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+aprun $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;err_chk
 
 ############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS
@@ -298,7 +298,7 @@ EOF
   export DIRD=${COMOUT}/bufr.${NEST}${MODEL}${cyc}/${NEST}${MODEL}bufr
 
   startmsg
-  $EXEChiresw/hiresw_stnmlist < stnmlist_input >> $pgmout 2>errfile
+aprun $EXEChiresw/hiresw_stnmlist < stnmlist_input >> $pgmout 2>errfile
   export err=$?;err_chk
 
   echo ${COMOUT}/bufr.${NEST}${MODEL}${cyc} > ${COMOUT}/bufr.${NEST}${MODEL}${cyc}/bufrloc

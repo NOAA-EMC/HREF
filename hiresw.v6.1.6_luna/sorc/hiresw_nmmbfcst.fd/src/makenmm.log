@@ -544,7 +544,7 @@ ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/
 ar -r ENS_Cpl.a ENS_CplComp_ESMFMod_STUB.o
 ar: creating ENS_Cpl.a
 gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_MEDIATOR.F90 > module_MEDIATOR.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_MEDIATOR.F90 > module_MEDIATOR.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_MEDIATOR.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -552,7 +552,7 @@ In file included from module_MEDIATOR.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.1/intel/include/nemsio_v2.2.1 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise  -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_MEDIATOR.f90
 rm module_MEDIATOR.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_EARTH_GENERIC_COMP.F90 > module_EARTH_GENERIC_COMP.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_EARTH_GENERIC_COMP.F90 > module_EARTH_GENERIC_COMP.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_EARTH_GENERIC_COMP.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -560,7 +560,7 @@ In file included from module_EARTH_GENERIC_COMP.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.1/intel/include/nemsio_v2.2.1 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise  -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_EARTH_GENERIC_COMP.f90
 rm module_EARTH_GENERIC_COMP.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_EARTH_INTERNAL_STATE.F90 > module_EARTH_INTERNAL_STATE.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_EARTH_INTERNAL_STATE.F90 > module_EARTH_INTERNAL_STATE.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_EARTH_INTERNAL_STATE.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -568,7 +568,7 @@ In file included from module_EARTH_INTERNAL_STATE.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.1/intel/include/nemsio_v2.2.1 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise  -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_EARTH_INTERNAL_STATE.f90
 rm module_EARTH_INTERNAL_STATE.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_EARTH_GRID_COMP.F90 > module_EARTH_GRID_COMP.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_EARTH_GRID_COMP.F90 > module_EARTH_GRID_COMP.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_EARTH_GRID_COMP.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -576,7 +576,7 @@ In file included from module_EARTH_GRID_COMP.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.1/intel/include/nemsio_v2.2.1 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise  -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_EARTH_GRID_COMP.f90
 rm module_EARTH_GRID_COMP.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_NEMS_INTERNAL_STATE.F90 > module_NEMS_INTERNAL_STATE.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_NEMS_INTERNAL_STATE.F90 > module_NEMS_INTERNAL_STATE.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_NEMS_INTERNAL_STATE.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -584,7 +584,7 @@ In file included from module_NEMS_INTERNAL_STATE.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.1/intel/include/nemsio_v2.2.1 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise  -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_NEMS_INTERNAL_STATE.f90
 rm module_NEMS_INTERNAL_STATE.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_NEMS_GRID_COMP.F90 > module_NEMS_GRID_COMP.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' module_NEMS_GRID_COMP.F90 > module_NEMS_GRID_COMP.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_NEMS_GRID_COMP.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -592,7 +592,7 @@ In file included from module_NEMS_GRID_COMP.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g  -traceback -openmp   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.1/intel/include/nemsio_v2.2.1 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise  -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_NEMS_GRID_COMP.f90
 rm module_NEMS_GRID_COMP.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 15:48:09 UTC 2015 r65585:65590M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' MAIN_NEMS.F90 > MAIN_NEMS.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 -DENABLE_SMP  -D'SVN_INFO="(Matthew.Pyle) Mon Nov 23 19:05:21 UTC 2015 r65585:65611M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v6.1.6_luna/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2015' -D'CMP_JD=327' MAIN_NEMS.F90 > MAIN_NEMS.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from MAIN_NEMS.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
