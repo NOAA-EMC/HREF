@@ -2,11 +2,11 @@
 
 module purge
 
-module load ../modulefiles/HREF/v1.1.0.luna
+module load /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.1.0_luna/modulefiles/HREF/v1.1.0_luna
 
 echo Z_LIB $Z_LIB
 
-# module load /nwpara2/modulefiles/HREF/v1.1.0
+module list
 
 sleep 1
 

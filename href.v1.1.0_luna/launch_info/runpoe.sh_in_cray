@@ -14,12 +14,14 @@ export cyc=_CYC_
 
 module load prod_envir
 
-export COMROOT=/com2
-export COMROOTp1=/com
-export DATAROOT=/stmpd3/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/ptmpd3/Matthew.Pyle/com/
-export COMINhiresw=/com2/hiresw/prod/hiresw
-export COMINnam=/com/nam/prod/nam
+# COMROOTp2=/gpfs/tp2/nco/ops/com
+# COMROOTp1=/gpfs/tp1/nco/ops/com
+
+export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+
+export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
+export COMINnam=${COMROOTp1}/nam/prod/nam
 
 module load grib_util
 module load prod_util
