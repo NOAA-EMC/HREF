@@ -5,6 +5,7 @@
 #BSUB -q "dev"
 #BSUB -P HRW-T2O
 #BSUB -W 1:25
+#BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_POSTSPAN_] cu[type=cabinet]}' rusage[mem=3000]
 
 module load prod_util
