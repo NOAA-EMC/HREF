@@ -13,6 +13,7 @@
 # module load ibmpe
 
 module load prod_util
+module load prod_envir
 
 
 export numprocs=4
@@ -37,7 +38,8 @@ export MODEL=_CORE_
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export GESINnam=/gpfs/tp1/nco/ops/nwges/prod/nam.${DATE}
+export GESINnam=${GESROOTp1}/prod/nam.${DATE}
+# export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}

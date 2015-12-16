@@ -19,8 +19,8 @@ sleep 1
 
 ##############################
 
-# cd ${BASE}/hiresw_bucket.fd
-# make
+cd ${BASE}/hiresw_bucket.fd
+make
 
 ##############################
 

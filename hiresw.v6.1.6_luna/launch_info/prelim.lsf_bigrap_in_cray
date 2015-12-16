@@ -12,6 +12,7 @@ export numprocs=9
 export spanprocs=3
 
 module load prod_util
+module load prod_envir
 
 # module load ics
 # module load ibmpe
@@ -37,7 +38,8 @@ export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 
-export GESINnam=/gpfs/tp1/nco/ops/nwges/prod/nam.${DATE}
+export GESINnam=${GESROOTp1}/prod/nam.${DATE}
+# export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export DATA=${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}

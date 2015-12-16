@@ -11,6 +11,8 @@
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
 
+module load prod_envir
+
 vers=`cat /u/Matthew.Pyle/hiresw_version`
 
 export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
@@ -32,7 +34,6 @@ DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
-export COMROOT=/gpfs/tp1/nco/ops/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 

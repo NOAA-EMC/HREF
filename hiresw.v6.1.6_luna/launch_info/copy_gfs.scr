@@ -1,10 +1,12 @@
-#! /bin/ksh
+#! /bin/sh
+
+module load prod_envir
 
 cyc=${1}
 
 
 # DATE=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-DATE=`cat /gpfs/tp1/nco/ops/com/date/t${cyc}z | cut -c7-14`
+DATE=`cat $COMROOTp1/date/t${cyc}z | cut -c7-14`
 
 targdir=/gpfs/hps/ptmp/Matthew.Pyle/com/gfs/prod/gfs.${DATE}
 
@@ -14,6 +16,6 @@ mkdir -p $targdir
 
 cd $targdir
 
-cp /gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}/gfs.t${cyc}z.pgrb2.0p50.f0[0-4]? .
+cp $COMROOTp1/gfs/prod/gfs.${DATE}/gfs.t${cyc}z.pgrb2.0p50.f0[0-4]? .
 
 ls -l

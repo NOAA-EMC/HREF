@@ -32,6 +32,7 @@ export cyc=_CYC_
 export MODEL=_CORE_
 
 module load prod_util
+module load prod_envir
 
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
@@ -48,19 +49,19 @@ export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 if [ ${cyc} = "00" ]
 then
 	echo "setting COMINsref here"
-export COMINsref=/gpfs/tp2/nco/ops/com/sref/prod/sref.${DATEM1}/21/ensprod
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATEM1}/21/ensprod
 export srefcyc=21
 elif [ ${cyc} = "06" ]
 then
-export COMINsref=/gpfs/tp2/nco/ops/com/sref/prod/sref.${DATE}/03/ensprod
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/03/ensprod
 export srefcyc=03
 elif [ ${cyc} = "12" ]
 then
-export COMINsref=/gpfs/tp2/nco/ops/com/sref/prod/sref.${DATE}/09/ensprod
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/09/ensprod
 export srefcyc=09
 elif [ ${cyc} = "18" ]
 then
-export COMINsref=/gpfs/tp2/nco/ops/com/sref/prod/sref.${DATE}/15/ensprod
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/15/ensprod
 export srefcyc=15
 fi
 
