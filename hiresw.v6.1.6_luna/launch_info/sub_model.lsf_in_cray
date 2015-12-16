@@ -20,6 +20,7 @@ export MP_MPILIB=mpich2
 # module load NetCDF/4.2/serial
 
 module load prod_util
+module load prod_envir
 
 module list
 
@@ -45,7 +46,11 @@ export MODEL=_CORE_
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export FIXgsm=/gpfs/tp1/nco/ops/nwprod/gsm.v12.0.1/fix/fix_am
+export FIXgsm=${NWROOTp1}/gsm.v12.0.1/fix/fix_am
+
+ls $FIXgsm
+
+export FIXgsm=${HOMEhiresw}/fix
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
