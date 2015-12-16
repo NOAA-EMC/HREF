@@ -5,6 +5,7 @@
 #BSUB -J HIRESW_NEMSINTERP_3
 #BSUB -W 0:12
 #BSUB -P HRW-T2O
+#BSUB -M 9000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}' rusage[mem=9000]
 
 

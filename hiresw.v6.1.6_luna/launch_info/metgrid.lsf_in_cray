@@ -5,6 +5,7 @@
 #BSUB -J HIRESW_METGRID
 #BSUB -W 0:29
 #BSUB -P HRW-T2O
+#BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=9] cu[type=cabinet]}' rusage[mem=3000]
 
 # export TIME="RSS in KB (times 4): %M"

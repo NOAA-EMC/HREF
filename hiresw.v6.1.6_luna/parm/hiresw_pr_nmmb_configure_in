@@ -25,7 +25,7 @@ sbd:  -5.184                # Grid's southern boundary (rotated degrees)
 ################################
 
 inpes:  6             # Number of compute tasks in the I direction
-jnpes:  19            # Number of compute tasks in the J direction
+jnpes:  15            # Number of compute tasks in the J direction
 
 
 #################################
