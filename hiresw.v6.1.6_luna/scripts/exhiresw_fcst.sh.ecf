@@ -327,19 +327,6 @@ export pgm=hiresw_${MODEL}_fcst
 
 export FORT_BUFFERED=true
 
-# if [ $RUNLOC = "conusarw" ]
-# then
-# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 756/24 24/24 24/6`"
-
-# elif [ $RUNLOC = "conusnmmb" ]
-# then
-# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/16`"
-
-# elif [ $RUNLOC = "akarw" ]
-# then
-# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 784/24 24/12 24/8`"
-# fi
-
 startmsg
 
 if [ $MODEL = "nmmb" ]
@@ -348,7 +335,6 @@ then
 cp $EXEChiresw/hiresw_nmmbfcst .
 if [  $RUNLOC = "conusnmmb" ]
 then
-## aprun -n 624 -N 24 ./hiresw_nmmbfcst : -n 48 -N 16 ./hiresw_nmmbfcst
 aprun -n 528 -N 24 ./hiresw_nmmbfcst : -n 72 -N 24 ./hiresw_nmmbfcst
 else
 aprun -n ${numprocs} ./hiresw_nmmbfcst
@@ -361,9 +347,7 @@ cp $EXEChiresw/hiresw_${MODEL}_fcst .
 
 if [ $RUNLOC = "conusarw" ]
 then
-#toofast aprun -n 756 -N 24  ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 6  ./hiresw_${MODEL}_fcst
 aprun -n 720 -N 24  ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 6  ./hiresw_${MODEL}_fcst
-#notwithstrict aprun -n 624 -N 24  ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 6  ./hiresw_${MODEL}_fcst
 elif [ $RUNLOC = "akarw" ]
 then
 aprun -n 768 -N 24  ./hiresw_${MODEL}_fcst : -n 48 -N 16 ./hiresw_${MODEL}_fcst 
