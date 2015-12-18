@@ -2,6 +2,8 @@
 
 module load prod_envir
 
+module list
+
 cyc=${1}
 
 

@@ -3,8 +3,8 @@
 #BSUB -q "dev"
 #BSUB -J HIRESW_SMARTINITB
 #BSUB -P HRW-T2O
-#BSUB -M 9000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=9000]
+#BSUB -M 18000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=18000]
 #BSUB -W 1:29
 #
 
