@@ -16,11 +16,14 @@ set sys [uname sysname]
 set HREF /meso/save/Matthew.Pyle/href.v1.1.0/modulefiles/HREF
 set lname HREF
 
-setenv FC ifort
 setenv COMP ftn
+setenv FC ftn
+
+module load craype-sandybridge
 
 module load ncep
 module load PrgEnv-intel
+module load iobuf
 
 # Loading nceplibs modules
 module load ip-intel-sandybridge/2.0.0

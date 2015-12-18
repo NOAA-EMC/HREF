@@ -19,6 +19,7 @@ date
 export NET=${NET:-hiresw}
 export RUN=${RUN:-href}
 
+export IOBUF_PARAMS='*:size=8M:count=8:verbose'
 
 ###############################################################
 # This block can be modified for different Production test
@@ -109,31 +110,55 @@ fi
 # Execute the Script exhref_ensprod.sh.ecf
 
 rm -rf poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 09" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 12" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 15" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 18" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 21" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 24" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 27" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 30" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33" >>poescript
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36" >>poescript
 
-export MP_CMDFILE=poescript
-export MP_PGMMODEL=mpmd
-export MP_EUILIB=us
-export MP_LABELIO=YES
-export MP_INFOLEVEL=3
+echo "#!/bin/sh  "                             >  poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06 &" >> poe.a
+echo "wait"                                    >> poe.a
 
-mpirun.lsf
+echo "#!/bin/sh  "                             >  poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 09 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 12 &" >> poe.b
+echo "wait"                                    >> poe.b
 
+echo "#!/bin/sh  "                             >  poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 15 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 18 &" >> poe.c
+echo "wait"                                    >> poe.c
+
+echo "#!/bin/sh  "                             >  poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 21 &" >> poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 24 &" >> poe.d
+echo "wait"                                    >> poe.d
+
+echo "#!/bin/sh  "                             >  poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 27 &" >> poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 30 &" >> poe.e
+echo "wait"                                    >> poe.e
+
+echo "#!/bin/sh  "                             >  poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33 &" >> poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36 &" >> poe.f
+echo "wait"                                    >> poe.f
+
+chmod 775 ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
+chmod 775 ${DATA}/poe.d ${DATA}/poe.e ${DATA}/poe.f
+
+# aprun -n 1 -N 1 -d 4 ${DATA}/poe.a : -n 1 -N 1 -d 4 ${DATA}/poe.b : -n 1 -N 1 -d 4 ${DATA}/poe.c
+
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.a & 
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.b &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.c &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.d &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.e &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.f &
+
+wait
 export err=$?; err_chk
 
 msg"JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
+date
 
 cd $DATAROOT
 #if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

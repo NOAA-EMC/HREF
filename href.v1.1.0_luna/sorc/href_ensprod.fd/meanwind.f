@@ -24,6 +24,10 @@ c    for derived variables
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
+
+        REAL  time_begin, time_end
+        REAL  overall_time_begin, overall_time_end
+
                                                                                                                                                                 
         common /dtbl/nderiv,
      +              dvname,dk4,dk5,dk6,dMlvl,dPlvl,dTlvl,
@@ -71,7 +75,9 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
          miss=0
 
          Wpr=0.0
+         call cpu_time(overall_time_begin)
          do 600 irun=1,iens
+         call cpu_time(time_begin)
            do 500 k=1,lvl
              if(mbrname(irun)(1:5).eq.'conus'.and.(p(k).eq.475
      +       .or.p(k).eq.425.or.p(k).eq.375.or.p(k).eq.325)) goto 500
@@ -94,6 +100,10 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             end if
 
             write(*,*) 'read/compute meanWpr for irun', irun, ' done'
+
+	call cpu_time(time_end)
+	write(*,*) 'time for member: ', time_end-time_begin
+	write(*,*) 'running time for loop 600: ', time_end-overall_time_begin
 
 600      continue 
 
