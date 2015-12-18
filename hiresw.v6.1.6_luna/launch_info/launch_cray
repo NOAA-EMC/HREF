@@ -1,8 +1,11 @@
-#! /bin/ksh
+#! /bin/sh
 
 DOM=${1}
 CORE=${2}
 CYC=${3}
+
+
+which bsub
 
 
 if [ $DOM$CORE == "hinmmb"  ]
@@ -17,7 +20,7 @@ BUFRSPAN=1
 NPROCBUFR=1
 elif [ $DOM$CORE == "hiarw" ]
 then
-MODPROCS=67
+MODPROCS=68
 MODSPAN=23
 POSTPROCS=2
 POSTSPAN=2
@@ -47,8 +50,8 @@ BUFRSPAN=1
 NPROCBUFR=1
 elif [ $DOM$CORE == "guamnmmb"  ]
 then
-MODPROCS=58
-MODSPAN=20
+MODPROCS=62
+MODSPAN=21
 POSTPROCS=2
 POSTSPAN=2
 PRDGENPROCS=2
