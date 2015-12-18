@@ -1,5 +1,6 @@
-
 cyc=$1
+
+echo cyc $cyc
 
 cat runpoe.sh_in_cray | sed s:_CYC_:${cyc}:g > launch_hrefrunpoe_${cyc}
 

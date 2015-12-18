@@ -20,6 +20,10 @@ echo "$0 STRDATE "`date`
 msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
+location=`hostname`
+
+echo running on $location
+
 #
 # Get members or their softlinks
 #
