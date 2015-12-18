@@ -7,7 +7,15 @@ set -xa
 export PS4='$SECONDS + ' 
 
 # export IOBUF_PARAMS='*:size=32M:count=8:verbose'
+
+### make this domain dependent?
+if [ $NEST = 'conus' -o $NEST = 'ak' ]
+then
  export IOBUF_PARAMS='fort.11:size=64M:count=8:verbose'
+else
+ export IOBUF_PARAMS='fort.11:size=4M:count=8:verbose'
+fi
+
 date
 
 ###############################
