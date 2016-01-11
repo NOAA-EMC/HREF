@@ -14,9 +14,16 @@ BASE=`pwd`
 
 #########################
 
-cd href_ensprod.fd
+cd ${BASE}/href_ensprod.fd
+make clean
 make
 make copy
 make clean
 
 #########################
+
+cd ${BASE}/href_get_prcip.fd
+make clean
+make href_get_prcip
+make copy
+make clean
