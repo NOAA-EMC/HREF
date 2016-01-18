@@ -1829,10 +1829,6 @@ C
      &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0)
 
 
-        if (MYPE .eq. 0) then
-        write(0,*) 'read SFCSHX0(674): ', SFCSHX0(674)
-        endif
-
 !-------------------------------------------------------------------
 
       VarName='sfclhx'
@@ -1847,7 +1843,7 @@ C
       VcoordName='sfc'
       l=1
       call getnemsandplace(nfile,im,jm,spval,VarName,VcoordName,
-     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SFCSHX0)
+     &               l,impf,jmpf,nframed2,NUMSTA,IHINDX,JHINDX,SUBSHX0)
 
 !-------------------------------------------------------------------
 
