@@ -17,11 +17,6 @@ export envir=test
 export SUB_ENVIR=dev
 export cyc=_CYC_
 
-echo at start of launch job, what is env
-
-env
-
-
 
 export OMP_NUM_THREADS=1
 export MP_TASK_AFFINITY=core:1
@@ -33,6 +28,9 @@ module load prod_envir
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+
+export DATE=_DATE_
+export DATEm1=_DATEm1_
 
 export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
 export COMINnam=${COMROOTp1}/nam/prod/nam
@@ -46,4 +44,4 @@ export HOMEhref=/gpfs/hps/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 
 export SENDCOM=YES
 
-${HOMEhref}/jobs/JHREF_ENSPROD
+${HOMEhref}/jobs/JHREF_ENSPROD_retro
