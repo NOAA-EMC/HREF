@@ -127,7 +127,7 @@ ff=$fhr
        nmbr=` expr $nmbr + 1`
        echo "   "$weight href.m${m}.t${cyc}z.f$ff "->" ${file[$m]}.t${cycloc[$m]}z.f${fcst} >> temp.f${ff}
        ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/href.m${m}.t${cyc}z.f$ff
-       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/prcip.m${m}.t${cyc}z.f$ff
+#no       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/prcip.m${m}.t${cyc}z.f$ff
    fi
  done
 

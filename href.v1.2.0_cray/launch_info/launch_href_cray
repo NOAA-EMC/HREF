@@ -1,9 +1,31 @@
+#! /bin/sh
+
 cyc=$1
 
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+echo env in job
+env
+
+module list
+
 echo cyc $cyc
+
+vers=`cat ~/href_version`
+
+cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.${vers}/launch_info/
 
 cat runpoe.sh_in_cray | sed s:_CYC_:${cyc}:g > launch_hrefrunpoe_${cyc}
 
 bsub < launch_hrefrunpoe_${cyc}
 
-rm launch_hrefrunpoe_${cyc}
+# rm launch_hrefrunpoe_${cyc}
