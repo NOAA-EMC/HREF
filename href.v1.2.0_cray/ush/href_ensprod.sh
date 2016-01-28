@@ -25,7 +25,10 @@ mm=`echo ${PDY} | cut -c 5-6`
 dd=`echo ${PDY} | cut -c 7-8`
 
 
-rm -f poescript.run_post  poescript.post filename.* 
+echo where am I when deleting files
+pwd
+
+rm -f poescript.run_post  poescript.post filename.$fhr
 
 cp $PARMhref/href_variable_grib2.tbl variable.tbl
 
@@ -112,7 +115,7 @@ else
 fi
 
 
-
+l
 ff=$fhr
  nmbr=0
  for m in $mbrs ; do              
@@ -136,7 +139,16 @@ ff=$fhr
   rm -f temp.f${ff}
 
 rm -f fhrs.input.$ff
+
 ln -fs $DATA/filename.f$ff $DATA/$ff/filename
+
+if [ ! -e $DATA/filename.f$ff ]
+then
+echo missing file $DATA/filename.f$ff
+sleep 60
+ln -fs $DATA/filename.f$ff $DATA/$ff/filename
+fi
+
 ln -fs $DATA/variable.tbl $DATA/$ff/variable.tbl
 ln -fs $EXEChref/href_ensprod $DATA/$ff/href_ensprod
 
