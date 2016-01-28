@@ -19,7 +19,7 @@ date
 export NET=${NET:-hiresw}
 export RUN=${RUN:-href}
 
-export IOBUF_PARAMS='*:size=8M:count=8:verbose'
+# export IOBUF_PARAMS='*:size=8M:count=8:verbose'
 
 ###############################################################
 # This block can be modified for different Production test
@@ -164,5 +164,5 @@ postmsg "$jlogfile" "$msg"
 date
 
 cd $DATAROOT
-#if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 date
