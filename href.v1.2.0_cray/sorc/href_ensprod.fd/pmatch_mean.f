@@ -30,8 +30,8 @@
         call quick_sort(vrbl_mn,listorder,jf)
         call quick_sort(rawdata_1d,listorderfull,iens*jf)
 
-        write(6,*) 'maxval(rawdata_mn): ',maxval(rawdata_mn(:,:,lv))
-        write(6,*) 'maxval(vrbl_mn(:,lv)): ',maxval(vrbl_mn(:,lv))
+        write(0,*) 'maxval(rawdata_mn): ',maxval(rawdata_mn(:,:,lv))
+        write(0,*) 'maxval(vrbl_mn(:,lv)): ',maxval(vrbl_mn(:,lv))
 
         vrbl_mn_pm(:,:)=-999.
 
@@ -51,44 +51,96 @@
           vrbl_mn_pm(iplace,lv)=0.
          else
 
-         amin=999. 
-         amax=-999.
+         amin=9999. 
+         amax=-9999.
          do JJ=1,iens
-          if (rawdata_mn(iplace,JJ,lm) .gt. amax) then
-                amax=rawdata_mn(iplace,JJ,lm)
+          if (rawdata_mn(iplace,JJ,lv) .gt. amax) then
+                amax=rawdata_mn(iplace,JJ,lv)
           endif
-          if (rawdata_mn(iplace,JJ,lm) .lt. amin) then
-                amin=rawdata_mn(iplace,JJ,lm)
+          if (rawdata_mn(iplace,JJ,lv) .lt. amin) then
+                amin=rawdata_mn(iplace,JJ,lv)
           endif
          enddo
  
+!!!!!!!!!!!!!!!!!!!!!!!!!!
          if (rawdata_1d(J) .gt. amax) then
+
           vrbl_mn_pm(iplace,lv)=amax 
           ibound_max=ibound_max+1
-	write(0,*) 'iplace, amax, rawdata_1d: ', iplace,
-     &         amax, rawdata_1d(J)
+
+	write(0,*) 'iplace,amax,rawdata_1d,vrbl_mn: ', iplace,
+     &         amax, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
+
+	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
+	write(0,*) 'BIG val: ',iplace, vrbl_mn_pm(iplace,lv)
+	endif
+
          elseif (rawdata_1d(J) .lt. amin) then
+
           vrbl_mn_pm(iplace,lv)=amin
           ibound_min=ibound_min+1
-	write(0,*) 'iplace, amin, rawdata_1d: ', iplace,
-     &         amin, rawdata_1d(J)
+
+	write(0,*) 'iplace, amin, rawdata_1d, vrbl_mn: ',iplace,
+     &         amin, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
+
+	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
+	write(0,*) 'BIG val (on min side): ',iplace, vrbl_mn_pm(iplace,lv)
+	endif
+
          else
+
           vrbl_mn_pm(iplace,lv)=rawdata_1d(J)
-         endif
 
          endif
 
-        endif
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+         endif  ! vrbl_mn_hold check
+
+        endif  ! AP3h
 
 !!! add it to REFD as well?  How much is it slowing down the code?
 
         if (vname .eq. 'REFD') then
+
+
          if (vrbl_mn_hold(iplace,lv) .eq. -20.) then
           vrbl_mn_pm(iplace,lv)=-20.
          else
+
+         amin=9999. 
+         amax=-9999.
+         do JJ=1,iens
+          if (rawdata_mn(iplace,JJ,lv) .gt. amax) then
+                amax=rawdata_mn(iplace,JJ,lv)
+          endif
+          if (rawdata_mn(iplace,JJ,lv) .lt. amin) then
+                amin=rawdata_mn(iplace,JJ,lv)
+          endif
+         enddo
+
+         if (rawdata_1d(J) .gt. amax) then
+
+          vrbl_mn_pm(iplace,lv)=amax 
+          ibound_max=ibound_max+1
+
+	if (vrbl_mn_pm(iplace,lv) .ge. 35.) then	
+	write(0,*) 'refd BIG val: ',iplace,vrbl_mn_pm(iplace,lv),
+     &         rawdata_1d(J),
+     &         vrbl_mn_hold(iplace,lv)
+	endif
+
+         elseif (rawdata_1d(J) .lt. amin) then
+
+          vrbl_mn_pm(iplace,lv)=amin
+          ibound_min=ibound_min+1
+
+         else
+
           vrbl_mn_pm(iplace,lv)=rawdata_1d(J)
          endif
-        endif
+
+        endif ! vrbl_mn_hold check
+        endif ! on REFD
 
         enddo ! loop over ensemble
 
