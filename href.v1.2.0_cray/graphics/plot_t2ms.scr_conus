@@ -1,6 +1,6 @@
 #! /bin/ksh
 
-regs="nw nc ne sw sc se"
+regs="conus"
 
 for reg in $regs
 do
@@ -70,13 +70,12 @@ do
 
 gdplot << endplot
 
-\$MAPFIL = HICNUS.NWS + HIPOWO.CIA
-
+\$MAPFIL = HIPOWO.CIA
  GDFILE   = ${MYFILE}
  GDATTIM  = f${hr}
- gvcord=none
- glev=0
- gfun = p03i
+ gvcord=hght
+ glev=2
+ gfun = tmpc
  PANEL    = 0
  SKIP     = 0
  SCALE    = 0
@@ -84,8 +83,8 @@ gdplot << endplot
  CONTUR   = 3
  CINT     = 0
  LINE     = 3
- FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0
- FLINE    = 0;21-29;14-20
+ FINT     = -21;-18;-15;-12;-9;-6;-3;0;3;6;9;12;15;18;22;26;30
+ FLINE    = 30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
  HILO     =
  HLSYM    =
  CLRBAR   = 32
@@ -102,7 +101,7 @@ gdplot << endplot
  proj     = lcc/35;-100;35
  MSCALE   = 0
  LATLON   =
- DEVICE   = gif|${TYP}_href_${reg}_p03i_f${hr}.gif|960;720
+ DEVICE   = gif|${TYP}_href_${reg}_t2ms_f${hr}.gif|960;720
  STNPLT   =
 r
 
@@ -113,61 +112,5 @@ endplot
 gpend
 
 done
-
-hrs="06 12 18 24 30 36"
-
-for hr in $hrs
-do
-
-gdplot << endplot
-
- GDFILE   = ${MYFILE}
- GDATTIM  = f${hr}
- gvcord=none
- glev=0
- gfun = p06i
- PANEL    = 0
- SKIP     = 0
- SCALE    = 0
- CTYPE    = f
- CONTUR   = 0
- CINT     = 0
- LINE     = 3
- FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4
- FLINE    = 0;21-29;14-20
- DEVICE   = gif|${TYP}_href_${reg}_p06i_f${hr}.gif|960;720
-r
-
-ex
-
-endplot
-
-done
-
-gpend
-
-gdplot << endplot
-
-gdattim=f24
-gfun=p24i
- FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4;5;6;7;8
- DEVICE   = gif|${TYP}_href_${reg}_p24i_f24.gif|960;720
-r
-
-gdattim=f36
-gfun=p24i
- FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4;5;6;7;8
- DEVICE   = gif|${TYP}_href_${reg}_p24i_f36.gif|960;720
-r
-
-gfun=p36i
- DEVICE   = gif|${TYP}_href_${reg}_p36i_f36.gif|960;720
-r
-
-ex
-
-endplot
-
-gpend
 
 done
