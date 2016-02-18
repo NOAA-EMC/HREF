@@ -144,6 +144,9 @@
 
         enddo ! loop over ensemble
 
+! restore the mean value for use in possible blending
+        vrbl_mn=vrbl_mn_hold
+
 	write(0,*) 'ibound_min: ', ibound_min
 	write(0,*) 'ibound_max: ', ibound_max
 
