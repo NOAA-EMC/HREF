@@ -1,5 +1,21 @@
 #! /bin/sh
 
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/logs/test_graphics__CYC_.out
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/logs/test_graphics__CYC_.err
+#BSUB -q "dev"
+#BSUB -J HREFGRAPHICS
+#BSUB -P HRW-T2O
+#BSUB -M 5000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
+#BSUB -W 0:29
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+# cyc=_CYC_
 cyc=${1}
 
 cd /u/$USER    # cron does this for us - this is here just to be safe
@@ -43,11 +59,24 @@ cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics
 
 rm *.gif
 rm *.grd 
+rm *.grb2
 
 for hr in $hrs
 do
 
+while [ ! -e $ops_href_dir/href.t${cyc}z.mean.f${hr}.grib2 ]
+do
+sleep 10
+done
+
+
 $WGRIB2 $ops_href_dir/href.t${cyc}z.mean.f${hr}.grib2 -match ":(APCP):" -grib ops.f${hr}.grb2
+
+while [ ! -e $para_href_dir/href.t${cyc}z.mean.f${hr}.grib2 ]
+do
+sleep 10
+done
+
 $WGRIB2 $para_href_dir/href.t${cyc}z.mean.f${hr}.grib2 -match ":(APCP|REFD|TMP):" -grib para.f${hr}.grb2
 
 done
@@ -74,25 +103,71 @@ ex
 
 endgrib
 
+gpend
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+basedir=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics
+
+echo "#! /bin/sh " > run_para.scr
+echo "#! /bin/sh " > run_prod.scr
+
+cp run_para.scr run_para.scr_2
+cp run_para.scr run_para.scr_3
+
+for hr in $hrs 
+do
+
 export MYFILE=all_para_apcp.grd
 export TYP=para
 
-./plot_t2ms.scr
-./plot_t2ms.scr_conus
 
-./plot_apcp.scr
-./plot_apcp.scr_conus
+echo "export basedir=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics" >> run_para.scr
+echo "export MYFILE=all_para_apcp.grd" >> run_para.scr
+echo "export TYP=para" >> run_para.scr 
 
-./plot_refd.scr
-./plot_refd.scr_conus
+# echo "${basedir}/plot_t2ms.scr $hr" >> run_para.scr
+echo "${basedir}/plot_t2ms.scr_conus $hr" >> run_para.scr
+# echo "${basedir}/plot_apcp.scr $hr" >> run_para.scr_2
+echo "${basedir}/plot_apcp.scr_conus $hr" >> run_para.scr_2
+# echo "${basedir}/plot_refd.scr $hr" >> run_para.scr_3
+echo "${basedir}/plot_refd.scr_conus $hr" >> run_para.scr_3
 
-export MYFILE=all_ops_apcp.grd
-export TYP=ops
 
-./plot_apcp.scr
-./plot_apcp.scr_conus
+echo "export MYFILE=all_ops_apcp.grd" >> run_prod.scr
+echo "export TYP=ops" >> run_prod.scr
+echo "export basedir=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics" >> run_prod.scr
+# echo "${basedir}/plot_apcp.scr $hr" >> run_prod.scr
+echo "${basedir}/plot_apcp.scr_conus $hr" >> run_prod.scr
+
+done
+
+# echo "wait" >> run_para.scr
+# echo "wait" >> run_para.scr_2
+# echo "wait" >> run_para.scr_3
+# echo "wait" >> run_prod.scr
+
+chmod u+x run_para.scr
+# aprun -n 1 -N 1 -d 24 run_para.scr
+chmod u+x run_para.scr_2
+# aprun -n 1 -N 1 -d 24 run_para.scr_2
+chmod u+x run_para.scr_3
+# aprun -n 1 -N 1 -d 24 run_para.scr_3
+
+
+./run_para.scr
+./run_para.scr_2
+./run_para.scr_3
+
+gpend
+
+chmod u+x run_prod.scr
+# aprun -n 1 -N 1 -d 24 run_prod.scr
+./run_prod.scr
+
+gpend
 
 scp *.gif mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href/
 
-cat info.html_in | sed s:_DATEIN_:${PDY}:g | sed s:_CYC_:${cyc}:g > info.html
+cat info.html_in | sed s:_DATEIN_:${PDY}:g | sed s:_CYCWEB_:${cyc}:g > info.html
 scp info.html mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href/

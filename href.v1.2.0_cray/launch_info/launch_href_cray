@@ -13,12 +13,14 @@ if [ -a .bashrc ]; then
    . ./.bashrc
 fi
 
-echo env in job
-env
-
-module list
-
 echo cyc $cyc
+
+module load prod_util
+module load grib_util
+module load prod_envir
+
+export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
+export COMINnam=${COMROOTp1}/nam/prod/nam
 
 vers=`cat ~/href_version`
 
