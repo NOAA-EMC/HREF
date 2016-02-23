@@ -2,6 +2,14 @@
 
 regs="conus"
 
+hr=${1}
+
+mkdir -p ${basedir}/${TYP}_${hr}_apcp_conus
+rm ${basedir}/${TYP}_${hr}_apcp_conus/*
+cd ${basedir}/${TYP}_${hr}_apcp_conus/
+
+cp ../*.grd .
+
 for reg in $regs
 do
 
@@ -63,10 +71,10 @@ skip=0
 fi
 
 
-hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+# hrs="03 06 09 12 15 18 21 24 27 30 33 36"
 
-for hr in $hrs
-do
+# for hr in $hrs
+# do
 
 gdplot << endplot
 
@@ -112,13 +120,15 @@ endplot
 
 gpend
 
-done
+# done
 
-hrs="06 12 18 24 30 36"
+# hrs="06 12 18 24 30 36"
 
-for hr in $hrs
-do
+# for hr in $hrs
+# do
 
+if [ $hr%6 -eq 0 ]
+then
 gdplot << endplot
 
  GDFILE   = ${MYFILE}
@@ -142,9 +152,12 @@ ex
 
 endplot
 
-done
+fi
 
 gpend
+
+if [ $hr -eq 36 ]
+then
 
 gdplot << endplot
 
@@ -170,4 +183,8 @@ endplot
 
 gpend
 
+fi
+
 done
+
+cp *.gif ../

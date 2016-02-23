@@ -29,6 +29,7 @@ echo running on $location
 #
 
 $USHhref/href_getmbr.sh $fhr
+# $USHhref/href_getmbr.sh_reduced_nam $fhr
 
 #
 # Prepare to run ensemble product generator

@@ -1,4 +1,3 @@
-
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/logs/test_hrefpoe__CYC_.out
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/logs/test_hrefpoe__CYC_.err
 #BSUB -q "dev"
@@ -8,9 +7,11 @@
 ####BSUB -extsched 'CRAYLINUX[]'
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 12*{select[craylinux && vnode]span[ptile=2] cu[type=cabinet]}'
 ####BSUB -R span[ptile=2]
-#BSUB -W 0:29
+#BSUB -W 0:39
 
 ###export NODES=6
+
+export KEEPDATA=NO
 
 export RUN_ENVIR=test
 export envir=test
@@ -31,6 +32,7 @@ export OMP_NUM_THREADS=1
 
 module load prod_envir
 
+export COMROOT=/gpfs/hps/nco/ops/com
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 
