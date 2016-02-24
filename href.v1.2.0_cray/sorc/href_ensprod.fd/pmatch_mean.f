@@ -68,24 +68,24 @@
           vrbl_mn_pm(iplace,lv)=amax 
           ibound_max=ibound_max+1
 
-	write(0,*) 'iplace,amax,rawdata_1d,vrbl_mn: ', iplace,
-     &         amax, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
+!	write(0,*) 'iplace,amax,rawdata_1d,vrbl_mn: ', iplace,
+!     &         amax, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
 
-	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
-	write(0,*) 'BIG val: ',iplace, vrbl_mn_pm(iplace,lv)
-	endif
+!	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
+!	write(0,*) 'BIG val: ',iplace, vrbl_mn_pm(iplace,lv)
+!	endif
 
          elseif (rawdata_1d(J) .lt. amin) then
 
           vrbl_mn_pm(iplace,lv)=amin
           ibound_min=ibound_min+1
 
-	write(0,*) 'iplace, amin, rawdata_1d, vrbl_mn: ',iplace,
-     &         amin, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
+!	write(0,*) 'iplace, amin, rawdata_1d, vrbl_mn: ',iplace,
+!     &         amin, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
 
-	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
-	write(0,*) 'BIG val (on min side): ',iplace, vrbl_mn_pm(iplace,lv)
-	endif
+!	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
+!	write(0,*) 'BIG val (on min side): ',iplace, vrbl_mn_pm(iplace,lv)
+!	endif
 
          else
 
@@ -123,11 +123,11 @@
           vrbl_mn_pm(iplace,lv)=amax 
           ibound_max=ibound_max+1
 
-	if (vrbl_mn_pm(iplace,lv) .ge. 35.) then	
-	write(0,*) 'refd BIG val: ',iplace,vrbl_mn_pm(iplace,lv),
-     &         rawdata_1d(J),
-     &         vrbl_mn_hold(iplace,lv)
-	endif
+!	if (vrbl_mn_pm(iplace,lv) .ge. 35.) then	
+!	write(0,*) 'refd BIG val: ',iplace,vrbl_mn_pm(iplace,lv),
+!     &         rawdata_1d(J),
+!     &         vrbl_mn_hold(iplace,lv)
+!	endif
 
          elseif (rawdata_1d(J) .lt. amin) then
 
