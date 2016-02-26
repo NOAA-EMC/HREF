@@ -28,7 +28,7 @@ dd=`echo ${PDY} | cut -c 7-8`
 echo where am I when deleting files
 pwd
 
-rm -f poescript.run_post  poescript.post filename.$fhr
+# rm -f poescript.run_post  poescript.post filename.$fhr
 
 cp $PARMhref/href_variable_grib2.tbl variable.tbl
 

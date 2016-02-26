@@ -748,7 +748,7 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
 !           allocate (vrbl_mn_pm(jf,Lm))         !in case Mlvl(nv)=0
 
          call pmatch_mean(vname(nv),rawdata_mn,vrbl_mn,
-     &                    vrbl_mn_pm,lv,lm,jf,iens)
+     &                    jpd1,jpd2,jpd10,vrbl_mn_pm,lm,lv,jf,iens)
 
         write(6,*) 'minval(vrbl_mn_pm): ', minval(vrbl_mn_pm)
         write(6,*) 'maxval(vrbl_mn_pm): ', maxval(vrbl_mn_pm)
