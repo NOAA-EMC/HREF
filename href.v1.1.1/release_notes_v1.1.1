@@ -1,7 +1,16 @@
 v1.1.1 - released March 2, 2016
 
-Check out  https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.1.1/
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/href.v1.1.1/
 
+Run the sorc/build_href.scr script to build the href_ensprod executable.  This
+script loads the modulefiles/HREF/v1.1.0 modulefile.
+
+Update details:
+
+Modifies the ush/href_ensprod.sh script in light of two operational failures 
+in February 2016.  Script is reworked slightly to avoid repeated copying of the
+same file to the same target by multiple threads.  This seemed to be the likely
+cause for the non-reproducible failures.
 
 
 #####################################
