@@ -24,11 +24,8 @@ yy=`echo ${PDY} | cut -c 1-4`
 mm=`echo ${PDY} | cut -c 5-6`
 dd=`echo ${PDY} | cut -c 7-8`
 
-
-rm -f poescript.run_post  poescript.post filename.* 
-
-cp $PARMhref/href_variable_grib2.tbl variable.tbl
-
+ff=$fhr
+cd ${DATA}/${ff}
 
 ###############################
 
@@ -111,8 +108,6 @@ else
 
 fi
 
-
-
 ff=$fhr
  nmbr=0
  for m in $mbrs ; do              
@@ -126,22 +121,20 @@ ff=$fhr
    if [ -s $DATA/href.m${m}.t${cyc}z.f$ff ] ; then
        nmbr=` expr $nmbr + 1`
        echo "   "$weight href.m${m}.t${cyc}z.f$ff "->" ${file[$m]}.t${cycloc[$m]}z.f${fcst} >> temp.f${ff}
-       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/href.m${m}.t${cyc}z.f$ff
-       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff $DATA/$ff/prcip.m${m}.t${cyc}z.f$ff
+       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff .
    fi
  done
 
-  echo $yy $mm $dd $cyc $ff "227 39" "36" "3" "12"  > filename.f${ff}    #first 36 is leadtime, second 12 is fcst times = leadtime/interval
-  cat temp.f${ff} >> filename.f${ff}
+  echo $yy $mm $dd $cyc $ff "227 39" "36" "3" "12"  > filename    #first 36 is leadtime, second 12 is fcst times = leadtime/interval
+  cat temp.f${ff} >> filename
   rm -f temp.f${ff}
 
-rm -f fhrs.input.$ff
-ln -fs $DATA/filename.f$ff $DATA/$ff/filename
-ln -fs $DATA/variable.tbl $DATA/$ff/variable.tbl
-ln -fs $EXEChref/href_ensprod $DATA/$ff/href_ensprod
+ln -sf $PARMhref/href_variable_grib2.tbl variable.tbl
 
-cd $DATA/$ff
 $EXEChref/href_ensprod > $DATA/$ff/output_ensprod.$ff 
+
+export err=$?; err_chk;
+
 
 if [ $SENDCOM = YES ]; then
  cp $DATA/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.mean.f$ff.grib2
