@@ -99,6 +99,8 @@ if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT
 fi
 
+env
+
 #######################################################
 # Pass information which is needed to run the Script
 #######################################################
