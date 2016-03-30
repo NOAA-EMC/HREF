@@ -1,0 +1,82 @@
+#! /bin/sh
+
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/logs/test_graphics__CYC_.out_apcp_conus_para
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/logs/test_graphics__CYC_.err_apcp_conus_para
+#BSUB -q "dev"
+#BSUB -J HREFGRAPHICS
+#BSUB -P HRW-T2O
+#BSUB -M 5000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
+#BSUB -W 0:23
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+cyc=_CYC_
+
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+echo cyc $cyc
+
+module load prod_util
+module load prod_envir
+module load grib_util
+
+module load gempak
+
+export GEMTBL=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/gem_tables_5.11_hiresw
+export GEMNTS=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/gem_tables_5.11_hiresw/nts
+
+export cycle=t${cyc}z
+
+# export DATA=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics
+
+setpdy.sh
+. PDY
+
+echo PDY is $PDY
+
+ops_href_dir=${COMROOTp2}/hiresw/prod/href.${PDY}
+para_href_dir=/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/href.${PDY}
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+basedir=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics
+
+runscript=run.scr_para_conus_apcp
+
+echo "#! /bin/sh " > $runscript
+
+for hr in $hrs 
+do
+
+export MYFILE=all_para_apcp.grd
+export TYP=para
+
+echo "export basedir=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics" >> $runscript
+echo "export MYFILE=all_para_apcp.grd" >> $runscript
+echo "export TYP=para" >> $runscript
+echo "${basedir}/plot_apcp.scr_conus $hr" >> $runscript
+done
+
+chmod u+x $runscript
+
+$runscript
+
+gpend
+
+# scp *.gif mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href/
+# cat info.html_in | sed s:_DATEIN_:${PDY}:g | sed s:_CYCWEB_:${cyc}:g > info.html
+# scp info.html mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href/
