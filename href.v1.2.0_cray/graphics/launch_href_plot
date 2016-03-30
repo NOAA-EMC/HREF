@@ -1,0 +1,31 @@
+#! /bin/sh
+
+hr=$1
+
+cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v1.2.0_cray/graphics
+
+cat gen_href_plots.scr_prelim | sed s:_CYC_:${hr}:g > gen_href_plots.scr
+
+cat gen_href_plots.scr_para_apcp_conus_in | sed s:_CYC_:${hr}:g > gen_href_plots.scr_para_apcp_conus
+cat gen_href_plots.scr_para_apcp_regs_in | sed s:_CYC_:${hr}:g > gen_href_plots.scr_para_apcp_regs
+cat gen_href_plots.scr_para_refd_conus_in  | sed s:_CYC_:${hr}:g > gen_href_plots.scr_para_refd_conus
+cat gen_href_plots.scr_para_refd_regs_in  | sed s:_CYC_:${hr}:g > gen_href_plots.scr_para_refd_regs
+cat gen_href_plots.scr_para_t2ms_conus_in | sed s:_CYC_:${hr}:g > gen_href_plots.scr_para_t2ms_conus
+cat gen_href_plots.scr_para_t2ms_regs_in | sed s:_CYC_:${hr}:g > gen_href_plots.scr_para_t2ms_regs
+
+cat gen_href_plots.scr_prod_apcp_conus_in | sed s:_CYC_:${hr}:g > gen_href_plots.scr_prod_apcp_conus
+cat gen_href_plots.scr_prod_apcp_regs_in | sed s:_CYC_:${hr}:g > gen_href_plots.scr_prod_apcp_regs
+
+cat send_plots.scr_in |  sed s:_CYC_:${hr}:g >  send_plots.scr
+
+chmod u+x send_plots.scr
+chmod u+x gen_href_plots.scr
+
+chmod u+x gen_href_plots.scr_para_apcp_conus gen_href_plots.scr_para_apcp_regs
+chmod u+x gen_href_plots.scr_para_refd_conus gen_href_plots.scr_para_refd_regs
+chmod u+x gen_href_plots.scr_para_t2ms_conus gen_href_plots.scr_para_t2ms_regs
+chmod u+x gen_href_plots.scr_prod_apcp_conus gen_href_plots.scr_prod_apcp_regs
+
+
+./gen_href_plots.scr
+
