@@ -115,9 +115,11 @@ fi
 rm -rf poescript
 
 echo "#!/bin/sh  "                             >  poe.a
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03 &" >> poe.a
-echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06 &" >> poe.a
-echo "wait"                                    >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03"   >> poe.a
+
+echo "#!/bin/sh  "                             >  poe.aa
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06 &" >> poe.aa
+echo "wait"                                    >> poe.aa
 
 echo "#!/bin/sh  "                             >  poe.b
 echo "$SCRIPTShref/exhref_ensprod.sh.ecf 09 &" >> poe.b
@@ -144,12 +146,14 @@ echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33 &" >> poe.f
 echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36 &" >> poe.f
 echo "wait"                                    >> poe.f
 
-chmod 775 ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
+chmod 775 ${DATA}/poe.aa ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
 chmod 775 ${DATA}/poe.d ${DATA}/poe.e ${DATA}/poe.f
 
 # aprun -n 1 -N 1 -d 4 ${DATA}/poe.a : -n 1 -N 1 -d 4 ${DATA}/poe.b : -n 1 -N 1 -d 4 ${DATA}/poe.c
 
-aprun -n 1 -N 1 -d 2 ${DATA}/poe.a & 
+aprun -n 1 -N 1 -d 1 ${DATA}/poe.a
+
+aprun -n 1 -N 1 -d 1 ${DATA}/poe.aa & 
 aprun -n 1 -N 1 -d 2 ${DATA}/poe.b &
 aprun -n 1 -N 1 -d 2 ${DATA}/poe.c &
 aprun -n 1 -N 1 -d 2 ${DATA}/poe.d &

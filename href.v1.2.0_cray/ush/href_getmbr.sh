@@ -15,6 +15,11 @@ typeset -Z2 m
 
 fhr=$1
 
+let fcheck=fhr+2
+
+typeset -Z2 fcheck
+
+
 cd $DATA
 
 if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then 
@@ -96,6 +101,22 @@ fi
 mbr=0
 
 ff=$fhr
+
+## are older files available?
+        if [ $ff = '06' -o $ff = '09' ]
+        then
+        fcheck=` expr $ff - 03`
+        elif [  $ff = '12' -o  $ff = '15' -o $ff = '18' -o $ff = '21' ]
+        then
+        fcheck=` expr $ff - 09`
+        elif [  $ff = '24' -o  $ff = '27' -o $ff = '30' -o $ff = '33' -o $ff = '36' ]
+        then
+        fcheck=` expr $ff - 21`
+        fi
+
+typeset -Z2 fcheck
+echo working things with fcheck as $fcheck
+
   mkdir -p $DATA/${ff} 
    mbr=0
    for m in $mbrs ; do
@@ -106,14 +127,32 @@ ff=$fhr
 
       echo href.m${m}.t${cyc}z.f${ff} 
 
-      if [ ${file[$m]} = 'namnest' ] ; then     
+      if [ ${file[$m]} = 'namnest' -a $fcst -le 60 ] ; then     
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        echo namnest $m $ff
+
+
+        fcheckloc=$fcheck
+        while [ $fcheckloc -le $ff ]
+        do
+        echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} ]
+        do
+        echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+          sleep 10
+        done
+        let fcheckloc=fcheckloc+3
+typeset -Z2 fcheckloc
+        echo new fcheckloc is $fcheckloc
+        done
+
         echo href.m${m}.t${cyc}z. $ff |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip.m${m}.f${ff}
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
       fi
  
-      if [ ${file[$m]} = 'conusarw' ] ; then
+      if [ ${file[$m]} = 'conusarw' -a $fcst -le 48 ] ; then
 	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
@@ -123,11 +162,26 @@ ff=$fhr
         ln -sf ${COMINhiresw}.${day[$m]}/conusarw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 	fi
 
+        echo conusarw $m $ff
+
+        fcheckloc=$fcheck
+        while [ $fcheckloc -le $ff ]
+        do
+        echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} ]
+        do
+        echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+          sleep 10
+        done
+        let fcheckloc=fcheckloc+3
+typeset -Z2 fcheckloc
+        done
+
         echo href.m${m}.t${cyc}z. $ff |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip.m${m}.f${ff}
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
       fi
 
-      if [ ${file[$m]} = 'conusnmmb' ] ; then
+      if [ ${file[$m]} = 'conusnmmb' -a $fcst -le 48 ] ; then
 	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 ]
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
@@ -136,6 +190,22 @@ ff=$fhr
         ln -sf ${COMINhiresw}.${day[$m]}/conusnmmb.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/conusnmmb.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 	fi
+
+        echo conusnmmb $m $ff
+
+        fcheckloc=$fcheck
+        while [ $fcheckloc -le $ff ]
+        do
+        echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        while [ ! -e    $DATA/href.m${m}.t${cyc}z.f${fcheckloc} ]
+        do
+        echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+          sleep 10
+        done
+        let fcheckloc=fcheckloc+3
+typeset -Z2 fcheckloc
+        done
+
         echo href.m${m}.t${cyc}z. $ff |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip.m${m}.f${ff}
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
       fi

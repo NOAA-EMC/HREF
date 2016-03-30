@@ -187,4 +187,4 @@ fi
 
 done
 
-# cp *.gif ../
+cp *.gif ../

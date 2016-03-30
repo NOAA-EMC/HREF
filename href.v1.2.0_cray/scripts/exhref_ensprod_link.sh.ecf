@@ -1,19 +1,17 @@
 #!/bin/ksh
-# Name of Script: exhref_runall.sh.sms 
-# This script runs 1 USH script:
-#  (1) href_ensprod.sh to get final ensemble products 
-# Arguments: cycle
+# This script runs 1 scripts
+#  (1) href_getmbr.sh to get soft link for namnest, hireswnmmb and hireswarw
+# Arguments: fhr
 # Author: Binbin Zhou, EMC/NCEP, 02/02/2015
 #         Matthew Pyle, 9 April 2015 - eliminated most arguments in USH calls
-#         Matthew Pyle, 29 Mar 2016 - removed call to linking script from this script
+#         Matthew Pyle, 29 Mar 2016 - new script to allow the href_getmbr.sh to be separately
+#                                     poescript submitted from main job.
 #         
 ###########################################################
 set -x
 
 
 cd $DATA
-
-export fhr=$1
 
 echo "$0 STRDATE "`date`
 
@@ -24,11 +22,13 @@ location=`hostname`
 
 echo running on $location
 
+export fhr=${1}
+
 #
-# Prepare to run ensemble product generator
+# Get members or their softlinks
 #
 
-$USHhref/href_ensprod.sh
+$USHhref/href_getmbr.sh $fhr
 
 
 #####################################################################

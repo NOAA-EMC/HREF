@@ -19,7 +19,7 @@ date
 export NET=${NET:-hiresw}
 export RUN=${RUN:-href}
 
-export IOBUF_PARAMS='*:size=8M:count=8:verbose'
+export IOBUF_PARAMS='*:size=8M:count=8'
 
 ###############################################################
 # This block can be modified for different Production test
@@ -113,7 +113,23 @@ env
 ###################################################
 # Execute the Script exhref_ensprod.sh.ecf
 
-rm -rf poescript
+rm -rf poe.*
+
+echo "#!/bin/sh  "                                  >  poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 03 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 06 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 09 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 12 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 15 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 18 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 21 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 24 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 27 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 30 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 33 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 36 &" >> poe.aa
+echo "wait"                                         >> poe.aa
+
 
 echo "#!/bin/sh  "                             >  poe.a
 echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03 &" >> poe.a
@@ -145,17 +161,17 @@ echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33 &" >> poe.f
 echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36 &" >> poe.f
 echo "wait"                                    >> poe.f
 
-chmod 775 ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
-chmod 775 ${DATA}/poe.d ${DATA}/poe.e ${DATA}/poe.f
+chmod 775 ${DATA}/poe.aa ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
+chmod 775 ${DATA}/poe.d  ${DATA}/poe.e ${DATA}/poe.f
 
-# aprun -n 1 -N 1 -d 4 ${DATA}/poe.a : -n 1 -N 1 -d 4 ${DATA}/poe.b : -n 1 -N 1 -d 4 ${DATA}/poe.c
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.aa
 
-aprun -F exclusive -n 1 -N 1 -d 2 ${DATA}/poe.a & 
-aprun -F exclusive -n 1 -N 1 -d 2 ${DATA}/poe.b &
-aprun -F exclusive -n 1 -N 1 -d 2 ${DATA}/poe.c &
-aprun -F exclusive -n 1 -N 1 -d 2 ${DATA}/poe.d &
-aprun -F exclusive -n 1 -N 1 -d 2 ${DATA}/poe.e &
-aprun -F exclusive -n 1 -N 1 -d 2 ${DATA}/poe.f &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.a & 
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.b &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.c &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.d &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.e &
+aprun -n 1 -N 1 -d 2 ${DATA}/poe.f &
 
 wait
 export err=$?; err_chk
@@ -165,5 +181,5 @@ postmsg "$jlogfile" "$msg"
 date
 
 cd $DATAROOT
-#if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 date
