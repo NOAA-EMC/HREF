@@ -5,7 +5,7 @@
 #BSUB -q "dev"
 #BSUB -J HREFGRAPHICS
 #BSUB -P HRW-T2O
-#BSUB -M 5000
+#BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}'
 #BSUB -W 0:19
 

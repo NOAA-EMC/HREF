@@ -5,7 +5,7 @@
 #BSUB -q "dev"
 #BSUB -J HREFGRAPHICS
 #BSUB -P HRW-T2O
-#BSUB -M 5000
+#BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]'
 #BSUB -W 0:59
 
