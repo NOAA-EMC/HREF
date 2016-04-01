@@ -1,0 +1,21 @@
+#############################################
+####  NEMS Run-Time Configuration File  #####
+#############################################
+
+# ATM #
+atm_model:                      _atm_model_
+atm_petlist_bounds:             _atm_petlist_bounds_
+
+# OCN #
+ocn_model:                      _ocn_model_
+ocn_petlist_bounds:             _ocn_petlist_bounds_
+
+# ICE #
+ice_model:                      _ice_model_
+ice_petlist_bounds:             _ice_petlist_bounds_
+
+# MED #
+med_model:                      _med_model_
+med_petlist_bounds:             _med_petlist_bounds_
+med_atm_coupling_interval_sec:  _med_atm_coupling_interval_sec_
+med_ocn_coupling_interval_sec:  _med_ocn_coupling_interval_sec_

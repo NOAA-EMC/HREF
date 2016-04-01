@@ -1,0 +1,29 @@
+#! /bin/ksh --login
+#
+#BSUB -o /ptmp/Matthew.Pyle/nps_nemsinterp.log.%J
+#BSUB -e /ptmp/Matthew.Pyle/nps_nemsinterp.log.%J
+#BSUB -q "dev"
+#BSUB -W 0:39
+#BSUB -J NEMSINTERP
+#BSUB -a poe
+#BSUB -n 1
+#
+module load ics
+module load ibmpe
+#
+
+PACKDIR=/meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_nps.fd
+WORKDIR=/stmp/Matthew.Pyle/nmmb_init
+
+
+cd $WORKDIR
+cp $PACKDIR/NPS/nemsinterp.exe .
+
+rm test_input* 
+rm input_domain*
+rm domain_det*
+rm boco.*
+rm configure_nest_details*
+rm GWD*
+
+mpirun.lsf ./nemsinterp.exe > nemsinterp.log 2>&1

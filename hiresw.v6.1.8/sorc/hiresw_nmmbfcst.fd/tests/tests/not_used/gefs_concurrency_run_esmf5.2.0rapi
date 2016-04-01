@@ -1,0 +1,21 @@
+###############################################################################
+#
+#  Concurrency GEFS
+#  4 members, every 6 hours, couple and add stochastic perturbations, T190L28.
+#
+###############################################################################
+
+export TEST_DESCR="Concurrency GEFS, stochastic perturbations, 4 members, T190L28. ESMF5.2.0r API"
+
+export CNTL_DIR=GEFS_m4_ESMF5.2.0rAPI
+export LIST_FILES="SIG.F06_01 SIG.F06_02 SIG.F06_03 SIG.F06_04 \
+                   SFC.F06_01 SFC.F06_02 SFC.F06_03 SFC.F06_04 \
+                   FLX.F06_01 FLX.F06_02 FLX.F06_03 FLX.F06_04"
+
+export_gsm
+
+export GEFS_ENSEMBLE=1
+export TASKS=64
+export WLCLK=40
+
+RUN_SCRIPT=rt_gfs.sh

@@ -1,0 +1,22 @@
+###############################################################################
+#
+#  Regional NMM-B with selected physics schemes (SAS, ZHAO)
+#  6x5 compute tasks / 1 thread / selected GFS physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional with physics schemes SAS, ZHAO"
+
+export CNTL_DIR=NMMB_reg_sas_zhao
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0024h_00m_00.00s \
+		   nmmb_hst_01_nio_0000h_00m_00.00s nmmb_hst_01_nio_0024h_00m_00.00s \
+		   nmmb_rst_01_bin_0012h_00m_00.00s nmmb_rst_01_nio_0012h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=reg
+export FCSTL=24
+export CONVC=sas
+export MICRO=gfs
+
+RUN_SCRIPT=rt_nmm.sh
