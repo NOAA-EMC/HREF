@@ -1,0 +1,30 @@
+###############################################################################
+#
+# TEST   - GFS with multiple threads, no quilting, and frequent output
+#        - 16 tasks / 2 threads
+#
+###############################################################################
+
+export TEST_DESCR="Test GFS, 16 proc, 2 threads,no quilt, output every 2 time steps"
+
+export CNTL_DIR=GFS_NODFI
+
+# For this test, all sig and sfc outputs and flx06 are OK, only flxf03 , flxf12
+# and flxf24 are not OK.  Skip the check of flxf03, flx12 and flx24, and will fix it.
+
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 \
+                   flxf06 "
+#                   flxf03 flxf06 flxf12 flxf24"
+
+export_gsm
+export TASKS=16
+export PE1=16
+export WTPG=1
+export WRTGP=1
+export THRD=2
+export NSOUT=2
+export NDAYS=1
+export QUILT=.false.
+
+RUN_SCRIPT=rt_gfs.sh

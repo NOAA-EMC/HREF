@@ -1,0 +1,52 @@
+#BSUB -J %E%hiresw_%MODEL%_%DOMAIN%_smartinitb_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_smartinitb_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_smartinitb_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -q %QUEUE%_shared
+#BSUB -cwd /tmp
+#BSUB -W 02:00
+#BSUB -M 20000
+#BSUB -P %PROJ%
+
+%include <head.h>
+%include <envir-xc40.h>
+
+set -x
+
+export job=hiresw_%MODEL%_%DOMAIN%_smartinitb_%CYC%
+export cyc=%CYC%
+export NEST="%DOMAIN%"
+export MODEL="%MODEL%"
+export MEMBER="ctl"
+
+export MP_EUILIB=us
+export OMP_NUM_THREADS=1
+
+VERSION_FILE=$NWROOT/versions/hiresw.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ecflow_client --msg="***JOB ${ECFNAME} ERROR: Version File $VERSION_FILE does not exist"
+  ecflow_client --abort
+  exit
+fi
+
+module load grib_util
+$NWROOT/hiresw.${hiresw_ver}/jobs/JHIRESW_SMARTINITB
+
+%include <tail.h>
+%manual
+######################################################################
+#
+#  PURPOSE:
+#
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

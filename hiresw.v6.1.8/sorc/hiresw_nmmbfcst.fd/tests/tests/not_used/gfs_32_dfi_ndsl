@@ -1,0 +1,34 @@
+###############################################################################
+#
+#  GFS 
+#  NDSL 12 compute tasks / 2 thread
+#
+###############################################################################
+
+export TEST_DESCR="GFS, 16tasks, 2threads, quilt, dfi3hr, reduced grid, NDSL"
+
+export CNTL_DIR=GFS_DFI_REDUCEDGRID_NDSL
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 \
+                   flxf03 flxf06 flxf12 flxf24"
+
+export_gsm
+export TASKS=16
+export PE1=12
+export THRD=2
+export WRTGP=1
+export WTPG=1
+export FDFI=3
+export NDSLFV=.true.
+export NEMSIOIN=.true.
+export NEMSIOOUT=.true.
+export CDATE=2010010100
+if [ $NEMSIOIN = .true. ] ; then
+  export IDVC=3
+  export THERMODYN_ID=3
+  export SFCPRESS_ID=2
+  export SPECTRALLOOP=1
+#  export IC_DIR=${DISKNM}/noscrub/wx20rv/REGRESSION_TEST/GFS_DFI_REDUCEDGRID_HYB/
+fi
+
+RUN_SCRIPT=rt_gfs.sh
