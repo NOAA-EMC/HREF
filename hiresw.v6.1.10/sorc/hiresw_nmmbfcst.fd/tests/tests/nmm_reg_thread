@@ -1,0 +1,25 @@
+###############################################################################
+#
+#  Regional NMM-B with multiple threads
+#  6x5 compute tasks / 2 threads / opnl physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional threading"
+
+export CNTL_DIR=NMMB_reg
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0048h_00m_00.00s \
+        	   nmmb_hst_01_nio_0000h_00m_00.00s nmmb_hst_01_nio_0048h_00m_00.00s \
+        	   nmmb_rst_01_bin_0024h_00m_00.00s nmmb_rst_01_nio_0024h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=reg
+export THRD=2
+export TASKS=$TASKS_thrd
+export TPN=$TPN_thrd
+export INPES=$INPES_thrd
+export JNPES=$JNPES_thrd
+export WTPG=$WTPG_thrd
+
+RUN_SCRIPT=rt_nmm.sh

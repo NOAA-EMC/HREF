@@ -1,0 +1,19 @@
+###############################################################################
+#
+#  Regional NMM-B writing time series
+#  6x5 compute tasks / 1 thread / opnl physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional writing time series"
+
+export CNTL_DIR=NMMB_reg_timesr
+export LIST_FILES="nmmb_hst_01_bin_0006h_00m_00.00s ts_p01_d01.bin ts_p02_d01.bin"
+
+export_nems
+export_nmm
+export GBRG=reg
+export TS=true
+export FCSTL=06
+
+RUN_SCRIPT=rt_nmm.sh

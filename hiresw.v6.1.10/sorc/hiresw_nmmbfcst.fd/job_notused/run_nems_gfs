@@ -1,0 +1,758 @@
+#!/bin/ksh
+set -x
+#
+#######################################################################
+#### Sep 2012 Jun Wang
+#### this script is modified from Moorthi's run_gfs_2012(March/2012version)
+#### to run nems gfs.
+#######################################################################
+
+export acc=GFS-T2O
+
+LDFIFLTO=.false.
+export SPECTRAL_LOOP=2
+CHGQ0=1                                # When zflxtvd=.true.
+export fcst_begin=YES
+MDL=NEMSGFS
+whenrun=+0000
+ NST_FCST=0         # valid values are 0 (AM), 1(am,nst) and 2(cpld nstnst)
+ export ADIAB=.false.
+ if [[ $ADIAB = .true. ]] ; then 
+     export NUM_FILE=1 ; 
+    export FILENAME_BASE="'SIG.F'"
+    export FILE_IO_FORM="'grib'"
+ else
+    export FILENAME_BASE="'SIG.F' 'SFC.F' 'FLX.F'"
+    export FILE_IO_FORM="'grib' 'bin4' 'grib'"
+    export NUM_FILE=3
+    if [ $NST_FCST -gt 0 ] ; then
+      export FILENAME_BASE=${FILENAME_BASE}" 'NST.F'"
+      export FILE_IO_FORM=${FILE_IO_FORM}" 'bin4'"
+      NUM_FILE=`expr $NUM_FILE + 1`
+      export NUM_FILE
+    fi
+    echo "NUM_FILE=$NUM_FILE,NST_FCST=$NST_FCST,FILENAME_BASE=$FILENAME_BASE"
+ fi
+#jw shuff_lats_r=.true.
+#jw shuff_lats_a=.true.
+ shuff_lats_r=.false.
+ shuff_lats_a=.false.
+ grid_aldata=.false.
+ lingg_a=.false.
+ export REDUCED_GRID=.true.
+ export nsout=1
+
+runid=nemsgfs_sigio
+sdate=2012010100
+
+ bkgd_vdif_h=1.0
+ hdif_fac=1.0
+ hdif_fac2=1.0
+
+ ras=.false.
+if [ $ras = .true. ] ; then
+ bkgd_vdif_m=1.0
+ random_clds=.true.
+ catastrophy=.false.
+
+ psautco='6.0e-4, 4.0e-4'     # For RASb
+ prautco='3.0e-4, 1.0e-4'     # For RASb
+
+ evpco=1.0e-4
+ mstrat=.true.
+ old_monin=.true.
+ sashal=.false.
+ newsas=.false.
+ export crtrh='0.90,0.90,0.90'        ; # for Zhao microphysics
+ ccwf='0.0, 1.0'
+ dlqf='0.5, 0.25'
+ ctei_rm='0.60, 0.23'
+else
+ bkgd_vdif_m=3.0
+ bkgd_vdif_s=0.2               # DBG PARA value
+ psautco='4.0e-4 4.0e-4'      # For SAS
+ prautco='1.0e-4 1.0e-4'      # For SAS
+ wminco='1.0e-5,1.0e-5'        # Current OPR value
+ evpco=2.0e-5                 # For SAS
+ export crtrh='0.85,0.85,0.85'        ; # for Zhao microphysics
+fi
+zhao_mic=.true.
+ZFLXTVD=.true.
+ndsl=.false.            # Henry's semi-Lagrangian
+#
+#
+export QUILTING=.false.
+export WRT_GROUP=1
+export WRTPE_PER_GROUP=1
+if [[ $QUILTING = .false. ]] ; then
+  wrtpe=0
+else
+  wrtpe=$((WRTPE_PER_GROUP*WRT_GROUP))
+fi
+#jwif [ $wrtpe -gt 0 ] ; then export liope=.true. ; fi
+#
+export GOCART_CLIM=/global/save/wx23sm/NEMS/f2010/trunk/fix/gocart_clim
+export GOCART_LUTS=/global/save/wx23sm/NEMS/f2010/trunk/fix/gocart_luts
+export COPYGB=/climate/save/wx20wa/globpara/nems/release-9.1.0_nofix/util/exec/copygb
+
+#
+#
+#    Set up horizontal and vertical resolution ; default will be T6264
+#
+export orig_ic=NO
+CDUMP=gfs
+#jw  export wave=574 ; export lm=64 ; export lsoil=4 ; export NGPTC=15
+ export wave=62 ; export lm=64 ; export lsoil=4 ; export NGPTC=12
+ export JCAP=$wave; export LEVS=$lm; export LEVR=$lm
+#
+#
+# Depending on the machine define certain prefixes to the directory path
+#
+node=`hostname | cut -d. -f1,1`
+mac=`echo $node | cut -c1-1`
+if [ $mac = d -o $mac = m  -o $mac = c -o $mac = s ] ; then
+                                 #           For mist or dew
+                                 #           ---------------
+  rdir=/global
+  dmpdir=$rdir/shared
+  export acc=GFS-T2O
+#  export class=1
+#  export group=class1onprod
+#  export group=devonprod
+#  export group=dev
+  export group=class1onprod
+  export class=1
+  export MACHINE_ID=ccs
+elif [ $mac = h -o $mac = v ] ; then
+                                 #           For haze or vapor
+                                 #           ---------------
+  rdir=/cdev
+  dmpdir=/shared/glopara
+  rdir=/mtb
+  export acc=GFS-T2O-RES
+  export group=class1onprod
+  export class=1
+fi
+export dir_save=$rdir/save
+export dir_nosc=$rdir/noscrub
+export mdir=$dir_save/wx23sm
+export chdir=$mdir
+if [ $rdir = '/mtb' ] ; then
+ chdir=/cdev/save/wx23sm/
+fi
+if [ $mac = v  -a $mdir = '/cdev' ] ; then export mdir=$mdir/new ; fi
+#
+paradir=$mdir/GFS/f2010/trunk/para
+fixdir=$paradir/fix/fix_am
+export ISOL=0 ; export ICO2=1 ; export IAER=111
+export FIX_RAD=${fixdir:-$mdir/2jif/f2008/fix}
+export AERODIR=${FIX_RAD:-$mdir/2jif/f2008/fix}
+export ATMOS_CONFIG_GFS=/global/save/wx23sm/NEMS/f2011/branches/moorthi/newphys/job/regression_tests/atmos.configure_gfs
+export SPECTRAL_LOOP=${SPECTRAL_LOOP:-1}
+export LDFIFLTO=${LDFIFLTO:-.true.}
+#
+#
+ export NUMTHRD=2
+ export NTHSTACK=4096000000
+#
+#
+export rcpu="$NUMTHRD"
+npe_node=32
+#jw export rmem=$((26000*NUMTHRD/npe_node))
+export rmem=$((208000*NUMTHRD/npe_node))
+sub=/u/wx23sm/bin/sub
+if [ $mac = v -o $mac = c -o $mac = s ] ; then
+ export npe_node=64
+ export rmem=$((105000*NUMTHRD/npe_node))
+fi
+if [ $mac = v ] ; then
+ export sub=/u/wx15dp/bin/sub
+elif [ $mac = c -o $mac = s ] ; then
+ sub=/u/wx23sm/bin/sub_vapor
+fi
+#
+export FTSFS=90.0
+export FAISS=99999
+ export ENS_NUM=1
+
+ENS_SPS=.true.
+export FH_INC=6
+export HOUTASPS=12
+
+#jw tasks=384  ; export PE1=384 ; export nodes=$((tasks*NUMTHRD/npe_node))
+#jw export  tasks=1  ; export PE1=1 ; export nodes=$((tasks*NUMTHRD/npe_node))
+ tasks=16  ; export PE1=16 ; export nodes=$((tasks*NUMTHRD/npe_node))
+
+if [ $nodes = 0 ] ; then export nodes=1 ; fi
+if [ $tasks -gt $wave ] ; then tasks=$((wave-1)) ; PE1=$tasks ; fi
+#
+ export NCEPPOST=NO
+ export hybrid=YES
+ export OUTTYP=2
+if [ $ndsl = .true. ] ; then
+ export hybrid=NO
+ export GEN_COORD_HYBRID=YES
+ export RUN_ENTHALPY=.false.
+fi
+ export newoz_nrl=YES
+ ocnglac=YES
+#
+ export GEN_COORD_HYBRID=${GEN_COORD_HYBRID:-NO}
+ 
+ export FHROT=0
+#
+#    Set up experiment and directory names
+#
+  export expt=nems_${wave}_${sdate}_ticket22
+#
+#
+ export fcst_begin=${fcst_begin:-YES}
+ export cold_sfc=${cold_sfc:-NO}
+ export hybrid=${hybrid:-NO}
+ export newoz_gsfc=${newoz_gsfc:-NO}
+ export newoz_nrl=${newoz_nrl:-NO}
+ export newozopr=${newozopr:-NO}
+ export class=${class:-dev}
+ export group=${group:-dev}
+ export dir_save=/global/save
+ export dir_nosc=/global/noscrub
+
+ export NEMSIO_IN=${NEMSIO_IN:-.false.}
+ export NEMSIO_OUT=${NEMSIO_OUT:-.false.}
+ export SIGIO_OUT=${SIGIO_OUT:-.true.}
+ export SFCIO_OUT=${SFCIO_OUT:-.true.}
+ export OUTTYP=${OUTTYP:-1}
+ export CHGQ0=${CHGQ0:-0}
+ 
+export MP_COREFILE_FORMAT=lite 
+
+export RUNDIR=${RUNDIR:-/ptmp/$LOGNAME/$MDL/$expt}
+export FCSMEAN=${FCSMEAN:-/ptmp/$LOGNAME/data}
+export FNLMEAN=${FNLMEAN:-$dir_nosc/$LOGNAME/data}
+export SCRIPTS=${SCRIPTS:-$mdir/gsm/scripts}
+export SFCANADIR=${SFCANADIR:-$mdir/data/sfcanl}
+export NCP=${NCP:-/u/wx23sm/bin/ncp}
+#
+#     Define cpu time for forecast in ch (hours) and cm (minutes) & cs (secs)
+#
+ export ch=00 ; export cm=30 ; export cs=00 ; export pfac=1
+#
+ export chp=$ch; export cmp=$cm ; export csp=00
+#
+#
+ export CDATE=$sdate
+#
+ export wgrib=${wgrib:-/nwprod/util/exec/wgrib}
+ export nemsioget=/climate/save/wx20wa/gfsio/nems/nemsio_get
+# export SIGHDR=/climate/save/wx20wa/gfsio/nems/nemsio_get
+ export SIGHDR=/nwprod/exec/global_sighdr
+ export NEMSHDR=/climate/save/wx20wa/gfsio/nems/nemsio_get
+#
+#    nhourb is the beginig hour.  If nhourb=0, then initial condition
+#    needs to be specified. ndays is the Length of #orecast in days
+#    begining from nhourb
+#
+export ndays=1
+if [[ ${fcst_begin} = YES ]] ; then
+ export nhourb=0
+else
+ if [[ -s $RUNDIR/sigr1$FM ]] ; then
+   export GDATE=$($SIGHDR $RUNDIR/sigr1$FM idate | grep -i "idate" \
+     |awk -F"= " '{print $2}')
+   nhourb=$($nemsioget $RUNDIR/sigr1$FM nfhour | grep -i "nfhour" |awk \
+     -F"= " '{print $2}')
+   nhourb=`expr $nhourb + 0 `
+   export nhourb
+   export FHROT=${FHROT:-$nhourb}
+ else
+   nhourb=0
+ fi
+fi
+echo "GDATE= $GDATE, nhourb=$nhourb"
+#
+#
+ export nhours=`expr $ndays \* 24`
+#
+if [[ $nhourb -eq 0 ]] ; then
+# For two tracers
+  export ntrc=3  ; export varid=21  ; export numcld=1
+#
+#jw   export change_res=YES
+  export change_res=${change_res:-NO}
+#
+#  export ic_type=local
+  export ic_type=special
+fi
+#
+ export fmax=$nhours
+ export fout=6  ; export fzer=6  ; export fcyc=24 ; export fdfi=3 ; export FHRES=120 ; export FHLWR=1
+#
+#    Forecast model : horizontal truncation  and vertical levels
+#                     ---------------------
+#
+export wave=${wave:-62}
+export lm=${lm:-64}
+export lsoil=${lsoil:-4}
+#
+export NTRAC=${NTRAC:-3}
+export NTOZ=${NTOZ:-2}
+export NTCW=${NTCW:-3}
+export NCLD=${NCLD:-1}
+export NMTVR=${NMTVR:-14}
+#
+export nsout=${nsout:-0}
+export lsm=${lsm:-1}
+#
+export R=${wave}${lm}
+if [ $hybrid = YES ] ; then
+ export SIGLEVEL=$fixdir/global_hyblev.l$lm.txt
+ export RUN_ENTHALPY=.false.
+elif [ $GEN_COORD_HYBRID = YES ] ; then
+ Apercent=${Apercent:-100}
+ if [ $Apercent -lt 100 ] ; then
+  export SIGLEVEL=$mdir/2jif/f2006/fix/global_hyblev3.ipa$Apercent.txt
+ else
+  export SIGLEVEL=$fixdir/global_hyblev3.l$lm.txt
+ fi
+fi
+#
+#   Control for post and time averaging  If "YES" then run
+#   -- Defaults to "NO" 
+#
+ export post=NO
+#
+if [ $post = YES ] ; then
+  export rcpu_p=${NUMTHRD_POST:-1}
+  export tasks_p=${tasks_p:-64}
+  export nodes_p=${nodes_p:-1}
+  export rmem_p=$((105000*rcpu_p/npe_node))
+fi
+#
+MODIS_ALB=${MODIS_ALB:-NO}
+#     For Modis Albedo ##########################################
+if [ $MODIS_ALB = YES ] ; then
+ export MODISDIR=${MODISDIR:-$mdir/modis_fix}
+ export FNALBC=${FNALBC:-$MODISDIR/global_albedo.t$wave.grb}
+ export FNABSC=${FNABSC:-$MODISDIR/global_mxsalbedo.t$wave.grb}
+ export ialb=1
+else
+ export ialb=0
+fi
+
+#########################################################################
+#
+zhao_mic=${zhao_mic:-.true.}
+if [[ $zhao_mic = .false. ]] ; then
+  export crtrh='0.98,0.98,0.98'      ; # For Ferrie-Moorthi microphysics
+fi
+ export flgmin='0.160,0.210'
+ export ncw='15,120'
+#
+export ras=${ras:-.false.}
+export ccwf=${ccwf:-"1.0,1.0"}
+export dlqf=${dlqf:-'0.0,0.0'}
+export random_clds=${random_clds:-.false.}
+export mstrat=${mstrat:-.false.}
+export ccnorm=${ccnorm:-.false.}
+export ADIAB=${ADIAB:-.false.}
+export sashal=${sashal:-.true.}
+export shal_cnv=${shal_cnv:-.true.}
+export newsas=${newsas:-.true.}
+export old_monin=${old_monin:-.false.}
+export ENS_SPS=${ENS_SPS:-.false.}
+export FH_INC=${FH_INC:-6}
+export HOUTASPS=${HOUTASPS:-12}
+export catastrophy=${catastrophy:-.true.}
+
+export zhao_mic=${zhao_mic:-.true.}
+export ZFLXTVD=${ZFLXTVD:-.true.}
+if [[ $ZFLXTVD = .true. ]] ; then export CHGQ=1 ; fi
+export ictm=${ictm:-0}
+
+RUN_ENTHALPY=${RUN_ENTHALPY:-.true.}
+OUT_VIRTTEMP=${OUT_VIRTTEMP:-.true.}
+
+if [ $GEN_COORD_HYBRID = YES ] ; then
+ if [ $ndsl = .true. ] ; then
+  export SFCPRESS_ID=2      # SFCPRESS_ID=2 or psfc
+  export THERMODYN_ID=1     # for virtual T
+ elif [ $RUN_ENTHALPY = .true ] ; then
+                       # SFCPRESS_ID=0 or 1 for ln(psfc), 2 for psfc
+  export SFCPRESS_ID=2
+                       # THERMODYN_ID=3 for h (=CpT), 0 or 1 for Tv, 2 for T
+  export THERMODYN_ID=3
+
+  export CPIlist=" 1004.6,   1846.0, 820.2391,    0.0"
+  export RIlist="  287.05,   461.50, 173.2247,    0.0"
+ fi
+else
+ export SFCPRESS_ID=1      # SFCPRESS_ID=0 or 1 for ln(psfc)
+ export THERMODYN_ID=1     # for virtual T
+fi
+
+NST_SPINUP=${NST_SPINUP:-.false.}
+
+shuff_lats_r=${shuff_lats_r:-.true.}
+shuff_lats_a=${shuff_lats_a:-.false.}
+fmax_hf=${fmax_hf:-0}
+fout_hf=${fout_hf:-1}
+liope=${liope:-.false.}
+ldiag3d=${ldiag3d:-.false.}
+
+
+#############################################################################
+#
+ export DYNVARS="liope=.F.,nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,nsout=$nsout,\
+                 sigio_out=$SIGIO_OUT,zflxtvd=$ZFLXTVD, shuff_lats_a=$shuff_lats_a"
+
+ export PHYVARS="liope=$liope,ras=$ras,zhao_mic=$zhao_mic,lsm=$lsm,\
+              old_monin=$old_monin,sashal=$sashal,newsas=$newsas,\
+              shal_cnv=$shal_cnv,shuff_lats_r=$shuff_lats_r,\
+              ialb=$ialb,pre_rad=.false.,random_clds=$random_clds,\
+              iovr_lw=1,iovr_sw=1,\
+              ISOL=$ISOL, ICO2=$ICO2, IAER=$IAER,ictm=$ictm, nsout=$nsout,\
+              ldiag3d=$ldiag3d, ncw=$ncw,crtrh=$crtrh,flgmin=$flgmin,\
+              cnvgwd=.false.,ctei_rm=$ctei_rm,mstrat=$mstrat,ccnorm=$ccnorm,\
+              mom4ice=.false.,NST_FCST=$NST_FCST,NST_SPINUP=$NST_SPINUP,\
+              lgoc3d=.false.,trans_trac=.true.,cal_pre=.false.,\
+              CCWF=$ccwf,dlqf=$dlqf,psautco=$psautco,prautco=$prautco,evpco=$evpco,\
+              bkgd_vdif_m=$bkgd_vdif_m,bkgd_vdif_h=$bkgd_vdif_h,\
+              grid_aldata=$grid_aldata,bkgd_vdif_s=$bkgd_vdif_s,hdif_fac=$hdif_fac,
+              nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,sfcio_out=$SFCIO_OUT"
+
+ export TRACERVARS="RI=$RIlist,CPI=$CPIlist,"
+#
+export NGPTC=${NGPTC:-$((wave/10))}
+export levr=${levr:-0}
+if [ $hybrid = YES ] ; then
+ export IDVC=2 ; export IDVM=1
+ export nvcoord=2 ; export ivssfc=200501 ; export ivssig=198410
+#jw
+ export LATCH=48
+elif [ $GEN_COORD_HYBRID = YES ] ; then
+ export IDVC=3 ;  export IDSL=2 ; export ivssfc=200501
+ export IDVM=${THERMODYN_ID}${SFCPRESS_ID}
+ export ivssig=200509 ; export nvcoord=3 ; export LATCH=48
+else
+ export IDVC=1
+fi
+#
+#  For new Ozone Production/Destruction and Climatology
+# 
+#
+if [ $newoz_gsfc = YES ] ; then
+ export O3PROD=${O3PROD:-$mdir/O3P_L/ox_prdlos_head.ieee}
+ export O3CLIM=${O3CLIM:-$mdir/O3P_L/ozone.clim}
+fi
+if [ $newozopr = YES ] ; then
+ export O3PROD=${O3PROD:-$mdir/O3P_L/ox_prdlos_opr_head.ieee}
+fi
+#
+#
+#     Forecaset script executable name
+#
+#
+# NEMSDIR=$mdir/NEMS/f2011/trunk
+# export NEMSDIR=/climate/save/wx20wa/esmf/nems/comparison/nemsgfs_test
+# export NEMSDIR=/climate/save/wx20wa/esmf/nems/comparison/00wknems/nemsgfs_vldt
+ CRTDIR=`pwd`
+ export NEMSDIR=$CRTDIR/..
+ export FCSTSCRIPT=$NEMSDIR/job/exglobal_fcst.sh.sms_nems
+ export fname=$NEMSDIR/exe/NEMS.x
+
+#
+#
+# ***************************************************************
+#    Below here no change needed most of the time
+#    ____________________________________________
+#
+mkdir -p $RUNDIR
+cd $RUNDIR
+export COMOUT=$RUNDIR
+
+#
+cp -p ${NEMSDIR}/job/regression_tests/Chem_Registry.rc $RUNDIR
+cp -p ${NEMSDIR}/job/regression_tests/MAPL.rc $RUNDIR
+#
+#$NCP /nfsuser/g01/wx23sm/gsm/sfccyc/aeros_data/aeropac3a* $RUNDIR
+#
+ export fixdir=${fixdir:-/nwprod/fix}
+#
+# for new oceanic glaciers from Jordan Alpert
+#
+
+MTNDIR=${fixdir:-/nwprod/fix}
+export SLMASK=$MTNDIR/global_slmask.t$wave.grb
+export OROGRAPHY=/nwpara/fix/global_orography.t$wave.grb
+#jw export OROGRAPHY=/global/noscrub/wx23sm/terr07_test574.1760.880n/ml574/orogb574
+export MTNVAR=$MTNDIR/global_mtnvar.t$wave.f77
+export FNTG3C=$MTNDIR/global_tg3clim.2.6x1.5.grb
+
+ocnglac=${ocnglac:-NO}
+#
+FNTSFC='/nwprod/fix/cfs_oi2sst1x1monclim19822001.grb'
+FNAISC='/nwprod/fix/cfs_ice1x1monclim19822001.grb'
+FNVEGC='/nwprod/fix/global_vegfrac.0.144.decpercent.grb'
+#
+export kop=26
+if [[ $lm -eq 64 ]] ; then
+  export kop=47
+fi
+#
+# for new chgres - George Gayno
+#
+ export ivssfc=200509
+ export default_ivs=NO
+ export opr_chgres=NO
+if [ $NEMSIO_IN = .true. ]; then
+  export CHGRESSH=/climate/save/wx20wa/gfsio/chgres_20120424/test/global_chgres_opn.sh
+  export CHGRESEXEC=/climate/save/wx20wa/gfsio/chgres_20120626/global_chgres
+else
+  export CHGRESSH=/global/save/wx23sm/GFS/f2010/trunk/para/ush/global_chgres.sh
+  export CHGRESEXEC=/global/save/wx23sm/GFS/f2010/trunk/para/sorc/global_chgres.fd/global_chgres
+fi
+#
+if [ $GEN_COORD_HYBRID = YES ] ; then
+ export POSTGPEXEC=$chdir/2jif/f2008/sorc/global_postgp.fd/global_postgp
+fi
+#
+if [ $NCEPPOST = YES ] ; then
+ export CHGRESTHREAD=${CHGRESTHREAD:-32}
+# export POSTGPSH=/global/save/wx20hc/nceppost/RFC_June09/scripts/global_nceppost.sh
+# export POSTGPEXEC=/global/save/wx20hc/nceppost/RFC_June09/exec/ncep_post_exp
+# export CTLFILE=/global/save/wx20hc/nceppost/RFC_June09/parm/gdas_cntrl.parm
+# export POSTGPSH=$paradir/ush/global_nceppost.sh
+# export POSTGPEXEC=$paradir/sorc/global_nceppost.fd/ncep_post
+ export POSTGPSH=/climate/save/wx20wa/esmf/nems/20120424/scripts/global_nceppost_nems.sh
+ export POSTGPEXEC=/climate/save/wx20wa/esmf/nems/20120424/post/ncep_post
+ export CTLFILE=$paradir/parms/parm_am/gfs_cntrl.parm_nobt
+ export MICRO_PHYS_DATA=$paradir/parms/parm_am/nam_micro_lookup.dat
+
+fi
+#
+
+orig_ic=${orig_ic:-YES}
+if [ $sdate -lt 2006082200 -a orig_ic = YES ] ; then
+ export LANDICE_OPT=1
+else
+ export LANDICE_OPT=2
+fi
+export CLIMO_FIELDS_OPT=2
+#
+#
+if [[ $lm -gt 99 ]] ; then
+  export default_ivs=NO
+  export kop=46
+  export ivssig=200509 ; export nvcoord=2 ; export ivssfc=200501
+  export SIGLEVEL=$chdir/idea/wam_hyblev.txt
+fi
+#
+export grid_id=3
+if [[ $wave -eq 62 ]] ; then
+  export LONF=192 ; export LATG=94 ; export LONR=192 ; export LATR=94
+  export im=$LONR ; export jm=$LATR ; export iop=144 ; export jop=73
+  export grid_id=2
+  if [[ $lm -eq 64 ]] ; then
+    export DELTIM=${DELTIM:-900}
+  fi
+  if [[ $lm -eq 150 ]] ; then
+    export DELTIM=${DELTIM:-180}
+  fi
+  export DELTIM=${DELTIM:-1200}
+elif [[ $wave -eq 126 ]] ; then
+  export LONF=384 ; export LATG=190 ; export LONR=384 ; export LATR=190
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-600}
+elif [[ $wave -eq 170 ]] ; then
+  export LONF=512 ; export LATG=256 ; export LONR=512 ; export LATR=256
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-450}
+elif [[ $wave -eq 190 ]] ; then
+  export LONF=576 ; export LATG=288 ; export LONR=576 ; export LATR=288
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-360}
+elif [[ $wave -eq 254 ]] ; then
+  export LONF=768 ; export LATG=384 ; export LONR=768 ; export LATR=384
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+elif [[ $wave -eq 382 ]] ; then
+  export LONF=1152 ; export LATG=576 ; export LONR=1152 ; export LATR=576
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-180}
+elif [[ $wave -eq 510 ]] ; then
+  export LONF=1536 ; export LATG=766 ; export LONR=1536 ; export LATR=766
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-120}
+  export OROGRAPHY=$dir_save/wx23ys/fix.all/global_orography.t${wave}.grb
+  export MTNVAR=$dir_save/wx23my/fix.all/global_mtnvar.t${wave}.f77
+elif [[ $wave -eq 574 ]] ; then
+  export LONF=1760 ; export LATG=880 ; export LONR=1760 ; export LATR=880
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-120}
+  if [ $lingg_a = .true. ] ; then
+    export LONF=1152 ; export LATG=576
+    if [ $lingg_b = .true. ] ; then
+      export LONR=1152 ; export LATR=576
+      export OROGRAPHY=/global/save/wx23my/t382.lin.gen.oro/oro/orogb.$LONF.$LATG
+      export SLMASK=/global/save/wx23my/t382.lin.gen.oro/oro/slmgb.$LONF.$LATG
+    else
+      echo ' Linear/Guassian combination not available'
+    fi
+  fi
+fi
+#
+if [[ $kop -eq 17 ]] ; then
+  export POSTGPVARS="IO=$iop,JO=$jop,KPO=$kop,PO=1000.,925.,850.,700.,600.,500.,400.,300.,250.,200.,150.,100.,70.,50.,30.,20.,10.,"
+fi
+if [[ $kop -eq 26 ]] ; then
+  export POSTGPVARS="IDRTC=0,IOC=$iop,JOC=$jop,IDRT=0,IO=$iop,JO=$jop,pob(051)=1000,pob(154)=1000,pot(153)=0,pot(051)=0"
+fi
+if [ $kop -eq 46 -o $kop -eq 47 ] ; then
+ if [ $kop -eq 46 ] ; then
+  polist="\
+   1000.0,   975.0, 950.0, 925.0, 900.0, 875.0,\
+    850.0,   825.0, 800.0, 750.0, 700.0, 650.0,\
+    600.0,   550.0, 500.0, 450.0, 400.0, 350.0,\
+    300.0,   250.0, 200.0, 150.0, 100.0,  70.0,\
+     50.0,    40.0,  30.0,  20.0, 10.00,   7.0,\
+      5.0,     4.0,   3.0,   2.0,  1.0,    0.7,\
+      0.5,     0.4,   0.3,   0.2,  0.1,    0.07,\
+      0.05,    0.04,  0.03,  0.02,"
+ elif [ $kop -eq 47 ] ; then
+  polist="\
+   1000.,975.,950.,925.,900.,875.,850.,825.,800.,775.,750.,725.,700.,675.,650.,625.,600.,575.,550.,525.,500.,475.,450.,425.,400.,375.,350.,325.,300.,275.,250.,225.,200.,175.,150.,125.,100.,70.,50.,30.,20.,10.,7.,5.,3.,2.,1.,"
+ fi
+ export POSTGPVARS="KPO=$kop,PO=$polist,\
+                   IDRTC=0,IOC=$iop,JOC=$jop,IDRT=0,IO=$iop,JO=$jop,\
+                   POB(051)=1000,POB(154)=1000,\
+                   POT(039)=0,POT(051)=0,POT(052)=0,POT(153)=0,"
+fi
+if [ $NCEPPOST = YES ] ; then
+ export POSTGPVARS="KPO=$kop,PO=$polist,"
+fi
+#
+if [ $lsoil -eq 2 ] ; then
+ export IVS=200001
+elif [ $lsoil -eq 4 ] ; then
+ export IVS=200501
+fi
+#
+export POSTGPEXEC=${POSTGPEXEC:-/nwprod/exec/global_postgp}
+export CHGRESEXEC=${CHGRESEXEC:-/nwprod/exec/global_chgres}
+#
+#if [ $ntrc -eq 4 ] ; then
+# export CHGRESEXEC=/nfsuser/g01/wx20mi/2jif/global_chgres.fd200205/global_chgres.drytheta
+# export CHGRESEXEC=/nfsuser/g01/wx20mi/2jif/global_chgres.fd200205/global_chgres.eqvtheta
+#fi
+#
+ export post=${post:-"NO"}   ; export avg=${avg:-"NO"}
+ export index=${index:-"NO"} ; export pgb=${pgb:-"NO"}
+ export flx=${flx:-"NO"}     ; export d3d=${d3d:-"NO"}
+ export znl=${znl:-"NO"}     ; export change_res=${change_res:-"NO"}
+ export cyclebc=${cyclebc:-"NO"}
+#
+if [[ $nhourb -eq 0 ]] ; then
+#
+#    Initial condition directory and dataset names
+#
+  CDUMP=${CDUMP:-gfs}
+  if [[ ${ic_type} = suru ]] ; then
+#   For initial condition from Suru
+    export datic=/nfsuser/g01/wx23ss/data/ini
+    export sig_fname=siganl.$CDATE
+    export sfc_fname=sfcanl.$CDATE
+  fi
+#
+  if [[ ${ic_type} = gfs ]] ; then
+#   For initial conditon from production GFS
+    dtg=`echo $CDATE | cut -c1-8`
+    hr=`echo $CDATE | cut -c9-10`
+    export datic=/com/gfs/prod/gfs.$dtg
+#   if [[ $wave -eq 62 ]] ;then
+#     export sig_fname=gdas2.t00z.sanl
+#     export sfc_fname=gdas2.t00z.sfcanl
+#   else
+      export sig_fname=gfs.t${hr}z.sanl
+      export sfc_fname=gfs.t${hr}z.sfcanl
+#   fi
+  fi
+# For parallel or other initial conditions
+  if [[ ${ic_type} = prx ]] ; then
+    export datic=/global/shared/dump/$CDATE/$CDUMP
+    export sig_fname=siganl.$CDUMP.$CDATE
+    export sfc_fname=sfcanl.$CDUMP.$CDATE
+  fi
+  if [[ ${ic_type} = reanl2 ]] ; then
+    export datic=/ptmp/wx23sm/climate/coldic
+    export sig_fname=/siganl.r2.$CDATE
+    export sfc_fname=sfcanl.r2.$CDATE
+  fi
+# For local i.e. /nfsuser/g01/wx23sm/data/ini directory
+  if [[ ${ic_type} = local ]] ; then
+    export datic=$RUNDIR
+    export sig_fname=siganl.$CDATE
+    export sfc_fname=sfcanl.$CDATE
+  fi
+  if [[ ${ic_type} = special ]] ; then
+    export datic=/climate/save/wx20wa/esmf/nems/20120913/data
+    export sig_fname=siganl.$CDATE
+    export sfc_fname=sfcanl.$CDATE
+  fi
+fi
+#
+if [[ $nhourb -eq 0 ]] ; then
+  if [[ $ENS_NUM -gt 1 ]] ; then
+    for MN in $MEMBER_NAMES ; do
+      ${NCP:-cp} $sig_fname ${sig_fname}$MN
+      ${NCP:-cp} $sfc_fname ${sfc_fname}$MN
+    done
+  fi
+fi
+
+#
+if [ $ENS_NUM -eq 1 ] ; then export COMOUT=$RUNDIR ; fi
+
+
+pwd
+
+export listvar=CDATE,COMOUT,FCSMEAN,SCRIPTS,fexec,fname,fmax,fout,listvar,fzer,fdfi,wave,im,jm,lm,lsoil,iop,jop,kop,OROGRAPHY,SLMASK,MTNVAR,fcyc,RUNDIR,sdate_avg,edate_avg,expt,post,index,avg,pgb,flx,d3d,znl,nhourb,nhours,datic,sig_fname,sfc_fname,change_res,cyclebc,cycle_date,DELTIM,CO2CON,SIGLEVEL,DYNVARS,PHYVARS,ZFLXTVD,POSTGPSH,POSTGPEXEC,POSTGPVARS,CTLFILE,NCEPPOST,CHGRESTHREAD,ntrc,SFCANADIR,CHGRESEXEC,CHGRESSH,FHRES,fixdir,varid,numcld,FNTSFA,FNACNA,FNLMEAN,NCP,chp,cmp,csp,IDVC,FHROT,IVS,cold_sfc,NEMSDIR,FCSTSCRIPT,NUMTHRD,JCAP,LEVS,LEVR,LONF,LATG,LONR,LATR,NTRAC,NTOZ,NTCW,NCLD,NMTVR,NGPTC,FHLWR,FHSWR,FNTSFC,FNAISC,FNVEGC,O3FORC,O3LOSS,O3CLIM,FNTG3C,ivssig,nvcoord,ivssfc,opr_chgres,default_ivs,LANDICE_OPT,CLIMO_FIELDS_OPT,hybrid,ENS_NUM,MEMBER_NAMES,FM,PE1,PE2,PE3,PE4,PE5,PE6,PE7,PE8,PE9,PE10,PE11,FTSFS,FAISS,acc,GEN_COORD_HYBRID,LATCH,IDVM,IDSL,dir_save,dir_nosc,NEMSIO_IN,NEMSIO_OUT,TRACERVARS,CPIlist,RIlist,lsm,class,group,rmem,rcpu,AERODIR,FIX_RAD,EMISDIR,MP_COREFILE_FORMAT,FNALBC,FNABSC,ialb,CHGQ0,ICO2,ISOL,IAER,OUTTYP,SFCPRESS_ID,THERMODYN_ID,ADIAB,mdir,sub,ADIAB,NTHSTACK,fmax_hf,fout_hf,LINK_FILES,QUILTING,WRT_GROUP,WRTPE_PER_GROUP,NUM_FILE,FILENAME_BASE,FILE_IO_FORM,GOCART_CLIM,GOCART_LUTS,COPYGB,ATMOS_CONFIG_GFS,SPECTRAL_LOOP,LDFIFLTO,SIGHDR,NEMSHDR,nemsioget,REDUCED_GRID,SIGINP,SFCINP,MACHINE_ID,nsout
+echo $RIlist
+echo $CPIlist
+
+echo "NUMFILE=$NUM_FILE,FILENAME_BASE=$FILENAME_BASE,FILE_IO_FORM=$FILE_IO_FORM,NST_FCST=$NST_FCST"
+echo "GDATE= $GDATE, nhourb=$nhourb"
+
+
+#
+if [[ $nhourb -lt $nhours ]] ; then
+
+
+
+#jw  echo "#@ group = $group" | $sub -i -a $acc -e $listvar -q $class -p $tasks/$nodes/N -r $rmem/$rcpu -t $ch:$cm:$cs -o $RUNDIR/fcst.$CDATE.out_${nhourb} $SCRIPTS/global_fcst_script_nemsio
+  echo "#@ group = $group" | $sub -i -a $acc -e $listvar -q $class -p $tasks/$nodes/N -r $rmem/$rcpu -t $ch:$cm:$cs -o $RUNDIR/fcst.$CDATE.out_${nhourb} $NEMSDIR/job/global_fcst_script_nems
+#
+#  For invoking TotalView
+#
+# sub -e $listvar -q dev -p $tasks/$nodes -t $ch:$cm:$cs -o $RUNDIR/fcst.$CDATE.out $SCRIPTS/global_fcst_script_tv
+# sub -e $listvar -q dev -p $tasks -t $ch:$cm:$cs -o $RUNDIR/fcst.$CDATE.out $SCRIPTS/global_fcst_script_tv
+# sub -e $listvar -q dev -p $tasks/$nodes -t $ch:$cm:$cs -o $RUNDIR/fcst.$CDATE.out $SCRIPTS/global_fcst_script_tv2
+#
+elif [[ $post = YES ]] ; then
+ if [[ $NCEPPOST = YES ]] ; then
+   echo "#@ group = $group" | $sub -i -a $acc -e $listvar -q $class -p 32/1/N -r $rmem/$rcpu -t $chp:$cmp:$csp -o $RUNDIR/post.$CDATE.out $SCRIPTS/global_unipost.sh
+ else
+   echo "#@ group = $group" | $sub -i -a $acc -e $listvar -q $class -p 32/1/N -r $rmem/$rcpu -t $chp:$cmp:$csp -o $RUNDIR/post.$CDATE.out $SCRIPTS/global_post
+ fi
+elif [[ $avg = YES ]] ; then
+  echo "#@ group = $group" | sub -i -e $listvar -q 1 -p 1/1 -r $rmem -t 0:20:00 -o $COMOUT/avg.$CDATE.out $SCRIPTS/global_avgall_new2
+fi
+#
+#
+#
+#  else
+#   export SIGI=$SIGINP
+#   export SIGI2=$SIGINP
+#   export SFCI=$SFCINP
+#   FHROT=`/nwprod/exec/global_sighdr $SIGINP ifhr`
+#  fi
+#

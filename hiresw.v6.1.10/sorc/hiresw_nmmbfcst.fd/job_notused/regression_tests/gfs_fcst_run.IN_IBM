@@ -1,0 +1,515 @@
+#!/bin/ksh
+#
+set -x
+#
+#
+
+ export CDATE=_CDATE_
+ cyc=`echo $CDATE|cut -c9-10`
+#***************************************************************
+#
+#    Set up horizontal and vertical resolution ; default will be T6264
+#
+ export wave=_wave_ ; export lm=_lm_ ; export lsoil=_lsoil_
+
+#**************************************************************
+#
+#    Set up model options
+#
+#export EXPLICIT=.true.
+ export EXPLICIT=.false.
+
+ export ADIAB=_ADIAB_
+ export NST_FCST=_NSTFCST_   #0(AM), 1(am,nst) and 2(cpld nstnst)
+ export NST_FCST=${NST_FCST:-0}
+## IAER=0 (no aerosols); 11 (opac for sw/lw) and 22 (gocart for sw/lw)
+
+ export IAER=_IAER_
+ export IEMS=_IEMS_
+ export ICO2=_ICO2_
+ export ISOL=_ISOL_
+ export SLG=_SLG_
+ echo SLG=$SLG
+
+ export NGRID_A2OI=41
+ export NGRID_A2OI=${NGRID_A2OI:-41}
+#export A2OI_OUT=.true.
+ export A2OI_OUT=${A2OI_OUT:-.false.}
+ export CPLFLX=.true.
+ export CPLFLX=${CPLFLX:-.false.}
+
+ export CLIMATE=${CLIMATE:-.false.}
+
+ export GOCART=_GOCART_
+ export GOCART=${GOCART:-0}
+# reduced_grid default is true
+ export REDUCED_GRID=_REDUCEDGRID_
+
+# wam model to couple with idea, default is false
+ export IDEA=_IDEA_
+ export IDEA=${IDEA:-.false.}
+ export RTPWD=_RTPWD_
+
+# nemsio input/output
+ export NEMSIO_IN=_NEMSIOIN_
+ export NEMSIO_OUT=_NEMSIOOUT_
+ export NEMSIO_IN=${NEMSIO_IN:-.false.}
+ export NEMSIO_OUT=${NEMSIO_OUT:-.false.}
+
+# sigio input/output
+ export SIGIO_IN=_SIGIOIN_
+ export SIGIO_OUT=_SIGIOOUT_
+ export SFCIO_OUT=_SFCIOOUT_
+ export MACHINE_ID=_MACHINE_ID_
+ export SCHEDULER=_SCHEDULER_
+
+ export SIGIO_IN=${SIGIO_IN:-.true.}
+ export SIGIO_OUT=${SIGIO_OUT:-.true.}
+ export SFCIO_OUT=${SFCIO_OUT:-.true.}
+# 
+ export MACHINE_ID=${MACHINE_ID:-WCOSS}
+ export SCHEDULER=${SCHEDULER:-lsf}
+
+ export machine=${machine:-${MACHINE_ID:-WCOSS}}
+ export SIGHDR=_SIGHDR_
+#
+# number of output files, default =3, for adiab num_file=1
+ if [[ $ADIAB = .true. ]] ; then
+     export NUM_FILE=1 ;
+    export FILENAME_BASE="'SIG.F'"
+    export FILE_IO_FORM="'grib'"
+ else
+    export FILENAME_BASE="'SIG.F' 'SFC.F' 'FLX.F'"
+    export FILE_IO_FORM="'grib' 'bin4' 'grib'"
+    export NUM_FILE=3
+    if [ $NST_FCST -gt 0 ] ; then
+      export FILENAME_BASE=${FILENAME_BASE}" 'NST.F'"
+      export FILE_IO_FORM=${FILE_IO_FORM}" 'bin4'"
+      NUM_FILE=`expr $NUM_FILE + 1`
+      export NUM_FILE
+      if [ $NST_FCST -eq 1 ]; then
+#testing
+          NST_SPINUP=.true.
+      fi
+    fi
+    if [ $GOCART == 1 ] ; then
+      export FILENAME_BASE=${FILENAME_BASE}" 'AER.F'"
+      export FILE_IO_FORM=${FILE_IO_FORM}" 'grib'"
+      NUM_FILE=`expr $NUM_FILE + 1`
+      export NUM_FILE
+    fi
+    echo "NUM_FILE=$NUM_FILE,GOCART=$GOCART,NST_FCST=$NST_FCST,FILENAME_BASE=$FILENAME_BASE"
+ fi
+NST_SPINUP=${NST_SPINUP:-.false.}
+
+# restart default is coldstart
+#export RESTART=_RESTART_
+#read one time step input data
+# export FHROT=_FHROT_
+# restart file output frequency
+ export FHRES=_FHRES_
+
+# SFCPRESS_ID=0 or 1 for ln(psfc), 2 for psfc
+# export SFCPRESS_ID=2
+# THERMODYN_ID=3 for enthalphy, 0 or 1 for virtual T, 2 for T
+# export THERMODYN_ID=3
+#
+# export IDVC=3
+# export hybrid=NO
+# export GEN_COORD_HYBRID=YES
+# SPECTRAL_LOOP       2 for old option, 1 is for one loop.
+# export SPECTRAL_LOOP=1
+###
+ export SFCPRESS_ID=_SFCPRESSID_
+ export THERMODYN_ID=_THERMODYNID_
+ export IDVC=_IDVC_
+ export SPECTRAL_LOOP=_SPECTRALLOOP_
+ export NDSLFV=_NDSLFV_
+
+if [ $NDSLFV = .true. ]
+then
+ export MASS_DP=.true.
+ export PROCESS_SPLIT=.false.
+else
+ export MASS_DP=.false.
+ export PROCESS_SPLIT=.false.
+fi
+#
+if [ $IDEA = .true. ]; then
+#***************************************************************
+#                    N2 ,    H2O,     O3,        CLW,    O,      O2
+ export CPIlist=" 1039.645, 1846.0, 820.2391,    0.0, 1299.185, 918.0969"
+ export RIlist="  296.8034, 461.50, 173.2247,    0.0,  519.674, 259.837 "
+#***************************************************************
+ export NTRAC=5
+else
+#                   Dry ,    H2O,     O3,        CLW,    O,      O2
+export CPIlist=" 1004.6,   1846.0, 820.2391,    0.0"
+export RIlist="  286.05,   461.50, 173.2247,    0.0"
+
+fi
+#
+export NCP=cp
+export FTSFS=0.0
+export FAISS=0.0
+if [ $SLG = .true. ] ; then
+    export NTRAC=3
+    export FTSFS=90
+    export FAISS=99999
+fi
+#
+#  This script is NOT complete for running multiple ensemble members
+#
+ export ENS_NUM=1
+#
+#tasks=_TASKS_  
+ export PE1=_TASKS_  
+
+ export MEMBER_NAMES=_MEMBER_NAMES_
+
+c=1
+while [ $c -le $ENS_NUM ] ; do
+ eval export PE$c=\${PE$c:-0}
+ c=$((c+1))
+done
+#
+export QUILTING=_QUILT_
+export WRT_GROUP=_WRTGP_
+export WRTPE_PER_GROUP=_WTPG_
+export WRITE_DOPOST=_wrtdopost_
+export POST_GRIBVERSION=_postgrbvs_
+export GOCART_AER2POST=_aer2post_
+export liope=.false.
+if [[ $QUILTING = .true. ]] ; then export liope=.true. ; fi
+if [ $SLG = .true. ] ; then export liope=.true. ; fi
+#
+export NTHREADS=_THRDS_
+export MP_STDOUTMODE=ordered
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+export MP_COREFILE_FORMAT=lite 
+#
+#    Set up experiment and directory names
+#
+export expt=_RUNDIR_
+ 
+#
+export NSCDIR=/global/noscrub
+export TOPDIR=/global/save
+export DUMPDIR=/global/shared/dump
+# export MP_COREFILE_FORMAT=lite 
+export RUNDIR=${RUNDIR:-$expt}
+export SCRIPTS=${SCRIPTS:-$TOPDIR/wx23sm/gsm/scripts}
+
+export fcst_begin=${fcst_begin:-YES}
+export cold_sfc=${cold_sfc:-NO}
+export hybrid=${hybrid:-NO}
+#
+export NCP=${NCP:-/u/wx20mi/bin/ncp}
+#
+if [ $NEMSIO_IN = .true. ]; then
+  if [ $SCHEDULER = 'moab' ]; then
+    export nemsioget=${nemsioget}
+  elif [ $SCHEDULER = 'pbs' ]; then
+    export nemsioget=${nemsioget:-/scratch1/portfolios/NCEPDEV/nems/save/Jun.Wang/nems/util/nemsio_get}
+  elif [ $SCHEDULER = 'lsf' ] ; then
+    export nemsioget=${nemsioget:-/nwprod/ngac.v1.0.0/exec/nemsio_get}
+  fi
+else
+  export nemsioget=${nemsioget:-${EXECGLOBAL}/global_sighdr$XC}
+fi
+#
+#
+#    nhourb is the beginig hour.  If nhourb=0, then initial condition
+#    needs to be specified. ndays is the Length of #orecast in days
+#    begining from nhourb
+#
+export ndays=_NDAYS_
+if [[ ${fcst_begin} = YES ]] ; then
+ export nhourb=0
+else
+ if [[ -s $RUNDIR/grdr1 ]] ; then
+   export nhourb=`$nemsioget $RUNDIR/grdr1 nfhour`
+   export FHROT=${FHROT:-$nhourb}
+ else
+   nhourb=$((ndays*24))
+ fi
+fi
+#
+#
+export nhours=`expr $ndays \* 24`
+
+#
+# For two tracers
+export ntrc=3  ; export varid=21  ; export numcld=1
+#
+#
+export fmax=$nhours
+export fout=3  
+export fzer=6  
+export fcyc=0 
+export fdfi=_FDFI_ 
+#
+#    Forecast model : horizontal truncation  and vertical levels
+#                     ---------------------
+#
+export wave=${wave:-62}
+export lm=${lm:-64}
+if [ $IDEA = .true. ]; then
+  export lm=150;
+  export levr=90
+  export DELTIM=180
+fi
+export lsoil=${lsoil:-4}
+#
+export PASSIVE_TRACER=_TRACER_ 
+#
+export NTRAC=${NTRAC:-3}
+export NTOZ=${NTOZ:-2}
+export NTCW=${NTCW:-3}
+export NCLD=${NCLD:-1}
+export NMTVR=${NMTVR:-14}
+#
+#export nsout=${nsout:-0}
+export nsout=_NSOUT_
+export lsm=${lsm:-1}
+
+## IAER=0 (no aerosols); 11 (opac for sw/lw) and 22 (gocart for sw/lw)
+ export IAER=_IAER_
+#
+#   Control for post and time averaging  If "YES" then run
+#   -- Defaults to "NO" 
+#
+# export gfsio_in=.true.
+# export gfsio_out=.true.,
+if [ $SLG = .true. ] ; then
+   export gfsio_in=.false.
+   export gfsio_out=.false.
+   export out_virttemp=.false.
+fi
+#
+if [ $SLG = .true. ] ; then
+    export ZFLXTVD=.false.
+    export SHUFF_LATS_A=.false.
+    export SHUFF_LATS_R=.false.
+else
+    export ZFLXTVD=.true.
+    export SHUFF_LATS_A=.true.
+    export SHUFF_LATS_R=.true.
+fi
+#export DYNVARS="liope=.F."
+export DYNVARS=liope=$liope,nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,sigio_out=$SIGIO_OUT,zflxtvd=$ZFLXTVD,shuff_lats_a=$SHUFF_LATS_A,hdif_fac=1.0,hdif_fac2=1.0,ldfi_spect=$LDFI_SPECT
+#jw bkgd_vdif_s=1.0
+
+grid_aldata=_CP2_
+# export PHYVARS="liope=$liope,ras=$ras,zhao_mic=$zhao_mic,lsm=$lsm,\
+#             old_monin=$old_monin,sashal=$sashal,newsas=$newsas,\
+#             shal_cnv=$shal_cnv,shuff_lats_r=$shuff_lats_r,\
+#             ialb=$ialb,pre_rad=.false.,random_clds=$random_clds,\
+#             iovr_lw=1,iovr_sw=1,\
+#             ISOL=$ISOL, ICO2=$ICO2, IAER=$IAER,ictm=$ictm, nsout=$nsout,\
+#             ldiag3d=$ldiag3d, ncw=$ncw,crtrh=$crtrh,flgmin=$flgmin,\
+#             cnvgwd=.false.,ctei_rm=$ctei_rm,mstrat=$mstrat,ccnorm=$ccnorm,\
+#             mom4ice=.false.,NST_FCST=$NST_FCST,NST_SPINUP=$NST_SPINUP,\
+#             lgoc3d=.false.,trans_trac=.true.,cal_pre=.false.,\
+#             CCWF=$ccwf,dlqf=$dlqf,psautco=$psautco,prautco=$prautco,evpco=$evpco,\
+#             bkgd_vdif_m=$bkgd_vdif_m,bkgd_vdif_h=$bkgd_vdif_h,\
+#             bkgd_vdif_s=$bkgd_vdif_s,hdif_fac=$hdif_fac,grid_aldata=$grid_aldata"
+#export PHYVARS="liope=.F.,grid_aldata=$grid_aldata,NST_FCST=$NST_FCST,NST_SPINUP=$NST_SPINUP"
+export PHYVARS=liope=$liope,grid_aldata=$grid_aldata,ras=.false.,zhao_mic=.true.,lsm=1,old_monin=.false.,sashal=.true.,newsas=.true.,shal_cnv=.true.,shuff_lats_r=$SHUFF_LATS_R,ialb=0,pre_rad=.false.,random_clds=.false.,iovr_lw=1,iovr_sw=1,IEMS=$IEMS,ISOL=$ISOL,ICO2=$ICO2,IAER=$IAER,ictm=0,nsout=0,ldiag3d=.false.,sfcio_out=$SFCIO_OUT,ncw=20,120,crtrh=0.85,0.85,0.85,flgmin=0.200,0.300,cnvgwd=.false.,ctei_rm=,mstrat=.false.,ccnorm=.false.,mom4ice=.false.,A2OI_OUT=$A2OI_OUT,CPLFLX=$CPLFLX,NGRID_A2OI=$NGRID_A2OI,NST_FCST=0,NST_SPINUP=.false.,lgoc3d=.false.,trans_trac=.true.,cal_pre=.false.,bkgd_vdif_m=3.0,bkgd_vdif_h=1.0,bkgd_vdif_s=0.2,climate=$CLIMATE,psautco=4.0e-4,4.0e-4,prautco=1.0e-4,1.0e-4,evpco=2.0e-5,wminco=1.0e-5,1.0e-5,CCWF=1.0,1.0,dlqf=0.0,0.0,shal_cnv=.true.,nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,cdmbgwd=1.0,1.0,grid_aldata=.false.
+
+ export TRACERVARS="RI=$RIlist,CPI=$CPIlist,"
+#
+#export NGPTC=12
+export NGPTC=8
+if [ $SLG = .true. ] ; then
+    export NGPTC=15
+fi
+export NGPTC=${NGPTC:-$((wave/10))}
+export LEVR=${levr:-0}
+#
+#     Forecaset script and executable name
+#
+ srcdir=_PATHTR_
+ export FCSTSCRIPT=$srcdir/job/exglobal_fcst.sh.sms_nems
+ export FCSTEXEC=$srcdir/exe/NEMS.x
+#
+#
+# ***************************************************************
+#    Below here no change needed most of the time
+#    ____________________________________________
+#
+mkdir -p $RUNDIR
+cd $RUNDIR
+
+ export COMOUT=$RUNDIR
+#
+if [ $SCHEDULER = 'moab' ]; then
+   export FIXGLOBAL=${FIXGLOBAL}
+   export FCST_LAUNCHER=aprun
+elif [ $SCHEDULER = 'pbs' ]; then
+   source _PATHTR_/src/conf/modules.nems.Zeus
+   module list
+#  export FIXGLOBAL=${FIXGLOBAL:-/scratch2/portfolios/NCEPDEV/rstprod/nwprod/fix}
+   export FIXGLOBAL=${FIXGLOBAL:-/scratch2/portfolios/NCEPDEV/global/save/Shrinivas.Moorthi/para/fix/fix_am}
+   export OMP_NUM_THREADS=$NTHREADS
+   mpiexec=`which mpiexec_mpt`
+   if [ $NTHREADS -eq 1 ] ; then
+    export FCST_LAUNCHER="env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $mpiexec -n $PE1"
+   else
+    export FCST_LAUNCHER="env LD_LIBRARY_PATH=$LD_LIBRARY_PATH $mpiexec -np $PE1 omplace -nt $NTHREADS"
+   fi
+elif [ $SCHEDULER = 'lsf' ]; then
+   if [ $SLG = .true. ] ; then
+      export FIXGLOBAL=/nems/save/Weiyu.Yang/gfs.trunk.21242/data.for.eddy/fix_am
+   fi
+   export FIXGLOBAL=${FIXGLOBAL:-/global/noscrub/Shrinivas.Moorthi/para_new/para/fix/fix_am}
+   export FCST_LAUNCHER=mpirun.lsf
+fi
+#export FIX_RAD=/global/save/wx23hh/00wkgfs/fix/fix_rad
+ export FIX_RAD=${FIX_RAD:-$FIXGLOBAL}
+ export FIX_IDEA=${FIX_IDEA:-${RTPWD}/WAM_gh_l150}
+#export FIX_RAD=/global/save/wx23lu/NEMS/fix/fix_rad
+ export GOCARTDIR=/global/save/wx23lu/NEMS/fix
+ export GOCART_CLIM=$GOCARTDIR/gocart_clim
+ export GOCART_LUTS=$GOCARTDIR/gocart_luts
+#
+ export POSTGPDIR=$TOPDIR/wx23hh/00wkgfs/src/global_postgp.fd
+ export POSTGPEXEC=$POSTGPDIR/global_postgp
+ export POSTGPSH=/nwprod/ush/global_postgp.sh
+#
+ export LANDICE_OPT=1
+ export CLIMO_FIELDS_OPT=2
+#
+if [[ $wave -eq 62 ]] ; then
+  export LONF=192 ; export LATG=94 ; export LONR=192 ; export LATR=94
+  export im=$LONR ; export jm=$LATR ; export iop=144 ; export jop=73
+  if [[ $lm -eq 64 ]] ; then
+    export DELTIM=${DELTIM:-900}
+  fi
+  if [[ $lm -eq 150 ]] ; then
+    export DELTIM=${DELTIM:-180}
+  fi
+
+elif [[ $wave -eq 126 ]] ; then
+  export LONF=384 ; export LATG=190 ; export LONR=384 ; export LATR=190
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-600}
+
+elif [[ $wave -eq 170 ]] ; then
+  export LONF=512 ; export LATG=256 ; export LONR=512 ; export LATR=256
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-450}
+
+elif [[ $wave -eq 190 ]] ; then
+  export LONF=576 ; export LATG=288 ; export LONR=576 ; export LATR=288
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+
+elif [[ $wave -eq 254 ]] ; then
+  export LONF=768 ; export LATG=384 ; export LONR=768 ; export LATR=384
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+
+elif [[ $wave -eq 382 ]] ; then
+  export LONF=1152 ; export LATG=576 ; export LONR=1152 ; export LATR=576
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-180}
+
+elif [[ $wave -eq 574 ]] ; then
+#For Semi-Lagrangian test, WY.
+#-----------------------------
+if [ $SLG = .true. ] ; then
+  export LONF=1152 ; export LATG=576 ; export LONR=1152 ; export LATR=576
+  export DELTIM=${DELTIM:-600}
+else
+  export LONF=1760 ; export LATG=880 ; export LONR=1760 ; export LATR=880
+  export DELTIM=${DELTIM:-120}
+fi
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+
+elif [[ $wave -eq 852 ]] ; then
+  export LONF=2560 ; export LATG=1280 ; export LONR=2560 ; export LATR=1280
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-90}
+
+fi
+#
+# ------------------------ initial condition ----------------
+#
+  export JCAP=$wave
+  export LEVS=$lm
+  export LONB=$im
+  export LATB=$jm
+  export VERBOSE=YES
+
+#
+  export FHROT=00
+  if [ -f $RUNDIR/grdr1 -a -f $RUNDIR/grdr2 -a -f $RUNDIR/sigr1 -a -f $RUNDIR/sigr2 -a -f $RUNDIR/sfcr ]; then
+    export GRDI=$RUNDIR/grdr1
+    export GRDI2=$RUNDIR/grdr2
+    export SIGI=$RUNDIR/sigr1
+    export SIGI2=$RUNDIR/sigr2
+    export SFCI=$RUNDIR/sfcr
+    export FHINI=`$nemsioget $GRDI nfhour |grep -i "nfhour"|awk -F" " '{print $2}'`
+  else
+    export GRDI=$RUNDIR/gfsanl.$CDATE
+    export SIGI=$RUNDIR/siganl.$CDATE
+    export SFCI=$RUNDIR/sfcanl.$CDATE
+    export FHINI=00
+  fi
+#
+# ------------------------ post varables ----------------
+#
+if [[ $WRITE_DOPOST = '.true.' ]] then
+ if [[ $POST_GRIBVERSION = 'grib1' ]] ; then
+   if [ $SCHEDULER = 'loadleveler' ]; then
+     export CTLFILE=/nwprod/parm/gfs_cntrl.parm
+   elif [ $SCHEDULER = 'pbs' ]; then
+     export CTLFILE=_RTPWD_/data_POST/gfs_cntrl.parm
+   elif [ $SCHEDULER = 'lsf' ]; then
+     export CTLFILE=_RTPWD_/data_POST/gfs_cntrl.parm
+   fi
+   ln -sf $CTLFILE fort.14
+ elif [[ $POST_GRIBVERSION = 'grib2' ]] ; then
+   if [ $SCHEDULER = 'loadleveler' ]; then
+     export CTLFILE=/climate/noscrub/wx20wa/mygrib2/xml/post/postcntrl_gfs.xml
+   elif [ $SCHEDULER = 'pbs' ]; then
+     export CTLFILE=_RTPWD_/data_POST/postcntrl_gfs.xml
+   elif [ $SCHEDULER = 'lsf' ]; then
+     export CTLFILE=_RTPWD_/data_POST/postcntrl_gfs.xml
+   fi
+   ln -sf $CTLFILE postcntrl.xml
+ fi
+ ln -sf griddef.out fort.110
+ if [ $SCHEDULER = 'loadleveler' ]; then
+   cp /nwprod/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+ elif [ $SCHEDULER = 'pbs' ]; then
+  cp _RTPWD_/data_POST/eta_micro_lookup.dat ./eta_micro_lookup.dat
+ elif [ $SCHEDULER = 'lsf' ]; then
+   cp /nwprod/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+ fi
+
+fi
+
+#
+# ---------------------------------------- fcst ----------------------
+#
+if [[ $nhourb -lt $nhours ]] ; then
+
+  export FNTSFA=
+  export FNACNA=
+#
+  export FHOUT=$fout
+  export FHZER=$fzer
+  export FHCYC=$fcyc
+  export FHDFI=$fdfi
+  export FHLWR=${FHLWR:-3600}
+  export FHSWR=${FHSWR:-3600}
+  export FHMAX=$nhours
+  export FHRES=${FHRES:-$FHMAX}
+  export FHROT=${FHROT:-0}
+#
+  $FCSTSCRIPT || exit
+fi
+#

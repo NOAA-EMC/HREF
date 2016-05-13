@@ -1,0 +1,7 @@
+check_esmf_pet.o : check_esmf_pet.F90  
+ffsync.o : ffsync.F90  
+idea_composition.o : idea_composition.f  
+module_CONSTANTS.o : module_CONSTANTS.F90 module_INCLUDE.o  
+module_CPLFIELDS.o : module_CPLFIELDS.F90  ../../ESMFVersionDefine.h
+module_ERR_MSG.o : module_ERR_MSG.F90  ../../ESMFVersionDefine.h
+module_INCLUDE.o : module_INCLUDE.F90  

@@ -1,0 +1,56 @@
+#BSUB -J %E%hiresw_%MODEL%_%DOMAIN%_gempak_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_gempak_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_gempak_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -q %QUEUE%_shared
+#BSUB -M 500
+#BSUB -cwd /tmp
+#BSUB -n 1
+#BSUB -R span[ptile=1]
+##BSUB -W 01:30
+#BSUB -W 02:30
+#BSUB -P %PROJ%
+
+%include <head.h>
+%include <envir-xc40.h>
+
+set -x
+
+export job=hiresw_%MODEL%_%DOMAIN%_gempak_%CYC%
+export cyc=%CYC%
+export NEST="%DOMAIN%"
+export MODEL="%MODEL%"
+export MEMBER="ctl"
+
+module load gempak
+export IOBUF_PARAMS='hiresw_*:size=1048576:count=4:vbuffer_count=4096:prefetch=1:verbose'
+export DVS_DATASYNC=off
+export DVS_CLOSESYNC=off
+
+VERSION_FILE=$NWROOT/versions/hiresw.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ecflow_client --msg="***JOB ${ECFNAME} ERROR: Version File $VERSION_FILE does not exist"
+  ecflow_client --abort
+  exit
+fi
+
+$NWROOT/hiresw.${hiresw_ver}/jobs/JHIRESW_GEMPAK
+
+%include <tail.h>
+%manual
+######################################################################
+#
+#  PURPOSE:
+#
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

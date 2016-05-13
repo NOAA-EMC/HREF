@@ -1,0 +1,30 @@
+###############################################################################
+#
+#  WAM enthalpy on general hybrid 2loop 150levels
+#  32 compute tasks / 1 thread ,no quilting
+#
+###############################################################################
+
+export TEST_DESCR="WAM enthalpy on general hybrid 2loop 150levels,32 compute tasks / 1 thread ,no quilting"
+
+export CNTL_DIR=WAM_gh_l150
+export LIST_FILES="sigf00 sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf00 sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf00 flxf03 flxf06 flxf12 flxf24 flxf48"
+
+export_gsm
+export CDATE=2011092300
+export WLCLK=90
+export TASKS=32
+export PE1=32
+export THRD=1
+export QUILT=.false.
+export FDFI=3
+export CP2=.false.
+export IDEA=.true.
+export IDVC=3
+export THERMODYN_ID=3
+export SFCPRESS_ID=2
+export SPECTRALLOOP=2
+
+RUN_SCRIPT=rt_gfs.sh
