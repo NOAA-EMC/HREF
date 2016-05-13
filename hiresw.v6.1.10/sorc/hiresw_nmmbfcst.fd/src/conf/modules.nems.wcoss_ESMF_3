@@ -1,0 +1,2 @@
+module purge
+module load EnvVars/1.0.0 ibmpe lsf ics/14.0.1 NetCDF ESMF/310rp5

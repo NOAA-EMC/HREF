@@ -1,0 +1,21 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_metgrid.out_hi_arw
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_metgrid.err_hi_arw
+#BSUB -q "dev"
+#BSUB -W 0:02
+#BSUB -a poe
+#BSUB -n 1
+
+module load ics
+module load ibmpe
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+cd /meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd
+
+ln -sf metgrid/METGRID.TBL.ARW METGRID.TBL
+
+mpirun.lsf metgrid.exe >& test_metgrid.log
+
+rm met*.int

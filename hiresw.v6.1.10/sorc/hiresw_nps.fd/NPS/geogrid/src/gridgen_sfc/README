@@ -1,0 +1,14 @@
+This is the code (with some modification to make it callable from geogrid) from:
+
+[Dusan.Jovic@t14a1 gridgen_sfc_grib2]$ svn info
+Path: .
+URL: https://svnemc.ncep.noaa.gov/projects/land_utilities/branches/gridgen_sfc/grib2
+Repository Root: https://svnemc.ncep.noaa.gov/projects
+Repository UUID: 281fb692-3a18-0410-826d-9e847983f365
+Revision: 24506
+Node Kind: directory
+Schedule: normal
+Last Changed Author: george.gayno@noaa.gov
+Last Changed Rev: 23437
+Last Changed Date: 2012-12-14 16:13:53 +0000 (Fri, 14 Dec 2012)
+

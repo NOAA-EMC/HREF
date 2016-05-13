@@ -1,0 +1,25 @@
+#!/bin/sh
+
+#PBS -o out
+#PBS -e err
+#PBS -N _JBNME_
+#PBS -A _ACCNR_
+#PBS -l procs=_TASKS_
+#PBS -l walltime=00:_WLCLK_:00
+
+export MPI_GROUP_MAX=96
+
+export ESMF_RUNTIME_COMPLIANCECHECK=ON:depth=4
+
+source _SRCD_/src/conf/modules.nems
+module list
+
+cd $PBS_O_WORKDIR
+
+echo "Model started:  " `date`
+
+mpiexec_mpt -prefix " %g:" -np $PBS_NP ./NEMS.x
+
+echo "Model ended:    " `date`
+
+exit
