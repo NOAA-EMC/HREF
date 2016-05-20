@@ -117,6 +117,7 @@ C  raw data
 C mean
       real,allocatable,dimension(:,:) :: vrbl_mn                    !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_pm                 !jf, maxmlvl
+      real,allocatable,dimension(:,:) :: vrbl_mn_blend              
       real,allocatable,dimension(:,:) :: derv_mn                    !jf, maxmlvl
 
 C spread
@@ -158,7 +159,7 @@ cc%%%%%%%  8. To be added if necessary ...........................
 C original                                                                                                                                           
        dimension kgds(25)
        character*20 mnout,pmin,pmax,pmod,pp10,pp25,pp50,pp75,pp90
-       character*20 spout
+       character*20 spout,pmmnout,avgout
        character*20 prout
        character*40 files(50),prcps(50)
      
@@ -396,9 +397,14 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
         imean=201
         isprd=202
         iprob=203
+        ipmmn=204
+        iavg=205
+
 
       mnout=trim(eps)//'.mean.t'//cycle(ihr+1)//'z'//'.f'//cfhr
       spout=trim(eps)//'.sprd.t'//cycle(ihr+1)//'z'//'.f'//cfhr
+      pmmnout=trim(eps)//'.pmmn.t'//cycle(ihr+1)//'z'//'.f'//cfhr
+      avgout=trim(eps)//'.avrg.t'//cycle(ihr+1)//'z'//'.f'//cfhr
       prout=trim(eps)//'.prob.t'//cycle(ihr+1)//'z'//'.f'//cfhr
 
       call baopen (imean, mnout, iret)
@@ -407,6 +413,10 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       if (iret.ne.0) write(*,*) 'open ', spout, 'err=', iret
       call baopen (iprob, prout, iret)
       if (iret.ne.0) write(*,*) 'open ', prout, 'err=', iret
+      call baopen (ipmmn, pmmnout, iret)
+      if (iret.ne.0) write(*,*) 'open ', pmmnout, 'err=', iret
+      call baopen (iavg, avgout, iret)
+      if (iret.ne.0) write(*,*) 'open ', pmmnout, 'err=', iret
 
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -439,6 +449,7 @@ c  Loop  1-0: Allocate nesessary arrays
            Lm=max(1,Mlvl(nv))                !Keep at least one vrbl_mn to pass it into packGB2 
            allocate (vrbl_mn(jf,Lm))         !in case Mlvl(nv)=0
            allocate (vrbl_mn_pm(jf,Lm))         !in case Mlvl(nv)=0
+           allocate (vrbl_mn_blend(jf,Lm))         !in case Mlvl(nv)=0
          end if
         if (.NOT.allocated(vrbl_sp)) then
            Lm=max(1,Mlvl(nv))
@@ -752,6 +763,7 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
 
         write(6,*) 'minval(vrbl_mn_pm): ', minval(vrbl_mn_pm)
         write(6,*) 'maxval(vrbl_mn_pm): ', maxval(vrbl_mn_pm)
+                vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
 
         endif
 
@@ -855,9 +867,18 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 
         if (vname(nv).eq.'AP3h' .or. vname(nv) .eq. 'REFD') then
-      call packGB2_mean(imean,isprd,vrbl_mn_pm,vrbl_sp,   !jpd12 is determined inside 
+      call packGB2_mean(ipmmn,isprd,vrbl_mn_pm,vrbl_sp,   !jpd12 is determined inside 
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)           !gfld is used to send in other info 
+
+      call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
+     +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+     +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)           !gfld is used to send in other info 
+
+          call packGB2_mean(iavg,isprd,vrbl_mn_blend,vrbl_sp,
+     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
+
 
         else
       call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
@@ -882,6 +903,7 @@ c Loop 1-4: Deallocation
         deallocate (rawdata_pr)
         deallocate (vrbl_mn)
         deallocate (vrbl_mn_pm)
+        deallocate (vrbl_mn_blend)
         deallocate (vrbl_sp)
         deallocate (vrbl_pr)
 
@@ -1212,6 +1234,8 @@ c Loop 3-2: Packing
        call baclose(imean,ierr)
        call baclose(isprd,ierr)
        call baclose(iprob,ierr)
+       call baclose(ipmmn,ierr)
+       call baclose(iavg,ierr)
 
        if (nmxp.gt.0) then
          call baclose(301,ierr)

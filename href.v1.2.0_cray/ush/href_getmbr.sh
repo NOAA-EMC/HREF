@@ -135,13 +135,17 @@ echo working things with fcheck as $fcheck
 
 
         fcheckloc=$fcheck
-        while [ $fcheckloc -le $ff ]
+
+        while [ $fcheckloc -le $ff  ]
         do
+
+        loop=0
         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 3
+          let loop=loop+1
         done
         let fcheckloc=fcheckloc+3
 typeset -Z2 fcheckloc
@@ -167,11 +171,13 @@ typeset -Z2 fcheckloc
         fcheckloc=$fcheck
         while [ $fcheckloc -le $ff ]
         do
+        loop=0
         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 3
+          let loop=loop+1
         done
         let fcheckloc=fcheckloc+3
 typeset -Z2 fcheckloc
@@ -197,10 +203,12 @@ typeset -Z2 fcheckloc
         while [ $fcheckloc -le $ff ]
         do
         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
-        while [ ! -e    $DATA/href.m${m}.t${cyc}z.f${fcheckloc} ]
+	loop=0
+        while [ ! -e    $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 3
+          let loop=loop+1
         done
         let fcheckloc=fcheckloc+3
 typeset -Z2 fcheckloc

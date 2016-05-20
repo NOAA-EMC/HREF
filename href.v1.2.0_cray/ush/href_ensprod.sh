@@ -143,6 +143,10 @@ if [ $SENDCOM = YES ]; then
  $WGRIB2 $COMOUT/href.t${cyc}z.prob.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.prob.f$ff.grib2.idx
  cp $DATA/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.sprd.f$ff.grib2
  $WGRIB2 $COMOUT/href.t${cyc}z.sprd.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.sprd.f$ff.grib2.idx
+ cp $DATA/$ff/href.pmmn.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.pmmn.f$ff.grib2
+ $WGRIB2 $COMOUT/href.t${cyc}z.pmmn.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.pmmn.f$ff.grib2.idx
+ cp $DATA/$ff/href.avrg.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.avrg.f$ff.grib2
+ $WGRIB2 $COMOUT/href.t${cyc}z.avrg.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.avrg.f$ff.grib2.idx
 fi
 if [ $SENDDBN = YES ]; then
   $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.mean.f$ff.grib2
