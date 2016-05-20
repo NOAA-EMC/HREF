@@ -23,7 +23,7 @@ AP3h   1 8     1 M1  0  P1  0   > T6 0.25 6.35 12.7 25.4 50.8 76.2
 AP6h   1 8     1 M0     P1  0   > T6 0.254 6.354 12.704 25.404 50.804 76.204
 AP24h  1 8     1 M0     P1  0   > T7 2.54 6.352 12.702 25.402 50.802 76.202 127.0
 
-   9       special derived variables, each  of which, needs code to process specially
+   8       special derived variables, each  of which, needs code to process specially
 PTYP  1 19     1 M0    P1  0  = T1 1.0
 WIND  2 1    103 M0    P1 80   >  T3 10.3 15.4 20.6
 WIND  2 1    103 M0    P1 10   >  T3 10.3 15.4 20.6
@@ -31,7 +31,6 @@ WIND  2 1    100 M1 850  P3 850 500 250  > T5 10.3 20.6 30.9 41.2 51.5
 FLTR  19 205   1 M0    P1  0  = T4 1.0 2.0 3.0 4.0
 FIRW  4 2      1 M0    P1  0  - T4 2.0 5.0 6.0 7.0
 CEIL  3 5    215 M1  0 P1  0 < T6 305 610 915 1372 1830 3050
-LLWS  2 192  1   M1  0 P1 0 > T1 20.0
 AVRW  2 1    108 M0    P2 850 300 < T1 5
   0        No mxp computation for NSSE  
 
