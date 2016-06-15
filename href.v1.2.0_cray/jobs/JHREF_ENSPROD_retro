@@ -95,12 +95,17 @@ export PDYm1=${DATEm1}
 
 if [ "$RUN_ENVIR" != nco ] ; then
   export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}
+  export COMOUTPERM=${MYCOMROOTPERM}/${NET}/${envir}/${RUN}.${PDY}
 else
   export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 fi
 
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT
+fi
+
+if [ ! -d $COMOUTPERM ] ; then 
+ mkdir -p $COMOUTPERM
 fi
 
 #######################################################
