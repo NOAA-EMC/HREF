@@ -22,8 +22,6 @@ echo at start of launch job, what is env
 
 env
 
-
-
 export OMP_NUM_THREADS=1
 export MP_TASK_AFFINITY=core:1
 export MP_MPILIB=mpich2
@@ -35,6 +33,7 @@ module load prod_envir
 export COMROOT=/gpfs/hps/nco/ops/com
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
 
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
 export COMINnam=${COMROOTp1}/nam/prod/nam

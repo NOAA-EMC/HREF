@@ -128,8 +128,15 @@ echo working things with fcheck as $fcheck
       echo href.m${m}.t${cyc}z.f${ff} 
 
       if [ ${file[$m]} = 'namnest' -a $fcst -le 60 ] ; then     
+
+        if [ -e ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 ]
+        then
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        else
+        ln -sf ${COMINnamb}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINnamb}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+	fi
 
         echo namnest $m $ff
 
@@ -159,11 +166,15 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = 'conusarw' -a $fcst -le 48 ] ; then
 	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
         then
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        elif [ -e ${COMINhireswb}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 ]
+        then
+         ln -sf ${COMINhireswb}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+         ln -sf ${COMINhireswb}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         else
-        ln -sf ${COMINhiresw}.${day[$m]}/conusarw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/conusarw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         ln -sf ${COMINhiresw}.${day[$m]}/conusarw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+         ln -sf ${COMINhiresw}.${day[$m]}/conusarw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 	fi
 
         echo conusarw $m $ff
@@ -192,6 +203,10 @@ typeset -Z2 fcheckloc
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        elif [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 ]
+        then
+        ln -sf ${COMINhireswb}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhireswb}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.conus.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         else
         ln -sf ${COMINhiresw}.${day[$m]}/conusnmmb.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/conusnmmb.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
