@@ -31,7 +31,7 @@ stream=${5}
 
 cd $DATA/run_ungrib_${stream}/
 
-cp $PARMhiresw/hiresw_Vtable.GFS Vtable
+cp $PARMhiresw/hiresw_Vtable.${GRIBSRC} Vtable
 
 if [ $MODEL != "nmmb" ]
 then
