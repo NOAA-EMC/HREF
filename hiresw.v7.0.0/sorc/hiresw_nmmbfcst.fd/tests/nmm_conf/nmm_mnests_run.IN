@@ -1,0 +1,58 @@
+#!/bin/ksh
+
+RUNDIR=_RUND_
+SRCDIR=_SRCD_
+
+mkdir -p $RUNDIR
+cd $RUNDIR
+rm -rf $RUNDIR/*
+
+cp _RTPWD_/NMMB_mvg_nests/input_domain_01_nemsio  input_domain_01_nemsio
+cp _RTPWD_/NMMB_mvg_nests/input_domain_02_nemsio  input_domain_02_nemsio
+cp _RTPWD_/NMMB_mvg_nests/input_domain_03_nemsio  input_domain_03_nemsio
+cp _RTPWD_/NMMB_mvg_nests/input_domain_04_nemsio  input_domain_04_nemsio
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_01_bin_0012h_00m_00.00s  restart_file_01
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_01_nio_0012h_00m_00.00s  restart_file_01_nemsio
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_02_bin_0012h_00m_00.00s  restart_file_02
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_02_nio_0012h_00m_00.00s  restart_file_02_nemsio
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_03_bin_0012h_00m_00.00s  restart_file_03
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_03_nio_0012h_00m_00.00s  restart_file_03_nemsio
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_04_bin_0012h_00m_00.00s  restart_file_04
+cp _RTPWD_/NMMB_mvg_nests/nmmb_rst_04_nio_0012h_00m_00.00s  restart_file_04_nemsio
+
+cp _RTPWD_/NMMB_mvg_nests/boco.* .
+cp _RTPWD_/data/* .
+cp _RTPWD_/NMMB_mvg_nests/GWD_bin_* .
+cp _RTPWD_/NMMB_mvg_nests/*_3.nc .
+cp _RTPWD_/NMMB_mvg_nests/*_9.nc .
+cp IGBP_VEGPARM.TBL VEGPARM.TBL
+cp IGBP_LANDUSE.TBL LANDUSE.TBL
+cp ETAMPNEW_DATA.expanded_rain ETAMPNEW_DATA
+
+cp $SRCDIR/tests/atmos.configure_nmm atmos.configure
+cp $SRCDIR/tests/configure_file_0* .
+cp configure_file_01 model_configure
+
+ln -sf global_o3prdlos.f77 fort.28
+ln -sf global_o3clim.txt fort.48
+
+cp $SRCDIR/tests/solver_state.txt .
+cp $SRCDIR/tests/nests.txt .
+if [ $TS = true ]; then
+  cp $SRCDIR/tests/ts_locations.nml .
+fi
+
+cp $SRCDIR/exe/NEMS.x .
+
+if [ $SCHEDULER = 'moab' ]; then
+  cp $SRCDIR/tests/nmm_msub .
+  msub nmm_msub > /dev/null
+elif [ $SCHEDULER = 'pbs' ]; then
+  cp $SRCDIR/tests/nmm_qsub .
+  qsub nmm_qsub > /dev/null
+elif [ $SCHEDULER = 'lsf' ]; then
+  cp $SRCDIR/tests/nmm_bsub .
+  bsub < nmm_bsub > /dev/null 2>&1
+fi
+
+exit

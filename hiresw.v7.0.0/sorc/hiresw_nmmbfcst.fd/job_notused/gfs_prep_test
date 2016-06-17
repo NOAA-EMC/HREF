@@ -1,0 +1,230 @@
+#!/bin/ksh
+#
+set -x
+#
+ export CDATE=2010010100
+
+# -------------------------------------------------------------
+# SFCPRESS_ID=0 or 1 for ln(psfc), 2 for psfc
+#  export SFCPRESS_ID=2
+# THERMODYN_ID=3 for enthalphy, 0 or 1 for virtual T, 2 for T
+ export THERMODYN_ID=3
+# export hybrid=NO
+# export GEN_COORD_HYBRID=YES
+ export hybrid=YES
+ export GEN_COORD_HYBRID=NO 
+ export SFCPRESS_ID=2
+ export THERMODYN_ID=0
+#***************************************************************
+#                    N2 ,    H2O,     O3,        CLW,    O,      O2
+#export RIlist="  296.8034, 461.50, 173.2247,    0.0,  519.674, 259.837 "
+#export CPIlist=" 1039.645, 1846.0, 820.2391,    0.0, 1299.185, 918.0969"
+#***************************************************************
+#                   Dry ,    H2O,     O3,        CLW,    O,      O2
+export CPIlist=" 1004.6,   1846.0, 820.2391,    0.0"
+export RIlist="  286.05,   461.50, 173.2247,    0.0"
+#***************************************************************
+#
+#    Set up horizontal and vertical resolution ; default will be T6264
+#
+# export wave=188 ; export lm=64 ; export lsoil=4
+ export wave=62  ;  export lm=64 ; export lsoil=4
+#
+export NCP=cp
+export FTSFS=0.0
+export FAISS=0.0
+#
+#  This script is NOT complete for running multiple ensemble members
+#
+ export ENS_NUM=1
+#
+ tasks=1 ; export PE1=1 
+#
+export MP_STDOUTMODE=ordered
+export MP_SHARED_MEMORY=yes
+export MEMORY_AFFINITY=MCM
+##export BIND_TASKS=yes
+export NTHREADS=1
+export XLSMPOPTS="parthds=$NTHREADS:spins=0:yields=0:stack=512000000"
+export SPINLOOPTIME=500
+export YIELDLOOPTIME=500
+export AIXTHREAD_SCOPE=S
+export MALLOCMULTIHEAP=true
+#
+#
+#    Set up experiment and directory names
+#
+ export expt=gfs.1
+#
+ export NSCDIR=/global/noscrub
+ export TOPDIR=/global/save
+ export DUMPDIR=/global/shared/dump
+ export MP_COREFILE_FORMAT=lite 
+ export RUNDIR=${RUNDIR:-/ptmp/${USER}/$expt}
+ export SCRIPTS=${SCRIPTS:-$TOPDIR/wx23sm/gsm/scripts}
+
+ export cold_sfc=${cold_sfc:-NO}
+ export hybrid=${hybrid:-NO}
+#
+export NCP=${NCP:-/u/wx20mi/bin/ncp}
+#
+#
+# For two tracers
+  export ntrc=3  ; export varid=21  ; export numcld=1
+#
+  export change_res=YES
+#
+  export ic_type=prx
+#
+#    Forecast model : horizontal truncation  and vertical levels
+#
+export wave=${wave:-92}
+export lm=${lm:-64}
+export lsoil=${lsoil:-4}
+#
+export NTRAC=${NTRAC:-3}
+export NTOZ=${NTOZ:-2}
+export NTCW=${NTCW:-3}
+export NCLD=${NCLD:-1}
+export NMTVR=${NMTVR:-14}
+#
+export lsm=${lsm:-1}
+#
+export R=${wave}${lm}
+echo $R
+if [ $hybrid = YES ] ; then
+ export SIGLEVEL=$TOPDIR/wx23sm/2jif/f2006/fix/global_hyblev.l$lm.txt
+elif [ $GEN_COORD_HYBRID = YES ] ; then
+# -- sigma-theta-pressure --
+# Apercent=${Apercent:-010}
+# ---- sigma-pressure ------
+  Apercent=${Apercent:-100}
+# ---- sigma-theta ---------
+# Apercent=${Apercent:-000}
+  if [ $lm -eq 64 ]; then
+  export SIGLEVEL=$TOPDIR/wx23hh/00wkgfs/fix/global_hyblev3.ipa$Apercent.txt
+  else
+  export SIGLEVEL=$TOPDIR/wx23sm/2jif/f2006/fix/global_hyblev3.l$lm.txt
+  fi
+fi
+#
+export IDVM=1 ; export IDSL=1
+if [ $hybrid = YES ] ; then
+ export IDVC=2
+ export nvcoord=2 ; export ivssfc=200509
+elif [ $GEN_COORD_HYBRID = YES ] ; then
+ export IDVC=3 ; export IDSL=2 ; export ivssfc=200509
+ export IDVM=$THERMODYN_ID$SFCPRESS_ID
+ export ivssig=200509 ; export nvcoord=3 ; export LATCH=48
+else
+ export IDVC=1 ; export ivssfc=200509
+fi
+#
+# ***************************************************************
+#    Below here no change needed most of the time
+#    ____________________________________________
+#
+mkdir -p $RUNDIR
+cd $RUNDIR
+export COMOUT=$RUNDIR
+#
+export FIXGLOBAL=/nwprod/fix
+#
+export kop=26
+if [[ $lm -eq 64 ]] ; then
+  export kop=46
+fi
+#
+# export CHGRESDIR=$TOPDIR/wx23hh/00wkgfs/src/global_chgres-moorthi.fd
+# export CHGRESEXEC=$CHGRESDIR/global_chgres
+# export CHGRESSH=$TOPDIR/wx23hh/00wkgfs/ush/global_chgres-moorthi.sh
+ export CHGRESEXEC=/climate/save/wx20wa/gfsio/chgres_test3/global_chgres
+ export CHGRESSH=/climate/save/wx20wa/gfsio/chgres_nems_test/test/global_chgres_opn.sh
+#
+export LANDICE_OPT=2
+export CLIMO_FIELDS_OPT=2
+#
+# ----------------- determine resolution related ----------------------
+#
+if [[ $wave -eq 62 ]] ; then
+  export LONF=192 ; export LATG=94 ; export LONR=192 ; export LATR=94
+  export im=$LONR ; export jm=$LATR ; export iop=144 ; export jop=73
+  if [[ $lm -eq 64 ]] ; then
+    export DELTIM=${DELTIM:-900}
+  fi
+  if [[ $lm -eq 150 ]] ; then
+    export DELTIM=${DELTIM:-180}
+  fi
+  export DELTIM=${DELTIM:-1200}
+elif [[ $wave -eq 126 ]] ; then
+  export LONF=384 ; export LATG=190 ; export LONR=384 ; export LATR=190
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-600}
+elif [[ $wave -eq 170 ]] ; then
+  export LONF=512 ; export LATG=256 ; export LONR=512 ; export LATR=256
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-450}
+elif [[ $wave -eq 190 ]] ; then
+  export LONF=576 ; export LATG=288 ; export LONR=576 ; export LATR=288
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+elif [[ $wave -eq 254 ]] ; then
+  export LONF=768 ; export LATG=384 ; export LONR=768 ; export LATR=384
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+elif [[ $wave -eq 382 ]] ; then
+  export LONF=1152 ; export LATG=576 ; export LONR=1152 ; export LATR=576
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-180}
+elif [[ $wave -eq 510 ]] ; then
+  export LONF=1536 ; export LATG=766 ; export LONR=1536 ; export LATR=766
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-120}
+  export OROGRAPHY=$TOPDIR/wx23ys/fix.all/global_orography.t${wave}.grb
+  export MTNVAR=$TOPDIR/wx23my/fix.all/global_mtnvar.t${wave}.f77
+fi
+#
+# ------------------ initial data ---------------------------
+#
+  CDUMP=gfs
+# For parallel or other initial conditions
+  if [[ ${ic_type} = prx ]] ; then
+    export datic=$DUMPDIR/$CDATE/$CDUMP
+    export sig_fname=siganl.$CDUMP.$CDATE
+    export sfc_fname=sfcanl.$CDUMP.$CDATE
+  fi
+#
+# ----------------- change resolution or not ----------------
+#
+export JCAP=$wave
+export LEVS=$lm
+export LONB=$im
+export LATB=$jm
+export VERBOSE=YES
+#
+
+  export SIGINP=$datic/${sig_fname}
+  export SFCINP=$datic/${sfc_fname}
+# export SFCINP=
+#
+  export GFSOUT=$RUNDIR/gfsanl.$CDATE
+  export SIGOUT=$RUNDIR/siganl.$CDATE
+  export SFCOUT=$RUNDIR/sfcout.$CDATE
+  export SFNOUT=$RUNDIR/sfcanl.$CDATE
+#
+  echo ${change_res}
+  if [[ ${change_res} = YES ]] ; then
+    export CHGRESVARS="ntrac=$ntrc,idvt=$varid,ncldt=$numcld,idvc=$IDVC,IVSSIG=$ivssig,NVCOORD=$nvcoord,IVSSFC=$ivssfc,idvm=$IDVM,idsl=$IDSL,OUTTYP=1,"
+    export SIGLEVEL=${SIGLEVEL:-/nwprod/fix/global_siglevel.l$lm.txt}
+    export LONSPERLAT=$TOPDIR/wx20mi/newres/global_lonsperlat.t$JCAP.txt
+    export CHGRESSH=${CHGRESSH:-/nwprod/ush/global_chgres.sh}
+    export CHGRESVARS=$CHGRESVARS"RI=$RIlist,CPI=$CPIlist"
+    $CHGRESSH
+  else
+    ${NCP:-cp} $SIGINP $SIGOUT
+    ${NCP:-cp} $SFCINP $SFCOUT
+  fi
+  export SIGI=$SIGOUT
+  export GFSI=$GFSOUT
+  export SFCI=$SFNOUT
+

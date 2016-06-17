@@ -1,0 +1,130 @@
+
+===========================================================
+ National Environmental Modeling System (NEMS) Version 4.0
+===========================================================
+
+ -Employs ESMF superstructure & utilities
+ -Separate dynamics, physics, and coupler grid components & import/export states
+ -Digital filtering capabilities added
+ -Adiabatic (dynamics only) simulation capability
+ -Enhanced postprocessing capability
+
+
+=====================
+ Directory Structure
+=====================
+
+exe:  NEMS and makedepf90 executables
+
+inc:  KIND types and some #defines for the GFS
+
+job:  Examples of loadleveler runscripts;
+
+   -- regression_tests: The NEMS regression tests 
+
+src:  The Main program for NEMS.
+      The NEMS component code and its internal state.
+      The EARTH component code and its internal state.
+
+   -- atmos
+      - The ATM component code and its internal state.
+
+      - gfs
+	- All files directly related to the GFS.
+
+      - nmm
+	- All files directly related to the NMM-B.
+
+      - fim
+        - All files directly related to the FIM.
+
+      - gen
+        - All files directly related to the GEN.
+
+      - phys
+        - All physics science routines (nothing core-specific and no ESMF)
+          [Currently holds only NMM-B routines.  GFS routines under /gfs/phys.]
+
+      - share
+        - Assorted source shared by all model cores.
+
+      - ENS_Cpl
+        - The Ensemble coupler directory.
+
+      - post
+        - The post directory, only contains subroutines to conenct NEMS and POST, no unified post source code included 
+
+   -- chem 
+      - gocart
+        - The GOCART source files.
+
+   -- conf 
+      - Various compile specifications.
+
+util: ESMF source codes.
+      makedepf90-2.8.8: Source code for the makedepf90 executable used to create the "depend" text file
+                        which determines dependencies between modules. 
+
+
+=====================
+ Configure and Build
+=====================
+
+To compile and load the model(s):
+
+ (1) Go into /src .
+
+ (2) Set special compile options in the appropiate configure file in /conf .
+
+ (3) Based on which version of the ESMF library will be used, 
+     run "esmf_version ESMF_Version_Number", where:
+          ESMF_Version_Number = 3,  use ESMF 3.1.0rp2 library 
+          ESMF_Version_Number = 4,  use ESMF 4.0.0rp2 library
+          ESMF_Version_Number = 5,  use ESMF 5.1.0    library
+          ESMF_Version_Number = 5.2,use ESMF 5.2.0r_beta_snapshot_07 library
+
+ (4) In /src execute one of the following commands indicating which cores are to be compiled:
+       gmake nmm                          --- for NMM core only
+       gmake gfs                          --- for GFS core only - without GOCART
+       gmake gfs GOCART_MODE=full         --- for GFS core only - with GOCART
+       gmake nmm_gfs                      --- for both NMM and GFS core - without GOCART
+       gmake nmm_gfs GOCART_MODE=full     --- for both NMM and GFS core - with GOCART
+       gmake fim                          --- for FIM core only
+       gmake fim_gfs                      --- for both FIM and GFS core only - without GOCART
+       gmake fim_gfs GOCART_MODE=full     --- for both FIM and GFS core only - with GOCART
+       gmake gen                          --- for GEN core only
+       gmake gen_nmm_gfs GOCART_MODE=full --- for GEN, NMM and GFS cores - with GOCART
+       gmake nmm_post                     --- for NMM core, run with post on quilt
+       gmake gfs_post                     --- for GFS core, run with post on quilt
+       gmake nmm_gfs_gen_post GOCART_MODE=full --- for GEN, NMM and GFS cores - with post
+
+ (5) The executable NEMS.x will appear in /exe .
+
+
+===========
+ Execution
+===========
+
+ Once an executable is created, one may go about running NEMS by merely using one's own loadleveler submission script and accessing:
+
+ trunk/exe/NEMS.x  
+
+ Sample loadleveler submission scripts are provided in the directory:
+
+ trunk/job
+
+ These may be used as templates from which user-specific submission scripts can be based. These include:
+
+ trunk/job/runglobal_nmm - global nmmb experiment
+ trunk/job/runregional_nmm - regional nmmb experiment 
+ trunk/job/gfs_prep_test - gfs prep
+ trunk/job/gfs_run_test - gfs experiment
+ trunk/job/gen_run_test - gen experiment
+
+ The associated configure files which are read by this scripts are included as well:
+
+ trunk/job/configfile_global_nmm - global nmmb experiment configure file
+ trunk/job/configfile_regional_nmm - regional nmmb experiment configure file
+ trunk/job/exglobal_fcst.sh.sms_nems - gfs experiment configure file
+ trunk/job/gen_fcst.sh.sms_nems - gen experiment job script file.
+

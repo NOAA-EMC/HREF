@@ -1,0 +1,610 @@
+module process_domain_module
+
+   contains
+
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! Name: process_domain
+   !
+   ! Purpose:
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   subroutine process_domain(n, extra_row, extra_col)
+   
+      use date_pack
+      use gridinfo_module
+      use module_data
+      use assorted_definitions
+      use ingest_metgrid
+      use vinterp_routines
+      use boundary
+      USE output_nemsinit
+
+!      use interp_option_module
+!      use misc_definitions_module
+!      use module_debug
+!      use storage_module
+   
+      implicit none
+   
+      ! Arguments
+      integer, intent(in) :: n
+      logical, intent(in) :: extra_row, extra_col
+   
+      ! Local variables
+      integer :: num_metgrid_levels, ibogus
+      character(LEN=90):: filename
+
+      integer :: i, t, dyn_opt,j, &
+                 we_dom_s, we_dom_e, sn_dom_s, sn_dom_e, &
+                 we_patch_s, we_patch_e, we_patch_stag_s, we_patch_stag_e, &
+                 sn_patch_s, sn_patch_e, sn_patch_stag_s, sn_patch_stag_e, &
+                 we_mem_s, we_mem_e, we_mem_stag_s, we_mem_stag_e, &
+                 sn_mem_s, sn_mem_e, sn_mem_stag_s, sn_mem_stag_e, &
+                 idiff, n_times, &
+                 west_east_dim, south_north_dim, bottom_top_dim,  &
+                 is_water, is_ice, is_urban, i_soilwater, &
+!                 i_parent_start_loc, j_parent_start_loc, &
+                 i_parent_end_loc, j_parent_end_loc, grid_id, map_proj_loc
+      real :: cen_lat, moad_cen_lat, cen_lon,   &
+              dom_dx, dom_dy
+      real, dimension(16) :: corner_lats, corner_lons
+      real, pointer, dimension(:,:) :: landmask
+      real, pointer, dimension(:,:) :: xlat, xlon, xlat_u, xlon_u, xlat_v, xlon_v
+      logical, allocatable, dimension(:) :: got_this_field, got_const_field
+      character (len=19) :: valid_date, temp_date
+      character (len=1) :: nestnum
+      character (len=128) :: title, mminlu
+      character (len=128), allocatable, dimension(:) :: output_flags, td_output_flags
+
+!???      TYPE(output_vars) :: gridout
+!         TYPE(boundary_vars) :: bdy
+
+
+      ! Compute number of times that we will process
+
+	write(0,*) 'inside process_domains'
+	write(0,*) 'call geth_idts'
+	write(0,*) 'start_date(n): ', start_date(n)
+	write(0,*) 'end_date(n): ', end_date(n)
+      call geth_idts(end_date(n), start_date(n), idiff)
+	write(0,*) 'return geth_idts'
+
+	write(0,*) 'max_dom is: ', max_dom
+
+	gridin%fcstlength=idiff/3600
+
+	write(0,*) 'fcst length: ', gridin%fcstlength
+
+
+!!!!!! something to help write boundaries for all domains
+!	if (n .eq. 1) then
+      n_times = idiff / interval_seconds
+!	else
+!      n_times=0
+!	endif
+   
+      ! Check that the interval evenly divides the range of times to process
+   
+      ! Initialize the storage module
+!tmp      call storage_init()
+
+   
+      !
+      ! Begin time-dependent processing
+      !
+
+!      allocate(got_this_field (num_entries))
+   
+      ! Loop over all times to be processed for this domain
+	
+   TIMES:  do t=0,n_times
+   
+         call geth_newdate(valid_date, trim(start_date(n)), t*interval_seconds)
+         temp_date = ' '
+
+         if (mod(interval_seconds,3600) == 0) then
+            write(temp_date,'(a13)') valid_date(1:10)//'_'//valid_date(12:13)
+         else if (mod(interval_seconds,60) == 0) then
+            write(temp_date,'(a16)') valid_date(1:10)//'_'//valid_date(12:16)
+         else
+            write(temp_date,'(a19)') valid_date(1:10)//'_'//valid_date(12:19)
+         end if
+   
+
+	gridin%current_date=valid_date
+
+!	if (start_date(1:19) .eq. gridin%current_date(1:19)) then
+
+	if (t .eq. 0) then
+	gridin%first_time=.true.
+	write(0,*) 'set first_time to true'
+	else
+	gridin%first_time=.false.
+	write(0,*) 'set first_time to false'
+	endif
+
+
+!	gridin%sdate(1:19)=start_date(1:19)
+   
+
+!   use mpi-io, inventory file?
+!
+!   have two lists of contents retrieved...full for initial time, limited for bdy times?
+
+	filename='                                                           '
+
+        if (gridtype == 'B') then
+          filename(1:10)='met_nmb.d0'
+        elseif (gridtype == 'A') then
+          filename(1:10)='met_sla.d0'
+	endif
+
+!
+        gridin%gtype=gridtype
+!
+
+	write(0,*) 'define nestnum'
+ 	write(nestnum,633) n
+  633   format(I1)
+
+        filename(11:11)=nestnum(1:1)
+        filename(12:12)='.'
+	filename(13:31)=valid_date
+        filename(32:35)='.dio'
+
+	if (t .eq. 0) then
+      call get_static_fields_simple(filename, n, dyn_opt, west_east_dim, south_north_dim, bottom_top_dim, map_proj_loc, &
+                    we_dom_s, we_dom_e, sn_dom_s, sn_dom_e, &
+                    we_patch_s,      we_patch_e, &
+                    we_patch_stag_s, we_patch_stag_e, &
+                    sn_patch_s,      sn_patch_e, &
+                    sn_patch_stag_s, sn_patch_stag_e, &
+                    we_mem_s, we_mem_e, we_mem_stag_s, we_mem_stag_e, &
+                    sn_mem_s, sn_mem_e, sn_mem_stag_s, sn_mem_stag_e, & 
+                    ibogus, ibogus, &
+                    gridout%i_parent_start_loc, gridout%j_parent_start_loc, i_parent_end_loc, j_parent_end_loc, &
+                    ibogus )
+
+	write(0,*) 'we_mem_s we_mem_e : ', we_mem_s, we_mem_e
+	write(0,*) 'sn_mem_s sn_mem_e : ', sn_mem_s, sn_mem_e
+	write(0,*) 'we_patch_s we_patch_e : ', we_patch_s, we_patch_e
+	write(0,*) 'sn_patch_s sn_patch_e : ', sn_patch_s, sn_patch_e
+	endif
+        
+
+	write(0,*) 'filename for read_wps: ', filename(1:35)
+	write(0,*) 'valid_date: ', valid_date
+	write(0,*) 'num_metgrid_levels: ', num_metgrid_levels
+
+!!!! pass parallelism into read_wps and vinterp_driver?
+!!!! work on subsets of full domain
+
+!!!! use memory dimensions to allow for easier data exchanges later?
+	
+	write(0,*) 'do_clouds into read_nps: ', do_clouds
+
+        CALL read_nps (gridin,trim(filename),valid_date,num_metgrid_levels, &
+                       ncep_processing, do_gwd,do_clouds,spectral,we_patch_s, we_patch_e, sn_patch_s, sn_patch_e, &
+                       we_mem_s, we_mem_e, sn_mem_s, sn_mem_e)
+
+        write(0,*)'num_metgrid_levels ... ',num_metgrid_levels, &
+                       we_patch_s, we_patch_e, sn_patch_s, sn_patch_e, &
+                       we_mem_s, we_mem_e, sn_mem_s, sn_mem_e
+
+
+	gridin%ITS=we_patch_s
+	gridin%ITE=we_patch_e
+	gridin%JTS=sn_patch_s
+	gridin%JTE=sn_patch_e
+
+	gridin%IMS=we_mem_s
+	gridin%IME=we_mem_e
+	gridin%JMS=sn_mem_s
+	gridin%JME=sn_mem_e
+
+        gridout%ncep_processing=ncep_processing
+
+	write(0,*) 'into vinterp_driver: ', num_metgrid_levels
+
+        CALL vinterp_driver(gridin,gridout,w,num_metgrid_levels,gridbdy%lnsh)
+	
+	write(0,*) 'gridout%albedo extremes, post vinterp_driver:: ', minval(gridout%albedo),maxval(gridout%albedo)
+	write(0,*) 'gridout%cwm extremes, post vinterp_driver: ', minval(gridout%CWM), maxval(gridout%CWM)
+
+	IF (t == 0) THEN
+
+	CALL extra_nems_fields(gridin, gridout)
+	write(0,*) 'gridout%albedo extremes, post extra_nems_fields:: ', minval(gridout%albedo),maxval(gridout%albedo)
+	write(0,*) 'call write_nemsinit'
+	write(0,*) 'gridout%cwm extremes, post extra_nems_fields: ', minval(gridout%CWM), maxval(gridout%CWM)
+
+	write(0,*) 'CWM dimensions:: ', size(gridout%CWM,dim=1), size(gridout%CWM,dim=2), size(gridout%CWM,dim=3)
+        CALL write_nemsinit (gridout, gridin, n, do_gwd, max_dom, gridbdy%lnsh)
+	write(0,*) 'gridout%cwm extremes, post write_nemsinit: ', minval(gridout%CWM), maxval(gridout%CWM)
+
+	ENDIF
+
+
+!	if ( n .eq. 1) then
+	write(0,*) 'call proc_bdy'
+        CALL proc_bdy (gridout, gridin, gridbdy, t, n)
+	write(0,*) 'return proc_bdy'
+!	endif
+
+	write(0,*) 'done loop: ', t, ' of : ', n_times
+	write(0,*) 'what is global...should we do the next time?  ', global
+	if (global) exit TIMES
+
+	write(0,*) 'ent of TIMES loop for time t: ', t
+!	call summary()
+      end do TIMES  ! Loop over n_times
+
+	write(0,*) 'call deallocate'
+          CALL deallocate_data_structures(gridin, gridout, gridbdy, w)
+
+!tmp      call storage_delete_all()
+   
+   end subroutine process_domain
+
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! Name: get_static_fields
+   !
+   ! Purpose:
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   subroutine get_static_fields_simple(filename, n, dyn_opt, west_east_dim, south_north_dim, bottom_top_dim, &
+                    map_proj_loc, &
+                    we_dom_s,   we_dom_e,   sn_dom_s,        sn_dom_e, &
+                    we_patch_s, we_patch_e, we_patch_stag_s, we_patch_stag_e, &
+                    sn_patch_s, sn_patch_e, sn_patch_stag_s, sn_patch_stag_e, &
+                    we_mem_s, we_mem_e, we_mem_stag_s, we_mem_stag_e, &
+                    sn_mem_s, sn_mem_e, sn_mem_stag_s, sn_mem_stag_e, &
+                    grid_id_loc, parent_id_loc, &
+                    i_parent_start_loc, j_parent_start_loc, i_parent_end_loc, j_parent_end_loc, parent_grid_ratio_loc )
+
+      use gridinfo_module
+!      use llxy_module
+      use parallel_module
+!      use storage_module
+!      use input_module
+!      use ingest_metgrid
+      USE dio
+
+!	include "mpif.h"
+
+      implicit none
+
+      ! Arguments
+      integer, intent(in) :: n
+      integer, intent(inout) :: dyn_opt, west_east_dim, south_north_dim, bottom_top_dim, &
+                                map_proj_loc, &
+                                we_dom_s, we_dom_e, sn_dom_s, sn_dom_e, &
+                                we_patch_s, we_patch_e, we_patch_stag_s, we_patch_stag_e, &
+                                sn_patch_s, sn_patch_e, sn_patch_stag_s, sn_patch_stag_e, &
+                                sn_mem_s, sn_mem_e, sn_mem_stag_s, sn_mem_stag_e, &
+                                grid_id_loc, parent_id_loc, we_mem_s , we_mem_e, we_mem_stag_s, we_mem_stag_e, &
+                                i_parent_start_loc, j_parent_start_loc, i_parent_end_loc, j_parent_end_loc, &
+                                parent_grid_ratio_loc
+
+       character(len=90) :: filename
+
+      ! Local variables
+      integer :: istatus, i, j, k, sp1, ep1, sp2, ep2, sp3, ep3, &
+                 lh_mult, rh_mult, bh_mult, th_mult
+
+!semibogus
+      real :: cen_lat,  cen_lon, &
+              dom_dx, dom_dy
+      real, dimension(16) :: corner_lats, corner_lons
+      character (len=128) :: title, mminlu
+      integer::  is_water, is_ice, is_urban, i_soilwater
+!endsemibogus
+
+      real, pointer, dimension(:,:,:) :: real_array
+      character (len=3) :: memorder
+      CHARACTER (LEN=79)              :: VarName
+      character (len=128) :: grid_type, datestr, cname, stagger, cunits, cdesc
+      character (len=128), dimension(3) :: dimnames
+!      type (fg_input) :: field
+
+      type(dio_file) :: dfile
+
+      ! Initialize the input module to read static input data for this domain
+!      write(0,*) 'Opening static input file.'
+!       call input_init(n, istatus)
+!      write(0,*) 'ERROR input_init(): Error opening input for domain : ', n
+
+      ! Read global attributes from the static data input file
+!      write(0,*) 'Reading static global attributes.'
+
+      call dio_init(iret=istatus)
+      call dio_open(dfile,trim(filename),"READ",iret=istatus)
+
+      call dio_read(dfile,'SOUTH-NORTH_GRID_DIMENSION',south_north_dim,iret=istatus)
+
+      call dio_read(dfile,'WEST-EAST_GRID_DIMENSION',west_east_dim,iret=istatus)
+
+!mpnew
+      call dio_read(dfile,'i_parent_start',i_parent_start_loc,iret=istatus)
+      call dio_read(dfile,'j_parent_start',j_parent_start_loc,iret=istatus)
+
+	write(0,*) 'read in i_parent_start_loc: ', i_parent_start_loc
+	write(0,*) 'read in j_parent_start_loc: ', j_parent_start_loc
+
+      call dio_close(dfile,iret=istatus)
+      call dio_finalize()
+
+!      call read_global_attrs(title, datestr, grid_type, dyn_opt, west_east_dim, &
+!                             south_north_dim, bottom_top_dim, &
+!                             we_patch_s, we_patch_e, we_patch_stag_s, we_patch_stag_e, &
+!                             sn_patch_s, sn_patch_e, sn_patch_stag_s, sn_patch_stag_e, &
+!                             map_proj, mminlu, is_water, is_ice, is_urban, i_soilwater, &
+!                             grid_id, parent_id, i_parent_start, &
+!                             j_parent_start, i_parent_end, j_parent_end, dom_dx, dom_dy, &
+!                             cen_lat, moad_cen_lat, cen_lon, stand_lon, truelat1, &
+!                             truelat2, parent_grid_ratio, corner_lats, corner_lons)
+
+      we_dom_s = 1
+      sn_dom_s = 1
+      if (grid_type(1:1) == 'C') then
+         we_dom_e = west_east_dim   - 1
+         sn_dom_e = south_north_dim - 1
+      else if (grid_type(1:1) == 'E') then
+         we_dom_e = west_east_dim
+         sn_dom_e = south_north_dim
+      else if (grid_type(1:1) == 'B') then
+         we_dom_e = west_east_dim
+         sn_dom_e = south_north_dim
+      else if (grid_type(1:1) == 'A') then
+         we_dom_e = west_east_dim
+         sn_dom_e = south_north_dim
+      end if
+
+      ! Given the full dimensions of this domain, find out the range of indices
+      !   that will be worked on by this processor. This information is given by
+      !   my_minx, my_miny, my_maxx, my_maxy
+
+	write(0,*) 'call parallel_get_tile_dims'
+      call parallel_get_tile_dims(west_east_dim, south_north_dim)
+
+
+      ! Must figure out patch dimensions from info in parallel module
+      if (nprocs > 1 .and. .not. do_tiled_input) then
+
+         we_patch_s      = my_minx
+         we_patch_stag_s = my_minx
+         we_patch_e      = my_maxx - 1
+         sn_patch_s      = my_miny
+         sn_patch_stag_s = my_miny
+         sn_patch_e      = my_maxy - 1
+
+
+         if (gridtype == 'C') then
+            if (my_x /= nproc_x - 1) then
+               we_patch_e = we_patch_e + 1
+               we_patch_stag_e = we_patch_e
+            else
+               we_patch_stag_e = we_patch_e + 1
+            end if
+            if (my_y /= nproc_y - 1) then
+               sn_patch_e = sn_patch_e + 1
+               sn_patch_stag_e = sn_patch_e
+            else
+               sn_patch_stag_e = sn_patch_e + 1
+            end if
+         else if (gridtype == 'E' .or. gridtype == 'B' .or. gridtype == 'A') then
+            we_patch_e = we_patch_e + 1
+            sn_patch_e = sn_patch_e + 1
+            we_patch_stag_e = we_patch_e
+            sn_patch_stag_e = sn_patch_e
+         end if
+
+      else ! mp addition, 20080307 for nemsinterp type processing
+
+         we_patch_s      = my_minx
+         we_patch_e      = my_maxx 
+         sn_patch_s      = my_miny
+         sn_patch_e      = my_maxy 
+
+      end if
+
+	write(0,*) 'patch limits:: ', we_patch_s, we_patch_e, sn_patch_s, sn_patch_e
+      ! Compute multipliers for halo width; these must be 0/1
+      if (my_x /= 0) then
+        lh_mult = 1
+      else
+        lh_mult = 0
+      end if
+      if (my_x /= (nproc_x-1)) then
+        rh_mult = 1
+      else
+        rh_mult = 0
+      end if
+      if (my_y /= 0) then
+        bh_mult = 1
+      else
+        bh_mult = 0
+      end if
+      if (my_y /= (nproc_y-1)) then
+        th_mult = 1
+      else
+        th_mult = 0
+      end if
+
+	write(0,*) 'HALO_WIDTH: ', HALO_WIDTH
+
+      we_mem_s = we_patch_s - HALO_WIDTH*lh_mult
+      we_mem_e = we_patch_e + HALO_WIDTH*rh_mult
+      sn_mem_s = sn_patch_s - HALO_WIDTH*bh_mult
+      sn_mem_e = sn_patch_e + HALO_WIDTH*th_mult
+      we_mem_stag_s = we_patch_stag_s - HALO_WIDTH*lh_mult
+      we_mem_stag_e = we_patch_stag_e + HALO_WIDTH*rh_mult
+      sn_mem_stag_s = sn_patch_stag_s - HALO_WIDTH*bh_mult
+      sn_mem_stag_e = sn_patch_stag_e + HALO_WIDTH*th_mult
+
+
+   end subroutine get_static_fields_simple
+
+
+   subroutine wrf_error_fatal3(file_str, line, str )
+  CHARACTER*(*) file_str
+  INTEGER , INTENT (IN) :: line  ! only print file and line if line > 0
+  CHARACTER*(*) str
+  CHARACTER*256 :: line_str
+
+
+! stub
+	write(0,*) 'bad stuff in fake wrf_error_fatal3'
+
+	end subroutine wrf_error_fatal3
+
+          subroutine deallocate_data_structures(gridin_loc, gridout, bdy, work)
+
+      use module_data
+
+        type(input_vars) :: gridin_loc
+	type(output_vars) :: gridout
+        type(boundary_vars) :: bdy
+        type(work_vars) :: work
+
+        if (ALLOCATED(gridin_loc%PRES)) deallocate(gridin_loc%PRES)
+        if (ASSOCIATED(gridin_loc%SMC_WPS)) deallocate(gridin_loc%SMC_WPS)
+        if (ASSOCIATED(gridin_loc%STC_WPS)) deallocate(gridin_loc%STC_WPS)
+        if (ASSOCIATED(gridin_loc%GHT)) deallocate(gridin_loc%GHT)
+        if (ASSOCIATED(gridin_loc%RH)) deallocate(gridin_loc%RH)
+        if (ASSOCIATED(gridin_loc%UU)) deallocate(gridin_loc%UU)
+        if (ASSOCIATED(gridin_loc%VV)) deallocate(gridin_loc%VV)
+        if (ASSOCIATED(gridin_loc%TT)) deallocate(gridin_loc%TT)
+        if (ASSOCIATED(gridin_loc%FRIMEF)) deallocate(gridin_loc%FRIMEF)
+        if (ASSOCIATED(gridin_loc%RWMR)) deallocate(gridin_loc%RWMR)
+        if (ASSOCIATED(gridin_loc%SNMR)) deallocate(gridin_loc%SNMR)
+        if (ASSOCIATED(gridin_loc%CICE)) deallocate(gridin_loc%CICE)
+        if (ASSOCIATED(gridin_loc%CANWAT)) deallocate(gridin_loc%CANWAT)
+        if (ASSOCIATED(gridin_loc%SNOW)) deallocate(gridin_loc%SNOW)
+        if (ASSOCIATED(gridin_loc%SKINTEMP)) deallocate(gridin_loc%SKINTEMP)
+        if (ASSOCIATED(gridin_loc%SOILHGT)) deallocate(gridin_loc%SOILHGT)
+        if (ASSOCIATED(gridin_loc%LANDSEA)) deallocate(gridin_loc%LANDSEA)
+        if (ASSOCIATED(gridin_loc%SEAICE)) deallocate(gridin_loc%SEAICE)
+
+        if (ASSOCIATED(gridin_loc%PSFC)) deallocate(gridin_loc%PSFC)
+        if (ASSOCIATED(gridin_loc%SLOPECAT)) deallocate(gridin_loc%SLOPECAT)
+        if (ASSOCIATED(gridin_loc%VEGCAT)) deallocate(gridin_loc%VEGCAT)
+        if (ASSOCIATED(gridin_loc%SOILCAT)) deallocate(gridin_loc%SOILCAT)
+        if (ASSOCIATED(gridin_loc%SNOALB)) deallocate(gridin_loc%SNOALB)
+        if (ASSOCIATED(gridin_loc%GREENFRAC)) deallocate(gridin_loc%GREENFRAC)
+        if (ASSOCIATED(gridin_loc%ALBEDO12M)) deallocate(gridin_loc%ALBEDO12M)
+        if (ASSOCIATED(gridin_loc%SOILCTOP)) deallocate(gridin_loc%SOILCTOP)
+        if (ASSOCIATED(gridin_loc%SOILTEMP)) deallocate(gridin_loc%SOILTEMP)
+        if (ASSOCIATED(gridin_loc%HGT_M)) deallocate(gridin_loc%HGT_M)
+        if (ASSOCIATED(gridin_loc%HGT_V)) deallocate(gridin_loc%HGT_V)
+        if (ASSOCIATED(gridin_loc%STDVTOPO)) deallocate(gridin_loc%STDVTOPO)
+        if (ASSOCIATED(gridin_loc%XLAT_M)) deallocate(gridin_loc%XLAT_M)
+        if (ASSOCIATED(gridin_loc%XLAT_V)) deallocate(gridin_loc%XLAT_V)
+        if (ASSOCIATED(gridin_loc%XLONG_M)) deallocate(gridin_loc%XLONG_M)
+        if (ASSOCIATED(gridin_loc%XLONG_V)) deallocate(gridin_loc%XLONG_V)
+        if (ASSOCIATED(gridin_loc%LU_INDEX)) deallocate(gridin_loc%LU_INDEX)
+        if (ASSOCIATED(gridin_loc%LANDUSEF)) deallocate(gridin_loc%LANDUSEF)
+        if (ASSOCIATED(gridin_loc%LANDMASK)) deallocate(gridin_loc%LANDMASK)
+
+
+	if (ALLOCATED(gridout%PD)) deallocate(gridout%PD)
+	if (ASSOCIATED(gridout%SM)) deallocate(gridout%SM)
+	if (ASSOCIATED(gridout%FIS)) deallocate(gridout%FIS)
+	if (ASSOCIATED(gridout%STDVTOPO)) deallocate(gridout%STDVTOPO)
+	if (ASSOCIATED(gridout%ALBEDO)) deallocate(gridout%ALBEDO)
+	if (ASSOCIATED(gridout%ALBASE)) deallocate(gridout%ALBASE)
+	if (ASSOCIATED(gridout%EPSR)) deallocate(gridout%EPSR)
+	if (ASSOCIATED(gridout%MXSNAL)) deallocate(gridout%MXSNAL)
+	if (ASSOCIATED(gridout%TSK)) deallocate(gridout%TSK)
+	if (ASSOCIATED(gridout%SST)) deallocate(gridout%SST)
+	if (ASSOCIATED(gridout%SNO)) deallocate(gridout%SNO)
+	if (ASSOCIATED(gridout%WEASD)) deallocate(gridout%WEASD)
+	if (ASSOCIATED(gridout%SI)) deallocate(gridout%SI)
+	if (ASSOCIATED(gridout%SICE)) deallocate(gridout%SICE)
+	if (ASSOCIATED(gridout%TG)) deallocate(gridout%TG)
+	if (ASSOCIATED(gridout%CMC)) deallocate(gridout%CMC)
+	if (ASSOCIATED(gridout%SR)) deallocate(gridout%SR)
+	if (ASSOCIATED(gridout%USTAR)) deallocate(gridout%USTAR)
+	if (ASSOCIATED(gridout%Z0)) deallocate(gridout%Z0)
+	if (ASSOCIATED(gridout%VEGFRA)) deallocate(gridout%VEGFRA)
+!	if (ASSOCIATED(gridout%GLAT)) deallocate(gridout%GLAT)
+!	if (ASSOCIATED(gridout%GLON)) deallocate(gridout%GLON)
+	if (ASSOCIATED(gridout%ISLTYP)) deallocate(gridout%ISLTYP)
+	if (ASSOCIATED(gridout%IVGTYP)) deallocate(gridout%IVGTYP)
+
+	if (ASSOCIATED(gridout%U)) deallocate(gridout%U)
+	if (ASSOCIATED(gridout%V)) deallocate(gridout%V)
+	if (ASSOCIATED(gridout%Q)) deallocate(gridout%Q)
+	if (ASSOCIATED(gridout%CWM)) deallocate(gridout%CWM)
+	if (ASSOCIATED(gridout%T)) deallocate(gridout%T)
+	if (ASSOCIATED(gridout%STC)) deallocate(gridout%STC)
+	if (ASSOCIATED(gridout%SMC)) deallocate(gridout%SMC)
+	if (ASSOCIATED(gridout%SH2O)) deallocate(gridout%SH2O)
+
+!!!      work
+        if (ASSOCIATED(work%P3D_OUT)) deallocate(work%P3D_OUT)
+        if (ASSOCIATED(work%P3DV_OUT)) deallocate(work%P3DV_OUT)
+        if (ASSOCIATED(work%P3DV_IN)) deallocate(work%P3DV_IN)
+        if (ASSOCIATED(work%QTMP)) deallocate(work%QTMP)
+        if (ASSOCIATED(work%QTMP2)) deallocate(work%QTMP2)
+        if (ASSOCIATED(work%model_Z)) deallocate(work%model_Z)
+!        if (ASSOCIATED(work%pint_out)) deallocate(work%pint_out)
+	if (ASSOCIATED(work%snmr_input)) deallocate(work%snmr_input)
+	if (ASSOCIATED(work%rwmr_input)) deallocate(work%rwmr_input)
+	if (ASSOCIATED(work%cice_input)) deallocate(work%cice_input)
+	if (ASSOCIATED(work%clwmr_input)) deallocate(work%clwmr_input)
+	if (ASSOCIATED(work%rimef_input)) deallocate(work%rimef_input)
+
+!!!	bdy
+
+	if (ASSOCIATED(bdy%pd_new_n)) then   ! assume all bdy items allocated
+
+        deallocate(bdy%pd_new_n, bdy%pd_new_s)
+        deallocate(bdy%pd_old_n, bdy%pd_old_s)
+        deallocate(bdy%pd_new_w, bdy%pd_new_e)
+        deallocate(bdy%pd_old_w, bdy%pd_old_e)
+
+	deallocate(bdy%t_new_n, bdy%t_new_s )
+        deallocate(bdy%t_old_n, bdy%t_old_s )
+        deallocate(bdy%t_new_w, bdy%t_new_e )
+        deallocate(bdy%t_old_w, bdy%t_old_e )
+
+	deallocate(bdy%q_new_n, bdy%q_new_s )
+        deallocate(bdy%q_old_n, bdy%q_old_s )
+        deallocate(bdy%q_new_w, bdy%q_new_e )
+        deallocate(bdy%q_old_w, bdy%q_old_e )
+
+	deallocate(bdy%cwm_new_n, bdy%cwm_new_s )
+        deallocate(bdy%cwm_old_n, bdy%cwm_old_s )
+        deallocate(bdy%cwm_new_w, bdy%cwm_new_e )
+        deallocate(bdy%cwm_old_w, bdy%cwm_old_e )
+
+	deallocate(bdy%u_new_n, bdy%u_new_s )
+        deallocate(bdy%u_old_n, bdy%u_old_s )
+        deallocate(bdy%u_new_w, bdy%u_new_e )
+        deallocate(bdy%u_old_w, bdy%u_old_e )
+
+	deallocate(bdy%v_new_n, bdy%v_new_s )
+        deallocate(bdy%v_old_n, bdy%v_old_s )
+        deallocate(bdy%v_new_w, bdy%v_new_e )
+        deallocate(bdy%v_old_w, bdy%v_old_e )
+
+        deallocate(bdy%pdb_n, bdy%pdb_s, bdy%pdb_w, bdy%pdb_e)
+        deallocate(bdy%tb_n, bdy%tb_s, bdy%tb_w, bdy%tb_e)
+        deallocate(bdy%qb_n, bdy%qb_s, bdy%qb_w, bdy%qb_e)
+        deallocate(bdy%cwmb_n, bdy%cwmb_s, bdy%cwmb_w, bdy%cwmb_e)
+        deallocate(bdy%ub_n, bdy%ub_s, bdy%ub_w, bdy%ub_e)
+        deallocate(bdy%vb_n, bdy%vb_s, bdy%vb_w, bdy%vb_e)
+
+        deallocate(bdy%pdb_n_g, bdy%pdb_s_g,bdy%pdb_w_g, bdy%pdb_e_g)
+        deallocate(bdy%tb_n_g, bdy%tb_s_g, bdy%tb_w_g, bdy%tb_e_g)
+        deallocate(bdy%qb_n_g, bdy%qb_s_g, bdy%qb_w_g, bdy%qb_e_g)
+        deallocate(bdy%cwmb_n_g, bdy%cwmb_s_g, bdy%cwmb_w_g, bdy%cwmb_e_g)
+        deallocate(bdy%ub_n_g, bdy%ub_s_g, bdy%ub_w_g, bdy%ub_e_g)
+        deallocate(bdy%vb_n_g, bdy%vb_s_g, bdy%vb_w_g, bdy%vb_e_g)
+
+	endif
+
+         
+         end subroutine deallocate_data_structures
+
+
+end module process_domain_module

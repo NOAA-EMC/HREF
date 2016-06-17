@@ -1,0 +1,366 @@
+
+#################################
+#####  Grid Specifications  #####
+#################################
+
+im:  251                    # I gridpoints
+jm:  201                    # J gridpoints
+lm:  35                     # Number of atmospheric layers
+
+tph0d:   54.0               # Central geographic latitude of grid (degrees)
+tlm0d: -106.0               # Central geographic longitude of grid (degrees, positive east)
+
+wbd:  -60.0                 # Grid's western boundary (rotated degrees)
+sbd:  -45.0                 # Grid's southern boundary (rotated degrees)
+
+
+################################
+#####  Grid Decomposition  #####
+################################
+
+inpes:  _INPES_             # Number of compute tasks in the I direction
+jnpes:  _JNPES_             # Number of compute tasks in the J direction
+
+
+#################################
+####  Specify the I/O tasks  ####
+#################################
+
+quilting:              true    # Do you want asynchronous quilting/history writes?
+write_groups:          1
+write_tasks_per_group: _WTPG_
+
+
+############################################
+#####  Fundamental Timestep (seconds)  #####
+############################################
+
+dt_int: 90                  # Integer seconds
+dt_num:  0                  # Numerator of fractional second
+dt_den:  1                  # Denominator of fractional second
+
+filt_dt_int: 90             # Integer seconds
+filt_dt_num:  0             # Numerator of fractional second
+filt_dt_den:  1             # Denominator of fractional second
+
+
+
+#################################
+#####  Forecast Start Time  #####
+#################################
+
+start_year:   2013
+start_month:  01
+start_day:    20
+start_hour:   00
+start_minute: 0
+start_second: 0
+
+
+#############################################################
+#####  Forecast Length / Restarting / Output Frequency  #####
+#############################################################
+
+nhours_fcst:      _FCSTL_   # Length of the forecast (hours)
+minutes_history:  180       # Frequency of history output (minutes)
+nhours_dfini:       0
+
+restart:          _RSTRT_   # True--> A restarted run
+minutes_restart:  720       # Frequency of restart output (minutes)
+
+avg_max_length: 3600        # Time in seconds when averaged fields are reset
+
+
+rst_out_00:          false  # True--> Write 00h history in restarted run
+write_last_restart:  true   # True--> Write last restart file
+
+freerun:             true   # True--> Original
+                            # False--> 5X divergence dumping in NDAS forec.
+
+
+###########################
+#####  General Modes  #####
+###########################
+
+global:    false            # True--> Global ; False--> Regional
+hydro:     false            # True--> Hydrostatic ;  False--> Nonhydrostatic
+adiabatic: false            # True--> Adiabatic ;  False--> Diabatic
+oper:      false
+
+
+###########################
+#####  Printouts      #####
+###########################
+
+print_all:     false        # Print all statements to err file
+print_diag:    false        # Print diagnostics (CALL FIELD_STATS)
+print_esmf:    true         # Print ESMF return signals
+print_output:  false        # Print info on records written into history/restart file
+print_timing:  true         # Print timing info (CPU time)
+
+
+####################
+##### Ensemble #####
+####################
+
+ENS_SPS:      false
+RUN_CONTINUE: false
+total_member: 1
+PE_MEMBER01:    0
+
+
+######################
+#####  Dynamics  #####
+######################
+ 
+secadv:  true               # True--> 2nd order advection ; False--> 4th order advection
+
+smag2:   0.2                # Smagorinsky constant for 2nd order diffusion
+
+codamp:  9.0                # Divergence damping constant
+wcor:    0.18               # Divergence correction factor
+ 
+idtadt:  2                  # Number of adjustment timesteps between tracer advection calls (normally 1)
+
+num_tracers_met:   4        # Number of specified meterological "tracer" scalars (e.g., water)
+num_tracers_chem:  0        # Number of specified chem/aerosol "tracer" scalars
+
+lnsh:  1                    # Number of boundary blending rows for H points
+lnsv:  1                    # Number of boundary blending rows for V points
+
+
+######################################
+#####  Digital Filtering Options  ####
+######################################
+
+filter_method: 0            # 0--->none ; 1--->DFL ; 2---> DDFI ; 3--->TDFI
+
+nsecs_dfl: 1800             # HALF foward filter window (s)          (DFL)
+nsecs_bckddfi: 1800         # HALF backward integration duration (s) (DDFI)
+nsecs_fwdddfi: 3600         # HALF foward filter window (s)          (DDFI)
+nsecs_bcktdfi: 3600         # HALF backward filter window (s)        (TDFI)
+nsecs_fwdtdfi: 3600         # HALF forward filter window (s)         (TDFI)
+
+radar_init: 0
+
+#############################
+#####  Global Summations ####
+#############################
+
+use_allreduce:  false       # False--> use mpi send/recv for global sums (reproducible results)
+                            # True--> use mpi_allreduce for global sums (much faster)
+
+#####################################
+###  Precipitation Assimilation  ####
+#####################################
+
+pcpflg:  _PCPFLG_           # True--> assimilation on ; False--> assimilation off
+pcphr: 6
+write_prec_adj: _WPREC_     # True--> create baseline prec. files ; False--> regular run
+
+
+############################
+###  Gravity Wave Drag  ####
+############################
+
+gwdflg:  true               # True--> GWD on ; False--> GWD off
+
+cdmb:       0.1             # tunable parameter for adjusting mountain blocking
+cleffamp:   1.00            # tunable parameter, depends on resolution
+sigfac:     0.00            # tunable parameter
+factop:     0.50            # de-acceleration limiter
+rlolev:   500.00            # critical pressure level (check units)
+dpmin:      5.00            # minimum thickness of the reference layer (check units)
+
+
+####################################
+#####  Physics Scheme Options  #####
+####################################
+
+#---------------------------------
+shortwave: _RADTN_          # Radiation schemes
+longwave:  _RADTN_
+                                # gfdl--> GFDL (shortwave and longwave)
+                                # gsfc--> Goddard shortwave
+                                # dudh--> Dudhia shortwave
+                                # rrtm--> RRTM (shortwave and longwave)
+
+co2tf:  1                       # co2tf--> Read (0) or generate internally (1)
+                                #          the GFDL CO2 transmission functions
+
+#---------------------------------
+convection:  _CONVC_        # Convection scheme
+                                # bmj    --> Betts-Miller-Janjic
+                                # bmj_dev--> BMJ (development)
+                                #  kf    --> Kain-Fritsch
+                                # sas    --> Simplified Arakawa-Schubert
+                                #  gd    --> Grell-Devenyi
+                                # none   --> No convection
+
+#---------------------------------
+microphysics:  _MICRO_      # Microphysics scheme
+                                # fer--> Ferrier
+                                # fer_hires--> Ferrier operational
+                                # kes--> Kessler
+                                # lin--> Lin
+                                # tho--> Thompson
+                                # wsm3--> WSM3
+                                # gfs--> GFS microphy
+
+spec_adv:  .false.          # Individual cloud species advected
+lmprate:  .false.           # .true.: 4D array called MPRATES containing
+                            # 3D microphysics source/sink terms
+                            # .false.: One 3D array called MPRATES
+                            # with zero values
+#---------------------------------
+turbulence:  _TURBL_        # Turbulence schemes
+                                # myj--> Mellor-Yamada-Janjic
+                                # gfs--> GFS PBL
+
+#---------------------------------
+sfc_layer:  myj             # Surface layer schemes
+                                # myj--> Mellor-Yamada-Jamnjic
+                                # mm5--> MM5 sfc layer
+
+#---------------------------------
+land_surface:  noah         # Land surface schemes
+                                # noah--> NOAH scheme
+                                # liss--> Janjic LSM
+
+ucmcall: 0                  # Use (1) or do not use (0) the Urban Canopy Model
+ivegsrc: 1                  # Vegetation map identifier, 0--> USGS, 1--> IGBP
+
+#---------------------------------
+
+gfs:  _gfsP_                # Select entire GFS physics suite
+
+
+########################################
+#####  Shallow Convection Switches  ####
+########################################
+
+fres:     1.00              # resolution factor for dsp's (default)
+fr:       1.00              # land factor for dsp's (dafault)
+fsl:      0.85              # reduction factor for "slow" dsp's over land (dafault)
+fss:      0.85              # reduction factor for "slow" dsp's over water (dafault)
+
+#fres:     0.80             # resolution factor for dsp's
+#fr:       1.00             # land factor for dsp's
+#fsl:      0.85             # reduction factor for "slow" dsp's over land
+#fss:      0.85             # reduction factor for "slow" dsp's over water
+
+entrain:    .false.         # Entrainment
+newall:     .false.         # New cloud used at all shallow points
+newswap:    .false.         # New clouds at swap shallow points
+newupup:    .false.         # New cloud used for both heat and moisture up shallow pts.
+nodeep:     .false.         # All deep convection diverted to shallow swap algorythm
+
+
+###############################
+#####  Physics Timesteps  #####
+###############################
+
+nrads:     34               # Number of dynamics timesteps between calls to shortwave
+nradl:     34               # Number of dynamics timesteps  between calls to longwave
+
+nphs:       2               # Number of dynamics timesteps between calls to landsurface and turbulence
+
+nprecip:    2               # Number of dynamics timesteps between calls to convection and microphysics
+
+####
+#### NOTE:  User must set nhrs_udef to .TRUE. and set the emptying frequencies (nhrs_*) to the desired values
+####        or else all accumulations will automatically be emptied hourly.
+####
+
+nhrs_udef:  true            # User defined when fluxes are emptied.
+                            # False--> Auto ; True--> User defined:
+
+nhrs_prec:  3               # Frequency in hours between times when precip arrays are emptied
+nhrs_heat:  3               # Frequency in hours between times when heating arrays are emptied
+nhrs_clod:  3               # Frequency in hours between times when cloud arrays are emptied
+nhrs_rdlw:  3               # Frequency in hours between times when LW radiation arrays are emptied
+nhrs_rdsw:  3               # Frequency in hours between times when SW radiation arrays are emptied
+nhrs_srfc:  3               # Frequency in hours between times when sfc evap/flux arrays are emptied
+
+
+################################################
+####  Write History/Restart Specifications  ####
+################################################
+
+nemsio_input: _NEMSI_
+
+write_hst_bin:       true   # True--> Write history files in binary format
+write_hst_nemsio:    true   # True--> Write history files in NEMSIO format
+write_rst_bin:       true   # True--> Write restart files in binary format
+write_rst_nemsio:    true   # True--> Write restart files in NEMSIO format
+
+write_nemsioctl:     true   # True--> Yes write ctl for nemsio run history files
+write_donefileflag:  false 
+write_fsyncflag:     false  # True--> Yes write fsync
+write_dopost:        false  # True--> Yes run post on quilt
+post_gribversion:   'grib1' # grib version for post output
+
+hst_name_base:   'nmmb_hst'
+rst_name_base:   'nmmb_rst'
+
+
+##################################
+####  Nesting Specifications  ####
+##################################
+
+num_domains_total: 4          # The total number of domains in this run (only needed in domain #1's configure file)
+my_domain_id: 1               # The ID number of this domain (uppermost domain must have ID=1)
+my_parent_id: -999            # The ID number of this domain's parent
+n_children:  _NCHILD_         # How many child domains does this domain have?
+
+my_domain_moves:  false       # Does this domain move?
+
+nest_mode:  _MODE_            # If there is nesting, select '1-way' or '2-way' interaction between parents/children
+generation:  1                # For 2-way only, in which generation is this domain?
+2way_wgt:   _WGT_             # Weight of child 2-way exchange data in parent
+
+### If this domain is not a nest then the remaining variables
+### in 'Nesting Specifications' are ignored.
+
+i_parent_start:   75          # Nest southwest corner at this parent I
+j_parent_start:   27          # Nest southwest corner at this parent J
+parent_child_space_ratio: 3   # Ratio of parent grid increment to nests's
+
+ratio_sfc_files: 9            # Ratio of uppermost parent grid increment to this moving nest's
+
+nrows_p_upd_w: 2              # West bndry rows of moving nest footprint updated by parent
+nrows_p_upd_e: 2              # East bndry rows of moving nest footprint updated by parent
+nrows_p_upd_s: 2              # South bndry rows of moving nest footprint updated by parent
+nrows_p_upd_n: 2              # North bndry rows of moving nest footprint updated by parent
+
+input_ready:  false           # Nest has pre-generated input file
+
+
+#######################
+####  Timing Info  ####
+#######################
+
+nhours_clocktime:   1        # Frequency in hours between clocktime diagnostic prints.
+npe_print:          1        # The MPI task that will provide the clocktimes.
+
+
+
+#######################
+####  Hurricane    ####
+#######################
+
+run_tc:             false    # true=use hwrf phys
+
+sas_pgcon:          0.55     # convectively forced pressure gradient factor,default=0.55
+sas_shal_pgcon:     -1       # convectively forced pressure gradient factor sas shallow conv, 
+                             # '-1' means sas_pgcon is used
+sas_shalconv:       1        # 1=enable shallow conv,better with gfspblhur scheme
+sas_mass_flux:      9.0e9    # mass flux limit,default=9e9
+sas_mommix:         1.0      # SAS momentum mixing coef
+var_ric:            1.0      # 1=use variable critical Ri# in gfspblhur
+coef_ric_l:         0.16     # Regression coef for land Ric,default=0.16
+coef_ric_s:         0.16     # Regression coef for sea Ric,default=0.16
+alpha:              0.7      # adjustment coef for K in gfspblhur
+sfenth:             0.0      # GFDL surface-layer enhancement coef
+disheat:            true     # true='consider diss heating'
+

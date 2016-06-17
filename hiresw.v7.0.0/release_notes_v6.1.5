@@ -1,0 +1,381 @@
+v6.1.5 - Re-released July 27, 2015
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/hiresw.v6.1.5/ to pick
+up the needed updates.
+
+----------------------
+
+Update details (6.1.4 to 6.1.5):
+
+Adds:
+
+parm/hiresw_arw_cntrl.parm.xml_small
+parm/hiresw_nmmb_cntrl.parm.xml_small
+
+Modifies scripts/exhiresw_postg2.sh.ecf to utilize those files for the
+PR, HI, and Guam domains and pack that data using JPEG2000 packing.
+
+The post output GRIB files will be made about 30% smaller with the
+shift to JPEG2000 packing, and will take about 60% longer to run.  
+However, given how quickly the post runs for the small domains, this
+slowdown should not generate any problems.
+
+Also changes the packing precision from 1.0 to 3.0 for Haines Index in:
+
+parm/hiresw_arw_cntrl.parm.xml_small
+parm/hiresw_nmmb_cntrl.parm.xml_small
+parm/hiresw_arw_cntrl.parm.xml
+parm/hiresw_nmmb_cntrl.parm.xml
+
+
+
+
+v6.1.4 - Released June 19, 2015
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/hiresw.v6.1.4/ to pick
+up updated fix files.
+
+
+----------------------
+
+Update details (6.1.3 to 6.1.4):
+
+Provides updated versions of
+
+fix/hiresw_aknmmb_profdat
+fix/hiresw_conusarw_profdat
+fix/hiresw_conusnmmb_profdat
+fix/hiresw_akarw_profdat
+
+as part of the broader effort to use a unified station list in producing BUFR output.
+
+These two files:
+
+fix/hiresw_conusarw_profdat
+fix/hiresw_akarw_profdat
+
+are modified from the versions that were in the v6.1.3 that was tagged on June 17th.
+
+
+v6.1.2 - released May 15, 2015
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/hiresw.v6.1.2/
+
+The modulefile used for the build is in modulefiles/HIRESW/v6.1.2.  Copy it to a location from which it can be loaded (/nwprod2/modulefiles or similar)
+
+Running ./build_hiresw.scr from the main hiresw.v6.1.2 directory should produce all needed 
+executables.  It does a module purge and module load of HIRESW/v6.1.2 before compiling all codes in sequence.
+
+----------------------
+
+Update details (6.1.1 to 6.1.2):
+
+Fixes a problem which was making the precipitation type from the WRF-ARW to be all zero.
+
+
+
+
+Update details:
+
+* Updates the NMMB forecast code using a January 2015 version of the model, yet retains the
+microphysics from the v6.0.x code..  WRF-ARW code is updated from v3.5 to
+ v3.6.1, but with a local modification to the microphysics. The WSM6 microphysics routine used 
+in the WRF-ARW run was modified to expand the anvil region in clouds.  This was achieved by 
+slowing graupel production processes, allowing more production of snow aloft.
+
+* Number of vertical levels increased from 40 to 50 for both models.
+
+* Adds new products for severe weather and aviation purposes
+
+* Adds a new high resolution ensemble product generating system, which combines information
+from the most recent runs of the HiresWindow and NAM Conus Nest (details described in separate HREF release notes).
+
+#############################
+Output changes:
+#############################
+
+* New fields only for lower-resolution, non-NDFD grid output:
+
+- Cloud ceiling height
+- Simulated radar reflectivity at -10 C level
+
+* Changes in the content of the 2.5-3 km NDFD output grids:
+
+        *       Removes duplicate fields of surface height, land-sea mask, and Haines
+Index in the three hourly files
+
+        *       The surface total cloud percentage in the three hourly files is removed,
+and replaced by the total cloud percentage over the entire atmosphere,
+which was already in the non-three hourly files, to provide consistent guidance.  
+ 
+        *       The one and two hour old 2 m temperature and dew point temperature fields
+are included for forecasts valid at 00Z and 12Z (previously was included
+for all three hour output except at those valid times).
+
+        *       Adds a best CAPE field to the three hourly output (previously was just
+in the non-three hourly output)
+
+        *       Removes precipitation type and 2 m temperature and dew point temperature
+fields from the non-three hourly output in the NMMB run over Hawaii.
+
+        *       Corrects a bug that was leading to incomplete Guam output files every
+six hours.
+
+*  Adds a new output file with a subset of fields most relevant to convection allowing model guidance (currently done just for Alaska and CONUS)
+
+#############################
+Changes to the filename structure
+#############################
+
+* A new, uniform naming convention is applied to all gridded output.
+
+* All output files now have "hiresw" as the leading character string
+
+* Legacy "awpreg", "awp5km", and "smart" strings are discontinued
+
+* Output file resolution in kilometers is given in the file name, with
+decimals represented with a "p" (2.5 km is 2p5km in a file name)
+
+Examples showing the current operational file on the left and the new file
+name on the right:
+
+
+hinmmb.t12z.awpregf24.grib2 --> hiresw.t12z.nmmb_5km.f24.hi.grib2
+
+prarw.t18z.smartprf18.grib2 --> hiresw.t18z.arw_2p5km.f18.pr.grib2
+akarw.t18z.smartakf18.grib2 --> hiresw.t18z.arw_3km.f18.ak.grib2
+
+conusnmmb.t00z.awp5kmf24.grib -->  hiresw.t00z.nmmb_5km.f24.conus.grib2
+                              (new product)  hiresw.t00z.nmmb_5km.f24.conus.subset.grib2
+
+conusarw.t12z.awpregeastf24.grib2 --> hiresw.t12z.arw_5km.f24.conuseast.grib2
+conusarw.t12z.awpregwestf24.grib2 --> hiresw.t12z.arw_5km.f24.conuswest.grib2
+
+
+#############################
+BUFR output changes:
+#############################
+
+The BUFR output file name also changes, generally following the rules applied for the gridded 
+output.  As an example:
+
+akarw.t06z.class1.bufr --> hiresw.t06z.akarw.class1.bufr
+
+In addition to the single monolithic files output for each model run,
+the BUFR output now is also split out by station
+
+Individual stations have names of the format:
+        ${dom}${core}bufr.${station}.${cycle}
+
+where $dom is conus, ak, guam, hi, or pr
+where $core is arw or nmmb
+where $station is the 6-digit identifier
+and where $cycle is the YYYYMMDDHH formatted time of the model initial time
+
+###############################
+
+
+###################################
+Resource usage changes:
+###################################
+
+Pre-model job resource changes:
+
+ JHIRESW_METGRID
+* Shift from 2 node/9 tasks to 1 node/9 tasks
+* Serial executable run MPMD under poe
+* Slightly slower in parallel (AK 109 s before, 118 s in parallel (ARW)), (CONUS ARW 2:18 in ops, 2:30 in para). 
+
+
+  JHIRESW_FORECAST resources are changed:
+
+${DOM} ${CORE}
+--------------
+Current production CPUs (nodes/tasks)  -->  Proposed system CPUs (nodes/tasks)
+Current run time (min) --> Test run time (min)
+
+CONUS NMMB
+--------------
+33/525 --> 29/696
+59 --> 57
+
+CONUS WRF-ARW
+--------------
+37/592 --> 37/888
+58 -->  61
+
+Alaska NMMB
+--------------
+31/496 --> 28/672
+58 --> 58
+
+Alaska WRF-ARW
+--------------
+34/540 --> 38/912
+57 --> 59
+Hawaii NMMB
+--------------
+3/45 --> 3/72
+37 -->34
+
+Hawaii WRF-ARW
+--------------
+3/48 -->3/67
+35 --> 34
+
+Guam NMMB
+--------------
+3/42 -->3/72
+48 --> 46
+
+Guam WRF-ARW
+--------------
+4/63 --> 3/72
+31 --> 33
+
+Puerto Rico NMMB
+--------------
+5/80 --> 5/120
+46 --> 45
+
+Puerto Rico WRF-ARW
+--------------
+6/80 --> 5/105
+38 --> 36
+
+ JHIRESW_POST resources are changed:
+
+
+${DOM} ${CORE}
+--------------
+Current production CPUs (nodes/tasks), unshared? --> Proposed system CPUs (nodes/tasks), unshared
+
+Current production disk usage (GB/cycle) --> Proposed system disk usage (GB/cycle)
+
+
+
+
+CONUS NMMB
+--------------
+5/40 --> 3/24
+70.8 --> 28.7
+
+CONUS WRF-ARW
+--------------
+2/16 --> 2/24
+53.5 --> 25.3
+
+Alaska NMMB
+--------------
+4/32 --> 3/24
+53 --> 20
+
+Alaska WRF-ARW
+--------------
+2/16 --> 2/16
+40.9 --> 18.3
+
+Hawaii NMMB
+--------------
+1/1 --> 1/2
+4.1 --> 1.59
+
+Hawaii WRF-ARW
+--------------
+1/1 --> 1/2
+2.59 --> 1.2
+
+Guam NMMB
+--------------
+1/1 --> 1/2
+4.1 --> 1.42
+
+Guam WRF-ARW
+--------------
+1/1 --> 1/2
+2.61 -->1.31
+
+
+
+
+Puerto Rico NMMB
+--------------
+1/1 --> 1/2
+7.1 --> 3.1
+
+Puerto Rico WRF-ARW
+--------------
+1/1 --> 1/2 
+4.5 --> 2.16
+
+NOTE:  Timings for JHIRESW_POST were not closely examined in general, but it was
+designed to be able to keep pace with the model forecast jobs.  
+
+
+ JHIRESW_PRDGEN resources are changed
+
+${DOM} ${CYC}
+--------------
+Current production CPUs (nodes/tasks) [ prod_shared] --> Proposed system CPUs (nodes/tasks) [tested shared]
+
+Current production disk usage (GB/cycle) --> Proposed system disk usage (GB/cycle)
+
+CONUS NMMB
+--------------
+1/4  --> 3/13
+40.4 --> 13
+
+CONUS WRF-ARW
+--------------
+1/4 --> 3/13
+40.8 --> 13.4
+
+Alaska NMMB
+--------------
+1/2 -->  1/5
+11.9 --> 4.55
+
+Alaska WRF-ARW
+--------------
+1/2  --> 1/5
+11.96 --> 4.67
+
+Hawaii NMMB
+--------------
+1/2  --> 1/2
+0.68 --> 0.29
+
+
+Hawaii WRF-ARW
+--------------
+1/2  --> 1/2
+0.70 --> 0.31
+
+Guam NMMB
+--------------
+1/2  --> 1/2
+0.59 --> 0.21
+
+Guam WRF-ARW
+--------------
+1/2  --> 1/2
+0.68 --> 0.31
+
+Puerto Rico NMMB
+--------------
+1/2  --> 1/2
+1.26 --> 0.5
+
+Puerto Rico WRF-ARW
+--------------
+1/2 --> 1/2
+1.33 --> 0.58
+
+NOTE:  Timings for JHIRESW_PRDGEN jobs were not closely examined, but it
+was designed to be able to keep pace with the post and model jobs.

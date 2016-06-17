@@ -1,0 +1,20 @@
+##############################
+######## Model Core ###########
+###############################
+
+core: gen                   # The dynamic core options:
+                                # nmm
+                                # gfs
+                                # fim
+                                # arw
+
+
+###############################
+#### Specify the I/O tasks ####
+###############################
+                                                                                                                                             
+quilting:              .false.    # Do you want asynchronous quilting/history writes?
+read_groups:           0
+read_tasks_per_group:  0
+write_groups:          0
+write_tasks_per_group: 0
