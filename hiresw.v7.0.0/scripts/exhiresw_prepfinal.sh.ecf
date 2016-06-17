@@ -76,6 +76,8 @@ hend=`echo $end | cut -c9-10`
 
 ## for all domains now, special namelist.input files are required for the model
 
+### this could be generalized and simplified
+
 if [ $NEST = "pr" ] ; then
 
 if [ $MODEL = "arw" ]; then
@@ -111,6 +113,12 @@ if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus_model namelist.input_in_model
 fi
 
+elif [ $NEST = "conusnssl" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusnssl namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusnssl_model namelist.input_in_model
+fi
 
 else
 
@@ -121,7 +129,12 @@ fi
 
 ### number of input levels depends on source model data
 
+if [ $NEST -ne 'CONUSNSSL' ]
+then
 NUMLEVS=27
+else
+NUMLEVS=40
+fi
 
 cat namelist.input_in | sed s:YSTART:$ystart: | sed s:MSTART:$mstart: \
  | sed s:DSTART:$dstart: | sed s:HSTART:$cyc: | sed s:YEND:$yend: \
@@ -152,9 +165,6 @@ cp $FIXhiresw/hiresw_RRTM_DATA RRTM_DATA
 cp $FIXhiresw/hiresw_tr49t67 tr49t67
 cp $FIXhiresw/hiresw_tr49t85 tr49t85
 cp $FIXhiresw/hiresw_tr67t85 tr67t85
-
-
-
 
 
 FHRS="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"

@@ -107,13 +107,28 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
+if [ $NEST -ne 'CONUSNSSL' ]
+then
+
 mod=gfs
 type=pgrb2.0p50.f0
 suf=""
 
+else
+
+mod=nam
+type=awip32
+suf=".tm00.grib2"
+
+fi
+
 
 while [ $whr -le $last ]
 do
+
+
+if [ $NEST -ne 'CONUSNSSL' ]
+then
 
 icnt=0
 while [ ! -e ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} ]
@@ -134,7 +149,33 @@ cp ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} $DATA/.
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_3/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_4/Vtable 
 
-GRIBSRC=GFS
+export GRIBSRC=GFS
+
+else
+
+icnt=0
+while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} ]
+do
+  sleep 10
+  if [ $icnt -gt 90 ]; then 
+    msg="FATAL ERROR: ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} STILL NOT AVAILABLE after 15 minutes waiting."
+    export err=911; err_chk
+   else 
+     icnt=$((icnt + 1))
+   fi 
+done
+
+cp ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} $DATA/.
+  export err1=$?
+  cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_1/Vtable 
+  cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_2/Vtable 
+  cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_3/Vtable 
+  cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_4/Vtable 
+
+export GRIBSRC=NAM
+
+
+fi
 
 
 if [ $MODEL != "nmmb" ]
