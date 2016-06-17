@@ -1,0 +1,51 @@
+#BSUB -J %E%hiresw_%MODEL%_%DOMAIN%_awips_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_awips_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_awips_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -q %QUEUE%_shared
+#BSUB -R rusage[mem=1500]
+#BSUB -R affinity[core]
+#BSUB -cwd /tmpnwprd
+#BSUB -n 1
+#BSUB -R span[ptile=1]
+#BSUB -W 01:25
+#BSUB -P %PROJ%
+
+%include <head.h>
+%include <envir-p2.h>
+
+set -x
+
+export job=hiresw_%MODEL%_%DOMAIN%_awips_%CYC%
+export cyc=%CYC%
+export NEST="%DOMAIN%"
+export MODEL="%MODEL%"
+export MEMBER="ctl"
+
+VERSION_FILE=$NWROOT/versions/hiresw.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ecflow_client --msg="***JOB ${ECFNAME} ERROR: Version File $VERSION_FILE does not exist"
+  ecflow_client --abort
+  exit
+fi
+
+$NWROOT/hiresw.${hiresw_ver}/jobs/JHIRESW_AWIPS
+
+%include <tail.h>
+%manual
+######################################################################
+#
+#  PURPOSE:
+#
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

@@ -1,0 +1,47 @@
+#BSUB -J %E%hiresw_cleanup_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/hiresw_cleanup_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/hiresw_cleanup_%CYC%.o%J
+#BSUB -cwd /tmp
+#BSUB -L /bin/sh
+#BSUB -q %QUEUE%_shared
+#BSUB -n 1
+#BSUB -W 00:30
+#BSUB -P %PROJ%
+#BSUB -M 500
+
+%include <head.h>
+%include <envir-xc40.h>
+
+set -x
+
+export cyc=%CYC%
+
+#  PURPOSE:      Clean up HIRESW current cycle's working directory
+
+# versions file for HIRESW model $hiresw_ver
+VERSION_FILE=$NWROOT/versions/hiresw.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  exit
+fi
+
+$NWROOT/hiresw.${hiresw_ver}/jobs/JHIRESW_CLEANUP
+
+if [ $? -ne 0 ]; then
+  ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+  ecflow_client --abort
+  exit
+fi
+
+
+%include <tail.h>
+%manual
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

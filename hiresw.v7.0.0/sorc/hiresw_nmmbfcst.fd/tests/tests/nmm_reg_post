@@ -1,0 +1,27 @@
+###############################################################################
+#
+#  Regional NMM-B with pure binary input and post
+#  6x5 compute tasks / 1 thread / opnl physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="NMMB-regional run with post on quilt"
+
+export CNTL_DIR=NMMB_reg_post
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s \
+        	   nmmb_hst_01_bin_0048h_00m_00.00s \
+        	   nmmb_hst_01_nio_0000h_00m_00.00s \
+        	   nmmb_hst_01_nio_0048h_00m_00.00s \
+        	   nmmb_rst_01_bin_0024h_00m_00.00s \
+        	   nmmb_rst_01_nio_0024h_00m_00.00s \
+        	   BGDAWP.GrbF48 \
+        	   BGRD3D.GrbF48 \
+        	   BGRDSF.GrbF48"
+
+export_nems
+export_nmm
+export GBRG=reg
+export WPREC=true
+export WRITE_DOPOST=.true.
+
+RUN_SCRIPT=rt_nmm.sh
