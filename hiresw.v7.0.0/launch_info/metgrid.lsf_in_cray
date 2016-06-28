@@ -15,6 +15,9 @@ module load prod_envir
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
+export NTASK=9
+export PTILE=9
+
 export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
 export envir=test

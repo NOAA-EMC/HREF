@@ -13,6 +13,8 @@
 
 module load prod_util
 
+export NTASK=9
+export PTILE=3
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
