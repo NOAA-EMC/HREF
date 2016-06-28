@@ -50,6 +50,8 @@ export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 # export COMINrap=/gpfs/hps/ptmp/Matthew.Pyle/com/rap/prod/rap.${DATE}
-export COMINrap=/gpfs/td1/ptmp/Corey.Guastini/com/rap/prod/rap.${DATE}
+# export COMINrap=/gpfs/td1/ptmp/Corey.Guastini/com/rap/prod/rap.${DATE}
+
+export COMINrap=${COMROOTp1}/rap/prod/rap.${DATE}
 
 $HOMEhiresw/jobs/JHIRESW_PREPRAP

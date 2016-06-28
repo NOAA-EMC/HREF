@@ -18,6 +18,8 @@ export OMP_NUM_THREADS=1
 # module load ibmpe
 
 module load prod_util
+module load prod_envir
+module load grib_util/1.0.3
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}

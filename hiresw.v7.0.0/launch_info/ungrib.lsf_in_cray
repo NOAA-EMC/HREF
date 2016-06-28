@@ -14,6 +14,9 @@
 module load prod_util
 module load prod_envir
 
+export NTASK=4
+export PTILE=4
+
 module list
 
 export MP_LABELIO=yes
