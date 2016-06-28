@@ -43,7 +43,7 @@ export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 
-export HOMEgsm=${HOMEgsm:-${NWROOTp1:?}/gsm.${gsm_ver:?}}
+export HOMEgsm=${HOMEgsm:-${NWROOTp2:?}/gsm.${gsm_ver:?}}
 export FIXgsm=${FIXgsm:-${HOMEgsm}/fix/fix_am}
 
 # Run setpdy and initialize PDY variables
@@ -59,6 +59,14 @@ then
   export MP_USE_TOKEN_FLOW_CONTROL=yes
   export MP_INSTANCES=2
 fi
+
+# bsub post scripts  - clean these out before commit
+bsub < ${HOMEhiresw}/launch_info/sub_post.lsf_${NEST}_${MODEL}_${cyc}
+bsub < ${HOMEhiresw}/launch_info/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
+bsub < ${HOMEhiresw}/launch_info/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}
+bsub < ${HOMEhiresw}/launch_info/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
+bsub < ${HOMEhiresw}/launch_info/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
+### end bsub post scripts
  
 ###################################################
 # Execute the Script
