@@ -236,6 +236,10 @@
       call getarg(6,CORE)
         write(0,*) 'read CORE: ', CORE
 
+      call getarg(7,CTMP)
+      READ (ctmp,*) GDIN%KMAX
+        write(0,*) 'read KMAX: ', GDIN%KMAX
+
         if  (GDIN%REGION .eq. 'GUAM' .or.  GDIN%REGION .eq. 'guam') then
          HAVESREF=0
         else
@@ -295,8 +299,9 @@
 
     CALL RDHDRS_g2(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
     IM=GDIN%IMAX;JM=GDIN%JMAX;ITOT=NUMVAL
-    GDIN%KMAX=35       ! HARDWIRE MAXLEVs
-    if (lnest) GDIN%KMAX=35
+!!    GDIN%KMAX=50       ! HARDWIRE MAXLEVs
+ !!   if (lnest) GDIN%KMAX=50
+
     KMAX=GDIN%KMAX
 
         write(0,*) 'IM, JM, KMAX: ', IM,JM,KMAX
@@ -687,7 +692,7 @@
         write(0,*) 'kmax, ktop: ', kmax, ktop
 
        if (lnest) then 
-         ktop=35
+         ktop=kmax
 !!         RH(:,:,41:kmax)=0.  ! nests only have varbs to level 40 ???
        endif
 
@@ -1271,7 +1276,7 @@
 
 !----------------Make into subroutine lal
        RH1TOT=0.; RH1SUM=0.; RH2TOT=0.;  RH2SUM=0.
-       DO L=1,35
+       DO L=1,KMAX
         IF(PSFC(I,J)-PMID(I,J,L).LT.3000.) THEN
           RH1TOT=RH1TOT+RH(I,J,L)
           RH1SUM=RH1SUM+1.
