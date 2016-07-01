@@ -31,6 +31,7 @@ export OMP_NUM_THREADS=1
 
 export numprocs=_NPROC_
 export NTASK=_NPROC_
+export PTILE=_SPAN_
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
