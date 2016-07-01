@@ -129,7 +129,7 @@ fi
 
 ### number of input levels depends on source model data
 
-if [ $NEST -ne 'CONUSNSSL' ]
+if [ $NEST != "conusnssl" ]
 then
 NUMLEVS=27
 else

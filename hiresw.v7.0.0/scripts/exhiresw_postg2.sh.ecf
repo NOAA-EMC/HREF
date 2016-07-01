@@ -232,9 +232,6 @@ rm -f fort.*
 
 cp ${PARMhiresw}/hiresw_post_avblflds.xml       post_avblflds.xml
 cp ${PARMhiresw}/hiresw_params_grib2_tbl_new    params_grib2_tbl_new
-
-
-
                                                                                                                    
 ### assume that ready to process based on postmgr jobhj
 
