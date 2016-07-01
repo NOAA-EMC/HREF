@@ -295,8 +295,8 @@
 
     CALL RDHDRS_g2(LUGB,LUGI,IGDNUM,GDIN,NUMVAL)
     IM=GDIN%IMAX;JM=GDIN%JMAX;ITOT=NUMVAL
-    GDIN%KMAX=50       ! HARDWIRE MAXLEVs
-    if (lnest) GDIN%KMAX=50
+    GDIN%KMAX=35       ! HARDWIRE MAXLEVs
+    if (lnest) GDIN%KMAX=35
     KMAX=GDIN%KMAX
 
         write(0,*) 'IM, JM, KMAX: ', IM,JM,KMAX
@@ -687,9 +687,10 @@
         write(0,*) 'kmax, ktop: ', kmax, ktop
 
        if (lnest) then 
-         ktop=50
-!         RH(:,:,41:kmax)=0.  ! nests only have varbs to level 40 ???
+         ktop=35
+!!         RH(:,:,41:kmax)=0.  ! nests only have varbs to level 40 ???
        endif
+
        DO J=1,JM
        DO I=1,IM
          if (validpt(I,J)) then
@@ -1270,7 +1271,7 @@
 
 !----------------Make into subroutine lal
        RH1TOT=0.; RH1SUM=0.; RH2TOT=0.;  RH2SUM=0.
-       DO L=1,50
+       DO L=1,35
         IF(PSFC(I,J)-PMID(I,J,L).LT.3000.) THEN
           RH1TOT=RH1TOT+RH(I,J,L)
           RH1SUM=RH1SUM+1.
