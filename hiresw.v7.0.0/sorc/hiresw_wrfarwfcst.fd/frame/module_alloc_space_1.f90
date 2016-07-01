@@ -11159,7 +11159,7 @@ IF(in_use_for_config(id,'tke_pbl').AND.(.NOT.grid%is_intermediate))THEN
   grid%tail_statevars%Restart  = .TRUE.
   grid%tail_statevars%scalar_array = .FALSE.
   grid%tail_statevars%rfield_3d => grid%tke_pbl
-  grid%tail_statevars%streams(1) = 1 
+  grid%tail_statevars%streams(1) = 0 
   grid%tail_statevars%streams(2) = 2097152 
   grid%tail_statevars%sd1 = ids
   grid%tail_statevars%ed1 = (ide-1)
@@ -11218,7 +11218,7 @@ IF(in_use_for_config(id,'el_pbl').AND.(.NOT.grid%is_intermediate))THEN
   grid%tail_statevars%Restart  = .FALSE.
   grid%tail_statevars%scalar_array = .FALSE.
   grid%tail_statevars%rfield_3d => grid%el_pbl
-  grid%tail_statevars%streams(1) = 1 
+  grid%tail_statevars%streams(1) = 0 
   grid%tail_statevars%streams(2) = 0 
   grid%tail_statevars%sd1 = ids
   grid%tail_statevars%ed1 = (ide-1)
