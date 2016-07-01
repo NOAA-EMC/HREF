@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err
-#BSUB -q "dev"
+#BSUB -q "debug"
 #BSUB -J HIRESW_UNGRIB
 #BSUB -W 0:08
 #BSUB -P HRW-T2O

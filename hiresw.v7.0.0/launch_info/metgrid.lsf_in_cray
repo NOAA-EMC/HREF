@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_metgrid.out__DOM___CORE___CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_metgrid.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "debug"
 #BSUB -J HIRESW_METGRID
 #BSUB -W 0:29
 #BSUB -P HRW-T2O
@@ -50,7 +50,7 @@ then
 
 bsub < sub_prelimfinal.lsf__DOM___CORE___CYC_
 
-rm sub_prelimfinal.lsf__DOM___CORE___CYC_
+# rm sub_prelimfinal.lsf__DOM___CORE___CYC_
 
 else
 
