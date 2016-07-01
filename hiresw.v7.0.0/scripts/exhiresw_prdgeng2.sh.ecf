@@ -70,7 +70,7 @@ while [ $fhr -le $fhrend ]
 do
 
 
-if [ $NEST = "conus" ]
+if [ $NEST = "conus" -o $NEST = "conusnssl" ]
 then
 
 echo "#!/bin/bash" > $DATA/poescript_${fhr}
@@ -134,7 +134,7 @@ then
 cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_2 \
     $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_4 \
     $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_5 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_6 > \
-  $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
  
 $WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.idx
@@ -165,8 +165,8 @@ rm  $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc
 
 # reassemble the ndfd output grid
 
-cat $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.conus.grib2_1  $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.conus.grib2_2 \
-    $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.conus.grib2_3 > $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.conus.grib2
+cat $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_1  $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_2 \
+    $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_3 > $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2
 
 
 ## is this overwritten by smartinit output?
@@ -195,6 +195,73 @@ $WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2 -ncep_uv $COM
 
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2.idx
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2.idx
+  fi
+
+rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2
+rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_2
+
+elif [ $NEST = "conusnssl" ]
+then
+
+# reassemble the large 5 km output grid
+
+  if test $SENDCOM = 'YES'
+  then
+
+cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_2 \
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_4 \
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_5 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_6 > \
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2
+ 
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2.idx
+
+### change to use a PARM .txt file, and do for CONUS and AK
+
+cp $PARMhiresw/hiresw_subset.txt .
+
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 |  grep -F -f hiresw_subset.txt | \
+$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 
+
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.subset.grib2.idx
+
+    if [ $SENDDBN = YES ]; then
+       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2
+       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2.idx
+    fi
+
+  fi # SENDCOM
+
+
+rm  $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_2 \
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_4 \
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_5 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_6
+
+# reassemble the ndfd output grid
+
+cat $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_1  $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_2 \
+    $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_3 > $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2
+
+rm $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_1 
+rm $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_2
+rm $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_3
+
+# reassemble the legacy 5 km output grid
+
+  if test $SENDCOM = 'YES'
+  then
+cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2 \
+ > $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2
+
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2
+
+cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_2 \
+ > $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2
+
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2
+
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2.idx
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2.idx
   fi
 
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2

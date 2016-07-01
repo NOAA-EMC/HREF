@@ -107,7 +107,7 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
-if [ $NEST -ne 'CONUSNSSL' ]
+if [ $NEST != "conusnssl" ]
 then
 
 mod=gfs
@@ -127,7 +127,7 @@ while [ $whr -le $last ]
 do
 
 
-if [ $NEST -ne 'CONUSNSSL' ]
+if [ $NEST != "conusnssl" ]
 then
 
 icnt=0
@@ -152,6 +152,8 @@ cp ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} $DATA/.
 export GRIBSRC=GFS
 
 else
+
+echo conusnssl branch
 
 icnt=0
 while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} ]

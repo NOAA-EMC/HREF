@@ -250,8 +250,15 @@ export FORT78="$DATA/class1.bufr"
 
 startmsg
 #$EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+
+if [ ${RUNLOC} -eq "conusnsslarw" ]
+then
+aprun $EXEChiresw/hiresw_sndp_nssl${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+export err=$?;err_chk
+else
 aprun $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;err_chk
+fi
 
 ############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS
 
