@@ -4,6 +4,19 @@ DOM=${1}
 CORE=${2}
 CYC=${3}
 
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+
+cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/launch_info/
 
 which bsub
 
