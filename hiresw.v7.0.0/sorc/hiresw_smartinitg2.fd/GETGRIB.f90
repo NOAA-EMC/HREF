@@ -859,9 +859,9 @@
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,& 
                      KPDS,KGDS,MASK,GRID,PMID(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
 
-        if (IRET .eq. 0) then
-        write(0,*) 'PMID(1,1,LL): ', LL, PMID(1,1,LL)
-        endif
+!        if (IRET .eq. 0) then
+!        write(0,*) 'PMID(1,1,LL): ', LL, PMID(1,1,LL)
+!        endif
 
         if (IRET .ne. 0) then
         write(0,*) 'IRET from pressure column : ', IRET
@@ -883,9 +883,9 @@
         J=0
       CALL SETVAR_g2(LUGB,LUGI,NUMVAL,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,KF,K,&
                      KPDS,KGDS,MASK,GRID,HGHT(:,:,LL),GFLD,ISSREF,IRET,ISTAT)
-        if (IRET .eq. 0) then
-        write(0,*) 'HGHT(1,1,LL): ', HGHT(1,1,LL)
-        endif
+!        if (IRET .eq. 0) then
+!        write(0,*) 'HGHT(1,1,LL): ', HGHT(1,1,LL)
+!        endif
 
 !mptest       J=K
       ENDDO
