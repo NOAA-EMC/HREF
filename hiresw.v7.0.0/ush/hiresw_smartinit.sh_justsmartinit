@@ -78,6 +78,7 @@ cpfs $INPUT_DATA/DATE .
 #SMARTINIT OUTPUT grid filename extension
 outreg=$rg
 case $RUNTYP in
+  conusnsslarw) rg=conus; outres="2p5km"; outreg=conusnssl;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   conusarw|conusnmmb) rg=conus; outres="2p5km"; outreg=conus;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   hiarw|hinmmb) rg=hi; outres="2p5km"; outreg=hi;wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
   prarw|prnmmb) rg=pr; outres="2p5km"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
@@ -179,6 +180,10 @@ grdextmerc=" 0 64 2500 2500"
      aknmmb)  sgrb=216;ogrd=91
       grid="255 5 1649 1105 40530 181429 8 210000 2976 2976 0 64 0 25000 25000";;
      conusarw)  sgrb=212;ogrd=184 
+      grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
+      topopre=ruc2_ndfd_elevtiles.ndfd2.5
+      maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
+     conusnsslarw)  sgrb=212;ogrd=184 
       grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
       topopre=ruc2_ndfd_elevtiles.ndfd2.5
       maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
@@ -531,7 +536,7 @@ fi
 # Run Smartinit
 #========================================================
   case $RUNTYP in
-   conus|conusnest) RGIN=CS;;
+   conus|conusnssl|conusnest) RGIN=CS;;
       conusnest2p5) RGIN=CS2P;;
         ak_rtmages) RGIN=AKRT;;
                  *) RGIN=`echo $rg |tr '[a-z]'  '[A-Z]' `;;
@@ -548,8 +553,26 @@ fi
 
 sleep 2 # safety sleep
 
-  $EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
-  export err=$?; err_chk
+echo START env AT CALL OF g2 script
+env
+echo END env AT CALL OF g2 script
+
+if [ $RUNTYP != "conusnsslarw" ]
+then
+
+echo USE 50 level version
+$EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+export err=$?; err_chk
+
+else
+
+echo USE 35 level version
+ls -l $EXEChiresw/hiresw_smartinit_g2_35lev
+echo args $cyc $fhr $ogrd $RGIN $inest $MODEL
+$EXEChiresw/hiresw_smartinit_g2_35lev $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+export err=$?; err_chk
+
+fi
 
 
 # ncoproc all hours now
@@ -563,7 +586,11 @@ sleep 2 # safety sleep
    export ogrd 
    export mksmart
 
+echo run hiresw_ncoprocg2.sh
+
    ${USHhiresw}/hiresw_ncoprocg2.sh
+
+echo past run hiresw_ncoprocg2.sh
 
 
 done  #fhr loop

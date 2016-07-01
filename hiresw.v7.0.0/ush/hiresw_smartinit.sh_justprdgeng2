@@ -72,6 +72,7 @@ export mdl=$RUNTYP
 #SMARTINIT OUTPUT grid filename extension
 outreg=$rg
 case $RUNTYP in
+  conusnsslarw) rg=conus; outreg=conusnssl; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   conusarw|conusnmmb) rg=conus; outreg=conus; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   hiarw|hinmmb) rg=hi; compress="jpeg";outreg=hi; wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
   prarw|prnmmb) rg=pr; compress="jpeg"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
@@ -168,6 +169,10 @@ grdextmerc=" 0 64 2500 2500"
      aknmmb)  sgrb=216;ogrd=91
       grid="255 5 1649 1105 40530 181429 8 210000 2976 2976 0 64 0 25000 25000";;
      conusarw)  sgrb=212;ogrd=184 
+      grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
+      topopre=ruc2_ndfd_elevtiles.ndfd2.5
+      maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
+     conusnsslarw)  sgrb=212;ogrd=184 
       grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
       topopre=ruc2_ndfd_elevtiles.ndfd2.5
       maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;

@@ -49,7 +49,7 @@ then
   DOMIN_bucket="general_g2"
   IM=884
   JM=614
-elif [ $DOMIN = "conusarw" ]
+elif [ $DOMIN = "conusarw" -o $DOMIN = "conusnsslarw" ]
 then
   filenamthree="wrf.EMCONUS05"
   DOMIN_bucket="general_g2"
