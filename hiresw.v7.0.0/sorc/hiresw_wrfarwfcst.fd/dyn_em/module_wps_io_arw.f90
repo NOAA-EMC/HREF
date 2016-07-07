@@ -2234,6 +2234,8 @@ end subroutine retrieve_field
         RAP=.false.
         endif
 
+	write(0,*) 'here with RAP: ', RAP
+
 
         write(0,*) 'garb1: ', garb1
         write(0,*) 'garb3: ', garb3
@@ -2260,8 +2262,10 @@ end subroutine retrieve_field
         if (RAP) then
             allocate(dumdata_soil(IDS:IDE-1,JDS:JDE-1,6))
         else
-             allocate(dumdata_soil(IDS:IDE-1,JDS:JDE-1,4))
+            allocate(dumdata_soil(IDS:IDE-1,JDS:JDE-1,4))
         endif
+
+	write(0,*) 'dumdata_soil final dimension: ', size(dumdata_soil,dim=3)
 
 	endif
 
@@ -2290,7 +2294,7 @@ end subroutine retrieve_field
         write(0,*) 'to dumdata_soil read'
         read(47) 
         write(0,*) 'read SOIL_LAYERS'
-       read(47) dumdata_soil  
+       read(47) 
         write(0,*) 'read SM'
 
         read(47) 
