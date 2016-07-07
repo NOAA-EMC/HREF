@@ -559,20 +559,16 @@ echo END env AT CALL OF g2 script
 
 if [ $RUNTYP != "conusnsslarw" ]
 then
-
-echo USE 50 level version
-$EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
-export err=$?; err_chk
-
+NLEV=50
 else
+NLEV=35
+fi
 
-echo USE 35 level version
-ls -l $EXEChiresw/hiresw_smartinit_g2_35lev
-echo args $cyc $fhr $ogrd $RGIN $inest $MODEL
-$EXEChiresw/hiresw_smartinit_g2_35lev $cyc $fhr $ogrd $RGIN $inest $MODEL > smartinit.out${fhr} 2>&1
+echo execute with $NLEV levels
+
+$EXEChiresw/hiresw_smartinit_g2 $cyc $fhr $ogrd $RGIN $inest $MODEL $NLEV > smartinit.out${fhr} 2>&1
 export err=$?; err_chk
 
-fi
 
 
 # ncoproc all hours now
