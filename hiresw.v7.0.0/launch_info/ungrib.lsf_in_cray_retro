@@ -29,10 +29,10 @@ export RUN=hiresw
 export NEST=_DOM_
 export cyc=_CYC_
 export MODEL=_CORE_
+export DATE=_DATE_
 
-export DATEroot=/gpfs/hps/nco/ops/com/date
-DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
-
+# export DATEroot=/gpfs/hps/nco/ops/com/date
+# DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 # export COMGFS=/gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}
 # export COMINgfs=/gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}
@@ -55,7 +55,7 @@ echo delete $typ
 rm -rf ${DATAROOT}/hiresw.${typ}_${NEST}_${MODEL}_${cyc}_${envir}
 done
 
-$HOMEhiresw/jobs/JHIRESW_UNGRIB
+$HOMEhiresw/jobs/JHIRESW_UNGRIB_retro
 
 bsub < sub_metgrid.lsf__DOM___CORE___CYC_
 ## rm sub_metgrid.lsf__DOM___CORE___CYC_
