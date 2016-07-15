@@ -81,10 +81,24 @@ else
 cp $PARMhiresw/hiresw_conus_awp5km.txt hiresw_grid_extract.txt
 fi
 
+if [ $DOMIN_SMALL = "conus" ]
+then
+
+if [ $fhr -eq 00 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+elif [ $fhr%2 -eq 0 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+else
+INPUT_DATA=$INPUT_DATA_ODD
+fi
+
+fi
 
 while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
-sleep 6
+sleep 3
 done
 
 ### extract just needed items
@@ -164,7 +178,7 @@ echo COMPUTING PRECIP BUCKETS
 while [ ! -e $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00
-sleep 10
+sleep 3
 done
 
 
@@ -196,7 +210,7 @@ echo "3 hourly, do 3H precip bucket"
 while [ ! -e $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00
-sleep 10
+sleep 3
 done
 
 
