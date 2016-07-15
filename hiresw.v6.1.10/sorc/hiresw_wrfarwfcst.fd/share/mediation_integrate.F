@@ -1237,7 +1237,8 @@ SUBROUTINE med_last_solve_io ( grid , config_flags )
 !end of zhang's doing
 #endif
      IF ( grid%id .EQ. 1 ) THEN
-       CALL med_restart_out ( grid , config_flags )
+       write(*,*) 'AVOID med_restart_out in med_last_solve_io'
+!       CALL med_restart_out ( grid , config_flags )
      ENDIF
    ENDIF
 
