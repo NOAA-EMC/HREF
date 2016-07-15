@@ -222,10 +222,24 @@ fi
 echo use_1h $use_1h
 echo use_3h $use_3h
 
+if [ $DOMIN_SMALL = "conus" ]
+then
+
+if [ $fhr -eq 00 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+elif [ $fhr%2 -eq 0 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+else
+INPUT_DATA=$INPUT_DATA_ODD
+fi
+
+fi
 
 while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
-sleep 6
+sleep 3
 done
 
 
@@ -380,7 +394,7 @@ then
 while [ ! -e $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00
-sleep 10
+sleep 3
 done
 
 else
@@ -388,7 +402,7 @@ else
 while [ ! -e $DATA/prdgen_full/$filenamthree$onehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_full/$filenamthree$onehrprev.tm00
-sleep 10
+sleep 3
 done
 
 fi
@@ -411,7 +425,7 @@ then
 while [ ! -e $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00
-sleep 10
+sleep 3
 done
 
 else
@@ -419,7 +433,7 @@ else
 while [ ! -e $DATA/prdgen_full/$filenamthree$threehrprev.tm00 ]
 do
 echo waiting for $DATA/prdgen_full/$filenamthree$threehrprev.tm00
-sleep 10
+sleep 3
 done
 
 fi

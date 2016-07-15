@@ -392,8 +392,8 @@ export MP_CMDFILE=wgrib2.poe
 time aprun -n 1 -N 1 -d $NTASK wgrib2.poe
 export err=$?;  err_chk
 
-#sleep 60
-sleep 5
+## still needed?
+sleep 2
 
 $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
@@ -678,7 +678,7 @@ while (! cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 mo
 
 	echo about to execute hiresw_smartprecipg2
 	ls -l fort.*
-	sleep 2
+#	sleep 2
 
      $EXEChiresw/hiresw_smartprecipg2 <<EOF > ${ppgm}precip${freq}${fhr}.out 2>errfile_${freq}${fhr}
 $pfhr1 $pfhr2 $pfhr3 $pfhr4 $IARW
