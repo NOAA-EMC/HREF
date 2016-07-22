@@ -155,7 +155,7 @@
 !
 !temporary vars
 !
-      real(kind=8) :: time_initpost=0.,INITPOST_tim=0.,btim,timef,rtc
+      real(kind=8) :: time_initpost=0.,INITPOST_tim=0.,btim,timef,rtc,now
       real rinc(5)
       integer :: status=0,iostatusD3D=0,iostatusFlux=0
       integer iii,l,k,ierr,nrec,ist,lusig,idrt
@@ -729,8 +729,14 @@
       ELSE IF(TRIM(IOFORM) == 'binarynemsiompiio')THEN
        IF(MODELNAME == 'NMM') THEN
 ! close nemsio file for serial read 
+       now=timef()
+       write(0,*) 'to nemsio_close  ', (now - btim)*1.e-3
         call nemsio_close(nfile,iret=status)
+       now=timef()
+       write(0,*) 'past nemsio_close  ', (now - btim)*1.e-3
         CALL INITPOST_NEMS_MPIIO()
+       now=timef()
+       write(0,*) 'past INITPOST_NEMS_MPIIO  ', (now - btim)*1.e-3
        ELSE
         PRINT*,'POST does not have nemsio mpi option for model,',MODELNAME, &
          'STOPPING,'
@@ -749,8 +755,10 @@
        PRINT*,'UNKNOWN MODEL OUTPUT FORMAT, STOPPING'
        STOP 9999
       END IF 
+
       INITPOST_tim = INITPOST_tim +(timef() - btim)
       time_initpost = time_initpost + rtc()
+
       IF(ME.EQ.0)THEN
         WRITE(6,*)'WRFPOST:  INITIALIZED POST COMMON BLOCKS'
       ENDIF
