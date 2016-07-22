@@ -57,7 +57,7 @@ mkdir -p $COMOUT
 
 ########################################################
 # Execute the script.
-$HOMEhiresw/scripts/exhiresw_wrfbufr.sh.ecf
+$HOMEhiresw/scripts/exhiresw_wrfbufr_odd.sh.ecf
 ########################################################
 
 cd $DATAROOT
