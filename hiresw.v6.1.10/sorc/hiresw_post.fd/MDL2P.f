@@ -682,31 +682,31 @@
 	  FACT=(ALSL(LP)-ALOG(PINT(I,J,LL)))/                            &
                (ALOG(PINT(I,J,LL))-ALOG(PINT(I,J,LL-1)))
 
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'LL, PINT(LL), PINT(LL-1): ', LL, PINT(I,J,LL), &
-                   PINT(I,J,LL-1)
-        write(0,*) 'LL, ZINT(I,J,LL), ZINT(I,J,LL-1), FACT: ', LL, ZINT(I,J,LL), &
-                   ZINT(I,J,LL-1), FACT
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'LL, PINT(LL), PINT(LL-1): ', LL, PINT(I,J,LL), &
+!                   PINT(I,J,LL-1)
+!        write(0,*) 'LL, ZINT(I,J,LL), ZINT(I,J,LL-1), FACT: ', LL, ZINT(I,J,LL), &
+!                   ZINT(I,J,LL-1), FACT
+!        endif
         
 
 	  IF(ZINT(I,J,LL).LT.SPVAL .AND. ZINT(I,J,LL-1).LT.SPVAL)        &
              FSL(I,J)=ZINT(I,J,LL)+(ZINT(I,J,LL)-ZINT(I,J,LL-1))*FACT
           FSL(I,J)=FSL(I,J)*G 
 
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'set FSL/g to: ', FSL(I,J)/G
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'set FSL/g to: ', FSL(I,J)/G
+!        endif
 
 	 ELSE
 	  FSL(I,J)=FPRS(I,J,LP-1)-RD*(TPRS(I,J,LP-1)                      &
                    *(H1+D608*QPRS(I,J,LP-1))                              &
                    +TSL(I,J)*(H1+D608*QSL(I,J)))                          &
                    *LOG(SPL(LP)/SPL(LP-1))/2.0 
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'LP-1,FPRS(I,J,LP-1),TPRS(I,J,LP-1), TSL, FSL: ',LP-1, &
-                   FPRS(I,J,LP-1),TPRS(I,J,LP-1), TSL(I,J),FSL(I,J)
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'LP-1,FPRS(I,J,LP-1),TPRS(I,J,LP-1), TSL, FSL: ',LP-1, &
+!                   FPRS(I,J,LP-1),TPRS(I,J,LP-1), TSL(I,J),FSL(I,J)
+!        endif
          END IF
 	END IF  
 

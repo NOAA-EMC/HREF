@@ -125,6 +125,9 @@
               nsrfc,nrdlw,nrdsw,nheat,nclod,                           &
               iunit,nrec,I,J,L, iret,nframe,impf,jmpf,nframed2,       &
 	      igdout,ll,n,im1,jm1,iim1
+
+      real(kind=8) :: btim,timef,rtc,now
+
 !
       DATA BLANK/'    '/
 !
@@ -132,6 +135,8 @@
 !     START INIT HERE.
 !
       WRITE(6,*)'INITPOST:  ENTER INITPOST'
+
+      btim=timef()
 !     
 !     
 !     STEP 1.  READ MODEL OUTPUT FILE
@@ -569,7 +574,13 @@
       allocate(tmp(fldsize*nrec))
       print*,'allocate tmp successfully'
       tmp=0.
+
+	now=timef()
+	write(0,*) 'to nemsio_denseread call: ', (now-btim)*1.e-3
+
       call nemsio_denseread(nfile,1,im,jsta,jend,tmp,iret=iret)
+	now=timef()
+	write(0,*) 'past nemsio_denseread call: ', (now-btim)*1.e-3
       if(iret/=0)then
         print*,"fail to read nemsio file using mpi io read, stopping"
         stop
@@ -825,6 +836,8 @@
         endif
         if(debugprint)print*,'sample l ',VarName,' = ',ll,q(im/2,(jsta+jend)/2,ll)
       end do ! do loop for l
+	now=timef()
+	write(0,*) 'past placing Q ', (now-btim)*1.e-3
       
 ! model level u      
       VarName='ugrd'
@@ -914,6 +927,9 @@
 	end if ! end of wind interpolation for global NMM 
 
       end do ! do loop for l
+
+	now=timef()
+	write(0,*) 'past placing U,V ', (now-btim)*1.e-3
 
       varname='pblh'
       VcoordName='sfc'
