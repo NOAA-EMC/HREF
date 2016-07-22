@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ########################################
-# Runs HIRESW WRFBUFR and SNDP programs
+# RUNS HIRESW POST JOB
 ########################################
 set -xa
 export PS4='$SECONDS + ' 
@@ -13,53 +13,54 @@ date
 export NET=${NET:-hiresw}
 export RUN=${RUN:-hiresw}
 
-# 
+############################################################# 
 # obtain unique process id (pid) and make temp directories
-#
+############################################################# 
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}/hiresw.bufrpost_${NEST:?}_${MODEL:?}_${cyc:?}_${envir:?}}
+export DATA=${DATA:-${DATAROOT:?}/hiresw.posteven_${NEST:?}_${MODEL:?}_${cyc:?}_${envir:?}}
 export INPUT_DATA=${INPUT_DATA:-${DATAROOT:?}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}}
-
-mkdir -p $DATA/bufrpost
-cd $DATA/bufrpost 
+mkdir -p $DATA
+cd $DATA
 
 ####################################
 # Determine Job Output Name on System
 ####################################
-
 export outid="LL$job"
 export pgmout="OUTPUT.${pid}"
 
 export cycle=${cycle:-t${cyc}z}
 
-export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_BUFR}
+export IOBUF_PARAMS='*:size=64M:count=8:verbose'
+# export IOBUF_PARAMS='fort.11:size=64M:count=8:verbose'
 
+
+export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
+                                                                                                             
 export HOMEhiresw=${HOMEhiresw:-${NWROOT:?}/hiresw.${hiresw_ver:?}}
 export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
 export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 
-export HOMEobsproc_shared_bufr_cword=${HOMEobsproc_shared_bufr_cword:-${NWROOTp1:?}/obsproc_shared/bufr_cword.${obsproc_shared_bufr_cword_ver:?}}
-export USHobsproc_shared_bufr_cword=${USHobsproc_shared_bufr_cword:-$HOMEobsproc_shared_bufr_cword/ush}
-export EXECobsproc_shared_bufr_cword=${EXECobsproc_shared_bufr_cword:-$HOMEobsproc_shared_bufr_cword/exec}
-
 # Run setpdy and initialize PDY variables
 setpdy.sh
 . PDY
 
 export COMIN=${COMIN:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
 
-export IOBUF_PARAMS='*:size=64M:count=8:verbose'
-
-mkdir -p $COMOUT
+################################################
+# Copy Forecast files from com
+################################################
+. $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.envir.sh
+export tmmark=tm00
 
 ########################################################
-# Execute the script.
-$HOMEhiresw/scripts/exhiresw_wrfbufr.sh.ecf
+# Run the ex-script
+#
+${HOMEhiresw}/scripts/exhiresw_postg2_even.sh.ecf
+#
 ########################################################
 
-cd $DATAROOT
-if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+postmsg "$jlogfile" "$job FOR NEST=${NEST}${MODEL} IS COMPLETE"
+
 date

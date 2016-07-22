@@ -80,7 +80,6 @@ NPROCBUFR=1
 BUFRSPAN=1
 elif [ $DOM$CORE == "conusarw" ]
 then
-# MODPROCS=840
 MODPROCS=1344
 MODSPAN=24
 POSTPROCS=24
@@ -165,6 +164,12 @@ cat sub_prdgen.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed
 
 cat sub_wrfbufrsnd.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
   sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsndodd.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsndodd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_wrfbufrsndeven.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsndeven.lsf_${DOM}_${CORE}_${CYC}
 
 cat sub_smartinit.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
 sub_smartinit.lsf_${DOM}_${CORE}_${CYC}

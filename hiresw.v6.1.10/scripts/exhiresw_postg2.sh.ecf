@@ -251,9 +251,11 @@ elif [ $MODEL = arw ] ; then
 
 export POSTMOD=NCAR
 
-while [ ! -e $INPUT_DATA/fcstdone${fhr}.${tmmark} ]
+count=0
+while [ ! -e $INPUT_DATA/fcstdone${fhr}.${tmmark} -a $count -lt 200 ]
 do
-sleep 6
+sleep 3
+let count=count+1
 done
 
 # cat > itag <<EOF
@@ -281,7 +283,7 @@ export POSTMOD=NMM
 
 while [ ! -e $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
 do
-sleep 6
+sleep 3
 done
 
 # cat > itag <<EOF
