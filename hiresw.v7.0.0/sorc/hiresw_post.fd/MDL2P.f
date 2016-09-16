@@ -64,8 +64,7 @@
               O3PROD, O3TNDY, MWPV, UNKNOWN, VDIFFZACCE, ZGDRAG, CNVCTVMMIXING, VDIFFMACCE,&
               MGDRAG, CNVCTUMMIXING, NCNVCTCFRAC, CNVCTUMFLX, CNVCTDETMFLX, CNVCTZGDRAG,&
               CNVCTMGDRAG, ZMID, ZINT, PMIDV, CNVCTDMFLX
-      use vrbls2d, only: T500, W_UP_MAX, W_DN_MAX, W_MEAN, PSLP, FIS, Z1000, &
-                         DWDT_MAX, TKE_MAX, W_STDV
+      use vrbls2d, only: T500, W_UP_MAX, W_DN_MAX, W_MEAN, PSLP, FIS, Z1000
       use masks, only: LMH, SM
       use physcons, only: CON_FVIRT, CON_ROG, CON_EPS, CON_EPSM1
       use params_mod, only: H1M12, DBZMIN, H1, PQ0, A2, A3, A4, RHMIN, G, RGAMOG, RD, D608, GI,&
@@ -191,7 +190,7 @@
 !***  INTERPOLATION ABOVE GROUND NOW.
 !***
 !
-         print*,'LSM= ',lsm
+!         print*,'LSM= ',lsm
 	if(gridtype=='B' .or. gridtype=='E') &
 	 call exch(PINT(1:IM,JSTA_2L:JEND_2U,LP1)) 
 	 
@@ -199,7 +198,7 @@
 !        if(me.eq.0) print *,'in LP loop me=',me,'UH=',UH(1:10,JSTA,LP), &
 !          'JSTA_2L=',JSTA_2L,'JEND_2U=',JEND_2U,'JSTA=',JSTA,JEND, &
 !          'PMID(1,1,L)=',(PMID(1,1,LI),LI=1,LM),'SPL(LP)=',SPL(LP)
-        if(me.eq.0) print *,'in mdl2p,LP loop o3=',maxval(o3(1:im,jsta:jend,lm))
+!        if(me.eq.0) print *,'in mdl2p,LP loop o3=',maxval(o3(1:im,jsta:jend,lm))
 !
         DO J=JSTA_2L,JEND_2U
         DO I=1,IM
@@ -3222,11 +3221,11 @@
          ELSE
            ID(18) = IFHR - 1
          ENDIF
-         DO J=JSTA,JEND
-         DO I=1,IM
-            GRID1(I,J)=DWDT_MAX(I,J)
-         ENDDO
-         ENDDO
+!         DO J=JSTA,JEND
+!         DO I=1,IM
+!            GRID1(I,J)=DWDT_MAX(I,J)
+!         ENDDO
+!         ENDDO
          CALL GRIBIT(IGET(660),LP,GRID1,IM,JM)
       ENDIF
 !
@@ -3246,11 +3245,11 @@
          ELSE
            ID(18) = IFHR - 1
          ENDIF
-         DO J=JSTA,JEND
-         DO I=1,IM
-            GRID1(I,J)=TKE_MAX(I,J)
-         ENDDO
-         ENDDO
+!         DO J=JSTA,JEND
+!         DO I=1,IM
+!            GRID1(I,J)=TKE_MAX(I,J)
+!         ENDDO
+!         ENDDO
          CALL GRIBIT(IGET(661),LP,GRID1,IM,JM)
       ENDIF
 
@@ -3268,11 +3267,11 @@
          ELSE
            ID(18) = IFHR - 1
          ENDIF
-         DO J=JSTA,JEND
-         DO I=1,IM
-            GRID1(I,J)=W_STDV(I,J)
-         ENDDO
-         ENDDO
+!         DO J=JSTA,JEND
+!         DO I=1,IM
+!            GRID1(I,J)=W_STDV(I,J)
+!         ENDDO
+!         ENDDO
          CALL GRIBIT(IGET(662),LP,GRID1,IM,JM)
       ENDIF
 

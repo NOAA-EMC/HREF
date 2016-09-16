@@ -298,7 +298,7 @@
  50   CONTINUE
 !     END OF MSL FD LEVELS
       ELSE
-	write(6,*) 'computing above AGL'
+!	write(6,*) 'computing above AGL'
 !
 !     AGL FD LEVELS 
 !

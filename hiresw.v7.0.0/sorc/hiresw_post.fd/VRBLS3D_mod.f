@@ -7,21 +7,24 @@
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
        implicit none
 !
-      real, allocatable :: UH(:,:,:),VH(:,:,:),WH(:,:,:) &
-      ,U(:,:,:),V(:,:,:),T(:,:,:),Q(:,:,:) &
-      ,CWM(:,:,:),Q2(:,:,:),PMID(:,:,:),PMIDV(:,:,:) &
-      ,PINT(:,:,:),ALPINT(:,:,:),ZMID(:,:,:) &
-      ,ZINT(:,:,:),OMGA(:,:,:) &
-      ,T_ADJ(:,:,:) &
-      ,F_ice(:,:,:),F_rain(:,:,:),F_RimeF(:,:,:) &
-      ,QQW(:,:,:), QQI(:,:,:), QQR(:,:,:), QQS(:,:,:), QQG(:,:,:) &
-      ,QQNI(:,:,:),QQNR(:,:,:) &
+      real, allocatable :: UH(:,:,:),VH(:,:,:),WH(:,:,:)             &
+      ,U(:,:,:),V(:,:,:),T(:,:,:),Q(:,:,:)                           &
+      ,CWM(:,:,:),Q2(:,:,:),PMID(:,:,:),PMIDV(:,:,:)                 &
+      ,PINT(:,:,:),ALPINT(:,:,:),ZMID(:,:,:)                         &
+      ,ZINT(:,:,:),OMGA(:,:,:)                                       &
+      ,T_ADJ(:,:,:)                                                  &
+      ,F_ice(:,:,:),F_rain(:,:,:),F_RimeF(:,:,:)                     &
+      ,QQW(:,:,:), QQI(:,:,:), QQR(:,:,:), QQS(:,:,:), QQG(:,:,:)    &
+      ,QQNI(:,:,:),QQNR(:,:,:)                                       &
       ,CFR(:,:,:), DBZ(:,:,:), DBZR(:,:,:), DBZI(:,:,:), DBZC(:,:,:) &
-      ,TTND(:,:,:),RSWTT(:,:,:),RLWTT(:,:,:),REFL_MDL(:,:,:) &
-      ,EXCH_H(:,:,:),TRAIN(:,:,:),TCUCN(:,:,:),EL_PBL(:,:,:) &
-      ,MCVG(:,:,:),EXTCOF55(:,:,:),NLICE(:,:,:) &
+      ,TTND(:,:,:),RSWTT(:,:,:),RLWTT(:,:,:), REF_10CM(:,:,:),REFL_MDL(:,:,:)    &
+      ,EXCH_H(:,:,:),TRAIN(:,:,:),TCUCN(:,:,:),EL_PBL(:,:,:)         &
+      ,MCVG(:,:,:),EXTCOF55(:,:,:),NLICE(:,:,:)                      &
+!! Wm Lewis: added
+      ,NRAIN(:,:,:)                                                  &
+      ,radius_cloud(:,:,:),radius_ice(:,:,:),radius_snow(:,:,:)      &
 ! Add GFS fields     
-      ,O3(:,:,:)             &
+      ,O3(:,:,:),O(:,:,:),O2(:,:,:)              &
 ! Add GFS D3D fields
       ,vdifftt(:,:,:)         &
       ,tcucns(:,:,:)          &
@@ -46,6 +49,8 @@
       ,cnvctdetmflx(:,:,:)    &
       ,cnvctzgdrag(:,:,:)     &
       ,cnvctmgdrag(:,:,:)     &   
+      ,QQNWFA(:,:,:)          &
+      ,QQNIFA(:,:,:)          &
 !
 ! Add aerosol optical properties for GOCART (NGAC)
       ,ext(:,:,:), asy(:,:,:)           &
@@ -65,6 +70,6 @@
       ,dpres(:,:,:),rhomid(:,:,:)       &  
 
 ! Add NCAR GFIP ICING
-      ,icing_gfip(:,:,:)
+      ,icing_gfip(:,:,:),icing_gfis(:,:,:)
 
       end module vrbls3d

@@ -468,6 +468,12 @@
           kd = td
           cflag = 0
       END IF
+
+	if (kd .eq. 0) then
+	write(0,*) 'divide zero avoided...t,td was: ', t,td
+	kd=t-5
+	endif
+
 !
       ed = c0 - c1 * kd - c2 / kd
       IF (ed.lt.-14.0.or.ed.gt.7.0) RETURN

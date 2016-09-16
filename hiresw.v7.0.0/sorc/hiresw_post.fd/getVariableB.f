@@ -74,9 +74,9 @@ subroutine getVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
 
    start_index = 1
    end_index = 1
-     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
+!     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
    call ext_int_get_var_info(dh,TRIM(VarName),ndim,ordering,Stagger,start_index,end_index,WrfType,ierr)
-     write(*,*)'VarName,end_index(1,2,3),ndim= ',VarName,end_index(1),end_index(2),end_index(3),ndim   
+!     write(*,*)'VarName,end_index(1,2,3),ndim= ',VarName,end_index(1),end_index(2),end_index(3),ndim   
    IF ( ierr /= 0 ) THEN
      write(*,*)'Error: ',ierr,TRIM(VarName),' not found in ',fileName
 !CHUANG make sure data=0 when not found in wrf output
@@ -152,7 +152,7 @@ subroutine getVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
 !mp       VarBuff(i,j,l)=data(i,ll,j,1)
       enddo
      enddo
-     write(*,*) Varname,' L ',l,': = ',data(1,1,ll,1)
+!     write(*,*) Varname,' L ',l,': = ',data(1,1,ll,1)
     enddo
    end if
  27 continue
@@ -236,13 +236,13 @@ subroutine getVariableBikj(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2
    character(len=132) :: Stagger
 
 
-        write(6,*) 'using ikj reader'
+!        write(6,*) 'using ikj reader'
 
    start_index = 1
    end_index = 1
-     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
+!     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
    call ext_int_get_var_info(dh,TRIM(VarName),ndim,ordering,Stagger,start_index,end_index,WrfType,ierr)
-     write(*,*)'VarName,end_index(1,2,3),ndim= ',VarName,end_index(1),end_index(2),end_index(3),ndim   
+!     write(*,*)'VarName,end_index(1,2,3),ndim= ',VarName,end_index(1),end_index(2),end_index(3),ndim   
    IF ( ierr /= 0 ) THEN
      write(*,*)'Error: ',ierr,TRIM(VarName),' not found in ',fileName
 !CHUANG make sure data=0 when not found in wrf output
@@ -318,7 +318,7 @@ subroutine getVariableBikj(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2
       enddo
      enddo
 !     write(0,*) Varname,' L ',l,': = ',data(1,ll,1,1)
-     write(*,*) Varname,' L ',l,': = ',data(1,ll,1,1)
+!     write(*,*) Varname,' L ',l,': = ',data(1,ll,1,1)
     enddo
    end if
  27 continue

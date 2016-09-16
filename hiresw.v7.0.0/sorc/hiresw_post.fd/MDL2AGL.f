@@ -133,8 +133,8 @@
          IF(LVLS(LP,IGET(253)).GT.0 .OR.LVLS(LP,IGET(279)).GT.0 .OR.    &
      &      LVLS(LP,IGET(280)).GT.0 .OR.LVLS(LP,IGET(281)).GT.0) THEN
 
-        write(0,*) 'LOOP 310, LP: ', LP
-        write(0,*) 'ZAGL(LP): ', ZAGL(LP)
+!        write(0,*) 'LOOP 310, LP: ', LP
+!        write(0,*) 'ZAGL(LP): ', ZAGL(LP)
 !
           jj=float(jsta+jend)/2.0
           ii=float(im)/3.0
@@ -157,9 +157,9 @@
             IF(ZDUM.GE.ZAGL(LP))THEN
              NL1X(I,J)=L+1
 
-        if (I .eq. 82 .and. J .eq. 39) then
-        write(0,*) 'NL1X defined: ', NL1X(I,J)
-        endif
+!        if (I .eq. 82 .and. J .eq. 39) then
+!        write(0,*) 'NL1X defined: ', NL1X(I,J)
+!        endif
 
 	     GO TO 30
             ENDIF
@@ -173,9 +173,9 @@
 !
            IF(NL1X(I,J).EQ.(LLMH+1) .AND. ZAGL(LP).GT.0.)THEN
             NL1X(I,J)=LM
-        if (I .eq. 82 .and. J .eq. 39) then
-        write(0,*) 'NL1X defined as LM: ', NL1X(I,J)
-        endif
+!        if (I .eq. 82 .and. J .eq. 39) then
+!        write(0,*) 'NL1X defined as LM: ', NL1X(I,J)
+!        endif
            ENDIF
 !
 !        if(NL1X(I,J).EQ.LMP1)print*,'Debug: NL1X=LMP1 AT '
@@ -214,16 +214,16 @@
 !     &         (ALOG(PMID(I,J,LL))-ALOG(PMID(I,J,LL-1)))
            ZDUM=ZAGL(LP)+ZINT(I,J,NINT(LMH(I,J))+1)
            FACT=(ZDUM-ZMID(I,J,LL))/(ZMID(I,J,LL)-ZMID(I,J,LL-1))
-        if (I .eq. 82 .and. J .eq. 39) then
-        write(0,*) 'ZDUM, FACT: ', ZDUM, FACT
-        endif
+!        if (I .eq. 82 .and. J .eq. 39) then
+!        write(0,*) 'ZDUM, FACT: ', ZDUM, FACT
+!        endif
 !	  
 	 DBZ1(I,J)=DBZ(I,J,LL)+(DBZ(I,J,LL)-DBZ(I,J,LL-1))*FACT
 
-        if (I .eq. 82 .and. J .eq. 39) then
-        write(0,*) 'I,J,LL, DBZ(I,J,LL), DBZ1(I,J): ', &
-           I,J,LL, DBZ(I,J,LL), DBZ1(I,J)
-        endif
+!        if (I .eq. 82 .and. J .eq. 39) then
+!        write(0,*) 'I,J,LL, DBZ(I,J,LL), DBZ1(I,J): ', &
+!           I,J,LL, DBZ(I,J,LL), DBZ1(I,J)
+!        endif
 
 	 DBZR1(I,J)=DBZR(I,J,LL)+(DBZR(I,J,LL)-DBZR(I,J,LL-1))*FACT
 	 DBZI1(I,J)=DBZI(I,J,LL)+(DBZI(I,J,LL)-DBZI(I,J,LL-1))*FACT
@@ -369,7 +369,7 @@
 ! SRD
 !---  Max Derived Radar Reflectivity
           IF((IGET(421).GT.0) )THEN
-	write(0,*) 'IGET(421) writing REFD_MAX, max: ', maxval(REFD_MAX)
+!	write(0,*) 'IGET(421) writing REFD_MAX, max: ', maxval(REFD_MAX)
              DO J=JSTA,JEND
              DO I=1,IM
                GRID1(I,J)=REFD_MAX(I,J)

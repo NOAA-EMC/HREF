@@ -53,9 +53,15 @@ subroutine count_recs_wrf_binary_file(in_unit,wrf_ges_filename,nrecs)
   integer(i_long) missing
   equivalence (missing,missing4(1))
   integer(i_llong),parameter:: lrecl=2**20
+!  integer(i_llong),parameter:: lrecl=2**12
   integer(i_byte) buf(lrecl)
   integer i,loc_count,nreads
   logical lastbuf
+
+
+	write(0,*) 'in_unit: ', in_unit
+	write(0,*) 'trim(wrf_ges_filename): ', trim(wrf_ges_filename)
+	write(0,*) 'lrecl: ', lrecl
 
   open(in_unit,file=trim(wrf_ges_filename),access='direct',recl=lrecl)
   nrecs=0

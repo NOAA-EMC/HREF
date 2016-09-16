@@ -1341,6 +1341,9 @@
 	    ID(1:25) = 0
 
 !mp
+! give initial definition
+            TMAXMIN=0.5
+!mp
 	    TMAXMIN=AMAX1(TMAXMIN,1.)
 !mp
 	    ITMAXMIN     = INT(TMAXMIN)
