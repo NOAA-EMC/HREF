@@ -8,12 +8,14 @@ TARGET   = ../../exec/hiresw_post
 #
 #FC       = ${COMP_MP} -compiler ${COMPILER}
 FC       = ${COMP_MP}
+CC       = ${C_COMP}
 CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
+CFLAGS= -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long'
 OPTS     = -O3 -fp-model fast -assume noold_ldout_format 
 FREE     = -FR
 TRAPS    = # -ftrapuv  -check all  -fp-stack-check  -fstack-protector
-DEBUG    = -g  # -traceback
+DEBUG    = -g  -traceback
 
 #
 # Now the hard part. NCEPPOST needs 19 libraries, WOW!!!!!
@@ -91,7 +93,8 @@ LIBS     = $(WRF_LIB) \
 
 OBJS =  wrf_io_flags.o getVariable.o getIVariable.o getIVariableN.o \
         getVariableB.o \
-        kinds_mod.o machine.o physcons.o \
+        kinds_mod.o machine.o physcons.o      \
+        native_endianness.o blockIO.o initialize_byte_swap_wrf_binary_file.o \
         count_recs_wrf_binary_file.o inventory_wrf_binary_file.o \
         next_buf.o retrieve_index.o ZENSUN.o CLDFRAC_ZHAO.o \
         GFSPOST.o GETGBANDSCATTER.o post_t.o \
@@ -115,11 +118,11 @@ OBJS =  wrf_io_flags.o getVariable.o getIVariable.o getIVariableN.o \
         SPLINE.o TABLE.o TABLEQ.o TRPAUS.o TTBLEX.o WETBULB.o WRFPOST.o \
         CALMICT.o MICROINIT.o GPVS.o MDL2SIGMA.o \
         ETCALC.o CANRES.o CALGUST.o WETFRZLVL.o SNFRAC.o MDL2AGL.o SNFRAC_GFS.o \
-        AVIATION.o DEALLOCATE.o INITPOST_NMM_BIN_MPIIO.o INITPOST_BIN.o \
+        AVIATION.o DEALLOCATE.o INITPOST_NMM_BIN_MPIIO.o INITPOST_BIN.o INITPOST_BIN_MPIIO.o  \
         CALPBL.o MDL2SIGMA2.o INITPOST_GFS.o CALRH_GFS.o LFMFLD_GFS.o \
         CALRAD_WCLOUD_newcrtm.o MDL2THANDPV.o CALPBLREGIME.o POLEAVG.o \
         INITPOST_NEMS.o GETNEMSNDSCATTER.o ICAOHEIGHT.o INITPOST_GFS_NEMS.o \
-        INITPOST_BIN_MPIIO.o GEO_ZENITH_ANGLE.o GFIP3.o GRIDAVG.o CALUPDHEL.o INITPOST_GFS_SIGIO.o \
+        GEO_ZENITH_ANGLE.o GFIP3.o GRIDAVG.o CALUPDHEL.o INITPOST_GFS_SIGIO.o \
         AllGETHERV_GSD.o MSFPS.o SELECT_CHANNELS.o ALLOCATE_ALL.o INITPOST_NEMS_MPIIO.o ASSIGNNEMSIOVAR.o
 
 #OBJS =  wrf_io_flags.o getVariable.o getIVariable.o getIVariableN.o \
@@ -169,6 +172,8 @@ $(TARGET): $(OBJS)
 .f90.o:
 	$(FC) $(FFLAGS) -c $<
 
+.c.o :
+	${CC} ${CFLAGS} -c $<
 
 clean:
 	/bin/rm -f  *.lst *.o *.mod

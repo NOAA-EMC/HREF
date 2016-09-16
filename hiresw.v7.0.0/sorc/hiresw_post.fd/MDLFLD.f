@@ -325,10 +325,10 @@
   !    ice (snow) follows algorithm in GSMCOLUMN; radar reflectivity
   !    is derived to be consistent with microphysical assumptions 
   !
-	write(0,*) 'calling CALMICT with C1D max ', maxval(C1D)
+!	write(0,*) 'calling CALMICT with C1D max ', maxval(C1D)
            CALL CALMICT(P1D,T1D,Q1D,C1D,FI1D,FR1D,FS1D,CUREFL          &
      &                 ,QW1,QI1,QR1,QS1,DBZ1,DBZR1,DBZI1,DBZC1,NLICE1)
-	write(0,*) 'return with max DBZ1 of: ', maxval(DBZ1)
+!	write(0,*) 'return with max DBZ1 of: ', maxval(DBZ1)
         ELSE
   !
   !--- This branch is executed if GFS micro (imp_physics=9) is run in the NMM.
@@ -375,10 +375,10 @@
                                         
 
 ! still good at this write statement
-	write(0,*) 'here with max DBZ(:,:,L): ', maxval(DBZ(:,:,L))
+!	write(0,*) 'here with max DBZ(:,:,L): ', maxval(DBZ(:,:,L))
        ENDDO           !-- End DO L loop        
        END IF  ! end of icount_calmict
-	write(0,*) 'here with max DBZ(a): ', maxval(DBZ(:,:,:))
+!	write(0,*) 'here with max DBZ(a): ', maxval(DBZ(:,:,:))
        icount_calmict=icount_calmict+1
        if(me==0)print*,'debug calmict:icount_calmict= ',icount_calmict
 
@@ -464,7 +464,7 @@
         ELSE
           IICE=1
         END IF
-        PRINT*,'IICE= ',IICE
+!        PRINT*,'IICE= ',IICE
 
         IF(IMP_PHYSICS.NE.8 .AND. IMP_PHYSICS.NE.9) THEN
 !tgs - non-Thompson schemes
@@ -473,7 +473,7 @@
 
 !	goto 981
 
-	write(0,*) 'IICE: ', IICE
+!	write(0,*) 'IICE: ', IICE
 
         DO L=1,LM
          DO J=JSTA,JEND
@@ -707,7 +707,7 @@
       ENDIF     !tgs endif for Thompson scheme
 
       END IF
-	write(0,*) 'here with max DBZ(b): ', maxval(DBZ(:,:,:))
+!	write(0,*) 'here with max DBZ(b): ', maxval(DBZ(:,:,:))
 
             IF (IGET(950).GT.0) THEN
 
@@ -727,9 +727,9 @@
                  DO J=JSTA,JEND
                  DO I=1,IM
                    GRID1(I,J)=DBZ(I,J,Zm10c(I,J))
-        if (mod(I,10) .eq. 0 .and. mod(J,10) .eq. 0) then
-        write(0,*) 'I,J,Zm10c, GRID1: ', I,J,Zm10c(I,J), GRID1(I,J)
-        endif
+!        if (mod(I,10) .eq. 0 .and. mod(J,10) .eq. 0) then
+!        write(0,*) 'I,J,Zm10c, GRID1: ', I,J,Zm10c(I,J), GRID1(I,J)
+!        endif
                  ENDDO
                  ENDDO
 
@@ -996,7 +996,7 @@
                  GRID1(I,J)=DBZ(I,J,LL)
                ENDDO
                ENDDO
-        write(0,*) 'LL, max(dbz): ', LL, maxval(grid1)
+!        write(0,*) 'LL, max(dbz): ', LL, maxval(grid1)
 
                CALL BOUND(GRID1,DBZmin,DBZmax)
                if(grib=="grib1" )then
@@ -2222,7 +2222,7 @@
 !     Per Mei Xu, VIL is radar derived vertically integrated liquid water based
 !     on emprical conversion factors (0.00344) 
       IF (IGET(581).GT.0  .and. IMP_PHYSICS .NE. 5) THEN
-	write(0,*) 'here with max DBZ(c): ', maxval(DBZ(:,:,:))
+!	write(0,*) 'here with max DBZ(c): ', maxval(DBZ(:,:,:))
         DO J=JSTA,JEND
           DO I=1,IM
             GRID1(I,J)=0.0
@@ -2235,9 +2235,10 @@
               (10.**(DBZ(I,J,L)/10.))**0.57143*(ZINT(I,J,L)-ZINT(I,J,L+1))/1000.
 	endif
 
-	if ( mod(L,3) .eq. 0 .and. mod(J,25) .eq. 0 .and. mod(I,25) .eq. 0) then
-	write(0,*) 'DBZ, GRID1 vil: ', I,J, L,DBZ(I,J,L),GRID1(I,J)
-	endif
+!	if ( mod(L,3) .eq. 0 .and. mod(J,25) .eq. 0 .and. mod(I,25) .eq. 0) then
+!	write(0,*) 'DBZ, GRID1 vil: ', I,J, L,DBZ(I,J,L),GRID1(I,J)
+!	endif
+
             ENDDO
           ENDDO
         ENDDO
@@ -2489,7 +2490,7 @@
 !     +,QI1(ii,jj) ,QS1(ii,jj),T1D(ii,jj),P1D(ii,jj)
 
         CALL CALVIS(Q1D,QW1,QR1,QI1,QS1,T1D,P1D,VIS)
-        print*,'Debug: Visbility ',VIS(ii,jj)
+!        print*,'Debug: Visbility ',VIS(ii,jj)
 
 !        print*,'Debug: Visbility ',Q1D(ii,jj),QW1(ii,jj),QR1(ii,jj),QI1(ii,jj)
 !     +,QS1(ii,jj),T1D(ii,jj),P1D(ii,jj)
@@ -2752,9 +2753,9 @@
                   DO I=1,IM
 
                    if (EGRID5(I,J) .le. EGRID4(I,J)) then
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'working with L : ', L
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'working with L : ', L
+!        endif
 		    HCOUNT=HCOUNT+1
 		    DP=EGRID6(I,J)-EGRID7(I,J)
                     EGRID1(I,J)=EGRID1(I,J)+UH(I,J,L)*DP
@@ -2855,7 +2856,7 @@
 
             IF ( (IGET(454).GT.0) ) THEN
 
-        write(0,*) 'IM is: ', IM
+!        write(0,*) 'IM is: ', IM
                 DO J=JSTA,JEND
                 DO I=1,IM
 
@@ -2866,11 +2867,11 @@
                 ENDIF
 
 
-        if ( (I .ge. 15 .and. I .le. 17)  .and. J .ge. 193 .and. J .le. 195) then
-        write(0,*) 'I,J,EGRID1(I,J) (wind speed): ', I,J, EGRID1(I,J)
-        write(0,*) 'I,J,PBLH: ', I,J, EGRID4(I,J)
-        write(0,*) 'I,J,GRID1 (ventilation rate): ', I,J, GRID1(I,J)
-        endif
+!        if ( (I .ge. 15 .and. I .le. 17)  .and. J .ge. 193 .and. J .le. 195) then
+!        write(0,*) 'I,J,EGRID1(I,J) (wind speed): ', I,J, EGRID1(I,J)
+!        write(0,*) 'I,J,PBLH: ', I,J, EGRID4(I,J)
+!        write(0,*) 'I,J,GRID1 (ventilation rate): ', I,J, GRID1(I,J)
+!        endif
 
 
                 ENDDO
@@ -2957,7 +2958,7 @@
 !
       IF(IGET(400).GT.0)THEN
 
-        write(0,*) 'radar echo top'
+!        write(0,*) 'radar echo top'
         DO J=JSTA,JEND
           DO I=1,IM
 
@@ -3009,7 +3010,7 @@
           ENDDO
         ENDDO
 
-        write(0,*) 'maxval of VIL: ', maxval(GRID1)
+!        write(0,*) 'maxval of VIL: ', maxval(GRID1)
 
 !!! NEW VIL
 

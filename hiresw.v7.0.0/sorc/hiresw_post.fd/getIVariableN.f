@@ -85,7 +85,7 @@ subroutine getIVariableN(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,
    VarBuff=0.
      go to 27
    ENDIF
-   write(*,*)'WrfType in getIVariable= ',WrfType
+!   write(*,*)'WrfType in getIVariable= ',WrfType
 !   if( WrfType /= WRF_REAL .AND. WrfType /= WRF_REAL8 ) then !Ignore if not a real variable
 !     write(*,*) 'Error: Not a real variable',WrfType
 !     return

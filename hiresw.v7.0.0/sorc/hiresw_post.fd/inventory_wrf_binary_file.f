@@ -64,6 +64,7 @@ subroutine inventory_wrf_binary_file(in_unit,wrf_ges_filename,nrecs, &
   integer(i_long) missing
   equivalence (missing,missing4(1))
   integer(i_llong),parameter:: lrecl=2**20
+!  integer(i_llong),parameter:: lrecl=2**12
   integer(i_byte) buf(lrecl)
   integer i,loc_count,nreads
   logical lastbuf
@@ -100,7 +101,17 @@ subroutine inventory_wrf_binary_file(in_unit,wrf_ges_filename,nrecs, &
 
   blanks=trim(' ')
 
-  open(in_unit,file=trim(wrf_ges_filename),access='direct',recl=lrecl)
+	write(0,*) 'A what is i_llong: ', i_llong
+	write(0,*) 'A in_unit: ', in_unit
+	write(0,*) 'wrf_ges_filename(1:6): ', wrf_ges_filename(1:6)
+!	write(0,*) 'A what is 2^8 : ', 2**8
+!	write(0,*) 'A what is 2^12 : ', 2**12
+	write(0,*) 'A what is lrecl: ' , lrecl
+
+	write(0,*) 'TO OPEN STATEMENT'
+  open(in_unit,file=wrf_ges_filename(1:6),access='direct',recl=lrecl)
+	write(0,*) 'PAST OPEN STATEMENT'
+!   open(in_unit,file=wrf_ges_filename,access='direct',recl=lrecl)
   irecs=0
   missing=-9999
   nextbyte=0_i_llong

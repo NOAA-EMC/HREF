@@ -62,8 +62,8 @@
               ancprc, lspa, sno, si, cldefi, th10, q10, pshltr, tshltr,&
               qshltr, akhs, akms, albase, albedo, czen, hbot, htopd, hbots,&
               cuppt, cprate, hbotd, htops, u10max,v10max, &
-              w_up_max, w_dn_max, up_heli_max, refd_max, grpl_max, &
-              dwdt_max, w_stdv, tke_max
+              w_up_max, w_dn_max, up_heli_max, refd_max, grpl_max
+!              dwdt_max, w_stdv, tke_max
       use soil, only: sldpth, sllevel, sh2o, smc, stc
       use masks, only: lmv, lmh, htm, vtm, hbm2, sm, sice, dx, gdlat, gdlon, dy
       use kinds, only             : i_llong
@@ -1042,73 +1042,6 @@
         else
            print*, 'read GRPL_MAX properly ', &
                    minval(GRPL_MAX),maxval(GRPL_MAX)
-        end if
-
-      end if
-
-
-      VarName='MAXDW2D'
-
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        DWDT_MAX=SPVAL
-      else
-        this_offset=file_offset(index+1)+(jsta_2l-1)*4*im
-        this_length=im*(jend_2u-jsta_2l+1)
-        call mpi_file_read_at(iunit,this_offset &
-       ,DWDT_MAX,this_length,mpi_real4 &
-       , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          DWDT_MAX=SPVAL
-        else
-           print*, 'read DWDT_MAX properly ', &
-                   minval(DWDT_MAX),maxval(DWDT_MAX)
-        end if
-
-      end if
-
-      VarName='WSTDV'
-
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        W_STDV=SPVAL
-      else
-        this_offset=file_offset(index+1)+(jsta_2l-1)*4*im
-        this_length=im*(jend_2u-jsta_2l+1)
-        call mpi_file_read_at(iunit,this_offset &
-       ,W_STDV,this_length,mpi_real4 &
-       , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          W_STDV=SPVAL
-        else
-           print*, 'read W_STDV properly ', &
-                   minval(W_STDV),maxval(W_STDV)
-        end if
-
-      end if
-
-      VarName='MAXTKE2D'
-
-      call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TKE_MAX=SPVAL
-      else
-        this_offset=file_offset(index+1)+(jsta_2l-1)*4*im
-        this_length=im*(jend_2u-jsta_2l+1)
-        call mpi_file_read_at(iunit,this_offset &
-       ,TKE_MAX,this_length,mpi_real4 &
-       , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TKE_MAX=SPVAL
-        else
-           print*, 'read TKE_MAX properly ', &
-                   minval(TKE_MAX),maxval(TKE_MAX)
         end if
 
       end if

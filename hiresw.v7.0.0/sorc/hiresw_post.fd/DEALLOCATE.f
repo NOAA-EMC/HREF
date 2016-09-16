@@ -80,24 +80,24 @@
       deallocate(tcucn)
       deallocate(EL_PBL)
 
-        write(0,*) 'dealloc through 1'
+!        write(0,*) 'dealloc through 1'
 !     MP FIELD   
       deallocate(cwm)
       deallocate(F_ice)
       deallocate(F_rain)
       deallocate(F_RimeF)
-        write(0,*) 'dealloc through 2'
+!        write(0,*) 'dealloc through 2'
       deallocate(QQW)
       deallocate(QQI)
       deallocate(QQR)
-        write(0,*) 'dealloc through 3'
+!        write(0,*) 'dealloc through 3'
       deallocate(QQS)
       deallocate(QQG)
       deallocate(QQNI)
-        write(0,*) 'dealloc through 4'
+!        write(0,*) 'dealloc through 4'
       deallocate(QQNR)
       deallocate(EXTCOF55)
-        write(0,*) 'dealloc through 5'
+!        write(0,*) 'dealloc through 5'
       deallocate(CFR)
       deallocate(REFL_MDL)
       deallocate(DBZ)
@@ -105,7 +105,7 @@
       deallocate(DBZI)
       deallocate(DBZC)
       deallocate(mcvg)
-        write(0,*) 'dealloc through 5a'
+!        write(0,*) 'dealloc through 5a'
       deallocate(NLICE)
 !GFS FIELD
       deallocate(o3)
@@ -114,7 +114,7 @@
       deallocate(tcucns)
       deallocate(vdiffmois)
       deallocate(dconvmois)
-        write(0,*) 'dealloc through 5b'
+!        write(0,*) 'dealloc through 5b'
       deallocate(sconvmois)
       deallocate(nradtt)
       deallocate(o3vdiff)
@@ -122,22 +122,22 @@
       deallocate(o3tndy)
       deallocate(mwpv)
       deallocate(unknown)
-        write(0,*) 'dealloc through 5c'
+!        write(0,*) 'dealloc through 5c'
       deallocate(vdiffzacce)
       deallocate(zgdrag)
       deallocate(cnvctummixing)
       deallocate(vdiffmacce)
       deallocate(mgdrag)
       deallocate(cnvctvmmixing)
-        write(0,*) 'dealloc through 5d'
+!        write(0,*) 'dealloc through 5d'
       deallocate(ncnvctcfrac)
       deallocate(cnvctumflx)
       deallocate(cnvctdmflx)
       deallocate(cnvctdetmflx)
       deallocate(cnvctzgdrag)
-        write(0,*) 'dealloc through 5e'
+!        write(0,*) 'dealloc through 5e'
       deallocate(cnvctmgdrag)      
-        write(0,*) 'dealloc through 5ea'
+!        write(0,*) 'dealloc through 5ea'
 !
 !     FROM SOIL
 !
@@ -147,26 +147,26 @@
       deallocate(SLDPTH)
       deallocate(RTDPTH)
       deallocate(SLLEVEL)
-        write(0,*) 'dealloc through 5eb'
+!        write(0,*) 'dealloc through 5eb'
 !
 !     FROM VRBLS2D
 !
       deallocate(u10)
-        write(0,*) 'dealloc through 5eba'
+!        write(0,*) 'dealloc through 5eba'
       deallocate(v10)
-        write(0,*) 'dealloc through 5ebb'
+!        write(0,*) 'dealloc through 5ebb'
 !tst      deallocate(tshltr)
-        write(0,*) 'dealloc through 5ec'
+!        write(0,*) 'dealloc through 5ec'
       deallocate(qshltr)
       deallocate(mrshltr)
       deallocate(smstav)
       deallocate(ssroff)
-        write(0,*) 'dealloc through 5ed'
+!        write(0,*) 'dealloc through 5ed'
       deallocate(bgroff)
       deallocate(vegfrc)
       deallocate(acsnow)
       deallocate(acsnom)
-        write(0,*) 'dealloc through 5f'
+!        write(0,*) 'dealloc through 5f'
       deallocate(cmc)
       deallocate(sst)
       deallocate(qz0)
@@ -185,7 +185,7 @@
       deallocate(akmsavg)
       deallocate(u10max)
       deallocate(v10max)
-        write(0,*) 'dealloc through 5g'
+!        write(0,*) 'dealloc through 5g'
       deallocate(u10h)
       deallocate(v10h)
       deallocate(akms)
@@ -253,7 +253,7 @@
       deallocate(albase)
       deallocate(cldfra)
       deallocate(cprate)
-        write(0,*) 'dealloc through 5h'
+!        write(0,*) 'dealloc through 5h'
       deallocate(cnvcfr)
       deallocate(ivgtyp)
       deallocate(isltyp)
@@ -267,7 +267,7 @@
       deallocate(lspa)
       deallocate(rswinc)
       deallocate(vis)
-        write(0,*) 'dealloc through 5i'
+!        write(0,*) 'dealloc through 5i'
       deallocate(pd)
       deallocate(mxsnal)
 ! add GFS fields
@@ -307,7 +307,7 @@
       deallocate(maxrhshltr)
       deallocate(minrhshltr)
       deallocate(mixht)
-        write(0,*) 'dealloc through 5j'
+!        write(0,*) 'dealloc through 5j'
       deallocate(epsr)
       deallocate(dzice)
       deallocate(alwinc)
@@ -325,7 +325,7 @@
       deallocate(airbeamswin)
       deallocate(airdiffswin)
       deallocate(snowfall)
-        write(0,*) 'dealloc through 5k'
+!        write(0,*) 'dealloc through 5k'
 ! GSD
       deallocate(rainc_bucket)
       deallocate(rainnc_bucket)
@@ -333,7 +333,7 @@
       deallocate(snow_bucket)
       deallocate(qrmax)
       deallocate(tmax)
-        write(0,*) 'dealloc through 6'
+!        write(0,*) 'dealloc through 6'
       deallocate(snownc)
       deallocate(graupelnc)
 ! SRD
@@ -341,30 +341,30 @@
       deallocate(w_up_max)
       deallocate(w_dn_max)
       deallocate(w_mean)
-        write(0,*) 'dealloc through 7'
+!        write(0,*) 'dealloc through 7'
       deallocate(refd_max)
       deallocate(up_heli_max)
       deallocate(up_heli_max16)
       deallocate(grpl_max) 
       deallocate(up_heli)
       deallocate(up_heli16)
-        write(0,*) 'dealloc through 8'
+!        write(0,*) 'dealloc through 8'
       deallocate(nca_wq)
       deallocate(nci_refd)
       deallocate(nca_refd)     
-        write(0,*) 'dealloc through 8a'
+!        write(0,*) 'dealloc through 8a'
       deallocate(ltg1_max)
       deallocate(ltg2_max)
       deallocate(ltg3_max)
-        write(0,*) 'dealloc through 8b'
+!        write(0,*) 'dealloc through 8b'
       deallocate(nci_ltg)
       deallocate(nca_ltg)
       deallocate(nci_wq)
-        write(0,*) 'dealloc through 8c'
-      deallocate(dwdt_max)
-      deallocate(tke_max)
-      deallocate(w_stdv)
-        write(0,*) 'dealloc through 8d'
+!        write(0,*) 'dealloc through 8c'
+!      deallocate(dwdt_max)
+!      deallocate(tke_max)
+!      deallocate(w_stdv)
+!        write(0,*) 'dealloc through 8d'
 
 !
 !     FROM MASKS

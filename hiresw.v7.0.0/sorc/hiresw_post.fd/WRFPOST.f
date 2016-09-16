@@ -205,25 +205,27 @@
 !read namelist
       open(5,file='itag')
  98   read(5,111,end=1000) fileName
-      print*,'fileName= ',fileName
+      if (me == 0) print*,'fileName= ',fileName
       read(5,113) IOFORM
-           print*,'IOFORM= ',IOFORM
+!           print*,'IOFORM= ',IOFORM
       read(5,120) grib
-           print*,'OUTFORM= ',grib
+!           print*,'OUTFORM= ',grib
       if(index(grib,"grib")==0) then
        grib='grib1'
        rewind(5,iostat=ierr)
        read(5,111,end=1000) fileName
        read(5,113) IOFORM
       endif
-           print*,'OUTFORM2= ',grib
+!           print*,'OUTFORM2= ',grib
       read(5,112) StartDateStr
       read(5,112) DateStr
       read(5,114) MODELNAME 
 ! assume for now that the first date in the stdin file is the start date
       read(DateStr,300) iyear,imn,iday,ihrst,imin
+	if (me == 0) then
       write(*,*) 'in WRFPOST iyear,imn,iday,ihrst,imin',                &
              iyear,imn,iday,ihrst,imin
+        endif
  300  format(i4,1x,i2,1x,i2,1x,i2,1x,i2)
          IDAT(1)=imn
          IDAT(2)=iday
@@ -235,7 +237,7 @@
  113  format(a20)
  114  format(a4)
  120  format(a5)
-      print*,'MODELNAME= ',MODELNAME,'grib=',grib
+!      print*,'MODELNAME= ',MODELNAME,'grib=',grib
 !Chuang: If model is GFS, read in flux file name from unit5
       if(MODELNAME .EQ. 'GFS')then
          read(5,111,end=117)fileNameFlux
@@ -312,7 +314,7 @@
         end if
       end if
       LSMP1=LSM+1
-      print*,'LSM, SPL = ',lsm,spl(1:lsm)        
+!      print*,'LSM, SPL = ',lsm,spl(1:lsm)        
 !      end if
 ! CRA READ VALID TIME UNITS
       if(MODELNAME.EQ.'RAPR')then
@@ -341,10 +343,10 @@
 !Chuang: add dynamical allocation
       if(TRIM(IOFORM) .EQ. 'netcdf')THEN
         call ext_ncd_ioinit(SysDepInfo,Status)
-        print*,'called ioinit', Status
+!         print*,'called ioinit', Status
         call ext_ncd_open_for_read( trim(fileName), 0, 0, " ",          &
           DataHandle, Status)
-        print*,'called open for read', Status
+!        print*,'called open for read', Status
         if ( Status /= 0 ) then
           print*,'error opening ',fileName, ' Status = ', Status ; stop
         endif
@@ -367,7 +369,7 @@
         call ext_ncd_get_dom_ti_integer(DataHandle                      &
           ,'SF_SURFACE_PHYSICS',itmp,1,ioutcount, status )
         iSF_SURFACE_PHYSICS = itmp
-        print*,'SF_SURFACE_PHYSICS= ',iSF_SURFACE_PHYSICS
+!        print*,'SF_SURFACE_PHYSICS= ',iSF_SURFACE_PHYSICS
 ! set NSOIL to 4 as default for NOAH but change if using other
 ! SFC scheme
         NSOIL=4
@@ -378,7 +380,7 @@
         ELSE IF(itmp.eq.7)then !Pleim Xu
          NSOIL=2
         END IF
-        print*,'NSOIL from wrfout= ',NSOIL
+!        print*,'NSOIL from wrfout= ',NSOIL
 
          call ext_ncd_ioclose ( DataHandle, Status )
 
@@ -387,10 +389,10 @@
         TRIM(IOFORM).EQ.'binarympiio' )THEN
       
           call ext_int_ioinit(SysDepInfo,Status)
-          print*,'called ioinit', Status
+!          print*,'called ioinit', Status
           call ext_int_open_for_read( trim(fileName), 0, 0, " ",      &
             DataHandle, Status)
-          print*,'called open for read', Status
+!          print*,'called open for read', Status
           if ( Status /= 0 ) then
             print*,'error opening ',fileName, ' Status = ', Status ; stop
           endif
@@ -430,7 +432,7 @@
             NSOIL=2
            END IF
           END IF	
-         print*,'NSOIL from wrfout= ',NSOIL
+!         print*,'NSOIL from wrfout= ',NSOIL
          call ext_int_ioclose ( DataHandle, Status )
        
       ELSE IF(TRIM(IOFORM) == 'grib' )THEN
@@ -812,13 +814,13 @@
        if(grib=="grib2") then
          call mpi_barrier(mpi_comm_comp,ierr)
 !      if(me==0)call w3tage('bf grb2  ')
-        write(0,*) 'calling gribit2 with post_fname: ', post_fname, '_END'
+!        write(0,*) 'calling gribit2 with post_fname: ', post_fname, '_END'
          call gribit2(post_fname)
-        write(0,*) 'past gribit2 for post_fname: ', post_fname, '_END'
+!        write(0,*) 'past gribit2 for post_fname: ', post_fname, '_END'
          deallocate(datapd)
-        write(0,*) 'past datapd dealloc'
+!        write(0,*) 'past datapd dealloc'
          deallocate(fld_info)
-        write(0,*) 'past fld_info dealloc'
+!        write(0,*) 'past fld_info dealloc'
          if(npset>=num_pset) go to 20
         endif
 
@@ -832,7 +834,7 @@
  20   CONTINUE
 !
 !-------
-        write(0,*) 'call grib_info_finalize'
+!        write(0,*) 'call grib_info_finalize'
      call grib_info_finalize()
         write(0,*) 'past grib_info_finalize'
 !

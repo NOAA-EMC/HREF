@@ -75,9 +75,9 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
 
    start_index = 1
    end_index = 1
-     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
+!     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
    call ext_int_get_var_info(dh,TRIM(VarName),ndim,ordering,Stagger,start_index,end_index,WrfType,ierr)
-     write(*,*)'VarName,end_index(1,2,3)= ',VarName,end_index(1),end_index(2),end_index(3)   
+!     write(*,*)'VarName,end_index(1,2,3)= ',VarName,end_index(1),end_index(2),end_index(3)   
    IF ( ierr /= 0 ) THEN
      write(*,*)'Error: ',ierr,TRIM(VarName),' not found in ',fileName
 !CHUANG make sure data=0 when not found in wrf output
@@ -85,7 +85,7 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
    VarBuff=0.
      go to 27
    ENDIF
-   write(*,*)'WrfType in getIVariable= ',WrfType
+!   write(*,*)'WrfType in getIVariable= ',WrfType
 !   if( WrfType /= WRF_REAL) then !Ignore if not a real variable
 !     write(*,*) 'Error: Not a real variable',WrfType
 !     return

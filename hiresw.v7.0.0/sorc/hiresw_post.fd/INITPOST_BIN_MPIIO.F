@@ -1,4 +1,5 @@
       SUBROUTINE INITPOST_BIN_MPIIO
+
 !$$$  SUBPROGRAM DOCUMENTATION BLOCK
 !                .      .    .     
 ! SUBPROGRAM:    INITPOST    INITIALIZE POST FOR RUN
@@ -41,42 +42,60 @@
 !    
 !   ATTRIBUTES:
 !     LANGUAGE: FORTRAN
-!     MACHINE : CRAY C-90
+!     MACHINE : WCOSS
 !$$$  
-      use vrbls3d, only: u, uh, v, vh, wh, t, q, pmid, omga, pint, alpint, zint,&
-              zmid, qqw, qqr, qqs, qqi, qqg, qqni, qqnr, cwm, extcof55, f_ice, f_rain,&
-              f_rimef, q2, cfr
-      use vrbls2d, only: tmax, fis, sr, smstav, smstot, tshltr, v10, th10, q10, qv2m,&
-              u10, qshltr, qrmax, cuppt, cfrach, cfracl, cfracm, cfracm, cfrach, cfracl,&
-              htop, hbot, ssroff, bgroff, sfcevp, sfcexc, ivgtyp, isltyp, islope, vegfrc,&
-              acsnow, acsnom, grnflx, sno, si, cmc, sst, thz0, qz0, ancprc, acprec, cprate,&
-              rainc_bucket, rainnc_bucket, pcp_bucket, prec, snownc, uz0, vz0, qs, z0, ths,&
-              radot, cuprec, snow_bucket, graupelnc, czen, czmean, rlwin, sigt4, rlwtoa,&
-              rswinc, aswin, aswout, alwin, alwout, alwtoa, f, albedo, aswtoa, rswin, rswout,&
-              soiltb, ustar, akhs, akms, pblh, sfcuvx, potevp, ncfrcv, ncfrst, pctsno,&
-              tsnow, wspd10max, w_up_max, w_dn_max, w_mean, refd_max, up_heli_max, tg,&
-              twbs, qwbs, sfcshx, sfclhx, subshx, snopcx, grpl_max, dwdt_max, &
-              w_stdv, tke_max
-      use soil, only: sldpth, sllevel, stc, smc, sh2o
-      use masks, only: lmv, lmh, htm, vtm, sice, gdlat, gdlon, sm, dx, dy
-      use kinds, only: i_llong
-      use params_mod, only: capa, g, rd, d608, ad05, cft0, tfrz, p1000, stbol, pi, rtd, dtr,&
-              lheat, erad, small
-      use lookup_mod, only: thl, plq, ptbl, ttbl, rdq, rdth, rdp, rdthe, pl, qs0, sqs, sthe, the0,&
-              ttblq, rdpq, rdtheq, stheq, the0q
-      use ctlblk_mod, only: jsta_2l, jend_2u, lm, filename,ihrst, imin, idat, sdat, ifhr, ifmin,&
-              imp_physics, icu_physics, isf_surface_physics, nsoil, spval, nsoil, lm, jsta, jend,&
-              pt, lp1, modelname, jsta_m, jend_m, ardlw, ardsw, asrfc, nphs, me, mpi_comm_comp,&
-              prec_acc_dt, dtq2, tsrfc, trdlw, trdsw, theat, tclod, tprec, alsl, smflag, spl, lsm,&
-              dt, im, jm
-      use gridspec_mod, only: gridtype, dxval, latstart, latlast, lonstart, lonlast, dyval, cenlat,&
-              cenlon, maptype, truelat1, standlon, psmapf, truelat2
+     !use mpi
+      use vrbls3d, only: u, uh, v, vh, wh, t, q, pmid, omga, pint, alpint,    &
+                         zint, zmid, qqw, qqr, qqs, qqi, qqg, qqni, qqnr, cwm,&
+                         extcof55, f_ice, f_rain, f_rimef, q2, cfr, ref_10cm
+      use vrbls2d, only: tmax, fis, sr, smstav, smstot, tshltr, v10, th10,    &
+                         q10, qv2m, u10, qshltr, qrmax, cuppt, cfrach, cfracl,&
+                         cfracm, cfracm, cfrach, cfracl, htop, hbot, ssroff,  &
+                         bgroff, sfcevp, sfcexc, ivgtyp, isltyp, islope,      &
+                         vegfrc, acsnow, acsnom, grnflx, sno, si, cmc, sst,   &
+                         thz0, qz0, ancprc, acprec, cprate, rainc_bucket,     &
+                         rainnc_bucket, pcp_bucket, prec, snownc, uz0, vz0,   &
+                         qs, z0, ths, radot, cuprec, snow_bucket,             &
+                         graup_bucket, graupelnc,                             &
+                         czen, czmean, rlwin, sigt4, rlwtoa, rswinc, aswin,   &
+                         aswout, alwin, alwout, alwtoa, f, albedo, aswtoa,    &
+                         rswin, rswout, soiltb, ustar, akhs, akms, pblh,      &
+                         sfcuvx, potevp, ncfrcv, ncfrst, pctsno, tsnow,       &
+                         wspd10max, w_up_max, w_dn_max, w_mean, refd_max,     &
+                         up_heli_max, tg, twbs, qwbs, sfcshx, sfclhx, subshx, &
+                         snopcx, grpl_max,QVl1,REFC_10CM,REF1KM_10CM,         &
+                         REF4KM_10CM,SWRADmean,U10mean,V10mean,SPDUV10mean,   &
+                         SWNORMmean,SNFDEN,SNDEPAC,hbotd,hbots,               &
+                         UP_HELI_MAX16,UP_HELI16,UP_HELI,LTG1_MAX,LTG2_MAX,   &
+                         LTG3_MAX,NCI_LTG,NCA_LTG,NCI_WQ,NCA_WQ,              &
+                         NCI_REFD,NCA_REFD
+      use soil,    only: sldpth, sllevel, stc, smc, sh2o
+      use masks,   only: lmv, lmh, htm, vtm, sice, gdlat, gdlon, sm, dx, dy
+      use kinds,   only: i_llong
+
+      use params_mod, only: capa, g, rd, d608, ad05, cft0, tfrz, p1000, stbol,&
+                             pi, rtd, dtr, lheat, erad, small
+      use lookup_mod, only: thl, plq, ptbl, ttbl, rdq, rdth, rdp, rdthe, pl,  &
+                            qs0, sqs, sthe, the0, ttblq, rdpq, rdtheq, stheq, &
+                            the0q
+      use ctlblk_mod, only: jsta_2l, jend_2u, lm, filename,ihrst, imin, idat, &
+                            sdat, ifhr, ifmin, imp_physics, icu_physics,      &
+                            isf_surface_physics, nsoil, spval, nsoil, lm,     &
+                            jsta, jend, pt, lp1, modelname, jsta_m, jend_m,   &
+                            ardlw, ardsw, asrfc, nphs, me, mpi_comm_comp,     &
+                            prec_acc_dt, dtq2, tsrfc, trdlw, trdsw, theat,    &
+                            tclod, tprec, alsl, smflag, spl, lsm, dt, im, jm, &
+                            gdsdegr, grib
+      use gridspec_mod, only: gridtype, dxval, latstart, latlast, lonstart,   &
+                              lonlast, dyval, cenlat, cenlon, maptype,        &
+                              truelat1, standlon, psmapf, truelat2
+      use native_endianness, only: byte_swap
 !      use wrf_io_flags_mod, only:
 !
       implicit none
 !
 !     INCLUDE/SET PARAMETERS.
-      INCLUDE "mpif.h"
+       INCLUDE "mpif.h"
 !
       character(len=31) :: VarName
       integer :: Status
@@ -97,15 +116,17 @@
 !
 !     DECLARE VARIABLES.
 !     
-      REAL,dimension(5) :: RINC
+      REAL                  :: SLDPTH2(NSOIL)
+      REAL,dimension(5)     :: RINC
       REAL,dimension(im,jm) :: DUMMY, dummy2, msft
-      REAL, ALLOCATABLE::  DUM3D_IKJ ( :,:,: ), DUM3D_IKJ2(:,:,:)
-      real, allocatable::  pvapor(:,:)
-      real, allocatable::  pvapor_orig(:,:)
-      REAL, ALLOCATABLE :: thv(:,:,:)      
+      REAL, ALLOCATABLE     ::  DUM3D_IKJ ( :,:,: ), DUM3D_IKJ2(:,:,:)
+      real, allocatable     ::  pvapor(:,:)
+      real, allocatable     ::  pvapor_orig(:,:)
+      REAL, ALLOCATABLE     :: thv(:,:,:)      
 
       character*132, allocatable :: datestr_all(:)
       character*132, allocatable :: varname_all(:)
+      character*132, allocatable :: memoryorder_all(:)
       integer, allocatable       :: domainend_all(:,:)
       integer, allocatable       :: start_block(:)
       integer, allocatable       :: end_block(:)
@@ -116,21 +137,23 @@
 
       character*80     :: titlestring
 
-      real :: dumcst
-      real :: tmp, garb
-      real :: pvapornew, qmean, tsph, tlmh, rho, dz
+      real    :: dumcst
+      real    :: tmp, garb
+      real    :: pvapornew, qmean, tsph, tlmh, rho, dz
       integer :: name_offset
-      integer :: itmp, iret1, iret2, irtn, imn, iyear, iday, istatus, ioutcount, i, j, l, je, js, iunit
+      integer :: itmp, iret1, iret2, irtn, imn, iyear, iday, istatus,       &
+                 ioutcount, i, j, l, je, js, iunit
       integer :: ll,jj,ii,n, iret, jev, index, nrecs, igdout, ierr,igarb
       integer :: nsrfc,nrdlw,nrdsw,nheat,nclod
       integer :: k1,k,lflip
-      real :: ZSF,ZPBLTOP, fact
+      real    :: ZSF,ZPBLTOP, fact, temp
 
       integer jdn, numr, ic, jc
       integer, external :: iw3jdn
       real sun_zenith,sun_azimuth, ptop_low, ptop_mid, ptop_high
       real watericetotal, cloud_def_p, radius
       real totcount, cloudcount
+      integer :: num_swap
 
       real :: LAT
 !
@@ -139,7 +162,7 @@
 !
       WRITE(6,*)'INITPOST:  ENTER INITPOST'
 !     
-      gridtype='A'
+      gridtype = 'A'
 !     
 !     STEP 1.  READ MODEL OUTPUT FILE
 !
@@ -150,37 +173,40 @@
 ! LMV always = LM for sigma-type vert coord
 
        do j = jsta_2l, jend_2u
-        do i = 1, im
-            LMV ( i, j ) = lm
-            LMH ( i, j ) = lm
-        end do
+         do i = 1, im
+            LMV(i,j) = lm
+            LMH(i,j) = lm
+         end do
        end do
 
 
 ! HTM VTM all 1 for sigma-type vert coord
 
       do l = 1, lm
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            HTM ( i, j, l ) = 1.0
-            VTM ( i, j, l ) = 1.0
+        do j = jsta_2l, jend_2u
+         do i = 1, im
+            HTM(i,j,l) = 1.0
+            VTM(i,j,l) = 1.0
+         end do
         end do
-       end do
       end do
 !
 !  The end j row is going to be jend_2u for all variables except for V.
-      JS=JSTA_2L
-      JE=JEND_2U
-      IF (JEND_2U.EQ.JM) THEN
-       JEV=JEND_2U+1
+      JS = JSTA_2L
+      JE = JEND_2U
+      IF (JEND_2U == JM) THEN
+        JEV = JEND_2U+1
       ELSE
-       JEV=JEND_2U
+        JEV = JEND_2U
       ENDIF
 !
 ! start calling mpi io
-        write(0,*) 'call count_recs'
-      iunit=33
-      call count_recs_wrf_binary_file(iunit, fileName, nrecs)
+      write(0,*) 'call count_recs'
+	write(0,*) 'trim(fileName): ', trim(fileName)
+      iunit = 33
+!       call initialize_byte_swap_wrf_binary_file(iunit,trim(fileName))
+
+      call count_recs_wrf_binary_file(iunit, trim(fileName), nrecs)
       print*,'- FILE CONTAINS ',nrecs, ' RECORDS'
       allocate (datestr_all(nrecs))
       allocate (varname_all(nrecs))
@@ -190,15 +216,26 @@
       allocate (start_byte(nrecs))
       allocate (end_byte(nrecs))
       allocate (file_offset(nrecs))
+      allocate(memoryorder_all(nrecs))
 
-        write(0,*) 'allocated, call inventory'
+      write(0,*) 'allocated, call inventory'
+
+	write(0,*) 'have filename: ', trim(filename)
+!	write(0,*) 'full filename into inventory_wrf_binary_file: ', filename
+
       call inventory_wrf_binary_file(iunit, filename, nrecs,            &
-                      datestr_all,varname_all,domainend_all,            &
-            start_block,end_block,start_byte,end_byte,file_offset)
+                      datestr_all,varname_all,memoryorder_all,domainend_all,            &
+                      start_block,end_block,start_byte,end_byte,file_offset)
 
-!        do N=1,NRECS
-!        write(0,*) 'N,varname_all(N): ',N, varname_all(N)
-!        enddo
+      if(me==1) then
+      do N=1,NRECS
+           write(*,'(i4,2x,a20,a5,3i10)') N,  &
+              trim(varname_all(N)),trim(memoryorder_all(n)),domainend_all(:,n)
+           write(*,*) trim(datestr_all(n))
+      enddo
+      endif
+
+	if (nrecs .lt. 10) STOP
 
       close(iunit)
 
@@ -206,34 +243,36 @@
    print *,'mpi_comm_world,filename,iunit,mpi_mode_rdonly,mpi_info_null',&
             mpi_comm_world,filename,iunit,mpi_mode_rdonly,mpi_info_null
 
-      call mpi_file_open(mpi_comm_world, filename                       &
+      call mpi_file_open(mpi_comm_world, trim(filename)                   &
        , mpi_mode_rdonly,mpi_info_null, iunit, ierr)
       if (ierr /= 0) then
-       print*,"Error opening file with mpi io", ierr
-       stop
+        print*,"Error opening file with mpi io", ierr
+        stop
       end if
+
 ! Can retrieve current time from the datestr_all using any of the variables
 ! - for example T:
 
-      VarName='T'
+      VarName = 'T'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then
         print*,VarName," not found in file"
+	write(0,*) 'iret: ', iret
       else
          startdate3=trim(datestr_all(index))
       end if
 
       read(startdate3,15)iyear,imn,iday,ihrst,imin
-      write(*,*) 'Current date and time = ',iyear,imn,iday,ihrst,imin
+      write(*,*) ' Current date and time = ',iyear,imn,iday,ihrst,imin
 !
 ! Getting start time
-#ifdef COMMCODE
-      VarName='SIMULATION_START_DATE'
-      name_offset = 11
-#else
+! #ifdef COMMCODE
+!       VarName = 'SIMULATION_START_DATE'
+!       name_offset = 11
+! #else
       VarName='START_DATE'
       name_offset = 0
-#endif
+! #endif
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then
         print*,VarName," not found in file"
@@ -241,6 +280,11 @@
         call mpi_file_read_at(iunit                                    &
           ,file_offset(index)+(6+11+name_offset)*4                     &
           ,startdate2,19,mpi_integer4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=19
+           call to_native_endianness_i4(startdate2,num_swap)
+        end if
+
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -250,48 +294,43 @@
           end do
         end if
       endif
-      startdate=ACHAR(startdate2(1)) &
-                //ACHAR(startdate2(2)) &
-                //ACHAR(startdate2(3))  &
-                //ACHAR(startdate2(4))//ACHAR(startdate2(5)) &
-                //ACHAR(startdate2(6))  &
-                //ACHAR(startdate2(7))//ACHAR(startdate2(8)) &
-                //ACHAR(startdate2(9))  &
-                //ACHAR(startdate2(10))//ACHAR(startdate2(11)) &
-                //ACHAR(startdate2(12))  &
-                //ACHAR(startdate2(13))//ACHAR(startdate2(14)) & 
-                //ACHAR(startdate2(15))  &
-                //ACHAR(startdate2(16))//ACHAR(startdate2(17)) &
-                //ACHAR(startdate2(18))  &
-                //ACHAR(startdate2(19))
+      startdate =                                                              &
+         ACHAR(startdate2(1))//ACHAR(startdate2(2))//ACHAR(startdate2(3))    &
+         //ACHAR(startdate2(4))//ACHAR(startdate2(5))//ACHAR(startdate2(6))    &
+         //ACHAR(startdate2(7))//ACHAR(startdate2(8))//ACHAR(startdate2(9))    &
+         //ACHAR(startdate2(10))//ACHAR(startdate2(11))//ACHAR(startdate2(12)) &
+         //ACHAR(startdate2(13))//ACHAR(startdate2(14))//ACHAR(startdate2(15)) &
+         //ACHAR(startdate2(16))//ACHAR(startdate2(17))//ACHAR(startdate2(18)) &
+         //ACHAR(startdate2(19))
+
       read(startdate,15)iyear,imn,iday,ihrst,imin
       write(*,*) iyear,imn,iday,ihrst,imin
-      jdate=0
-      idate=0
+      jdate = 0
+      idate = 0
 !      read(startdate,15)iyear,imn,iday,ihrst,imin
  15   format(i4,1x,i2,1x,i2,1x,i2,1x,i2)
       print*,'start yr mo day hr min =',iyear,imn,iday,ihrst,imin
       print*,'processing yr mo day hr min='                             &
          ,idat(3),idat(1),idat(2),idat(4),idat(5)
 
-      idate(1)=iyear
-      idate(2)=imn
-      idate(3)=iday
-      idate(5)=ihrst
-      idate(6)=imin
-      SDAT(1)=imn
-      SDAT(2)=iday
-      SDAT(3)=iyear
-      jdate(1)=idat(3)
-      jdate(2)=idat(1)
-      jdate(3)=idat(2)
-      jdate(5)=idat(4)
-      jdate(6)=idat(5)
+      idate(1) = iyear
+      idate(2) = imn
+      idate(3) = iday
+      idate(5) = ihrst
+      idate(6) = imin
+      SDAT(1)  = imn
+      SDAT(2)  = iday
+      SDAT(3)  = iyear
+      jdate(1) = idat(3)
+      jdate(2) = idat(1)
+      jdate(3) = idat(2)
+      jdate(5) = idat(4)
+      jdate(6) = idat(5)
 !      CALL W3DIFDAT(JDATE,IDATE,2,RINC)
 !      ifhr=nint(rinc(2))
       CALL W3DIFDAT(JDATE,IDATE,0,RINC)
-      ifhr=nint(rinc(2)+rinc(1)*24.)
-      ifmin=nint(rinc(3))
+      ifhr = nint(rinc(2)+rinc(1)*24.)
+      ifmin = nint(rinc(3))
       print*,' in INITPOST ifhr ifmin fileName=',ifhr,ifmin,fileName
 !  OK, since all of the variables are dimensioned/allocated to be
 !  the same size, this means we have to be careful int getVariable
@@ -299,13 +338,18 @@
 !  DUM3D is dimensioned IM+1,JM+1,LM+1 but there might actually
 !  only be im,jm,lm points of data available for a particular variable.  
 
-      VarName='MP_PHYSICS'
+      VarName = 'MP_PHYSICS'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then
         print*,VarName," not found in file"
+        imp_physics=8
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4                 &
           ,igarb,1,mpi_integer4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(igarb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -320,13 +364,18 @@
        CALL MICROINIT(imp_physics)
       end if
 
-      VarName='CU_PHYSICS'
+      VarName = 'CU_PHYSICS'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then
         print*,VarName," not found in file"
+        icu_physics=5
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4                 &
           ,igarb,1,mpi_integer4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(igarb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -341,21 +390,54 @@
 !  to not try to get too much data.  For example, 
 !  DUM3D is dimensioned IM+1,JM+1,LM+1 but there might actually
 !  only be im,jm,lm points of data available for a particular variable.  
-!------------------------------------------------------
-! Soil layer/depth
+! get metadata
+! assign SLDPTH to be the same as eta
+! jkw comment out because Pleim Xiu only has 2 layers
+!         SLDPTH(1)=0.10
+!         SLDPTH(2)=0.3
+!         SLDPTH(3)=0.6
+!         SLDPTH(4)=1.0
 ! Initialize soil depth to some bogus value 
-      SLDPTH = 0.0
+! to alert user if not found in wrfout file
+      do I=1,NSOIL
+       SLDPTH(I) = 0.0
+      end do
 
-      ! RUC LSM - use depths of center of soil layer
-	index=1
+! or get SLDPTH from wrf output
+       VarName='SF_SURFACE_PHYSICS'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      if (iret /= 0) then
+        print*,VarName," not found in file"
+        iSF_SURFACE_PHYSICS=3
+      else
+        call mpi_file_read_at(iunit,file_offset(index)+5*4                 &
+          ,igarb,1,mpi_integer4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(igarb,num_swap)
+        end if
+        if (ierr /= 0) then
+          print*,"Error reading ", VarName," using MPIIO"
+        else
+          print*,VarName, ' from MPIIO READ= ',igarb
+          iSF_SURFACE_PHYSICS=igarb
+        end if
+      end if
+      print*,'SF_SURFACE_PHYSICS= ', iSF_SURFACE_PHYSICS
+
+      index = 1
       IF(iSF_SURFACE_PHYSICS==3)then ! RUC LSM
-       VarName='ZS'
+       VarName = 'ZS'
        call retrieve_index(index,VarName,varname_all,nrecs,iret)
        call mpi_file_read_at(iunit,file_offset(index+1)   &
        ,SLLEVEL,NSOIL,mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=NSOIL
+           call to_native_endianness_i4(SLLEVEL,num_swap)
+        end if
        if (iret /= 0 .or. ierr /= 0) then
          print*,"Error reading ", VarName,"Assigned missing values"
-         SLLEVEL=SPVAL
+         SLLEVEL = SPVAL
        else
          print*,'SLLEVEL= ',(SLLEVEL(N),N=1,NSOIL)
        end if
@@ -364,95 +446,125 @@
       ELSE
        VarName='DZS'
        call retrieve_index(index,VarName,varname_all,nrecs,iret)
-       call mpi_file_read_at(iunit,file_offset(index+1)                 &
-               ,SLDPTH,NSOIL,mpi_real4, mpi_status_ignore, ierr)
+	write(0,*) 'iret from retrieve_index: ', iret
+        call mpi_file_read_at(iunit,file_offset(index+1)                 &
+     & ,SLDPTH2,NSOIL,mpi_real4                                          &
+     & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=NSOIL
+           call to_native_endianness_i4(SLDPTH2,num_swap)
+        end if
+
         if (iret /= 0 .or. ierr /= 0) then
           print*,"Error reading ", VarName,"Assigned missing values"
-          SLDPTH=SPVAL
-       else
-         print*,'SLDPTH= ',(SLDPTH(N),N=1,NSOIL)
+          SLDPTH2=SPVAL
         end if
       END IF 
+! if SLDPTH in wrf output is non-zero, then use it
+      DUMCST=0.0
+      DO N=1,NSOIL
+       DUMCST=DUMCST+SLDPTH2(N)
+      END DO
+      IF(ABS(DUMCST-0.).GT.1.0E-2)THEN
+       DO N=1,NSOIL
+        SLDPTH(N)=SLDPTH2(N)
+        print*, 'N, SLDPTH(N): ', N, SLDPTH(N)
+       END DO
+      END IF
+
+
+!      DO N=1,NSOIL
+!       IF(SLDPTH2(N) .LT. SPVAL) SLDPTH(N)=SLDPTH2(N)
+!      END DO
+
+      print*,'SLDPTH= ',(SLDPTH(N),N=1,NSOIL)
 
 !-------------------------------------------------------
 
-      VarName='U'
+      VarName = 'U'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
 
-	allocate(DUM3D_IKJ(IM+1,LM,JM))
+      allocate(DUM3D_IKJ(IM+1,LM,JM))
 
-        call mpi_file_read_at(iunit,file_offset(index+1) &
-     & ,DUM3D_IKJ,((im+1)*jm*lm),mpi_real4 &
-     & , mpi_status_ignore, ierr)
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     &                     ,DUM3D_IKJ,((im+1)*jm*lm),mpi_real4 &
+     &                     ,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=(im+1)*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
-	if (iret .eq. 0 .and. ierr .eq. 0) then
-      do l = 1, lm
-       do j = jsta_2l, jend_2u
-        do i = 1, im+1
-            u ( i, j, l ) = dum3d_IKJ ( i, LM-L+1, j )
-        end do
-       end do
+      if (iret  == 0 .and. ierr == 0) then
+        do l = 1, lm
+          do j = jsta_2l, jend_2u
+            do i = 1, im+1
+              u(i,j,l) = dum3d_IKJ(i,LM-L+1,j)
+            end do
+          end do
 !  fill up UH which is U at P-points including 2 row halo
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-            UH (I,J,L) = (dum3d_IKJ(I,LM-L+1,J)+ &
-     &                    dum3d_IKJ(I+1,LM-L+1,J))*0.5
+          do j = jsta_2l, jend_2u
+            do i = 1, im
+              UH (I,J,L) = (dum3d_IKJ(I,LM-L+1,J)+ &
+     &                      dum3d_IKJ(I+1,LM-L+1,J))*0.5
+            end do
+          end do
         end do
-       end do
-      end do
 
-      ii=im/2
-      jj=(jsta+jend)/2
-      ll=lm
-      write(*,*) 'U,   Level, Maximum,   Minimum   single '
-      DO l=1,lm
-         write(*,*) l,maxval(UH (:,:,l)),minval(UH(:,:,l)),UH (ii,jj,l)
-      ENDDO
-	
-	else
-	U=SPVAL
-	UH=SPVAL
-	endif
+        ii = im/2
+        jj = (jsta+jend)/2
+        ll = lm
+        write(*,*) 'U,   Level, Maximum,   Minimum   single '
+        DO l=1,lm
+          write(*,*) l,maxval(UH (:,:,l)),minval(UH(:,:,l)),UH (ii,jj,l)
+        ENDDO
+      else
+        U  = SPVAL
+        UH = SPVAL
+      endif
 
-	deallocate(dum3d_ikj)
+      deallocate(dum3d_ikj)
 
 !----------------------
 
-      VarName='V'
+      VarName = 'V'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
 
-	allocate(DUM3D_IKJ(IM,LM,JM+1))
+      allocate(DUM3D_IKJ(IM,LM,JM+1))
 
        call mpi_file_read_at(iunit,file_offset(index+1) &
-     & ,DUM3D_IKJ,(im*(jm+1)*lm),mpi_real4 &
-     & , mpi_status_ignore, ierr)
+     &                      ,DUM3D_IKJ,(im*(jm+1)*lm),mpi_real4 &
+     &                      ,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=(im*(jm+1)*lm)
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
-	if (iret .eq. 0 .and. ierr .eq. 0) then
-      do l = 1, lm
-       do j = jsta_2l, jev-1
-        do i = 1, im
-            v ( i, j, l ) = dum3d_ikj ( I, LM-L+1, J )
-        end do
-       end do
+      if (iret .eq. 0 .and. ierr .eq. 0) then
+        do l = 1, lm
+          do j = jsta_2l, jev-1
+            do i = 1, im
+              v(i,j,l ) = dum3d_ikj(I,LM-L+1, J )
+            end do
+          end do
 !  fill up VH which is V at P-points including 2 row halo
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-          VH(I,J,L) = (dum3d_ikj(I,LM-L+1,J)+ &
-     &                 dum3d_ikj(I,LM-L+1,J+1))*0.5
+          do j = jsta_2l, jend_2u
+            do i = 1, im
+              VH(I,J,L) = (dum3d_ikj(I,LM-L+1,J)+ &
+     &                     dum3d_ikj(I,LM-L+1,J+1))*0.5
+            end do
+          end do
         end do
-       end do
-      end do
-      print*,'finish reading V'
-      write(*,*) 'V,   Level, Maximum,   Minimum   single '
-      DO l=1,lm
-         write(*,*) l,maxval(VH (:,:,l)),minval(VH(:,:,l)),VH (ii,jj,l)
-      ENDDO
-	else
-	V=SPVAL
-	VH=SPVAL
-	endif
+        print*,'finish reading V'
+        write(*,*) 'V,   Level, Maximum,   Minimum   single '
+        DO l=1,lm
+          write(*,*) l,maxval(VH (:,:,l)),minval(VH(:,:,l)),VH (ii,jj,l)
+        ENDDO
+      else
+        V  = SPVAL
+        VH = SPVAL
+      endif
 
-	deallocate(dum3d_ikj)
+      deallocate(dum3d_ikj)
 
 !------------------------
 
@@ -464,6 +576,10 @@
         call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*(lm+1)),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=(im*jm*(lm+1))
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 
 !  fill up WH which is W at P-points including 2 row halo
@@ -497,6 +613,10 @@
        call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 
 	if (iret .eq. 0  .and. ierr .eq. 0) then
@@ -529,6 +649,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
         if (iret .eq. 0) then 
       do l = 1, lm
@@ -552,32 +676,47 @@
 
 !-----------------------------------
 ! reading in pressure on half levels
-      VarName='P'
+! DCD 4/3/13
+! previously initialized PMID from sum of base-state (PB) and perturbation (P)
+! pressure
+! now initializing PMID from hydrostatic pressure (P_HYD), motivated
+! particularly by 0h HRRR
+
+!      VarName='P'
+      VarName='P_HYD'
       call retrieve_index(index,VarName,varname_all,nrecs,iret1)
 
         ALLOCATE(DUM3D_IKJ2(IM,LM,JM))
+        ALLOCATE ( thv(IM,JSTA_2L:JEND_2U,LM) )
+
+write(*,*) 'check=====',file_offset(index+1),mpi_real4,byte_swap
 
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ2,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ2,num_swap)
+        end if
 
 !-----------------------------------
 
-      VarName='PB'
-      call retrieve_index(index,VarName,varname_all,nrecs,iret2)
+!      VarName='PB'
+!      call retrieve_index(index,VarName,varname_all,nrecs,iret2)
 
-        ALLOCATE(DUM3D_IKJ(IM,LM,JM))
-        ALLOCATE ( thv(IM,JSTA_2L:JEND_2U,LM) )
+!        ALLOCATE(DUM3D_IKJ(IM,LM,JM))
+!        ALLOCATE ( thv(IM,JSTA_2L:JEND_2U,LM) )
 
-      call mpi_file_read_at(iunit,file_offset(index+1) &
-     & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
-     & , mpi_status_ignore, ierr)
+!      call mpi_file_read_at(iunit,file_offset(index+1) &
+!     & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
+!     & , mpi_status_ignore, ierr)
 
-        if (iret1 .eq. 0 .and. iret2 .eq. 0 .and. ierr .eq. 0) then
+!tgs        if (iret1 .eq. 0 .and. iret2 .eq. 0 .and. ierr .eq. 0) then
+        if (iret1 .eq. 0 .and. ierr .eq. 0) then
       do l = 1, lm
        do j = jsta_2l, jend_2u
         do i = 1, im
-            PMID(I,J,L)=DUM3D_IKJ(I,LM-L+1,J)+DUM3D_IKJ2(I,LM-L+1,J)
+            PMID(I,J,L)=DUM3D_IKJ2(I,LM-L+1,J)
             thv ( i, j, l ) = T(I,J,L)*(Q(I,J,L)*0.608+1.)
 ! now that I have P, convert theta to t
             t ( i, j, l ) = T(I,J,L)*(PMID(I,J,L)*1.E-5)**CAPA
@@ -587,6 +726,54 @@
         end do
        end do
       end do
+!tgs - 6 June 2012 - added check on monotonic PMID
+      do l = 2, lm-1
+         ll=lm-l+1
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+          if((PMID(I,J,ll-1) - PMID(I,J,ll)).ge.0.) then
+      write(*,*) 'non-monotonic PMID, i,j,ll , PMID(I,J,LL)',  &
+                  i,j,ll,PMID(I,J,LL), 'll-1, PMID(I,J,LL-1',ll-1,  &
+                  PMID(I,J,LL-1),'ll+1, PMID(I,J,LL+1)',ll+1,PMID(I,J,LL+1)
+
+            PMID(I,J,LL)=0.5*(PMID(I,J,LL+1)+PMID(I,J,LL-1))
+
+      write(*,*) 'after adjustment - i,j,ll,  PMID(I,J,LL) ' &
+                 ,i,j,ll,PMID(I,J,LL), 'll-1, PMID(I,J,LL-1)',ll-1,     &
+                  PMID(I,J,LL-1),'ll+1, PMID(I,J,LL+1)',ll+1,PMID(I,J,LL+1)
+          endif
+        end do
+       end do
+      end do
+!
+! check the lowest level too: set l=1, then extroplate the lowest level
+!                                      based on znu
+!       znu(lm)=0.9990000, znu(lm-1)=0.9960001, znu(lm-2)=0.9905000
+!       P(lm)=p(lm-2) + (p(lm-1)-p(lm-2))*(znu(lm)-znu(lm-2))/   &
+!                                         (znu(lm-1)-znu(lm-2)) 
+!  where: (znu(lm)-znu(lm-2))/(znu(lm-1)-znu(lm-2))=17/11
+!  Thus:  P(lm)=p(lm-2) + (p(lm-1)-p(lm-2))*17/11
+!              =p(lm-1) + (p(lm-1)-p(lm-2))*6/11
+      fact=6.0/11.0
+      ll=lm
+      do j = jsta_2l, jend_2u
+        do i = 1, im
+          if((PMID(I,J,ll-1) - PMID(I,J,ll)).ge.0.) then
+            write(*,*) 'non-monotonic PMID, i,j,ll ', i,j,ll
+            write(*,*) 'PMID: ll-2,ll-1,ll', PMID(I,J,LL-2) &
+                  ,PMID(I,J,LL-1), PMID(I,J,LL)
+
+            PMID(I,J,LL)=PMID(I,J,ll-1) + fact*(PMID(I,J,LL-1)-PMID(I,J,LL-2))
+
+            write(*,*) 'after adjustment-i,j,ll ', i,j,ll
+            write(*,*) 'PMID: ll-2,ll-1,ll', PMID(I,J,LL-2) &
+                  ,PMID(I,J,LL-1), PMID(I,J,LL)
+          endif
+        end do
+      end do
+
+! end check
+
          else
         write(0,*) 'MISSING PB or P...setting PMID and T to SPVAL'
         T=SPVAL
@@ -623,7 +810,7 @@
 !      print*,'PINT at ',ii,jj,ll,' = ',pint(ii,jj,ll)
 !      print*,'T at ',ii,jj,ll,' = ',t(ii,jj,ll)
 
-        deallocate(dum3d_ikj,dum3d_ikj2)
+        deallocate(dum3d_ikj2)
 
 !---  Compute max temperature in the column up to level 20 
 !---    to be used later in precip type computation
@@ -650,6 +837,10 @@
        call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .ne. 0 .or. ierr .ne. 0) then
 	DUMMY=SPVAL
 	endif
@@ -660,6 +851,10 @@
        call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 !----------------------------------
 ! reading p_top
       VarName='P_TOP'
@@ -667,6 +862,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,PT,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(PT,num_swap)
+        end if
 
       print*,'P_TOP = ',PT
       
@@ -696,6 +895,10 @@
         call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ2,(im*jm*(lm+1)),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*(lm+1)
+           call to_native_endianness_i4(DUM3D_IKJ2,num_swap)
+        end if
 	
       VarName='PHB'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
@@ -704,6 +907,10 @@
         call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*(lm+1)),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*(lm+1)
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
       print*,'finish reading geopotential'
 ! ph/phb are geopotential z=(ph+phb)/9.801
@@ -742,6 +949,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 
 
       DO J=Jsta,jend
@@ -763,36 +974,37 @@
 
         allocate(pvapor(IM,jsta_2l:jend_2u))
         allocate(pvapor_orig(IM,jsta_2l:jend_2u))
+
         DO J=jsta,jend
-        DO I=1,IM
+          DO I=1,IM
+            pvapor(I,J) = 0.
+          enddo
+        enddo
+        do L=1,LM
+          if (l < lm) then
+            ll = l+1
+          else
+            ll = l
+          endif
+          DO J=jsta,jend
+            DO I=1,IM
+              dz    = ZINT(I,J,L)-ZINT(I,J,L+1)
+              rho   = PMID(I,J,L)/(RD*T(I,J,L))
+              QMEAN = 0.5*(Q(I,J,L)+Q(I,J,LL))
+              pvapor(I,J) = pvapor(I,J) + G*rho*dz*QMEAN
+            enddo
+          enddo
+        enddo
 
-
-        pvapor(I,J)=0.
-       do L=1,LM
-       dz=ZINT(I,J,L)-ZINT(I,J,L+1)
-       rho=PMID(I,J,L)/(RD*T(I,J,L))
-
-
-        if (L .le. LM-1) then
-        QMEAN=0.5*(Q(I,J,L)+Q(I,J,L+1))
-        else
-        QMEAN=Q(I,J,L)
-        endif
-
-
-       pvapor(I,J)=pvapor(I,J)+G*rho*dz*QMEAN
-       enddo
-
+        DO J=jsta,jend
+          DO I=1,IM
 
 ! test elim
-!       pvapor(I,J)=0.
+!           pvapor(I,J) = 0.
+            pvapor_orig(I,J) = pvapor(I,J)
+          enddo
+        enddo
 
-
-        pvapor_orig(I,J)=pvapor(I,J)
-
-
-      ENDDO
-      ENDDO
 
       do L=1,405
         call exch(pvapor(1,jsta_2l))
@@ -863,6 +1075,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -924,8 +1140,11 @@
 
         DO I=1,IM
          DO J=JS,JE
-          ZMID(I,J,LM)=(ZINT(I,J,LM+1)+ZINT(I,J,LM))*0.5  ! ave of z
-          dummy(i,j)=ZMID(I,J,LM)
+          DO L=1,LM
+           ZINT(I,J,L+1) =AMIN1(ZINT(I,J,L)-2.,ZINT(I,J,L+1))
+           ZMID(I,J,L)=(ZINT(I,J,L+1)+ZINT(I,J,L))*0.5  ! ave of z
+           dummy(i,j)=ZMID(I,J,LM)
+          ENDDO
          ENDDO
         ENDDO
        print*,'maxi/min ZMID= ',lm,maxval(dummy),minval(dummy)
@@ -938,6 +1157,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .eq. 0 .and. ierr .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -961,6 +1184,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0 .and. ierr .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -981,6 +1208,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0 .and. ierr .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1002,6 +1233,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -1024,13 +1259,17 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
               IF(MODELNAME == 'RAPR')THEN
-!tgs use 1st level U for U10
-            U10 ( i, j ) =  u ( i, j, lm )
+!tgs use 1st level of unstaggered UH for U10
+            U10 ( i, j ) =  uh ( i, j, lm )
               ELSE
             U10 ( i, j ) = DUMMY2( i, j )
               ENDIF
@@ -1051,13 +1290,17 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jev-1
         do i = 1, im
               IF(MODELNAME == 'RAPR')THEN
-!tgs use 1st level U for U10
-            V10 ( i, j ) =  v ( i, j, lm )
+!tgs use 1st level of unstaggered VH for V10
+            V10 ( i, j ) =  vh ( i, j, lm )
               ELSE
             V10 ( i, j ) = DUMMY2( i, j )
               ENDIF
@@ -1069,6 +1312,78 @@
 	else
 	V10=spval
 	ENDIF
+
+! RAP/HRRR time-averaged U10, V10 and SPDUV10
+      VarName='U10MEAN'
+
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     & ,DUMMY2,(im*jm),mpi_real4 &
+     & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
+
+        if (iret .eq. 0) then
+       do j = jsta_2l, jev-1
+        do i = 1, im
+            U10mean ( i, j ) = DUMMY2( i, j )
+        end do
+       end do
+        write(*,*) ' U10mean'
+        write(*,*) maxval(U10mean),minval(U10mean),U10mean(ii,jj)
+        else
+        U10mean=spval
+        ENDIF
+!
+      VarName='V10MEAN'
+
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     & ,DUMMY2,(im*jm),mpi_real4 &
+     & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
+
+        if (iret .eq. 0) then
+       do j = jsta_2l, jev-1
+        do i = 1, im
+            V10mean ( i, j ) = DUMMY2( i, j )
+        end do
+       end do
+        write(*,*) ' V10mean'
+        write(*,*) maxval(V10mean),minval(V10mean),V10mean(ii,jj)
+        else
+        V10mean=spval
+        ENDIF
+
+!
+      VarName='SPDUV10MEAN'
+
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     & ,DUMMY2,(im*jm),mpi_real4 &
+     & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
+
+        if (iret .eq. 0) then
+       do j = jsta_2l, jev-1
+        do i = 1, im
+            SPDUV10mean ( i, j ) = DUMMY2( i, j )
+        end do
+       end do
+        write(*,*) ' SPDUV10mean'
+        write(*,*) maxval(SPDUV10mean),minval(SPDUV10mean),SPDUV10mean(ii,jj)
+        else
+        SPDUV10mean=spval
+        ENDIF
+
 
 !--------------------------------------------------
 
@@ -1087,15 +1402,23 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
 !HC CONVERT FROM MIXING RATIO TO SPECIFIC HUMIDITY
           IF(MODELNAME == 'RAPR')THEN
-!tgs - for RR set it equal to 1st level
-            QV2M ( i, j ) =  q ( i, j, lm )/(1. - q ( i, j, lm ))
-            QSHLTR ( i, j ) =  q ( i, j, lm )
+! QV2M = first level QV
+!           QV2M ( i, j ) =  q ( i, j, lm )/(1.-q ( i, j, lm )) ! 1st level mix. ratio
+!           QSHLTR ( i, j ) =  q ( i, j, lm ) ! 1st level spec. humidity
+! QV2M = diagnosed in WRF 2-m QV
+             QV2M ( i, j ) =  dummy ( i, j ) ! 2-m mix. ratio
+             QSHLTR ( i, j ) = dummy ( i, j )/(1.0+dummy ( i, j )) ! 2-m spec.  hum.
+            QVl1 ( i, j ) =  q ( i, j, lm ) ! spec. humidity at lev. 1
           ELSE
             QV2M ( i, j ) =  dummy ( i, j )
             QSHLTR ( i, j ) = dummy ( i, j )/(1.0+dummy ( i, j ))
@@ -1105,6 +1428,7 @@
         else
          write(0,*) 'Q2 not found....QSHLTR set to SPVAL'
           QSHLTR=SPVAL
+          QVl1=SPVAL
         endif
 
 
@@ -1134,6 +1458,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
       do l = 1, lm
@@ -1166,6 +1494,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_ikj,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
 
@@ -1219,6 +1551,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
       do l = 1, lm
@@ -1244,6 +1580,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 	if (iret .eq. 0) then
       do l = 1, lm
        do j = jsta_2l, jend_2u
@@ -1269,6 +1609,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
       do l = 1, lm
@@ -1278,7 +1622,7 @@
         end do
        end do
       end do
-!      print*,'qqg at ',ii,jj,ll,' = ',qqg(ii,jj,ll)
+      print*,'qqg at ',ii,jj,ll,' = ',qqg(ii,jj,ll)
 	else
 	QQG=SPVAL
 	endif
@@ -1292,6 +1636,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
         if (iret .eq. 0) then
       do l = 1, lm
@@ -1310,6 +1658,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
         if (iret .eq. 0) then
       do l = 1, lm
@@ -1334,6 +1686,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
         if (iret .eq. 0) then
       do l = 1, lm
@@ -1382,13 +1738,18 @@
        call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
        if (iret .eq. 0) then
          do l = 1, lm
           do j = jsta_2l, jend_2u
            do i = 1, im
-!            CWM ( i, j, l ) = dum3d_ikj ( i, l, j )
-            CWM ( i, j, l ) = dum3d_ikj ( i, LM-L+1, j )
+            CWM ( i, j, l ) = dum3d_ikj ( i, l, j )
+! Chuang
+!            CWM ( i, j, l ) = dum3d_ikj ( i, LM-L+1, j )
            end do
           end do
          end do 
@@ -1404,6 +1765,10 @@
         call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
        if (iret .eq. 0) then
          do l = 1, lm
@@ -1424,6 +1789,10 @@
         call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
        if (iret .eq. 0) then
          do l = 1, lm
@@ -1437,12 +1806,16 @@
          F_RAIN=SPVAL
         endif
 
-!      allocate(DUM3D_IKJ(IM,LM,JM))
+      allocate(DUM3D_IKJ(IM,LM,JM))
         VarName='F_RIMEF_PHY'
         call retrieve_index(index,VarName,varname_all,nrecs,iret)
         call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
        if (iret .eq. 0) then
          do l = 1, lm
@@ -1470,8 +1843,13 @@
         call mpi_file_read_at(iunit,file_offset(index+1) &
       ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
       , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
       if (iret .eq. 0) then
+        dum3d_ikj=0.0
         do l = 1, lm
          do j = jsta_2l, jend_2u
           do i = 1, im
@@ -1480,7 +1858,7 @@
          end do
         end do
        else
-        q2=spval
+        q2=0.0
        end if 
 
       deallocate(dum3d_ikj)
@@ -1491,6 +1869,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
       if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1509,6 +1891,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
       if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1526,6 +1912,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
       if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1549,6 +1939,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*nsoil),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*nsoil
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
       do l = 1, nsoil
@@ -1579,6 +1973,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*nsoil),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*nsoil
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
 
@@ -1603,6 +2001,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUM3D_IKJ,(im*jm*nsoil),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*nsoil
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        
@@ -1635,6 +2037,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
       ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
       , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
       if (iret .eq. 0) then
         do l = 1, lm
@@ -1648,37 +2054,64 @@
         cfr=spval
        end if
 
-      VarName='DX'
+      VarName='RDX'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then 
         print*,VarName," not found in file"
       else 
-        call mpi_file_read_at(iunit,file_offset(index)+5*4              &    
+        call mpi_file_read_at(iunit,file_offset(index+1)         &    
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then 
           print*,"Error reading ", VarName," using MPIIO"
         else 
-          dxval=nint(garb)
+write(*,*) garb,1.0/garb
+          dxval=nint(1.0/garb)
         end if
       end if
           write(6,*) 'dxval= ', dxval
+!       call retrieve_field(in_unit,wrfges,dxval,start_block(index+1), &
+!                         end_block(index+1),start_byte(index+1),end_byte(index+1))
+!          write(6,*) 'dxval= ', dxval
 
-       IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME == 'RAPR')THEN
+
+
+! #ifdef COMMCODE
+!      IF(MODELNAME .EQ. 'NCAR' .OR. MODELNAME == 'RAPR')THEN
+!        if(imp_physics.ne.5 .and. imp_physics.ne.0)then
+! #else
+      IF(MODELNAME == 'RAPR')THEN
+! #endif
 ! Compute 3-D cloud fraction not provided from ARW
         Cloud_def_p = 0.0000001
+            do k = 1,lm
+             LL=LM-k+1
+        do j = jsta_2l, jend_2u
+          do i = 1, im
+            dummy(i,j)=QQW(i,j,ll)
+            dummy2(i,j)=QQI(i,j,ll)
+          enddo
+        enddo
+
+        call AllGETHERV(dummy)
+        call AllGETHERV(dummy2)
+
         do j = jsta_2l, jend_2u
           do i = 1, im
             radius = 30000.
             numr = int(radius/dxval)
-            do k = 1,lm
-             LL=LM-k+1
+!            do k = 1,lm
+!             LL=LM-k+1
               totcount = 0.
               cloudcount=0.
               cfr(i,j,k) = 0.
              do ic = max(1,I-numr),min(I+numr,im)
-              do jc = max(jsta_2l,J-numr),min(jend_2u,J+numr)
+              do jc = max(1,J-numr),min(jm,J+numr)
                totcount = totcount+1.
-               watericetotal = QQW(ic,jc,ll) + QQI(ic,jc,ll)
+               watericetotal = dummy(ic,jc) + dummy2(ic,jc)
                if ( watericetotal .gt. cloud_def_p) &
                     cloudcount=cloudcount+1.
               enddo
@@ -1722,17 +2155,29 @@
         print *,' MIN/MAX CFRACL ',minval(CFRACL),maxval(CFRACL)
         print *,' MIN/MAX CFRACM ',minval(CFRACM),maxval(CFRACM)
         print *,' MIN/MAX CFRACH ',minval(CFRACH),maxval(CFRACH)
+!#ifdef COMMCODE
+!        endif  ! Not Ferrier or null mp_physics
+!#endif
       ENDIF   ! NCAR or RAPR
 
       deallocate(dum3d_ikj)
 !-------------------------------------------------------
 
+     IF(MODELNAME == 'RAPR')THEN
       VarName='SEAICE'
+     ELSE
+      VarName='XICE'
+     ENDIF
 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+
 
 	if (iret .eq. 0) then
       do j = jsta_2l, jend_2u
@@ -1747,12 +2192,16 @@
 ! --------------------------------------------------
 
 ! reading SURFACE RUNOFF 
-      VarName='SSROFF'
+      VarName='SFROFF'
 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1774,6 +2223,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1791,6 +2244,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1808,6 +2265,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -1827,6 +2288,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,IDUMMY,(im*jm),mpi_integer4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(IDUMMY,num_swap)
+        end if
 
 	if (IRET .EQ. 0) then
        do j = jsta_2l, jend_2u
@@ -1834,6 +2299,7 @@
             IVGTYP ( i, j ) = idummy ( i, j ) 
         end do
        end do 
+       print*,'MAX IVGTYP=', maxval(idummy)
 	else
 	IVGTYP=NINT(SPVAL)
 	endif
@@ -1846,6 +2312,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,IDUMMY,(im*jm),mpi_integer4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(IDUMMY,num_swap)
+        end if
 	if (iret .eq. 0) then
       do j = jsta_2l, jend_2u
         do i = 1, im
@@ -1865,6 +2335,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,islope,(im*jm),mpi_integer4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(islope,num_swap)
+        end if
          if (ierr /= 0) then
           print*,"Error reading ", VarName,"Assigned missing values"
           ISLOPE=NINT(SPVAL)
@@ -1879,6 +2353,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -1898,6 +2376,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -1916,6 +2398,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -1934,6 +2420,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
       do j = jsta_2l, jend_2u
@@ -1953,6 +2443,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
      
 	if (iret .eq. 0) then
       do j = jsta_2l, jend_2u
@@ -1971,6 +2465,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
       do j = jsta_2l, jend_2u
@@ -1989,6 +2487,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2008,6 +2510,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2028,6 +2534,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2048,6 +2558,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2068,6 +2582,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2087,6 +2605,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2106,6 +2628,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2126,6 +2652,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2145,6 +2675,10 @@
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4 &
      & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
       do j = jsta_2l, jend_2u
@@ -2165,6 +2699,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2195,6 +2733,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2214,6 +2756,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2235,6 +2781,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2254,6 +2804,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2276,10 +2830,14 @@
 
       VarName='RAINCV'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret .eq. 0) then
-        call mpi_file_read_at(iunit,file_offset(index+1) &
-           ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
-	if (ierr .eq. 0) then
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+
+	if (iret .eq. 0 .and. ierr .eq. 0) then
          do j = jsta_2l, jend_2u
           do i = 1, im
              CPRATE ( i, j ) = dummy ( i, j )* 0.001
@@ -2290,7 +2848,6 @@
          dummy=0
 	write(6,*) 'NO RAINCV field...CPRATE set to ZERO'
 	endif
-      endif
 
 !-------------------------------------------------
 
@@ -2300,8 +2857,10 @@
 	if (iret .eq. 0) then
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY2,(im*jm),mpi_real4, mpi_status_ignore, ierr)
-      else
-        DUMMY2 = 0
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 	endif
 
          do j = jsta_2l, jend_2u
@@ -2317,6 +2876,10 @@
         if (iret .eq. 0) then
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         endif
 
          do j = jsta_2l, jend_2u
@@ -2326,13 +2889,17 @@
           enddo
          enddo
 
-!-- SNOW_bucket  is "ACCUMULATED GRID SCALE  PRECIPITATION OVER BUCKET_DT PERIODS OF TIME"
+!-- SNOW_bucket  is "ACCUMULATED GRID SCALE  SNOW OVER BUCKET_DT PERIODS OF TIME"
       VarName='SNOW_ACC_NC'
         write(6,*) 'getting SNOW_ACC_NC, [mm]'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
         if (iret .eq. 0) then
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         endif
 
          do j = jsta_2l, jend_2u
@@ -2342,11 +2909,35 @@
          enddo
       print *,'MAX SNOW_ACC_NC = ',maxval(snow_bucket)
 
+!-- GRAUP  is "ACCUMULATED GRID SCALE  Graupel OVER BUCKET_DT PERIODS OF TIME"
+      VarName='GRAUP_ACC_NC'
+        write(6,*) 'getting SNOW_ACC_NC, [mm]'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+        if (iret .eq. 0) then
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        endif
+
+         do j = jsta_2l, jend_2u
+          do i = 1, im
+             graup_bucket ( i, j ) = dummy(i,j)
+          enddo
+         enddo
+      print *,'MAX GRAUP_ACC_NC = ',maxval(graup_bucket)
+
       VarName='GRAUPELNCV' 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
         if (iret .eq. 0) then
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         endif
         do j = jsta_2l, jend_2u
           do i = 1, im
@@ -2355,33 +2946,15 @@
          enddo
 !-------------------------------------------------
 
-! RSWIN can be output normally in SURFCE
-      IF(MODELNAME .NE. 'RAPR')THEN
-       do j = jsta_2l, jend_2u
-        do i = 1, im
-             CZEN ( i, j ) = 1.0
-             CZMEAN ( i, j ) = CZEN ( i, j )
-        end do
-       end do
-      ELSE
-
-        jdn=iw3jdn(idat(3),idat(1),idat(2))
-        do j=jsta,jend
-         do i=1,im
-             call zensun(jdn,float(idat(4)),gdlat(i,j),gdlon(i,j)     &
-               ,pi,sun_zenith,sun_azimuth)
-             czen(i,j)=cos(sun_zenith)
-             CZMEAN ( i, j ) = CZEN ( i, j )
-         end do
-        end do
-         print*,'sample RAPR zenith angle=',acos(czen(ii,jj))*rtd
-      ENDIF
-
       VarName='GLW'
 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2406,6 +2979,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2439,6 +3016,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)   &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2463,6 +3044,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)   &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2475,18 +3060,50 @@
 	GDLON=SPVAL
 	endif
 
+
+! RSWIN can be output normally in SURFCE
+      IF(MODELNAME .NE. 'RAPR')THEN
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+             CZEN ( i, j ) = 1.0
+             CZMEAN ( i, j ) = CZEN ( i, j )
+        end do
+       end do
+      ELSE
+
+        jdn=iw3jdn(idat(3),idat(1),idat(2))
+        do j=jsta,jend
+         do i=1,im
+             call zensun(jdn,float(idat(4)),gdlat(i,j),gdlon(i,j)     &
+               ,pi,sun_zenith,sun_azimuth)
+             temp=sun_zenith/rtd
+             czen(i,j)=cos(temp)
+             CZMEAN ( i, j ) = CZEN ( i, j )
+         end do
+        end do
+         print*,'sample RAPR zenith angle=',acos(czen(ii,jj))*rtd
+      ENDIF
+
 !------------------------------------
 
       VarName='SWDOWN'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)   &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, iret2)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
       VarName='ALBEDO'
 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)     &
      & ,DUMMY2,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY2,num_swap)
+        end if
 
 	if(iret .eq. 0 .and. iret2 .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2503,11 +3120,57 @@
 	endif
 !----------------------------------
 
+! RAP/HRRR time-averaged SWDOWN
+      VarName='SWRADMEAN'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)   &
+     & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, iret2)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if(iret .eq. 0 .and. iret2 .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+! averaged incoming solar radiation
+            SWRADmean ( i, j ) = dummy (i, j)
+        end do
+       end do
+        else
+        SWRADmean=SPVAL
+        endif
+!
+! RAP/HRRR time-averaged SWNORM
+      VarName='SWNORMMEAN'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)   &
+     & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, iret2)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if(iret .eq. 0 .and. iret2 .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+! averaged incoming solar radiation
+            SWNORMmean ( i, j ) = dummy (i, j)
+        end do
+       end do
+        else
+        SWRADmean=SPVAL
+        endif
+!
+
+
       VarName='TMN'
 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)  &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (IRET .EQ. 0) then
        do j = jsta_2l, jend_2u
@@ -2530,6 +3193,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2549,6 +3216,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2567,6 +3238,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2585,6 +3260,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
@@ -2603,6 +3282,10 @@
        call retrieve_index(index,VarName,varname_all,nrecs,iret)
        call mpi_file_read_at(iunit,file_offset(index+1) &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
        if (iret .eq. 0) then
         do j = jsta_2l, jend_2u
          do i = 1, im
@@ -2651,6 +3334,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)    &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2667,6 +3354,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)   &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2683,6 +3374,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)   &
      & ,DUMMY,(im*jm),mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2715,6 +3410,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
 	if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2725,12 +3424,59 @@
 	PCTSNO=SPVAL
 	endif
 
+! density of snowfall
+      VarName='RHOSNF'
+
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            SNFDEN( i, j ) = max(0.,dummy ( i, j ))
+        end do
+       end do
+        else
+        SNFDEN=SPVAL
+        endif
+        print *,' MIN/MAX SNFDEN ',minval(SNFDEN),maxval(SNFDEN)
+
+
+! snowfall accumulation
+      VarName='SNOWFALLAC'
+
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            SNDEPAC( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+        SNDEPAC=SPVAL
+        endif
+        print *,' MIN/MAX SNDEPAC ',minval(SNDEPAC),maxval(SNDEPAC)
+
 ! snow temperature at the interface of 2 snow layers
       VarName='SOILT1'
 
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2746,6 +3492,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2760,6 +3510,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2774,6 +3528,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2788,6 +3546,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2802,6 +3564,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2816,6 +3582,10 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2826,10 +3596,32 @@
           UP_HELI_MAX=spval
         end if
 
+      VarName='UP_HELI_MAX16'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           UP_HELI_MAX16( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+          UP_HELI_MAX16=spval
+        end if
+
       VarName='GRPL_MAX'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       call mpi_file_read_at(iunit,file_offset(index+1)                  &
      & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
         if (iret .eq. 0) then
        do j = jsta_2l, jend_2u
         do i = 1, im
@@ -2840,75 +3632,287 @@
           GRPL_MAX=spval
         end if
 
-
-
-      VarName='MAXDW2D'
-
+      VarName='UH'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        DWDT_MAX=SPVAL
-      else
-        this_offset=file_offset(index+1)+(jsta_2l-1)*4*im
-        this_length=im*(jend_2u-jsta_2l+1)
-        call mpi_file_read_at(iunit,this_offset &
-       ,DWDT_MAX,this_length,mpi_real4 &
-       , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          DWDT_MAX=SPVAL
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           UP_HELI( i, j ) = dummy ( i, j )
+        end do
+       end do
         else
-           print*, 'read DWDT_MAX properly ', &
-                   minval(DWDT_MAX),maxval(DWDT_MAX)
+           UP_HELI=spval
         end if
 
-      end if
-
-      VarName='WSTDV'
-
+      VarName='UH16'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        W_STDV=SPVAL
-      else
-        this_offset=file_offset(index+1)+(jsta_2l-1)*4*im
-        this_length=im*(jend_2u-jsta_2l+1)
-        call mpi_file_read_at(iunit,this_offset &
-       ,W_STDV,this_length,mpi_real4 &
-       , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          W_STDV=SPVAL
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           UP_HELI16( i, j ) = dummy ( i, j )
+        end do
+       end do
         else
-           print*, 'read W_STDV properly ', &
-                   minval(W_STDV),maxval(W_STDV)
+           UP_HELI16=spval
         end if
 
-      end if
-
-      VarName='MAXTKE2D'
-
+      VarName='LTG1_MAX'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
-      if (iret /= 0) then
-        print*,VarName," not found in file-Assigned missing values"
-        TKE_MAX=SPVAL
-      else
-        this_offset=file_offset(index+1)+(jsta_2l-1)*4*im
-        this_length=im*(jend_2u-jsta_2l+1)
-        call mpi_file_read_at(iunit,this_offset &
-       ,TKE_MAX,this_length,mpi_real4 &
-       , mpi_status_ignore, ierr)
-        if (ierr /= 0) then
-          print*,"Error reading ", VarName,"Assigned missing values"
-          TKE_MAX=SPVAL
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           LTG1_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
         else
-           print*, 'read TKE_MAX properly ', &
-                   minval(TKE_MAX),maxval(TKE_MAX)
+           LTG1_MAX=spval
         end if
 
-      end if
+      VarName='LTG2_MAX'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           LTG2_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           LTG2_MAX=spval
+        end if
+
+      VarName='LTG3_MAX'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           LTG3_MAX( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           LTG3_MAX=spval
+        end if
+
+      VarName='NCI_LTG'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           NCI_LTG( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           NCI_LTG=spval
+        end if
+
+      VarName='NCA_LTG'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           NCA_LTG( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           NCA_LTG=spval
+        end if
+
+      VarName='NCI_WQ'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           NCI_WQ( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           NCI_WQ=spval
+        end if
+
+      VarName='NCA_WQ'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           NCA_WQ( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           NCA_WQ=spval
+        end if
+
+      VarName='NCI_REFD'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           NCI_REFD( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           NCI_REFD=spval
+        end if
+
+      VarName='NCA_REFD'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           NCA_REFD( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           NCA_REFD=spval
+        end if
+!
+! CRA REFLECTIVITY
+!
+      VarName='REFL_10CM'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      ALLOCATE(DUM3D_IKJ(IM,LM,JM))
+      call mpi_file_read_at(iunit,file_offset(index+1) &
+     & ,DUM3D_IKJ,(im*jm*lm),mpi_real4 &
+     & , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm*lm
+           call to_native_endianness_i4(DUM3D_IKJ,num_swap)
+        end if
 
 
+        if (iret .eq. 0  .and. ierr .eq. 0) then
+      do l = 1, lm
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            REF_10CM ( i, j, l ) = dum3d_ikj ( i, LM-L+1, j )
+        end do
+       end do
+      end do
+        else
+         REF_10CM=SPVAL
+        endif
+
+        deallocate(dum3d_ikj)
+
+      VarName='COMPOSITE_REFL_10CM'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           REFC_10CM( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           REFC_10CM=spval
+        end if
+
+      VarName='REFL_10CM_1KM'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           REF1KM_10CM( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           REF1KM_10CM=spval
+        end if
+
+      VarName='REFL_10CM_4KM'
+      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+      call mpi_file_read_at(iunit,file_offset(index+1)                  &
+     & ,DUMMY,(im*jm),mpi_real4,mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=im*jm
+           call to_native_endianness_i4(DUMMY,num_swap)
+        end if
+        if (iret .eq. 0) then
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+           REF4KM_10CM( i, j ) = dummy ( i, j )
+        end do
+       end do
+        else
+           REF4KM_10CM=spval
+        end if
+! CRA
+!
 !---------------------------------------
 ! physics calling frequency
       VarName='STEPBL'
@@ -2918,6 +3922,10 @@
       else
         call mpi_file_read_at(iunit,file_offset(index+1),                 &
           NPHS,1,mpi_integer4 , mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(NPHS,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName,"Assigned missing values"
           NPHS=NINT(SPVAL)
@@ -2929,8 +3937,8 @@
 ! pos east
        call collect_loc(gdlat,dummy)
        if(me.eq.0)then
-        latstart=nint(dummy(1,1)*1000.)
-        latlast=nint(dummy(im,jm)*1000.)
+        latstart=nint(dummy(1,1)*gdsdegr)
+        latlast=nint(dummy(im,jm)*gdsdegr)
        end if
        write(6,*) 'laststart,latlast B calling bcast= ', latstart,latlast
        call mpi_bcast(latstart,1,MPI_INTEGER,0,mpi_comm_comp,irtn)
@@ -2997,17 +4005,21 @@
 !      end if
 !          write(6,*) 'dxval= ', dxval
 
-      VarName='DY'
+      VarName='RDY'
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then
         print*,VarName," not found in file"
       else
-        call mpi_file_read_at(iunit,file_offset(index)+5*4              &
+        call mpi_file_read_at(iunit,file_offset(index+1)              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
-          dyval=nint(garb)
+          dyval=nint(1.0/garb)
         end if
       end if
           write(6,*) 'dyval= ', dyval
@@ -3018,11 +4030,15 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
           print*,VarName, ' from MPIIO READ= ',garb
-          cenlat=nint(garb*1000.)
+          cenlat=nint(garb*gdsdegr)
           write(6,*) 'cenlat= ', cenlat
         end if
       end if
@@ -3034,11 +4050,15 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
           print*,VarName, ' from MPIIO READ= ',garb
-          cenlon=nint(garb*1000.)
+          cenlon=nint(garb*gdsdegr)
           write(6,*) 'cenlon= ', cenlon
         end if
       end if
@@ -3050,6 +4070,10 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,igarb,1,mpi_integer4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(igarb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -3067,6 +4091,10 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -3083,6 +4111,10 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -3101,6 +4133,10 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -3121,11 +4157,10 @@
         end do
        end do
 
-! Convert DXVAL and DYVAL for ARW rotated
-! latlon from meters to radian
+! Convert DXVAL and DYVAL for ARW rotated latlon from meters to radian
         if(maptype==6)then
-         dxval=(DXVAL * 360.)/(ERAD*2.*pi)*1000.
-         dyval=(DYVAL * 360.)/(ERAD*2.*pi)*1000.
+         dxval=(DXVAL * 360.)/(ERAD*2.*pi)*gdsdegr
+         dyval=(DYVAL * 360.)/(ERAD*2.*pi)*gdsdegr
          print*,'dx and dy for arw rotated latlon= ', &
          dxval,dyval
         end if
@@ -3165,9 +4200,14 @@
       call retrieve_index(index,VarName,varname_all,nrecs,iret)
       if (iret /= 0) then
         print*,VarName," not found in file"
+        DT=60
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -3189,6 +4229,10 @@
       else
         call mpi_file_read_at(iunit,file_offset(index)+5*4              &
           ,garb,1,mpi_real4, mpi_status_ignore, ierr)
+        if(byte_swap) then
+           num_swap=1
+           call to_native_endianness_i4(garb,num_swap)
+        end if
         if (ierr /= 0) then
           print*,"Error reading ", VarName," using MPIIO"
         else
@@ -3351,8 +4395,16 @@
         deallocate (file_offset)
       write(0,*)' after deallocates'
 
-	print*, 'end of INITPOST_BIN_MPIIO'
+!
+! convert  dxval, dyval from mtere to mm
+!
+      if (grib=="grib2" )then
+        dxval=dxval*1000.
+        dyval=dyval*1000.
+      endif
+
+      print*, 'end of INITPOST_BIN_MPIIO'
 !     
 !
       RETURN
-      END SUBROUTINE INITPOST_BIN_MPIIO
+      END ! SUBROUTINE INITPOST_BIN_MPIIO
