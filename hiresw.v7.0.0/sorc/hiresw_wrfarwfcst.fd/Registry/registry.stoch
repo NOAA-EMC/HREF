@@ -48,8 +48,8 @@ xpose XPOSE_STOCH_BACK_T_REAL dyn_em RT_REAL,RT_REAL_xxx,RT_REAL_yyy
 xpose XPOSE_STOCH_BACK_T_IMAG dyn_em RT_IMAG,RT_IMAG_xxx,RT_IMAG_yyy
 
 # Variables 
-state integer   SEED1            -      misc        1         -     rh        "SEED1"                "RANDOM SEED NUMBER 1"  ""
-state integer   SEED2            -      misc        1         -     rh        "SEED2"                "RANDOM SEED NUMBER 2"  ""
+state integer   SEED1            -      misc        1         -     r        "SEED1"                "RANDOM SEED NUMBER 1"  ""
+state integer   SEED2            -      misc        1         -     r        "SEED2"                "RANDOM SEED NUMBER 2"  ""
 state logical   did_stoch        -      misc        1         -     r         "DID_STOCH"            "Logical to tell us that we already did the initialization for dom 1"  ""
 
 # Namelist parameters general 
