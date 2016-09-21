@@ -235,7 +235,7 @@
 ! CRA  0-1 KM AND 0-6 KM SHEAR
 
        IF(IGET(430).GT.0.OR.IGET(431).GT.0.OR.IGET(432).GT.0      &
-         .OR.IGET(303).GT.0) THEN
+         .OR.IGET(433).GT.0) THEN
 
          DEPTH=6000.0
          CALL CALHEL(DEPTH,UST,VST,HELI,USHR1,VSHR1,USHR6,VSHR6)
@@ -254,7 +254,7 @@
             elseif(grib=='grib2') then
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(430))
-               datapd(1:im,1:jend-jsta+1,cfld)=EGRID1(1:im,jsta:jend)
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
             endif
          ENDIF
          IF(IGET(431).GT.0) THEN
@@ -271,7 +271,7 @@
             elseif(grib=='grib2') then
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(431))
-               datapd(1:im,1:jend-jsta+1,cfld)=EGRID1(1:im,jsta:jend)
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
             endif
          ENDIF
          IF(IGET(432).GT.0) THEN
@@ -288,7 +288,7 @@
             elseif(grib=='grib2') then
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(432))
-               datapd(1:im,1:jend-jsta+1,cfld)=EGRID1(1:im,jsta:jend)
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
             endif
          ENDIF
          IF(IGET(433).GT.0) THEN
@@ -305,7 +305,7 @@
             elseif(grib=='grib2') then
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(433))
-               datapd(1:im,1:jend-jsta+1,cfld)=EGRID1(1:im,jsta:jend)
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
             endif
          ENDIF
        ENDIF
