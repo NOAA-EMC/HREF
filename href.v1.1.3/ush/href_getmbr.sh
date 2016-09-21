@@ -15,6 +15,9 @@ typeset -Z2 m
 
 fhr=$1
 
+wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
+
+
 cd $DATA
 
 if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then 
@@ -107,8 +110,38 @@ ff=$fhr
       echo href.m${m}.t${cyc}z.f${ff} 
 
       if [ ${file[$m]} = 'namnest' ] ; then     
-        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+# now need to interpolate NAM nest data to the 5 km grid 227 used by HREF
+
+## can we determine the product subset required by cur ops HREF?
+#        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+      filecheck=${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2
+
+	if [ -e $filecheck ]
+        then
+
+#       $WGRIB2 $filecheck -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} $DATA/href.m${m}.t${cyc}z.f${ff}
+
+       $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt | $WGRIB2 -i -grib ./${ff}/inputs.grb $filecheck
+       $WGRIB2 ./${ff}/inputs.grb  -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  ./${ff}/main.grib2
+       $WGRIB2 $filecheck  -match ":(APCP):" -grib ./${ff}/inputs_budget.grb
+       $WGRIB2 $filecheck  -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF):" -grib ./${ff}/nn.grb
+       $WGRIB2 $filecheck  -match "HGT:cloud ceiling:" -grib ./${ff}/ceiling.grb
+       cd $ff
+       cat nn.grb ceiling.grb > inputs_nn.grb
+       $WGRIB2  inputs_nn.grb -new_grid_interpolation neighbor -set_grib_type jpeg  -new_grid_winds grid -new_grid ${wgrib2def} nn.grib2
+       $WGRIB2 inputs_budget.grb  -new_grid_interpolation budget -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} budget.grib2
+       cat main.grib2 nn.grib2 budget.grib2 > $DATA/href.m${m}.t${cyc}z.f${ff}
+       cd ../
+
+#       ln -sf  $filecheck $DATA/href.m${m}.t${cyc}z.f${ff}
+#       ln -sf  $filecheck $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        ln -sf  $DATA/href.m${m}.t${cyc}z.f${ff} $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        fi
       fi
  
       if [ ${file[$m]} = 'conusarw' ] ; then
