@@ -122,24 +122,21 @@ ff=$fhr
 	if [ -e $filecheck ]
         then
 
-#       $WGRIB2 $filecheck -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} $DATA/href.m${m}.t${cyc}z.f${ff}
+#        $WGRIB2 $filecheck -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} $DATA/href.m${m}.t${cyc}z.f${ff}
 
-       $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt | $WGRIB2 -i -grib ./${ff}/inputs.grb $filecheck
-       $WGRIB2 ./${ff}/inputs.grb  -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  ./${ff}/main.grib2
-       $WGRIB2 $filecheck  -match ":(APCP):" -grib ./${ff}/inputs_budget.grb
-       $WGRIB2 $filecheck  -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF):" -grib ./${ff}/nn.grb
-       $WGRIB2 $filecheck  -match "HGT:cloud ceiling:" -grib ./${ff}/ceiling.grb
-       cd $ff
-       cat nn.grb ceiling.grb > inputs_nn.grb
-       $WGRIB2  inputs_nn.grb -new_grid_interpolation neighbor -set_grib_type jpeg  -new_grid_winds grid -new_grid ${wgrib2def} nn.grib2
-       $WGRIB2 inputs_budget.grb  -new_grid_interpolation budget -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} budget.grib2
-       cat main.grib2 nn.grib2 budget.grib2 > $DATA/href.m${m}.t${cyc}z.f${ff}
-       cd ../
+         $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt | $WGRIB2 -i -grib ./${ff}/inputs.grb $filecheck
+         $WGRIB2 $filecheck  -match ":(APCP|HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF):" -grib ./${ff}/nn.grb
+         $WGRIB2 $filecheck  -match "HGT:cloud ceiling:" -grib ./${ff}/ceiling.grb
 
-#       ln -sf  $filecheck $DATA/href.m${m}.t${cyc}z.f${ff}
-#       ln -sf  $filecheck $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         cd $ff
+         cat nn.grb ceiling.grb > inputs_nn.grb
+         $WGRIB2  inputs.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main.grib2
+         $WGRIB2  inputs_nn.grb -set_grib_type jpeg -new_grid_interpolation neighbor  -new_grid_winds grid -new_grid ${wgrib2def} nn.grib2
+         cat main.grib2 nn.grib2  > $DATA/href.m${m}.t${cyc}z.f${ff}
+         rm nn.grb ceiling.grb inputs.grb inputs_nn.grb
+         cd ../
 
-        ln -sf  $DATA/href.m${m}.t${cyc}z.f${ff} $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         ln -sf  $DATA/href.m${m}.t${cyc}z.f${ff} $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
         fi
       fi
