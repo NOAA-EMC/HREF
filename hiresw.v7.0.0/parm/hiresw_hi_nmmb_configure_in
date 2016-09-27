@@ -180,6 +180,7 @@ write_prec_adj: false     # True--> create baseline prec. files ; False--> regul
 
 gwdflg:  false               # True--> GWD on ; False--> GWD off
 
+cdmb:       0.1             # tunable parameter for adjusting mountain blocking
 cleffamp:   1.00            # tunable parameter, depends on resolution
 sigfac:     0.00            # tunable parameter
 factop:     0.50            # de-acceleration limiter
@@ -198,6 +199,16 @@ longwave:   rrtm
                                 # gsfc--> Goddard shortwave
                                 # dudh--> Dudhia shortwave
                                 # rrtm--> RRTM (shortwave and longwave)
+
+np3d: 3                     # cloud properties for radiation
+                                # 3--> ferrier's microphysics cloud scheme (only stratiform cloud)
+                                # 4--> zhao/carr/sundqvist microphysics cloud (now available in the NMMB)
+                                # 5--> NAM stratiform + convective cloud optical depth and fraction (GFDL type convective cloud)
+                                # 8--> Thompson microphysics and special Thompson rrtm SW radiation
+
+cldfraction: default        # cloud fraction scheme for radiation
+                                # default  --> according to the choice of np3d
+                                # thompson --> thompson
 
 co2tf:  1                       # co2tf--> Read (0) or generate internally (1)
                                 #          the GFDL CO2 transmission functions
@@ -221,6 +232,7 @@ microphysics:  fer_hires            # Microphysics scheme
                                 # wsm3--> WSM3
                                 # gfs--> GFS microphy
 
+rhgrd: 1.0                 # Onset of condensation
 spec_adv:  .false.          # Individual cloud species advected
 lmprate:  .false.           # .true.: 4D array called MPRATES containing
                             # 3D microphysics source/sink terms
