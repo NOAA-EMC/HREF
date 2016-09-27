@@ -1,0 +1,34 @@
+###############################################################################
+#
+# TEST   - stand-alone HYCOM
+#        - 6h intervals
+#        - Starting at 2009120100, running for 2 days
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: HYCOM stand-alone from data with 6h intervals"
+
+# -
+export CNTL_DIR=2009_sbys_hycom
+export LIST_FILES="ovrtn_out restart_out.a restart_out.b summary_out"
+
+# - gsm configuration ---
+export_gsm
+export TASKS=146
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=2
+
+# - nems.configure ---
+export_nems
+export nems_configure=ocn
+export ocn_model=hycom
+export ocn_petlist_bounds="0 145"
+export coupling_interval_sec=21600.0
+
+# - component specific setup calls ---
+setup_hycom
+
+# -
+RUN_SCRIPT=rt_gfs.sh
+

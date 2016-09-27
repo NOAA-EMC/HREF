@@ -1,0 +1,21 @@
+#############################################
+####  NEMS Run-Time Configuration File  #####
+#############################################
+
+# ATM #
+atm_model:                      _atm_model_
+atm_petlist_bounds:             _atm_petlist_bounds_
+
+# OCN #
+ocn_model:                      _ocn_model_
+ocn_petlist_bounds:             _ocn_petlist_bounds_
+
+# Run Sequence #
+runSeq::
+  @_coupling_interval_sec_
+    ATM -> OCN
+    OCN -> ATM
+    ATM
+    OCN
+  @
+::

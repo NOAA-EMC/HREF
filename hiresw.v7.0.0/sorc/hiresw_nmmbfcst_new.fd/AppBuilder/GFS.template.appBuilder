@@ -1,0 +1,6 @@
+# Global Forecast System
+#
+# GFS NEMS Application Builder file
+
+COMPONENTS=( "GSM" )
+

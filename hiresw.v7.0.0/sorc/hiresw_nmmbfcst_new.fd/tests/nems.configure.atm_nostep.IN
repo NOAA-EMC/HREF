@@ -1,0 +1,12 @@
+#############################################
+####  NEMS Run-Time Configuration File  #####
+#############################################
+
+# ATM #
+atm_model:                      _atm_model_
+atm_petlist_bounds:             _atm_petlist_bounds_
+
+# Run Sequence #
+runSeq::
+  ATM
+::

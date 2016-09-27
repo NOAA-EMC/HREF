@@ -1,0 +1,24 @@
+# Location of external components on Gaea
+
+SATM_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/ATM-INSTALLS/SATM_2015-04-14-16-09-50
+XATM_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/ATM-INSTALLS/XATM_2015-04-14-16-11-10
+SLND_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/LND-INSTALLS/SLND_2015-04-14-17-23-12
+XLND_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/LND-INSTALLS/XLND_2015-04-14-17-23-26
+LIS_DIR=
+SICE_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/ICE-INSTALLS/SICE_2015-04-14-16-13-23
+XICE_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/ICE-INSTALLS/XICE_2015-04-14-16-13-32
+CICE_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/ICE-INSTALLS/CICE_2015-04-14-16-33-53
+SOCN_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/OCN-INSTALLS/SOCN_2015-04-14-16-41-34
+XOCN_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/OCN-INSTALLS/XOCN_2015-04-14-16-41-50
+MOM5_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/OCN-INSTALLS/MOM5_2015-04-14-17-13-05
+HYCOM_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/OCN-INSTALLS/HYCOM_2015-04-14-17-17-26
+POM_DIR=
+SWAV_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/WAV-INSTALLS/SWAV_2015-04-14-17-19-47
+XWAV_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/WAV-INSTALLS/XWAV_2015-04-14-17-19-53
+WW3_DIR=
+SIPM_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/IPM-INSTALLS/SIPM_2015-04-14-17-20-59
+XIPM_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/IPM-INSTALLS/XIPM_2015-04-14-17-21-08
+IPE_DIR=
+SHYD_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/HYD-INSTALLS/SHYD_2015-04-14-17-24-45
+XHYD_DIR=/autofs/mnt/ncrc-svm1_home2/Gerhard.Theurich/HYD-INSTALLS/XHYD_2015-04-14-17-25-01
+WRFHYDRO_DIR=

@@ -1,0 +1,307 @@
+#!/bin/bash
+#
+# ---------------------------------------------------------------
+# Script that runs the NOAA Environmental Modeling System (NEMS)
+# through a compset based list of configurations.
+# ---------------------------------------------------------------
+
+# -- procedures first --
+
+set_defaults ()
+{
+TASKS_dflt=48  ; TPN_dflt=   ; INPES_dflt=05 ; JNPES_dflt=09 ; WTPG_dflt=3
+TASKS_thrd=48  ; TPN_thrd=   ; INPES_thrd=05 ; JNPES_thrd=09 ; WTPG_thrd=3
+TASKS_nest=96  ; TPN_nest=   ; INPES_nest=02 ; JNPES_nest=02 ; WTPG_nest=1
+TASKS_fltr=64  ; TPN_fltr=   ; INPES_fltr=02 ; JNPES_fltr=02 ; WTPG_fltr=1
+TASKS_mvg1=96  ; TPN_mvg1=   ; INPES_mvg1=05 ; JNPES_mvg1=07 ; WTPG_mvg1=1
+TASKS_mvg2=96  ; TPN_mvg2=   ; INPES_mvg2=05 ; JNPES_mvg2=18 ; WTPG_mvg2=2
+}
+
+export_common ()
+{
+set_defaults
+export THRD=1
+export WTPG=$WTPG_dflt
+export WLCLK=10
+export GEFS_ENSEMBLE=0
+export GEN_ENSEMBLE=0
+export WRITE_DOPOST=.false.
+export POST_GRIBVERSION='"grib1"'
+check_executable
+}
+
+export_nmm ()
+{
+export_common
+export INPES=$INPES_dflt ; export JNPES=$JNPES_dflt ; export WTPG=$WTPG_dflt
+export TASKS=$TASKS_dflt ; export TPN=$TPN_dflt
+export GBRG=reg          ; export NEMSI=false       ; export RSTRT=false
+export AFFN=core         ; export NODE=1
+export NCHILD=0          ; export MODE=1-way        ; export WGT=0.0
+export FCSTL=48
+export PCPFLG=false      ; export WPREC=false
+export TS=false
+export RADTN=rrtm        ; export CONVC=bmj         ; export TURBL=myj
+export MICRO=fer_hires   ; export gfsP=false        ; export SPEC_ADV=false
+export SFC_LAYER=gfdl    ; export LAND_SURFACE=gfdlslab
+}
+
+export_gsm ()
+{
+export_common
+export TASKS=32  ; export PE1=32       ; export NSOUT=0       ; export QUILT=.false.
+export NDAYS=2   ; export CP2=.false.  ; export IAER=0        ; export FHRES=180
+export WRTGP=1   ; export FDFI=0       ; export ADIAB=.false. ; export REDUCEDGRID=.true.
+export wave=62   ; export THRD=1
+export lm=64     ; export lsoil=4         ; export MEMBER_NAMES=c00
+export IDVC=2    ; export THERMODYN_ID=1  ; export SFCPRESS_ID=1 ; export SPECTRALLOOP=2
+export NEMSIOIN=.false.  ; export NEMSIOOUT=.false. ; export rungfstest=.true.
+export SIGIOIN=.true.    ; export SIGIOOUT=.true.   ; export SFCIOOUT=.true.
+export FHSWR=3600        ;  export FHLWR=3600       ; LDFI_SPECT=.true.
+export CDATE=2012010100
+export GOCART_AER2POST=.false.
+export NST_FCST=0  ; export NDSLFV=.false.  ; export IDEA=.false.
+}
+
+export_fim ()
+{
+export_common
+export FIM_USE_NEMS=true
+}
+
+export_nems ()
+{
+export nems_configure=default
+export atm_model=none
+export atm_petlist_bounds="-1 -1"
+export lnd_model=none
+export lnd_petlist_bounds="-1 -1"
+export ice_model=none
+export ice_petlist_bounds="-1 -1"
+export ocn_model=none
+export ocn_petlist_bounds="-1 -1"
+export wav_model=none
+export wav_petlist_bounds="-1 -1"
+export ipm_model=none
+export ipm_petlist_bounds="-1 -1"
+export hyd_model=none
+export hyd_petlist_bounds="-1 -1"
+export med_model=none
+export med_petlist_bounds="-1 -1"
+export atm_coupling_interval_sec=-1
+export ocn_coupling_interval_sec=-1
+export coupling_interval_sec=-1
+export coupling_interval_slow_sec=-1
+export coupling_interval_fast_sec=-1
+}
+
+check_executable ()
+{
+if [ -f ${PATHTR}/exe/NEMS.x ] ; then
+  echo "   The NEMS.x executable IS available."
+else
+  echo "   The NEMS.x executable is NOT available. Must first compile NEMS!"
+  echo "...bailing out!"
+  exit 1    
+fi
+}
+
+# -- component specific setup functions
+
+setup_hycom(){
+  ln -s ${RTPWD}/HYCOM_glob/* ${RUNDIR}/.
+}
+
+setup_mom5cice(){
+  if [ $SCHEDULER = 'pbs' -o $SCHEDULER = 'moab' ]; then
+    if [ $MACHINE_ID = zeus ] ; then
+      /home/Fei.Liu/bin/setup_mom_input.sh ${RUNDIR}
+    elif [ $MACHINE_ID = gaea ] ; then
+#    /autofs/na1_home1/Fei.Liu/bin/setup_mom_input.sh ${RUNDIR}
+      export ocn_input_dir=${ocn_input_dir:-/lustre/f1/unswept/ncep/Shrinivas.Moorthi/nems/NUOPC/OM_stuff/global_box1}
+      export ice_input_dir=${ocn_input_dir:-/lustre/f1/unswept/ncep/Shrinivas.Moorthi/nems/NUOPC/OM_stuff/lanl_cice}
+      ./setup_mom_input.sh $RUNDIR $ocn_input_dir $ice_input_dir
+    fi
+  fi
+}
+
+setup_ipe(){
+  # this implementation assumes that IPE is right under ROOTDIR
+  ln -s ${ROOTDIR}/IPE/IPE.inp ${RUNDIR}/.
+  ln -s ${ROOTDIR}/IPE/coeff_hflux.dat ${RUNDIR}/.
+  ln -s ${ROOTDIR}/IPE/coeff_lflux.dat ${RUNDIR}/.
+  ln -s ${ROOTDIR}/IPE/ipe_grid ${RUNDIR}/.
+  ln -s ${ROOTDIR}/IPE/stup* ${RUNDIR}/.
+  ln -s ${ROOTDIR}/IPE/wei96.cofcnts ${RUNDIR}/.
+}
+
+setup_spaceweather(){
+  ln -s /scratch1/portfolios/NCEPDEV/nems/noscrub/Gerhard.Theurich/SpaceWeatherResources/data ${RUNDIR}/.
+}
+
+# -------------- script main --------------
+
+echo "========================================================================="
+
+# Initialize
+ROOTDIR=`pwd`
+NEMSDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export PATHCS=${NEMSDIR}/compsets             # Path to compsets directory
+export PATHTR=${NEMSDIR}                      # Path to NEMS trunk
+#export PATHRT=${NEMSDIR}/job/regression_tests # Path to legacy NEMS test scripts
+export PATHRT=${NEMSDIR}/tests # Path to NEMS test scripts
+export CREATE_BASELINE=false
+export BAIL_CONDITION=NONE
+
+# Initialization by traditional NEMS run scripts
+source $PATHTR/tests/detect_machine.sh
+
+export dprefix1=""
+export dprefix2=""
+export MACHINE_ID=${MACHINE_ID:-wcoss}
+if [ $MACHINE_ID = wcoss ]; then
+  source /usrx/local/Modules/default/init/sh
+  export CLASS=dev
+  export ACCNR=dev
+  export DISKNM=/meso
+  export STMP=/stmpp1
+  export PTMP=/ptmpp1
+  export SCHEDULER=lsf
+elif [ $MACHINE_ID = gaea ]; then
+  export CLASS=debug
+  export ACCNR
+  export DISKNM=/lustre/f1/Ratko.Vasic
+  export STMP=/lustre/f1/ncep/$LOGNAME/ptmp
+  export PTMP=/lustre/f1/ncep/$LOGNAME/ptmp
+  export SCHEDULER=moab
+  export SIGHDR=/lustre/f1/unswept/ncep/Shrinivas.Moorthi/para_branch/para_new/sorc/global_sighdr.fd/global_sighdr
+elif [ $MACHINE_ID = zeus ]; then
+  source /usr/share/Modules/init/sh
+  export ACCNR
+  export QUEUE=batch
+  export QUEUE=debug
+  export dprefix1=/scratch1/portfolios/NCEPDEV
+  export dprefix2=/scratch2/portfolios/NCEPDEV
+  export DISKNM=$dprefix2/meso
+  export STMP=$dprefix2/stmp
+  export PTMP=$dprefix2/ptmp
+# export PTMP=$dprefix2/stmp
+  export SCHEDULER=pbs
+  export SIGHDR=$dprefix2/global/save/Shrinivas.Moorthi/para/sorc/global_sighdr.fd/global_sighdr
+  export SLG=.false.
+else
+  echo "Unknown machine ID, must edit file '$PATHTR/tests/detect_machine.sh'."
+  echo "...bailing out!"
+  exit 1    
+fi
+
+echo "========================================================================="
+
+if [ $MACHINE_ID = wcoss ]; then
+ cp $PATHRT/gfs_fcst_run.IN_IBM $PATHRT/gfs_fcst_run.IN
+elif [ $MACHINE_ID = zeus ]; then
+ cp $PATHRT/gfs_fcst_run.IN_Linux $PATHRT/gfs_fcst_run.IN
+ export IC_DIR=/scratch1/portfolios/NCEPDEV/nems/noscrub/Gerhard.Theurich/GSM_INITIAL_CONDITIONS
+ export RTPWD=/scratch1/portfolios/NCEPDEV/nems/noscrub/Gerhard.Theurich/REGRESSION_TEST_NUOPC_development_v0012
+elif [ $MACHINE_ID = gaea ]; then
+ cp $PATHRT/gfs_fcst_run.IN_Linux $PATHRT/gfs_fcst_run.IN
+ export IC_DIR=/lustre/f1/unswept/ncep/Gerhard.Theurich/GSM_INITIAL_CONDITIONS
+ export RTPWD=/lustre/f1/unswept/ncep/Gerhard.Theurich/REGRESSION_TEST_NUOPC_development_v0011
+ export FIXGLOBAL=/lustre/f1/unswept/ncep/Shrinivas.Moorthi/para_branch/para_new/fix/fix_am
+elif [ $MACHINE_ID = theia ]; then
+ cp $PATHRT/gfs_fcst_run.IN_Linux $PATHRT/gfs_fcst_run.IN
+ export IC_DIR=/scratch4/NCEPDEV/nems/Gerhard.Theurich/GSM_INITIAL_CONDITIONS
+ export RTPWD=/scratch4/NCEPDEV/nems/Gerhard.Theurich/REGRESSION_TEST_NUOPC_development_v0011
+fi
+
+# Make the RUNDIR_ROOT on the temporary file system
+export RUNDIR_ROOT=${PTMP}/${USER}/rt_$$
+mkdir -p ${RUNDIR_ROOT}
+
+echo "RUNDIR_ROOT: '${RUNDIR_ROOT}'"
+
+export TEST_NR=""
+export REGRESSIONTEST_LOG=${PATHRT}/RegressionTests_$MACHINE_ID.log
+
+echo "========================================================================="
+
+# Determine file that contains the list of compsets
+if ([ $# == 0 ]); then
+  compsetfileCounter=0
+  shopt -s nullglob # all expansion to null string
+  for i in $ROOTDIR/*.compsetRun; do
+    if [ "x$i" != "x" ]; then
+      let compsetfileCounter++
+      compsetfilelist=( "${compsetfilelist[@]}" $i )
+    fi
+  done
+  if [ $compsetfileCounter == 0 ]; then
+    file=$PATHCS/"default.compsetRun"
+  else
+    file=${compsetfilelist[0]}
+  fi
+  echo "Looping through the compset list in file '$file'..."
+elif ([ $# == 1 ]); then
+  file=$1
+  echo "Looping through the compset list in file '$file'..."
+else
+  echo "Usage: ./NEMSCompsetRun [FILE]"
+  echo "  Where FILE contains a list of compsets to be run, one compset per line."
+  echo "  Without FILE the default configuration in file 'default.compsetRun' "
+  echo "  in subdir ./compsets in the NEMS root directory is used."
+  echo "...bailing out!"
+  exit 1
+fi
+
+# Ensure the file exists
+if ([ ! -f $file ]); then
+  echo "The file '$file' does not exist!"
+  echo "...bailing out!"
+  exit 1
+fi
+
+# Construct a list variable of compsets, skip comments
+compsets=`cat $file | grep -v '^#'| grep -v '^DIR=' | awk '{ print $1 }' | xargs`
+echo $compsets
+
+# Look for DIR variable in the file
+compsetdir=`cat $file | grep -e '^DIR=' | tail -1 | sed 's/DIR=//g'`
+if ([ $compsetdir"x" == "x" ]); then
+  # default
+  compsetdir=$PATHCS
+fi
+echo "Looking for compsets in directory: '$compsetdir'."
+
+echo "========================================================================="
+
+# Loop over the list of compsets
+echo "Starting :" > $REGRESSIONTEST_LOG
+date >> $REGRESSIONTEST_LOG
+i=0
+for compset in $compsets; do
+  echo "======================================================================"
+  echo "======================================================================"\
+  >> $REGRESSIONTEST_LOG
+  echo "Setting up to run NEMS on compset: '$compset'."
+  echo "Setting up to run NEMS on compset: '$compset'." >> $REGRESSIONTEST_LOG
+  if ([ -f $compsetdir/$compset ]); then
+    echo "Found compset file '$compsetdir/$compset'."
+    export RUNDIR=${RUNDIR_ROOT}/$compset
+    mkdir -p ${RUNDIR}
+    let i++
+    export JBNME=`basename $RUNDIR_ROOT`_$i
+    source $compsetdir/$compset
+    echo "RUNDIR: '$RUNDIR'."
+    echo "RUNDIR: '$RUNDIR'." >> $REGRESSIONTEST_LOG
+    cd $PATHRT
+    ./${RUN_SCRIPT} || echo "... detected problems!!!"
+  else
+    echo "Did NOT find compset file '$compsetdir/$compset'."
+    echo "...bailing out!"
+    exit 1
+  fi
+done
+echo "======================================================================"
+echo "======================================================================"\
+>> $REGRESSIONTEST_LOG
+date >> $REGRESSIONTEST_LOG

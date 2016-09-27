@@ -1,0 +1,37 @@
+###############################################################################
+# 
+# TEST   - SATM <-> Mediator <-> SIPM
+#        - Exchanging fields with dummy data
+#        - Starting at 2009120100, running for 2 days
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: SATM <-> Mediator <-> SIPM ... 2 days"
+
+# -
+export CNTL_DIR=""
+export LIST_FILES=""
+
+# - gsm configuration ---
+export_gsm
+export TASKS=56
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=2
+
+# - nems.configure ---
+export_nems
+export nems_configure=med_atm_ipm
+export atm_model=satm
+export atm_petlist_bounds="0 7"
+export ipm_model=sipm
+export ipm_petlist_bounds="8 15"
+export med_model=spaceweather
+export med_petlist_bounds="16 55"
+export coupling_interval_sec=21600.0
+
+# - component specific setup calls ---
+setup_spaceweather
+
+# -
+RUN_SCRIPT=rt_gfs.sh

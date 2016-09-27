@@ -1,0 +1,357 @@
+#
+#   This config file sets up the defaults for the ngac pre processing,
+#   forecast, and post processing.  This script is based on CFS v2
+#   config (/nwprod/parm/cfs_parm_am/cfs_config) by Shrinivas Moorthi
+#
+#   REVISION HISTORY:
+#   07Nov2011 Sarah Lu       First crack.
+#   12Dec2011 Sarah Lu       Modify NGAC configuration
+#   19Dec2011 Sarah Lu       Remove RUN_ENVIR dependence; re-structure
+#   13Jan2012 Sarah Lu       Add COLD_START and DO_REPLAY
+#   14Jan2012 Sarah Lu       Add RETRO
+#   15Jan2012 Sarah Lu       Add WRITE_DOPOST,GOCART_POSTOUT,POST_GRIBVERSION
+#                            POSTCTLFILE, MAPPING
+#   31Jan2012 Jun Wang       Add POST_AVBLFLDFILE
+#   12Feb2012 Sarah Lu       Set POST_GRIBVERSION default to grib2;
+#                            Change GOCART_POSTOUT to GOCART_AER2POST
+#   13Feb2012 Sarah Lu       Add OPT_FLE, OPT_PDT
+#   15Feb2012 Sarah Lu       Add DFILES
+#   21Feb2012 Sarah Lu       Add POST_NCEPGRB2TBL, Remove OPT_PDT
+#   06Mar2012 Sarah Lu       Restore OPT_PDT option; clean up the code
+#   08Mar2012 Sarah Lu       Add OPT_LUMP option
+#   14Mar2012 Sarah Lu       Revise default path for POST parm files
+#   15Mar2012 Sarah Lu       Refine and clean up
+#
+set -x
+
+############################################################
+# Set relevant parameters for NGAC                         #
+############################################################
+
+GOCART=${GOCART:-1}          ## explicitly turn on GOCART
+DELTIM=${DELTIM:-450}        ## reduce time step from 600 to 450
+FHDFI=${FHDFI:-0}            ## turn off digital filter
+
+############################################################
+# Specify Execution Areas                                  #
+############################################################
+HOMEGLOBAL=${HOMEGLOBAL:-/nw${envir}}
+EXECGLOBAL=${EXECGLOBAL:-$HOMEGLOBAL/exec}
+FIXGLOBAL=${FIXGLOBAL:-$HOMEGLOBAL/fix}
+USHGLOBAL=${USHGLOBAL:-$HOMEGLOBAL/ush}
+PARMGLOBAL=${PARMGLOBAL:-$HOMEGLOBAL/parm}
+
+HOMEngac=${HOMEngac:-$HOMEGLOBAL}
+EXECngac=${EXECngac:-$HOMEngac/exec}
+#FIXngac=${FIXngac:-$HOMEngac/fix}
+USHngac=${USHngac:-$HOMEngac/ush}
+#PARMngac=${PARMngac:-$HOMEngac/parm}
+
+############################################################
+# Set relevant parameters for NEMS-GFS                     #
+############################################################
+#
+#                    GFS related parameters
+#                    ---------------------
+JCAP=${JCAP:-126}
+LEVS=${LEVS:-64}
+LSOIL=${LSOIL:-4}
+
+#if [ $JCAP -eq 574 ]     ; then
+#  LONB=${LONB:-1760}     ; LATB=${LATB:-880}  ; DELTIM=${DELTIM:-120}
+#elif [ $JCAP -eq 382 ]   ; then
+#  LONB=${LONB:-1152}     ; LATB=${LATB:-576}  ; DELTIM=${DELTIM:-180}
+#elif [ $JCAP -eq 254 ]   ; then
+#  LONB=${LONB:-768}      ; LATB=${LATB:-384}  ; DELTIM=${DELTIM:-300}
+#elif [ $JCAP -eq 190 ]   ; then
+#  LONB=${LONB:-576}      ; LATB=${LATB:-288}  ; DELTIM=${DELTIM:-360}
+#elif [ $JCAP -eq 170 ]   ; then
+#  LONB=${LONB:-512}      ; LATB=${LATB:-256}  ; DELTIM=${DELTIM:-450}
+#elif [ $JCAP -eq 126 ]   ; then
+#  LONB=${LONB:-384}      ; LATB=${LATB:-190}  ; DELTIM=${DELTIM:-600}
+#elif [ $JCAP -eq 62 ]    ; then
+#  LONB=${LONB:-192}      ; LATB=${LATB:-94}   ; DELTIM=${DELTIM:-900}
+#fi
+#if [ $LSOIL -eq 2 ] ; then
+#  lsm=${lsm:-0}     # This will run OSU LSM option
+#fi
+lsm=${lsm:-1}       # lsm=1 is for NOAH land model (=0 for OSU model)
+
+ntrac=${ntrac:-3}   # Only met tracers are specified here; chem tracers come through .rc file
+varid=${varid:-21}
+numcld=${numcld:-1}
+im=${im:-$LONB}
+jm=${jm:-$LATB}
+iop=${iop:-360}
+jop=${jop:-181}
+kop=${kop:-37}
+KTO=${KTO:-16}
+IGEN=${IGEN:-98}
+ivssig=${ivssig:-198410}
+ivssfc=${ivssfc:-200509}
+IDVC=${IDVC:-2}
+IDVM=${IDVM:-1}
+IDSL=${IDSL:-1}
+
+if [ $LEVS -gt 99 ] ; then ivssig=200509 ; fi
+if [ $IDVC = 1 ] ; then
+ nvcoord=1
+ SIGLEVEL1=${SIGLEVEL1:-$FIXGLOBAL/global_siglevel.l$LEVS.txt}
+elif [ $IDVC = 2 ] ; then
+ nvcoord=2
+ SIGLEVEL2=${SIGLEVEL2:-$FIXGLOBAL/global_hyblev.l$LEVS.txt}
+elif [ $IDVC = 3 ] ; then
+ ivssig=200509
+#Apercent=${Apercent:-050}
+ Apercent=${Apercent:-100}
+ if [ $Apercent -lt 100 ] ; then
+   SIGLEVEL3=${SIGLEVEL3:-$FIXGLOBAL/global_hyblev3.ipa$Apercent.txt}     
+ else
+   SIGLEVEL3=${SIGLEVEL3:-$FIXGLOBAL/global_hyblev3.l$LEVS.txt}
+ fi
+fi
+#
+
+LANDICE_OPT=${LANDICE_OPT:-2}
+CLIMO_FIELDS_OPT=${CLIMO_FIELDS_OPT:-2}
+if [ $lsm -eq 0 ] ; then # all climo/static fields interpolated from input grid
+  CLIMO_FIELDS_OPT=${CLIMO_FIELDS_OPT:-1}
+else                     # Interpolate veg type, soil type and slope type from input grid, all others from sfcsub.f
+  CLIMO_FIELDS_OPT=${CLIMO_FIELDS_OPT:-2}
+fi
+
+gfsio_in=${gfsio_in:-.true.}
+gfsio_out=${gfsio_out:-.true.}
+ldiag3d=${ldiag3d:-.false.}
+lgoc3d=${lgoc3d:-.false.}
+liope=${liope:-.false.}       
+NGPTC=${NGPTC:-$((JCAP/10))}
+
+IAER=${IAER:-${IAER:-111}}     
+IALB=${IALB:-${IALB:-0}}       
+ICO2=${ICO2:-${ICO2:-1}}       
+ICTM=${ICTM:-${ICTM:-1}}        
+IEMS=${IEMS:-${IEMS:-0}}
+ISOL=${ISOL:-${ISOL:-0}}
+FHLWR=${FHLWR:-1}
+FHSWR=${FHSWR:-1}
+
+IOVR_LW=${IOVR_LW:-1}
+IOVR_SW=${IOVR_SW:-1}
+ISUBC_LW=${ISUBC_LW:-0}
+ISUBC_SW=${ISUBC_SW:-0}
+
+RUN_ENTHALPY=${RUN_ENTHALPY:-.false.}
+THERMODYN_ID=${THERMODYN_ID:-0}        
+SFCPRESS_ID=${SFCPRESS_ID:-0}          
+
+export NST_FCST=${NST_FCST:-0}
+export NST_SPINUP=${NST_SPINUP:-0}
+export NST_RESERVED=${NST_RESERVED:-0}
+export ZSEA1=${ZSEA1:-0}
+export ZSEA2=${ZSEA2:-0}
+
+export nstf_name="$NST_FCST,$NST_SPINUP,$NST_RESERVED,$ZSEA1,$ZSEA2"
+export nst_anl=${nst_anl:-.false.}
+
+if [ $ldiag3d = .true. ] ; then FCSTVARS="LDIAG3D=$ldiag3d,$FCSTVARS" ; fi
+## NGAC:: NEMS does not support the LGOC3D option
+## if [ $lgoc3d = .true. ]  ; then
+##   FHGOC3D=${FHGOC3D:-72}
+##   FCSTVARS="LGOC3D=$LGOC3D,FHGOC3D=$FHGOC3D,$FCSTVARS"
+## fi
+if [ $RUN_ENTHALPY = .true. ] ; then
+  RIlist=${RIlist:-"   287.05, 461.50, 173.2247,    0.0"}
+  CPIlist=${CPIlist:-" 1004.6, 1846.0, 820.2391,    0.0"}
+  TRACERVARS="RI=$RIlist,CPI=$CPIlist,"
+# FCSTVARS="RUN_ENTHALPY=$RUN_ENTHALPY,$FCSTVARS"
+  IDVM=${THERMODYN_ID}${SFCPRESS_ID}
+  IDSL=2 ; nvcoord=3 ; LATCH=${LATCH:-8}
+fi
+SIGLEVEL=$(eval echo \${SIGLEVEL$IDVC})
+
+ENS_NUM=${ENS_NUM:-1}    # This is for uncoupled ensemble runs
+
+#
+#                    RAS-related parameters for NGAC
+#                    ---------------------
+mstrat=${mstrat:-.true.}  
+ncw=${ncw:-'50,150'}
+nsout=${nsout:-0}
+old_monin=${old_monin:-.true.}
+ras=${ras:-.true.}               
+tfiltc=${tfiltc:-0.85}
+zflxtvd=${zflxtvd:-.true.}     
+zhao_mic=${zhao_mic:-.true.}
+crtrh=${crtrh:-'0.90,0.90,0.90'}  
+ctei_rm=${ctei_rm:-'0.6,0.6'}  
+flgmin=${flgmin:-'0.200,0.300'}      
+random_clds=${random_clds:-.true.}
+imfshalcnv=${imfshalcnv:--1}
+trans_trac=${trans_trac:-.true.}
+imfdeepcnv=${imfdeepcnv:--1}
+dlqf=${dlqf:-"0.5, 0.25"}
+bkgd_vdif_m=${bkgd_vdif_m:-"1.0"}
+bkgd_vdif_s=${bkgd_vdif_s:-"1.0"}
+ccwf=${ccwf:-"0.0, 1.0"}
+psautco=${psautco:-"6.0e-4, 4.0e-4"}
+prautco=${prautco:-"3.0e-4, 1.0e-4"}
+evpco=${evpco:-1.0e-4}
+
+#
+#                    NEMS related parameters
+#                    ---------------------
+grid_aldata=${grid_aldata:-.false.}        
+SPECTRAL_LOOP=${SPECTRAL_LOOP:-2}      
+NDSLFV=${NDSLFV:-.false.}             
+JCAPG=$JCAP          
+GOCART=${GOCART:-0}                 
+PASSIVE_TRACER=${PASSIVE_TRACER:-.false.}   
+RIlist=${RIlist:-"   287.05, 461.50, 173.2247,    0.0"}
+CPIlist=${CPIlist:-" 1004.6, 1846.0, 820.2391,    0.0"}
+
+## NGAC prep setting
+CDUMP=${CDUMP:-gdas}                       ## use gdas analysis
+COMDIR=${COMDIR:-/com/gfs/prod}
+DO_REPLAY=${DO_REPLAY:-YES}                ## option to ingest analysis
+FHREPLAY=${FHREPLAY:-24}                   ## freq to ingest analysis
+COLD_START=${COLD_START:-NO}               ## is this a cold start run
+RETRO=${RETRO:-NO}                         ## is this a retro run
+
+## NGAC post setting
+WRITE_DOPOST=${WRITE_DOPOST:-.true.}
+GOCART_AER2POST=${GOCART_AER2POST:-.true.}
+POST_GRIBVERSION=${POST_GRIBVERSION:-grib2}
+MAPPING=${MAPPING:-.true.}
+OPT_FLE=${OPT_FLE:-multiple}
+OPT_PDT=${OPT_PDT:-pdt48}
+OPT_LUMP=${OPT_LUMP:-YES}
+## Note: Single file option only works for grib2-PDT 4.48
+if [[ $OPT_PDT = pdt44 || $POST_GRIBVERSION = grib1 ]]; then
+   OPT_FLE=multiple
+fi
+## Note: Lumping option only works for multiple file
+if [ $OPT_FLE = single ]; then
+   OPT_LUMP=NO
+fi
+
+DFILES=${DFILES:-"2d 3d"}
+if [ $OPT_FLE = multiple ]; then
+   DFILES="$DFILES 01 02 03 04 05 06 07"
+fi
+
+
+## NGAC_prep: CHGRES 
+CHGRESVARS="ntrac=$ntrac,idvt=$varid,ncldt=$numcld,idvc=$IDVC,IVSSIG=$ivssig,NVCOORD=$nvcoord,IVSSFC=$ivssfc,idvm=$IDVM,idsl=$IDSL,OUTTYP=1,"
+CHGRESVARS=$CHGRESVARS"RI=$RIlist,CPI=$CPIlist"
+
+## NGAC_fcst: NEMS has DYNVARS, PHYVARS, and TRACERVARS
+#DYNVARS="liope=$liope,ZFLXTVD=$zflxtvd,ntrac=$ntrac"
+#PHYVARS="liope=$liope,grid_aldata=$grid_aldata,NST_FCST=$NST_FCST,NST_SPINUP=$NST_SPINUP,\
+#                ras=$ras,trans_trac=$trans_trac,random_clds=.true.,\
+#                old_monin=$old_monin,imfshalcnv=$imfshalcnv,imfdeepcnv=$imfdeepcnv,\
+#                bkgd_vdif_m=$bkgd_vdif_m,bkgd_vdif_s=$bkgd_vdif_s,\
+#                ctei_rm=$ctei_rm,mstrat=$mstrat,\
+#                crtrh=$crtrh,\
+#                CCWF=$ccwf,dlqf=$dlqf,psautco=$psautco,prautco=$prautco,evpco=$evpco,\
+#                ialb=$ialb,ntrac=$ntrac"
+#TRACERVARS="RI=$RIlist,CPI=$CPIlist,"
+
+
+############################################################
+# Define executive code and places                         #
+############################################################
+export NCP=cp
+NCP=${NCP:-/u/wx20mi/bin/ncp}
+utilexec=${utilexec:-/nwprod/util/exec}
+ndate=${NDATE:-$utilexec/ndate}
+nhour=${NHOUR:-$utilexec/nhour}
+##wgrib=${wgrib:-$utilexec/wgrib}
+if [ $SCHEDULER = 'loadleveler' ]; then
+   export wgrib=${wgrib:-$utilexec/wgrib}
+elif [ $SCHEDULER = 'pbs' ]; then
+   export wgrib=${wgrib:-/home/George.Vandenberghe/nwprod/util/exec/wgrib}
+elif [ $SCHEDULER = 'lsf' ]; then
+   export wgrib=${wgrib:-$utilexec/wgrib}
+fi
+copygb=${copygb:-$utilexec/copygb}
+copygb2=${copygb2:-$utilexec/copygb2}
+windex=${windex:-$utilexec/grbindex}
+
+
+############################################################
+# Define NGAC script and executive                         #
+############################################################
+
+SCRIPTDIR=${SCRIPTDIR:-$HOMEngac/scripts}
+PREP_SCRIPT_DIR=${PREP_SCRIPT_DIR:-$SCRIPTDIR}
+PREP_SCRIPT=${PREP_SCRIPT:-$PREP_SCRIPT_DIR/exngac_prep.sh.sms}
+FCST_SCRIPT_DIR=${FCST_SCRIPT_DIR:-$SCRIPTDIR}
+FCST_SCRIPT=${FCST_SCRIPT:-$FCST_SCRIPT_DIR/exngac_fcst.sh.sms}
+POST_SCRIPT_DIR=${POST_SCRIPT_DIR:-$SCRIPTDIR}
+POST_SCRIPT=${POST_SCRIPT:-$POST_SCRIPT_DIR/exngac_post.sh.sms}
+
+nemsioget=${nemsioget:-$EXECngac/nemsio_get}
+SIGHDR=$nemsioget
+REPLAYEXEC=${REPLAYEXEC:-$EXECngac/ngac_replay}
+CHGFHREXEC=${CHGFHREXEC:-$EXECngac/ngac_chgfhr}
+CHGRESEXEC=${CHGRESEXEC:-$EXECngac/ngac_chgres}
+FCSTEXEC=${FCSTEXEC:-$EXECngac/ngac_fcst}
+POSTEXEC=${POSTEXEC:-$EXECngac/ncep_post}
+#SH POSTEXEC=${POSTEXEC:-$EXECGLOBAL/ncep_post}
+
+CHGRESSH=${CHGRESSH:-$USHngac/ngac_chgres.sh}
+POST_USH=${POST_USH:-$USHngac/ngac_post.sh}
+
+
+############################################################
+# Define NGAC config and resource files                    #
+############################################################
+CONFIG_DU=${CONFIG_DU:-$PARM_NGAC/DU_GridComp.rc}
+CONFIG_SU=${CONFIG_SU:-$PARM_NGAC/SU_GridComp.rc}
+CONFIG_OC=${CONFIG_OC:-$PARM_NGAC/OC_GridComp.rc}
+CONFIG_OCx=${CONFIG_OCx:-$PARM_NGAC/OC_GridComp---full.rc}
+CONFIG_BC=${CONFIG_BC:-$PARM_NGAC/BC_GridComp.rc}
+CONFIG_SS=${CONFIG_SS:-$PARM_NGAC/SS_GridComp.rc}
+CHEM_REGISTRY=${CHEM_REGISTRY:-$PARM_NGAC/Chem_Registry.rc}
+AOD_REGISTRY=${AOD_REGISTRY:-$PARM_NGAC/Aod-550nm_Registry.rc}
+MAPL=${MAPL:-$PARM_NGAC/MAPL.rc}
+
+
+############################################################
+# Define NGAC post parm files                              #
+############################################################
+# G2TMPL_TBL_DIR=${G2TMPL_TBL_DIR:-$HOMEGLOBAL/lib/sorc/g2tmpl}
+G2TMPL_TBL_DIR=${G2TMPL_TBL_DIR:-$HOMEGLOBAL/parm}
+POST_NCEPGRB2TBL=${POST_NCEPGRB2TBL:-$G2TMPL_TBL_DIR/params_grib2_tbl_new}
+
+POST_AVBLFLDSXML=${POST_AVBLFLDSXML:-$PARM_NGAC/ngac_post_avblflds.xml}
+POSTCTLFILE=${POSTCTLFILE:-$PARM_NGAC/ngac_postcntrl.parm}
+
+POST_PARM=${POST_PARM:-$PARM_NGAC/ngac_postcntrl.xml}
+
+############################################################
+# Define forecast output variables                         #
+############################################################
+#
+FHMAX=${FHMAX:-120}        # Forecast length
+FHRES=${FHRES:-120}        # Forecast Hour Restart Frequency
+FHOUT=${FHOUT:-3}          # Forecast Hour Output Frequency
+FHZER=${FHZER:-3}          # Interval to Zero the bucket - must be greater than or equal to FHOUT
+FHCYC=${FHCYC:-24}         # Surface boundary condition update interval in hours
+FHDFI=${FHDFI:-3}          # Half of the digital filter initialization hours
+dtphys=${dtphys:-3600}     # phys time step 
+
+export NEMSIO_IN=${NEMSIO_IN:-.true.}
+export NEMSIO_OUT=${NEMSIO_OUT:-.true.}
+export SIGIO_OUT=${SIGIO_OUT:-.false.}
+export SFCIO_OUT=${SFCIO_OUT:-.false.}
+
+export model=ngac
+scrdir=${scrdir:-$FCST_SCRIPT_DIR}
+#export FCSTSCRIPT=$srcdir/exglobal_fcst.sh.sms_nems
+#export FCSTEXEC=$srcdir/exe/NEMS.x
+
+export CONFIG=${GSM_CONFIG:-$scrdir/gsm_config}
+set -a;. $CONFIG;set +a
+

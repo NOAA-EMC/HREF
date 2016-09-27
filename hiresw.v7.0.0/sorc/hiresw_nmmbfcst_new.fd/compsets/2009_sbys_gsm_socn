@@ -1,0 +1,38 @@
+###############################################################################
+#
+# TEST   - GSM + XOCN side-by-side
+#        - 6h intervals for both GSM and SOCN
+#        - GSM is running from data files
+#        - Starting at 2009120100, running for 2 days
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: GSM + SOCN side-by-side from data with 6h intervals"
+
+# -
+export CNTL_DIR=2009_sbys_gsm
+export LIST_FILES=" \
+    sigf00 sigf03 sigf06 sigf12 sigf18 sigf24 sigf30 sigf36 sigf42 sigf48 \
+    sfcf00 sfcf03 sfcf06 sfcf12 sfcf18 sfcf24 sfcf30 sfcf36 sfcf42 sfcf48 \
+    flxf00 flxf03 flxf06 flxf12 flxf18 flxf24 flxf30 flxf36 flxf42 flxf48 "
+
+# - gsm configuration ---
+export_gsm
+export TASKS=40
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=2
+export wave=126 ; export lm=64 ; export lsoil=4
+
+# - nems.configure ---
+export_nems
+export nems_configure=atm_ocn
+export atm_model=gsm
+export atm_petlist_bounds="0 31"
+export ocn_model=socn
+export ocn_petlist_bounds="32 39"
+export coupling_interval_sec=21600.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh
+

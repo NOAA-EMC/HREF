@@ -1,0 +1,32 @@
+#############################################
+####  NEMS Run-Time Configuration File  #####
+#############################################
+
+# MED #
+med_model:                      _med_model_
+med_petlist_bounds:             _med_petlist_bounds_
+
+# ATM #
+atm_model:                      _atm_model_
+atm_petlist_bounds:             _atm_petlist_bounds_
+
+# OCN #
+ocn_model:                      _ocn_model_
+ocn_petlist_bounds:             _ocn_petlist_bounds_
+
+# Run Sequence #
+runSeq::
+  @_coupling_interval_slow_sec_
+    OCN -> MED :remapMethod=redist
+    MED MedPhase_slow
+    MED -> OCN :remapMethod=redist
+    OCN
+    @_coupling_interval_fast_sec_
+      MED MedPhase_fast_before
+      MED -> ATM :remapMethod=redist
+      ATM
+      ATM -> MED :remapMethod=redist
+      MED MedPhase_fast_after
+    @
+  @
+::

@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Moab options used on Gaea
+
+#MSUB -S /bin/ksh
+#MSUB -e _RUND_/err
+#MSUB -o _RUND_/out
+#MSUB -N _JBNME_
+#MSUB -l partition=c1:c2
+#MSUB -l size=_TASKS_
+#MSUB -l walltime=00:_WLCLK_:00
+
+set -aeux
+
+echo "Model started:  " `date`
+
+export TASKSIZE=_TPN_
+export SCHEDULER=moab
+export MACHINE_ID=gaea
+export FIXGLOBAL=_FIXGLOBAL_
+
+./gfs_fcst_run
+
+echo "Model ended:    " `date`
+
+exit

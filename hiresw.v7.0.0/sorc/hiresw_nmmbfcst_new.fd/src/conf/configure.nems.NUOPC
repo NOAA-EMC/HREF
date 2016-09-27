@@ -1,0 +1,73 @@
+## NEMS build configuration file
+## Common NUOPC parts
+
+################################################################################
+## This configuration file leverages the ESMFMKFILE mechanism to switch
+## between different ESMF versions and installations. The only environment
+## variable used by this  mechanism is ESMFMKFILE, which appears below in 
+## the include statment. Systems that use "modules" to manage environments
+## will set ESMFMKFILE as part of loading an "esmf" module. The user can
+## also set ESMFMKFILE manually to target a different ESMF installation.
+
+include         $(ESMFMKFILE)
+ESMF_INC        = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB        = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+################################################################################
+## ATM settings
+## Use GSM as GFS
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+satm_mk       = $(SATM_DIR)/satm.mk
+xatm_mk       = $(XATM_DIR)/xatm.mk
+
+################################################################################
+## OCN settings
+## NUOPC compliant models supply a standard makefile fragment
+
+socn_mk       = $(SOCN_DIR)/socn.mk
+xocn_mk       = $(XOCN_DIR)/xocn.mk
+hycom_mk      = $(HYCOM_DIR)/hycom_nuopc.mk
+mom5_mk       = $(MOM5_DIR)/mom5.mk
+pom_mk        = $(POM_DIR)/pom.mk
+
+################################################################################
+## SEAICE settings
+## NUOPC compliant models supply a standard makefile fragment
+
+sice_mk       = $(SICE_DIR)/sice.mk
+xice_mk       = $(XICE_DIR)/xice.mk
+cice_mk	      = $(CICE_DIR)/cice.mk
+
+################################################################################
+## WAV settings
+## NUOPC compliant models supply a standard makefile fragment
+
+swav_mk       = $(SWAV_DIR)/swav.mk
+xwav_mk       = $(XWAV_DIR)/xwav.mk
+ww3_mk        = $(WW3_DIR)/ww3.mk
+
+################################################################################
+## LND settings
+## NUOPC compliant models supply a standard makefile fragment
+
+slnd_mk       = $(SLND_DIR)/slnd.mk
+xlnd_mk       = $(XLND_DIR)/xlnd.mk
+lis_mk        = $(LIS_DIR)/lis.mk
+
+################################################################################
+## IPM settings
+## NUOPC compliant models supply a standard makefile fragment
+
+sipm_mk       = $(SIPM_DIR)/sipm.mk
+xipm_mk       = $(XIPM_DIR)/xipm.mk
+ipe_mk        = $(IPE_DIR)/ipe.mk
+
+################################################################################
+## HYD settings
+## NUOPC compliant models supply a standard makefile fragment
+
+shyd_mk       = $(SHYD_DIR)/shyd.mk
+xhyd_mk       = $(XHYD_DIR)/xhyd.mk
+wrfhydro_mk   = $(WRFHYDRO_DIR)/wrfhydro.mk

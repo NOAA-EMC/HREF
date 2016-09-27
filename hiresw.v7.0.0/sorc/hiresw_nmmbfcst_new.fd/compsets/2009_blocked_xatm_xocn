@@ -1,0 +1,47 @@
+###############################################################################
+#
+# TEST   - XATM + XOCN block coupled
+#        - 6h intervals for both XATM and XOCN
+#        - Starting at 2009120100, running for 2 days
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: XATM + XOCN concurrent coupled with 6h intervals"
+
+# -
+export CNTL_DIR=2009_blocked_xatm_xocn
+export LIST_FILES=" \
+  field_atm_export_inst_spec_humid_height2m.nc  \
+  field_atm_export_inst_temp_height2m.nc  \
+  field_atm_export_mean_down_sw_flx.nc  \
+  field_atm_export_mean_net_lw_flx.nc \
+  field_atm_export_mean_net_sw_flx.nc \
+  field_atm_export_mean_prec_rate.nc  \
+  field_atm_import_sea_surface_temperature.nc \
+  field_ocn_export_sea_surface_temperature.nc \
+  field_ocn_import_inst_spec_humid_height2m.nc  \
+  field_ocn_import_inst_temp_height2m.nc  \
+  field_ocn_import_mean_down_sw_flx.nc  \
+  field_ocn_import_mean_net_lw_flx.nc \
+  field_ocn_import_mean_net_sw_flx.nc \
+  field_ocn_import_mean_prec_rate.nc  "
+
+# - gsm configuration ---
+export_gsm
+export TASKS=16
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=2
+
+# - nems.configure ---
+export_nems
+export nems_configure=blocked_atm_ocn
+export atm_model=xatm
+export atm_petlist_bounds="0 7"
+export ocn_model=xocn
+export ocn_petlist_bounds="8 15"
+export coupling_interval_sec=21600.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh
+

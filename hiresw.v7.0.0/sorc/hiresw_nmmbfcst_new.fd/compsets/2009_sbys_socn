@@ -1,0 +1,31 @@
+###############################################################################
+#
+# TEST   - stand-alone SOCN
+#        - 6h intervals
+#        - Starting at 2009120100, running for 2 days
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: SOCN stand-alone from data with 6h intervals"
+
+# -
+export CNTL_DIR=""
+export LIST_FILES=""
+
+# - gsm configuration ---
+export_gsm
+export TASKS=8
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=2
+
+# - nems.configure ---
+export_nems
+export nems_configure=ocn
+export ocn_model=socn
+export ocn_petlist_bounds="0 7"
+export coupling_interval_sec=21600.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh
+

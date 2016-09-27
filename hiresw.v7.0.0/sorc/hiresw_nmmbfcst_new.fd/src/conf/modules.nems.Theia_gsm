@@ -1,0 +1,7 @@
+
+# This script is responsible for loading modules that are compatible with
+# the ESMF 6.3.0r API. 
+
+ module purge
+ module load intel/15.1.133 impi/5.0.3.048 netcdf/4.3.0 szip
+# module load intel/15.1.133 impi/5.0.3.048 netcdf/3.6.3 szip

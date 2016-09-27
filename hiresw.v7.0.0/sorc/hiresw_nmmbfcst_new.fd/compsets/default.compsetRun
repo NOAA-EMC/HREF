@@ -1,0 +1,8 @@
+### List of compsets ###
+########################
+
+2013_sbys_nmmb%glob       ! stand-alone global NMM-B
+2012_sbys_gsm             ! stand-alone GSM
+2009_nems_gsm_cice_mom5   ! NEMS mediator coupled GSM-CICE-MOM5
+2011_sbys_gsm%wam         ! stand-alone GSM run as WAM
+2011_sbys_gsm%wam%ndsl    ! stand-alone GSM run as WAM with NDSL

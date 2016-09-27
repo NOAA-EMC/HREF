@@ -1,0 +1,691 @@
+#!/bin/bash
+#
+# NEMS Application Builder 
+# A front-end script that guides the source code access and installation of
+# available NEMS applications.
+################################################################################
+
+# determine whether dialog or whiptail is available
+read dialog <<< "$(which dialog 2> /dev/null)"
+read whiptail <<< "$(which whiptail 2> /dev/null)"
+
+# use whichever tool was found
+if [ "$dialog"x != "x" ] ; then
+tool=$dialog
+elif [ "$whiptail"x != "x" ] ; then
+tool=$whiptail
+else
+  echo "ABORT: Neither dialog nor whiptail found." \
+  "Must first install one of those tools!" >&2
+  exit 1
+fi
+
+# delete temporary files
+deletetempfiles(){
+  rm -f $ROOTDIR/*.$$
+}
+
+bailout(){
+  $tool --clear --backtitle "NEMS Application Builder" \
+  --title "Bail out" --msgbox "Confirm bail out with <Enter>, back with <Esc>."\
+  8 30
+  if [ "$?" == "0" ] ; then
+    exit
+  fi
+  bailFlag=true
+}
+
+# External component build functions ###########################################
+
+build_checkloop(){
+  # in: COMP, ${COMP}_DIR, ${COMP}_SRCDIR, BUILD_FUNC
+  eval COMP_DIR=\${${COMP}_DIR}
+  eval COMP_SRCDIR=\${${COMP}_SRCDIR}
+  if [[ -d $COMP_DIR ]] ; then
+    $tool --clear --backtitle "NEMS Application Builder" \
+      --title "Alert" --yesno \
+      "Looks like the $COMP component has been installed before.\
+      \n\nUse previous installation <Yes>, or re-install <No>." 10 40
+    if [[ "$?" != "0" ]] ; then
+      rm -rf $COMP_DIR
+      $tool --clear --backtitle "NEMS Application Builder" \
+        --title "Alert" --yesno \
+        "Clean the $COMP component and build from scratch?" 8 40
+      if [[ "$?" == "0" ]] ; then
+      
+        $tool --backtitle "NEMS Application Builder" \
+              --title "${COMP} Clean Progress" \
+              --tailboxbg $ROOTDIR/appBuilder.${COMP}.log.$$ 20 120 \
+              --and-widget --ok-label "CANCEL" \
+              --begin 2 1 --msgbox "Press CANCEL to interrupt." 5 30 \
+              2> /dev/null &
+        mypid=$!
+        $BUILD_FUNC clean &> $ROOTDIR/appBuilder.${COMP}.log.$$ &
+        makepid=$!
+  
+        # now wait for either for $mypid to finish because of canceling, or
+        # $makepid to finish due to done or bail out of make command.
+  
+        while ps -p $makepid > /dev/null
+        do
+          if ! ps -p $mypid > /dev/null
+          then
+            kill $makepid &> /dev/null
+          fi
+        done
+        kill $mypid &> /dev/null
+        
+      fi
+    fi
+  fi
+  while [[ ! -d $COMP_DIR ]] ; do
+  
+    $tool --backtitle "NEMS Application Builder" \
+          --title "${COMP} Build Progress" \
+          --tailboxbg $ROOTDIR/appBuilder.${COMP}.log.$$ 20 120 \
+          --and-widget --ok-label "CANCEL" \
+          --begin 2 1 --msgbox "Press CANCEL to interrupt." 5 30 \
+          2> /dev/null &
+    mypid=$!
+    $BUILD_FUNC &> $ROOTDIR/appBuilder.${COMP}.log.$$ &
+    makepid=$!
+  
+    # now wait for either for $mypid to finish because of canceling, or
+    # $makepid to finish due to done or bail out of make command.
+  
+    while ps -p $makepid > /dev/null
+    do
+      if ! ps -p $mypid > /dev/null
+      then
+        kill $makepid &> /dev/null
+      fi
+    done
+    kill $mypid &> /dev/null
+  
+    if ([ ! -d $COMP_DIR ]); then
+      # build did not succeed
+      $tool --clear --backtitle "NEMS Application Builder" \
+        --title "Trouble view log" --textbox $ROOTDIR/appBuilder.${COMP}.log.$$ 20 120
+      $tool --clear --backtitle "NEMS Application Builder" \
+        --title "Diagnosis" --yesno \
+        "Looks like the attempt to build the $COMP component failed.\
+        \n\nTry again <Yes>, or skip <No>." 10 40
+      if [[ "$?" != "0" ]] ; then
+        break
+      fi
+    fi
+  done
+}
+
+build_std(){
+  # in: COMP, COMP_SRCDIR, COMP_DIR
+  if [[ $1"" == "clean" ]] ; then
+    echo "Cleaning $COMP..."
+    cd $COMP_SRCDIR
+    make clean
+    echo "...done cleaning $COMP."
+  else
+    echo "Building $COMP..."
+    cd $COMP_SRCDIR
+    make
+    make DESTDIR=/ INSTDIR=$COMP_DIR install
+    if ([ ! -d $COMP_DIR ]); then
+      echo "...failed building $COMP."
+    else
+      echo "...done building $COMP."
+    fi
+  fi
+}
+
+build_cice(){
+  # in: COMP, COMP_SRCDIR, COMP_DIR
+  if [[ $1"" == "clean" ]] ; then
+    echo "Cleaning $COMP..."
+    echo "Not implemented!!!"
+    echo "...done cleaning $COMP."
+  else
+    echo "Building $COMP..."
+    cd $COMP_SRCDIR
+    export SITE=NOAA.zeus
+    export SYSTEM_USERDIR=`pwd`
+    export SRCDIR=`pwd`
+    export EXEDIR=`pwd`
+    ./comp_ice.backend
+    if ([ ! -d $COMP_DIR ]); then
+      echo "...failed building $COMP."
+    else
+      echo "...done building $COMP."
+    fi
+  fi
+}
+
+build_hycom(){
+  # in: COMP, COMP_SRCDIR, COMP_DIR
+  if [[ $1"" == "clean" ]] ; then
+    echo "Cleaning $COMP..."
+    cd $COMP_SRCDIR
+    make ARCH=AintelIFC TYPE=nuopc clean
+    echo "...done cleaning $COMP."
+  else
+    echo "Building $COMP..."
+    cd $COMP_SRCDIR/sorc
+    make ARCH=AintelIFC TYPE=nuopc nuopc
+    make ARCH=AintelIFC TYPE=nuopc DESTDIR=/ INSTDIR=$COMP_DIR nuopcinstall
+    if ([ ! -d $COMP_DIR ]); then
+      echo "...failed building $COMP."
+    else
+      echo "...done building $COMP."
+    fi
+  fi
+}
+
+build_ipe(){
+  # in: COMP, COMP_SRCDIR, COMP_DIR
+  if [[ $1"" == "clean" ]] ; then
+    echo "Cleaning $COMP..."
+    cd $COMP_SRCDIR
+    make clean
+    echo "...done cleaning $COMP."
+  else
+    echo "Building $COMP..."
+    cd $COMP_SRCDIR
+    make nuopc
+    make DESTDIR=/ INSTDIR=$COMP_DIR nuopcinstall
+    if ([ ! -d $COMP_DIR ]); then
+      echo "...failed building $COMP."
+    else
+      echo "...done building $COMP."
+    fi
+  fi
+}
+
+
+# MAIN #########################################################################
+
+trap 'deletetempfiles'  EXIT     # delete temp files on exit
+
+ROOTDIR=`pwd`
+LOGFILE=`pwd`/appBuilder.log.$$
+NEMSDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+# Start of the Front-End #######################################################
+
+# Welcome and explanation about this tool
+bailFlag=true
+while [ $bailFlag == "true" ] ; do
+bailFlag=false
+$tool --clear --backtitle "NEMS Application Builder" \
+  --title "Welcome" --msgbox "Welcome to the NOAA Environmental Modeling \
+System (NEMS) Application Builder. \
+\n\nThe NEMS Application Builder will guide you through the installation of \
+the external model components and the compilation of the NEMS executable. \
+\n\nProceed with <Enter>, exit with <Esc>." \
+12 60
+if [ "$?" != "0" ] ; then
+  bailout
+fi
+done
+
+# Determine the available application(s)
+appCounter=0
+shopt -s nullglob # all expansion to null string
+for i in $ROOTDIR/*.appBuilder; do
+  if [ "x$i" != "x" ]; then
+    let appCounter++
+    title=`head -1 $i`
+    title=${title#"#"}
+    title=${title#" "}
+    appbuilderlist=( "${appbuilderlist[@]}" $i )
+    i=${i#"$ROOTDIR/"}
+    i=${i%".appBuilder"}
+    if [ $appCounter == 1 ]; then
+      radiolist=( "${radiolist[@]}" $i "$title" on )
+    else
+      radiolist=( "${radiolist[@]}" $i "$title" off )
+    fi
+  fi
+done
+# deal with the situation of no appBuilder files found
+if [ $appCounter == 0 ]; then
+  radiolist=( NEMS "Explicit selection of NEMS components" on )
+  appCounter=1
+  # check the AppBuilder subdirectory for more appBuilder files
+  for i in $ROOTDIR/AppBuilder/*.appBuilder; do
+    if [ "x$i" != "x" ]; then
+      let appCounter++
+      title=`head -1 $i`
+      title=${title#"#"}
+      title=${title#" "}
+      appbuilderlist=( "${appbuilderlist[@]}" $i )
+      i=${i#"$ROOTDIR/AppBuilder/"}
+      i=${i%".appBuilder"}
+      radiolist=( "${radiolist[@]}" $i "$title" off )
+    fi
+  done
+fi
+
+# Selection of NEMS application
+if [[ $appCounter > 1 ]]; then
+  bailFlag=true
+  while [ $bailFlag == "true" ] ; do
+  bailFlag=false
+  $tool --clear --backtitle "NEMS Application Builder" \
+    --title "Application Selection" \
+    --radiolist "Select the target application to be supported by the \
+  NEMS executable:"  15 75 $appCounter \
+    "${radiolist[@]}" \
+    2> $LOGFILE
+  if [ "$?" != "0" ] ; then
+    bailout
+  fi
+  done
+else
+  # explicitly write selection into the LOGFILE
+  echo "${radiolist[0]}" > $LOGFILE
+fi
+
+# new line into file
+echo >> $LOGFILE
+
+# determine APP selection
+APP=`head -1 $LOGFILE`
+
+# select on the APP selection
+case $APP in
+
+NEMS) 
+# Selection of NEMS components
+bailFlag=true
+while [ $bailFlag == "true" ] ; do
+bailFlag=false
+$tool --clear --backtitle "NEMS Application Builder" \
+  --title "NEMS Component Selection" \
+  --checklist "Select the components to be built into the NEMS executable \
+explicitly:"  20 75 18 \
+  SATM      "ATM: Stub Model"                                       off \
+  XATM      "ATM: Dead Model"                                       off \
+  GSM       "ATM: Global Spectral Model"                            on  \
+  NMMB      "ATM: Nonhydrostatic Multiscale Model on B Grid"        off \
+  FIM       "ATM: Flow-Following Finite Volume Icosahedral Model"   off \
+  SICE      "ICE: Stub Model"                                       off \
+  XICE      "ICE: Dead Model"                                       off \
+  CICE      "ICE: Los Alamos Sea Ice Model"                         off \
+  KISS      "ICE: NOAA Keeping Ice'S Simplicity ice model"          off \
+  SOCN      "OCN: Stub Model"                                       off \
+  XOCN      "OCN: Dead Model"                                       off \
+  MOM5      "OCN: NOAA Modular Ocean Model 5"                       off \
+  HYCOM     "OCN: HYbrid Coordinate Ocean Model"                    off \
+  POM       "OCN: Princeton Ocean Model"                            off \
+  SWAV      "WAV: Stub Model"                                       off \
+  XWAV      "WAV: Dead Model"                                       off \
+  WW3       "WAV: WaveWatchIII"                                     off \
+  SLND      "LND: Stub Model"                                       off \
+  XLND      "LND: Dead Model"                                       off \
+  LIS       "LND: NASA Land Information System"                     off \
+  SIPM      "IPM: Stub Model"                                       off \
+  XIPM      "IPM: Dead Model"                                       off \
+  IPE       "IPM: NOAA Ionosphere Plasmasphere Electrodynamics"     off \
+  SHYD      "HYD: Stub Model"                                       off \
+  XHYD      "HYD: Dead Model"                                       off \
+  WRFHYDRO  "HYD: Hydraulics portion of WRF-Hydro Model"            off \
+  2>> $LOGFILE
+if [ "$?" != "0" ] ; then
+  bailout
+fi
+  COMPONENTS=( `tail -1 $LOGFILE` )
+done
+;;
+
+*)
+# Need to find the associated appBuilder file
+for i in "${appbuilderlist[@]}" ; do
+  if ( [[ "$i" =~ "$APP" ]] ); then
+    source "$i"
+    echo "${COMPONENTS[@]}" >> $LOGFILE
+  fi
+done
+;;
+
+esac
+
+# Start of the Back-End ########################################################
+
+# use NEMS script to determine the platform
+$tool --backtitle "NEMS Application Builder" \
+  --title "Info" --infobox "Determine platform..." 6 25
+bailFlag=true
+while [ $bailFlag == "true" ] ; do
+bailFlag=false
+source $NEMSDIR/tests/detect_machine.sh machineonly &> /dev/null
+if [ "$MACHINE_ID"x == "x" ] ; then
+  $tool --clear --backtitle "NEMS Application Builder" \
+  --title "Unknown machine" --yesno \
+  "Need to add NEMS configuration for this machine before trying again!\
+  \n\nTry again <Yes>, or bail out <No>."\
+  10 40
+  if [ "$?" != "0" ] ; then
+    exit
+  fi
+  bailFlag=true
+fi
+done
+$tool --backtitle "NEMS Application Builder" \
+  --title "Info" --infobox "Determine platform...$MACHINE_ID" 6 35
+
+# set the platform specific build environment (if provided)
+envir="environment_${MACHINE_ID}"
+if [ `type -t $envir`"" == 'function' ]; then
+  $envir
+fi
+
+# loop over the components to build them
+if [[ "$APP" != "NEMS" ]] ; then
+for i in "${COMPONENTS[@]}" ; do
+  # first remove potential quotation marks
+  i=${i#\"}
+  COMP=${i%\"}
+  if [[ $COMP != "GSM" && $COMP != "NMMB" && $COMP != "FIM" ]] ; then
+    envir="environment_${MACHINE_ID}_${COMP}"
+    if [ `type -t $envir`"" == 'function' ]; then
+      $envir
+    fi
+    if [[ $COMP == "HYCOM" ]] ; then
+      BUILD_FUNC=build_hycom
+    elif [[ $COMP == "MOM5" ]] ; then
+      BUILD_FUNC=build_mom5
+    elif [[ $COMP == "CICE" ]] ; then
+      BUILD_FUNC=build_cice
+    elif [[ $COMP == "IPE" ]] ; then
+      BUILD_FUNC=build_ipe
+    else
+      BUILD_FUNC=build_std
+    fi
+    # attempt to build the component
+    build_checkloop
+  fi
+done
+fi
+
+# configure NEMS for the specific platform
+cd $NEMSDIR/src
+./configure nuopc_$MACHINE_ID  &> $ROOTDIR/appBuilder.NEMS.log.$$
+echo >> $ROOTDIR/appBuilder.NEMS.log.$$ 2>&1
+
+# for the explicit NEMS case must obtain component locations
+if [[ "$APP" == "NEMS" ]] ; then
+  source $NEMSDIR/src/conf/externals.nems
+fi
+
+# prepare for the disection of components
+COMP="${COMPONENTS[@]}"
+COMPDIRS=""
+
+# construct the NEMS target
+if ( [[ $COMP =~ "GSM" ]] ); then
+  if ( [[ $COMP =~ "NMMB" ]] ); then
+    TARGET=nmm_gsm
+  else
+    TARGET=gsm
+  fi
+elif ( [[ $COMP =~ "NMMB" ]] ); then
+  TARGET=nmm
+elif ( [[ $COMP =~ "FIM" ]] ); then
+  TARGET=fim
+fi
+
+# TODO: remove the default "gsm" target when NEMS can handle it
+if [[ "x$TARGET" == "x" ]] ; then
+  TARGET=gsm
+fi
+
+# construct the ATM make variable
+ATM=""
+if ( [[ $COMP =~ "SATM" ]] ); then
+  ATM=$ATM",satm"
+  COMPDIRS="$COMPDIRS SATM_DIR=$SATM_DIR"
+fi
+if ( [[ $COMP =~ "XATM" ]] ); then
+  ATM=$ATM",xatm"
+  COMPDIRS="$COMPDIRS XATM_DIR=$XATM_DIR"
+fi
+if [[ "x$ATM" != "x" ]] ; then
+  ATMOPT="ATM=${ATM#","}"
+else
+  ATMOPT=""
+fi
+
+# construct the ICE make variable
+ICE=""
+if ( [[ $COMP =~ "SICE" ]] ); then
+  ICE=$ICE",sice"
+  COMPDIRS="$COMPDIRS SICE_DIR=$SICE_DIR"
+fi
+if ( [[ $COMP =~ "XICE" ]] ); then
+  ICE=$ICE",xice"
+  COMPDIRS="$COMPDIRS XICE_DIR=$XICE_DIR"
+fi
+if ( [[ $COMP =~ "CICE" ]] ); then
+  ICE=$ICE",cice"
+  COMPDIRS="$COMPDIRS CICE_DIR=$CICE_DIR"
+fi
+if [[ "x$ICE" != "x" ]] ; then
+  ICEOPT="ICE=${ICE#","}"
+else
+  ICEOPT=""
+fi
+
+# construct the OCN make variable
+OCN=""
+if ( [[ $COMP =~ "SOCN" ]] ); then
+  OCN=$OCN",socn"
+  COMPDIRS="$COMPDIRS SOCN_DIR=$SOCN_DIR"
+fi
+if ( [[ $COMP =~ "XOCN" ]] ); then
+  OCN=$OCN",xocn"
+  COMPDIRS="$COMPDIRS XOCN_DIR=$XOCN_DIR"
+fi
+if ( [[ $COMP =~ "MOM5" ]] ); then
+  OCN=$OCN",mom5"
+  COMPDIRS="$COMPDIRS MOM5_DIR=$MOM5_DIR"
+fi
+if ( [[ $COMP =~ "HYCOM" ]] ); then
+  OCN=$OCN",hycom"
+  COMPDIRS="$COMPDIRS HYCOM_DIR=$HYCOM_DIR"
+fi
+if ( [[ $COMP =~ "POM" ]] ); then
+  OCN=$OCN",pom"
+  COMPDIRS="$COMPDIRS POM_DIR=$POM_DIR"
+fi
+if [[ "x$OCN" != "x" ]] ; then
+  OCNOPT="OCN=${OCN#","}"
+else
+  OCNOPT=""
+fi
+
+# construct the WAV make variable
+WAV=""
+if ( [[ $COMP =~ "SWAV" ]] ); then
+  WAV=$WAV",swav"
+  COMPDIRS="$COMPDIRS SWAV_DIR=$SWAV_DIR"
+fi
+if ( [[ $COMP =~ "XWAV" ]] ); then
+  WAV=$WAV",xwav"
+  COMPDIRS="$COMPDIRS XWAV_DIR=$XWAV_DIR"
+fi
+if ( [[ $COMP =~ "WW3" ]] ); then
+  WAV=$WAV",ww3"
+  COMPDIRS="$COMPDIRS WW3_DIR=$WW3_DIR"
+fi
+if [[ "x$WAV" != "x" ]] ; then
+  WAVOPT="WAV=${WAV#","}"
+else
+  WAVOPT=""
+fi
+
+# construct the LND make variable
+LND=""
+if ( [[ $COMP =~ "SLND" ]] ); then
+  LND=$LND",slnd"
+  COMPDIRS="$COMPDIRS SLND_DIR=$SLND_DIR"
+fi
+if ( [[ $COMP =~ "XLND" ]] ); then
+  LND=$LND",xlnd"
+  COMPDIRS="$COMPDIRS XLND_DIR=$XLND_DIR"
+fi
+if ( [[ $COMP =~ "LIS" ]] ); then
+  LND=$LND",lis"
+  COMPDIRS="$COMPDIRS LIS_DIR=$LIS_DIR"
+fi
+if [[ "x$LND" != "x" ]] ; then
+  LNDOPT="LND=${LND#","}"
+else
+  LNDOPT=""
+fi
+
+# construct the IPM make variable
+IPM=""
+if ( [[ $COMP =~ "SIPM" ]] ); then
+  IPM=$IPM",sipm"
+  COMPDIRS="$COMPDIRS SIPM_DIR=$SIPM_DIR"
+fi
+if ( [[ $COMP =~ "XIPM" ]] ); then
+  IPM=$IPM",xipm"
+  COMPDIRS="$COMPDIRS XIPM_DIR=$XIPM_DIR"
+fi
+if ( [[ $COMP =~ "IPE" ]] ); then
+  IPM=$IPM",ipe"
+  COMPDIRS="$COMPDIRS IPE_DIR=$IPE_DIR"
+fi
+if [[ "x$IPM" != "x" ]] ; then
+  IPMOPT="IPM=${IPM#","}"
+else
+  IPMOPT=""
+fi
+
+# construct the HYD make variable
+HYD=""
+if ( [[ $COMP =~ "SHYD" ]] ); then
+  HYD=$HYD",shyd"
+  COMPDIRS="$COMPDIRS SHYD_DIR=$SHYD_DIR"
+fi
+if ( [[ $COMP =~ "XHYD" ]] ); then
+  HYD=$HYD",xhyd"
+  COMPDIRS="$COMPDIRS XHYD_DIR=$XHYD_DIR"
+fi
+if ( [[ $COMP =~ "WRFHYDRO" ]] ); then
+  HYD=$HYD",wrfhydro"
+  COMPDIRS="$COMPDIRS WRFHYDRO_DIR=$WRFHYDRO_DIR"
+fi
+if [[ "x$HYD" != "x" ]] ; then
+  HYDOPT="HYD=${HYD#","}"
+else
+  HYDOPT=""
+fi
+
+# ready to build the NEMS executable
+$tool --clear --backtitle "NEMS Application Builder" \
+  --title "Ready to build NEMS executable:" \
+  --msgbox "make $TARGET $ATMOPT $ICEOPT $OCNOPT $WAVOPT $LNDOPT $IPMOPT $HYDOPT $COMPDIRS \
+  \n\nProceed with <Enter>, exit with <Esc>." 20 100
+
+if [ "$?" != "0" ] ; then
+  bailout
+fi
+
+# finally attempt to build the NEMS executable
+export NEMSAppBuilder # guard variable used by NEMS makefile
+# set nems specific build environment if provided
+envir="environment_${MACHINE_ID}_nems"
+if [ `type -t $envir`"" == 'function' ]; then
+  $envir
+fi
+# potentially clean-up first
+if [[ -f ../exe/NEMS.x ]] ; then
+  $tool --clear --backtitle "NEMS Application Builder" \
+    --title "Alert" --yesno \
+    "Re-use parts form the previous NEMS build <Yes>, or build from scratch <No>?" \
+    8 40
+  if [[ "$?" != "0" ]] ; then
+    $tool --backtitle "NEMS Application Builder" \
+          --title "NEMS Clean Progress" \
+          --tailboxbg $ROOTDIR/appBuilder.NEMS.log.$$ 20 120 \
+          --and-widget --ok-label "CANCEL" \
+          --begin 2 1 --msgbox "Press CANCEL to interrupt." 5 30 \
+          2> /dev/null &
+    mypid=$!
+    make clean &> $ROOTDIR/appBuilder.NEMS.log.$$ &
+    makepid=$!
+  
+    # now wait for either for $mypid to finish because of canceling, or
+    # $makepid to finish due to done or bail out of make command.
+  
+    while ps -p $makepid > /dev/null
+    do
+      if ! ps -p $mypid > /dev/null
+      then
+        killall gmake
+        killall make
+      fi
+    done
+    kill $mypid &> /dev/null
+  else
+    rm -f ../exe/NEMS.x
+  fi
+fi
+# build loop
+while [[ ! -f ../exe/NEMS.x ]] ; do
+  echo "make $TARGET $ATMOPT $ICEOPT $OCNOPT $WAVOPT $LNDOPT $IPMOPT $HYDOPT $COMPDIRS" >> $ROOTDIR/appBuilder.NEMS.log.$$ 2>&1
+  echo >> $ROOTDIR/appBuilder.NEMS.log.$$ 2>&1
+
+  $tool --backtitle "NEMS Application Builder" \
+        --title "NEMS Build Progress" \
+        --tailboxbg $ROOTDIR/appBuilder.NEMS.log.$$ 20 120 \
+        --and-widget --ok-label "CANCEL" \
+        --begin 2 1 --msgbox "Press CANCEL to interrupt." 5 30 \
+        2> /dev/null &
+  mypid=$!
+  make $TARGET $ATMOPT $ICEOPT $OCNOPT $WAVOPT $LNDOPT $IPMOPT $HYDOPT $COMPDIRS >> $ROOTDIR/appBuilder.NEMS.log.$$ 2>&1 &
+  makepid=$!
+  
+  # now wait for either for $mypid to finish because of canceling, or
+  # $makepid to finish due to done or bail out of make command.
+  
+  while ps -p $makepid > /dev/null
+  do
+    if ! ps -p $mypid > /dev/null
+    then
+      killall gmake
+      killall make
+    fi
+  done
+  kill $mypid &> /dev/null
+  
+  if [[ ! -f ../exe/NEMS.x ]] ; then
+    # build did not succeed
+    $tool --clear --backtitle "NEMS Application Builder" \
+      --title "Trouble view log" --textbox $ROOTDIR/appBuilder.NEMS.log.$$ 20 120
+    $tool --clear --backtitle "NEMS Application Builder" \
+      --title "Diagnosis" --yesno \
+      "Looks like the attempt to build the NEMS executable failed.\
+      \n\nTry again <Yes>, or quit <No>." 10 40
+    if [[ "$?" != "0" ]] ; then
+      break
+    fi
+  fi
+done
+if [[ -f ../exe/NEMS.x ]] ; then
+  $tool --clear --backtitle "NEMS Application Builder" \
+    --title "Success" --yesno "The NEMS executable was successfully built. \
+    \n\nView log <Yes>, or exit <No>." 7 60
+  if [[ "$?" == "0" ]] ; then
+    $tool --clear --backtitle "NEMS Application Builder" \
+      --title "Success view log" --textbox $ROOTDIR/appBuilder.NEMS.log.$$ 20 120
+  fi
+fi
+
+################################################################################
+# Finish up
+
+cd $ROOTDIR
+clear
+exit

@@ -1,0 +1,20 @@
+###############################################################################
+#
+#  Regional NMM-B restart with pure binary input
+#  6x5 compute tasks / 1 thread / opnl physics / restart / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional restart run DEBUG"
+
+export CNTL_DIR=NMMB_reg
+export LIST_FILES=
+
+export_nems
+export_nmm
+export FCSTL=27
+export GBRG=reg
+export RSTRT=true
+export WLCLK=10
+
+RUN_SCRIPT=rt_nmm.sh

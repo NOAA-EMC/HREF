@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# This script is responsible for loading modules that are compatible with
+# the NUOPC Layer version used in NEMS.
+
+module use ~Gerhard.Theurich/Modulefiles
+module load intel impi esmf/7.0.0bs39-theia

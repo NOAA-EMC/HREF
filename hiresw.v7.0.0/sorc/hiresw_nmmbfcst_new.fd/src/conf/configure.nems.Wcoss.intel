@@ -1,0 +1,98 @@
+SHELL       = /bin/ksh
+
+include       $(ESMFMKFILE)
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+NETCDF_INC  = $(NETCDF_INCLUDE)
+NETCDF_LIB  = $(NETCDF_LDFLAGS)
+
+#NEMSIO_INC  = -I/nwprod/lib/incmod/nemsio
+#NEMSIO_LIB  = -L/nwprod/lib -lnemsio
+NEMSIO_INC  = -I/nems/save/Jun.Wang/nceplibs/nemsio/nemsgfs_newrad/incmod
+NEMSIO_LIB  = -L/nems/save/Jun.Wang/nceplibs/nemsio/nemsgfs_newrad -lnemsio
+
+W3_LIB      = -L/nwprod/lib -lw3nco_d -lw3emc_d
+BACIO_LIB   = -L/nwprod/lib -lbacio_4
+SP_LIB      = -L/nwprod/lib -lsp_d
+SYS_LIB     =
+
+##POSTDIR   = /nwprod/lib
+#POSTDIR    = /global/save/Hui-Ya.Chuang/nceppost/post_tag_2013_GFS_SummerSchool/lib
+#POSTDIR     = /global/noscrub/Shrinivas.Moorthi/post_wam_moorthi/src
+ POSTDIR     = /global/save/Shrinivas.Moorthi/nceppost_moorthi/sorc/ncep_post.fd
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L/nwprod/lib -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L/nwprod/lib -lcrtm_v2.0.6
+G2_LIB      = -L/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz
+XML_LIB     = -L/nwprod/lib -lxmlparse
+SIGIO_LIB   = -L/nwprod/lib -lsigio_4
+SFCIO_LIB   = -L/nwprod/lib -lsfcio_4
+
+EXTLIBS     = $(NEMSIO_LIB) \
+              $(W3_LIB) \
+              $(BACIO_LIB) \
+              $(SP_LIB) \
+              $(ESMF_LIB) \
+              $(NETCDF_LIB) \
+              $(SYS_LIB)
+
+
+EXTLIBS_POST = $(POST_LIB) \
+               $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+# For debug.  WY.
+#----------------
+#FC          = mpiifort -g -traceback -openmp  -mkl=sequential -check bounds -check uninit
+# FC          = mpiifort -g -traceback -openmp  -mkl=sequential
+ FC          = mpiifort -g -openmp  -mkl=sequential -diag-disable 8290,8291
+FPP         = -fpp
+CC          = mpcc
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC) $(NETCDF_INC)
+TRAPS       =
+#TRAPS       = -ftrapuv -check all -fp-stack-check
+#TRAPS       = -ftrapuv -check bounds -check format -check output_conversion -check pointers -check uninit -fp-stack-check
+
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model source -xAVX -align
+#FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model source -xAVX -align array32byte
+#FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model source -align array32byte
+
+OPTS_NMM    = -O2
+#OPTS_GFS    = -O0  -traceback
+ OPTS_GFS    = -O3
+OPTS_GEN    = -O2
+OPTS_FIM    = -O2
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DENABLE_SMP -DCHNK_RRTM=8
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm

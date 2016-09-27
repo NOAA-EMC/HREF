@@ -1,0 +1,5 @@
+core: fim
+
+atm_model:                      _atm_model_
+atm_coupling_interval_sec:      _coupling_interval_fast_sec_
+

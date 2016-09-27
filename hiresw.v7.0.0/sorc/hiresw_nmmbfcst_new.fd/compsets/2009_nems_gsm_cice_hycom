@@ -1,0 +1,55 @@
+###############################################################################
+#                   CICE  
+#                     | 1h 
+# TEST   - GSM <-> Mediator <-> HYCOM
+#        -      1h           2h    coupling interval
+#        - Exchanging Fields
+#        - Starting at 2009120100, running for 1 day
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: GSM <-1h-> MED <-1h-> CICE <-1h-> MED <-2h-> HYCOM ... 1 day"
+
+# -
+export CNTL_DIR=2009_nems_gsm_cice_hycom
+export LIST_FILES=" \
+    sigf00 sigf01 sigf02 sigf04 sigf06 sigf12 sigf24  \
+    sfcf00 sfcf01 sfcf02 sfcf04 sfcf06 sfcf12 sfcf24  \
+    flxf00 flxf01 flxf02 flxf04 flxf06 flxf12 flxf24  \
+    field_atm_import_ice_fraction.nc \
+    field_atm_import_sea_surface_temperature.nc \
+    field_med_to_ice_sea_surface_temperature.nc "
+
+# - gsm configuration ---
+export_gsm
+export TASKS=198
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=1
+export wave=126 ; export lm=64 ; export lsoil=4
+export CPLFLX=.true.
+export A2OI_OUT=.true.
+export NGRID_A2OI=41
+export FHZER=1
+export FHOUT=1
+
+# - nems.configure ---
+export_nems
+export nems_configure=med_atm_ocn_ice
+export atm_model=gsm
+export atm_petlist_bounds="0 31"
+export ocn_model=hycom
+export ocn_petlist_bounds="32 177"
+export ice_model=cice
+export ice_petlist_bounds="178 181"
+export med_model=nems
+export med_petlist_bounds="182 197"
+export coupling_interval_slow_sec=7200.0
+export coupling_interval_fast_sec=3600.0
+
+# - component specific setup calls ---
+setup_hycom
+setup_mom5cice
+
+# -
+RUN_SCRIPT=rt_gfs.sh

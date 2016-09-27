@@ -1,0 +1,151 @@
+## NEMS configuration file
+##
+## Platform: THEIA
+#
+## Compiler: Intel with MPT
+
+SHELL           = /bin/sh
+
+################################################################################
+## This configuration file leverages the ESMFMKFILE mechanism to switch
+## between different ESMF versions and installations. The only environment
+## variable used by this  mechanism is ESMFMKFILE, which appears below in 
+## the include statment. Systems that use "modules" to manage environments
+## will set ESMFMKFILE as part of loading an "esmf" module. The user can
+## also set ESMFMKFILE manually to target a different ESMF installation.
+
+include         $(ESMFMKFILE)
+ESMF_INC        = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB        = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+################################################################################
+## ATM settings
+## Use GSM as GFS
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+################################################################################
+## OCN settings
+## NUOPC compliant OCN models supply a standard makefile fragment
+
+#ocndummy_mk   = /home/Gerhard.Theurich/OCN-INSTALLS/DummyOCN-head/ocn.mk
+#ocndummy_mk   = /home/Gerhard.Theurich/OCN-INSTALLS/DummyOCN-rev38154-ESMF700bs06/ocn.mk
+ocndummy_mk   = /home/Anthony.Craig/OCN-INSTALLS/DummyOCN/ocn.mk
+hycom_mk      = /home/Gerhard.Theurich/OCN-INSTALLS/HYCOM-rtofs0.25cfsr__branches__NUOPC.rev32555-ESMF630r/hycom_nuopc.mk
+#hycom_mk      = /scratch1/portfolios/NCEPDEV/ocean/noscrub/Gerhard.Theurich/HYCOM-NCEP/rtofs0.25cfsr__branches__NUOPC.working/sorc/hycom_nuopc.mk
+mom5_mk       = /home/Fei.Liu/OCN-INSTALLS/2014-06-26-12-33-31/mom5.mk
+#mom5_mk       = /home/Fei.Liu/OCN-INSTALLS/head/mom5.mk
+
+################################################################################
+## SEAICE settings
+## NUOPC compliant SEAICE models supply a standard makefile fragment
+
+#icedummy_mk   = /home/Gerhard.Theurich/ICE-INSTALLS/DummyICE-head/ice.mk
+icedummy_mk   = /home/Gerhard.Theurich/ICE-INSTALLS/DummyICE-rev38708/ice.mk
+cice_mk       = /home/Fei.Liu/ICE-INSTALLS/2014-03-19-18-52-00/cice.mk
+
+################################################################################
+## Other settings
+
+NETCDF_INC   = -I$(NETCDF)/include
+NETCDF_LIB   = -L$(NETCDF)/lib -lnetcdf
+
+LIBDIR=/scratch3/NCEPDEV/nwprod/lib
+PARADIR=/scratch3/NCEPDEV/nwprod/lib
+POSTDIR=/scratch4/NCEPDEV/global/save/Shrinivas.Moorthi/nceppost_moorthi_redmem/sorc/ncep_post.fd
+nemsiov=_v2.2.1
+baciov=_v2.0.1
+w3emcv=_v2.0.4
+w3ncov=_v2.0.6
+spv=_v2.0.2
+sigiov=_v2.0.1
+sfciov=_v1.0.1
+crtmv=
+
+#LIBDIR=/contrib/nceplibs/nwprod/lib
+#LIBDIR=/scratchr4/NCEPDEV/global/save/Shrinivas.Moorthi/theia/nceplibs/nwprod/lib
+#PARADIR=/contrib/nceplibs_ext/lib
+#POSTDIR=/scratch2/portfolios/NCEPDEV/global/save/Sarah.Lu/Summer_School_2013/lib
+#POSTDIR=/scratch2/portfolios/NCEPDEV/global/noscrub/Shrinivas.Moorthi/post_wam_moorthi/src
+#POSTDIR=/scratch2/portfolios/NCEPDEV/global/save/Shrinivas.Moorthi/nceppost_moorthi/sorc/ncep_post.fd
+
+NEMSIO_INC   = -I${LIBDIR}/incmod/nemsio${nemsiov}
+#NEMSIO_INC   = -I/scratch1/portfolios/NCEPDEV/nems/save/Jun.Wang/nceplibs/src/nemsio/nemsgfs_newrad/incmod
+##NEMSIO_LIB   = -L${LIBDIR} -lnemsio
+#NEMSIO_LIB   = -L/scratch1/portfolios/NCEPDEV/nems/save/Jun.Wang/nceplibs/src/nemsio/nemsgfs_newrad -lnemsio
+NEMSIO_LIB   = -L${LIBDIR} -lnemsio${nemsiov}
+
+BACIO_LIB    = -L${LIBDIR} -lbacio${baciov}_4
+#W3_LIB      = -L${LIBDIR} -lw3nco_4 -lw3emc_4
+W3_LIB       = -L${LIBDIR} -lw3nco${w3ncov}_d -lw3emc${w3emcv}_d
+SP_LIB       = -L${LIBDIR} -lsp${spv}_d
+SYS_LIB      =
+ 
+EXTLIBS      = $(NEMSIO_LIB) \
+               $(BACIO_LIB) \
+               $(W3_LIB) \
+               $(SP_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+## for the post quilting option
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L${LIBDIR}  -lw3nco${w3ncov}_4 -lw3emc${w3emcv}_4
+CRTM_LIB    = -L${PARADIR} -lcrtm${crtmv}
+G2_LIB      =  -L${LIBDIR} -lg2tmpl -lg2_4  -L${PARADIR} -ljasper -lpng -lz
+XML_LIB     = -L${PARADIR} -lxmlparse
+SIGIO_LIB   = -L${LIBDIR} -lsigio${sigiov}_4
+SFCIO_LIB   = -L${LIBDIR} -lsfcio${sfciov}
+
+EXTLIBS_POST = $(NEMSIO_LIB) \
+               $(POST_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+###
+FC          = mpiifort -g -openmp -mkl=sequential -align array32byte -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -openmp -convert big_endian -assume byterecl -mkl=sequential
+F77         = mpiifort -g -openmp -mkl=sequential -align array32byte -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -openmp -convert big_endian -assume byterecl -mkl=sequential
+FREE         = -free
+FIXED        = -fixed
+R8           = -r8
+
+FINCS        = $(ESMF_INC) $(NEMSIO_INC) $(NETCDF_INC)
+TRAPS        =
+#TRAPS        = -g -fno-inline -no-ip -traceback -ftrapuv -fpe0 -ftz -check all -check noarg_temp_created -fp-stack-check
+
+FFLAGS       = $(TRAPS) $(FINCS) -fp-model strict
+
+OPTS_NMM     = -O3
+OPTS_GFS     = -O3
+#OPTS_GFS     = -O0 -g -traceback
+OPTS_GEN     = -O3
+OPTS_FIM     = -O3
+
+FFLAGM_DEBUG = 
+
+FFLAGS_NMM   = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS   = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF  = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN   = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM   = $(OPTS_FIM) $(FFLAGS)
+
+FPP          = -fpp
+CPP          = /lib/cpp -P -traditional
+CPPFLAGS     = -DENABLE_SMP -DCHNK_RRTM=8
+
+AR           = ar
+ARFLAGS      = -r
+
+RM           = rm
