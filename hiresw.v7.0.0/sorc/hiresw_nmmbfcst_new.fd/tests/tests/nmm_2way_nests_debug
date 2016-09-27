@@ -1,0 +1,31 @@
+###############################################################################
+#
+#  NMM-B moving nests: Use generational task assignments and 2-way exchange.
+#  Compute tasks - Upper parent 5x18 | Child #1 5x9 | Child #2 5x9 | Grandchild 10x9
+#  1 thread / opnl physics / free fcst / nemsio and pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional with 2-way moving nests DEBUG"
+
+export CNTL_DIR=NMMB_2way_nests
+export LIST_FILES=
+
+export_nems
+export_nmm
+export GBRG=mnests_2way
+export FCSTL=3
+export NCHILD=02
+export NEMSI=true
+export NODE=3
+export AFFN=cpu
+export MODE=2-way
+export TASKS=$TASKS_mvg2
+export TPN=$TPN_mvg2
+export INPES=$INPES_mvg2
+export JNPES=$JNPES_mvg2
+export WTPG=$WTPG_mvg2
+export WGT=1.0
+export WLCLK=15
+
+RUN_SCRIPT=rt_nmm.sh

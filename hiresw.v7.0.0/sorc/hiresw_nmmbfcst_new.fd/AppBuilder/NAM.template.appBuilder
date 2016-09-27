@@ -1,0 +1,6 @@
+# North American Mesoscale Forecast System
+#
+# NAM NEMS Application Builder file
+
+COMPONENTS=( "NMMB" )
+

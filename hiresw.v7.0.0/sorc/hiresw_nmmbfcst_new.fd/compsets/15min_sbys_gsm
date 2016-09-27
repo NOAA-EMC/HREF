@@ -1,0 +1,32 @@
+###############################################################################
+# 
+# TEST   - GSM with stepable Run() method
+#        - Calling GSM Run() from EARTH component in 15min intervals
+#        - 30 compute tasks / 1 thread 
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: GSM with stepable Run() driven in 15min intervals"
+
+# -
+export CNTL_DIR=15min_sbys_gsm
+export LIST_FILES=" \
+    sigf00 sigf03 sigf06 sigf12 sigf18 sigf24 \
+    sfcf00 sfcf03 sfcf06 sfcf12 sfcf18 sfcf24 \
+    flxf00 flxf03 flxf06 flxf12 flxf18 flxf24 "
+
+# - gsm configuration ---
+export_gsm
+export TASKS=32
+export WLCLK=30
+export NDAYS=1
+
+# - nems.configure ---
+export_nems
+export nems_configure=atm
+export atm_model=gsm
+export atm_petlist_bounds="0 31"
+export coupling_interval_sec=900.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh

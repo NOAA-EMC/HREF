@@ -1,0 +1,28 @@
+#!/bin/sh -l
+#PBS -o out
+#PBS -e err
+#PBS -N _JBNME_
+#PBS -A _ACCNR_
+#PBS -q _QUEUE_
+#PBS -d .
+#PBS -l procs=_TASKS_
+#PBS -l walltime=00:_WLCLK_:00
+
+set -eux
+
+export MPI_TYPE_DEPTH=20
+export OMP_NUM_THREADS=1
+export ESMF_RUNTIME_COMPLIANCECHECK=ON:depth=4
+#ulimit -s unlimited
+
+source /apps/lmod/lmod/init/sh
+source _SRCD_/src/conf/modules.nems
+module list
+
+echo "Model started:  " `date`
+
+mpirun -prepend-rank -np $PBS_NP ./NEMS.x
+
+echo "Model ended:    " `date`
+
+exit

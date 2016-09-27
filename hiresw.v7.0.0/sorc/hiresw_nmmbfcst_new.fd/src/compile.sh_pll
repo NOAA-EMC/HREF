@@ -1,0 +1,13 @@
+set -x
+
+rm build.log
+
+# CODE=/meso/save/Eric.Rogers/nam_dgexv4_working_new/NAM_DGEXv4_2017Q1/nam.v4.0.0/sorc/nam_nems_nmmb.fd
+
+# CODE=`pwd`
+# cd $CODE/src
+
+gmake nmm J=-j4 > build.log 2>&1
+
+cd $CODE
+mv $CODE/exe/NEMS.x ../../exec/wcoss.exec/nam_nems_nmmb_fcst

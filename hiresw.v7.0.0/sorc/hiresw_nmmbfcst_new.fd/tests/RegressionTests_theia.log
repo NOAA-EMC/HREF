@@ -1,0 +1,814 @@
+Fri Apr 15 03:03:07 UTC 2016
+Start Regression test
+
+
+
+Test 1 nmm_cntrl Compare NMMB-global results with previous trunk version
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_glob
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_cntrl
+Checking test 1 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0048h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0024h_00m_00.00s.........OK
+Test 1 PASS 
+
+
+
+Test 2 nmm_nemsio Test NMMB-global NEMSIO as input file
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_glob
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_nemsio
+Checking test 2 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0048h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0024h_00m_00.00s.........OK
+Test 2 PASS 
+
+
+
+Test 3 nmm_rest Test NMMB-global restart run
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_glob
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_rest
+Checking test 3 results ....
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+Test 3 PASS 
+
+
+
+Test 4 nmm_rest_nio Test NMMB-global restart run from NEMSIO file
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_glob
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_rest_nio
+Checking test 4 results ....
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+Test 4 PASS 
+
+
+
+Test 5 nmm_decomp Test NMMB-global different decomposition
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_glob
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_decomp
+Checking test 5 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+Test 5 PASS 
+
+
+
+Test 6 nmm_thread Test NMMB-global threading
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_glob
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_thread
+Checking test 6 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0048h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0024h_00m_00.00s.........OK
+Test 6 PASS 
+
+
+
+Test 7 nmm_reg_ctl Compare NMMB-regional results with previous trunk version
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_ctl
+Checking test 7 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0048h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0024h_00m_00.00s.........OK
+ Comparing pcp.hr1.01.bin.........OK
+ Comparing pcp.hr2.01.bin.........OK
+ Comparing pcp.hr3.01.bin.........OK
+ Comparing pcp.hr4.01.bin.........OK
+ Comparing pcp.hr5.01.bin.........OK
+ Comparing pcp.hr6.01.bin.........OK
+ Comparing pcp.hr7.01.bin.........OK
+Test 7 PASS 
+
+
+
+Test 8 nmm_reg_nemsio Test NMMB-regional NEMSIO as input file
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_nemsio
+Checking test 8 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0012h_00m_00.00s.........OK
+Test 8 PASS 
+
+
+
+Test 9 nmm_reg_rst Test NMMB-regional restart run
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_rst
+Checking test 9 results ....
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+Test 9 PASS 
+
+
+
+Test 10 nmm_reg_rst_nio Test NMMB-regional restart run with NEMSIO file
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_rst_nio
+Checking test 10 results ....
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+Test 10 PASS 
+
+
+
+Test 11 nmm_reg_decomp Test NMMB-regional different decomposition
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_decomp
+Checking test 11 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0012h_00m_00.00s.........OK
+Test 11 PASS 
+
+
+
+Test 12 nmm_reg_thread Test NMMB-regional threading
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_thread
+Checking test 12 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0048h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0048h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0024h_00m_00.00s.........OK
+Test 12 PASS 
+
+
+
+Test 13 nmm_reg_sel_phy Test NMMB-regional with selected GFS physics schemes
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_sel_phy
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_sel_phy
+Checking test 13 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 13 PASS 
+
+
+
+Test 14 nmm_reg_spec_adv Test NMMB-regional with separate species advection ON
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_spec_adv
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_spec_adv
+Checking test 14 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 14 PASS 
+
+
+
+Test 15 nmm_reg_spec_adv_rst Test NMMB-regional with separate species advection ON
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_spec_adv
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_spec_adv_rst
+Checking test 15 results ....
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+Test 15 PASS 
+
+
+
+Test 16 nmm_reg_wsm6_gfdl Test NMMB-regional with physics schemes WSM6 and GFDL
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_wsm6_gfdl
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_wsm6_gfdl
+Checking test 16 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 16 PASS 
+
+
+
+Test 17 nmm_reg_wsm6_rrtm Test NMMB-regional with physics schemes WSM6 and RRTM
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_wsm6_rrtm
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_wsm6_rrtm
+Checking test 17 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 17 PASS 
+
+
+
+Test 18 nmm_reg_sas_zhao Test NMMB-regional with physics schemes SAS, ZHAO
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_sas_zhao
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_sas_zhao
+Checking test 18 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 18 PASS 
+
+
+
+Test 19 nmm_reg_thomp Test NMMB-regional with THOMPSON microphysics scheme
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_thomp
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_thomp
+Checking test 19 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 19 PASS 
+
+
+
+Test 20 nmm_reg_hur Test NMMB-regional with HWRF physics
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_hur
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_hur
+Checking test 20 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 20 PASS 
+
+
+
+Test 21 nmm_reg_pcpadj Test NMMB-regional with precipitation adjustment on
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_pcpadj
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_pcpadj
+Checking test 21 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+Test 21 PASS 
+
+
+
+Test 22 nmm_reg_timesr Test NMMB-regional writing time series
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_timesr
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_timesr
+Checking test 22 results ....
+ Comparing nmmb_hst_01_bin_0006h_00m_00.00s.........OK
+ Comparing ts_p01_d01.bin.........OK
+ Comparing ts_p02_d01.bin.........OK
+Test 22 PASS 
+
+
+
+Test 23 nmm_nests Test NMMB-regional with static nests
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_nests
+Checking test 23 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_nio_0012h_00m_00.00s.........OK
+Test 23 PASS 
+
+
+
+Test 24 nmm_nest_rest Test NMMB-regional static nests with restart
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_nest_rest
+Checking test 24 results ....
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+Test 24 PASS 
+
+
+
+Test 25 nmm_reg_filt Test NMMB-regional digital filter with static nests
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_filt
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_filt
+Checking test 25 results ....
+ Comparing nmmb_hst_01_bin_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0003h_00m_00.00s.........OK
+Test 25 PASS 
+
+
+
+Test 26 nmm_reg_filt_zombie Test NMMB-regional digital filter with zombie grandchild
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg_filt_zombie
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_filt_zombie
+Checking test 26 results ....
+ Comparing nmmb_hst_01_bin_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0003h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0003h_00m_00.00s.........OK
+Test 26 PASS 
+
+
+
+Test 27 nmm_mvg_nests Test NMMB-regional with moving nests
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_mvg_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_mvg_nests
+Checking test 27 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_nio_0012h_00m_00.00s.........OK
+Test 27 PASS 
+
+
+
+Test 28 nmm_mvg_nests_restart Test NMMB-regional with moving nests - RESTART
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_mvg_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_mvg_nests_restart
+Checking test 28 results ....
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+Test 28 PASS 
+
+
+
+Test 29 nmm_mvg_nests_gens Test NMMB-regional with 1-way moving nests and generational task assignments
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_mvg_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_mvg_nests_gens
+Checking test 29 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_nio_0012h_00m_00.00s.........OK
+Test 29 PASS 
+
+
+
+Test 30 nmm_2way_nests Test NMMB-regional with 2-way moving nests
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_2way_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_2way_nests
+Checking test 30 results ....
+ Comparing nmmb_hst_01_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_01_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_02_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_03_nio_0012h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0000h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_bin_0012h_00m_00.00s.........OK
+ Comparing nmmb_rst_04_nio_0012h_00m_00.00s.........OK
+Test 30 PASS 
+
+
+
+Test 31 nmm_2way_nests_restart Test NMMB-regional with 2-way moving nests - RESTART
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_2way_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_2way_nests_restart
+Checking test 31 results ....
+ Comparing nmmb_hst_01_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_01_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_02_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_bin_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_03_nio_0024h_00m_00.00s.........OK
+ Comparing nmmb_hst_04_nio_0024h_00m_00.00s.........OK
+Test 31 PASS 
+
+
+
+Test 32 nmm_reg_rst_nio_debug Test NMMB-regional restart run with NEMSIO file DEBUG
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_rst_nio_debug
+Checking test 32 results ....
+Test 32 PASS 
+
+
+
+Test 33 nmm_reg_rst_debug Test NMMB-regional restart run DEBUG
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_rst_debug
+Checking test 33 results ....
+Test 33 PASS 
+
+
+
+Test 34 nmm_reg_ctl_debug Compare NMMB-regional results with previous trunk version DEBUG
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_reg
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_reg_ctl_debug
+Checking test 34 results ....
+Test 34 PASS 
+
+
+
+Test 35 nmm_2way_nests_debug Test NMMB-regional with 2-way moving nests DEBUG
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/NMMB_2way_nests
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/nmm_2way_nests_debug
+Checking test 35 results ....
+Test 35 PASS 
+
+
+
+Test 36 gfs_eulerian GFS eulerian dycore,32 total proc (tasks), 1 thread, quilt, digital filter on reduced grid
+Test 36
+GFS eulerian dycore,32 total proc (tasks), 1 thread, quilt, digital filter on reduced grid
+GFS, 32 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_EULERIAN
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_eulerian
+Checking test 36 results ....
+ Comparing sigf03.........OK
+ Comparing sigf06.........OK
+ Comparing sigf12.........OK
+ Comparing sigf24.........OK
+ Comparing sigf48.........OK
+ Comparing sfcf03.........OK
+ Comparing sfcf06.........OK
+ Comparing sfcf12.........OK
+ Comparing sfcf24.........OK
+ Comparing sfcf48.........OK
+ Comparing flxf03.........OK
+ Comparing flxf06.........OK
+ Comparing flxf12.........OK
+ Comparing flxf24.........OK
+ Comparing flxf48.........OK
+Test 36 PASS 
+
+
+
+Test 37 wam_gh_l150 WAM enthalpy on general hybrid 2loop 150levels,32 compute tasks / 1 thread ,no quilting
+Test 37
+WAM enthalpy on general hybrid 2loop 150levels,32 compute tasks / 1 thread ,no quilting
+GFS, 32 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/WAM_gh_l150
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/wam_gh_l150
+Checking test 37 results ....
+ Comparing sigf00.........OK
+ Comparing sigf03.........OK
+ Comparing sigf06.........OK
+ Comparing sigf12.........OK
+ Comparing sigf24.........OK
+ Comparing sigf48.........OK
+ Comparing sfcf00.........OK
+ Comparing sfcf03.........OK
+ Comparing sfcf06.........OK
+ Comparing sfcf12.........OK
+ Comparing sfcf24.........OK
+ Comparing sfcf48.........OK
+ Comparing flxf00.........OK
+ Comparing flxf03.........OK
+ Comparing flxf06.........OK
+ Comparing flxf12.........OK
+ Comparing flxf24.........OK
+ Comparing flxf48.........OK
+Test 37 PASS 
+
+
+
+Test 38 gfs_slg Run SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+Test 38
+Run SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+GFS, 33 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_SLG
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_slg
+Checking test 38 results ....
+ Comparing sigf00.........OK
+ Comparing sigf01.........OK
+ Comparing sigf24.........OK
+ Comparing sfcf00.........OK
+ Comparing sfcf01.........OK
+ Comparing sfcf24.........OK
+ Comparing flxf00.........OK
+ Comparing flxf01.........OK
+ Comparing flxf24.........OK
+Test 38 PASS 
+
+
+
+Test 39 gfs_slg_adiabatic Run SLG adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+Test 39
+Run SLG adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+GFS, 32 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_SLG_ADIABATIC
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_slg_adiabatic
+Checking test 39 results ....
+ Comparing sigf00.........OK
+ Comparing sigf06.........OK
+ Comparing sigf12.........OK
+ Comparing sigf24.........OK
+Test 39 PASS 
+
+
+
+Test 40 gfs_slg_48pe Run SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions, 48pe
+Test 40
+Run SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions, 48pe
+GFS, 48 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_SLG_48PE
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_slg_48pe
+Checking test 40 results ....
+ Comparing sigf00.........OK
+ Comparing sigf06.........OK
+ Comparing sigf12.........OK
+ Comparing sigf24.........OK
+ Comparing sfcf00.........OK
+ Comparing sfcf06.........OK
+ Comparing sfcf12.........OK
+ Comparing sfcf24.........OK
+ Comparing flxf00.........OK
+ Comparing flxf06.........OK
+ Comparing flxf12.........OK
+ Comparing flxf24.........OK
+Test 40 PASS 
+
+
+
+Test 41 gfs_slg_2thread Run SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+Test 41
+Run SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+GFS, 32 proc, 2 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_SLG
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_slg_2thread
+Checking test 41 results ....
+ Comparing sigf00.........OK
+ Comparing SIG.F06.........OK
+ Comparing sigf24.........OK
+ Comparing sfcf00.........OK
+ Comparing SFC.F06.........OK
+ Comparing sfcf24.........OK
+ Comparing flxf00.........OK
+ Comparing FLX.F06.........OK
+ Comparing flxf24.........OK
+Test 41 PASS 
+
+
+
+Test 42 gfs_slg_rsthst Run SLG restart from history file non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+Test 42
+Run SLG restart from history file non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+GFS, 33 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_SLG_RSTHST
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_slg_rsthst
+Checking test 42 results ....
+ Comparing sigf30.........OK
+ Comparing sigf48.........OK
+ Comparing sfcf30.........OK
+ Comparing sfcf48.........OK
+ Comparing flxf30.........OK
+ Comparing flxf48.........OK
+Test 42 PASS 
+
+
+
+Test 43 gfs_slg_t574 Run T574 SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+Test 43
+Run T574 SLG non-adiabatic test with NEMSIO and digital filter from NEMSIO initial conditions
+GFS, 96 proc, 1 thread
+
+
+baseline dir = /scratch4/NCEPDEV/meso/noscrub/wx20rv/REGRESSION_TEST_NAMv4/GFS_SLG_T574
+working dir  = /scratch4/NCEPDEV/stmp3/Ratko.Vasic/rt_49819/gfs_slg_t574
+Checking test 43 results ....
+ Comparing sigf00.........OK
+ Comparing SIG.F06.........OK
+ Comparing SIG.F12.........OK
+ Comparing sigf24.........OK
+ Comparing sfcf00.........OK
+ Comparing SFC.F06.........OK
+ Comparing SFC.F12.........OK
+ Comparing sfcf24.........OK
+ Comparing flxf00.........OK
+ Comparing FLX.F06.........OK
+ Comparing FLX.F12.........OK
+ Comparing flxf24.........OK
+Test 43 PASS 
+
+
+
+Test 44 gfs_gocart_nemsio GFS_GOCART with NEMSIO
+Test 44
+GFS_GOCART with NEMSIO
+GFS, 64 proc, 1 thread
+
+
+
+
+Checking test 44 results ....
+ Comparing ngac.t00z.sigf00.........OK
+ Comparing ngac.t00z.sigf03.........OK
+ Comparing ngac.t00z.sigf06.........OK
+ Comparing ngac.t00z.sigf12.........OK
+ Comparing ngac.t00z.sigf24.........OK
+ Comparing ngac.t00z.sfcf00.........OK
+ Comparing ngac.t00z.sfcf03.........OK
+ Comparing ngac.t00z.sfcf06.........OK
+ Comparing ngac.t00z.sfcf12.........OK
+ Comparing ngac.t00z.sfcf24.........OK
+ Comparing ngac.t00z.aerf00.........OK
+ Comparing ngac.t00z.aerf03.........OK
+ Comparing ngac.t00z.aerf06.........OK
+ Comparing ngac.t00z.aerf12.........OK
+ Comparing ngac.t00z.aerf24.........OK
+Test 44 PASS 
+
+
+
+
+REGRESSION TEST WAS SUCCESSFUL
+Fri Apr 15 07:46:21 UTC 2016

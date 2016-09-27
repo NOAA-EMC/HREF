@@ -1,0 +1,97 @@
+## NEMS build configure file
+##
+## Platform: Gaea
+## Compiler: Intel with MPT
+
+SHELL           = /bin/sh
+
+################################################################################
+## Include the common configuration parts
+
+include         $(TOP)/conf/configure.nems.NUOPC
+
+################################################################################
+## Other settings
+
+NETCDF_LIB   = /opt/cray/netcdf/4.2.0/intel/120/lib/libnetcdf.a
+
+#LIBDIR=/lustre/f1/unswept/ncep/Shrinivas.Moorthi/nceplibs/nwprod/lib
+LIBDIR=/ncrc/home1/Shrinivas.Moorthi/nceplibs/nwprod/lib
+PARADIR=${LIBDIR}
+POSTDIR=/scratch2/portfolios/NCEPDEV/global/save/Sarah.Lu/Summer_School_2013/lib
+
+NEMSIO_INC   = -I${LIBDIR}/incmod/nemsio
+NEMSIO_LIB   = -L${LIBDIR} -lnemsio
+BACIO_LIB    = -L${LIBDIR} -lbacio_4
+#W3_LIB      = -L${LIBDIR}  -lw3nco_4 -lw3emc_4
+W3_LIB       = -L${LIBDIR}  -lw3nco_d -lw3emc_d
+SP_LIB       = -L${LIBDIR} -lsp_d
+SYS_LIB      =
+
+EXTLIBS      = $(NEMSIO_LIB) \
+               $(BACIO_LIB) \
+               $(W3_LIB) \
+               $(SP_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+## for the post quilting option
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L${LIBDIR}  -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L${LIBDIR} -lcrtm_v2.0.7
+G2_LIB      = -L${LIBDIR} -lg2tmpl -lg2_4  -ljasper -lpng -lz
+XML_LIB     = -L${LIBDIR} -lxmlparse_v2.0.0
+SIGIO_LIB   = -L${LIBDIR} -lsigio_4
+SFCIO_LIB   = -L${LIBDIR} -lsfcio
+
+EXTLIBS_POST = $(NEMSIO_LIB) \
+               $(POST_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+###
+
+FC          = ftn -convert big_endian -assume byterecl -openmp -mkl=sequential
+FPP         = -eZ
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC)
+ TRAPS       =
+#TRAPS       = -check all -ftrapuv -fp-stack-check -fstack-protector -heap-arrays
+
+FFLAGS      = $(TRAPS) $(FINCS) -fp-model source
+#FFLAGS      = $(TRAPS) $(FINCS) -fp-model source -g -O0 -traceback
+
+OPTS_NMM    = -O3
+#OPTS_GFS    = -O0 -g -traceback
+ OPTS_GFS    = -O3 -g -traceback
+OPTS_GEN    = -O3
+OPTS_FIM    = -O3
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+FPP         = -fpp
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DENABLE_SMP -DCHNK_RRTM=8
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm

@@ -1,0 +1,6 @@
+# Next Generation Global Prediction System
+#
+# NGGPS NEMS Application Builder file
+
+COMPONENTS=( "GSM" )
+

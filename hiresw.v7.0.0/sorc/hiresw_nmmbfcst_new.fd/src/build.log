@@ -1,0 +1,2 @@
+conf/configure.nems:3: /meso/noscrub/Ratko.Vasic/libs/esmf_6/lib/libO/Linux.intel.64.intelmpi.default/esmf.mk: No such file or directory
+gmake: *** No rule to make target `/meso/noscrub/Ratko.Vasic/libs/esmf_6/lib/libO/Linux.intel.64.intelmpi.default/esmf.mk'.  Stop.

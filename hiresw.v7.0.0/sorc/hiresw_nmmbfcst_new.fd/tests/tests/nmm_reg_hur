@@ -1,0 +1,29 @@
+###############################################################################
+#
+#  Regional NMM-B with HWRF physics
+#  6x5 compute tasks / 1 thread / HWRF / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional with HWRF physics"
+
+export CNTL_DIR=NMMB_reg_hur
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0024h_00m_00.00s \
+        	   nmmb_hst_01_nio_0000h_00m_00.00s nmmb_hst_01_nio_0024h_00m_00.00s \
+        	   nmmb_rst_01_bin_0012h_00m_00.00s nmmb_rst_01_nio_0012h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=reg
+export FCSTL=24
+export WLCLK=5
+export TURBL=gfshur
+export CONVC=sashur
+export MICRO=fer
+export RADTN=gfdl
+export SFC_LAYER=gfdl
+export LAND_SURFACE=gfdlslab 
+export WLCLK=8
+
+
+RUN_SCRIPT=rt_nmm.sh

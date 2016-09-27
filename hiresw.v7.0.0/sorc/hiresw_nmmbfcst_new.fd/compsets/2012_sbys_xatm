@@ -1,0 +1,27 @@
+###############################################################################
+# 
+# TEST   - XATM with stepable Run() method
+#        - 12 hour intervals
+#        - 30 compute tasks / 1 thread 
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: XATM with stepable Run() driven in 12h intervals"
+
+# -
+export CNTL_DIR=""
+export LIST_FILES=""
+
+# - gsm configuration ---
+export_gsm
+export WLCLK=30
+
+# - nems.configure ---
+export_nems
+export nems_configure=atm
+export atm_model=xatm
+export atm_petlist_bounds="0 31"
+export coupling_interval_sec=43200.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh

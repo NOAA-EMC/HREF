@@ -1,0 +1,21 @@
+###############################################################################
+#
+#  Regional NMM-B restart with NEMSIO input
+#  6x5 compute tasks / 1 thread / opnl physics / restart / nemsio input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional restart run with NEMSIO file DEBUG"
+
+export CNTL_DIR=NMMB_reg
+export LIST_FILES=""
+
+export_nems
+export_nmm
+export FCSTL=27
+export GBRG=reg
+export NEMSI=true
+export RSTRT=true
+export WLCLK=10
+
+RUN_SCRIPT=rt_nmm.sh

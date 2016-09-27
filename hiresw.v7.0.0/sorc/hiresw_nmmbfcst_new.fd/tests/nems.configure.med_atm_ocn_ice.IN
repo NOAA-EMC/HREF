@@ -1,0 +1,41 @@
+#############################################
+####  NEMS Run-Time Configuration File  #####
+#############################################
+
+### ATM-ICE-OCN coupled by central NEMS mediator ###
+
+# MED #
+med_model:                      _med_model_
+med_petlist_bounds:             _med_petlist_bounds_
+
+# ATM #
+atm_model:                      _atm_model_
+atm_petlist_bounds:             _atm_petlist_bounds_
+
+# OCN #
+ocn_model:                      _ocn_model_
+ocn_petlist_bounds:             _ocn_petlist_bounds_
+
+# ICE #
+ice_model:                      _ice_model_
+ice_petlist_bounds:             _ice_petlist_bounds_
+
+# Run Sequence #
+runSeq::
+  @_coupling_interval_slow_sec_
+    OCN -> MED :remapMethod=redist
+    MED MedPhase_slow
+    MED -> OCN :remapMethod=redist
+    OCN
+    @_coupling_interval_fast_sec_
+      MED MedPhase_fast_before
+      MED -> ATM :remapMethod=redist
+      MED -> ICE :remapMethod=redist
+      ATM
+      ICE
+      ATM -> MED :remapMethod=redist
+      ICE -> MED :remapMethod=redist
+      MED MedPhase_fast_after
+    @
+  @
+::

@@ -1,0 +1,43 @@
+###############################################################################
+# 
+# TEST   - GSM <-> Mediator <-> SOCN
+#        -      3h           6h    coupling interval
+#        - Exchanging fields with dummy data
+#        - Starting at 2009120100, running for 2 days
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: GSM <-3h-> Mediator <-6h-> SOCN ... 2 days"
+
+# -
+export CNTL_DIR=2009_sbys_gsm
+export LIST_FILES=" \
+    sigf00 sigf03 sigf06 sigf12 sigf18 sigf24 sigf30 sigf36 sigf42 sigf48 \
+    sfcf00 sfcf03 sfcf06 sfcf12 sfcf18 sfcf24 sfcf30 sfcf36 sfcf42 sfcf48 \
+    flxf00 flxf03 flxf06 flxf12 flxf18 flxf24 flxf30 flxf36 flxf42 flxf48 "
+
+# - gsm configuration ---
+export_gsm
+export TASKS=64
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=2
+export wave=126 ; export lm=64 ; export lsoil=4
+export CPLFLX=.true.
+export A2OI_OUT=.true.
+export NGRID_A2OI=41
+
+# - nems.configure ---
+export_nems
+export nems_configure=med_atm_ocn
+export atm_model=gsm
+export atm_petlist_bounds="0 31"
+export ocn_model=socn
+export ocn_petlist_bounds="32 49"
+export med_model=nems
+export med_petlist_bounds="50 63"
+export coupling_interval_slow_sec=21600.0
+export coupling_interval_fast_sec=10800.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh

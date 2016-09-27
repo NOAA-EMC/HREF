@@ -1,0 +1,48 @@
+###############################################################################
+#
+# TEST   - WAM + IPE side-by-side
+#        - 60 minutes intervals for both WAM and IPE
+#
+#  WAM enthalpy on general hybrid 2loop 150levels
+#  32 compute tasks / 1 thread ,no quilting
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: IPE side-by-side with GSM%WAM enthalpy on general hybrid 2loop 150levels,32 compute tasks / 1 thread ,no quilting"
+
+# -
+export CNTL_DIR=2011_sbys_gsm%wam_ipe
+export LIST_FILES="sigf00 sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf00 sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf00 flxf03 flxf06 flxf12 flxf24 flxf48"
+
+# - gsm configuration ---
+export_gsm
+export CDATE=2011092300
+export WLCLK=30
+export TASKS=40
+export PE1=32
+export THRD=1
+export QUILT=.false.
+export FDFI=3
+export CP2=.false.
+export IDEA=.true.
+export IDVC=3
+export THERMODYN_ID=3
+export SFCPRESS_ID=2
+export SPECTRALLOOP=2
+
+# - nems.configure ---
+export_nems
+export nems_configure=atm_ipm
+export atm_model=gsm
+export atm_petlist_bounds="0 31"
+export ipm_model=ipe
+export ipm_petlist_bounds="32 39"
+export coupling_interval_sec=3600.0
+
+# - component specific setup calls ---
+setup_ipe
+
+# -
+RUN_SCRIPT=rt_gfs.sh

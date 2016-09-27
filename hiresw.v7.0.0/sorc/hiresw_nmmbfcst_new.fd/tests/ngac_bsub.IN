@@ -1,0 +1,68 @@
+#!/bin/bash
+#BSUB -a poe
+#BSUB -oo _RUND_/out
+#BSUB -eo _RUND_/err
+#BSUB -J _JBNME_
+#BSUB -network type=sn_all:mode=US
+#BSUB -P GFS-T2O
+####BSUB -P "_ACCNR_"
+#BSUB -q _CLASS_
+#BSUB -n _TASKS_
+#BSUB -R span[ptile=_TPN_]
+#BSUB -R affinity[core(_THRDS_)]
+#BSUB -x
+#BSUB -W 00:_WLCLK_
+
+. /usrx/local/Modules/3.2.9/init/bash
+ module purge
+ module load ibmpe lsf
+ module load ics/14.0.1 NetCDF/4.2/serial ESMF/630rp1
+ export FCST_LAUNCHER=mpirun.lsf
+ export OMP_NUM_THREADS=_THRDS_
+ export MP_MPILIB=mpich2
+ export MP_EUIDEVELOP=min
+ export KMP_STACKSIZE=1024m
+ export MP_LABELIO=yes
+ export MP_STDOUTMODE=ordered
+ export LD_PRELOAD=/u/James.A.Abeles/mpi_trace_linux_x86_64/shared/libmpitrace.so
+ export KMP_STACKSIZE=1024m
+
+set -x
+
+echo "Model started:  " `date`
+
+export MACHINE_ID=_MACHINE_ID_
+export SCHEDULER=_SCHED_
+cd _RUND_
+
+export NEMSIO_IN=_NEMSIOIN_
+export NEMSIO_OUT=_NEMSIOOUT_
+
+##mpirun.lsf ./NEMS.x
+export RUN_ENVIR=dev
+export cyc=00
+export envir=dev
+export PARA_CONFIG=_CONFIG_
+export CONFIG_FILE=_CONFIGFILE_
+export NEMSDIR=_NEMSDIR_
+export WORKDIR=_WORKDIR_
+export REGSDIR=_REGSDIR_
+export FCST_SCRIPT_DIR=_NEMSDIR_/tests
+export DATAICDIR=_DATAICDIR_
+export PDY=20120717
+
+export GRDI=_REGSDIR_/$DATAICDIR/ngac.t00z.gfsanl
+
+if [ $NEMSIO_IN = .true. ] ; then
+  export SFCI=_REGSDIR_/$DATAICDIR/ngac.t00z.sfnanl
+else
+  export SFCI=_REGSDIR_/$DATAICDIR/ngac.t00z.sfcanl
+fi
+
+export FIXGLOBAL=/global/noscrub/Shrinivas.Moorthi/para_new/para/fix/fix_am
+
+_RUND_/JNGAC_FORECAST.sms.para
+
+echo "Model ended:    " `date`
+
+exit

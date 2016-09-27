@@ -1,0 +1,215 @@
+#!/bin/ksh
+
+# copy_diff_files
+copy_diff_files(){
+  if [[ ! -f $2 ]] ; then
+    set -x
+    cp $1 $2
+    set +x
+  else
+  if [[ `diff $1 $2`"" != "" ]] ; then
+    set -x
+    cp $1 $2
+    set +x
+  else
+    echo "confirmed $2"
+  fi
+  fi
+}
+
+#
+# ESMF 3
+#
+if [[ $1 = 3_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.wcoss_ESMF_3 conf/modules.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp2 library on wcoss"
+elif [[ $1 = 3_gaea ]]; then
+     set -x
+     cp conf/configure.nems.Gaea.intel conf/configure.nems
+     touch conf/externals.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 library on gaea"
+elif [[ $1 = 3_yellowstone ]]; then
+     set -x
+     cp conf/configure.nems.Yellowstone.intel conf/configure.nems
+     touch conf/externals.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp2 library on yellowstone"
+
+#
+# ESMF 6
+#
+elif [[ $1 = 6.3r_nmm_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_630r_nmm conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.wcoss_ESMF_630rAPI_nmm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library"
+elif [[ $1 = 6.3r_nmm_wcoss_fast ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_630r_nmm_fast conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.wcoss_ESMF_630rAPI_nmm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library and optimized compile options for NMMB"
+elif [[ $1 = 6.3r_gsm_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_630r_gsm conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.wcoss_ESMF_630rAPI_gsm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library and netcdf 4.2 library"
+elif [[ $1 = 6.3r_gsm_wcoss_c ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss_C.intel_ESMF_630r_gsm conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.wcoss_c_ESMF_630rAPI_gsm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library and netcdf 4.2 library"
+elif [[ $1 = 6.3r_gocart_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_630r_gsm conf/configure.nems
+     cp conf/modules.nems.wcoss_ESMF_630rAPI_gocart conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r and netcdf 4.2 library"
+elif [[ $1 = 6_nmm_theia ]]; then
+     set -x
+     cp conf/configure.nems.Theia.intel_nmm conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.Theia_nmm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0rp1 series library on theia"
+elif [[ $1 = 7_nmm_theia ]]; then
+     set -x
+     cp conf/configure.nems.Theia.intel_ESMF_7_nmm conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.Theia_ESMF_7_nmm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 7.0.0 series library on theia"
+elif [[ $1 = 6_gsm_theia ]]; then
+     set -x
+     cp conf/configure.nems.Theia.intel_gsm conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.Theia_gsm conf/modules.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0rp1 series library on theia"
+elif [[ $1 = 6_gaea ]]; then
+     set -x
+     cp conf/configure.nems.Gaea.intel conf/configure.nems
+     touch conf/externals.nems
+     cp conf/modules.nems.Gaea_ESMF_630rAPI conf/modules.nems.gaea
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library on gaea"
+elif [[ $1 = 6_yellowstone ]]; then
+     set -x
+     cp conf/configure.nems.Yellowstone.intel   conf/configure.nems
+     touch conf/externals.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r series library on yellowstone"
+
+elif [[ $1 = 7_gsm_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_7_15.0.1_gsm conf/configure.nems
+     cp conf/modules.nems.wcoss_ESMF_7_15.0.1API_gsm      conf/modules.nems
+     cp ESMFVersionDefine_ESMF_7_15.0.1API.h              ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 7_15.0.1 library"
+#
+# NUOPC
+#
+elif [[ $1 = nuopc_wcoss ]]; then
+     copy_diff_files conf/configure.nems.Wcoss.intel_ESMF conf/configure.nems
+     copy_diff_files conf/externals.nems.Wcoss conf/externals.nems
+     copy_diff_files conf/modules.nems.Wcoss_ESMF_NUOPC conf/modules.nems
+     copy_diff_files ESMFVersionDefine_ESMF_NUOPC.h ESMFVersionDefine.h
+     echo "Use an ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot)"
+elif [[ $1 = nuopc_gaea ]]; then
+     copy_diff_files conf/configure.nems.Gaea.intel conf/configure.nems
+     copy_diff_files conf/externals.nems.Gaea conf/externals.nems
+     copy_diff_files conf/modules.nems.Gaea_ESMF_NUOPC conf/modules.nems
+     copy_diff_files ESMFVersionDefine_ESMF_NUOPC.h ESMFVersionDefine.h
+     echo "Use an ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot)"
+elif [[ $1 = nuopc_theia ]]; then
+     copy_diff_files conf/configure.nems.Theia.intel conf/configure.nems
+     copy_diff_files conf/externals.nems.Theia conf/externals.nems
+     copy_diff_files conf/modules.nems.Theia_ESMF_NUOPC conf/modules.nems
+     copy_diff_files ESMFVersionDefine_ESMF_NUOPC.h ESMFVersionDefine.h
+     echo "Use an ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot)"
+
+#
+# tacc,savoy,mic, ...
+#
+elif [[ $1 = tacc ]]; then
+     set -x
+     cp conf/configure.nems.tacc.ifort conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 series library"
+elif [[ $1 = savoy ]]; then
+     set -x
+     cp conf/configure.nems.savoy.ifort conf/configure.nems
+#     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 630r series library"
+elif [[ $1 = savoy-mic ]]; then
+     set -x
+     cp conf/configure.nems.savoy.ifort-mic conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 series library"
+elif [[ $1 = savoy-mic-esmf-7 ]]; then
+     set -x
+     cp conf/configure.nems.savoy.ifort-mic.esmf7 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 7.0.0 series library"
+
+elif [[ $1 = tacc-mic ]]; then
+     set -x
+     cp conf/configure.nems.tacc.ifort-mic conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 series library"
+
+#
+# help message
+#
+else
+     echo;echo "     Run ./configure with one argument:"
+     echo;
+     echo " 'configure 3_wcoss'            : ESMF 3.1.0rp2 library on wcoss"
+     echo " 'configure 3_gaea'             : ESMF 3.1.0rp2 library on gaea"
+     echo " 'configure 3_yellowstone'      : ESMF 3.1.0rp2 library on yellowstone"
+     echo;
+     echo " 'configure 6.3r_nmm_wcoss'     : ESMF 6.3.0r library on wcoss for nmm"
+     echo " 'configure 6.3r_nmm_wcoss_fast': ESMF 6.3.0r library on wcoss for nmm - optimized compile for production"
+     echo " 'configure 6.3r_gsm_wcoss'     : ESMF 6.3.0r library on wcoss for gsm"
+     echo " 'configure 6_nmm_theia'        : ESMF 6.3.0rp1 series library on theia nmm"
+     echo " 'configure 7_nmm_theia'        : ESMF 7.0.0 series library on theia nmm"
+     echo " 'configure 6_gsm_theia'        : ESMF 6.3.0rp1 series library on theia gsm"
+     echo " 'configure 6_yellowstone'      : ESMF 6.3.0r series library on yellowstone"
+     echo;
+     echo " 'configure nuopc_wcoss'        : ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot) on wcoss"
+     echo " 'configure nuopc_gaea'         : ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot) on gaea"
+     echo " 'configure nuopc_theia'        : ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot) on theia"
+     echo;
+fi

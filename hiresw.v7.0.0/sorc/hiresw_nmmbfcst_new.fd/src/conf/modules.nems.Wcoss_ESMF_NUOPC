@@ -1,0 +1,8 @@
+# This script is responsible for loading modules that are compatible with
+# the NUOPC Layer version used in NEMS.
+
+module purge
+module load EnvVars/1.0.0 ibmpe lsf ics/14.0.1 NetCDF/3.6.3
+
+# In the future should also load ESMF module that has NUOPC Layer.
+# For now must set the ESMFMKFILE variable explicitly!!!

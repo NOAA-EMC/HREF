@@ -1,0 +1,82 @@
+SHELL       = /bin/ksh
+
+include     /meso/noscrub/Ratko.Vasic/libs/esmf_6/lib/libO/Linux.intel.64.intelmpi.default/esmf.mk
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+NETCDF_INC  = $(NETCDF_INCLUDE)
+NETCDF_LIB  = $(NETCDF_LDFLAGS)
+
+W3_LIB      = ${W3NCO_LIBd} ${W3EMC_LIBd}
+BACIO_LIB   = ${BACIO_LIB4}
+SP_LIB      = ${SP_LIBd}
+
+POSTDIR     = /global/save/Shrinivas.Moorthi/nceppost_moorthi/sorc/ncep_post.fd
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = ${W3NCO_LIB4} ${W3EMC_LIB4}
+G2_LIB      = ${G2TMPL_LIB} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
+SIGIO_LIB   = ${SIGIO_LIB4}
+SFCIO_LIB   = ${SFCIO_LIB4}
+
+EXTLIBS     = $(NEMSIO_LIB) \
+              $(W3_LIB) \
+              $(BACIO_LIB) \
+              $(SP_LIB) \
+              $(ESMF_LIB) \
+              $(NETCDF_LIB)
+
+EXTLIBS_POST = $(POST_LIB) \
+               $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB)
+
+FC          = mpiifort -g -traceback -openmp -mkl=sequential -diag-disable 8290,8291 -warn errors
+
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) -I$(NEMSIO_INC) $(NETCDF_INC)
+
+ifeq ($(DEBUG),on)
+  TRAPS     = -ftrapuv -fno-inline -no-ip -fpe0 -ftz -fp-stack-check -check all -check noarg_temp_created
+  OPTS_NMM  = -O0
+  OPTS_GFS  = -O0
+  OPTS_GEN  = -O0
+  OPTS_FIM  = -O0
+else
+  TRAPS     =
+  OPTS_NMM  = -O2
+  OPTS_GFS  = -O3
+  OPTS_GEN  = -O2
+  OPTS_FIM  = -O2
+endif
+
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model precise -xAVX
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+FPP         = -fpp
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DENABLE_SMP -DCHNK_RRTM=8
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm

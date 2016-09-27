@@ -1,0 +1,107 @@
+## NEMS configuration file
+##
+## Platform: Theia
+## Compiler: Intel with IntelMPI
+
+SHELL           = /bin/sh
+
+include /scratch4/NCEPDEV/meso/noscrub/Ratko.Vasic/libs/esmf_6/lib/libO/Linux.intel.64.intelmpi.default/esmf.mk
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+################################################################################
+## Include the common configuration parts
+
+include         $(TOP)/conf/configure.nems.NUOPC
+
+################################################################################
+## Other settings
+
+NETCDF_INC   = -I$(NETCDF)/include
+NETCDF_LIB   = -L$(NETCDF)/lib -lnetcdff -lnetcdf
+
+# LIBDIR=/scratch3/NCEPDEV/nwprod/lib
+LIBDIR=/scratch4/NCEPDEV/meso/noscrub/Ratko.Vasic/libs
+PARADIR=/contrib/nceplibs_ext/lib
+POSTDIR=/scratch4/NCEPDEV/global/save/Shrinivas.Moorthi/nceppost_moorthi/sorc/ncep_post.fd
+
+NEMSIO_INC   = -I${LIBDIR}/incmod/nemsio
+NEMSIO_LIB   = -L${LIBDIR} -lnemsio
+
+BACIO_LIB    = -L${LIBDIR} -lbacio_4
+W3_LIB       = -L${LIBDIR} -lw3nco_d -lw3emc_d
+SP_LIB       = -L${LIBDIR} -lsp_d
+SYS_LIB      =
+ 
+EXTLIBS      = $(NEMSIO_LIB) \
+               $(BACIO_LIB) \
+               $(W3_LIB) \
+               $(SP_LIB) \
+               $(NETCDF_LIB) \
+               $(ESMF_LIB) \
+               $(SYS_LIB)  
+
+## for the post quilting option
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L${LIBDIR}  -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L/home/Weiyu.Yang/bin -lcrtm
+# CRTM_LIB    = -L${PARADIR} -lcrtm
+G2_LIB      =  -L$/home/Weiyu.Yang/bin -lg2tmpl -lg2_4  -L${PARADIR} -ljasper -lpng -lz
+# G2_LIB      =  -L${LIBDIR} -lg2tmpl -lg2_4  -L${PARADIR} -ljasper -lpng -lz
+XML_LIB     = -L/home/Weiyu.Yang/bin -lxmlparse
+# XML_LIB     = -L${PARADIR} -lxmlparse
+SIGIO_LIB   = -L${LIBDIR} -lsigio_4
+SFCIO_LIB   = -L${LIBDIR} -lsfcio_4
+
+EXTLIBS_POST = $(NEMSIO_LIB) \
+               $(POST_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+###
+FC          = mpiifort -g -openmp -mkl=sequential -align array32byte -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -openmp -convert big_endian -assume byterecl -mkl=sequential -diag-disable 8290,8291
+F77         = mpiifort -g -openmp -mkl=sequential -align array32byte -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -openmp -convert big_endian -assume byterecl -mkl=sequential -diag-disable 8290,8291
+FREE         = -free
+FIXED        = -fixed
+R8           = -r8
+
+FINCS        = $(ESMF_INC) $(NEMSIO_INC) $(NETCDF_INC)
+   TRAPS        = -g -traceback
+#1 TRAPS        = -g -fno-inline -no-ip -traceback -ftrapuv -fpe0 -ftz -check all -check noarg_temp_created -fp-stack-check
+#2 TRAPS        = -g -fno-inline -no-ip -traceback -ftrapuv -fpe0 -ftz -check all
+#3 TRAPS        = -g -traceback -ftrapuv -fpe0 -ftz -check all
+#5 TRAPS        = -g -fno-inline -no-ip -traceback
+
+FFLAGS       = $(TRAPS) $(FINCS) -fp-model strict
+
+OPTS_NMM     = -O3
+OPTS_GFS     = -O3
+OPTS_GEN     = -O3
+OPTS_FIM     = -O3
+
+FFLAGM_DEBUG =
+
+FFLAGS_NMM   = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS   = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF  = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN   = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM   = $(OPTS_FIM) $(FFLAGS)
+
+FPP          = -fpp
+CPP          = /lib/cpp -P -traditional
+CPPFLAGS     = -DENABLE_SMP -DCHNK_RRTM=8
+
+AR           = ar
+ARFLAGS      = -r
+
+RM           = rm

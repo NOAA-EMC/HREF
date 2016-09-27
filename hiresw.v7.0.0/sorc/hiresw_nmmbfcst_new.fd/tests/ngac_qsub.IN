@@ -1,0 +1,74 @@
+#! /bin/sh -l
+
+#PBS -o _RUND_/out
+#PBS -e _RUND_/err
+
+#PBS -N _JBNME_
+#PBS -A _ACCNR_
+#PBS -q _QUEUE_
+#PBS -l procs=_TASKS_
+#PBS -l walltime=00:_WLCLK_:00
+
+set -aeux
+export MPI_GROUP_MAX=96
+export MACHINE_ID=_MACHINE_ID_
+export SCHEDULER=_SCHED_
+
+cd _RUND_
+
+echo "Model started:  " `date`
+
+module purge
+export TASKSIZE=_TASKS_
+export NTHREADS=_THRDS_
+
+export NEMSIO_IN=_NEMSIOIN_
+export NEMSIO_OUT=_NEMSIOOUT_
+
+export OMP_NUM_THREADS=$NTHREADS
+if [ $MACHINE_ID = 'theia' ]; then
+ module load intel/15.1.133 impi/5.0.3.048 netcdf/4.3.0 szip
+ mpiexec=`which mpirun`
+fi
+if [ $NTHREADS -eq 1 ] ; then
+ export FCST_LAUNCHER="$mpiexec -n $TASKSIZE"
+else
+ export FCST_LAUNCHER="$mpiexec -np $TASKSIZE"
+fi
+
+### for ngac
+export RUN_ENVIR=dev 
+export cyc=00 
+export envir=dev
+export PARA_CONFIG=_CONFIG_
+export CONFIG_FILE=_CONFIGFILE_
+export NEMSDIR=_NEMSDIR_
+export WORKDIR=_WORKDIR_
+export REGSDIR=_REGSDIR_ 
+export FCST_SCRIPT_DIR=_NEMSDIR_/tests
+export DATAICDIR=_DATAICDIR_
+export PDY=20120717
+
+export FHSWR=3600.
+export FHLWR=3600.
+
+export GRDI=_REGSDIR_/$DATAICDIR/ngac.t00z.gfsanl
+if [ $NEMSIO_IN = .true. ] ; then
+  export SFCI=_REGSDIR_/$DATAICDIR/ngac.t00z.sfnanl
+else
+  export SFCI=_REGSDIR_/$DATAICDIR/ngac.t00z.sfcanl
+fi
+
+export wgrib=/home/George.Vandenberghe/nwprod/util/exec/wgrib
+if [ $MACHINE_ID = 'theia' ]; then
+  export HOMEGLOBAL=/scratch4/NCEPDEV/global/save/Shrinivas.Moorthi/para
+  export FIXGLOBAL=/scratch4/NCEPDEV/global/save/Shrinivas.Moorthi/para/fix/fix_am
+  export FIX_NGAC=/scratch4/NCEPDEV/global/save/Shrinivas.Moorthi/para/fix/fix_ngac
+fi
+
+
+_RUND_/JNGAC_FORECAST.sms.para
+
+echo "Model ended:    " `date`
+
+exit

@@ -1,0 +1,39 @@
+###############################################################################
+#                   SICE  
+#                     | 1h 
+# TEST   - SATM <-> Mediator <-> SOCN
+#        -      1h           2h    coupling interval
+#        - Exchanging Fields
+#        - Starting at 2009120100, running for 1 day
+#
+###############################################################################
+
+export TEST_DESCR="NUOPC: SATM <-1h-> MED <-1h-> SICE <-1h-> MED <-2h-> SOCN ... 1 day"
+
+# -
+export CNTL_DIR=2009_sbys_gsm
+export LIST_FILES=""
+
+# - gsm configuration ---
+export_gsm
+export TASKS=32
+export WLCLK=30
+export CDATE=2009120100
+export NDAYS=1
+
+# - nems.configure ---
+export_nems
+export nems_configure=med_atm_ocn_ice
+export atm_model=satm
+export atm_petlist_bounds="0 7"
+export ocn_model=socn
+export ocn_petlist_bounds="8 15"
+export ice_model=sice
+export ice_petlist_bounds="16 23"
+export med_model=nems
+export med_petlist_bounds="24 31"
+export coupling_interval_slow_sec=7200.0
+export coupling_interval_fast_sec=3600.0
+
+# -
+RUN_SCRIPT=rt_gfs.sh
