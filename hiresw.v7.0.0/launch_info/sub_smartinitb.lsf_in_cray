@@ -3,7 +3,8 @@
 #BSUB -q "dev_shared"
 #BSUB -J HIRESW_SMARTINITB
 #BSUB -P HRW-T2O
-#BSUB -M 40000
+#BSUB -M 1000
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -R rusage[mem=40000]
 #BSUB -W 1:29
 #

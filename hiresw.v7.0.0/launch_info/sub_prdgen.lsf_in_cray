@@ -5,6 +5,7 @@
 #BSUB -J HIRESW_PRDGEN
 #BSUB -P HRW-T2O
 #BSUB -W 1:25
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -M 1000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_NPROC_] cu[type=cabinet]}' rusage[mem=1000]
 
