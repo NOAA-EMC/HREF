@@ -1,8 +1,9 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_metgrid.out__DOM___CORE___CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_metgrid.err__DOM___CORE___CYC_
-#BSUB -q "debug"
+#BSUB -q "dev"
 #BSUB -J HIRESW_METGRID
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -W 0:29
 #BSUB -P HRW-T2O
 #BSUB -M 3000
@@ -48,20 +49,15 @@ $HOMEhiresw/jobs/JHIRESW_METGRID
 if [ _CORE_ == "arw" ]
 then
 
-bsub < sub_prelimfinal.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_prelimfinal.lsf__DOM___CORE___CYC_
 
 # rm sub_prelimfinal.lsf__DOM___CORE___CYC_
 
 else
 
-bsub < sub_nemsinterp_1.lsf__DOM___CORE___CYC_
-bsub < sub_nemsinterp_2.lsf__DOM___CORE___CYC_
-bsub < sub_nemsinterp_3.lsf__DOM___CORE___CYC_
-bsub < sub_nemsinterp_4.lsf__DOM___CORE___CYC_
-
-rm sub_nemsinterp_1.lsf__DOM___CORE___CYC_
-rm sub_nemsinterp_2.lsf__DOM___CORE___CYC_
-rm sub_nemsinterp_3.lsf__DOM___CORE___CYC_
-rm sub_nemsinterp_4.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_nemsinterp_1.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_nemsinterp_2.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_nemsinterp_3.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_nemsinterp_4.lsf__DOM___CORE___CYC_
 
 fi

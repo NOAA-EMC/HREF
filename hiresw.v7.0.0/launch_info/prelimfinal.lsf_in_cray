@@ -1,9 +1,10 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.out__DOM___CORE___CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.err__DOM___CORE___CYC_
-#BSUB -q "debug"
+#BSUB -q "dev"
 #BSUB -J HIRESW_PREPFINAL
 #BSUB -W 0:18
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}' rusage[mem=9000]
@@ -46,4 +47,4 @@ export DATA=${DATAROOT}/hiresw.prepfinal_${NEST}_${MODEL}_${cyc}_${envir}
 
 $HOMEhiresw/jobs/JHIRESW_PREPFINAL
 
-bsub < sub_model.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_model.lsf__DOM___CORE___CYC_

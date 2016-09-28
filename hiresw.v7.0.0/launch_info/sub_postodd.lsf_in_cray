@@ -4,8 +4,8 @@
 #BSUB -J HIRESW_POST
 #BSUB -q "dev"
 #BSUB -P HRW-T2O
-#BSUB -W 1:25
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -W 1:25
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_POSTSPAN_] cu[type=cabinet]}' rusage[mem=3000]
 
@@ -19,7 +19,7 @@ export spanprocs=_POSTSPAN_
 export NTASK=_NPROC_
 export PTILE=_POSTSPAN_
 
-vers=`cat /u/Matthew.Pyle/hiresw_version_para`
+vers=`cat /u/Matthew.Pyle/hiresw_version`
 
 export MP_EUILIB=us
 
@@ -53,6 +53,6 @@ export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
-export DATA=${DATAROOT}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}
+export DATA=${DATAROOT}/hiresw.postodd_${NEST}_${MODEL}_${cyc}_${envir}
 
-$HOMEhiresw/jobs/JHIRESW_POST
+$HOMEhiresw/jobs/JHIRESW_POST_ODD
