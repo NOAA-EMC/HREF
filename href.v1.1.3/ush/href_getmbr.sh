@@ -118,46 +118,21 @@ ff=$fhr
 	if [ -e $filecheck ]
         then
 
-         $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt_11 | $WGRIB2 -i -grib ./${ff}/inputs1.grb $filecheck
-         $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt_22 | $WGRIB2 -i -grib ./${ff}/inputs2.grb $filecheck
-         $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt_33 | $WGRIB2 -i -grib ./${ff}/inputs3.grb $filecheck
-
+         $WGRIB2 $filecheck | grep -F -f $PARMhref/namnest_subset.txt | $WGRIB2 -i -grib ./${ff}/inputs.grb $filecheck
          $WGRIB2 $filecheck  -match ":(APCP|HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF):" -grib ./${ff}/nn.grb
          $WGRIB2 $filecheck  -match "HGT:cloud ceiling:" -grib ./${ff}/ceiling.grb
+
          cat ./${ff}/nn.grb ./${ff}/ceiling.grb > ./${ff}/inputs_nn.grb
          rm ./${ff}/nn.grb ./${ff}/ceiling.grb
 
          cd $ff
 
-         datestr=`date`
-         echo "start WGRIB2 interpolation" $datestr
+         $WGRIB2  inputs.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main.grib2 
+         $WGRIB2  inputs_nn.grb -set_grib_type jpeg -new_grid_interpolation neighbor  -new_grid_winds grid -new_grid ${wgrib2def} nn.grib2 
 
-# could it be poeized?
-
-         $WGRIB2  inputs1.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main1.grib2 &
-         $WGRIB2  inputs2.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main2.grib2 &
-         $WGRIB2  inputs3.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main3.grib2 &
-         $WGRIB2  inputs_nn.grb -set_grib_type jpeg -new_grid_interpolation neighbor  -new_grid_winds grid -new_grid ${wgrib2def} nn.grib2 &
-         wait
-
-#no         echo "$WGRIB2  inputs1.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main1.grib2" > poe.wgrib2
-#no         echo "$WGRIB2  inputs2.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main2.grib2" >> poe.wgrib2
-#no         echo "$WGRIB2  inputs3.grb   -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def}  main3.grib2" >> poe.wgrib2
-#no         echo "$WGRIB2  inputs_nn.grb -set_grib_type jpeg -new_grid_interpolation neighbor  -new_grid_winds grid -new_grid ${wgrib2def} nn.grib2" >> poe.wgrib2
-
-#no         export MP_CMDFILE=poe.wgrib2
-#no         export MP_PGMMODEL=mpmd
-#no         export MP_EUILIB=us
-#no         export MP_LABELIO=YES
-#no         export MP_INFOLEVEL=3
-#no         mpirun.lsf
-
-         cat main1.grib2 main2.grib2 main3.grib2 nn.grib2  > $DATA/href.m${m}.t${cyc}z.f${ff}
-         rm inputs1.grb inputs2.grib inputs_nn.grb  
-         rm main1.grib2 main2.grib2 main3.grib2 nn.grib2
+         cat main.grib2 nn.grib2  > $DATA/href.m${m}.t${cyc}z.f${ff}
+         rm inputs.grb  inputs_nn.grb   main.grib2  nn.grib2
          cd ../
-         datestr=`date`
-         echo "finish WGRIB2 interpolation" $datestr
 
          ln -sf  $DATA/href.m${m}.t${cyc}z.f${ff} $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
