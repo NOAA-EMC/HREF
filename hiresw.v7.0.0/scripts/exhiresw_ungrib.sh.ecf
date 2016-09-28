@@ -117,7 +117,7 @@ suf=""
 else
 
 mod=nam
-type=awip32
+type=awp151
 suf=".tm00.grib2"
 
 fi

@@ -108,28 +108,28 @@ then
 
 # grab post-digital filter analysis file if available
 
-	if [ -e  ${COMINrap}/rap.t${cyc}z.awip32f${whr}df ]
+	if [ -e  ${COMINrap}/rap.t${cyc}z.awip32f${whr}df.grib2 ]
 	then
 
- cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
- suf="df"
+ cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}df.grib2 $DATA/run_ungrib/.
+ suf="df.grib2"
  NUMLEVS=41
  
-	elif [ -e ${DATA}/../rap.t${cyc}z.awip32f${whr}df ]
+	elif [ -e ${DATA}/../rap.t${cyc}z.awip32f${whr}df.grib2 ]
 	then
  # cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
- cp ${DATA}/../rap.t${cyc}z.awip32f${whr}df $DATA/run_ungrib/.
- suf="df"
+ cp ${DATA}/../rap.t${cyc}z.awip32f${whr}df.grib2 $DATA/run_ungrib/.
+ suf="df.grib2"
  NUMLEVS=41
 
-        elif [ -e ${COMINrap}/rap.t${cyc}z.awip32f${whr} ]
+        elif [ -e ${COMINrap}/rap.t${cyc}z.awip32f${whr}.grib2 ]
         then
- cp ${COMINrap}/rap.t${cyc}z.awip32f${whr} $DATA/run_ungrib/.
- suf=""
+ cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}.grib2 $DATA/run_ungrib/.
+ suf=".grib2"
  NUMLEVS=41
 
         else
-           msg="FATAL ERROR: ${COMINrap}/rap.t${cyc}z.awip32f${whr}df DOES NOT EXIST"
+           msg="FATAL ERROR: ${COMINrap}/rap.t${cyc}z.awip32f${whr}df.grib2  DOES NOT EXIST"
            err_exit $msg
         fi
 
