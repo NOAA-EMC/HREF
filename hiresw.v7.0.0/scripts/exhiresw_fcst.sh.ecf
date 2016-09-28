@@ -261,7 +261,7 @@ cp $PARMhiresw/hiresw_ocean.configure           ocean.configure
 
 ####
 #
-cp $PARMhiresw/hiresw_solver_state.txt          solver_state.txt
+cp $PARMhiresw/hiresw_solver_state_new.txt          solver_state.txt
 #
 ####
 
@@ -329,7 +329,7 @@ export FORT_BUFFERED=true
 
 
 if [ $MODEL = "nmmb" ]; then
-    cp $EXEChiresw/hiresw_nmmbfcst .
+    cp $EXEChiresw/hiresw_nmmbfcst_new ./hiresw_nmmbfcst
     runline="aprun -n $NTASK -N $PTILE ./hiresw_nmmbfcst"
 else
     cp $EXEChiresw/hiresw_${MODEL}_fcst .
@@ -339,10 +339,12 @@ fi
 if [ $RUNLOC = "conusarw" ]
 then
 #export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 756/24 24/24 24/6`"
-runline="aprun -n 720 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
+runline="aprun -n 1728 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 4 ./hiresw_${MODEL}_fcst"
+
 elif [ $RUNLOC = "conusnsslarw" ]
 then
-runline="aprun -n 720 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst"
+# runline="aprun -n 912 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 8 ./hiresw_${MODEL}_fcst"
+runline="aprun -n 1104 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 4 ./hiresw_${MODEL}_fcst"
 
 elif [ $RUNLOC = "conusnmmb" ]
 then
