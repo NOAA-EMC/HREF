@@ -1,0 +1,628 @@
+#! /bin/ksh
+#set -x
+#
+######################################
+### WCOSS,WCOSSCRAY,THEIA (=1, yes)
+###                         =0, no)
+###                          all 0 ==> need to define an alternative below
+WCOSS=0
+WCOSSCRAY=1
+THEIA=0
+
+## Use your appropriate ptmp space (ptmpp1, ptmpd1, ptmpd2) if on WCOSS
+## or /gpfs/hps/ptmp if on WCOSSCRAY 
+#
+# WCOSS (phase1/phase2)
+# export PTMP=ptmpd1
+
+# WCOSS (cray)
+export PTMP="gpfs/hps/ptmp"
+#
+
+######################################
+### GLOBAL (=1 --> global
+###         =0 --> regional)
+######################################
+
+global=0
+
+######################################
+### NENS   (>=1 number of ensemble members (max is limited by GDAS EnKF size) 
+###         =0 --> Standard single member ICs only)
+######################################
+NENS=0
+
+######################################
+### DATE AND LENGTH OF RUN
+######################################
+
+start_yr=2016
+start_mn=09
+start_dy=28
+start_hr=00
+
+end_yr=2016
+end_mn=09
+end_dy=28
+end_hr=12
+
+run_hr=12
+
+bc_interval=10800
+
+### defined boundary width (standard = 1)
+
+lnsh=5
+lnsv=5
+
+######################################
+### DOMAIN DIMENSIONS AND GRID SPACING
+######################################
+
+
+#############  keep num_domains = 1 
+#############  unless want nesting
+#
+num_domains=1
+#
+#############
+#############
+
+nx=2008
+ny=1256
+nz=50
+
+dx=0.029
+dy=0.028
+
+nxnest1=173
+nynest1=161
+nest1ratio=3
+
+nxnest2=349
+nynest2=199
+nest2ratio=3
+
+######################################
+## DOMAIN LOCATION
+######################################
+
+cenlat=40.0
+cenlon=-98.0
+
+nest1cenlat=40.0
+nest1cenlon=-98.0
+
+nest2cenlat=38.0
+nest2cenlon=-119.0
+
+######################################
+### VERT COORD DETAILS
+######################################
+
+PTOP=5000.
+PTSGM=30000.
+
+## levels specified from TOA to ground (0 --> 1)
+## defining here is optional.  Code will define based on the number of vertical levels if no values are provided.
+
+# levels="0.0,.025,.050,.074,.099,.124,.148,.171,.190,.208,.226,.245,.266,.288,.311,.335,.360,.384,.409,.433,.458,.482,.506,.530,.554,.577,.601,.623,.646,.667,.688,.708,.728,.747,.766,.784,.801,.818,.834,.845,.863,.877,.889,.890,.908,.916,.924,.930,.937,.943,.949,.955,.960,.965,.971,.976,.981,.986,.990,.995,1.0"
+
+# levels="0.00,0.008005803,0.016543405,0.025547907,0.03491926, 0.044690812,0.055029315,0.066101517,0.07804082,0.090813874,0.104487377,0.119094681,0.134569085,0.150810539,0.167785693,0.185494547,0.203970452,0.223346807,0.243590262,0.264934267,0.287945773,0.31585973,0.349609938,0.389529898,0.433852059,0.482643122,0.534935935,0.588762848,0.642456362,0.694649125,0.743440187,0.786628448,0.822312956,0.850226913,0.871404169,0.888079173,0.902186226,0.914292279,0.924697482,0.933768684,0.941872736,0.949309788,0.95624659,0.963049992,0.969619943,0.975923095,0.981759346,0.987162048,0.992064499,0.9964,1.00"
+
+### VCOORD_OPT
+# 0 = original NMMB option (NOT viable with new vertical coordinate code)
+# 1 = "vc"
+# 2 = GFS
+# 3 = "sal" - like the old
+
+VCOORD_OPT=1
+
+######################################
+### MISC DETAILS
+######################################
+
+nproc_ungrib=1
+nproc_geogrid=4
+nproc_metgrid=4
+nproc_nemsinterp=1
+
+SRC_GRIB=GFS
+spectral=.false.
+direct_temp=.true.
+
+
+## note that NCEP_PROC and DO_GWD are defined as false below for global runs
+#
+NCEP_PROC=.true.
+NCEP_PROC_GRIB2=.true.
+#
+moving_nests=.false.
+
+DO_GWD=.false.
+DO_CLOUDS=.false.
+
+#### USE_IGBP=0 --> USGS
+#### USE_IGBP=1 --> IGBP
+USE_IGBP=1
+
+JUST_LAST=.false.
+
+IGNORE_GRIDGEN=.false.
+
+
+# echo $levels
+
+if [ $WCOSS -eq 1 ] 
+then
+export ndate=/nwprod/util/exec/ndate
+export PACKROOT=/${PTMP}/${USER}/NMMB_init_packdir   # Location of ROOT path holding all NPS tables 
+                                                    # and scripts - everything needed will be
+                                                    # copied into this location - should be a
+                                                    # temporary space
+#
+export WORKROOT=/${PTMP}/${USER}/nmmb_init           # Location of ROOT Working directory - generally
+                                                    # should also be a temporary space
+#
+export MAX_IN_LSF=10                                # Maximum number of simultaneous LSF processes 
+                                                    # allowed in the LSF queue.  Jobs will not be
+                                                    # submitted unless this number drops below 
+                                                    # the threshold noted here. 
+                                                    # This is intended to avoid flooding the 
+                                                    # WCOSS queue with too many ensemble 
+                                                    # pre-processing jobs.
+
+fi
+
+if [ $WCOSSCRAY -eq 1 ] 
+then
+
+module load prod_envir
+export ndate=$NDATE
+
+export PACKROOT=/${PTMP}/${USER}/NMMB_init_packdir   
+export WORKROOT=/${PTMP}/${USER}/nmmb_init         
+                                                    # should also be a temporary space
+#
+export MAX_IN_LSF=10                                # Maximum number of simultaneous LSF processes 
+                                                    # allowed in the LSF queue.  Jobs will not be
+                                                    # submitted unless this number drops below 
+                                                    # the threshold noted here. 
+                                                    # This is intended to avoid flooding the 
+                                                    # WCOSS queue with too many ensemble 
+                                                    # pre-processing jobs.
+
+fi
+
+if [ $THEIA -eq 1 ] 
+then
+TBASE=/scratch4/NCEPDEV
+export ndate=${TBASE}/meso/save/Ratko.Vasic/nwprod/exec/ndate
+export PACKROOT=${TBASE}/stmp3/${USER}/NMMB_init_packdir
+export WORKROOT=${TBASE}/stmp3/${USER}/nmmb_init
+fi
+
+######################################
+######## NO CHANGES BELOW ############
+######################################
+
+
+if [ $global -eq 0 -a $run_hr -gt 9 -a $NENS -gt 0 ]; then
+  echo "WARNING WARNING WARNING"
+  echo "CANNOT EXECUTE REGIONAL ENSEMBLE FORECAST LONGER THAN 9 HOURS"
+  echo "GIVEN CURRENT CONFIGURATION SINCE GLOBAL ENKF FORECASTS CAN ONLY"
+  echo "PROVIDE COMPLETE BCs OUT TO THIS LENGTH! RE-SETTING!"
+  run_hr=09
+  echo "RUN_HR IS NOW ${run_hr}"
+fi
+
+if [ $global -eq 1 ]; then
+  echo "Configuring dx and dy to be consistent with GNMMB option"
+  (( nx_minus1 = nx - 1 ))
+  (( ny_minus1 = ny - 1 ))
+  dx=`echo "360"/"$nx_minus1" | bc -l `
+  dy=`echo "180"/"$ny_minus1" | bc -l `
+  # wbd=`echo "$wbdnum"*"$newdx"*-1 | bc -l `
+  # sbd=`echo "$sbdnum"*"$newdy"*-1 | bc -l `
+  echo newdx for global run $dx
+  echo newdy for global run $dy
+  echo "Setting PTSGM to safer value of 20000."
+  PTSGM=20000.
+#
+  DO_GWD=.false.
+  NCEP_PROC=.false.
+  NCEP_PROC_GRIB2=.true.
+  cenlat=0.0
+  cenlon=0.0
+  log_glob=.true.
+else
+  log_glob=.false.
+fi
+
+if [ $NENS -gt 0 ]; then
+  spectral=.true.
+fi
+
+if [ $USE_IGBP -eq 1 ]
+then
+use_igbp_log=.true.
+else
+use_igbp_log=.false.
+fi
+
+
+npsioform=2
+
+if [ $global -eq 1 ]
+then
+
+let nxminus="$nx-1"
+
+echo HAVE NX $nx
+
+ifort -o find_factors.x find_factors.F
+echo $nx > itag
+
+cat itag
+
+val=`find_factors.x < itag`
+
+echo $val
+
+let targetnx="$val+1"
+
+# if [ $val -ne $nx ]
+if [ $val -ne $nxminus ]
+then
+echo "reset dimension so nx is: " $targetnx
+# let nx="$targetnx + 0"
+# echo $nx
+echo "recompute dx value as well"
+exit
+else
+echo "believe global value for nx is okay"
+fi
+
+
+fi
+# exit
+
+### new WPS code needs "+1" dimensions
+
+# let nxplus="$nx+1"
+# let nyplus="$ny+1"
+# let nzplus="$nz+1"
+
+let nxplusnest1="$nxnest1+1"
+let nyplusnest1="$nynest1+1"
+
+let nxplusnest2="$nxnest2+1"
+let nyplusnest2="$nynest2+1"
+
+echo log_glob $log_glob
+
+
+n=0
+typeset -Z3 n
+while [ $n -le $NENS ]; do    #May not be best way here - could easily overload the queue
+  if [ $n -gt 0 ]; then 
+    echo "Working on ensemble member $n .... "
+    CDATE=${start_yr}${start_mn}${start_dy}${start_hr}
+    ENDDATE=`$ndate $run_hr $CDATE` 
+    echo "MY ENSEMBLE END DATE FOR MEMBER $n is $ENDDATE"
+    end_yr=`echo $ENDDATE | cut -c 1-4`
+    end_mn=`echo $ENDDATE | cut -c 5-6`
+    end_dy=`echo $ENDDATE | cut -c 7-8`
+    end_hr=`echo $ENDDATE | cut -c 9-10`
+    SRC_GRIB="ENKF$n"
+    export PACKDIR=${PACKROOT}/ensmem_${n}
+    export WORKDIR=${WORKROOT}/ensmem_${n}
+  else
+    export PACKDIR=${PACKROOT}/main
+    export WORKDIR=${WORKROOT}/main
+fi
+
+if [ $global -eq 1 ]; then
+   WORKDIR=${WORKDIR}_global
+   PACKDIR=${PACKDIR}_global
+fi
+
+
+mkdir -p $WORKDIR
+mkdir -p $PACKDIR
+
+
+if [ $WCOSS -eq 1 ]
+then
+NAMELIST_INPUT=namelist.nps_input_wcoss
+elif [ $WCOSSCRAY -eq 1 ]
+then
+NAMELIST_INPUT=namelist.nps_input_wcosscray
+elif [ $THEIA -eq 1 ]
+then
+NAMELIST_INPUT=namelist.nps_input_theia
+else
+NAMELIST_INPUT=namelist.nps_input
+fi
+
+
+cat $NAMELIST_INPUT | sed s:MAX_DOM:$num_domains:g | sed s:YSTART:$start_yr:g | sed s:MSTART:${start_mn}:g |  \
+                         sed s:DSTART:$start_dy:g   | sed s:HSTART:${start_hr}:g | \
+                         sed s:YEND:$end_yr:g | sed s:MEND:$end_mn:g |  \
+                         sed s:DEND:$end_dy:g | sed s:HEND:$end_hr:g |  \
+                         sed s:NUMX:$nx: | sed s:NUMY:$ny: | \
+                         sed s:NUMX_NEST1:$nxnest1:g | sed s:NUMY_NEST1:$nynest1:g | \
+                         sed s:NUMX_NEST2:$nxnest2:g | sed s:NUMY_NEST2:$nynest2:g | \
+                         sed s:RATIO1:$nest1ratio:g | sed s:RATIO2:$nest2ratio:g | \
+                         sed s:DELTAX:$dx: | sed s:DELTAY:$dy: | \
+                         sed s:CENLAT:$cenlat:g | sed s:CENLON:$cenlon:g | \
+                         sed s:NEST1_CENTLAT:$nest1cenlat:g | sed s:NEST1_CENTLON:$nest1cenlon:g | \
+                         sed s:NEST2_CENTLAT:$nest2cenlat:g | sed s:NEST2_CENTLON:$nest2cenlon:g | \
+                         sed s:TDIRECT_IN:$direct_temp:g | sed s:GLOBALIN:$log_glob:g | \
+                         sed s:PTIN:$PTOP:g | sed s:PTSGMIN:$PTSGM:g | sed s:NZIN:$nz:g | \
+                         sed s:IOFORM:$npsioform:g | sed s:LEVSIN:$levels:g | sed s:LNSH:$lnsh:g | sed s:LNSV:$lnsv:g | \
+                         sed s:INTERVAL:$bc_interval:g | sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g | sed s:NCEP_PROC:$NCEP_PROC:g | \
+                         sed s:MOVE_NESTS:$moving_nests:g | \
+                         sed s:DO_CLOUDS:${DO_CLOUDS}:g | sed s:SPECTRAL:${spectral}:g |  \
+                         sed s:DO_GWD:${DO_GWD}:g | sed s:VCOORD_OPT:$VCOORD_OPT:g | \
+                         sed s:USE_IGBP_LOG:${use_igbp_log}:g | sed s:IGNORE_GRIDGEN:${IGNORE_GRIDGEN}:g |  \
+                         sed s:GRIBSRC:${SRC_GRIB}:g | sed s:JUST_LAST:${JUST_LAST}:g > ${PACKDIR}/namelist.nps
+
+
+mkdir -p ${PACKDIR}/NPS/geogrid
+
+if [ $USE_IGBP -eq 1 ]
+then
+
+
+ #### IGBP namelists
+
+if [ $WCOSS -eq 1 ]
+then
+cat ./NPS/geogrid/testb.nml_input_igbp_wcoss | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+
+elif [ $WCOSSCRAY -eq 1 ]
+then
+cat ./NPS/geogrid/testb.nml_input_igbp_wcosscray | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+
+elif [ $THEIA -eq 1 ]
+then
+
+cat ./NPS/geogrid/testb.nml_input_igbp_theia | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+
+else
+
+cat ./NPS/geogrid/testb.nml_input_igbp | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                           sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+fi
+
+else
+
+ #### USGS namelists
+
+if [ $WCOSS -eq 1 ]
+then
+cat ./NPS/geogrid/testb.nml_input_wcoss | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+elif [ $WCOSSCRAY -eq 1 ]
+then
+cat ./NPS/geogrid/testb.nml_input_wcosscray | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+
+
+elif [ $THEIA -eq 1 ]
+then
+
+cat ./NPS/geogrid/testb.nml_input_theia | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+
+
+else
+
+cat ./NPS/geogrid/testb.nml_input | sed s:IDIM:${nx}:g | sed s:JDIM:${ny}:g | \
+                          sed s:DXVAL:${dx}:g | sed s:DYVAL:${dy}:g | \
+                          sed s:CENLAT:${cenlat}:g | sed s:CENLON:${cenlon}:g | \
+                          sed s:NCEP_PROC_GRIB2:${NCEP_PROC_GRIB2}:g > ${PACKDIR}/NPS/geogrid/testb.nml
+fi
+
+fi
+
+################################
+
+### umo code uses true dimensions
+
+if [ $global -eq 1 ]
+then
+wbd=-180.0
+sbd=-90.0
+
+# let nzminus="$nz-1"
+
+else
+
+# let nxminus="$nx-1"
+# let nyminus="$ny-1"
+# let nzminus="$nz-1"
+
+let wbdnum="$nx/2"
+let sbdnum="$ny/2"
+
+wbd=`echo "$wbdnum"*"$dx"*"-1" | bc -l`
+echo resulting wbd is $wbd
+sbd=`echo "$sbdnum"*"$dy"*"-1" | bc -l`
+echo resulting sbd is $sbd
+
+fi
+
+
+if [ $num_domains -gt 1 ]; then
+  ## NEST1
+
+  let nx="$nxplusnest1-1"
+  let ny="$nyplusnest1-1"
+  let wbdnum="$nx/2"
+  let sbdnum="$ny/2"
+
+  echo wbdnum $wbdnum
+  echo sbdnum $sbdnum
+
+  newdx=`echo "$dx"/"$nest1ratio" | bc -l `
+  newdy=`echo "$dy"/"$nest1ratio" | bc -l `
+  # wbd=`echo "$wbdnum"*"$newdx"*-1 | bc -l `
+  # sbd=`echo "$sbdnum"*"$newdy"*-1 | bc -l `
+
+  echo newdx $newdx
+  echo newdy $newdy
+  # echo wbd $wbd
+  # echo sbd $sbd
+
+fi
+
+
+  export YSTARTMSTARTDSTART=${start_yr}${start_mn}${start_dy}
+  export FLEN=${run_hr}
+  export HSTART=${start_hr}
+  export GRIBSRC=${SRC_GRIB}
+
+if [ $WCOSS -eq 1 ]
+then
+cat run_nps.ll_input_combined_wcoss | sed s:_NPROC_UNGRIB_:${nproc_ungrib}: | \
+                                      sed s:_NPROC_GEOGRID_:${nproc_geogrid}: | \
+                                      sed s:_NPROC_METGRID_:${nproc_metgrid}: | \
+                                      sed s:_NPROC_NEMSINTERP_:${nproc_nemsinterp}: | \
+                                      sed s:_THISPACKDIR_:${PACKDIR}: | \
+                                      sed s:_THISWORKDIR_:${WORKDIR}: >  ${PACKDIR}/run_nps
+
+elif [ $WCOSSCRAY -eq 1 ]
+then
+cat run_nps.ll_input_combined_wcosscray | sed s:_NPROC_UNGRIB_:${nproc_ungrib}: | \
+                                      sed s:_NPROC_GEOGRID_:${nproc_geogrid}: | \
+                                      sed s:_NPROC_METGRID_:${nproc_metgrid}: | \
+                                      sed s:_NPROC_NEMSINTERP_:${nproc_nemsinterp}: | \
+                                      sed s:_THISPACKDIR_:${PACKDIR}: | \
+                                      sed s:_THISWORKDIR_:${WORKDIR}: >  ${PACKDIR}/run_nps
+
+
+elif [ $THEIA -eq 1 ]
+then
+
+cat run_nps.ll_input_combined_theia | sed s:_NPROC_UNGRIB_:${nproc_ungrib}: | \
+                                      sed s:_NPROC_GEOGRID_:${nproc_geogrid}: | \
+                                      sed s:_NPROC_METGRID_:${nproc_metgrid}: | \
+                                      sed s:_NPROC_NEMSINTERP_:${nproc_nemsinterp}: | \
+                                      sed s:_THISPACKDIR_:${PACKDIR}: | \
+                                      sed s:_THISWORKDIR_:${WORKDIR}: >  ${PACKDIR}/run_nps
+fi
+
+mydir=`pwd`
+mkdir -p ${PACKDIR}/NPS/ungrib/Variable_Tables
+mkdir -p ${PACKDIR}/NPS/metgrid
+
+
+
+if [ $GRIBSRC = "GFS" ]
+then
+
+if [ $spectral = .true. ]
+then
+  echo COPY THE GFS SPECTRAL APPROPRIATE VERSION 
+  cp ${mydir}/NPS/ungrib/Variable_Tables/Vtable.GFS_spectral ${PACKDIR}/NPS/ungrib/Variable_Tables/Vtable.GFS
+  cp ${mydir}/NPS/metgrid/METGRID.TBL.NMB_spectral           ${PACKDIR}/NPS/metgrid/METGRID.TBL.NMB
+else
+  echo COPY THE FULL ISOBARIC VERSION 
+  cp ${mydir}/NPS/ungrib/Variable_Tables/Vtable.GFS_with_isobaric ${PACKDIR}/NPS/ungrib/Variable_Tables/Vtable.GFS
+  cp ${mydir}/NPS/metgrid/METGRID.TBL.NMB_isobaric                ${PACKDIR}/NPS/metgrid/METGRID.TBL.NMB
+fi
+
+else
+
+if [ $GRIBSRC = "RUC" ]
+then
+cp ${mydir}/NPS/ungrib/Variable_Tables/Vtable.${GRIBSRC}p  ${PACKDIR}/NPS/ungrib/Variable_Tables/Vtable.${GRIBSRC}p
+else
+cp ${mydir}/NPS/ungrib/Variable_Tables/Vtable.${GRIBSRC}  ${PACKDIR}/NPS/ungrib/Variable_Tables/Vtable.${GRIBSRC}
+fi
+
+fi
+
+
+#NPS ungrib script needs the following file to determine if it needs to do spectral file processing.  Must link every time
+ln -sf ${mydir}/NPS/ungrib/Variable_Tables/Vtable.GFS_spectral $PACKDIR/NPS/ungrib/Variable_Tables/Vtable.GFS_spectral
+
+#Link in the GEOGRID TABLE TOO HERE
+ln -sf ${mydir}/NPS/geogrid/GEOGRID.TBL.NMB $PACKDIR/NPS/geogrid/GEOGRID.TBL.NMB 
+
+#Copy in the SED-able job cards
+if [ $WCOSS -eq 1 ]; then
+  cp ${mydir}/NPS/run*.ll_wcossin ${PACKDIR}/NPS/
+elif [ $WCOSSCRAY -eq 1 ] ; then
+  cp ${mydir}/NPS/run*.ll_wcosscrayin ${PACKDIR}/NPS/
+elif [ $THEIA -eq 1 ]; then
+  cp ${mydir}/NPS/run*.ll_theiain ${PACKDIR}/NPS/
+fi
+
+# Now link in the execs for NPS
+ln -sf ${mydir}/NPS/ungrib.exe $PACKDIR/NPS/ungrib.exe
+ln -sf ${mydir}/NPS/ungribp.exe $PACKDIR/NPS/ungribp.exe
+ln -sf ${mydir}/NPS/geogrid.exe $PACKDIR/NPS/geogrid.exe
+ln -sf ${mydir}/NPS/metgrid.exe $PACKDIR/NPS/metgrid.exe
+ln -sf ${mydir}/NPS/nemsinterp.exe $PACKDIR/NPS/nemsinterp.exe
+
+
+if [ $WCOSS -eq 0 -a $THEIA -eq 0 -a $WCOSSCRAY -eq 0 ]
+then
+
+  echo "Have no defined a valid machine on which to run! RECONFIGURE AND RERUN!"
+  exit
+
+
+elif [ $WCOSS -eq 1 -o $WCOSSCRAY -eq 1 ]
+then
+    chmod u+x ${PACKDIR}/run_nps
+    # Now we need to make sure we don't flood the system with 
+    #  an excessive number of jobs (AKA need to be responsible).
+    #  So let's limit things to no more than 10 pending/running NPS jobs
+    #  at a time (this equates to 10 ensemble members)
+    nps_check=0
+    while [ $nps_check -eq 0 ] ; do
+      n_ungrib=`bjobs -wrpu $USER | grep UNGRIB | wc -l` > /dev/null 2>&1
+      n_geogrid=`bjobs -wrpu $USER | grep GEOGRID | wc -l` > /dev/null 2>&1
+      n_metgrid=`bjobs -wrpu $USER | grep METGRID | wc -l` > /dev/null 2>&1
+      n_nemsinterp=`bjobs -wrpu $USER | grep NEMSINTERP | wc -l` > /dev/null 2>&1
+      (( n_nps_jobs = n_ungrib + n_geogrid + n_metgrid + n_nemsinterp ))
+      if [ $n_nps_jobs -lt $MAX_IN_LSF ]; then
+        echo "running ${PACKDIR}/run_nps"
+        ${PACKDIR}/run_nps
+        nps_check=1
+      else
+        echo "Too many NPS jobs still pending/running - sleep 30 before trying to run ${PACKDIR}/run_nps"
+        sleep 30
+      fi
+    done
+
+else
+
+        chmod u+x ${PACKDIR}/run_nps
+        ${PACKDIR}/run_nps
+
+fi
+
+(( n = n + 1 ))
+done

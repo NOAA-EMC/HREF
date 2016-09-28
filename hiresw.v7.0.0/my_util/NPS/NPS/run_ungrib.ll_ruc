@@ -1,0 +1,46 @@
+# @ step_name = run_wps_ungrib
+# @ output = ungrib.log
+# @ error = ungrib.log
+# @ notification = never
+# @ wall_clock_limit = 00:12:00
+# @ arguments = 20061121 00
+# @ job_type = parallel
+# @ total_tasks = 1
+# @ blocking=UNLIMITED
+# @ resources=ConsumableCPUS(1)ConsumableMemory(1 GB)
+# @ class=dev
+# @ group=meso
+# @ node_usage=shared
+# @ account_no=HRW-T2O
+# @ network.MPI = csss,shared,us
+# @ queue
+
+
+DATE=${1}
+CYC=${2}
+moddir=ruc
+mod=ruc2
+suf=" "
+type=bgrb20
+
+# cd /nbns/meso/wx20py/WPS+WRFV2/WPS_new
+cd /gpfs/m/meso/noscrub/wx20py/WPS+WRFV2/WPS_new
+
+rm Vtable
+rm GRIBFILE*
+
+# cp ungrib/Variable_Tables/Vtable.GFS Vtable
+# cp ungrib/Variable_Tables/Vtable.NAM Vtable
+cp ungrib/Variable_Tables/Vtable.RUCb Vtable
+
+filedir=/com/${moddir}/prod/${moddir}2a.${DATE}
+
+ls -l $filedir/${mod}.t${CYC}z.${type}anl $filedir/${mod}.t${CYC}z.sgrb20anl
+
+cat $filedir/${mod}.t${CYC}z.${type}anl $filedir/${mod}.t${CYC}z.sgrb20anl > GRIBFILE.AAA
+cat $filedir/${mod}.t${CYC}z.${type}f03 $filedir/${mod}.t${CYC}z.sgrb20f03 > GRIBFILE.AAB
+cat $filedir/${mod}.t${CYC}z.${type}f06 $filedir/${mod}.t${CYC}z.sgrb20f06 > GRIBFILE.AAC
+cat $filedir/${mod}.t${CYC}z.${type}f09 $filedir/${mod}.t${CYC}z.sgrb20f09 > GRIBFILE.AAD
+cat $filedir/${mod}.t${CYC}z.${type}f12 $filedir/${mod}.t${CYC}z.sgrb20f12 > GRIBFILE.AAE
+
+./ungrib.exe

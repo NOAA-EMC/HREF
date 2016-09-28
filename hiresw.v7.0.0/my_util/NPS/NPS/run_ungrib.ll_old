@@ -1,0 +1,58 @@
+# @ step_name = run_wps_ungrib
+# @ output = ungrib.log
+# @ error = ungrib.log
+# @ notification = never
+# @ wall_clock_limit = 00:12:00
+# @ arguments = 20070415 00
+# @ job_type = serial
+## @ total_tasks = 1
+## @ blocking=UNLIMITED
+# @ resources=ConsumableCPUS(1)ConsumableMemory(1 GB)
+# @ class=dev
+# @ group=devonprod
+## @ node_usage=shared
+# @ account_no=HRW-T2O
+## @ network.MPI = csss,shared,us
+# @ queue
+
+
+DATE=${1}
+CYC=${2}
+
+rm Vtable
+
+######################################################
+
+### GFS block
+mod=gfs
+type=pgrbf
+suf=" "
+cp ungrib/Variable_Tables/Vtable.GFS Vtable
+
+### NAM block
+# mod=nam
+# type=awip32
+# suf=".tm00"
+# cp ungrib/Variable_Tables/Vtable.NAM Vtable
+
+######################################################
+
+echo DATE $DATE
+echo CYC $CYC
+
+# cd /nbns/meso/wx20py/WPS+WRFV2/WPS_bgrid
+cd /meso/save/wx20py/NMMB_init_package/WPS_bgrid
+rm GRIBFILE.*
+
+filedir=/com/${mod}/prod/${mod}.${DATE}
+filedir=/meso/noscrub/wx20py/${DATE}${CYC}
+
+ln -sf $filedir/${mod}.t${CYC}z.${type}00${suf} GRIBFILE.AAA
+ln -sf $filedir/${mod}.t${CYC}z.${type}03${suf} GRIBFILE.AAB
+ln -sf $filedir/${mod}.t${CYC}z.${type}06${suf} GRIBFILE.AAC
+ln -sf $filedir/${mod}.t${CYC}z.${type}09${suf} GRIBFILE.AAD
+ln -sf $filedir/${mod}.t${CYC}z.${type}12${suf} GRIBFILE.AAE
+ln -sf $filedir/${mod}.t${CYC}z.${type}15${suf} GRIBFILE.AAF
+ln -sf $filedir/${mod}.t${CYC}z.${type}18${suf} GRIBFILE.AAG
+
+./ungrib.exe

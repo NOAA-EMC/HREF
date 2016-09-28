@@ -1,0 +1,32 @@
+#! /bin/ksh --login
+#
+#BSUB -o /_PTMP_/_USER_/nps_nemsinterp.log.%J
+#BSUB -e /_PTMP_/_USER_/nps_nemsinterp.log.%J
+#BSUB -q "dev"
+#BSUB -W 0:29
+#BSUB -P HRW-T2O
+#BSUB -J NEMSINTERP
+#BSUB -M 1000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCNEMSINTERP_*{select[craylinux && vnode]span[ptile=_NPROCNEMSINTERP_] cu[type=cabinet]}' rusage[mem=3000]
+#
+# . /usrx/local/Modules/3.2.9/init/ksh
+# module load ics
+# module load ibmpe
+# module load NetCDF/4.2/serial
+#
+
+PACKDIR=_PACKDIR_
+WORKDIR=_WORKDIR_
+
+
+cd $WORKDIR
+cp $PACKDIR/NPS/nemsinterp.exe .
+
+rm test_input* 
+rm input_domain*
+rm domain_det*
+rm boco.*
+rm configure_nest_details*
+rm GWD*
+
+aprun -n _NPROCNEMSINTERP_ -N _NPROCNEMSINTERP_ ./nemsinterp.exe > nemsinterp.log 2>&1

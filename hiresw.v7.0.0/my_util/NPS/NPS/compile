@@ -1,0 +1,123 @@
+#!/bin/csh -f
+
+if ( ! -e configure.nps ) then
+	echo "Do 'configure' first"
+	exit ( 1 ) 
+endif
+
+if  ( ( ! $?NETCDF ) && ( -d netcdf_links ) ) then
+	setenv NETCDF `pwd`/netcdf_links
+	setenv temp_netcdf 1
+else
+	setenv temp_netcdf 0
+endif
+
+set DEV_TOP = `pwd`
+
+if      ( ${#argv} == 0 ) then
+	set names	=	( dio ncio geogrid ungrib metgrid nemsinterp g1print g2print plotfmt rd_intermediate plotgrids mod_levs avg_tsfc calc_ecmwf_p )
+	set NAMES	=	( DIO NCIO GEOGRID UNGRIB METGRID NEMSINTERP GRIBUTIL GRIBUTIL UTIL     UTIL            UTIL      UTIL    UTIL      UTIL )
+else if ( $1 == nps    ) then
+	set names	=	( dio ncio geogrid ungrib metgrid nemsinterp )
+	set NAMES	=	( DIO NCIO GEOGRID UNGRIB METGRID NEMSINTERP )
+else if ( $1 == util    ) then
+	set names	=	( g1print g2print plotfmt rd_intermediate plotgrids mod_levs avg_tsfc calc_ecmwf_p )
+	set NAMES	=	( GRIBUTIL GRIBUTIL UTIL       UTIL          UTIL      UTIL    UTIL      UTIL )
+else if ( $1 == geogrid ) then
+	set names	=	( dio ncio geogrid )
+	set NAMES	=	( DIO NCIO GEOGRID )
+else if ( $1 == ungrib  ) then
+	set names	=	( dio ncio ungrib  )
+	set NAMES	=	( DIO NCIO UNGRIB  )
+else if ( $1 == metgrid ) then
+	set names	=	( dio ncio metgrid )
+	set NAMES	=	( DIO NCIO METGRID )
+else if ( $1 == nemsinterp ) then
+	set names	=	( dio ncio nemsinterp )
+	set NAMES	=	( DIO NCIO NEMSINTERP )
+else if ( $1 == g1print ) then
+	set names	=	( g1print )
+	set NAMES	=	( GRIBUTIL )
+else if ( $1 == g2print ) then
+	set names	=	( g2print )
+	set NAMES	=	( GRIBUTIL )
+else if ( $1 == plotfmt ) then
+	set names	=	( plotfmt )
+	set NAMES	=	( UTIL )
+else if ( $1 == rd_intermediate ) then
+	set names	=	( rd_intermediate )
+	set NAMES	=	( UTIL )
+else if ( $1 == plotgrids ) then
+	set names	=	( plotgrids )
+	set NAMES	=	( UTIL )
+else if ( $1 == mod_levs ) then
+	set names	=	( mod_levs )
+	set NAMES	=	( UTIL )
+else if ( $1 == avg_tsfc ) then
+	set names	=	( avg_tsfc )
+	set NAMES	=	( UTIL )
+else if ( $1 == calc_ecmwf_p ) then
+	set names	=	( calc_ecmwf_p )
+	set NAMES	=	( UTIL )
+else
+        echo "*****"
+        echo " "
+	echo "Unrecognized compile target $1."
+        echo " "
+        echo "Usage: compile [target]"
+        echo "where target is one of"
+        echo "   nps"
+        echo "   util"
+        echo "   geogrid"
+        echo "   ungrib"
+        echo "   metgrid"
+        echo "   nemsinterp"
+        echo "   g1print"
+        echo "   g2print"
+        echo "   plotfmt"
+        echo "   rd_intermediate"
+        echo "   plotgrids"
+        echo "   mod_levs"
+        echo "   avg_tsfc"
+        echo "   calc_ecmwf_p"
+        echo " "
+        echo " or just run compile with no target to build everything."
+        echo " "
+        echo "*****"
+        exit(1)
+endif
+
+echo " "
+if ( ${#argv} == 0 ) then
+	echo "**** Compiling NPS and all utilities ****"
+else
+	echo "**** Compiling $1 ****"
+endif
+echo " "
+
+set count = 1
+foreach f ( $names )
+	if ("$NAMES[$count]" == "UTIL") then
+		( cd util ; make -i -r DEV_TOP="${DEV_TOP}" TARGET="${f}.exe" CPP_TARGET="$NAMES[$count]" all )
+	else if ("$NAMES[$count]" == "GRIBUTIL") then
+		( cd ungrib ; make -i -r DEV_TOP="${DEV_TOP}" TARGET="${f}.exe" CPP_TARGET="$NAMES[$count]" all )
+		if ( -e ungrib/src/${f}.exe ) then
+			( cd util ; ln -sf ../ungrib/src/${f}.exe . )
+		endif
+	else
+		( cd $f ; make -i -r DEV_TOP="${DEV_TOP}" TARGET="${f}.exe" CPP_TARGET="$NAMES[$count]" all )
+		if ( -e ${f}/src/${f}.exe ) then
+			ln -sf ${f}/src/${f}.exe .
+	            if (${f} == ungrib) then
+	                ln -sf ${f}/src/${f}p.exe .
+                    endif
+		endif
+	endif
+	@ count ++
+end
+
+if ( $temp_netcdf == 1 ) then
+	unsetenv NETCDF
+endif
+
+exit(0)

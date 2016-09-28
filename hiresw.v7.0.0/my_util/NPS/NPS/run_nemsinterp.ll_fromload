@@ -1,0 +1,16 @@
+#! /bin/ksh
+
+WORKDIR=/stmp/wx20py/nmmb_init
+PACKDIR=/ptmp/wx20py/NMMB_init
+
+cd $WORKDIR
+cp $PACKDIR/NPS/nemsinterp.exe .
+
+rm test_input* 
+rm input_domain*
+rm domain_det*
+rm boco.*
+rm configure_nest_details*
+rm GWD*
+
+./nemsinterp.exe > nemsinterp.log 2>&1

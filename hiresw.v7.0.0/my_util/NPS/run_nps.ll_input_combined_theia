@@ -1,0 +1,36 @@
+#! /bin/ksh --login
+
+NPROC_UNGRIB=_NPROC_UNGRIB_
+NPROC_GEOGRID=_NPROC_GEOGRID_
+NPROC_METGRID=_NPROC_METGRID_
+NPROC_NEMSINTERP=_NPROC_NEMSINTERP_
+
+USERID=${USER}
+
+PACKDIR=_THISPACKDIR_
+WORKDIR=_THISWORKDIR_
+
+cd $PACKDIR
+
+CORE=NMB
+
+cat ${PACKDIR}/NPS/run_ungrib.ll_theiain | sed s:_NPROCUNGRIB_:${NPROC_UNGRIB}:g | \
+    sed s:_YSTARTMSTARTDSTART_:${YSTARTMSTARTDSTART}:g | \
+    sed s:_HSTART_:${HSTART}:g | sed s:_FLEN_:${FLEN}:g | sed s:_GRIBSRC_:${GRIBSRC}:g | \
+    sed s:_WORKDIR_:${WORKDIR}:g | sed s:_PACKDIR_:${PACKDIR}:g | sed s:_USER_:${USERID}:g > ${PACKDIR}/run_ungrib.lsf
+
+cat ${PACKDIR}/NPS/run_geo.ll_theiain | sed s:_NPROCGEOGRID_:${NPROC_GEOGRID}:g | \
+    sed s:_CORE_:${CORE}:g | sed s:_WORKDIR_:${WORKDIR}:g | sed s:_PACKDIR_:${PACKDIR}:g | \
+    sed s:_USER_:${USERID}:g > ${PACKDIR}/run_geo.lsf
+
+cat ${PACKDIR}/NPS/run_met.ll_theiain | sed s:_NPROCMETGRID_:${NPROC_METGRID}:g | \
+    sed s:_CORE_:${CORE}:g | sed s:_WORKDIR_:${WORKDIR}:g | sed s:_PACKDIR_:${PACKDIR}:g | \
+    sed s:_USER_:${USERID}:g > ${PACKDIR}/run_met.lsf
+
+cat ${PACKDIR}/NPS/run_nemsinterp.ll_theiain | sed s:_NPROCNEMSINTERP_:${NPROC_NEMSINTERP}:g | \
+    sed s:_CORE_:${CORE}:g | sed s:_WORKDIR_:${WORKDIR}:g | sed s:_PACKDIR_:${PACKDIR}:g | \
+    sed s:_USER_:${USERID}:g  > ${PACKDIR}/run_nemsinterp.lsf
+
+cd ${PACKDIR}
+
+qsub run_ungrib.lsf

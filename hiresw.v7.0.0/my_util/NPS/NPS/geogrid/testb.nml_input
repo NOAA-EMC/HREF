@@ -1,0 +1,87 @@
+
+&grid
+ domain_name="testb"
+ domain_type="bgrid"
+ imdl = IDIM
+ jmdl = JDIM
+ dx_mdl = DXVAL
+ dy_mdl = DYVAL
+ centlat_mdl =   CENLAT
+ centlon_mdl =   CENLON
+/
+
+&tiling
+ max_total_land_tiles=1
+/
+
+&veg_tiling
+ max_veg_tiles=1
+ veg_tile_threshold=0.05
+ default_veg_category=7
+ num_veg_groups = 5
+!-------------------------------------------------------------
+! veg groups
+! 1 - forest           categories - 10,11,12,13,14,15
+! 2 - barren           categories - 19, 23, 24
+! 3 - urban            categories - 1
+! 4 - grass/cropland   categories - 2,3,4,5,6,7
+! 5 - wetland/tundra   categories - 8,9,17,18,20,21,22
+!
+ veg_groups =3,4,4,4,4,4,4,5,5,1,1,1,1,1,1,9,5,5,2,5,5,5,2,2 
+!--------------------------------------------------------------
+/
+
+&soil_tiling
+ max_soil_tiles=1
+ soil_tile_threshold=0.05
+ default_soil_category=7
+ num_soil_groups = 5
+!----------------------------------------------
+! soil groups
+! 1 - sand  - cats 1,2,3
+! 2 - silt  - cats 4,5,8
+! 3 - loam  - cats 6,7,9
+! 4 - clay  - cats 10,11,12
+! 5 - other - cats 13,15,16
+!----------------------------------------------
+ soil_groups = 1,1,1,2,2,3,3,2,3,4,4,4,5,9,5,5
+/
+
+!----------------------------------------------------------
+! smooth = 1, peak smoothing with 'num_smooth_passes1' passes.
+! smooth = 2, smoother/desmoother with 'num_smooth_passes2' passes.
+! smooth = 3, both (1, then 2)
+! both options smooth the lateral boundaries in
+! the same heavy-handed manner.
+!----------------------------------------------------------
+
+&lsmask_orog_tiling
+ lsmask_aavg=.true.
+ lsmask_tiles=.false.
+ lsmask_tile_threshold=0.0
+ orog_gwd_tiles=.true.
+ max_orog_tiles=1
+ orog_bin_width=300.0
+ orog_tile_threshold=0.05
+ smooth=3
+ num_smooth_passes1=6
+ num_smooth_passes2=4
+/
+
+&input_data
+ leaf_area_idx_file=""
+ gfrac_file="/meso/mirror/wx20py/geog/green.0.144.bin"
+ mxsnow_alb_file="/meso/mirror/wx20py/geog/mxsno.1.0.bin"
+ roughness_file=""
+ slopetype_file="/meso/mirror/wx20py/geog/slope.1.0.bin"
+ snowfree_albedo_file="/meso/mirror/wx20py/geog/albedo.1.0.bin"
+ soiltype_tile_file="/meso/mirror/wx20py/geog/topsoil_fao.30s"
+ substrate_temp_file="/meso/mirror/wx20py/geog/tbot.1.0.bin"
+ vegtype_tile_file="/meso/mirror/wx20py/geog/vegtype_usgs.30s"
+ lsmask_file="/meso/mirror/wx20py/geog/gl-latlong-1km-landcover.bsq.fixed"
+ orog_file="/meso/mirror/wx20py/geog/terrain_usgs.30s"
+/
+
+&output_data
+grib2=NCEP_PROC_GRIB2
+/

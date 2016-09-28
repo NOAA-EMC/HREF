@@ -1,0 +1,43 @@
+#! /bin/ksh --login
+#
+
+## -- Request _NPROCNEMSINTERP_ cores
+#PBS -l procs=_NPROCNEMSINTERP_
+##
+## -- Specify a maximum wallclock
+#PBS -l walltime=0:15:00
+##
+## -- Specify under which account a job should run
+#PBS -A rm
+##
+## -- Set the name of the job, or moab will default to STDIN
+#PBS -N NEMSINTERP
+#
+## change directory to the working directory of the job
+## Use the if clause so that this script stays portable
+##
+#
+#if [ x$PBS_O_WORKDIR != x ]; then
+#   cd $PBS_O_WORKDIR
+#   fi
+#
+   np=$PBS_NP
+
+module load netcdf/4.3.0
+module load impi
+
+PACKDIR=_PACKDIR_
+WORKDIR=_WORKDIR_
+
+
+cd $WORKDIR
+cp $PACKDIR/NPS/nemsinterp.exe .
+
+rm test_input* 
+rm input_domain*
+rm domain_det*
+rm boco.*
+rm configure_nest_details*
+rm GWD*
+
+mpirun -np $np ./nemsinterp.exe > nemsinterp.log 2>&1

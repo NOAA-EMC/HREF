@@ -1,0 +1,86 @@
+&grid
+ domain_name="testb"
+ domain_type="bgrid"
+ imdl = IDIM
+ jmdl = JDIM
+ dx_mdl = DXVAL
+ dy_mdl = DYVAL
+ centlat_mdl =   CENLAT
+ centlon_mdl =   CENLON
+/
+
+&tiling
+ max_total_land_tiles=1
+/
+
+&veg_tiling
+ max_veg_tiles=1
+ veg_tile_threshold=0.05
+ default_veg_category=7
+ num_veg_groups = 5
+!-------------------------------------------------------------
+! veg groups
+! 1 - forest   categories - 1, 2, 3, 4, 5, 8, 9
+! 2 - barren  categories - 15, 16, 20
+! 3 - urban  categories - 13
+! 4 - grassland/cropland  categories - 10, 12, 14
+! 5 - shrubland/tundra  categories - 6, 7, 11, 18, 19
+!
+ veg_groups =1,1,1,1,1,5,5,1,1,4,5,4,3,4,2,2,9,5,5,2
+!--------------------------------------------------------------
+/
+
+&soil_tiling
+ max_soil_tiles=1
+ soil_tile_threshold=0.05
+ default_soil_category=7
+ num_soil_groups = 5
+!----------------------------------------------
+! soil groups
+! 1 - sand  - cats 1,2,3
+! 2 - silt  - cats 4,5,8
+! 3 - loam  - cats 6,7,9
+! 4 - clay  - cats 10,11,12
+! 5 - other - cats 13,15,16
+!----------------------------------------------
+ soil_groups = 1,1,1,2,2,3,3,2,3,4,4,4,5,9,5,5
+/
+
+!----------------------------------------------------------
+! smooth = 1, peak smoothing with 'num_smooth_passes1' passes.
+! smooth = 2, smoother/desmoother with 'num_smooth_passes2' passes.
+! smooth = 3, both (1, then 2)
+! both options smooth the lateral boundaries in
+! the same heavy-handed manner.
+!----------------------------------------------------------
+
+&lsmask_orog_tiling
+ lsmask_aavg=.true.
+ lsmask_tiles=.false.
+ lsmask_tile_threshold=0.0
+ orog_gwd_tiles=.true.
+ max_orog_tiles=1
+ orog_bin_width=300.0
+ orog_tile_threshold=0.05
+ smooth=3
+ num_smooth_passes1=6
+ num_smooth_passes2=4
+/
+
+&input_data
+ leaf_area_idx_file=""
+ gfrac_file="/meso/noscrub/Matthew.Pyle/geog/green.0.144.bin"
+ mxsnow_alb_file="/meso/noscrub/Matthew.Pyle/geog/mxsno.1.0.bin"
+ roughness_file=""
+ slopetype_file="/meso/noscrub/Matthew.Pyle/geog/slope.1.0.bin"
+ snowfree_albedo_file="/meso/noscrub/Matthew.Pyle/geog/albedo.1.0.bin"
+ soiltype_tile_file="/meso/noscrub/Matthew.Pyle/geog/topsoil_fao.30s"
+ substrate_temp_file="/meso/noscrub/Matthew.Pyle/geog/tbot.1.0.bin"
+ vegtype_tile_file="/meso/noscrub/Matthew.Pyle/geog/veg_igbp1a.bin"
+ lsmask_file="/meso/noscrub/Matthew.Pyle/geog/gl-latlong-1km-landcover.bsq.fixed"
+ orog_file="/meso/noscrub/Matthew.Pyle/geog/terrain_usgs.30s"
+/
+
+&output_data
+ grib2 = NCEP_PROC_GRIB2
+/
