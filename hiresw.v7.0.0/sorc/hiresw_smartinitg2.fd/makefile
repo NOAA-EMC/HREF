@@ -18,7 +18,7 @@ INC= -I${G2_INC4} -I${G2TMPL_INC}
 FFLAGS = -O3 -list 
 LDFLAGS =-FR -assume byterecl # -check all -debug all -warn nounused  
 
-CMD =	../../exec/hiresw_smartinit_g2_35lev
+CMD =	../../exec/hiresw_smartinit_g2
 
 PROFLIB =	-lprof
 

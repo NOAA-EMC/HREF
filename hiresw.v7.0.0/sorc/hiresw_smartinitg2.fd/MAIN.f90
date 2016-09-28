@@ -340,6 +340,9 @@
     P6CP10,P6CP50,P12CP01,P12CP10,P12CP50, THOLD,DHOLD,GDIN,&
     VALIDPT,HAVESREF,GFLD,GFLD8)
 
+	write(0,*) 'after GETGRIB...associated(gfld8%fld): ', associated(gfld8%fld)
+	write(0,*) 'after GETGRIB...allocated(gfld8%fld): ', allocated(gfld8%fld)
+
         write(0,*) 'minval(WETFRZ),maxval(WETFRZ): ', &
                     minval(WETFRZ),maxval(WETFRZ)
         print*, 'maval(VEG): ', maxval(veg)
@@ -669,7 +672,7 @@
 !??? do we need to check for validpt ????
        print *, 'Calculate PBL Levels',FHR
        ktop=kmax
-       if(lnest)ktop=35
+       if(lnest)ktop=40
        DO J=1,JM
        DO I=1,IM
          PBLMARK(I,J)=1
@@ -735,6 +738,9 @@
         CALL BOUND(POP3,0.,100.)
 
         DEC=3.0
+
+	write(0,*) 'associated(gfld8%fld):' , associated(gfld8%fld)
+	write(0,*) 'allocated(gfld8%fld):' , allocated(gfld8%fld)
 
        CALL FILL_FLD(GFLD8,NUMV,IM,JM,POP3)
 
