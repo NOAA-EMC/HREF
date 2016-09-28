@@ -58,8 +58,10 @@ RANLIB			=	echo
 
 # Settings for PC Linux x86_64 (wcoss), Intel(ifort) compiler, DM parallel
 #
-FC              =       ${COMP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
-SFC             =       ${COMP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+#FC              =       ${COMP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+FC              =       ${COMPILER} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+#SFC             =       ${COMP} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
+SFC             =       ${COMPILER} -O3 -fp-model strict -g -traceback # -debug all -check all -O0 -ftrapuv -fpe0
 FFLAGS          =       -FR -convert big_endian -assume noold_ldout_format
 F77FLAGS        =       -convert big_endian -assume noold_ldout_format
 FNGFLAGS        =       $(FFLAGS)
