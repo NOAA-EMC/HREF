@@ -1,13 +1,12 @@
-svn: '.' is not a working copy
 cd atmos/share         && gmake 
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
 makefile:43: depend: No such file or directory
 ls -1 module_ERR_MSG.F90 module_INCLUDE.F90 module_CONSTANTS.F90 module_CPLFIELDS.F90 check_esmf_pet.F90 ffsync.F90 idea_composition.f > Srcfiles
 echo "." > Filepath
 ../../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_ERR_MSG.F90 > module_ERR_MSG.f90
 In file included from ../../ESMFVersionDefine.h:16,
                  from module_ERR_MSG.F90:2:
@@ -33,16 +32,16 @@ ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/
 ftn -g -openmp -O3  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -fixed  -r8 -c idea_composition.f
 ar -r libshare.a module_ERR_MSG.o module_INCLUDE.o module_CONSTANTS.o module_CPLFIELDS.o check_esmf_pet.o ffsync.o  idea_composition.o
 ar: creating libshare.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share'
 cd atmos/phys          && gmake  gocart_stub
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
 makefile:210: depend: No such file or directory
 ls -1 module_BL_GFSPBL.F90 module_BL_GFSPBLHUR.F90 module_BL_MYJPBL.F90 module_CU_BMJ.F90 module_CU_SAS.F90 module_CU_SASHUR.F90 module_LS_LISS.F90 module_LS_NOAHLSM.F90 module_MP_ETANEW.F90 module_MP_FER_HIRES.F90 module_mp_thompson.F90 module_mp_radar.F90 module_MP_GFS.F90 module_MP_WSM6.F90 module_RA_GFDL.F90 module_RA_RRTM.F90 module_SF_JSFC.F90 module_SF_GFDL.F90 module_SF_URBAN.F90 machine.f physparam.f physcons.f funcphys.f module_nst_parameters.f module_nst_water_prop.f module_nst_model.f calpreciptype.f gocart_tracer_config_stub.f grrad_nmmb.f radiation_astronomy_nmmb.f radiation_aerosols_nmmb.f radiation_gases_nmmb.f radiation_clouds_nmmb.f radiation_surface_nmmb.f rad_initialize_nmmb.f radlw_param_nmmb.f radlw_datatb_nmmb.f radlw_main_nmmb.f radsw_param_nmmb.f radsw_datatb_nmmb.f radsw_main_nmmb.f radiation_astronomy_gfs.f radiation_aerosols_gfs.f radiation_gases_gfs.f radiation_clouds_gfs.f radiation_surface_gfs.f precpd_nmmb.f iounitdef.f ozne_def.f progtm_module.f date_def.f rascnvv2.f namelist_soilveg.f module_bfmicrophysics.f mersenne_twister.f tracer_const_h.f gfs_phy_tracer_config.f rad_initialize.f radlw_param.f radlw_datatb.f radlw_main.f radsw_param.f radsw_datatb.f radsw_main.f radiation_astronomy.f radiation_aerosols.f radiation_gases.f radiation_clouds.f radiation_surface.f grrad.f ozphys.f ozinterp.f sfcsub.f gbphys.f dcyc2.f dcyc2.pre.rad.f set_soilveg.f sfc_drv.f sfc_land.f progt2.f sfc_sice.f sfc_ocean.f sfc_nst.f sfc_diff.f sfc_diag.f sflx.f moninp.f moninp1.f moninq.f moninedmf.f mfpbl.f gwdps.f gwdc.f rayleigh_damp.f rayleigh_damp_mesopause.f sascnv.f sascnvn.f cnvc90.f tridi2t3.f shalcv.f shalcv_opr.f shalcnv.f lrgsclr.f gscond.f gscondp.f precpd.f precpdp.f mstadb.f mstadbtn.f mstcnv.f get_prs.f gsmddrive.f co2hc.f idea_solar_heating.f idea_tracer.f h2oc.f h2ohdc.f efield.f ideaca.f idea_co2.f idea_h2o.f idea_ion.f idea_o2_o3.f idea_dissipation.f idea_phys.f num_parthds.F > Srcfiles
 echo "." > Filepath
 ../../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_BL_GFSPBL.F90 > module_BL_GFSPBL.f90
 ftn -g -openmp -O3  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -free -I../share -fpp -DTHREAD_2D -DCHNK_RRTM=8 -r8 -c machine.f
 ftn -g -openmp -O2   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -I../share -c module_BL_GFSPBL.f90
@@ -202,16 +201,16 @@ ftn -g -openmp -free -O2   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/sr
 ftn -g -openmp -O3  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -free -I../share -r8  -c num_parthds.F
 ar -r libphys.a module_BL_GFSPBL.o module_BL_GFSPBLHUR.o module_BL_MYJPBL.o module_CU_BMJ.o module_CU_SAS.o module_CU_SASHUR.o module_LS_LISS.o module_LS_NOAHLSM.o module_MP_ETANEW.o module_MP_FER_HIRES.o module_mp_thompson.o module_mp_radar.o module_MP_GFS.o module_MP_WSM6.o module_RA_GFDL.o module_RA_RRTM.o module_SF_JSFC.o module_SF_GFDL.o module_SF_URBAN.o machine.o physparam.o physcons.o funcphys.o module_nst_parameters.o module_nst_water_prop.o module_nst_model.o calpreciptype.o co2hc.o idea_solar_heating.o idea_tracer.o h2oc.o h2ohdc.o efield.o ideaca.o idea_co2.o idea_h2o.o idea_ion.o idea_o2_o3.o idea_dissipation.o idea_phys.o gocart_tracer_config_stub.o iounitdef.o ozne_def.o progtm_module.o date_def.o rascnvv2.o namelist_soilveg.o module_bfmicrophysics.o mersenne_twister.o tracer_const_h.o gfs_phy_tracer_config.o rad_initialize.o radlw_param.o radlw_datatb.o radlw_main.o radsw_param.o radsw_datatb.o radsw_main.o radiation_astronomy.o radiation_aerosols.o radiation_gases.o radiation_clouds.o radiation_surface.o grrad.o ozphys.o ozinterp.o sfcsub.o gbphys.o dcyc2.o dcyc2.pre.rad.o set_soilveg.o sfc_drv.o sfc_land.o progt2.o sfc_sice.o sfc_ocean.o sfc_nst.o sfc_diff.o sfc_diag.o sflx.o moninp.o moninp1.o moninq.o moninedmf.o mfpbl.o gwdps.o gwdc.o rayleigh_damp.o rayleigh_damp_mesopause.o sascnv.o sascnvn.o cnvc90.o tridi2t3.o shalcv.o shalcv_opr.o shalcnv.o lrgsclr.o gscond.o gscondp.o precpd.o precpdp.o mstadb.o mstadbtn.o mstcnv.o get_prs.o gsmddrive.o grrad_nmmb.o radiation_astronomy_nmmb.o radiation_aerosols_nmmb.o radiation_gases_nmmb.o radiation_clouds_nmmb.o radiation_surface_nmmb.o rad_initialize_nmmb.o radlw_param_nmmb.o radlw_datatb_nmmb.o radlw_main_nmmb.o radsw_param_nmmb.o radsw_datatb_nmmb.o radsw_main_nmmb.o radiation_astronomy_gfs.o radiation_aerosols_gfs.o radiation_gases_gfs.o radiation_clouds_gfs.o radiation_surface_gfs.o precpd_nmmb.o num_parthds.o
 ar: creating libphys.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/phys'
 cd atmos/nmm           && gmake 
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
 makefile:89: depend: No such file or directory
 ls -1 module_BGRID_INTERP.F90 module_CLOCKTIMES.F90 module_CONTROL.F90 module_CONVECTION.F90 module_DERIVED_TYPES.F90 module_DIAGNOSE.F90 module_DIGITAL_FILTER_NMM.F90 module_DM_PARALLEL.F90 module_DOMAIN_GRID_COMP.F90 module_DOMAIN_INTERNAL_STATE.F90 module_DYNAMICS_ROUTINES.F90 module_EXCHANGE.F90 module_FLTBNDS.F90 module_GET_CONFIG.F90 module_GET_CONFIG_WRITE.F90 module_GWD.F90 module_H_TO_V.F90 module_INIT_READ_BIN.F90 module_INIT_READ_NEMSIO.F90 module_MICROPHYSICS.F90 module_MY_DOMAIN_SPECS.F90 module_NESTING.F90 module_NMM_GRID_COMP.F90 module_NMM_INTEGRATE.F90 module_NMM_INTERNAL_STATE.F90 module_OUTPUT.F90 module_PARENT_CHILD_CPL_COMP.F90 module_PRECIP_ADJUST.F90 module_RADIATION.F90 module_SOLVER_GRID_COMP.F90 module_SOLVER_INTERNAL_STATE.F90 module_TIMESERIES.F90 module_TURBULENCE.F90 module_VARS.F90 module_VARS_STATE.F90 module_WRITE_GRID_COMP.F90 module_WRITE_INTERNAL_STATE.F90 module_WRITE_ROUTINES.F90 n_namelist_physics_def.f n_layout1.f n_resol_def.f n_compns_physics.f n_mpi_def.f n_module_gfs_mpi_def.f n_mpi_quit.f > Srcfiles
 echo "." > Filepath
 ../../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_BGRID_INTERP.F90 > module_BGRID_INTERP.f90
 ftn -g -openmp -O2   -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -I../share -I../phys -c module_BGRID_INTERP.f90
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_CLOCKTIMES.F90 > module_CLOCKTIMES.f90
@@ -331,16 +330,16 @@ ftn -g -openmp -O3 -fixed  -I../share -I../phys -c n_compns_physics.f
 ftn -g -openmp -O3 -fixed  -I../share -I../phys -c n_mpi_quit.f
 ar -r libnmm.a module_BGRID_INTERP.o module_CLOCKTIMES.o module_CONTROL.o module_CONVECTION.o module_DERIVED_TYPES.o module_DIAGNOSE.o module_DIGITAL_FILTER_NMM.o module_DM_PARALLEL.o module_DOMAIN_GRID_COMP.o module_DOMAIN_INTERNAL_STATE.o module_DYNAMICS_ROUTINES.o module_EXCHANGE.o module_FLTBNDS.o module_GET_CONFIG.o module_GET_CONFIG_WRITE.o module_GWD.o module_H_TO_V.o module_INIT_READ_BIN.o module_INIT_READ_NEMSIO.o module_MICROPHYSICS.o module_MY_DOMAIN_SPECS.o module_NESTING.o module_NMM_GRID_COMP.o module_NMM_INTEGRATE.o module_NMM_INTERNAL_STATE.o module_OUTPUT.o module_PARENT_CHILD_CPL_COMP.o module_PRECIP_ADJUST.o module_RADIATION.o module_SOLVER_GRID_COMP.o module_SOLVER_INTERNAL_STATE.o module_TIMESERIES.o module_TURBULENCE.o module_VARS.o module_VARS_STATE.o module_WRITE_GRID_COMP.o module_WRITE_INTERNAL_STATE.o module_WRITE_ROUTINES.o n_namelist_physics_def.o n_layout1.o n_resol_def.o n_compns_physics.o n_mpi_def.o n_module_gfs_mpi_def.o n_mpi_quit.o
 ar: creating libnmm.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/nmm'
 cd atmos/gsm           && gmake stub
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
 makefile:91: depend: No such file or directory
 ls -1 module_GFS_CORE_SETUP.F90 module_GFS_INTERNAL_STATE.F90 module_GFS_INTEGRATE.F90 module_GFS_GRID_COMP.F90  > Srcfiles
 echo "." > Filepath
 ../../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_GFS_GRID_COMP_stub.F90 > module_GFS_GRID_COMP_stub.f90
 In file included from ../../ESMFVersionDefine.h:16,
                  from module_GFS_GRID_COMP_stub.F90:6:
@@ -350,9 +349,9 @@ In file included from module_GFS_GRID_COMP_stub.F90:6:
 ftn -g -openmp -O3  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -free -I../share -I../io -Ilibutil -c module_GFS_GRID_COMP_stub.f90
 ar -r libgfs.a module_GFS_GRID_COMP_stub.o
 ar: creating libgfs.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm'
 cd atmos/gen           && gmake stub
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/gen'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gen'
 makefile:31: warning: overriding commands for target `module_GEN_INTERNAL_STATE.o'
 makefile:28: warning: ignoring old commands for target `module_GEN_INTERNAL_STATE.o'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_GEN_INTERNAL_STATE.F90 > module_GEN_INTERNAL_STATE.f90
@@ -371,16 +370,16 @@ In file included from module_GEN_GRID_COMP_stub.F90:2:
 ftn -g -openmp -O2  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -I../share -c module_GEN_GRID_COMP_stub.f90
 ar -r libgen.a module_GEN_INTERNAL_STATE.o module_GEN_GRID_COMP_stub.o 
 ar: creating libgen.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/gen'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gen'
 cd atmos/fim           && gmake stub
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
 makefile:54: depend: No such file or directory
 ls -1 fim_internal_state.F90 fim_grid_comp.F90 module_FIM_INTEGRATE.F90 module_DYNAMICS_GRID_COMP.F90 module_DYN_PHY_CPL_COMP.F90 module_PHYSICS_GRID_COMP.F90 > Srcfiles
 echo "." > Filepath
 ../../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 fim_grid_comp_stub.F90 > fim_grid_comp_stub.f90
 In file included from ../../ESMFVersionDefine.h:16,
                  from fim_grid_comp_stub.F90:5:
@@ -390,9 +389,9 @@ In file included from fim_grid_comp_stub.F90:5:
 ftn -g -openmp -O2  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -I../share -c fim_grid_comp_stub.f90
 ar -r libfimtop.a fim_grid_comp_stub.o
 ar: creating libfimtop.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/fim'
 cd atmos/post          && gmake stub
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
 makefile:39: warning: overriding commands for target `post_nmm.o'
 makefile:36: warning: ignoring old commands for target `post_nmm.o'
 makefile:39: warning: overriding commands for target `post_nems_routines.o'
@@ -410,8 +409,8 @@ ls -1 post_gfs.F90 post_nmm.F90 post_nems_routines.F90 > Srcfiles
 echo "." > Filepath
 ../../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
 makefile:39: warning: overriding commands for target `post_nmm.o'
 makefile:36: warning: ignoring old commands for target `post_nmm.o'
 makefile:39: warning: overriding commands for target `post_nems_routines.o'
@@ -432,16 +431,16 @@ ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -I../share -c post_nems_routines_stub.f90
 ar -r libpost.a post_gfs_stub.o post_nmm_stub.o post_nems_routines_stub.o
 ar: creating libpost.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos/post'
 cd atmos               && gmake 
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos'
 makefile:39: depend: No such file or directory
 ls -1 module_ATM_INTERNAL_STATE.F90 module_ATM_GRID_COMP.F90 > Srcfiles
 echo "." > Filepath
 ../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 module_ATM_INTERNAL_STATE.F90 > module_ATM_INTERNAL_STATE.f90
 In file included from ../ESMFVersionDefine.h:16,
                  from module_ATM_INTERNAL_STATE.F90:2:
@@ -458,9 +457,9 @@ In file included from module_ATM_GRID_COMP.F90:2:
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Ishare -Inmm -Igsm -Ifim -Iphys -Igen -c module_ATM_GRID_COMP.f90
 ar -r libatmos.a module_ATM_INTERNAL_STATE.o module_ATM_GRID_COMP.o
 ar: creating libatmos.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/atmos'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/atmos'
 cd ENS_Cpl             && gmake stub
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
 makefile:124: depend: No such file or directory
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 Lib_ESMFStateAddGetMod.f > Lib_ESMFStateAddGetMod.f90
 In file included from ../ESMFVersionDefine.h:16,
@@ -533,8 +532,8 @@ ls -1 Lib_ESMFStateAddGetMod.f90 machine.f90 ENS_Cpl_InternalState_ESMFMod.f90 E
 echo "." > Filepath
 ../../exe/mkDepends.pl -m Filepath Srcfiles > depend
 rm -f Filepath Srcfiles
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
-gmake[1]: Entering directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
+gmake[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
 /lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8 ENS_CplComp_ESMFMod_STUB.F90 > ENS_CplComp_ESMFMod_STUB.f90
 In file included from ../ESMFVersionDefine.h:16,
                  from ENS_CplComp_ESMFMod_STUB.F90:2:
@@ -544,8 +543,8 @@ In file included from ENS_CplComp_ESMFMod_STUB.F90:2:
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -c ENS_CplComp_ESMFMod_STUB.f90
 ar -r ENS_Cpl.a ENS_CplComp_ESMFMod_STUB.o
 ar: creating ENS_Cpl.a
-gmake[1]: Leaving directory `/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.7/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' module_MEDIATOR.F90 > module_MEDIATOR.f90
+gmake[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl'
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' module_MEDIATOR.F90 > module_MEDIATOR.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_MEDIATOR.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -553,7 +552,7 @@ In file included from module_MEDIATOR.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_MEDIATOR.f90
 rm module_MEDIATOR.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' module_EARTH_GENERIC_COMP.F90 > module_EARTH_GENERIC_COMP.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' module_EARTH_GENERIC_COMP.F90 > module_EARTH_GENERIC_COMP.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_EARTH_GENERIC_COMP.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -561,7 +560,7 @@ In file included from module_EARTH_GENERIC_COMP.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_EARTH_GENERIC_COMP.f90
 rm module_EARTH_GENERIC_COMP.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' module_EARTH_INTERNAL_STATE.F90 > module_EARTH_INTERNAL_STATE.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' module_EARTH_INTERNAL_STATE.F90 > module_EARTH_INTERNAL_STATE.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_EARTH_INTERNAL_STATE.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -569,7 +568,7 @@ In file included from module_EARTH_INTERNAL_STATE.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_EARTH_INTERNAL_STATE.f90
 rm module_EARTH_INTERNAL_STATE.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' module_EARTH_GRID_COMP.F90 > module_EARTH_GRID_COMP.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' module_EARTH_GRID_COMP.F90 > module_EARTH_GRID_COMP.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_EARTH_GRID_COMP.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -577,7 +576,7 @@ In file included from module_EARTH_GRID_COMP.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_EARTH_GRID_COMP.f90
 rm module_EARTH_GRID_COMP.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' module_NEMS_INTERNAL_STATE.F90 > module_NEMS_INTERNAL_STATE.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' module_NEMS_INTERNAL_STATE.F90 > module_NEMS_INTERNAL_STATE.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_NEMS_INTERNAL_STATE.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -585,7 +584,7 @@ In file included from module_NEMS_INTERNAL_STATE.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_NEMS_INTERNAL_STATE.f90
 rm module_NEMS_INTERNAL_STATE.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' module_NEMS_GRID_COMP.F90 > module_NEMS_GRID_COMP.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' module_NEMS_GRID_COMP.F90 > module_NEMS_GRID_COMP.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from module_NEMS_GRID_COMP.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
@@ -593,7 +592,7 @@ In file included from module_NEMS_GRID_COMP.F90:2:
 ./ESMFVersionDefine.h:11: warning: this is the location of the previous definition
 ftn -g -openmp  -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/mod/modO/Unicos.intel.64.mpi.default -I/usrx/local/prod/ESMF/6_3_0rp1/intel/sandybridge/src/src/include  -I/gpfs/hps/nco/ops/nwprod/lib/nemsio/v2.2.2/intel/include/nemsio_v2.2.2 -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include -convert big_endian -assume byterecl -fp-model precise -xAVX -Iatmos -Ichem -Iatmos/share -IENS_Cpl -Iatmos/nmm -Iatmos/fim -Iatmos/gsm -Iatmos/phys -Iatmos/gen  -c module_NEMS_GRID_COMP.f90
 rm module_NEMS_GRID_COMP.f90
-/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Wojciech.Cencek) Tue Jan 19 22:34:59 UTC 2016 rexported "' -D'CMP_YEAR=2016' -D'CMP_JD=019' MAIN_NEMS.F90 > MAIN_NEMS.f90
+/lib/cpp -P -traditional -DTHREAD_2D -DCHNK_RRTM=8  -D'SVN_INFO="(Matthew.Pyle) Fri Jul 22 18:06:18 UTC 2016 r79750M https://svnemc.ncep.noaa.gov/projects/hrw/trunk/hiresw.v7.0.0/sorc/hiresw_nmmbfcst.fd/src"' -D'CMP_YEAR=2016' -D'CMP_JD=204' MAIN_NEMS.F90 > MAIN_NEMS.f90
 In file included from ./ESMFVersionDefine.h:16,
                  from MAIN_NEMS.F90:2:
 ././ESMFVersionLogic.h:20: warning: "ESMF_MAJOR_VERSION" redefined
