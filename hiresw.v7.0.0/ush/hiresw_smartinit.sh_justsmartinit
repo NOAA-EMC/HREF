@@ -561,7 +561,7 @@ if [ $RUNTYP != "conusnsslarw" ]
 then
 NLEV=50
 else
-NLEV=35
+NLEV=40
 fi
 
 echo execute with $NLEV levels
