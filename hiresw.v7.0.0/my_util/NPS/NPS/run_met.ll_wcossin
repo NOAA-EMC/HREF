@@ -1,0 +1,36 @@
+#! /bin/ksh --login
+#
+#BSUB -o /_PTMP_/_USER_/nps_metgrid.log.%J
+#BSUB -e /_PTMP_/_USER_/nps_metgrid.log.%J
+#BSUB -q "dev_shared"
+#BSUB -W 0:39
+#BSUB -J METGRID
+#BSUB -R "span[ptile=_NPROCMETGRID_]"
+#BSUB -P HRW-T2O
+#BSUB -R affinity[core(1)]
+#BSUB -R rusage[mem=3000]
+#BSUB -a poe
+#BSUB -n _NPROCMETGRID_
+#
+. /usrx/local/Modules/3.2.9/init/ksh
+module load ics
+module load ibmpe
+module load NetCDF/4.2/serial
+#
+
+PACKDIR=_PACKDIR_
+WORKDIR=_WORKDIR_
+
+cd $WORKDIR
+
+mkdir metgrid
+
+cp $PACKDIR/namelist.nps .
+cp $PACKDIR/NPS/metgrid/METGRID.TBL._CORE_ ./metgrid/METGRID.TBL
+cp $PACKDIR/NPS/metgrid.exe .
+
+mpirun.lsf ./metgrid.exe
+
+cd $PACKDIR
+
+bsub < run_nemsinterp.lsf

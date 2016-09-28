@@ -1,0 +1,19 @@
+#! /bin/sh
+
+
+set -x
+
+./clean -a
+
+module unload NetCDF/3.6.3
+module load NetCDF
+
+module list
+
+./conf wcoss
+
+./configure wcoss << EOF
+2
+EOF
+
+./compile nps

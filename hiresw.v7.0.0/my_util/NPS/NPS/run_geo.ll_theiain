@@ -1,0 +1,52 @@
+#!/bin/sh --login
+##
+## -- Request _NPROCGEOGRID_ cores
+#PBS -l procs=_NPROCGEOGRID_
+##
+## -- Specify a maximum wallclock 
+#PBS -l walltime=0:15:00
+##
+## -- Specify under which account a job should run
+#PBS -A rm
+##
+## -- Set the name of the job, or moab will default to STDIN
+#PBS -N GEOGRID
+#
+## change directory to the working directory of the job
+## Use the if clause so that this script stays portable
+##
+#
+#if [ x$PBS_O_WORKDIR != x ]; then
+#   cd $PBS_O_WORKDIR
+#   fi
+#
+   np=$PBS_NP
+
+module load impi
+module load netcdf/4.3.0
+PACKDIR=_PACKDIR_
+WORKDIR=_WORKDIR_
+
+cd $WORKDIR
+rm $WORKDIR/geo*.dio
+
+mkdir -p geogrid
+
+cp $PACKDIR/NPS/geogrid/GEOGRID.TBL._CORE_ ./geogrid/GEOGRID.TBL
+cp $PACKDIR/NPS/geogrid.exe .
+
+cp $PACKDIR/namelist.nps .
+
+cp $PACKDIR/NPS/geogrid/testb.nml .
+
+ln -sf testb.nml fort.81
+
+rm -rf cored*
+
+mpirun -np $np ./geogrid.exe
+
+cd $PACKDIR
+
+qsub run_met.lsf
+
+exit

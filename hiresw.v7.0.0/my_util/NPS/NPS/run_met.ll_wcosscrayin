@@ -1,0 +1,33 @@
+#! /bin/ksh --login
+#
+#BSUB -o /_PTMP_/_USER_/nps_metgrid.log.%J
+#BSUB -e /_PTMP_/_USER_/nps_metgrid.log.%J
+#BSUB -q "dev"
+#BSUB -W 0:39
+#BSUB -J METGRID
+#BSUB -P HRW-T2O
+#BSUB -M 1000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCMETGRID_*{select[craylinux && vnode]span[ptile=_NPROCMETGRID_] cu[type=cabinet]}' rusage[mem=3000]
+#
+# . /usrx/local/Modules/3.2.9/init/ksh
+# module load ics
+# module load ibmpe
+# module load NetCDF/4.2/serial
+#
+
+PACKDIR=_PACKDIR_
+WORKDIR=_WORKDIR_
+
+cd $WORKDIR
+
+mkdir metgrid
+
+cp $PACKDIR/namelist.nps .
+cp $PACKDIR/NPS/metgrid/METGRID.TBL._CORE_ ./metgrid/METGRID.TBL
+cp $PACKDIR/NPS/metgrid.exe .
+
+aprun -n _NPROCMETGRID_ -N _NPROCMETGRID_ ./metgrid.exe
+
+cd $PACKDIR
+
+bsub < run_nemsinterp.lsf

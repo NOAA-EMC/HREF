@@ -1,0 +1,62 @@
+#! /bin/bash
+
+if [ $# -ne 1 ]
+then
+echo "============================================"
+echo " NEED TO ENTER AN OPTION:                   "
+echo "                                            "
+echo " conf theia (for R&D Machine theia)         "
+echo " conf wcoss (for tide/gyre)                 "
+echo " conf wcosscray (for luna/surge)                 "
+echo " conf yellowstone (for NCAR machine)        "
+echo " conf linux (for generic linux)             "
+echo "                                            "
+exit
+fi
+
+set -x
+
+if [ $1 == "wcoss" -o $1 == "yellowstone"  -o $1 == "linux" -o $1 == "theia" -o $1 == "wcosscray" ]
+then
+cp arch/preamble.${1} arch/preamble
+else
+set +x
+echo "bad option " $1
+echo " needs to be zeus/theia/wcoss/yellowstone/linux, otherwise develop a new arch/preamble.${1} file"
+set -x
+fi
+
+if [ $1 == "wcosscray" ]
+then
+cp arch/postamble.${1} arch/postamble
+else
+cp arch/postamble.default arch/postamble
+fi
+
+set +x
+
+if [ $1 == "wcoss" ]
+then
+echo " "
+module list
+echo " "
+echo " "
+echo " !!! THINGS HAVE CHANGED !!! "
+echo " "
+echo "Now set up to use the default NetCDF/4.2/serial option"
+echo " "
+echo "enter 'module load NetCDF' if needed"
+echo "enter 'module unload NetCDF/3.6.3' first if 3.6.3 is already loaded"
+echo " "
+fi
+
+if [ $1 == "theia" ]
+then
+echo " "
+echo "Make sure netcdf/4.3.0 is loaded"
+echo "Make sure impi is loaded"
+echo " "
+echo "do a 'module load netcdf/4.3.0' if needed"
+echo "do a 'module load impi' if needed"
+echo " "
+fi

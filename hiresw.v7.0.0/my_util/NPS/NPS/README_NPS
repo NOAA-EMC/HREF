@@ -1,0 +1,145 @@
+########################  Obtaining and compiling #######################
+
+Download https://svnemc.ncep.noaa.gov/projects/nmmb_init/trunk/NMMB_init from the EMC code repository.
+
+The NMMB_init directory contains the NPS software, a controlling job 
+script, and loadleveler jobs that get submitted by the controlling script.
+
+Once you have obtained this directory, go into the NPS subdirectory.
+
+0)  Issue a "conf $mach" command, where $mach is either wcoss or zeus
+
+1)  Enter ./configure which will produce a menu that begins
+
+   1.  PC Linux x86_64 (zeus), Intel(ifort) compiler, DM parallel
+   2.  PC Linux x86_64 (wcoss), Intel(ifort) compiler, DM parallel
+   3.  PC Linux x86_64 (wcoss), GNU(gfortran) compiler, DM parallel, stillnotworking
+   4.  PC Linux x86_64 (wcoss), Intel(ifort) compiler, serial
+
+Use option 1 if on Zeus, and option 2 if on WCOSS.  Options 3 and 4 are works in progress
+at the moment
+
+2)  ./compile
+
+This should build all four of the NPS programs.  This includes those with 
+the same names as the standard E-grid WPS (geogrid.exe, ungrib.exe, 
+metgrid.exe) and also the new NEMS-specific program nemsinterp.exe.  
+The nemsinterp.exe program replaces the functionality of the WRF-based 
+real_nmm.exe program:  vertical interpolation onto the hybrid vertical 
+coordinate, and generation of the input and lateral boundary condition 
+files used by the forecast model.
+
+If all goes well with the build, these five executables should be linked 
+into the NPS directory:
+
+geogrid.exe     metgrid.exe     nemsinterp.exe  ungrib.exe ungribp.exe
+
+########################   How to use  ##################
+
+3) Go up one directory to the main NMMB_init directory (if not already
+there from step 2b) and edit the build_namelists.scr script
+that specifies details of the model domain.  The defining variables
+are grouped into several main blocks.
+
+a)  Machine selection 
+
+WCOSS and ZEUS are the fully supported options; others will require
+some slight editing (mimicing what is done for the WCOSS=1 and ZEUS=1 options)
+
+The "ptmp" space is widely used with NPS on WCOSS/ZEUS.  On WCOSS the ptmp is split
+across three different filesets, with different users on different disks, so which ptmp is a settable option.
+
+b)  Select global or regional
+
+Set with the binary (0/1) "global" variable, which in turn defines a 
+logical variable log_glob.  99% of development and testing has been done 
+with the regional option, and I recommend that choice for initial 
+attempts at using this package.
+
+c)  Specify the start_* and end_* times, and the length of the forecast 
+model run.
+
+Note that for the global model case, the start and end times can be the 
+same, with run_hr settable to any value.  In the regional case,  the 
+start_* and end_* times define the time period over which the lateral 
+boundaries will be defined, and the difference between them sets an upper 
+limit on run_hr.
+
+d)  Specify domain dimensions, grid spacing
+
+num_domains specifies how many total domains, including the parent.  
+The default system has crude support for two nests if desired.
+
+nx, ny, and nz define the dimensions.  At least for regional domains, 
+these are the true dimensions and not any "+1" dimensions as was done in 
+the WRF.
+
+Dimensions for nest1 and nest2 are specified, along with spacing ratios.
+
+dx and dy are the grid spacings along the x- and y-axes in degrees of 
+longitude and latitude.  For the same effective grid spacing, the dx and 
+dy values on the B-grid are roughly sqrt(2) larger than the dx and dy
+values on the E-grid.
+
+e)  Specify domain location (center of domain) - west longitude is negative
+
+f)  Specify vertical coordinate details and miscellaneous items
+
+PTOP, PTSGM:  These define the model top pressure, and the approximate 
+pressure of the sigma - isobaric interface within the hybrid coordinate.
+Both are specified in Pa (i.e., PTOP=5000. is 50 hPa is 50 mb).
+
+levels:  An optional specification of the non-dimensional interface 
+values specifying the vertical coordinate.  If not specified, the code 
+will generate a reasonable vertical coordinate based on the number of 
+vertical levels.  NOTE:   for the values to properly be inserted into 
+the appropriate namelist, they must be listed as one continuous line with 
+no spaces ranging from 0 to 1.  Also, for a model run with nz levels, there should be nz+1 
+interface values specified here.
+
+VCOORD_OPT: 0=original NMMB hybrid (obsolete), 1="vc", 2=GFS, 3="sal".  Must be 
+between 1 and 3 to use with current model code.
+
+nproc_*:  Specifies task counts for each of the programs
+
+SRC_GRIB:  GFS and NAM are the major entries.  Used by the code when 
+DO_CLOUDS is true to decide what input cloud fields are available to
+be vertically interpolated.
+
+spectral:  logical specifying whether gridded data or GFS spectral
+files are to be used.
+
+direct_temp:  a logical switch specifying whether the temperature field 
+is vertically interpolated from the source model temperatures 
+(direct_temp = .true.) or is derived from the NMMB layer thicknesses 
+(direct_temp=.false.)
+
+NCEP_PROC, NCEP_PROC_GRIB2,  DO_GWD:   Logical variables specifying whether geogrid 
+produced static fields will be replaced by their Gayno code equivalents 
+(NCEP_PROC), and whether the additional GWD fields are desired in the 
+model input file (DO_GWD).  Setting NCEP_PROC to .true. is strongly
+recommended.  NCEP_PROC_GRIB2 writes the intermediate files as GRIB2, and needs
+to be true for moving nests.
+
+moving_nests:  Logical variable specifying whether full domain fields at nest
+resolution need to be created.  If true, NCEP_PROC_GRIB2 must also be true.
+   
+DO_CLOUDS:  Logical variable telling whether initial cloud fields should
+be produced or not.  Requires use of NAM grid 221 or GFS data.
+
+USE_IGBP:  If set to 1, the IGBP land classes will be utilized.  If 0, the older, USGS land classes
+are used.
+
+5)  Specify the paths for PACKROOT (holding location for scripts, tables, namelists), and 
+WORKROOT (where the NPS will run).  The defaults should be fine on WCOSS or
+ZEUS, but can be tailored to the users' needs.  
+
+6)  Run the intialization codes by run executing the build_namelists.scr 
+script, which will fill values into namelists and submit the  
+job to run.  Assuming a regional initialization, the WORKDIR path should end up 
+with a input_domain_01 file (initial conditions), and a set 
+of boco.XXXX files (boundary condition files, XXXX is the forecast hour 
+of the beginning of the period for which the boundary tendencies are 
+valid).  It also will produce a nemsio version of the input file 
+(input_domain_01_nemsio).  If running with nests, input_domain_xx and
+input_domain_xx_nemsio files also will be produced.

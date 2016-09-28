@@ -1,0 +1,27 @@
+#! /bin/ksh
+
+# @ step_name = run_wps_nemsinterp
+# @ output = nemsinterp.log
+# @ error = nemsinterp.log
+# @ notification = never
+# @ wall_clock_limit = 00:02:29
+# @ job_type = parallel
+# @ total_tasks = 1
+# @ node=1
+# @ arguments = NMM
+# @ class=dev
+# @ group=devonprod
+# @ resources=ConsumableCPUS(1)ConsumableMemory(1200 MB)
+# @ node_usage=shared
+# @ account_no=HRW-T2O
+# @ network.MPI = csss,shared,us
+# @ queue
+
+cd /meso/save/wx20py/NMMB_init_package/WPS_bgrid/
+
+rm -rf temp.*
+rm -rf cored*
+rm test_input_umo*
+rm boco.*
+
+./nemsinterp.exe > nemsinterp.log_1 2>&1

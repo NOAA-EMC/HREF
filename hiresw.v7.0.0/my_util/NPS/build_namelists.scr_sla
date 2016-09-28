@@ -1,0 +1,323 @@
+#! /bin/ksh
+
+######################################
+### MODEL CORE, MAP PROJECTION
+######################################
+
+# NMB (B-grid NMM) most thoroughly supported
+# SLA (Semi-Langrangian A-grid) partially supported
+
+core=SLA
+
+# lambert, mercator, latlon for SLA
+# rotated_ll for NMB
+
+projection=lambert
+
+######################################
+### GLOBAL/REGIONAL
+######################################
+
+# 1=yes, 0=no
+global=0
+
+if [ $global -eq 1 ]
+then
+log_glob=.true.
+txt_glob=true
+else
+log_glob=.false.
+txt_glob=false
+fi
+
+######################################
+### DATE AND LENGTH OF RUN
+######################################
+
+start_yr=2008
+start_mn=09
+start_dy=08
+start_hr=00
+
+end_yr=2008
+end_mn=09
+end_dy=09
+end_hr=00
+
+run_hr=24
+
+bc_interval=21600
+
+######################################
+### DOMAIN DIMENSIONS AND GRID SPACING
+######################################
+
+
+#############  keep num_domains = 1 
+#############  unless want nesting
+num_domains=1
+#############
+#############
+
+nx=321
+ny=221
+nz=40
+
+# dx=.121392
+# dy=.115336
+
+dx=11000
+dy=11000
+
+nxnest1=451
+nynest1=301
+nest1ratio=3
+
+nxnest2=349
+nynest2=199
+nest2ratio=9
+
+######################################
+### DOMAIN LOCATION
+######################################
+
+cenlat=30.0
+cenlon=-80.0
+
+truelat1=60.0
+truelat2=30.0
+projcenlon=-120.0
+
+nest1cenlat=55.0
+nest1cenlon=-85.0
+
+nest2cenlat=38.0
+nest2cenlon=-119.0
+
+######################################
+### TIME STEP FOR PARENT/NEST
+######################################
+
+dt_whole=30
+dt_num=0
+dt_denom=1
+
+dt_whole_nest1=10
+dt_num_nest1=0
+dt_denom_nest1=1
+
+######################################
+### GRID DECOMP, V. COORD DETAILS
+######################################
+
+ntaskx=6
+ntasky=10
+
+PTOP=1000.
+PTSGM=42000.
+
+## levels="1.00,0.98,0.96,0.94,0.92,0.90,0.88,0.86,0.84,0.82,0.80,0.78,0.76,0.74,0.72,0.70,0.68,0.66,0.64,0.62,0.60,0.58,0.56,0.54,0.52,0.50,0.48,0.46,0.42,0.38,0.34,0.30,0.26,0.22,0.18,0.15,0.12,0.09,0.06,0.03,0.00"
+
+direct_temp=.true.
+
+# echo $levels
+
+######################################
+######## NO CHANGES BELOW ############
+######################################
+
+wpsioform=1
+
+if [ $global -eq 1 ]
+then
+
+let nxminus="$nx-1"
+
+echo HAVE NX $nx
+xlf90 -o find_factors.x find_factors.F
+echo $nx > itag
+
+cat itag
+
+val=`find_factors.x < itag`
+
+echo $val
+
+let targetnx="$val+1"
+
+# if [ $val -ne $nx ]
+if [ $val -ne $nxminus ]
+then
+echo "reset dimension so nx is: " $targetnx
+# let nx="$targetnx + 0"
+# echo $nx
+echo "recompute dx value as well"
+exit
+else
+echo "believe global value for nx is okay"
+fi
+
+
+fi
+# exit
+
+### new WPS code needs "+1" dimensions
+
+let nxplus="$nx+1"
+let nyplus="$ny+1"
+let nzplus="$nz+1"
+
+let nxplusnest1="$nxnest1+1"
+let nyplusnest1="$nynest1+1"
+
+let nxplusnest2="$nxnest2+1"
+let nyplusnest2="$nynest2+1"
+
+echo log_glob $log_glob
+
+cat namelist.wps_input_sla | sed s:MAX_DOM:$num_domains:g | sed s:YSTART:$start_yr:g | sed s:MSTART:${start_mn}:g |  \
+                         sed s:COREIN:$core:g | sed s:PROJIN:$projection:g | \
+                         sed s:TRUELAT1:$truelat1:g | sed s:TRUELAT2:$truelat2:g |  \
+                         sed s:PROJCENLON:$projcenlon:g | \
+                         sed s:DSTART:$start_dy:g   | sed s:HSTART:${start_hr}:g | \
+                         sed s:YEND:$end_yr:g | sed s:MEND:$end_mn:g |  \
+                         sed s:DEND:$end_dy:g | sed s:HEND:$end_hr:g |  \
+                         sed s:NUMX:$nxplus: | sed s:NUMY:$nyplus: | \
+                         sed s:NUMX_NEST1:$nxplusnest1:g | sed s:NUMY_NEST1:$nyplusnest1:g | \
+                         sed s:NUMX_NEST2:$nxplusnest2:g | sed s:NUMY_NEST2:$nyplusnest2:g | \
+                         sed s:DELTAX:$dx: | sed s:DELTAY:$dy: | \
+                         sed s:CENLAT:$cenlat:g | sed s:CENLON:$cenlon:g | \
+                         sed s:NEST1_CENTLAT:$nest1cenlat:g | sed s:NEST1_CENTLON:$nest1cenlon:g | \
+                         sed s:NEST2_CENTLAT:$nest2cenlat:g | sed s:NEST2_CENTLON:$nest2cenlon:g | \
+                         sed s:TDIRECT_IN:$direct_temp:g | sed s:GLOBALIN:$log_glob:g | \
+                         sed s:PTIN:$PTOP:g | sed s:PTSGMIN:$PTSGM:g | sed s:NZIN:$nz:g | \
+                         sed s:IOFORM:$wpsioform:g | sed s:LEVSIN:$levels:g | \
+                         sed s:INTERVAL:$bc_interval:g   > namelist.nps
+
+
+################################
+
+### umo code uses true dimensions
+
+if [ $global -eq 1 ]
+then
+wbd=-180.0
+sbd=-90.0
+
+# let nzminus="$nz-1"
+
+else
+
+# let nxminus="$nx-1"
+# let nyminus="$ny-1"
+# let nzminus="$nz-1"
+
+let wbdnum="$nx/2"
+let sbdnum="$ny/2"
+
+wbd=`echo "$wbdnum"*"$dx"*"-1" | bc -l`
+echo resulting wbd is $wbd
+sbd=`echo "$sbdnum"*"$dy"*"-1" | bc -l`
+echo resulting sbd is $sbd
+
+# bc |&
+# print -p $wbdnum*$dx*-1
+# read -p wbd
+# print -p $sbdnum*$dy*-1
+# read -p sbd
+
+fi
+
+
+echo dt_num $dt_num
+echo dt_denom $dt_denom
+
+cat configfile_regional_new_in | sed s:YSTART:$start_yr: | sed s:MSTART:${start_mn}: |  \
+                        sed s:DSTART:$start_dy:   | sed s:HSTART:${start_hr}: | \
+                        sed s:RUNHOURS:$run_hr: | \
+                        sed s:NUMX:$nx: | sed s:NUMY:$ny: | \
+                        sed s:NUMZ:$nz: |  \
+                        sed s:CENLAT:$cenlat:g | sed s:CENLON:$cenlon:g | \
+                        sed s:GLOBAL_LOGICAL:$txt_glob: | \
+                        sed s:COMPUTE_WBD:$wbd: | sed s:COMPUTE_SBD:$sbd: |  \
+                        sed s:DT_INT:$dt_whole: | sed s:DT_NUM:$dt_num: | \
+                        sed s:DT_DEN:$dt_denom: | sed s:NTASKX:$ntaskx: |  \
+	                sed s:NTASKY:$ntasky: > configfile_regional_new_parent
+
+cat configfile_regional_new_in_was | sed s:YSTART:$start_yr: | sed s:MSTART:${start_mn}: |  \
+                        sed s:DSTART:$start_dy:   | sed s:HSTART:${start_hr}: | \
+                        sed s:RUNHOURS:$run_hr: | \
+                        sed s:NUMX:$nx: | sed s:NUMY:$ny: | \
+                        sed s:NUMZ:$nz: |  \
+                        sed s:CENLAT:$cenlat:g | sed s:CENLON:$cenlon:g | \
+                        sed s:GLOBAL_LOGICAL:$txt_glob: | \
+                        sed s:COMPUTE_WBD:$wbd: | sed s:COMPUTE_SBD:$sbd: |  \
+                        sed s:DT_INT:$dt_whole: | sed s:DT_NUM:$dt_num: | \
+                        sed s:DT_DEN:$dt_denom: | sed s:NTASKX:$ntaskx: |  \
+	                sed s:NTASKY:$ntasky: > configfile_regional_new_parent_was
+
+cp configfile_regional_new_parent  ./test_umo/newest/configfile_regional_new
+cp configfile_regional_new_parent_was  ./test_umo/nmmb_repository_20080421/configfile_regional_new
+
+if [ $global -eq 1 ]
+then
+
+cat configfile_global_new_in | sed s:YSTART:$start_yr: | sed s:MSTART:${start_mn}: |  \
+                        sed s:DSTART:$start_dy:   | sed s:HSTART:${start_hr}: | \
+                        sed s:RUNHOURS:$run_hr: | \
+                        sed s:NUMX:$nx: | sed s:NUMY:$ny: | \
+                        sed s:NUMZ:$nz: |  \
+                        sed s:CENLAT:$cenlat:g | sed s:CENLON:$cenlon:g | \
+                        sed s:GLOBAL_LOGICAL:$txt_glob: | \
+                        sed s:COMPUTE_WBD:$wbd: | sed s:COMPUTE_SBD:$sbd: |  \
+                        sed s:DT_INT:$dt_whole: | sed s:DT_NUM:$dt_num: | \
+                        sed s:DT_DEN:$dt_denom: | sed s:NTASKX:$ntaskx: |  \
+	                sed s:NTASKY:$ntasky: > configfile_global_new_parent
+
+cp configfile_global_new_parent  ./test_umo/newest/configfile_global_new
+
+fi
+
+
+## NEST1
+
+let nx="$nxplusnest1-1"
+let ny="$nyplusnest1-1"
+let wbdnum="$nx/2"
+let sbdnum="$ny/2"
+
+echo wbdnum $wbdnum
+echo sbdnum $sbdnum
+
+newdx=`echo "$dx"/"$nest1ratio" | bc -l `
+newdy=`echo "$dy"/"$nest1ratio" | bc -l `
+wbd=`echo "$wbdnum"*"$newdx"*-1 | bc -l `
+sbd=`echo "$sbdnum"*"$newdy"*-1 | bc -l `
+
+echo newdx $newdx
+echo newdy $newdy
+echo wbd $wbd
+echo sbd $sbd
+
+cat configfile_regional_new_in | sed s:YSTART:$start_yr: | sed s:MSTART:${start_mn}: |  \
+                        sed s:DSTART:$start_dy:   | sed s:HSTART:${start_hr}: | \
+                        sed s:RUNHOURS:$run_hr: | \
+                        sed s:NUMX:$nx: | sed s:NUMY:$ny: | \
+                        sed s:NUMZ:$nz: |  \
+                        sed s:CENLAT:$nest1cenlat:g | sed s:CENLON:$nest1cenlon:g | \
+                        sed s:GLOBAL_LOGICAL:$txt_glob: | \
+                        sed s:COMPUTE_WBD:$wbd: | sed s:COMPUTE_SBD:$sbd: |  \
+                        sed s:DT_INT:$dt_whole_nest1: | sed s:DT_NUM:$dt_num_nest1: | \
+                        sed s:DT_DEN:$dt_denom_nest1: | sed s:NTASKX:$ntaskx: |  \
+                        sed s:NTASKY:$ntasky: > configfile_regional_new_nest1
+
+ls -l configfile_regional_new_nest1
+
+cp configfile_regional_new_nest1  ./test_umo/newest/configfile_regional_new_nest1
+
+cat run_wps.ll_input_combined | sed s:YSTART:${start_yr}: | sed s:MSTART:${start_mn}: | \
+                    sed s:COREIN:$core:g | \
+                    sed s:DSTART:${start_dy}: | sed s:HSTART:${start_hr}: > run_wps_real.ll
+
+
+llsubmit run_wps_real.ll

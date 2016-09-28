@@ -1,0 +1,69 @@
+&share
+ wrf_core = 'NMB',
+ max_dom = MAX_DOM,
+ start_date = 'YSTART-MSTART-DSTART_HSTART:00:00', 'YSTART-MSTART-DSTART_HSTART:00:00', 'YSTART-MSTART-DSTART_HSTART:00:00'
+ end_date   = 'YEND-MEND-DEND_HEND:00:00', 'YEND-MEND-DEND_HEND:00:00', 'YEND-MEND-DEND_HEND:00:00'
+ interval_seconds = INTERVAL
+ io_form_geogrid = IOFORM,
+ debug_level = 50 
+/
+
+&geogrid
+ parent_id =           0, 1, 2
+ parent_grid_ratio =   1, RATIO1, RATIO2
+ s_we           = 1, 1, 1
+ e_we           = NUMX, NUMX_NEST1, NUMX_NEST2
+ s_sn           = 1, 1, 1
+ e_sn           = NUMY, NUMY_NEST1, NUMY_NEST2
+ geog_data_res  = '2m', '2m', '2m'
+ dx = DELTAX
+ dy = DELTAY
+ map_proj = 'rotated_llb'
+ ref_lat   = CENLAT
+ ref_lon   = CENLON
+ dom_cen_lat = CENLAT, NEST1_CENTLAT, NEST2_CENTLAT
+ dom_cen_lon = CENLON, NEST1_CENTLON, NEST2_CENTLON
+ truelat1  =  CENLAT
+ truelat2  =  CENLAT
+ stand_lon =  CENLON
+ geog_data_path = '/scratch4/NCEPDEV/meso/noscrub/Matthew.Pyle/geog'
+ ncep_processing = NCEP_PROC 
+ ncep_proc_path = ''
+ ncep_proc_prefix = 'b'
+ ncep_proc_domain_type = 'bgrid'
+ do_gwd = DO_GWD
+ just_last = JUST_LAST
+ ignore_gridgen_sfc = IGNORE_GRIDGEN
+ use_igbp = USE_IGBP_LOG
+ ncep_proc_grib2 = NCEP_PROC_GRIB2
+ movable_nests = MOVE_NESTS
+/
+
+&ungrib
+ out_format = 'WPS'
+ spectral = SPECTRAL
+/
+
+&metgrid
+ fg_name = './FILE'
+ io_form_metgrid = IOFORM, 
+/
+ opt_output_from_metgrid_path = './',
+ opt_metgrid_tbl_path         = 'metgrid/',
+ opt_ignore_dom_center        = .false.
+ constants_name = './TAVGSFC'
+
+&nemsinterp
+ pt = PTIN
+ ptsgm = PTSGMIN
+ nz = NZIN
+ direct_temp = TDIRECT_IN
+ global = GLOBALIN
+ do_clouds = DO_CLOUDS
+ grib_src = 'GRIBSRC'
+ boundary_flux = .true.
+ lnsh = LNSH
+ lnsv = LNSV
+ vcoord = VCOORD_OPT
+ coord_levs = LEVSIN
+/
