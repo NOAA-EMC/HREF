@@ -1,6 +1,9 @@
 HLCY:3000-0 m above ground:
 USTM:6000-0 m above ground:
 VSTM:6000-0 m above ground:
+VUCSH:0-6000 m above ground:
+VVCSH:0-6000 m above ground:
+CPOFP:surface:
 TMP:30-0 mb above ground:
 RH:30-0 mb above ground:
 UGRD:30-0 mb above ground:

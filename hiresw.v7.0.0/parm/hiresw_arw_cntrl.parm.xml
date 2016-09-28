@@ -412,6 +412,15 @@
          <scale> 3.0</scale>
       </param>
 
+    <param>
+       <post_avblfldidx>172</post_avblfldidx>
+       <shortname>CPOFP_ON_SURFACE</shortname>
+       <pname>CPOFP</pname>
+       <fixed_sfc1_type>surface</fixed_sfc1_type>
+       <scale>4.0</scale>
+    </param>
+
+
        <param>
        <shortname>VIS_ON_SURFACE</shortname>
        <pname>VIS</pname>
@@ -717,6 +726,18 @@
        <table_info>NCEP</table_info>
          <scale>-4.0</scale>
       </param>
+
+       <param>
+       <shortname>VUCSH_ON_SPEC_HGT_LVL_ABOVE_GRND_0-6km</shortname>
+       <pname>VUCSH</pname>
+       <scale>3.0</scale>
+       </param>
+
+       <param>
+       <shortname>VVCSH_ON_SPEC_HGT_LVL_ABOVE_GRND_0-6km</shortname>
+       <pname>VVCSH</pname>
+       <scale>3.0</scale>
+       </param>
 
        <param>
        <shortname>MAX_MAXUW_ON_SPEC_HGT_LVL_ABOVE_GRND_10m</shortname>
