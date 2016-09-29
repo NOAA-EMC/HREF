@@ -14,12 +14,12 @@
  i_parent_start =      1, 31
  j_parent_start =      1, 17
  s_we           = 1, 1,
- e_we           = 1188,112,
+ e_we           = 1386,112,
  s_sn           = 1, 1,
- e_sn           = 972,97,
+ e_sn           = 1134,97,
  geog_data_res  = '2m','2m',
- dx = 3500.,
- dy = 3500.,
+ dx = 3000.,
+ dy = 3000.,
  map_proj = 'lambert',
  ref_lat   = 61.0
  ref_lon   = -153.0

@@ -58,19 +58,19 @@
 
 
  &domains
- time_step                           = 24,
+ time_step                           = 18,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 316,    
+ e_we                                = 400,    
  s_sn                                = 1,     
- e_sn                                = 253,    
+ e_sn                                = 320,    
  s_vert                              = 1,     
  e_vert                              = 51,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3800, 
- dy                                  = 3800, 
+ dx                                  = 3000, 
+ dy                                  = 3000, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
@@ -94,7 +94,7 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x=6
- nproc_y=11
+ nproc_y=24
  /
 
  &physics
@@ -161,6 +161,6 @@
  /
 
  &namelist_quilt
- nio_tasks_per_group = 2,
+ nio_tasks_per_group = 6,
  nio_groups = 1,
  /

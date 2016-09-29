@@ -58,19 +58,19 @@
 
 
  &domains
- time_step                           = 25,
- time_step_fract_num                 = 0,
- time_step_fract_den                 = 1,
+ time_step                           = 18,
+ time_step_fract_num                 = 3,
+ time_step_fract_den                 = 4,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 305,    
+ e_we                                = 386,    
  s_sn                                = 1,     
- e_sn                                = 270,    
+ e_sn                                = 342,    
  s_vert                              = 1,     
  e_vert                              = 51,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3800, 
- dy                                  = 3800, 
+ dx                                  = 3000, 
+ dy                                  = 3000, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
