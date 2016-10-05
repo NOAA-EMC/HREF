@@ -78,7 +78,9 @@
       use ctlblk_mod, only: me, num_procs, jm, jsta, jend, jsta_m, jsta_m2,&
               jend_m, jend_m2, iup, idn, icnt, im, idsp, jsta_2l, jend_2u,&
               jvend_2u, lm, lp1, jsta_2l, jend_2u, nsoil, nbin_du, nbin_ss,&
-              nbin_bc, nbin_oc, nbin_su
+              nbin_bc, nbin_oc, nbin_su,&
+              arw_icnt,arw_icnt_u,arw_icnt_v, &
+              arw_idsp,arw_idsp_u,arw_idsp_v
 
 !
 !      use params_mod
@@ -87,7 +89,7 @@
 !
       include 'mpif.h'
 !
-      integer ierr,i,jsx,jex
+      integer ierr,i,jsx,jex, jsxx, jexx
 !
       if ( me .eq. 0 ) then
 !        print *, ' NUM_PROCS = ',num_procs
@@ -142,13 +144,29 @@
 !
 !     counts, disps for gatherv and scatterv
 !
+! how about icnt_u, icnt_v for staggered vars?
+
       do i = 0, num_procs - 1
          call para_range(1,jm,num_procs,i,jsx,jex) 
          icnt(i) = (jex-jsx+1)*im
          idsp(i) = (jsx-1)*im
+
+         call para_range_offset(1,jm,2,num_procs,i,jsx,jex)
+         arw_icnt(i) = (jex-jsx+1)*(im)
+         arw_idsp(i) = (jsx-1)*(im)
+         arw_icnt_u(i) = (jex-jsx+1)*(im+1)
+         arw_idsp_u(i) = (jsx-1)*(im+1)
+         call para_range_offset(1,jm+1,2,num_procs,i,jsxx,jexx)
+         arw_icnt_v(i) = (jexx-jsxx+1)*(im)
+         arw_idsp_v(i) = (jsxx-1)*(im)
+
          if ( me .eq. 0 ) then
-           print *, ' i, icnt(i),idsp(i) = ',i,icnt(i),      &
+           write(0,*) ' i, icnt(i),idsp(i) = ',i,icnt(i),      &
             idsp(i)
+           write(0,*) ' i, arw_icnt_u(i),arw_idsp_u(i) = ',i,arw_icnt_u(i),      &
+            arw_idsp_u(i)
+           write(0,*) ' i, arw_icnt_v(i),arw_idsp_v(i) = ',i,arw_icnt_v(i),      &
+            arw_idsp_v(i)
          end if
       end do
 !
