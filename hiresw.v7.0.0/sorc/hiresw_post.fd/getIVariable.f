@@ -52,8 +52,10 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
  ! the portion of VarBuff that is needed for this task.
 
    use wrf_io_flags_mod, only:
+   use ctlblk_mod, only: me, MPI_COMM_COMP
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    implicit none
+   include "mpif.h"
 !
    character(len=256) ,intent(in) :: fileName
    character(len=19) ,intent(in) :: DateStr
@@ -63,12 +65,14 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
    integer,intent(in) :: IM,LM,JSTA_2L,JEND_2U
    integer,intent(in) :: IM1,LM1,JS,JE
    integer :: ndim
-   integer :: WrfType,i,j,l,ll
+   integer :: WrfType,i,j,l,ll,K,INDEX,sizesend
    integer, dimension(4) :: start_index, end_index
    character (len= 4) :: staggering
    character (len= 3) :: ordering
    character (len=80), dimension(3) :: dimnames
    integer, allocatable, dimension(:,:,:,:) :: data
+   integer, allocatable, dimension(:) :: data_1d
+
 !   real, allocatable, dimension(:,:,:,:) :: data
    integer :: ierr
    character(len=132) :: Stagger
@@ -77,6 +81,9 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
    end_index = 1
 !     write(*,*)'fileName,DateStr,dh,VarName in getVariable= ',fileName,DateStr,dh,VarName
    call ext_int_get_var_info(dh,TRIM(VarName),ndim,ordering,Stagger,start_index,end_index,WrfType,ierr)
+      call mpi_bcast(ndim,1,MPI_integer,0,MPI_COMM_COMP,ierr)
+      call mpi_bcast(end_index,4,MPI_integer,0,MPI_COMM_COMP,ierr)
+
 !     write(*,*)'VarName,end_index(1,2,3)= ',VarName,end_index(1),end_index(2),end_index(3)   
    IF ( ierr /= 0 ) THEN
      write(*,*)'Error: ',ierr,TRIM(VarName),' not found in ',fileName
@@ -95,6 +102,12 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
 !           trim(VarName), ndim, end_index(1), end_index(2), end_index(3), &
 !           trim(ordering), trim(DateStr)
    allocate(data (end_index(1), end_index(2), end_index(3), 1))
+
+        if (allocated(data_1d)) then
+                deallocate(data_1d)
+        endif
+
+   if (ME .eq. 0) then
    call ext_int_read_field(dh,DateStr,TRIM(VarName),data,WrfType,0,0,0,ordering,&
                              staggering, dimnames , &
                              start_index,end_index, & !dom 
@@ -129,6 +142,49 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
    if (ndim.gt.3) then
      write(*,*) 'Error: ndim = ',ndim
    endif 
+
+   else
+        write(0,*) 'skipped ext_int_read_field'
+        endif
+
+        sizesend=(end_index(1)-start_index(1)+1)* &
+                 (end_index(2)-start_index(2)+1)* &
+                 (end_index(3)-start_index(3)+1)
+
+! note, the complication added by converting to data_1d did not
+! allow the code to get any further along.
+
+        allocate(data_1d(sizesend))
+        data_1d=0.
+
+        if (ME .eq. 0) then
+        do J=1,end_index(3)
+        do K=1,end_index(2)
+        do I=1,end_index(1)
+        INDEX=(J-1)*(end_index(2)*end_index(1))+((K-1)*end_index(1))+I
+        data_1d(INDEX)=data(I,K,J,1)
+        enddo
+        enddo
+        enddo
+        endif
+
+        write(0,*) 'size(data_1d) sizesend: ', size(data_1d), sizesend
+
+      call mpi_bcast(data_1d,sizesend,MPI_integer,0,MPI_COMM_COMP,ierr)
+
+
+
+
+        do J=1,end_index(3)
+        do K=1,end_index(2)
+        do I=1,end_index(1)
+        INDEX=(J-1)*(end_index(2)*end_index(1))+((K-1)*end_index(1))+I
+        data(I,K,J,1)=data_1d(INDEX)
+        enddo
+        enddo
+        enddo
+
+        write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
 
    if (ndim .eq. 0)then
     VarBuff(1,1,1)=data(1,1,1,1)
