@@ -391,7 +391,7 @@
 !      call getVariable(fileName,DateStr,DataHandle,'U',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
 
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
 
       do l = 1, lm
@@ -421,7 +421,7 @@
 
 
       VarName='V'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JEV,LM)
       do l = 1, lm
        do j = jsta_2l, jev
@@ -444,8 +444,9 @@
 !      print*,'finish reading V'
 !      print*,'VH at ',ii,jj,ll,' = ',VH (ii,jj,ll)
 
+
       VarName='W'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       & 
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       & 
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
 !      do l = 1, lm+1
 !       do j = jsta_2l, jend_2u
@@ -467,11 +468,11 @@
 
 
       VarName='PH'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D2,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
 
       VarName='PHB'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM+1)
 
       print*,'finish reading geopotential'
@@ -497,7 +498,7 @@
 !      call getVariableB(fileName,DateStr,DataHandle,'T',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
       VarName='T'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
       do l = 1, lm
        do j = jsta_2l, jend_2u
@@ -515,6 +516,7 @@
 !
 ! reading sfc pressure
       VarName='MU'
+	write(0,*) 'call for MU'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
         IM,1,JM,1,IM,JS,JE,1)
       VarName='MUB'
@@ -538,11 +540,11 @@
 !        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='P'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D2,     &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D2,     &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
       VarName='PB'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !
       do l = 1, lm
@@ -651,7 +653,7 @@
   979  continue
 
 !      VarName='P_HYD'
-!      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+!      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
 !        IM+1,1,JM+1,LM+1,IM+1,JS,JE,LM)
 
 ! reading 2 m mixing ratio 
@@ -765,7 +767,7 @@
 
 ! reading water vapor mixing ratio
       VarName='QVAPOR'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QVAPOR',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -894,7 +896,7 @@
  
       if(imp_physics.ne.5 .and. imp_physics.ne.0)then 
       VarName='QCLOUD'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -920,7 +922,7 @@
 
       if(imp_physics.ne.5 .and. imp_physics.ne.0)then
       VarName='QRAIN'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -946,7 +948,7 @@
       if(imp_physics.ne.1 .and. imp_physics.ne.3                        &
         .and. imp_physics.ne.5 .and. imp_physics.ne.0)then
       VarName='QICE'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -963,7 +965,7 @@
       if(imp_physics.ne.1 .and. imp_physics.ne.3                         &
        .and. imp_physics.ne.5 .and. imp_physics.ne.0)then
       VarName='QSNOW'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -980,7 +982,7 @@
       if(imp_physics.eq.2 .or. imp_physics.eq.6                         &
             .or. imp_physics.eq.8)then
       VarName='QGRAUP'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1021,7 +1023,7 @@
        end do
       else
        VarName='CWM'
-       call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+       call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
          IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
        do l = 1, lm
         do j = jsta_2l, jend_2u
@@ -1051,7 +1053,7 @@
 !
 ! reading soil temperature
       VarName='TSLB'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
       do l = 1, nsoil
        do j = jsta_2l, jend_2u
@@ -1172,7 +1174,7 @@
 !
 ! reading soil moisture
       VarName='SMOIS'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
       do l = 1, nsoil
        do j = jsta_2l, jend_2u
@@ -1186,7 +1188,7 @@
 !     &,smc(ii,jj,3),smc(ii,jj,4),smc(ii,jj,5)
 
       VarName='SH2O'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
        
       do l = 1, nsoil
@@ -1199,7 +1201,7 @@
 
 !off
 !      VarName='SMCREL'
-!      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+!      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,      &
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,NSOIL)
 
       VarName='SEAICE'
@@ -1604,7 +1606,7 @@
       if(imp_physics .eq. 5)then
 
       VarName='F_ICE_PHY'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1617,7 +1619,7 @@
       end do
 
       VarName='F_RAIN_PHY'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1630,7 +1632,7 @@
       end do
 
       VarName='F_RIMEF_PHY'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,       &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 !      call getVariable(fileName,DateStr,DataHandle,'QCLOUD',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
@@ -1953,7 +1955,7 @@
 !        IM,1,JM,1,IM,JS,JE,1)
 
       VarName='REFL_10CM'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
       do l = 1, lm
@@ -1966,7 +1968,7 @@
       end do
 
       VarName='CLDFRA'
-      call getVariableBikj(fileName,DateStr,DataHandle,VarName,DUM3D,      &
+      call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,      &
         IM+1,1,JM+1,LM+1,IM,JS,JE,LM)
 
       do l = 1, lm

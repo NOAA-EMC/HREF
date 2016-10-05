@@ -7,11 +7,12 @@ TARGET   = ../../exec/hiresw_post
 # CPP, Compiler, and Linker Options
 #
 #FC       = ${COMP_MP} -compiler ${COMPILER}
-FC       = ${COMP_MP}
+FC       = ${COMP_MP} -assume noold_ldout_format
 CC       = ${C_COMP}
 CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
 CFLAGS= -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long'
+# OPTS     = -O3 -fp-model strict -assume noold_ldout_format 
 OPTS     = -O3 -fp-model fast -assume noold_ldout_format 
 FREE     = -FR
 TRAPS    = # -ftrapuv  -check all  -fp-stack-check  -fstack-protector
@@ -91,8 +92,7 @@ LIBS     = $(WRF_LIB) \
            $(NETCDF_LIB)
 
 
-OBJS =  wrf_io_flags.o getVariable.o getIVariable.o getIVariableN.o \
-        getVariableB.o \
+OBJS =  wrf_io_flags.o getVariable.o getIVariableN.o \
         kinds_mod.o machine.o physcons.o      \
         native_endianness.o blockIO.o initialize_byte_swap_wrf_binary_file.o \
         count_recs_wrf_binary_file.o inventory_wrf_binary_file.o \
@@ -102,6 +102,7 @@ OBJS =  wrf_io_flags.o getVariable.o getIVariable.o getIVariableN.o \
         CMASSI.o CTLBLK.o GRIDSPEC.o LOOKUP.o PARAMR.o RHGRD.o RQSTFLD.o \
         cuparm.o params.o svptbl.o get_postfilename.o grib2_module.o \
         SET_LVLSXML.o FILL_PSETFLD.o \
+        getVariableB.o getIVariable.o \
         BNDLYR.o BOUND.o CALCAPE.o CALDWP.o CALDRG.o CALHEL.o CALLCL.o \
         CALMCVG.o CALPOT.o CALPW.o CALRH.o CALRCH.o CALRH_GSD.o \
         CALSTRM.o CALTAU.o CALTHTE.o CALVIS.o CALVIS_GSD.o CALVOR.o CALWXT.o \
