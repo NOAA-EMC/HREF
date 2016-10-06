@@ -72,7 +72,7 @@ export mdl=$RUNTYP
 #SMARTINIT OUTPUT grid filename extension
 outreg=$rg
 case $RUNTYP in
-  conusnsslarw) rg=conus; outreg=conusnssl; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
+  conusmem2arw) rg=conus; outreg=conusmem2; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   conusarw|conusnmmb) rg=conus; outreg=conus; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   hiarw|hinmmb) rg=hi; compress="jpeg";outreg=hi; wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
   prarw|prnmmb) rg=pr; compress="jpeg"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
@@ -172,7 +172,7 @@ grdextmerc=" 0 64 2500 2500"
       grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
       topopre=ruc2_ndfd_elevtiles.ndfd2.5
       maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
-     conusnsslarw)  sgrb=212;ogrd=184 
+     conusmem2arw)  sgrb=212;ogrd=184 
       grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
       topopre=ruc2_ndfd_elevtiles.ndfd2.5
       maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
@@ -314,7 +314,7 @@ fi
   typeset -Z2 fhr1 fhr2 fhr3 fhr6 fhr9 fhr12 fhr ffhr
 
 
-# do in 8-9 pieces (conus only??)
+# do in 13 pieces (conus only??)
 
 INF=${COMIN}/hiresw.t${cyc}z.$mdl.${natgrd}${fhr}
 
@@ -326,12 +326,17 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_5 list_5.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_6 list_6.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_7 list_7.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_8 list_8.txt
+cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_9 list_9.txt
+cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_10 list_10.txt
+cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_11 list_11.txt
+cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_12 list_12.txt
 cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_nn list_nn.txt
 
 
 if [ -e inputs.grb2_1 ]
 then
-rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_6 inputs.grb2_7 inputs.grb2_8 inputs.grb2_nn
+rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_6 inputs.grb2_7 inputs.grb2_8 
+rm inputs.grb2_9 inputs.grb2_10 inputs.grb2_11 inputs.grb2_12  inputs.grb2_nn 
 fi
 
 $WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1 $INF
@@ -342,6 +347,10 @@ $WGRIB2 $INF | grep -F -f list_5.txt | $WGRIB2 -i -grib inputs.grb2_5 $INF
 $WGRIB2 $INF | grep -F -f list_6.txt | $WGRIB2 -i -grib inputs.grb2_6 $INF
 $WGRIB2 $INF | grep -F -f list_7.txt | $WGRIB2 -i -grib inputs.grb2_7 $INF
 $WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8 $INF
+$WGRIB2 $INF | grep -F -f list_9.txt | $WGRIB2 -i -grib inputs.grb2_9 $INF
+$WGRIB2 $INF | grep -F -f list_10.txt | $WGRIB2 -i -grib inputs.grb2_10 $INF
+$WGRIB2 $INF | grep -F -f list_11.txt | $WGRIB2 -i -grib inputs.grb2_11 $INF
+$WGRIB2 $INF | grep -F -f list_12.txt | $WGRIB2 -i -grib inputs.grb2_12 $INF
 $WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
 
 rm wgrib2.poe
@@ -349,7 +358,7 @@ rm wgrib2.poe
 if [ -e model.ndfd_1 ]
 then
 rm  model.ndfd_1  model.ndfd_2  model.ndfd_3  model.ndfd_4  model.ndfd_5 model.ndfd_6 model.ndfd_nn
-rm  model.ndfd_7 model.ndfd_8
+rm  model.ndfd_7 model.ndfd_8 model.ndfd_9 model.ndfd_10 model.ndfd_11 model.ndfd_12
 fi
 
 echo "#! /bin/ksh" > a.poe
@@ -368,6 +377,16 @@ echo "#! /bin/ksh" > g.poe
 echo "$WGRIB2  inputs.grb2_7  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} m7; $FSYNC m7; mv m7 model.ndfd_7" >> g.poe
 echo "#! /bin/ksh" > h.poe
 echo "$WGRIB2  inputs.grb2_8  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} m8; $FSYNC m8; mv m8 model.ndfd_8" >> h.poe
+echo "#! /bin/ksh" > i.poe
+echo "$WGRIB2  inputs.grb2_9  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} m9; $FSYNC m9; mv m9 model.ndfd_9" >> i.poe
+echo "#! /bin/ksh" > j.poe
+echo "$WGRIB2  inputs.grb2_10  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} m10; $FSYNC m10; mv m10 model.ndfd_10" >> j.poe
+echo "#! /bin/ksh" > k.poe
+echo "$WGRIB2  inputs.grb2_11  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} m11; $FSYNC m11; mv m11 model.ndfd_11" >> k.poe
+echo "#! /bin/ksh" > l.poe
+echo "$WGRIB2  inputs.grb2_12  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} m12; $FSYNC m12; mv m12 model.ndfd_12" >> l.poe
+echo "#! /bin/ksh" > m.poe
+echo "$WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} m_nn; $FSYNC m_nn; mv m_nn model.ndfd_nn" >> m.poe
 
 
 chmod 775 a.poe
@@ -378,6 +397,11 @@ chmod 775 e.poe
 chmod 775 f.poe
 chmod 775 g.poe
 chmod 775 h.poe
+chmod 775 i.poe
+chmod 775 j.poe
+chmod 775 k.poe
+chmod 775 l.poe
+chmod 775 m.poe
 
 echo "#!/bin/ksh" > wgrib2.poe
 echo "a.poe &" >> wgrib2.poe
@@ -388,6 +412,11 @@ echo "e.poe &" >> wgrib2.poe
 echo "f.poe &" >> wgrib2.poe
 echo "g.poe &" >> wgrib2.poe
 echo "h.poe &" >> wgrib2.poe
+echo "i.poe &" >> wgrib2.poe
+echo "j.poe &" >> wgrib2.poe
+echo "k.poe &" >> wgrib2.poe
+echo "l.poe &" >> wgrib2.poe
+echo "m.poe &" >> wgrib2.poe
 echo "wait" >> wgrib2.poe
 
 chmod 775 wgrib2.poe
@@ -398,12 +427,12 @@ time aprun -n 1 -N 1 -d $NTASK wgrib2.poe
 export err=$?;  err_chk
 
 #sleep 60
-sleep 5
+sleep 2
 
-$WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
+# $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
 while (! cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_6 \
-    model.ndfd_7 model.ndfd_8 model.ndfd_nn > NDFD${fhr}.tm00 ) ; do sleep 1; done
+    model.ndfd_7 model.ndfd_8 model.ndfd_9 model.ndfd_10 model.ndfd_11 model.ndfd_12 model.ndfd_nn > NDFD${fhr}.tm00 ) ; do sleep 1; done
 
 
 ###	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
