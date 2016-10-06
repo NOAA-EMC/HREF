@@ -10,8 +10,8 @@
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=2000]
 #
 
-export numprocs=9
-export NTASK=9
+export numprocs=13
+export NTASK=13
 
 export MP_EUILIB=us
 
