@@ -58,19 +58,19 @@
 
 
  &domains
- time_step                           = 17,
- time_step_fract_num                 = 1,
- time_step_fract_den                 = 7,
+ time_step                           = 18,
+ time_step_fract_num                 = 162,
+ time_step_fract_den                 = 191,
  max_dom                             = 1,
  s_we                                = 1,     
- e_we                                = 1386,    
+ e_we                                = 2029,    
  s_sn                                = 1,     
- e_sn                                = 1134,    
+ e_sn                                = 1248,    
  s_vert                              = 1,     
- e_vert                              = 51,    
+ e_vert                              = 41,    
  num_metgrid_levels                  = NUMLEV 
- dx                                  = 3000, 
- dy                                  = 3000, 
+ dx                                  = 3200, 
+ dy                                  = 3200, 
  grid_id                             = 1,     
  parent_id                           = 0,     
  i_parent_start                      = 0,   
@@ -80,12 +80,12 @@
  feedback                            = 1,
  smooth_option                       = 0
  p_top_requested                     = 5000
- eta_levels= 1.00,0.9964,0.992064499,0.987212253,0.981839566,0.976016655,0.969743543,0.962892776,0.954883533,0.944825795,                   
-               0.931793646,0.915691137,0.896874787,0.875889432,0.852895705,0.827744976,0.800231762,0.769937055,0.736977691,
-               0.701283314,0.663409891,0.623582118,0.582252509,0.539702057,0.497172547,0.455771373,0.416627404,0.380207952,
-               0.346667571,0.316524008,0.289661319,0.265805731,0.24400726,0.223617065,0.204217365,0.185688101,0.167952566,
-               0.150977412,0.134759303,0.119334924,0.104760971,0.091074127,0.078274394,0.066328421,0.055189518,0.0447543,
-               0.034896038,0.025504676,0.016543352,0.00800575,0.00
+ eta_levels = 1.00,0.994,0.987,0.979,0.970127778,0.960322222,0.949416667,0.937316667,0.92365,0.90735,0.887675,
+              0.864415,0.838115,0.809215,0.777715,0.743515,0.706815,0.667815,0.627115,0.584915,0.541315,
+              0.496775,0.451675,0.406675,0.362185,0.319185,0.278885,0.242035,0.208755,0.179005,0.152755,
+              0.129397361,0.108324444,0.089244583,0.072279306,0.057307083,0.043841806,0.031494583,0.020119583,
+              0.009619583,0.00
+
  interp_type                         = 1
  lowest_lev_from_sfc                 = .false.
  lagrange_order                      = 1
@@ -94,18 +94,18 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x = 23
- nproc_y = 60
+ nproc_y = 48
  /
 
  &physics
  mp_physics                          = 6,  
- mp_tend_lim                         = 0.07,
+ mp_tend_lim                         = 0.10,
  ra_lw_physics                       = 1,  
  ra_sw_physics                       = 1,   
  radt                                = 10,  
- sf_sfclay_physics                   = 1,  
+ sf_sfclay_physics                   = 2,  
  sf_surface_physics                  = 2,  
- bl_pbl_physics                      = 1,  
+ bl_pbl_physics                      = 2,  
  bldt                                = 0,   
  cu_physics                          = 0,     
  cudt                                = 5,     
@@ -120,7 +120,7 @@
  maxens2                             = 3,
  maxens3                             = 16,
  ensdim                              = 144,
- do_radar_ref                        = 1,
+do_radar_ref                        = 1,
  /
 
  &fdda
@@ -154,14 +154,14 @@
  &grib2
  /
 
-
  &logging
-  compute_slaves_silent=.true.   ! all compute ranks except 0 are silent
-  io_servers_silent=.true.    ! all I/O server ranks are silent
-  stderr_logging=0   ! disable output to stderr except for error messages
+  compute_slaves_silent=.true.
+  io_servers_silent=.true.
+  stderr_logging=0
  /
 
+
  &namelist_quilt
- nio_tasks_per_group = 20,
- nio_groups = 3,
+ nio_tasks_per_group = 24,
+ nio_groups = 2,
  /
