@@ -177,6 +177,16 @@ fi
 if [ $WCOSSCRAY -eq 1 ] 
 then
 
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
 module load prod_envir
 export ndate=$NDATE
 
@@ -251,7 +261,7 @@ use_igbp_log=.false.
 fi
 
 
-npsioform=2
+npsioform=5
 
 if [ $global -eq 1 ]
 then

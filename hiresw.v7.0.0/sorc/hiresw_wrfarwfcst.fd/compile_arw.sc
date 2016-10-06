@@ -16,7 +16,7 @@ TARGDIR=../../exec
 ./clean -a
 cp configure.wrf_wcoss configure.wrf
 
-./compile em_real > compile_arw_fast.log 2>&1
+./compile -j4 em_real > compile_arw_fast.log 2>&1
 
 cp ./main/real.exe $TARGDIR/hiresw_arw_real
 cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
