@@ -63,9 +63,9 @@
  max_orog_tiles=1
  orog_bin_width=300.0
  orog_tile_threshold=0.05
- smooth=3
- num_smooth_passes1=6
- num_smooth_passes2=4
+ smooth=2
+ num_smooth_passes1=0
+ num_smooth_passes2=3
 /
 
 &input_data
