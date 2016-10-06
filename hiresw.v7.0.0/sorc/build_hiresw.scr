@@ -14,27 +14,42 @@ BASE=`pwd`
 ##############################
 
 cd ${BASE}/hiresw_wrfarwfcst.fd
-./compile_arw.sc
+# ./compile_arw.sc_noclean
+# ./compile_arw.sc
 
 echo hiresw_wrfarwfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+##############################
+
+cd ${BASE}/hiresw_nmmbfcst_new.fd/src
+# gmake clean
+# gmake nmm
+# cp ${BASE}/hiresw_nmmbfcst_new.fd/exe/NEMS.x ${BASE}/../exec/hiresw_nmmbfcst_new
+
+echo hiresw_nmmbfcst_new.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+##############################
+
+
+
 ##############################
 
 cd ${BASE}/hiresw_bucket.fd
-make
+# make
 
 echo hiresw_bucket.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_wrfbufr.fd
-make clean
-./fill_wrflibs.scr
-make
+# make clean
+# ./fill_wrflibs.scr
+# make
 
 echo hiresw_wrfbufr.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_wps.fd
-./build.scr
+# ./build.scr
 
 echo hiresw_wps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
@@ -46,6 +61,8 @@ make
 echo hiresw_post.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
+exit
+
 cd ${BASE}/hiresw_nps.fd/NPS/
 ./build.scr
  
@@ -54,11 +71,13 @@ echo hiresw_nps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 module load iobuf
 cd ${BASE}/hiresw_smartinitg2.fd
-make clean
-make
+# make clean
+# make
+
 module unload iobuf
 
 echo hiresw_smartinitg2.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 ##############################
 
 cd ${BASE}/hiresw_smartprecipg2.fd
@@ -75,12 +94,26 @@ make
 echo hiresw_coldstart.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
+cd ${BASE}/emcsfc_coldstart.fd
+make clean
+make
+make install
+
+echo emcsfc_coldstart.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+##############################
+
+exit
+
+
 cd ${BASE}/hiresw_sndp.fd
 make -f makefile_nmm
 make -f makefile_em
+make -f makefile_em_nssl
 
 echo hiresw_sndp.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
+
+exit
 
 cd ${BASE}/hiresw_stnmlist.fd
 make clean
