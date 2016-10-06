@@ -32,9 +32,9 @@ compress="c3 -set_bitmap 1"
 
 mkdir ${DATA}/prdgen_full
 
-if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusnssl1 worked
+	echo conusmem21 worked
  mkdir ${DATA}/prdgen_full_${subpiece}
  cd ${DATA}/prdgen_full_${subpiece}/
 else
@@ -120,9 +120,9 @@ then
   reg="20 6 0 0 0 0 0 0 1649 1105 40530000 -178571000 136 60000000 -150000000 2976000 2976000 0 64"
   reg="20 6 0 0 0 0 0 0 1649 1105 40530000 181429000 136 60000000 2100000000 2976000 2976000 0 64"
   wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976"
-elif [ $DOMIN = "conusarw" -o $DOMIN = "conusnsslarw" ]
+elif [ $DOMIN = "conusarw" -o $DOMIN = "conusmem2arw" ]
 then
-	echo conusnssl2 worked
+	echo conusmem22 worked
   filenamthree="wrf.EMCONUS04"
   DOMIN_bucket="general_g2"
   rg="conus"
@@ -186,9 +186,9 @@ if [ $fhr -eq 0 ]
 then
 
 
-if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusnssl3 worked
+	echo conusmem23 worked
 cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_ndfd.txt_3h hiresw_grid_extract.txt
@@ -201,9 +201,9 @@ then
 
 echo "here for 3hrly beyond f00 with DOMIN_SMALL" $DOMIN_SMALL
 
-if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusnssl4 worked
+	echo conusmem24 worked
 cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_ndfd.txt_3h hiresw_grid_extract.txt
@@ -218,9 +218,9 @@ echo here not three hourly and not zero
 
 
 
-if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusnssl5 worked
+	echo conusmem25 worked
 cp $PARMhiresw/hiresw_ndfd.txt_1h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_ndfd.txt_1h hiresw_grid_extract.txt
@@ -255,14 +255,14 @@ $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budge
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
-if [ $DOMIN_SMALL = "conusnssl"  -a $subpiece = "1" ] 
+if [ $DOMIN_SMALL = "conusmem2"  -a $subpiece = "1" ] 
 then
-	echo conusnssl6 worked
+	echo conusmem26 worked
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
-if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusnssl" ] 
+if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusmem2" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
@@ -283,9 +283,9 @@ fi
 
 
 #####
-if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusnssl8 worked
+	echo conusmem28 worked
 
 if [ $subpiece = "1" ]
 then
@@ -299,7 +299,7 @@ fi
 fi
 #####
 
-if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusnssl" ]
+if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusmem2" ]
 then
   $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
   $WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
@@ -312,9 +312,9 @@ fi
 	echo DOMIN_SMALL $DOMIN_SMALL 
 	echo subpiece $subpiece
 
-if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusnssl10 worked
+	echo conusmem210 worked
 
 if [ $subpiece = "1" ]
 then
@@ -325,7 +325,7 @@ fi
 
 fi
 
-if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusnssl" ]
+if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusmem2" ]
 then
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
 fi
@@ -359,9 +359,9 @@ if [ $fhr -eq 00 ]
 then
 
 
-if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusnssl" ] 
+if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ] 
 then
-	echo conusnssl12 worked
+	echo conusmem212 worked
 	echo COPYING f00 file to hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 	echo where am I
 	pwd

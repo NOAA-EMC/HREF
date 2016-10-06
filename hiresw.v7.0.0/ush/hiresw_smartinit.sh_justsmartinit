@@ -78,7 +78,7 @@ cpfs $INPUT_DATA/DATE .
 #SMARTINIT OUTPUT grid filename extension
 outreg=$rg
 case $RUNTYP in
-  conusnsslarw) rg=conus; outres="2p5km"; outreg=conusnssl;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
+  conusmem2arw) rg=conus; outres="2p5km"; outreg=conusmem2;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   conusarw|conusnmmb) rg=conus; outres="2p5km"; outreg=conus;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   hiarw|hinmmb) rg=hi; outres="2p5km"; outreg=hi;wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
   prarw|prnmmb) rg=pr; outres="2p5km"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
@@ -183,7 +183,7 @@ grdextmerc=" 0 64 2500 2500"
       grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
       topopre=ruc2_ndfd_elevtiles.ndfd2.5
       maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
-     conusnsslarw)  sgrb=212;ogrd=184 
+     conusmem2arw)  sgrb=212;ogrd=184 
       grid="255 3 2145 1377 20192 238446 8 265000 2540 2540 $grdext"
       topopre=ruc2_ndfd_elevtiles.ndfd2.5
       maskpre=ruc2_ndfd_vegtiles.ndfd2.5;;
@@ -536,7 +536,7 @@ fi
 # Run Smartinit
 #========================================================
   case $RUNTYP in
-   conus|conusnssl|conusnest) RGIN=CS;;
+   conus|conusmem2|conusnest) RGIN=CS;;
       conusnest2p5) RGIN=CS2P;;
         ak_rtmages) RGIN=AKRT;;
                  *) RGIN=`echo $rg |tr '[a-z]'  '[A-Z]' `;;
@@ -557,7 +557,7 @@ echo START env AT CALL OF g2 script
 env
 echo END env AT CALL OF g2 script
 
-if [ $RUNTYP != "conusnsslarw" ]
+if [ $RUNTYP != "conusmem2arw" ]
 then
 NLEV=50
 else

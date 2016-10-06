@@ -52,7 +52,7 @@ then
   JM=1025
 fi
 
-if [ $DOMIN = "conusarw" -o $DOMIN = "conusnsslarw" ]
+if [ $DOMIN = "conusarw" -o $DOMIN = "conusmem2arw" ]
 then
   filenamthree="wrf.EMCONUS05"
   DOMIN_bucket="general_g2"
@@ -74,7 +74,7 @@ export tmmark=tm00
 # make GRIB file with pressure data every 25 mb for EMC's FVS
 # verification
 
-if [ $DOMIN_SMALL = "conus"  -o $DOMIN_SMALL = "conusnssl" ]
+if [ $DOMIN_SMALL = "conus"  -o $DOMIN_SMALL = "conusmem2" ]
 then
 cp $PARMhiresw/hiresw_conus_awp5km.txt_${subpiece} hiresw_grid_extract.txt
 else
