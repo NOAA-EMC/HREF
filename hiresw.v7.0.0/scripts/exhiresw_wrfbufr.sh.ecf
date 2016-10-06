@@ -251,11 +251,16 @@ export FORT78="$DATA/class1.bufr"
 startmsg
 #$EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 
-if [ ${RUNLOC} -eq "conusnsslarw" ]
+echo here RUNLOC  $RUNLOC
+echo here MODEL $MODEL
+
+if [ ${RUNLOC} == "conusmem2arw" ]
 then
+echo running nssl version
 aprun $EXEChiresw/hiresw_sndp_nssl${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;err_chk
 else
+echo running non nssl version
 aprun $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;err_chk
 fi

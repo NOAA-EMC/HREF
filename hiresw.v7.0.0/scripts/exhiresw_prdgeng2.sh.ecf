@@ -70,7 +70,7 @@ while [ $fhr -le $fhrend ]
 do
 
 
-if [ $NEST = "conus" -o $NEST = "conusnssl" ]
+if [ $NEST = "conus" -o $NEST = "conusmem2" ]
 then
 
 echo "#!/bin/bash" > $DATA/poescript_${fhr}
@@ -200,7 +200,7 @@ $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2 -s > $COMOU
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_2
 
-elif [ $NEST = "conusnssl" ]
+elif [ $NEST = "conusmem2" ]
 then
 
 # reassemble the large 5 km output grid
@@ -211,23 +211,23 @@ then
 cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_2 \
     $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_4 \
     $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_5 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_6 > \
-    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2
+    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2
  
-$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2.idx
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2.idx
 
 ### change to use a PARM .txt file, and do for CONUS and AK
 
 cp $PARMhiresw/hiresw_subset.txt .
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 |  grep -F -f hiresw_subset.txt | \
-$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2 
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 |  grep -F -f hiresw_subset.txt | \
+$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.subset.grib2.idx
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2.idx
 
     if [ $SENDDBN = YES ]; then
-       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2
-       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssl.grib2.idx
+       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2
+       $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE_WIDX} $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2.idx
     fi
 
   fi # SENDCOM
@@ -251,17 +251,17 @@ rm $DATA/hiresw.t${cyc}z.${MODEL}_2p5km.f${fhr}.${NEST}.grib2_3
   if test $SENDCOM = 'YES'
   then
 cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2 \
- > $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2
+ > $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2east.grib2
 
-$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2east.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2east.grib2
 
 cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_2 \
- > $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2
+ > $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2west.grib2
 
-$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2west.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2west.grib2
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnssleast.grib2.idx
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusnsslwest.grib2.idx
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2east.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2east.grib2.idx
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2west.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2west.grib2.idx
   fi
 
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2

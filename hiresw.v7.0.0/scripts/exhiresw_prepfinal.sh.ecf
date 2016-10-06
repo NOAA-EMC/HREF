@@ -113,11 +113,11 @@ if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus_model namelist.input_in_model
 fi
 
-elif [ $NEST = "conusnssl" ] ; then
+elif [ $NEST = "conusmem2" ] ; then
 
 if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusnssl namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusnssl_model namelist.input_in_model
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusmem2 namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusmem2_model namelist.input_in_model
 fi
 
 else
@@ -129,7 +129,7 @@ fi
 
 ### number of input levels depends on source model data
 
-if [ $NEST != "conusnssl" ]
+if [ $NEST != "conusmem2" ]
 then
 NUMLEVS=27
 else
