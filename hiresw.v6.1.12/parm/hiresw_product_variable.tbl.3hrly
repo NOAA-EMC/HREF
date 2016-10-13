@@ -1,0 +1,23 @@
+ 15       row variables and mean/spread/prob info
+U10M 33 105 M1 10
+V10M   34   105  M1   10
+U      33   100  M2   850 250
+V      34   100  M2   850 250
+SLP   130   102  M1   0
+HGT     7   100  M1   500
+RH     52   100  M1   850
+RH     52   105  M1   2
+T      11   100  M3   850 500 250
+T2M    11   105  M1    2  P1  2     < T1 273.0
+T2M    11   105  M0       P1  2     > T1 298.8
+T      11   100  M0       P1  850   < T1 273.0
+CAPE   157   1   M1    0  P1  0     > T5 500 1000 2000 3000 4000
+CIN    156   1   M1    0  P1  0     < T5  -50.0 -100.0 -200.0 -300.0 -400.0
+PRCP   61    1   D1    0
+  3      special derived variables, each  of which, needs code to process specially
+APCP   61   1   H4 24 12 6 3 P4 24 12 6 3 > T10 0.25 1.27 2.54 6.35 12.7 25.4 38.1 50.8 101.6 152.4
+WIND   32  105  M1 10 P1 10  > T3 12.89 17.5 25.78
+WIND   32  100  M2 850 250
+
+NOTE: M/S*1.94 -> KNOT
+      INCH = 25.4 MM = 25.4 KG/M2

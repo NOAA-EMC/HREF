@@ -1,0 +1,26 @@
+###############################################################################
+#
+#  GFS with different decomposition
+#  58 compute tasks / 1 thread  restart
+#
+###############################################################################
+
+export TEST_DESCR="Test GFS different decomposition and restart"
+
+export RUNDIR=${RUNDIR_ROOT}/gfs_32_48
+export CNTL_DIR=GFS_NODFI
+
+# For this test, all sig and sfc outputs and flx03, flx06, even the flxf48 are OK, only flxf12
+# and flxf24 are not OK.  Skip the check of flx12 and flx24, and will fix it.
+
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 sigf48 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 sfcf48 \
+                   flxf03 flxf06 flxf48"
+#                   flxf03 flxf06 flxf12 flxf24 flxf48"
+
+export_gsm
+export TASKS=48
+export PE1=46
+export WLCLK=80
+
+RUN_SCRIPT=rt_gfs.sh

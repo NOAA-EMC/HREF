@@ -1,0 +1,24 @@
+###############################################################################
+#
+# TEST   - GFS on a single processor with no quilting
+#        - 1 task / 1 thread
+#
+###############################################################################
+
+export TEST_DESCR="Test GFS single processor"
+
+export CNTL_DIR=GFS_NODFI
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 \
+                   flxf03 flxf06 flxf12 flxf24"
+
+export_gsm
+export TASKS=1
+export PE1=1
+export WTPG=1
+export WRTGP=1
+export QUILT=.false.
+export NDAYS=1
+export WLCLK=80
+
+RUN_SCRIPT=rt_gfs.sh

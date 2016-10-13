@@ -1,0 +1,18 @@
+v6.1.10 - Released May 16, 2016
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/hiresw.v6.1.10/ to pick
+up the needed updates.
+
+----------------------
+
+Changes intended to go in with the RAPv3 upgrade.  Both changes are needed to allow
+the HiresW to work with RAP GRIB2 files.
+
+Update details (6.1.9 to 6.1.10):
+
+Modifies parm/hiresw_Vtable.RAP to account for GRIB2 RAP files
+
+Modifies scripts/exhiresw_prelim_rap.sh.ecf to modify the filename for the RAP
+file processed by the job (now with a .grib2 terminator).

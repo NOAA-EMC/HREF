@@ -1,0 +1,26 @@
+#! /bin/ksh --login
+
+# Moab options used on Gaea
+
+#PBS -S /bin/ksh
+#PBS -e _RUND_/err
+#PBS -o _RUND_/out
+#PBS -N _JBNME_
+#PBS -A _ACCNR_
+#PBS -q _CLASS_
+#PBS -l partition=c1:c2
+#PBS -l size=_TASKS_
+#PBS -l walltime=00:_WLCLK_:00
+
+set -aeux
+
+cd _RUND_
+
+echo "Model started:  " `date`
+
+_RUND_/gfs_fcst_run
+
+echo "Model ended:    " `date`
+
+exit
+

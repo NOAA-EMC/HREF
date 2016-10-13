@@ -1,0 +1,70 @@
+###
+#    The following list specifies details about the
+#    shifting of NMM-B dynamics internal state variables
+#    for moving nests.  Users need to exercise caution
+#    if they edit this file.
+###
+#
+#  Key: H - Shift this mass point variable.
+#       V - Shift this velocity point variable.
+#       F - Shift this mass point variable with intra-
+#           and inter-task routines but read in values
+#           from external nest-resolution datafiles
+#           within the parent update regions.
+#       x - The parent must execute a halo exchange
+#           for this variable each time one of its 
+#           children moves.
+#
+#------------------------------------------------------------
+# Name   Specification   Variable Description
+#------------------------------------------------------------
+
+
+###  2D real
+
+'FIS'        F     'Surface geopotential (m2 s-2)'
+'HDACX'      Hx    'Horiz diffusion param in X for H pts'
+'HDACY'      Hx    'Horiz diffusion param in Y for H pts'
+'GLAT'       H     'Latitudes of h points  (radians)'
+'GLON'       H     'Longitudes of h points (radians)'
+'PD'         -     'Pressure difference, sigma range  (Pa)'
+'F'          Vx    'Coriolis parameter (s-1)'
+'HDACVX'     Vx    'Lateral diffusion coefficient in X'
+'HDACVY'     Vx    'Lateral diffusion coefficient in Y'
+'VLAT'       V     'Latitudes of V points  (radians)'
+'VLON'       V     'Longitudes of V points (radians)'
+'PDO'        Hx    'Previous pressure difference, sigma range  (Pa)'
+
+
+###  3D real
+
+'T'          -     'Sensible temperature  (K)'
+'Q'          -     'Specific humidity  (kg kg-1)'
+'U'          -     'U wind component  (m s-1)'
+'V'          -     'V wind component  (m s-1)'
+'Q2'         -     '2*tke  (m2 s-2)'
+'CW'         -     'Cloud condensate  (kg kg-1)'
+'W'          H     'Vertical velocity at midlayers  (m s-1)'
+'DWDT'       H     'Vertical acceleration, correction factor  (m s-2)'
+'PINT'       -     'Nonhydrostatic interface pressure  (Pa)'
+'OMGALF'     -     'Omega-alpha  (K)'
+'O3'         -     'Ozone'
+'DIV'        -     'Horizontal mass divergence'
+'RTOP'       -     'RT/P, specific volume  (m3 kg-1)'
+'TCU'        Vx    'Time change of U (m s-2)'
+'TCV'        Vx    'Time change of V (m s-2)'
+'TCT'        Hx    'Time change of T (K s-1)'
+'TP'         Hx    'Sensible temperature, previous step  (K)'
+'UP'         Vx    'U wind component, previous step  (m s-1)'
+'VP'         Vx    'V wind component, previous step  (m s-1)'
+'E2'         H     '3D, 2*TKE - turbulent kinetic energy'
+'PSGDT'      -     'Specific volume  (m3 kg-1)'
+'Z'          Hx    'Height at midlayers  (m)'
+
+
+###  4D real
+
+'TRACERS'       -  'All tracer variables'
+'TRACERS_PREV'  -  'Previous step tracers'
+
+#EOF
