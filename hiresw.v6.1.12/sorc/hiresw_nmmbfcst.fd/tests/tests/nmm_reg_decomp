@@ -1,0 +1,20 @@
+###############################################################################
+#
+#  Regional NMM-B with different domain decomposition
+#  3x5 compute tasks / 1 thread / opnl physics / free fcst / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional different decomposition"
+
+export CNTL_DIR=NMMB_reg
+export LIST_FILES="nmmb_hst_01_bin_0000h_00m_00.00s nmmb_hst_01_bin_0012h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=reg
+export FCSTL=12
+export INPES=$JNPES_dflt
+export JNPES=$INPES_dflt
+
+RUN_SCRIPT=rt_nmm.sh

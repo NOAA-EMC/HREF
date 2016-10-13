@@ -1,0 +1,2 @@
+module_ATM_GRID_COMP.o : module_ATM_GRID_COMP.F90 module_ATM_INTERNAL_STATE.o  ../ESMFVersionDefine.h
+module_ATM_INTERNAL_STATE.o : module_ATM_INTERNAL_STATE.F90  ../ESMFVersionDefine.h

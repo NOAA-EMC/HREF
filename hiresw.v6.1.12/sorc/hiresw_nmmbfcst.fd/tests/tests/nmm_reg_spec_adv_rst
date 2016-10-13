@@ -1,0 +1,20 @@
+###############################################################################
+#
+#  Regional NMM-B restart with binary input
+#  6x5 compute tasks / 1 thread / separate species advection / pure binary input
+#
+###############################################################################
+
+export TEST_DESCR="Test NMMB-regional with separate species advection ON"
+
+export CNTL_DIR=NMMB_reg_spec_adv
+export LIST_FILES="nmmb_hst_01_bin_0024h_00m_00.00s nmmb_hst_01_nio_0024h_00m_00.00s"
+
+export_nems
+export_nmm
+export GBRG=reg
+export SPEC_ADV=true
+export FCSTL=24
+export RSTRT=true
+
+RUN_SCRIPT=rt_nmm.sh

@@ -1,0 +1,40 @@
+SHELL       = /bin/sh
+
+include /lustre/ltfs/scratch/George.Vandenberghe/esmf_3_1_0rp5/lib/libO/Unicos.pgi.64.mpi.default/esmf.mk
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIBS   = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+EXTLIBS     = $(ESMF_LIBS) \
+             -L/lustre/ltfs/scratch/George.Vandenberghe/nwprod/libpgi -lnemsio -lw3-2.0_4 -lw3ext_4 -lbacio_4 -lsp_4
+NEMSIO_INC  = -I/lustre/ltfs/scratch/George.Vandenberghe/nwprod/libpgi/incmod/nemsio
+
+
+FC          = ftn -byteswapio
+FPP         = -eZ
+FREE        = -Mfree
+FIXED       = -Mfixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC)
+TRAPS       =
+
+FFLAGS      = $(TRAPS) $(FINCS)
+
+OPTS_NMM    = -O3
+OPTS_GFS    = -O3
+OPTS_GEN    = -O3
+OPTS_FIM    = -O3
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DCHNK_RRTM=8
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm
