@@ -12,3 +12,6 @@ Update details (6.1.11 to 6.1.12):
 
 Modifies fix/hiresw_ak*_profdat and fix/hiresw_conus*_profdat files, 
 adding a few new stations, and changing the locations of some others.
+
+Just adopting the four updated profdat files will enact the change; 
+no code changes are required.
