@@ -16,7 +16,7 @@
 
       implicit none
 !
-      INTEGER, PARAMETER :: MXFLD=951,MXLVL=70
+      INTEGER, PARAMETER :: MXFLD=958,MXLVL=70
       CHARACTER*20 AVBL(MXFLD),FIELD(MXFLD)
       CHARACTER*50 AVBLGRB2(MXFLD)
       CHARACTER*6 DATSET      
@@ -2048,10 +2048,22 @@
      &                      /1,'MODEL SFC V WIND STR',125,001,     &
      &                       'V_FLX ON surface' /
 
-! HiresW additions (950-951)
+! HiresW additions (950-958)
       DATA IFILV(950),AVBL(950),IQ(950),IS(950),AVBLGRB2(950)      &
      &                      /1,'RADAR REFL ISOTHERMAL ',211,020,     &
      &                       'REFD_ON_ISOTHERMAL' /
+      DATA IFILV(951),AVBL(951),IQ(951),IS(951),AVBLGRB2(951)      &
+     &                      /1,'MAX UPDRAFT HELICITY',236,106,     &
+     &                       'MAX UPHL ON spec_hgt_lvl_above_grnd'/        
+      DATA IFILV(952),AVBL(952),IQ(952),IS(952),AVBLGRB2(952)      &
+     &                      /1,'MIN UPDRAFT HELICITY',236,106,     &
+     &                       'MIN UPHL ON spec_hgt_lvl_above_grnd'/        
+      DATA IFILV(953),AVBL(953),IQ(953),IS(953),AVBLGRB2(953)      &
+     &                      /1,'MAX UPDRAFT HELICITY',236,106,     &
+     &                       'MAX UPHL ON spec_hgt_lvl_above_grnd'/        
+      DATA IFILV(954),AVBL(954),IQ(954),IS(954),AVBLGRB2(954)      &
+     &                      /1,'MIN UPDRAFT HELICITY',236,106,     &
+     &                       'MIN UPHL ON spec_hgt_lvl_above_grnd'/        
 
 !end initialization
 !
