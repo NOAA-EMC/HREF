@@ -761,6 +761,27 @@
       </param>
 
        <param>
+       <shortname>MIN_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
+       <pname>MNUPHL</pname>
+       <table_info>NCEP</table_info>
+         <scale>-4.0</scale>
+      </param>
+
+       <param>
+       <shortname>MAX_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_0-3km</shortname>
+       <pname>MXUPHL</pname>
+       <table_info>NCEP</table_info>
+         <scale>-4.0</scale>
+      </param>
+
+       <param>
+       <shortname>MIN_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_0-3km</shortname>
+       <pname>MNUPHL</pname>
+       <table_info>NCEP</table_info>
+         <scale>-4.0</scale>
+      </param>
+
+       <param>
        <shortname>MAX_REF_ON_SPEC_HGT_LVL_ABOVE_GRND_1km</shortname>
        <pname>MAXREF</pname>
        <table_info>NCEP</table_info>

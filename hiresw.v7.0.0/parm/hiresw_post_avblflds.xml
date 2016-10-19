@@ -3607,20 +3607,6 @@
        <scale>3.0</scale>
     </param>
 
-    <param>
-      <post_avblfldidx>420</post_avblfldidx>
-      <shortname>MAX_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
-      <longname>maximum Updraft Helicity on Specified Height Level Above Ground</longname>
-      <stats_proc>MAX</stats_proc>
-      <pdstmpl>tmpl4_8</pdstmpl>
-      <pname>MXUPHL</pname>
-      <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
-      <level>5000</level>
-      <fixed_sfc2_type>spec_hgt_lvl_above_grnd</fixed_sfc2_type>
-      <level2>2000</level2>
-      <scale>-3.0</scale>
-   </param>
-
 
     <param>
        <post_avblfldidx>421</post_avblfldidx>
@@ -5441,6 +5427,62 @@
        <level>263.15</level>
        <scale>-4.0</scale>
     </param>
+
+       <param>
+       <post_avblfldidx>951</post_avblfldidx>
+       <shortname>MAX_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
+       <longname>maximum Updraft Helicity on Specified Height Level Above Ground</longname>
+      <stats_proc>MAX</stats_proc>
+      <pname>MXUPHL</pname>
+       <pdstmpl>tmpl4_8</pdstmpl>
+       <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
+       <level>5000</level>
+       <fixed_sfc2_type>spec_hgt_lvl_above_grnd</fixed_sfc2_type>
+       <level2>2000</level2>
+         <scale>-4.0</scale>
+      </param>
+
+       <param>
+       <post_avblfldidx>952</post_avblfldidx>
+       <shortname>MIN_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_2-5km</shortname>
+       <longname>minimum Updraft Helicity on Specified Height Level Above Ground</longname>
+      <stats_proc>MIN</stats_proc>
+      <pdstmpl>tmpl4_8</pdstmpl>
+       <pname>MNUPHL</pname>
+         <scale>-4.0</scale>
+       <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
+       <level>5000</level>
+       <fixed_sfc2_type>spec_hgt_lvl_above_grnd</fixed_sfc2_type>
+       <level2>2000</level>
+      </param>
+
+       <param>
+       <post_avblfldidx>953</post_avblfldidx>
+       <shortname>MAX_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_0-3km</shortname>
+       <longname>maximum Updraft Helicity on Specified Height Level Above Ground</longname>
+      <stats_proc>MAX</stats_proc>
+      <pname>MXUPHL</pname>
+       <pdstmpl>tmpl4_8</pdstmpl>
+       <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
+       <level>3000</level>
+       <fixed_sfc2_type>spec_hgt_lvl_above_grnd</fixed_sfc2_type>
+       <level2>0</level2>
+         <scale>-4.0</scale>
+      </param>
+
+       <param>
+       <post_avblfldidx>954</post_avblfldidx>
+       <shortname>MIN_UPHL_ON_SPEC_HGT_LVL_ABOVE_GRND_0-3km</shortname>
+       <longname>minimum Updraft Helicity on Specified Height Level Above Ground</longname>
+      <stats_proc>MIN</stats_proc>
+      <pdstmpl>tmpl4_8</pdstmpl>
+       <pname>MNUPHL</pname>
+         <scale>-4.0</scale>
+       <fixed_sfc1_type>spec_hgt_lvl_above_grnd</fixed_sfc1_type>
+       <level>3000</level>
+       <fixed_sfc2_type>spec_hgt_lvl_above_grnd</fixed_sfc2_type>
+       <level2>0</level>
+      </param>
 
   </post_avblflds>
 </postxml>
