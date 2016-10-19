@@ -63,7 +63,17 @@ fi
 # bsub post scripts  - clean these out before commit
 bsub < ${HOMEhiresw}/launch_info/sub_post.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch_info/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
+
+if [ ${NEST}${MODEL} = "conusnmmb" ]
+then
+bsub < ${HOMEhiresw}/launch_info/sub_wrfbufrsndodd.lsf_${NEST}_${MODEL}_${cyc}
+bsub < ${HOMEhiresw}/launch_info/sub_wrfbufrsndeven.lsf_${NEST}_${MODEL}_${cyc}
+
+else
 bsub < ${HOMEhiresw}/launch_info/sub_wrfbufrsnd.lsf_${NEST}_${MODEL}_${cyc}
+
+fi
+
 bsub < ${HOMEhiresw}/launch_info/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch_info/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
 ### end bsub post scripts
