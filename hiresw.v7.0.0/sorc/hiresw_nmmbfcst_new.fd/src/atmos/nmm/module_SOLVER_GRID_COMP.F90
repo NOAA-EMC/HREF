@@ -1150,7 +1150,6 @@
           int_state%RH02MAX(I,J)=-999.
           int_state%RH02MIN(I,J)=999.
           int_state%SPD10MAX(I,J)=-999.
-          int_state%UPHLMAX(I,J)=0.
           int_state%U10MAX(I,J)=-999.
           int_state%V10MAX(I,J)=-999.
           int_state%UPVVELMAX(I,J)=-999.
@@ -1163,6 +1162,10 @@
           int_state%SNOAVG(I,J)=0.
           int_state%REFDMAX(I,J)=DBZmin
           int_state%UPHLMAX(I,J)=-999.
+          int_state%UPHLMAX25(I,J)=-999.
+          int_state%UPHLMAX03(I,J)=-999.
+          int_state%UPHLMIN25(I,J)=999.
+          int_state%UPHLMIN03(I,J)=999.
         ENDDO
         ENDDO
         int_state%NCOUNT=0
@@ -4979,7 +4982,10 @@ if_global: IF(GLOBAL)THEN    !-- Global NMMB
           int_state%REFDMAX(I,J)=DBZmin
           int_state%PRATEMAX(I,J)=0
           int_state%FPRATEMAX(I,J)=0
-          int_state%UPHLMAX(I,J)=-999.
+          int_state%UPHLMAX25(I,J)=-999.
+          int_state%UPHLMAX03(I,J)=-999.
+          int_state%UPHLMIN25(I,J)=999.
+          int_state%UPHLMIN03(I,J)=999.
         ENDDO
         ENDDO
 !
@@ -5015,7 +5021,10 @@ max_hrly: IF (TRIM(int_state%MICROPHYSICS) == 'fer') THEN
                          ,int_state%AKHS,int_state%AKMS                  &
                          ,int_state%AKHSAVG,int_state%AKMSAVG            &
                          ,int_state%SNO,int_state%SNOAVG                 &
-                         ,int_state%UPHLMAX                              &
+                         ,int_state%UPHLMAX25                            &
+                         ,int_state%UPHLMIN25                            &
+                         ,int_state%UPHLMAX03                            &
+                         ,int_state%UPHLMIN03                            &
                          ,int_state%DT,int_state%NPHS,int_state%NTSD     &
                          ,int_state%DXH,int_state%DYH                    &
                          ,int_state%FIS                                  &
@@ -5053,7 +5062,10 @@ max_hrly: IF (TRIM(int_state%MICROPHYSICS) == 'fer') THEN
                             ,int_state%AKHS,int_state%AKMS               &
                             ,int_state%AKHSAVG,int_state%AKMSAVG         &
                             ,int_state%SNO,int_state%SNOAVG              &
-                            ,int_state%UPHLMAX                           &
+                            ,int_state%UPHLMAX25                         &
+                            ,int_state%UPHLMIN25                         &
+                            ,int_state%UPHLMAX03                         &
+                            ,int_state%UPHLMIN03                         &
                             ,int_state%DT,int_state%NPHS,int_state%NTSD  &
                             ,int_state%DXH,int_state%DYH                 &
                             ,int_state%FIS                               &
@@ -5089,7 +5101,10 @@ max_hrly: IF (TRIM(int_state%MICROPHYSICS) == 'fer') THEN
                            ,int_state%AKHS,int_state%AKMS               &
                            ,int_state%AKHSAVG,int_state%AKMSAVG         &
                            ,int_state%SNO,int_state%SNOAVG              &
-                           ,int_state%UPHLMAX                           &
+                           ,int_state%UPHLMAX25                         &
+                           ,int_state%UPHLMIN25                         &
+                           ,int_state%UPHLMAX03                         &
+                           ,int_state%UPHLMIN03                         &
                            ,int_state%DT,int_state%NPHS,int_state%NTSD  &
                            ,int_state%DXH,int_state%DYH                 &
                            ,int_state%FIS                               &
@@ -5126,7 +5141,10 @@ max_hrly: IF (TRIM(int_state%MICROPHYSICS) == 'fer') THEN
                            ,int_state%AKHS,int_state%AKMS               &
                            ,int_state%AKHSAVG,int_state%AKMSAVG         &
                            ,int_state%SNO,int_state%SNOAVG              &
-                           ,int_state%UPHLMAX                           &
+                           ,int_state%UPHLMAX25                         &
+                           ,int_state%UPHLMIN25                         &
+                           ,int_state%UPHLMAX03                         &
+                           ,int_state%UPHLMIN03                         &
                            ,int_state%DT,int_state%NPHS,int_state%NTSD  &
                            ,int_state%DXH,int_state%DYH                 &
                            ,int_state%FIS                               &
