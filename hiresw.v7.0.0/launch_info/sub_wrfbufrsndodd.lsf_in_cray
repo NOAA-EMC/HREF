@@ -32,7 +32,7 @@ export MP_MPILIB=mpich2
 # export MP_IOAGENT_CNT=all
 #
 
-vers=`cat /u/Matthew.Pyle/hiresw_version`
+vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 
 export RUN_ENVIR=test
