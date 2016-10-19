@@ -141,7 +141,7 @@ fi
 
 
 
-cat ungrib.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+cat ungrib.lsf_in_cray_offset | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 
 cat metgrid.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
@@ -205,7 +205,10 @@ sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
 cat sub_smartinitb.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
 sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 
-bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+chmod 775 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+./sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+exit
 
 if [ $DOM == "conus" ]
 then
