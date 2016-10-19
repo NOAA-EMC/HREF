@@ -40,7 +40,7 @@
 !***********************************************************************
 !-----------------------------------------------------------------------
 !
-      INTEGER, PARAMETER :: MAX_VARS = 300
+      INTEGER, PARAMETER :: MAX_VARS = 310
       INTEGER, PARAMETER :: TRACK_MAX_OLD = 100 ! max # of old track fixes to store
 !
       TYPE SOLVER_INTERNAL_STATE
@@ -229,6 +229,10 @@
         REAL(kind=KFPT),DIMENSION(:,:),POINTER :: TSHLTR           => NULL()
         REAL(kind=KFPT),DIMENSION(:,:),POINTER :: TWBS             => NULL()
         REAL(kind=KFPT),DIMENSION(:,:),POINTER :: UPHLMAX          => NULL()
+        REAL(kind=KFPT),DIMENSION(:,:),POINTER :: UPHLMAX25        => NULL()
+        REAL(kind=KFPT),DIMENSION(:,:),POINTER :: UPHLMAX03        => NULL()
+        REAL(kind=KFPT),DIMENSION(:,:),POINTER :: UPHLMIN25        => NULL()
+        REAL(kind=KFPT),DIMENSION(:,:),POINTER :: UPHLMIN03        => NULL()
         REAL(kind=KFPT),DIMENSION(:,:),POINTER :: UPVVELMAX        => NULL()
         REAL(kind=KFPT),DIMENSION(:,:),POINTER :: U10              => NULL()
         REAL(kind=KFPT),DIMENSION(:,:),POINTER :: U10MAX           => NULL()
@@ -1185,6 +1189,10 @@
       CALL SET_VAR_PTR(int_state%VARS,NV,'TSHLTR'     ,int_state%TSHLTR   ,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'TWBS'       ,int_state%TWBS     ,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLMAX'    ,int_state%UPHLMAX  ,(/ IMS,JMS /),(/ IME,JME /) )
+      CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLMAX25'  ,int_state%UPHLMAX25,(/ IMS,JMS /),(/ IME,JME /) )
+      CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLMIN25'  ,int_state%UPHLMIN25,(/ IMS,JMS /),(/ IME,JME /) )
+      CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLMAX03'  ,int_state%UPHLMAX03,(/ IMS,JMS /),(/ IME,JME /) )
+      CALL SET_VAR_PTR(int_state%VARS,NV,'UPHLMIN03'  ,int_state%UPHLMIN03,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'UPVVELMAX'  ,int_state%UPVVELMAX,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'U10'        ,int_state%U10      ,(/ IMS,JMS /),(/ IME,JME /) )
       CALL SET_VAR_PTR(int_state%VARS,NV,'U10MAX'     ,int_state%U10MAX   ,(/ IMS,JMS /),(/ IME,JME /) )
