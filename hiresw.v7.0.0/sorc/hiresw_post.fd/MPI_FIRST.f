@@ -48,6 +48,7 @@
               duwt, suem, susd, sudp, suwt, ocem, ocsd, ocdp, ocwt, bcem, bcsd,&
               bcdp, bcwt, ssem, sssd, ssdp, sswt, ext, dpres, rhomid
       use vrbls2d, only: wspd10max, w_up_max, w_dn_max, w_mean, refd_max, up_heli_max,&
+             up_heli_max25, up_heli_min25, up_heli_max03, up_heli_min03,  &
               up_heli_max16, grpl_max, up_heli, up_heli16, ltg1_max, ltg2_max, &
               ltg3_max, nci_ltg, nca_ltg, nci_wq, nca_wq, nci_refd, vil, radarvil,&
               echotop, u10, v10, tshltr, qshltr, mrshltr, smstav, ssroff, bgroff,&

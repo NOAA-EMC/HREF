@@ -38,6 +38,7 @@
       use vrbls2d, only: f, pd, fis, pblh, mixht, ustar, z0, ths, qs, twbs, qwbs, prec,&
               acprec, cuprec, lspa, sno, snoavg, psfcavg, t10avg, t10m, akhsavg, akmsavg,&
               refd_max, w_up_max, w_dn_max, up_heli_max, si, cldefi, th10, q10, pshltr,&
+              up_heli_max25, up_heli_min25, up_heli_max03, up_heli_min03,             &
               tshltr, qshltr, maxtshltr, mintshltr, maxrhshltr, minrhshltr, akhs, akms, albase,&
               albedo, czen, cfracl, cfracm, islope, cmc, grnflx, pctsno, soiltb, vegfrc,&
               acfrcv, acfrst, ssroff, bgroff, czmean, mxsnal, radot, sigt4, tg, sr, cfrach,&
@@ -1093,6 +1094,43 @@
       ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
       ,l,impf,jmpf,nframe,up_heli_max)
       if(debugprint)print*,'sample ',VarName,' = ',up_heli_max(im/2,(jsta+jend)/2)
+
+      varname='uphlmax25'
+      VcoordName='sfc' ! wrong
+      l=1
+      call getnemsandscatter(me,nfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,impf,jmpf,nframe,up_heli_max25)
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_max25(im/2,(jsta+jend)/2)
+	write(0,*) 'sample ',VarName,' = ',up_heli_max25(im/2,(jsta+jend)/2)
+
+      varname='uphlmin25'
+      VcoordName='sfc' ! wrong
+      l=1
+      call getnemsandscatter(me,nfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,impf,jmpf,nframe,up_heli_min25)
+
+	write(0,*) 'sample ',VarName,' = ',up_heli_min25(im/2,(jsta+jend)/2)
+
+
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_min25(im/2,(jsta+jend)/2)
+
+      varname='uphlmax03'
+      VcoordName='sfc' ! wrong
+      l=1
+      call getnemsandscatter(me,nfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,impf,jmpf,nframe,up_heli_max03)
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_max03(im/2,(jsta+jend)/2)
+
+      varname='uphlmin03'
+      VcoordName='sfc' ! wrong
+      l=1
+      call getnemsandscatter(me,nfile,im,jm,jsta,jsta_2l &
+      ,jend_2u,MPI_COMM_COMP,icnt,idsp,spval,VarName,VcoordName &
+      ,l,impf,jmpf,nframe,up_heli_min03)
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_min03(im/2,(jsta+jend)/2)
 
       varname='si'
       VcoordName='sfc'

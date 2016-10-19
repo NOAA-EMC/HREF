@@ -46,6 +46,7 @@
 !
       use vrbls3d, only: zmid, zint, dbz, dbzr, dbzi, dbzc, uh, vh, pmid, t, q
       use vrbls2d, only: refd_max, up_heli_max, up_heli_max16, grpl_max, ltg1_max,&
+              up_heli_max25, up_heli_min25, up_heli_max03, up_heli_min03,        &
               ltg2_max, ltg3_max, up_heli, up_heli16, nci_ltg, nca_ltg, nci_wq,&
               nca_wq, nci_refd, nca_refd, u10, v10, u10h, v10h
       use masks, only: lmh, lmv
@@ -435,6 +436,134 @@
                fld_info(cfld)%ntrange=0
         endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+             endif
+          END IF
+
+!---  Max Updraft Helicity 2-5 km
+          IF((IGET(951).GT.0) )THEN
+             DO J=JSTA,JEND
+             DO I=1,IM
+               GRID1(I,J)=UP_HELI_MAX25(I,J)
+             ENDDO
+             ENDDO
+             ID(1:25)=0
+             ID(02)=129
+!             ID(11) = NINT(ZAGL(2))
+             ID(9) = 106
+             ID(10) = 50
+             ID(11) = 20
+             ID(20) = 2
+             ID(19) = IFHR
+             IF (IFHR.EQ.0) THEN
+               ID(18) = 0
+             ELSE
+               ID(18) = IFHR - 1
+             ENDIF
+             if(grib=='grib1') then
+               CALL GRIBIT(IGET(951),LP,GRID1,IM,JM)
+             elseif(grib=='grib2') then
+               cfld=cfld+1
+               fld_info(cfld)%ifld=IAVBLFLD(IGET(951))
+               fld_info(cfld)%lvl=LVLSXML(LP,IGET(951))
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+             endif
+          END IF
+
+!---  Min Updraft Helicity 2-5 km
+          IF((IGET(952).GT.0) )THEN
+	write(0,*) 'minval(UP_HELI_MIN25): ', minval(UP_HELI_MIN25)
+             DO J=JSTA,JEND
+             DO I=1,IM
+               GRID1(I,J)=UP_HELI_MIN25(I,J)
+             ENDDO
+             ENDDO
+             ID(1:25)=0
+             ID(02)=129
+!             ID(11) = NINT(ZAGL(2))
+             ID(9) = 106
+             ID(10) = 50
+             ID(11) = 20
+	write(0,*) 'ID(10:11): ', ID(10:11)
+             ID(20) = 2
+             ID(19) = IFHR
+             IF (IFHR.EQ.0) THEN
+               ID(18) = 0
+             ELSE
+               ID(18) = IFHR - 1
+             ENDIF
+             if(grib=='grib1') then
+               CALL GRIBIT(IGET(952),LP,GRID1,IM,JM)
+             elseif(grib=='grib2') then
+               cfld=cfld+1
+	write(0,*) 'grib2 branch for MINUPHL ', cfld
+               fld_info(cfld)%ifld=IAVBLFLD(IGET(952))
+               fld_info(cfld)%lvl=LVLSXML(LP,IGET(952))
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+	write(0,*) 'minval(datapd(:,:,cfld)): ', minval(datapd(:,:,cfld))
+             endif
+          END IF
+
+!---  Max Updraft Helicity 0-3 km
+          IF((IGET(953).GT.0) )THEN
+             DO J=JSTA,JEND
+             DO I=1,IM
+               GRID1(I,J)=UP_HELI_MAX03(I,J)
+             ENDDO
+             ENDDO
+             ID(1:25)=0
+             ID(02)=129
+!             ID(11) = NINT(ZAGL(2))
+             ID(9) = 106
+             ID(10) = 30
+             ID(11) = 0
+             ID(20) = 2
+             ID(19) = IFHR
+             IF (IFHR.EQ.0) THEN
+               ID(18) = 0
+             ELSE
+               ID(18) = IFHR - 1
+             ENDIF
+             if(grib=='grib1') then
+               CALL GRIBIT(IGET(953),LP,GRID1,IM,JM)
+             elseif(grib=='grib2') then
+               cfld=cfld+1
+               fld_info(cfld)%ifld=IAVBLFLD(IGET(953))
+               fld_info(cfld)%lvl=LVLSXML(LP,IGET(953))
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+             endif
+          END IF
+
+!---  Min Updraft Helicity 2-5 km
+          IF((IGET(954).GT.0) )THEN
+	write(0,*) 'minval(UP_HELI_MIN03): ', minval(UP_HELI_MIN03)
+             DO J=JSTA,JEND
+             DO I=1,IM
+               GRID1(I,J)=UP_HELI_MIN03(I,J)
+             ENDDO
+             ENDDO
+             ID(1:25)=0
+             ID(02)=129
+!             ID(11) = NINT(ZAGL(2))
+             ID(9) = 106
+             ID(10) = 30
+             ID(11) = 0
+	write(0,*) 'ID(10:11): ', ID(10:11)
+             ID(20) = 2
+             ID(19) = IFHR
+             IF (IFHR.EQ.0) THEN
+               ID(18) = 0
+             ELSE
+               ID(18) = IFHR - 1
+             ENDIF
+             if(grib=='grib1') then
+               CALL GRIBIT(IGET(954),LP,GRID1,IM,JM)
+             elseif(grib=='grib2') then
+               cfld=cfld+1
+	write(0,*) 'grib2 branch for MINUPHL ', cfld
+               fld_info(cfld)%ifld=IAVBLFLD(IGET(954))
+               fld_info(cfld)%lvl=LVLSXML(LP,IGET(954))
+               datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+	write(0,*) 'minval(datapd(:,:,cfld)): ', minval(datapd(:,:,cfld))
              endif
           END IF
 

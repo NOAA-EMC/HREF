@@ -38,6 +38,7 @@
       use vrbls2d, only: f, pd, fis, pblh, mixht, ustar, z0, ths, qs, twbs, qwbs, prec,&
               acprec, cuprec, lspa, sno, snoavg, psfcavg, t10avg, t10m, akhsavg, akmsavg,&
               refd_max, w_up_max, w_dn_max, up_heli_max, si, cldefi, th10, q10, pshltr,&
+              up_heli_max25, up_heli_min25, up_heli_max03, up_heli_min03, &
               tshltr, qshltr, maxtshltr, mintshltr, maxrhshltr, minrhshltr, akhs, akms, albase,&
               albedo, czen, cfracl, cfracm, islope, cmc, grnflx, pctsno, soiltb, vegfrc,&
               acfrcv, acfrst, ssroff, bgroff, czmean, mxsnal, radot, sigt4, tg, sr, cfrach,&
@@ -1115,14 +1116,55 @@
       if(debugprint)print*,'sample ',VarName,' = ',w_dn_max(im/2,(jsta+jend)/2)
       print*,'sample ',VarName,' = ',w_dn_max(im/2,(jsta+jend)/2)
 
-      varname='uphlmax'
+      varname='uphlmax25'
       VcoordName='sfc' ! wrong
       l=1
       call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u &
       ,l,nrec,fldsize,spval,tmp &
       ,recname,reclevtyp,reclev,VarName,VcoordName &
-      ,up_heli_max)
-      if(debugprint)print*,'sample ',VarName,' = ',up_heli_max(im/2,(jsta+jend)/2)
+      ,up_heli_max25)
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_max25(im/2,(jsta+jend)/2)
+	write(0,*) 'maxval(up_heli_max25): ', maxval(up_heli_max25)
+
+     varname='uphlmin25'
+      VcoordName='sfc' ! wrong
+      l=1
+      call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u &
+      ,l,nrec,fldsize,spval,tmp &
+      ,recname,reclevtyp,reclev,VarName,VcoordName &
+      ,up_heli_min25)
+
+	write(0,*) 'minval(up_heli_min25): ', minval(up_heli_min25)
+
+!        write(0,*) 'sample ',VarName,' = ',up_heli_min25(im/2,(jsta+jend)/2)
+
+
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_min25(im/2,(jsta+jend)/2)
+
+      varname='uphlmax03'
+      VcoordName='sfc' ! wrong
+      l=1
+
+      call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u &
+      ,l,nrec,fldsize,spval,tmp &
+      ,recname,reclevtyp,reclev,VarName,VcoordName &
+      ,up_heli_max03)
+
+      if(debugprint)print*,'sample ',VarName,' = ',up_heli_max03(im/2,(jsta+jend)/2)
+	write(0,*) 'minval(up_heli_max03): ', minval(up_heli_max03)
+	write(0,*) 'maxval(up_heli_max03): ', maxval(up_heli_max03)
+
+      varname='uphlmin03'
+      VcoordName='sfc' ! wrong
+      l=1
+      call assignnemsiovar(im,jsta,jend,jsta_2l,jend_2u &
+      ,l,nrec,fldsize,spval,tmp &
+      ,recname,reclevtyp,reclev,VarName,VcoordName &
+      ,up_heli_min03)
+
+	write(0,*) 'minval(up_heli_min03): ', minval(up_heli_min03)
+	write(0,*) 'maxval(up_heli_min03): ', maxval(up_heli_min03)
+
 
       varname='si'
       VcoordName='sfc'
