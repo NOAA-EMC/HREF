@@ -120,6 +120,13 @@ if [ $MODEL = "arw" ]; then
   cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusmem2_model namelist.input_in_model
 fi
 
+elif [ $NEST = "akmem2" ] ; then
+
+if [ $MODEL = "arw" ]; then
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_akmem2 namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_akmem2_model namelist.input_in_model
+fi
+
 else
 
 msg="FATAL ERROR: invalid NEST choice $NEST in prepfinal"
@@ -129,7 +136,7 @@ fi
 
 ### number of input levels depends on source model data
 
-if [ $NEST != "conusmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
 then
 NUMLEVS=27
 else

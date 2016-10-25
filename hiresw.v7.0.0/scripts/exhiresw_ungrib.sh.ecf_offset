@@ -84,7 +84,7 @@ yend=`echo $end | cut -c1-4`
 mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 
-whr=00
+whr=06
 count=0
 last=${LENGTH}
 let last=last+6
@@ -120,7 +120,7 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
-if [ $NEST != "conusmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
 then
 
 mod=gfs
@@ -140,10 +140,11 @@ while [ $whr -le $last ]
 do
 
 
-if [ $NEST != "conusmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
 then
 
 icnt=0
+
 while [ ! -e ${COMINgfs}/${mod}.t${cycold}z.${type}${whr} ]
 do
   sleep 10
@@ -166,7 +167,7 @@ export GRIBSRC=GFS
 
 else
 
-echo conusmem2 branch
+echo mem2 branch
 
 icnt=0
 while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} ]
@@ -250,35 +251,64 @@ done
 
 ### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
-if [ $NEST != "conusmem2" ]
+if [ $NEST != "conusmem2" -a  $NEST != "akmem2" ]
 then
 
 
-mv ${mod}.t${cycold}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
-mv ${mod}.t${cycold}z.${type}03${suf} ./run_ungrib_1/GRIBFILE.AAB
-mv ${mod}.t${cycold}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAC
-mv ${mod}.t${cycold}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAD
-cp ${mod}.t${cycold}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}15${suf} ./run_ungrib_1/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_1/GRIBFILE.AAE
 
-mv ${mod}.t${cycold}z.${type}12${suf} ./run_ungrib_2/GRIBFILE.AAA
-mv ${mod}.t${cycold}z.${type}15${suf} ./run_ungrib_2/GRIBFILE.AAB
-mv ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAC
-mv ${mod}.t${cycold}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAD
-cp ${mod}.t${cycold}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}27${suf} ./run_ungrib_2/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_2/GRIBFILE.AAE
 
-mv ${mod}.t${cycold}z.${type}24${suf} ./run_ungrib_3/GRIBFILE.AAA
-mv ${mod}.t${cycold}z.${type}27${suf} ./run_ungrib_3/GRIBFILE.AAB
-mv ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAC
-mv ${mod}.t${cycold}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAD
-cp ${mod}.t${cycold}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}39${suf} ./run_ungrib_3/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_3/GRIBFILE.AAE
 
-mv ${mod}.t${cycold}z.${type}36${suf} ./run_ungrib_4/GRIBFILE.AAA
-mv ${mod}.t${cycold}z.${type}39${suf} ./run_ungrib_4/GRIBFILE.AAB
-mv ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAC
-mv ${mod}.t${cycold}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAD
-mv ${mod}.t${cycold}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAE
-mv ${mod}.t${cycold}z.${type}51${suf} ./run_ungrib_4/GRIBFILE.AAF
-mv ${mod}.t${cycold}z.${type}54${suf} ./run_ungrib_4/GRIBFILE.AAG
+mv ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}51${suf} ./run_ungrib_4/GRIBFILE.AAD
+mv ${mod}.t${cycold}z.${type}54${suf} ./run_ungrib_4/GRIBFILE.AAE
+
+else
+
+echo other branch using NAM...not cyc old
+
+mv ${mod}.t${cyc}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}03${suf} ./run_ungrib_1/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAD
+cp ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAE
+
+mv ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_2/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}15${suf} ./run_ungrib_2/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAD
+cp ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAE
+
+mv ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_3/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}27${suf} ./run_ungrib_3/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAD
+cp ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAE
+
+mv ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_4/GRIBFILE.AAA
+mv ${mod}.t${cyc}z.${type}39${suf} ./run_ungrib_4/GRIBFILE.AAB
+mv ${mod}.t${cyc}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAC
+mv ${mod}.t${cyc}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAD
+mv ${mod}.t${cyc}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAE
+
+
+fi
 
 pwd
 
@@ -303,8 +333,8 @@ export MP_INFOLEVEL=3
 export MP_STDOUTMODE=ordered
 
 export pgm=hiresw_wps_ungrib_gen.sh_offset
-#./poescript
-aprun -n 1 -N 1 -d $NTASK ./poescript
+./poescript
+# aprun -n 1 -N 1 -d $NTASK ./poescript
 export err=$?; err_chk
 
 cd run_ungrib/
