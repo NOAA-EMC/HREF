@@ -92,7 +92,7 @@ chmod 775 $DATA/poescript_${fhr}
 #command="aprun -n 1 -N 1 -d 5 $DATA/poescript_${fhr}_1 : -n 1 -N 1 -d 5 $DATA/poescript_${fhr}_2 : -n 1 -N 1 -d 3 $DATA/poescript_${fhr}_3 "
 command="aprun -n 1 -N 1 -d 13 $DATA/poescript_${fhr} "
 
-elif [ $NEST = "ak" ]
+elif [ $NEST = "ak" -o $NEST = "akmem2" ]
 then
 
 echo "#!/bin/bash" > $DATA/poescript_${fhr}
@@ -267,7 +267,7 @@ $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2west.grib2 -s > $C
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuseast.grib2_2
 rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_1 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conuswest.grib2_2
 
-elif [ $NEST = "ak" ]
+elif [ $NEST = "ak" -o $NEST = "akmem2" ]
 then
 
   if test $SENDCOM = 'YES'

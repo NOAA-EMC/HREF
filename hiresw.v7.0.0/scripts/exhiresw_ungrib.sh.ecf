@@ -107,18 +107,18 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
-if [ $NEST != "conusmem2" ]
+if [ $NEST = 'conusmem2' -o $NEST = 'akmem2' ]
 then
-
-mod=gfs
-type=pgrb2.0p50.f0
-suf=""
-
-else
 
 mod=nam
 type=awp151
 suf=".tm00.grib2"
+
+else
+
+mod=gfs
+type=pgrb2.0p50.f0
+suf=""
 
 fi
 
@@ -127,7 +127,7 @@ while [ $whr -le $last ]
 do
 
 
-if [ $NEST != "conusmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
 then
 
 icnt=0
@@ -153,7 +153,7 @@ export GRIBSRC=GFS
 
 else
 
-echo conusmem2 branch
+echo mem2 branch
 
 icnt=0
 while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} ]

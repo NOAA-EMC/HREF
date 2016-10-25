@@ -254,13 +254,13 @@ startmsg
 echo here RUNLOC  $RUNLOC
 echo here MODEL $MODEL
 
-if [ ${RUNLOC} == "conusmem2arw" ]
+if [ ${RUNLOC} == "conusmem2arw" -o ${RUNLOC} == "akmem2arw" ]
 then
-echo running nssl version
-aprun $EXEChiresw/hiresw_sndp_nssl${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+echo running mem2 version
+aprun $EXEChiresw/hiresw_sndp_${MODEL}mem2 < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;err_chk
 else
-echo running non nssl version
+echo running non mem2 version
 aprun $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
 export err=$?;err_chk
 fi
