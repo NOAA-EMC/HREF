@@ -109,7 +109,7 @@ then
   wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747"
 fi
 
-if [ $DOMIN = "akarw" ]
+if [ $DOMIN = "akarw" -o $DOMIN = "akmem2arw" ]
 then
   filenamthree="wrf.EMAK04"
   DOMIN_bucket="general_g2"
