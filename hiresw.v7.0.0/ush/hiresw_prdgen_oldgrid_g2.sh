@@ -95,7 +95,7 @@ then
   DOMIN_bucket="general_g2"
   IM=884
   JM=614
-elif [ $DOMIN = "akarw" ]
+elif [ $DOMIN = "akarw" -o $DOMIN = "akmem2arw" ]
 then
   filenamthree="wrf.EMAK05"
   DOMIN_bucket="general_g2"
@@ -148,7 +148,7 @@ export tmmark=tm00
 # make GRIB file with pressure data every 25 mb for EMC's FVS
 # verification
 
-if [ $DOMIN_SMALL = "ak" ]
+if [ $DOMIN_SMALL = "ak" -o $DOMIN_SMALL = "akmem2" ]
 then
 cp $PARMhiresw/hiresw_awpreg.txt_${subpiece} hiresw_grid_extract.txt
 else
