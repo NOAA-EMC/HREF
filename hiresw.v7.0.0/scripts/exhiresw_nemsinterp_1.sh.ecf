@@ -187,6 +187,9 @@ cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_0
 # make sure 00 h NAM restart file exists; use cold-start input
 # file if it does not
 
+## ndas.t00z.nmm_b_restart_nemsio.tm03 (off by 3 h) might be only possibility for starting 
+## before the NAM
+
 if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
 then
   INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"

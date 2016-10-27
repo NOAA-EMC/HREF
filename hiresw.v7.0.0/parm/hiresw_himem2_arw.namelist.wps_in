@@ -14,18 +14,18 @@
  i_parent_start =      1, 31
  j_parent_start =      1, 17
  s_we           = 1, 1,
- e_we           = 2029,112,
+ e_we           = 400,112,
  s_sn           = 1, 1,
- e_sn           = 1248,97,
+ e_sn           = 320,97,
  geog_data_res  = '2m','2m',
- dx = 3200.,
- dy = 3200.,
+ dx = 3000.,
+ dy = 3000.,
  map_proj = 'lambert',
- ref_lat   = 40.0
- ref_lon   = -98.0
- truelat1  =  40.0,
- truelat2  =  40.0,
- stand_lon = -98.0
+ ref_lat   = 20.0
+ ref_lon   = -157.0
+ truelat1  =  20.0,
+ truelat2  =  20,
+ stand_lon = -157.0
 /
  ref_x     = ,
  ref_y     = ,

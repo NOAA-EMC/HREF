@@ -81,8 +81,11 @@ case $RUNTYP in
   conusmem2arw) rg=conus; outres="2p5km"; outreg=conusmem2;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   conusarw|conusnmmb) rg=conus; outres="2p5km"; outreg=conus;wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   hiarw|hinmmb) rg=hi; outres="2p5km"; outreg=hi;wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
+  himem2arw) rg=hi; outres="2p5km"; outreg=himem2;wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
   prarw|prnmmb) rg=pr; outres="2p5km"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
+  prmem2arw) rg=pr; outres="2p5km"; outreg=prmem2; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
   akarw|aknmmb) rg=ak; outres="3km"; outreg=ak; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
+  akmem2) rg=ak; outres="3km"; outreg=akmem2; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
   guamarw|guamnmmb) rg=guam; outres="2p5km"; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
 esac
 
@@ -169,9 +172,13 @@ grdextmerc=" 0 64 2500 2500"
       grid="255 1 193 193 12350 143687 128 16794 148280 20000  $grdextmerc";;
      hiarw)            sgrb=243;ogrd=196
       grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
+     himem2arw)            sgrb=243;ogrd=196
+      grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
      hinmmb)            sgrb=243;ogrd=196
       grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
      prarw)            sgrb=212;ogrd=195
+      grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
+     prmem2arw)            sgrb=212;ogrd=195
       grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
      prnmmb)            sgrb=212;ogrd=195
       grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
@@ -196,6 +203,9 @@ grdextmerc=" 0 64 2500 2500"
       echo RUNTYP  ${RUNTYP} configuration not available $mdlgrd $rg
       exit;;
    esac
+
+	echo here2 with rg $rg
+	echo here2 with maskpre $maskpre
 
 maskfl=${maskpre}.${ext}
 topofl=${topopre}.${ext}
@@ -557,7 +567,7 @@ echo START env AT CALL OF g2 script
 env
 echo END env AT CALL OF g2 script
 
-if [ $RUNTYP != "conusmem2arw" ]
+if [ $RUNTYP != "conusmem2arw" -a $RUNTYP != "akmem2arw" -a $RUNTYP != "himem2arw" -a $RUNTYP != "prmem2arw" ]
 then
 NLEV=50
 else

@@ -34,7 +34,6 @@ mkdir ${DATA}/prdgen_full
 
 if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusmem21 worked
  mkdir ${DATA}/prdgen_full_${subpiece}
  cd ${DATA}/prdgen_full_${subpiece}/
 else
@@ -122,7 +121,6 @@ then
   wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976"
 elif [ $DOMIN = "conusarw" -o $DOMIN = "conusmem2arw" ]
 then
-	echo conusmem22 worked
   filenamthree="wrf.EMCONUS04"
   DOMIN_bucket="general_g2"
   rg="conus"
@@ -142,7 +140,7 @@ then
   JM=193
   reg="10 6 0 0 0 0 0 0 193 193 12350000 143687000 136 20000000 16794000 148280000 64 0 2500000 2500000"
   wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794"
-elif [ $DOMIN = "hiarw" ]
+elif [ $DOMIN = "hiarw" -o $DOMIN = "himem2arw" ]
 then
   filenamthree="wrf.EMHI04"
   DOMIN_bucket="general_g2"
@@ -153,7 +151,7 @@ then
 #  reg="10 6 0 0 0 0 0 0 321 225 18073000 -161525000 136 20000000 23088000 -153869000 64 0 2500000 2500000"
   reg="10 6 0 0 0 0 0 0 321 225 18073000 198475000 136 20000000 23088000 206131000 64 0 2500000 2500000"
   wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088"
-elif [ $DOMIN = "prarw" ]
+elif [ $DOMIN = "prarw" -o $DOMIN = "prmem2arw"  ]
 then
   filenamthree="wrf.EMPR04"
   DOMIN_bucket="general_g2"
@@ -188,7 +186,6 @@ then
 
 if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusmem23 worked
 cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_ndfd.txt_3h hiresw_grid_extract.txt
@@ -203,7 +200,6 @@ echo "here for 3hrly beyond f00 with DOMIN_SMALL" $DOMIN_SMALL
 
 if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusmem24 worked
 cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_ndfd.txt_3h hiresw_grid_extract.txt
@@ -220,7 +216,6 @@ echo here not three hourly and not zero
 
 if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusmem25 worked
 cp $PARMhiresw/hiresw_ndfd.txt_1h_conus_${subpiece} hiresw_grid_extract.txt
 else
 cp $PARMhiresw/hiresw_ndfd.txt_1h hiresw_grid_extract.txt
@@ -257,7 +252,6 @@ fi
 
 if [ $DOMIN_SMALL = "conusmem2"  -a $subpiece = "1" ] 
 then
-	echo conusmem26 worked
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
@@ -285,7 +279,6 @@ fi
 #####
 if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusmem28 worked
 
 if [ $subpiece = "1" ]
 then
@@ -314,7 +307,6 @@ fi
 
 if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ]
 then
-	echo conusmem210 worked
 
 if [ $subpiece = "1" ]
 then
@@ -361,7 +353,6 @@ then
 
 if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ] 
 then
-	echo conusmem212 worked
 	echo COPYING f00 file to hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 	echo where am I
 	pwd

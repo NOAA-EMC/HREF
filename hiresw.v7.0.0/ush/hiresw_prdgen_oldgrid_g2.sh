@@ -104,7 +104,7 @@ then
   wgt=ak
   reg="20 6 0 0 0 0 0 0 825 603 44800000 -174500000 136 60000000 -150000000 5000000 5000000 0 64"
   wgrib2def="nps:210:60 185.5:825:5000 44.8:603:5000"
-elif [ $DOMIN = "hiarw" ]
+elif [ $DOMIN = "hiarw" -o $DOMIN = "himem2arw" ]
 then
   filenamthree="wrf.EMHI05"
   DOMIN_bucket="general_g2"
@@ -114,7 +114,7 @@ then
 #  reg="0 6 0 0 0 0 0 0 223 170 0 0 16400000 -162350000 136 24005000 -152360000 45000 45000 64"
   reg="0 6 0 0 0 0 0 0 223 170 0 0 16400000 197650000 136 24005000 207640000 45000 45000 64"
   wgrib2def="latlon 197.65:223:.045 16.4:170:.045"
-elif [ $DOMIN = "prarw" ]
+elif [ $DOMIN = "prarw" -o $DOMIN = "prmem2arw" ]
 then
   filenamthree="wrf.EMPR05"
   DOMIN_bucket="general_g2"

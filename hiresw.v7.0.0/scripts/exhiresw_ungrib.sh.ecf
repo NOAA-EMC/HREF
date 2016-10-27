@@ -107,7 +107,7 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
-if [ $NEST = 'conusmem2' -o $NEST = 'akmem2' ]
+if [ $NEST = 'conusmem2' -o $NEST = 'akmem2' -o $NEST = 'himem2' -o $NEST = 'prmem2' ]
 then
 
 mod=nam
@@ -127,7 +127,7 @@ while [ $whr -le $last ]
 do
 
 
-if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != "prmem2" ]
 then
 
 icnt=0
