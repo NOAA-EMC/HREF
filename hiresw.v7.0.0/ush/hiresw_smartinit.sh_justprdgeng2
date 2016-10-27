@@ -75,7 +75,9 @@ case $RUNTYP in
   conusmem2arw) rg=conus; outreg=conusmem2; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   conusarw|conusnmmb) rg=conus; outreg=conus; wgrib2def="lambert:265:25:25 238.446:2145:2540 20.192:1377:2540";;
   hiarw|hinmmb) rg=hi; compress="jpeg";outreg=hi; wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
+  himem2arw) rg=hi; compress="jpeg"; outreg=himem2; wgrib2def="mercator:20 198.475:321:2500:206.131 18.073:225:2500:23.088";;
   prarw|prnmmb) rg=pr; compress="jpeg"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
+  prmem2arw) rg=pr; compress="jpeg"; outreg=prmem2; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
   akmem2arw) rg=ak ; outreg=akmem2; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
   akarw|aknmmb) rg=ak; outreg=ak; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
   guamarw|guamnmmb) rg=guam; compress="jpeg"; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
@@ -151,6 +153,8 @@ grdext=" 0 64 25000 25000"
 grdextmerc=" 0 64 2500 2500"
 
 
+   echo here with rg $rg
+
    maskpre=hiresw_smartmask${rg}
    topopre=hiresw_smarttopo${rg}
    ext=grb
@@ -159,9 +163,13 @@ grdextmerc=" 0 64 2500 2500"
       grid="255 1 193 193 12350 143687 128 16794 148280 20000  $grdextmerc";;
      hiarw)            sgrb=243;ogrd=196
       grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
+     himem2arw)            sgrb=243;ogrd=196
+      grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
      hinmmb)            sgrb=243;ogrd=196
       grid="255 1 321 225 18067 -161626 128 23082 -153969 20000 $grdextmerc";;
      prarw)            sgrb=212;ogrd=195
+      grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
+     prmem2arw)            sgrb=212;ogrd=195
       grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
      prnmmb)            sgrb=212;ogrd=195
       grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;

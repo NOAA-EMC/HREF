@@ -120,7 +120,7 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
-if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != "prmem2" ]
 then
 
 mod=gfs
@@ -140,7 +140,7 @@ while [ $whr -le $last ]
 do
 
 
-if [ $NEST != "conusmem2" -a $NEST != "akmem2" ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != "prmem2"]
 then
 
 icnt=0
@@ -251,7 +251,7 @@ done
 
 ### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
-if [ $NEST != "conusmem2" -a  $NEST != "akmem2" ]
+if [ $NEST != "conusmem2" -a  $NEST != "akmem2" -a $NEST != "himem2" -a  $NEST != "prmem2" ]
 then
 
 
@@ -333,8 +333,8 @@ export MP_INFOLEVEL=3
 export MP_STDOUTMODE=ordered
 
 export pgm=hiresw_wps_ungrib_gen.sh_offset
-./poescript
-# aprun -n 1 -N 1 -d $NTASK ./poescript
+# ./poescript
+aprun -n 1 -N 1 -d $NTASK ./poescript
 export err=$?; err_chk
 
 cd run_ungrib/
