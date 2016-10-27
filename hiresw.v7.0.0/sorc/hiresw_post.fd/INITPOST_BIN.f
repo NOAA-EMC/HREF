@@ -400,7 +400,7 @@
             u ( i, j, l ) = dum3d ( i, j, l )
 
 !        if (I .eq. 5 .and. J .eq. 54) then
-!        print*, 'I,J,L, u(i,j,l): ', I,J,L, u(i,j,l)
+!        write(0,*) 'I,J,L, u(i,j,l): ', I,J,L, u(i,j,l)
 !        endif
 
         end do
@@ -419,8 +419,11 @@
 !      call getVariable(fileName,DateStr,DataHandle,'V',DUM3D,
 !        IM+1,1,JM+1,LM+1,IM,JS,JEV,LM)
 
-
       VarName='V'
+
+!	write(0,*) 'to V, shape(DUM3D): ', shape(DUM3D)
+!	write(0,*) 'JM+1, JEV: ', JM+1, JEV
+
       call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JEV,LM)
       do l = 1, lm

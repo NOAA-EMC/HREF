@@ -452,7 +452,7 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 
    use ctlblk_mod, only: me, MPI_COMM_COMP, arw_icnt, arw_idsp, &
                          arw_icnt_u, arw_idsp_u, &
-                         arw_icnt_v, arw_idsp_v
+                         arw_icnt_v, arw_idsp_v,jsv,jev
    use wrf_io_flags_mod
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    implicit none
@@ -467,7 +467,7 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
    integer,intent(in) :: IM,LM,JSTA_2L,JEND_2U
    integer,intent(in) :: IM1,LM1,JS,JE
    integer :: ndim,sizesend
-   integer :: WrfType,i,j,l,ll,K,INDEX,LMLOC
+   integer :: WrfType,i,j,l,ll,K,INDEX,LMLOC, LOCDIM
    integer, dimension(4) :: start_index, end_index
    character (len= 4) :: staggering
    character (len= 3) :: ordering
@@ -594,12 +594,28 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 	 allocate(data_1d_out(LMLOC*arw_icnt_u(me)))
          call mpi_scatterv(data_1d,     LMLOC*arw_icnt_u, LMLOC*arw_idsp_u, MPI_real4, &
                            data_1d_out, LMLOC*arw_icnt_u(me),         MPI_real4, 0, MPI_COMM_COMP, ierr )
+	write(0,*) 'data_1d_out allocated for U: ', LMLOC*arw_icnt_u(me)
 	else if (trim(VarName) == 'V') then
+
+        LOCDIM=(jev-jsv+1)*(im1)*LMLOC
+	write(0,*) 'me, arw_icnt_v(me), LMLOC, jsv, jev: ', me, arw_icnt_v(me), LMLOC, jsv, jev
 	 allocate(data_1d_out(LMLOC*arw_icnt_v(me)))
+	write(0,*) 'data_1d_out allocated for V: jsv,jev ', jsv,jev, LMLOC*arw_icnt_v(me), &
+                   LOCDIM
+
+	if (LOCDIM .gt. LMLOC*arw_icnt_v(me) ) then
+	write(0,*) 'local fill space is larger than what will be available' , me
+	write(0,*) 'local fill space is larger than what will be available', me
+	write(0,*) 'STOP'
+	STOP
+	endif
+
+
          call mpi_scatterv(data_1d,     LMLOC*arw_icnt_v, LMLOC*arw_idsp_v, MPI_real4, &
                            data_1d_out, LMLOC*arw_icnt_v(me),         MPI_real4, 0, MPI_COMM_COMP, ierr )
         else
 	 allocate(data_1d_out(LMLOC*arw_icnt(me)))
+	write(0,*) 'data_1d_out allocated for scalar: ', LMLOC*arw_icnt(me)
          call mpi_scatterv(data_1d,     LMLOC*arw_icnt, LMLOC*arw_idsp, MPI_real4, &
                            data_1d_out, LMLOC*arw_icnt(me),         MPI_real4, 0, MPI_COMM_COMP, ierr )
 	endif
@@ -618,14 +634,44 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 
 ! mpi_scatterv stuff	
 
-        do J=js,je
+!
+	if (trim(VarName) == 'V') then
+
+	write(0,*) 'jsv, jev: ', jsv, jev
+        do J=jsv,jev
         do K=1,end_index(2)
         do I=1,im1
-	INDEX=((j-js+1)-1)*(end_index(2)*im1)+((K-1)*im1)+I
+
+	INDEX=((j-jsv+1)-1)*(end_index(2)*im1)+((K-1)*im1)+I
+
+	if (INDEX .gt. size(data_1d_out)) then
+	write(0,*) 'Js, I,J,K,INDEX,size: ',js, I,J,K,INDEX,size(data_1d_out)
+	endif
+
 	data(I,K,J,1)=data_1d_out(INDEX)
         enddo
         enddo
 	enddo
+
+	else
+
+        do J=js,je
+        do K=1,end_index(2)
+        do I=1,im1
+
+	INDEX=((j-js+1)-1)*(end_index(2)*im1)+((K-1)*im1)+I
+
+	if (INDEX .gt. size(data_1d_out)) then
+	write(0,*) 'Js, I,J,K,INDEX,size: ',js, I,J,K,INDEX,size(data_1d_out)
+!	write(0,*) 'shape(data): ', shape(data)
+	endif
+
+	data(I,K,J,1)=data_1d_out(INDEX)
+        enddo
+        enddo
+	enddo
+
+	endif
 
 	write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
 
