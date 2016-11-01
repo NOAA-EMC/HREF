@@ -133,7 +133,12 @@ then
            err_exit $msg
         fi
 
+if [ $PDY -lt 20160801 ]
+then
+ cp $PARMhiresw/hiresw_Vtable.RAP_retro $DATA/run_ungrib/Vtable
+else
  cp $PARMhiresw/hiresw_Vtable.RAP $DATA/run_ungrib/Vtable
+fi
  export err1=$?
  mod=rap
  GRIBSRC=RAP
@@ -389,11 +394,11 @@ if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
 then
   INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
 else
-  if [ -e $GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00 ]
+  if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 ]
   then
-    INPUT_FILE="$GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00"
+    INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01"
   else
-    msg="FATAL ERROR: NEITHER $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 NOR $GESINnam/nam.t${cyc}z.input_nemsio.anl.tm00 EXIST!"
+    msg="FATAL ERROR: NEITHER $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 NOR $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 EXIST!"
     err_exit $msg
   fi
 fi
