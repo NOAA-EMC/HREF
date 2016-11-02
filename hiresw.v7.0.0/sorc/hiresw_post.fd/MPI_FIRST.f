@@ -81,7 +81,7 @@
               jvend_2u, lm, lp1, jsta_2l, jend_2u, nsoil, nbin_du, nbin_ss,&
               nbin_bc, nbin_oc, nbin_su,&
               arw_icnt,arw_icnt_u,arw_icnt_v, &
-              arw_idsp,arw_idsp_u,arw_idsp_v,jsv,jev
+              arw_idsp,arw_idsp_u,arw_idsp_v,jsvmine,jevmine
 
 !
 !      use params_mod
@@ -160,8 +160,10 @@
 
          arw_icnt_v(i) = (jex-jsx+1)*(im)
          arw_idsp_v(i) = (jsx-1)*(im)
-	 jsv=jsx
-	 jev=jex
+	 jsvmine(i)=jsx
+	 jevmine(i)=jex
+
+	write(0,*) 'me, jsvmine, jevmine (a): ', me, jsvmine(i), jevmine(i)
 
          call para_range_offset(1,jm+1,2,num_procs,i,jsxx,jexx)
 
@@ -169,8 +171,9 @@
  !! only want the num_procs-1 one from this offset
          arw_icnt_v(i) = (jexx-jsxx+1)*(im)
          arw_idsp_v(i) = (jsxx-1)*(im)
-	 jsv=jsxx
-	 jev=jexx
+	 jsvmine(i)=jsxx
+	 jevmine(i)=jexx
+	write(0,*) 'me, jsvmine, jevmine (b): ', me, jsvmine(i), jevmine(i)
 	endif
 
          if ( me .eq. 0 ) then
