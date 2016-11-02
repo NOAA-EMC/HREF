@@ -54,7 +54,8 @@
              JSTA_M2,JEND_M2,IUP,IDN,ICNT(0:1023),IDSP(0:1023),        &
              ARW_ICNT(0:1023),ARW_IDSP(0:1023),                    &
              ARW_ICNT_U(0:1023),ARW_IDSP_U(0:1023),                    &
-             ARW_ICNT_V(0:1023),ARW_IDSP_V(0:1023),JSV,JEV,            &
+             ARW_ICNT_V(0:1023),ARW_IDSP_V(0:1023),                    &
+             JSVMINE(0:1023),JEVMINE(0:1023),                          &
              JSTA_2L, JEND_2U,JVEND_2u,NUM_SERVERS, MPI_COMM_INTER,    &
              MPI_COMM_COMP, IM,JM,LM,NSOIL,LP1,LM1,IM_JM,              &
              lsm,lsmp1                                    !comm mpi

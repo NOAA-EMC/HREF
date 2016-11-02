@@ -426,6 +426,7 @@
 
       call getVariableBikj_p(fileName,DateStr,DataHandle,VarName,DUM3D,       &
         IM+1,1,JM+1,LM+1,IM,JS,JEV,LM)
+
       do l = 1, lm
        do j = jsta_2l, jev
         do i = 1, im

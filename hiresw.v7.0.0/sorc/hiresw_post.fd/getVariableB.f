@@ -452,7 +452,7 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 
    use ctlblk_mod, only: me, MPI_COMM_COMP, arw_icnt, arw_idsp, &
                          arw_icnt_u, arw_idsp_u, &
-                         arw_icnt_v, arw_idsp_v,jsv,jev
+                         arw_icnt_v, arw_idsp_v,jsvmine,jevmine
    use wrf_io_flags_mod
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    implicit none
@@ -597,10 +597,10 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 	write(0,*) 'data_1d_out allocated for U: ', LMLOC*arw_icnt_u(me)
 	else if (trim(VarName) == 'V') then
 
-        LOCDIM=(jev-jsv+1)*(im1)*LMLOC
-	write(0,*) 'me, arw_icnt_v(me), LMLOC, jsv, jev: ', me, arw_icnt_v(me), LMLOC, jsv, jev
+        LOCDIM=(jevmine(me)-jsvmine(me)+1)*(im1)*LMLOC
+	write(0,*) 'me, arw_icnt_v(me), LMLOC, jsvmine, jevmine: ', me, arw_icnt_v(me), LMLOC, jsvmine(me), jevmine(me)
 	 allocate(data_1d_out(LMLOC*arw_icnt_v(me)))
-	write(0,*) 'data_1d_out allocated for V: jsv,jev ', jsv,jev, LMLOC*arw_icnt_v(me), &
+	write(0,*) 'data_1d_out allocated for V: jsvmine,jevmine ', jsvmine(me),jevmine(me), LMLOC*arw_icnt_v(me), &
                    LOCDIM
 
 	if (LOCDIM .gt. LMLOC*arw_icnt_v(me) ) then
@@ -637,12 +637,12 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 !
 	if (trim(VarName) == 'V') then
 
-	write(0,*) 'jsv, jev: ', jsv, jev
-        do J=jsv,jev
+	write(0,*) 'jsvmine, jevmine: ', jsvmine(me), jevmine(me)
+        do J=jsvmine(me),jevmine(me)
         do K=1,end_index(2)
         do I=1,im1
 
-	INDEX=((j-jsv+1)-1)*(end_index(2)*im1)+((K-1)*im1)+I
+	INDEX=((j-jsvmine(me)+1)-1)*(end_index(2)*im1)+((K-1)*im1)+I
 
 	if (INDEX .gt. size(data_1d_out)) then
 	write(0,*) 'Js, I,J,K,INDEX,size: ',js, I,J,K,INDEX,size(data_1d_out)
