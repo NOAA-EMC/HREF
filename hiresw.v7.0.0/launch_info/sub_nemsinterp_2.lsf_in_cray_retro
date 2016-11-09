@@ -4,6 +4,7 @@
 #BSUB -q "dev"
 #BSUB -J HIRESW_NEMSINTERP_2
 #BSUB -W 0:12
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}' rusage[mem=9000]
@@ -44,7 +45,7 @@ export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
-export DATA=${DATAROOT}/hiresw.nemsinterp_2_${NEST}_${MODEL}_${cyc}_${envir}
+export DATA=${DATAROOT}/hiresw.nemsinterp_2_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 
 $HOMEhiresw/jobs/JHIRESW_NEMSINTERP_2

@@ -4,6 +4,7 @@
 #BSUB -q "dev"
 #BSUB -J HIRESW_PREP_RAP
 #BSUB -W 0:15
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}' rusage[mem=3000]
@@ -43,7 +44,7 @@ export GESINnam=${GESROOTp1}/prod/nam.${DATE}
 # export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export DATA=${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}
+export DATA=${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}_retro
 export COMROOT=/gpfs/hps/nco/ops/com
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
@@ -51,6 +52,7 @@ export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 # export COMINrap=/gpfs/hps/ptmp/Matthew.Pyle/com/rap/prod/rap.${DATE}
 # export COMINrap=/gpfs/td1/ptmp/Corey.Guastini/com/rap/prod/rap.${DATE}
 
-export COMINrap=${COMROOTp1}/rap/prod/rap.${DATE}
+# export COMINrap=${COMROOTp1}/rap/prod/rap.${DATE}
+export COMINrap=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
 
-$HOMEhiresw/jobs/JHIRESW_PREPRAP
+$HOMEhiresw/jobs/JHIRESW_PREPRAP_retro

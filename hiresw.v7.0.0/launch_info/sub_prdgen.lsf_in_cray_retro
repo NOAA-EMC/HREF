@@ -4,7 +4,8 @@
 #BSUB -q "dev"
 #BSUB -J HIRESW_PRDGEN
 #BSUB -P HRW-T2O
-#BSUB -W 1:25
+#BSUB -W 1:45
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -M 1000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_NPROC_] cu[type=cabinet]}' rusage[mem=1000]
 
@@ -50,7 +51,30 @@ export COMROOT=/gpfs/hps/nco/ops/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
-export INPUT_DATA=${DATAROOT}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}
-export DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA=${DATAROOT}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 $HOMEhiresw/jobs/JHIRESW_PRDGEN_retro
+
+## increment the date by 12 hours
+
+sleep 240
+
+CUR=${DATE}${cyc}
+
+echo CUR is $CUR
+
+NEW=`$NDATE 12 $CUR`
+
+newdate=`echo $NEW | cut -c1-8`
+newcyc=`echo $NEW | cut -c9-10`
+
+echo newdate $newdate
+echo newcyc $newcyc
+
+if [ $newdate -lt 20160124 ]
+then
+$HOMEhiresw/launch_info/launch_cray_offset_retro conus arw ${newcyc} ${newdate}
+else
+echo too late so quitting
+fi

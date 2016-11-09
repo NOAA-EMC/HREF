@@ -43,6 +43,8 @@ DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 export GESINnam=${GESROOTp1}/prod/nam.${DATE}
 # export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
+# export GESINnam=/gpfs/td3/emc/meso/noscrub/Eric.Rogers/nwges/para/nam.${DATE}
+
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}

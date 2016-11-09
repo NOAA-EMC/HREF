@@ -26,6 +26,8 @@ cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/launch_info/
 
 which bsub
 
+echo NDATE is $NDATE
+
 
 if [ $DOM$CORE == "hinmmb"  ]
 then
@@ -101,8 +103,8 @@ elif [ $DOM$CORE == "conusarw" ]
 then
 MODPROCS=2160
 MODSPAN=24
-POSTPROCS=16
-POSTSPAN=8
+POSTPROCS=22
+POSTSPAN=11
 PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=1
