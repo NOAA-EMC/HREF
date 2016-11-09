@@ -3634,13 +3634,13 @@
 
     <param>
        <post_avblfldidx>423</post_avblfldidx>
-       <shortname>MAX_MAXUVV_ON_ISOBARIC_SFC_40-100hpa</shortname>
-       <longname>hourly maximum Upward Vertical Velocity between 40-100hpa</longname>
+       <shortname>MAX_MAXUVV_ON_ISOBARIC_SFC_10-100hpa</shortname>
+       <longname>hourly maximum Upward Vertical Velocity between 10-100hpa</longname>
        <stats_proc>MAX</stats_proc>
        <pdstmpl>tmpl4_8</pdstmpl>
        <pname>MAXUVV</pname>
        <fixed_sfc1_type>isobaric_sfc</fixed_sfc1_type>
-       <level>40000</level>
+       <level>10000</level>
        <fixed_sfc2_type>isobaric_sfc</fixed_sfc2_type>
        <level2>100000</level2>
        <scale>-3.0</scale>
@@ -3648,13 +3648,13 @@
 
     <param>
        <post_avblfldidx>424</post_avblfldidx>
-       <shortname>MAX_MAXDVV_ON_ISOBARIC_SFC_40-100hpa</shortname>
-       <longname>hourly maximum Downward Vertical Velocity between 40-100hpa</longname>
+       <shortname>MAX_MAXDVV_ON_ISOBARIC_SFC_10-100hpa</shortname>
+       <longname>hourly maximum Downward Vertical Velocity between 10-100hpa</longname>
        <stats_proc>MAX</stats_proc>
        <pdstmpl>tmpl4_8</pdstmpl>
        <pname>MAXDVV</pname>
        <fixed_sfc1_type>isobaric_sfc</fixed_sfc1_type>
-       <level>40000</level>
+       <level>10000</level>
        <fixed_sfc2_type>isobaric_sfc</fixed_sfc2_type>
        <level2>100000</level2>
        <scale>-3.0</scale>
