@@ -6030,6 +6030,7 @@ END SUBROUTINE phy_bc
     END SUBROUTINE compute_diff_metrics
 
     SUBROUTINE cal_helicity ( config_flags, u, v, w, uh, up_heli_max,&
+                                   up_heli_min,hlower,hupper,        &
                                    ph, phb,                          &
                                    msfux, msfuy,                     &
                                    msfvx, msfvy,                     &
@@ -6061,7 +6062,8 @@ END SUBROUTINE phy_bc
     INTEGER, INTENT( IN )  &
     :: ids, ide, jds, jde, kds, kde, &
        ims, ime, jms, jme, kms, kme, &
-       its, ite, jts, jte, kts, kte
+       its, ite, jts, jte, kts, kte, &
+       hlower, hupper
 
     REAL, INTENT( IN )  &
     :: rdx, rdy, cf1, cf2, cf3
@@ -6076,7 +6078,7 @@ END SUBROUTINE phy_bc
     ::  u, v, w, ph, phb, zx, zy, rdz, rdzw
 
     REAL, DIMENSION( ims:ime, jms:jme ), INTENT( INOUT )  &
-    :: uh, up_heli_max
+    :: uh, up_heli_max, up_heli_min
 
 ! Local variables.
 
@@ -6369,7 +6371,7 @@ END SUBROUTINE phy_bc
 
 !-----------------------------------------------------------------------
 ! Complete the updraft helicity calculation, only including columns with
-! positive vertical velocity between the 2000 m and 5000 m levels.
+! positive vertical velocity between the 2000 m and hupper m levels.
 
     DO j = j_start, j_end
     DO i = i_start, i_end
@@ -6396,7 +6398,7 @@ END SUBROUTINE phy_bc
            (( ph(i  ,k+1,j-1) + phb(i  ,k+1,j-1) ) / g - ht(i  ,j-1) ) +  &
            (( ph(i-1,k+1,j-1) + phb(i-1,k+1,j-1) ) / g - ht(i-1,j-1) ) ) )
 
-      IF ( zl .GE. 2000. .AND. zu .LE. 5000. ) THEN
+      IF ( zl .GE. hlower .AND. zu .LE. hupper ) THEN
         IF ( wavg(i,k,j) .GT. 0. .AND. wavg(i,k+1,j) .GT. 0. ) THEN
           uh(i,j) = uh(i,j) + ( ( wavg(i,k,j) * rvort(i,k,j) + &
                     wavg(i,k+1,j) * rvort(i,k+1,j) ) * 0.5 ) &
@@ -6423,12 +6425,11 @@ END SUBROUTINE phy_bc
       IF ( use_column(i,j) ) THEN
         IF ( uh_smth .GT. up_heli_max(i,j) ) THEN
            up_heli_max(i,j) = uh_smth
+        ELSEIF (uh_smth .LT. up_heli_min(i,j) ) THEN
+           up_heli_min(i,j) = uh_smth
         ENDIF
       ENDIF
 
-!     IF ( up_heli_max(i,j) .GT. 1.0e+3 ) THEN
-!       print *,' i,j,up_heli_max = ', i,j,up_heli_max(i,j)
-!     ENDIF
     END DO
     END DO
 
@@ -6443,6 +6444,7 @@ END SUBROUTINE phy_bc
       DO k = kts, kte
 !        rvort(ids,k,j) = rvort(ids+1,k,j)
         up_heli_max(ids,j) = up_heli_max(ids+1,j)
+        up_heli_min(ids,j) = up_heli_min(ids+1,j)
       END DO
       END DO
     END IF
@@ -6452,6 +6454,7 @@ END SUBROUTINE phy_bc
       DO i = its, ite
 !        rvort(i,k,jds) = rvort(i,k,jds+1)
         up_heli_max(i,jds) = up_heli_max(i,jds+1)
+        up_heli_min(i,jds) = up_heli_min(i,jds+1)
       END DO
       END DO
     END IF
@@ -6461,6 +6464,7 @@ END SUBROUTINE phy_bc
       DO k = kts, kte
 !        rvort(ide,k,j) = rvort(ide-1,k,j)
         up_heli_max(ide,j) = up_heli_max(ide-1,j)
+        up_heli_min(ide,j) = up_heli_min(ide-1,j)
       END DO
       END DO
     END IF
@@ -6470,6 +6474,7 @@ END SUBROUTINE phy_bc
       DO i = its, ite
 !        rvort(i,k,jde) = rvort(i,k,jde-1)
         up_heli_max(i,jde) = up_heli_max(i,jde-1)
+        up_heli_min(i,jde) = up_heli_min(i,jde-1)
       END DO
       END DO
     END IF

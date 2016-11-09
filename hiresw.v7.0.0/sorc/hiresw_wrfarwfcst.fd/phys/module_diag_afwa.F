@@ -1994,7 +1994,7 @@ CONTAINS
             grid%w_dn_max(i,j) = 0.
             grid%tcoli_max(i,j) = 0.
             grid%grpl_flx_max(i,j) = 0.
-            grid%up_heli_max(i,j) = 0.
+            grid%up_heli_max25(i,j) = 0.
 !            grid%refd_max(i,j) = 0.
             grid%afwa_llws(i,j) = 0.
             grid%afwa_tornado(i,j) = 0.
@@ -2048,7 +2048,7 @@ CONTAINS
       CALL severe_wx_diagnostics ( grid % wspd10max             &
                              , grid % w_up_max                  &
                              , grid % w_dn_max                  &
-                             , grid % up_heli_max               &
+                             , grid % up_heli_max25               &
                              , grid % tcoli_max                 &
                              , grid % midrh_min_old             &
                              , grid % midrh_min                 &

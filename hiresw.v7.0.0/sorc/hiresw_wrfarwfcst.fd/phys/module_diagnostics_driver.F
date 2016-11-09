@@ -263,7 +263,10 @@ CONTAINS
                 ,RH2MAX=grid%rh02_max,RH2MIN=grid%rh02_min           &
                 ,U10=grid%u10,V10=grid%v10,W=grid%w_2                &
                 ,WSPD10MAX=grid%wspd10max                            &
-                ,UP_HELI_MAX=grid%up_heli_max                        &
+                ,UP_HELI_MAX25=grid%up_heli_max25                    &
+                ,UP_HELI_MIN25=grid%up_heli_min25                    &
+                ,UP_HELI_MAX03=grid%up_heli_max03                    &
+                ,UP_HELI_MIN03=grid%up_heli_min03                    &
                 ,W_UP_MAX=grid%w_up_max,W_DN_MAX=grid%w_dn_max       &
                 ,ZNW=grid%znw,W_COLMEAN=grid%w_colmean               &
                 ,NUMCOLPTS=grid%numcolpts,W_MEAN=grid%w_mean         &

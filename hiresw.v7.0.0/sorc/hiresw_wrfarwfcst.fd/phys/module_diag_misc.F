@@ -41,7 +41,10 @@ CONTAINS
                      ,t2max,t2min,rh2max,rh2min                       &
                      ,u10,v10,w                                       &
                      ,wspd10max                                       &
-                     ,up_heli_max                                     &
+                     ,up_heli_max25                                   &
+                     ,up_heli_min25                                   &
+                     ,up_heli_max03                                   &
+                     ,up_heli_min03                                   &
                      ,w_up_max,w_dn_max                               &
                      ,znw,w_colmean                                   &
                      ,numcolpts,w_mean                                &
@@ -220,7 +223,10 @@ CONTAINS
 
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(INOUT) ::        &
                                                       wspd10max  &
-                                                   ,up_heli_max  &
+                                                 ,up_heli_max25  &
+                                                 ,up_heli_min25  &
+                                                 ,up_heli_max03  &
+                                                 ,up_heli_min03  &
                                              ,w_up_max,w_dn_max  &
                                     ,w_colmean,numcolpts,w_mean  &
                                           ,grpl_max,grpl_colint  &
@@ -428,7 +434,10 @@ CONTAINS
        DO j=j_start(ij),j_end(ij)
        DO i=i_start(ij),i_end(ij)
          wspd10max(i,j)   = 0.
-         up_heli_max(i,j) = 0.
+         up_heli_max25(i,j) = 0.
+         up_heli_min25(i,j) = 0.
+         up_heli_max03(i,j) = 0.
+         up_heli_min03(i,j) = 0.
          w_up_max(i,j)    = 0.
          w_dn_max(i,j)    = 0.
          w_mean(i,j)      = 0.
@@ -467,13 +476,13 @@ CONTAINS
      DO k=kms,kme
      DO i=i_start(ij),i_end(ij)
 
-! Find vertical velocity max (up and down) below 400 mb
+! Find vertical velocity max (up and down) below 100 mb
 
-       IF ( p8w(i,k,j) .GT. 40000. .AND. w(i,k,j) .GT. w_up_max(i,j) ) THEN
+       IF ( p8w(i,k,j) .GT. 10000. .AND. w(i,k,j) .GT. w_up_max(i,j) ) THEN
          w_up_max(i,j) = w(i,k,j)
        ENDIF
 
-       IF ( p8w(i,k,j) .GT. 40000. .AND. w(i,k,j) .LT. w_dn_max(i,j) ) THEN
+       IF ( p8w(i,k,j) .GT. 10000. .AND. w(i,k,j) .LT. w_dn_max(i,j) ) THEN
          w_dn_max(i,j) = w(i,k,j)
        ENDIF
 

@@ -470,9 +470,31 @@ BENCH_START(helicity_tim)
        DO ij = 1 , grid%num_tiles
 
           CALL wrf_debug ( 200 , ' call cal_helicity' )
+
+! call twice, once for 2-5 km, once for 0-3 km
+
           CALL cal_helicity ( config_flags,grid%u_2,grid%v_2,grid%w_2,  &
                               grid%uh,                             &
-                              grid%up_heli_max,                    &
+                              grid%up_heli_max25,                  &
+                              grid%up_heli_min25,                  &
+                              2000,5000,                           &
+                              grid%ph_2,grid%phb,                  &
+                              grid%msfux,grid%msfuy,               &
+                              grid%msfvx,grid%msfvy,               &
+                              grid%ht,                             &
+                              grid%rdx, grid%rdy, grid%dn, grid%dnw, grid%rdz, grid%rdzw,   &
+                              grid%fnm,grid%fnp,grid%cf1,grid%cf2,grid%cf3,grid%zx,grid%zy, &
+                              ids, ide, jds, jde, kds, kde,        &
+                              ims, ime, jms, jme, kms, kme,        &
+                              grid%i_start(ij), grid%i_end(ij),    &
+                              grid%j_start(ij), grid%j_end(ij),    &
+                              k_start    , k_end                  )
+
+          CALL cal_helicity ( config_flags,grid%u_2,grid%v_2,grid%w_2,  &
+                              grid%uh,                             &
+                              grid%up_heli_max03,                  &
+                              grid%up_heli_min03,                  &
+                              0,3000,                              &
                               grid%ph_2,grid%phb,                  &
                               grid%msfux,grid%msfuy,               &
                               grid%msfvx,grid%msfvy,               &
