@@ -150,8 +150,9 @@ subroutine getVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
      write(*,*) 'Error: ndim = ',ndim
    endif 
 
-       else
-	write(0,*) 'skipped ext_int_read_field'
+!       else
+!	write(0,*) 'skipped ext_int_read_field'
+
 	endif
 
         sizesend=(end_index(1)-start_index(1)+1)* &
@@ -175,7 +176,7 @@ subroutine getVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
 	enddo
 	endif
 
-	write(0,*) 'size(data_1d) sizesend: ', size(data_1d), sizesend
+!	write(0,*) 'size(data_1d) sizesend: ', size(data_1d), sizesend
 	
       call mpi_bcast(data_1d,sizesend,MPI_real4,0,MPI_COMM_COMP,ierr)
 
@@ -192,7 +193,7 @@ subroutine getVariableB(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
 	enddo
 	enddo
 
-	write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
+!	write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
 
    if (ndim .eq. 0)then
     VarBuff(1,1,1)=data(1,1,1,1)
@@ -615,7 +616,7 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
                            data_1d_out, LMLOC*arw_icnt_v(me),         MPI_real4, 0, MPI_COMM_COMP, ierr )
         else
 	 allocate(data_1d_out(LMLOC*arw_icnt(me)))
-	write(0,*) 'data_1d_out allocated for scalar: ', LMLOC*arw_icnt(me)
+!	write(0,*) 'data_1d_out allocated for scalar: ', LMLOC*arw_icnt(me)
          call mpi_scatterv(data_1d,     LMLOC*arw_icnt, LMLOC*arw_idsp, MPI_real4, &
                            data_1d_out, LMLOC*arw_icnt(me),         MPI_real4, 0, MPI_COMM_COMP, ierr )
 	endif
@@ -673,7 +674,7 @@ subroutine getVariableBikj_p(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND
 
 	endif
 
-	write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
+!	write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
 
    if (ndim .eq. 0)then
     VarBuff(1,1,1)=data(1,1,1,1)

@@ -470,7 +470,7 @@
       END IF
 
 	if (kd .eq. 0) then
-	write(0,*) 'divide zero avoided...t,td was: ', t,td
+!	write(0,*) 'divide zero avoided...t,td was: ', t,td
 	kd=t-5
 	endif
 

@@ -168,7 +168,7 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
         enddo
         endif
 
-        write(0,*) 'size(data_1d) sizesend: ', size(data_1d), sizesend
+!        write(0,*) 'size(data_1d) sizesend: ', size(data_1d), sizesend
 
       call mpi_bcast(data_1d,sizesend,MPI_integer,0,MPI_COMM_COMP,ierr)
 
@@ -184,7 +184,7 @@ subroutine getIVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,L
         enddo
         enddo
 
-        write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
+!        write(0,*) 'have data(1,1,1,1) now: ', data(1,1,1,1)
 
    if (ndim .eq. 0)then
     VarBuff(1,1,1)=data(1,1,1,1)
