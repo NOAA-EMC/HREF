@@ -1,6 +1,0 @@
-Execute a "make" command to build the hiresw_wrfbufr executable 
-in the ../../exec/ directory relative to this source.
-
-"make clean" will remove the executable and other traces
-of a previous build to force a full recompilation upon
-another "make" command.

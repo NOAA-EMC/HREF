@@ -1,5 +1,0 @@
-Run "make"
-
-It will build hiresw_pcpbucket_general executable 
-and copy it to the ../../exec/ directory relative to the source.
-
