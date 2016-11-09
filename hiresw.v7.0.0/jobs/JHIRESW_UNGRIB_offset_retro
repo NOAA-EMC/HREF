@@ -49,21 +49,25 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 #module load prod_util
 
 
+export PDY=${DATE}
+
 # Run setpdy and initialize PDY variables
 # setpdy.sh
 # . PDY
 
-export PDY=${DATE}
+### COMINgfs with be based on $PDY$cyc MINUS 6 hours
+
+PDYm6h=`$NDATE -6 $PDY$cyc | cut -c1-8`
 
 export COMOUT=${COMOUT:-/${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
-export COMINgfs=${COMINgfs:-$(compath.py gfs/prod/gfs.$PDY)}
+export COMINgfs=${COMINgfs:-$(compath.py gfs/prod/gfs.$PDYm6h)}
 export COMINnam=${COMINnam:-$(compath.py nam/prod/nam.$PDY)}
 
 mkdir -p -m 775 $COMOUT
  
 ########################################################
 # Execute the script.
-${HOMEhiresw}/scripts/exhiresw_ungrib.sh.ecf_retro
+${HOMEhiresw}/scripts/exhiresw_ungrib.sh.ecf_offset
 ########################################################
 
 cd $DATAROOT
