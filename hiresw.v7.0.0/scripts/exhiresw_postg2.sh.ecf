@@ -312,8 +312,31 @@ export pgm=hiresw_${MODEL}_post
 export FORT_BUFFERED=true
 
 # mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
-#mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
-aprun -n $NTASK -N $PTILE  $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
+# #mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
+
+echo here a about to decide
+
+echo NEST $NEST
+echo MODEL $MODEL
+
+if [ $MODEL = "arw" -a $NEST = "conus" ]
+then
+export MPICH_RANK_REORDER_METHOD=3
+cp $FIXhiresw/hiresw_post_rank_order_22task MPICH_RANK_ORDER
+
+elif [ $MODEL = "arw" -a  $NEST = "conusmem2"  ]
+then
+export MPICH_RANK_REORDER_METHOD=3
+cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
+
+elif [ $MODEL = "arw" -a  $NEST = "ak"  ]
+then
+export MPICH_RANK_REORDER_METHOD=3
+cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
+
+fi
+
+aprun  -n $NTASK -N $PTILE $EXEChiresw/hiresw_post  <  itag  > $pgmout 2>errfile
 export err=$?;err_chk
 
 cp $pgmout ${pgmout}_${fhr}
