@@ -1,7 +1,0 @@
-#module purge
-#module load ncep
-#module load craype craype-sandybridge 
-#module use -a /opt/cray/modulefiles
-#module load PrgEnv-intel NetCDF-intel-sandybridge/3.6.3 ESMF-intel-sandybridge/6_3_0rp1 nemsio-intel-sandybridge/2.2.2
-#module list
-
