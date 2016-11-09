@@ -6,6 +6,7 @@
 #BSUB -M 40000
 #BSUB -R rusage[mem=40000]
 #BSUB -W 1:29
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #
 
 export MP_EUILIB=us
@@ -42,8 +43,8 @@ export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
-export INPUT_DATA=${DATAROOT}/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}
-export PRDGEN_DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
-export DATA=${DATAROOT}/hiresw.smartinitb_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA=${DATAROOT}/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export PRDGEN_DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export DATA=${DATAROOT}/hiresw.smartinitb_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 $HOMEhiresw/jobs/JHIRESW_SMARTINITB

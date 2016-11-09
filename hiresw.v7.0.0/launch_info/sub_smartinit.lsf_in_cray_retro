@@ -6,6 +6,7 @@
 #BSUB -P HRW-T2O
 #BSUB -M 2000
 #BSUB -W 1:19
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=2000]
 #
 
@@ -68,7 +69,7 @@ export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/15/ensprod
 export srefcyc=15
 fi
 
-export INPUT_DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
-export DATA=${DATAROOT}/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export DATA=${DATAROOT}/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 $HOMEhiresw/jobs/JHIRESW_SMARTINIT

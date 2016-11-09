@@ -5,6 +5,7 @@
 #BSUB -P HRW-T2O
 #BSUB -M 2000
 #BSUB -W 1:29
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 ###BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}' rusage[mem=3000]
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=50000]
 
@@ -56,7 +57,7 @@ export COMROOT=/gpfs/hps/nco/ops/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
-export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}
-export DATA=${DATAROOT}/hiresw.bufrpost_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export DATA=${DATAROOT}/hiresw.bufrpost_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 $HOMEhiresw/jobs/JHIRESW_WRFBUFRSND_retro
