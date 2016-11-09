@@ -2366,17 +2366,49 @@
         end do
        end do
 
-      VarName='UP_HELI_MAX'
+      VarName='UP_HELI_MAX25'
 !        write(6,*) 'call getVariableB for : ', VarName
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
        IM,1,JM,1,IM,JS,JE,1)
 
        do j = jsta_2l, jend_2u
         do i = 1, im
-            UP_HELI_MAX( i, j ) = dummy ( i, j )
+            UP_HELI_MAX25( i, j ) = dummy ( i, j )
         end do
        end do
 
+      VarName='UP_HELI_MIN25'
+!        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            UP_HELI_MIN25( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='UP_HELI_MAX03'
+!        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            UP_HELI_MAX03( i, j ) = dummy ( i, j )
+        end do
+       end do
+
+      VarName='UP_HELI_MIN03'
+!        write(6,*) 'call getVariableB for : ', VarName
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+       IM,1,JM,1,IM,JS,JE,1)
+
+       do j = jsta_2l, jend_2u
+        do i = 1, im
+            UP_HELI_MIN03( i, j ) = dummy ( i, j )
+        end do
+       end do
 
 !off
 !        VarName='W_MEAN'

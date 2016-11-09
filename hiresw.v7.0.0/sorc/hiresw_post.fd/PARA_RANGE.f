@@ -91,13 +91,13 @@
       iend = ista + iwork1 - 1
       if ( iwork2 .gt. irank ) iend = iend + 1
 
-	write(0,*) 'irank, nprocs: ', irank, nprocs
+!	write(0,*) 'irank, nprocs: ', irank, nprocs
 
 	if (irank .gt. 0 .and. irank .lt. nprocs-1) then
            ista=ista-OFFSET
            iend=iend+OFFSET
         else if (irank .eq. (nprocs-1)) then
-	write(0,*) 'in irank equals nprocs block'
+!	write(0,*) 'in irank equals nprocs block'
            ista=ista-OFFSET
         else if (irank .eq. 0) then
            iend=iend+OFFSET

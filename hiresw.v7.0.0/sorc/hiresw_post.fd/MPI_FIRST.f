@@ -163,7 +163,7 @@
 	 jsvmine(i)=jsx
 	 jevmine(i)=jex
 
-	write(0,*) 'me, jsvmine, jevmine (a): ', me, jsvmine(i), jevmine(i)
+!	write(0,*) 'me, jsvmine, jevmine (a): ', me, jsvmine(i), jevmine(i)
 
          call para_range_offset(1,jm+1,2,num_procs,i,jsxx,jexx)
 
@@ -173,7 +173,7 @@
          arw_idsp_v(i) = (jsxx-1)*(im)
 	 jsvmine(i)=jsxx
 	 jevmine(i)=jexx
-	write(0,*) 'me, jsvmine, jevmine (b): ', me, jsvmine(i), jevmine(i)
+!	write(0,*) 'me, jsvmine, jevmine (b): ', me, jsvmine(i), jevmine(i)
 	endif
 
          if ( me .eq. 0 ) then

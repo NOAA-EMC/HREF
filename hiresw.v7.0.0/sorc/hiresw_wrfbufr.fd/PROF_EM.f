@@ -1486,7 +1486,19 @@ c
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
-      VarName='UP_HELI_MAX'
+      VarName='UP_HELI_MAX25'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='UP_HELI_MIN25'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='UP_HELI_MAX03'
+      call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
+     +  IM,1,JM,1,IM,JS,JE,1)
+
+      VarName='UP_HELI_MIN03'
       call getVariableB(fileName,DateStr,DataHandle,VarName,DUMMY,      &
      +  IM,1,JM,1,IM,JS,JE,1)
 
