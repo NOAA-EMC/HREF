@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ########################################
-# RUNS HIRESW_PRDGEN JOB
+# RUNS HIRESW POST JOB
 ########################################
 set -xa
 export PS4='$SECONDS + ' 
@@ -13,21 +13,14 @@ date
 export NET=${NET:-hiresw}
 export RUN=${RUN:-hiresw}
 
-export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
-
 ############################################################# 
 # obtain unique process id (pid) and make temp directories
 ############################################################# 
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}/hiresw.prdgen_${NEST:?}_${MODEL:?}_${cyc:?}_${envir:?}}
-export INPUT_DATA=${INPUT_DATA:-${DATAROOT:?}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}}
+export DATA=${DATA:-${DATAROOT:?}/hiresw.postodd_${NEST:?}_${MODEL:?}_${cyc:?}_${envir:?}}
+export INPUT_DATA=${INPUT_DATA:-${DATAROOT:?}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}}
 mkdir -p $DATA
 cd $DATA
-
-export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HIRESW_${DBN_NEST}_GB2}
-export DBN_ALERT_TYPE_WIDX=${DBN_ALERT_TYPE_WIDX:-HIRESW_${DBN_NEST}_GB2_WIDX}
-export DBN_ALERT_TYPE_SMART=${DBN_ALERT_TYPE_SMART:-HIRESW_${DBN_NEST}_NDFD_GB2}
-export DBN_ALERT_TYPE_SMART_WIDX=${DBN_ALERT_TYPE_SMART_WIDX:-HIRESW_${DBN_NEST}_NDFD_GB2_WIDX}
 
 ####################################
 # Determine Job Output Name on System
@@ -36,6 +29,12 @@ export outid="LL$job"
 export pgmout="OUTPUT.${pid}"
 
 export cycle=${cycle:-t${cyc}z}
+
+export IOBUF_PARAMS='*:size=64M:count=8:verbose'
+# export IOBUF_PARAMS='fort.11:size=64M:count=8:verbose'
+
+
+export DBN_NEST=`echo ${NEST}_${MODEL} | tr '[a-z]' '[A-Z]'`
                                                                                                              
 export HOMEhiresw=${HOMEhiresw:-${NWROOT:?}/hiresw.${hiresw_ver:?}}
 export EXEChiresw=${EXEChiresw:-$HOMEhiresw/exec}
@@ -43,30 +42,25 @@ export FIXhiresw=${FIXhiresw:-$HOMEhiresw/fix}
 export PARMhiresw=${PARMhiresw:-$HOMEhiresw/parm}
 export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 
-###################################
-# Set up the UTILITIES
-###################################
-#module load grib_util
-
-# keep using local version
-export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
-
 # Run setpdy and initialize PDY variables
 # setpdy.sh
 # . PDY
 
 export PDY=${DATE}
 
-export COMIN=${COMIN:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
 
-mkdir -p $COMOUT
-mkdir -p $COMOUTPERM
+export COMIN=${COMIN:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
+
+################################################
+# Copy Forecast files from com
+################################################
+. $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.envir.sh
+export tmmark=tm00
 
 ########################################################
 # Run the ex-script
 #
-${HOMEhiresw}/scripts/exhiresw_prdgeng2.sh.ecf
+${HOMEhiresw}/scripts/exhiresw_postg2_odd.sh.ecf
 #
 ########################################################
 
