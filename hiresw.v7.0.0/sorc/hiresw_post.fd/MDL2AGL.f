@@ -465,6 +465,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(951))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(951))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
@@ -498,6 +504,12 @@
 	write(0,*) 'grib2 branch for MINUPHL ', cfld
                fld_info(cfld)%ifld=IAVBLFLD(IGET(952))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(952))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
 	write(0,*) 'minval(datapd(:,:,cfld)): ', minval(datapd(:,:,cfld))
              endif
@@ -529,6 +541,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(953))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(953))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
@@ -562,6 +580,12 @@
 	write(0,*) 'grib2 branch for MINUPHL ', cfld
                fld_info(cfld)%ifld=IAVBLFLD(IGET(954))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(954))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
 	write(0,*) 'minval(datapd(:,:,cfld)): ', minval(datapd(:,:,cfld))
              endif
@@ -593,6 +617,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(700))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(700))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
@@ -619,6 +649,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(429))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(429))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
@@ -645,6 +681,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(702))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(702))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
@@ -671,6 +713,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(703))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(703))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
@@ -697,6 +745,12 @@
                cfld=cfld+1
                fld_info(cfld)%ifld=IAVBLFLD(IGET(704))
                fld_info(cfld)%lvl=LVLSXML(LP,IGET(704))
+               fld_info(cfld)%tinvstat=1
+        if (IFHR .gt. 0) then
+               fld_info(cfld)%ntrange=1
+        else
+               fld_info(cfld)%ntrange=0
+        endif
                datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
              endif
           END IF
