@@ -64,9 +64,17 @@ fhrend=48
 while [ $fhr -le $fhrend ]
 do
 
+# if [ ${fhr}%2 -eq 0 ]
+# then
+incr=2
+# else
+# incr=1
+# fi
+
+
 if [ -e postdone${fhr} ]
 then
-let fhr=fhr+1
+let fhr=fhr+incr
 
 if [ $fhr -lt 10 ]
 then

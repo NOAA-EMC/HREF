@@ -81,6 +81,22 @@ else
 cp $PARMhiresw/hiresw_conus_awp5km.txt hiresw_grid_extract.txt
 fi
 
+if [ $DOMIN_SMALL = "conus" ]
+then
+
+if [ $fhr -eq 00 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+elif [ $fhr%2 -eq 0 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+else
+INPUT_DATA=$INPUT_DATA_ODD
+fi
+
+fi
+
+
 
 while [ ! -e $INPUT_DATA/postdone${fhr} ]
 do
