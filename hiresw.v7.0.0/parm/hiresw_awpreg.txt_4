@@ -70,3 +70,6 @@ TCOLC:entire atmosphere
 LCDC:low cloud layer:
 MCDC:middle cloud layer:
 HCDC:high cloud layer:
+VUCSH:0-6000 m above ground:
+VVCSH:0-6000 m above ground:
+
