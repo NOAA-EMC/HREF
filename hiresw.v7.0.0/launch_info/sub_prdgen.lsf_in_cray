@@ -32,6 +32,8 @@ export NET=hiresw
 export RUN=hiresw
 
 
+
+
 export NEST=_DOM_
 export cyc=_CYC_
 export MODEL=_CORE_
@@ -46,12 +48,16 @@ export SENDCOM=YES
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMOUTPERM=${MYCOMROOTPERM}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export INPUT_DATA=${DATAROOT}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA_ODD=${DATAROOT}/hiresw.postodd_${NEST}_${MODEL}_${cyc}_${envir}
+export INPUT_DATA_EVEN=${DATAROOT}/hiresw.posteven_${NEST}_${MODEL}_${cyc}_${envir}
 export DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
 
 $HOMEhiresw/jobs/JHIRESW_PRDGEN

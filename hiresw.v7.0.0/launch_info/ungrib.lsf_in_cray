@@ -37,6 +37,7 @@ DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 # export COMINgfs=/gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}
 # export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATE}
 export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATE}
+# export COMINgfs= /gpfs/hps/ptmp/emc.glopara/com2/gfs/para/gfs.${DATE}
 export COMINnam=$COMROOTp1/nam/prod/nam.${DATE}
 
 # export COMINgfs=/gpfs/hps/ptmp/Matthew.Pyle/com/gfs/prod/gfs.${DATE}

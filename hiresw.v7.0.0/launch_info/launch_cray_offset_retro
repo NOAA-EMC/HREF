@@ -29,20 +29,21 @@ which bsub
 echo NDATE is $NDATE
 
 
+
 if [ $DOM$CORE == "hinmmb"  ]
 then
-MODPROCS=62
-MODSPAN=21
+MODPROCS=93
+MODSPAN=24
 POSTPROCS=2
 POSTSPAN=2
 PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
-elif [ $DOM$CORE == "hiarw" ]
+elif [ $DOM$CORE == "hiarw" -o $DOM$CORE == "himem2arw" ]
 then
-MODPROCS=68
-MODSPAN=23
+MODPROCS=134
+MODSPAN=24
 POSTPROCS=2
 POSTSPAN=2
 PRDGENPROCS=2
@@ -51,15 +52,25 @@ BUFRSPAN=1
 NPROCBUFR=1
 elif [ $DOM$CORE == "prnmmb"  ]
 then
-MODPROCS=96
-MODSPAN=16
+MODPROCS=158
+MODSPAN=24
 POSTPROCS=2
 POSTSPAN=2
 PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
-elif [ $DOM$CORE == "prarw" ]
+elif [ $DOM$CORE == "prarw" -o $DOM$CORE == "prmem2arw" ]
+then
+MODPROCS=230
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "guamnmmb"  ]
 then
 MODPROCS=100
 MODSPAN=20
@@ -69,20 +80,10 @@ PRDGENPROCS=2
 PRDGENSPAN=2
 BUFRSPAN=1
 NPROCBUFR=1
-elif [ $DOM$CORE == "guamnmmb"  ]
-then
-MODPROCS=62
-MODSPAN=21
-POSTPROCS=2
-POSTSPAN=2
-PRDGENPROCS=2
-PRDGENSPAN=2
-BUFRSPAN=1
-NPROCBUFR=1
 elif [ $DOM$CORE == "guamarw" ]
 then
-MODPROCS=66
-MODSPAN=22
+MODPROCS=165
+MODSPAN=24
 POSTPROCS=2
 POSTSPAN=2
 PRDGENPROCS=2
@@ -91,10 +92,10 @@ BUFRSPAN=1
 NPROCBUFR=1
 elif [ $DOM$CORE == "conusnmmb" ]
 then
-MODPROCS=600
+MODPROCS=1696
 MODSPAN=24
-POSTPROCS=24
-POSTSPAN=8
+POSTPROCS=16
+POSTSPAN=4
 PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=1
@@ -109,19 +110,19 @@ PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
-elif [ $DOM$CORE == "conusnsslarw" ]
+elif [ $DOM$CORE == "conusmem2arw" ]
 then
 MODPROCS=1296
 MODSPAN=24
-POSTPROCS=6
-POSTSPAN=1
+POSTPROCS=16
+POSTSPAN=8
 PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
 elif [ $DOM$CORE == "aknmmb" ]
 then
-MODPROCS=588
+MODPROCS=936
 MODSPAN=24
 POSTPROCS=24
 POSTSPAN=8
@@ -131,7 +132,17 @@ NPROCBUFR=1
 BUFRSPAN=1
 elif [ $DOM$CORE == "akarw" ]
 then
-MODPROCS=840
+MODPROCS=1524
+MODSPAN=24
+POSTPROCS=16
+POSTSPAN=8
+PRDGENPROCS=5
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "akmem2arw" ]
+then
+MODPROCS=1272
 MODSPAN=24
 POSTPROCS=16
 POSTSPAN=8
@@ -140,8 +151,6 @@ PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
 fi
-
-
 
 cat ungrib.lsf_in_cray_offset_retro | sed s:_DATE_:${DATE}:g | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
@@ -183,6 +192,12 @@ sed s:_DATE_:${DATE}:g |  sed s:_SPAN_:${MODSPAN}:g |  sed s:_NPROC_:${MODPROCS}
 
 cat sub_post.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
 sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_post.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postodd.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_postodd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_posteven.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_posteven.lsf_${DOM}_${CORE}_${CYC}
 
 cat sub_prdgen.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
 sed s:_DATE_:${DATE}:g |  sed s:_SPAN_:${PRDGENSPAN}:g |  sed s:_NPROC_:${PRDGENPROCS}:g  > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
