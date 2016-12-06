@@ -4,8 +4,8 @@
 #BSUB -J HIRESW_POST
 #BSUB -q "dev"
 #BSUB -P HRW-T2O
-#BSUB -W 1:59
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -W 1:59
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_POSTSPAN_] cu[type=cabinet]}' rusage[mem=3000]
 
@@ -29,7 +29,7 @@ export MP_EUILIB=us
 # module load ibmpe
 
 
-module list > ~/filename_postg2.launch 2>&1
+# module list > ~/filename_postg2.launch 2>&1
 
 export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
@@ -40,10 +40,12 @@ export RUN=hiresw
 export NEST=_DOM_
 export cyc=_CYC_
 export MODEL=_CORE_
-export DATE=_DATE_
 
 # export DATEroot=/gpfs/hps/nco/ops/com/date
 # DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
+
+export DATE=_DATE_
+
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
@@ -53,6 +55,6 @@ export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export INPUT_DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}_retro
-export DATA=${DATAROOT}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}_retro
+export DATA=${DATAROOT}/hiresw.postodd_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
-$HOMEhiresw/jobs/JHIRESW_POST_retro
+$HOMEhiresw/jobs/JHIRESW_POST_ODD_retro

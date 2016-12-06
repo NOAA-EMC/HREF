@@ -48,7 +48,8 @@ export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
+export INPUT_DATA=${DATAROOT}/hiresw.metgrid_${NEST}_${MODEL}_${cyc}_${envir}_retro
 export DATA=${DATAROOT}/hiresw.nemsinterp_1_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 
-$HOMEhiresw/jobs/JHIRESW_NEMSINTERP_1
+$HOMEhiresw/jobs/JHIRESW_NEMSINTERP_1_retro
