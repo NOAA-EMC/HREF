@@ -216,6 +216,13 @@ cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc
 $WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2.idx
 
+echo here with COMOUTPERM $COMOUTPERM
+
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -ncep_uv $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -s > $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2.idx
+
+
+
 ### change to use a PARM .txt file, and do for CONUS and AK
 
 cp $PARMhiresw/hiresw_subset.txt .
@@ -283,6 +290,9 @@ rm $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_1 $DATA/hiresw.t${cy
    $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_3 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2_4
 
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2.idx
+
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 -ncep_uv $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2 -s > $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2.idx
 
     if [ $SENDDBN = YES ]; then
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
