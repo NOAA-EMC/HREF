@@ -19,6 +19,8 @@ cd ${BASE}/hiresw_wrfarwfcst.fd
 
 echo hiresw_wrfarwfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+# exit
+
 
 ##############################
 
@@ -41,9 +43,9 @@ echo hiresw_bucket.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_wrfbufr.fd
-# make clean
-# ./fill_wrflibs.scr
-# make
+make clean
+./fill_wrflibs.scr
+make
 
 echo hiresw_wrfbufr.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
@@ -59,22 +61,23 @@ make clean
 make
 
 echo hiresw_post.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-##############################
 
 exit
 
+##############################
+
 cd ${BASE}/hiresw_nps.fd/NPS/
-./build.scr
+# ./build.scr
  
 echo hiresw_nps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
-module load iobuf
+module load iobuf/2.0.7
 cd ${BASE}/hiresw_smartinitg2.fd
 # make clean
 # make
 
-module unload iobuf
+module unload iobuf/2.0.7
 
 echo hiresw_smartinitg2.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -102,13 +105,11 @@ make install
 echo emcsfc_coldstart.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
-exit
-
 
 cd ${BASE}/hiresw_sndp.fd
 make -f makefile_nmm
 make -f makefile_em
-make -f makefile_em_nssl
+make -f makefile_em_mem2
 
 echo hiresw_sndp.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
