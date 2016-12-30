@@ -2,7 +2,7 @@
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_post.out_DOM__CORE__CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_post.err_DOM__CORE__CYC_
 #BSUB -J HIRESW_POST
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -P HRW-T2O
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -W 1:25
@@ -19,7 +19,7 @@ export spanprocs=_POSTSPAN_
 export NTASK=_NPROC_
 export PTILE=_POSTSPAN_
 
-vers=`cat /u/Matthew.Pyle/hiresw_version`
+vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
 export MP_EUILIB=us
 

@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_nemsinterp_1.out__DOM___CORE___CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_nemsinterp_1.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_NEMSINTERP_1
 #BSUB -W 0:12
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/

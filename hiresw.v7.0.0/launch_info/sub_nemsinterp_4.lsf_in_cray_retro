@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_nemsinterp_4.out__DOM___CORE___CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_nemsinterp_4.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_NEMSINTERP_4
 #BSUB -W 0:19
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
@@ -51,4 +51,4 @@ export INPUT_DATA=${DATAROOT}/hiresw.metgrid_${NEST}_${MODEL}_${cyc}_${envir}_re
 
 $HOMEhiresw/jobs/JHIRESW_NEMSINTERP_4_retro
 
-bsub < ${HOMEhiresw}/launch_info/sub_model.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_model.lsf__DOM___CORE___CYC__retro

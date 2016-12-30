@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinit.out__DOM__CORE__CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinit.err__DOM__CORE__CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_SMARTINIT
 #BSUB -P HRW-T2O
 #BSUB -M 2000
