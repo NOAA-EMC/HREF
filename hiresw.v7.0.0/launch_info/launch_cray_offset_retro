@@ -92,7 +92,11 @@ BUFRSPAN=1
 NPROCBUFR=1
 elif [ $DOM$CORE == "conusnmmb" ]
 then
-MODPROCS=1696
+# MODPROCS=1696
+# MODPROCS=1632
+MODPROCS=1056
+# MODPROCS=2196
+# MODPROCS=2976
 MODSPAN=24
 POSTPROCS=16
 POSTSPAN=4
@@ -153,67 +157,67 @@ BUFRSPAN=1
 fi
 
 cat ungrib.lsf_in_cray_offset_retro | sed s:_DATE_:${DATE}:g | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
-sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+sub_ungrib.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat metgrid.lsf_in_cray_retro |  sed s:_DATE_:${DATE}:g | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
-sub_metgrid.lsf_${DOM}_${CORE}_${CYC}
+sub_metgrid.lsf_${DOM}_${CORE}_${CYC}_retro
 
 
 if [ $CORE == "nmmb" ]
 then
 
 cat sub_nemsinterp_1.lsf_in_cray_retro |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_1.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_1.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_nemsinterp_2.lsf_in_cray_retro |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_2.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_2.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_nemsinterp_3.lsf_in_cray_retro |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_3.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_3.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_nemsinterp_4.lsf_in_cray_retro |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_4.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_nemsinterp_4.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat prelim.lsf_bigrap_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}_retro
 
 else
 
 cat prelimfinal.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_prelimfinal.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_prelimfinal.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat prelim.lsf_bigrap_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
-sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g | sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}_retro
 
 fi
 
 cat sub_model.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g |  sed s:_SPAN_:${MODSPAN}:g |  sed s:_NPROC_:${MODPROCS}:g  > sub_model.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g |  sed s:_SPAN_:${MODSPAN}:g |  sed s:_NPROC_:${MODPROCS}:g  > sub_model.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_post.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_post.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_post.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_postodd.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_postodd.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_postodd.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_posteven.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_posteven.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g |  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_posteven.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_prdgen.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g |  sed s:_SPAN_:${PRDGENSPAN}:g |  sed s:_NPROC_:${PRDGENPROCS}:g  > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g |  sed s:_SPAN_:${PRDGENSPAN}:g |  sed s:_NPROC_:${PRDGENPROCS}:g  > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_wrfbufrsnd.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g |  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g |  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_smartinit.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g > sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g > sub_smartinit.lsf_${DOM}_${CORE}_${CYC}_retro
 
 cat sub_smartinitb.lsf_in_cray_retro | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
-sed s:_DATE_:${DATE}:g > sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
+sed s:_DATE_:${DATE}:g > sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}_retro
 
-bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}_retro
 
 if [ $DOM == "conus" ]
 then
-bsub < sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+bsub < sub_preprap.lsf_${DOM}_${CORE}_${CYC}_retro
 fi

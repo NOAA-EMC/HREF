@@ -101,8 +101,8 @@ elif [ $DOM$CORE == "conusarw" ]
 then
 MODPROCS=2160
 MODSPAN=24
-POSTPROCS=16
-POSTSPAN=8
+POSTPROCS=22
+POSTSPAN=11
 PRDGENPROCS=13
 PRDGENSPAN=5
 NPROCBUFR=1
@@ -129,7 +129,17 @@ NPROCBUFR=1
 BUFRSPAN=1
 elif [ $DOM$CORE == "akarw" ]
 then
-MODPROCS=1488
+MODPROCS=1524
+MODSPAN=24
+POSTPROCS=16
+POSTSPAN=8
+PRDGENPROCS=5
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "akmem2arw" ]
+then
+MODPROCS=1272
 MODSPAN=24
 POSTPROCS=16
 POSTSPAN=8
@@ -182,6 +192,12 @@ cat sub_model.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed 
 cat sub_post.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
   sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_post.lsf_${DOM}_${CORE}_${CYC}
 
+cat sub_postodd.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_postodd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_posteven.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_posteven.lsf_${DOM}_${CORE}_${CYC}
+
 cat sub_prdgen.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
   sed s:_SPAN_:${PRDGENSPAN}:g |  sed s:_NPROC_:${PRDGENPROCS}:g  > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
 
@@ -206,11 +222,5 @@ cat sub_smartinitb.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g |
 sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 
 chmod 775 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
-./sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 
-exit
 
-if [ $DOM == "conus" ]
-then
-bsub < sub_preprap.lsf_${DOM}_${CORE}_${CYC}
-fi

@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.out__DOM___CORE___CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.err__DOM___CORE___CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_PREPFINAL
 #BSUB -W 0:18
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
@@ -49,4 +49,4 @@ export DATA=${DATAROOT}/hiresw.prepfinal_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
 $HOMEhiresw/jobs/JHIRESW_PREPFINAL_retro
 
-bsub < ${HOMEhiresw}/launch_info/sub_model.lsf__DOM___CORE___CYC_
+bsub < ${HOMEhiresw}/launch_info/sub_model.lsf__DOM___CORE___CYC__retro

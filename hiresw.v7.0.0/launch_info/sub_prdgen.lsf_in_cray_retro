@@ -1,7 +1,7 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prdgen.out__DOM__CORE__CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prdgen.err__DOM__CORE__CYC_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_PRDGEN
 #BSUB -P HRW-T2O
 #BSUB -W 2:09
@@ -62,11 +62,23 @@ $HOMEhiresw/jobs/JHIRESW_PRDGEN_retro
 
 ## increment the date by 12 hours
 
-sleep 120
+sleep 30
 
 CUR=${DATE}${cyc}
 
 echo CUR is $CUR
+
+
+## process to make permanent
+
+# if [ $cyc = "12" ]
+# then
+# echo making permanent for DATE $DATE
+# /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com/hiresw/test/make_permanent.scr_mem2 ${DATE} arw
+# else
+# echo not 12Z so will not copy
+# fi
+
 
 ## shift two two streams with 24 hour jumps?
 
@@ -74,7 +86,9 @@ echo CUR is $CUR
 # then
 # NEW=`$NDATE 12 $CUR`
 # else
-NEW=`$NDATE 24 $CUR`
+
+NEW=`$NDATE +24 $CUR`
+
 # fi
 
 
