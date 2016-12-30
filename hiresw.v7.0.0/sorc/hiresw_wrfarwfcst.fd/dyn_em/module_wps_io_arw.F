@@ -2541,7 +2541,18 @@ end subroutine retrieve_field
         ENDDO
 
 ! binary write of field: SNOWH   
-        read(47) 
+!was        read(47) 
+
+	write(0,*) 'try to really read SNOWH'
+       read(47) dumdata(:,:,1:1)
+
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%snowh(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+       flag_snowh=1
+	write(0,*) 'maxval(grid%snowh): ', maxval(grid%snowh)
 
 ! binary write of field: SKINTEMP  
        read(47) dumdata(:,:,1:1)
@@ -2558,6 +2569,7 @@ end subroutine retrieve_field
            grid%snow(I,J)=dumdata(I,J,1)
          ENDDO
         ENDDO
+        flag_snow=1
 
 ! binary write of field: SOILHGT  
        read(47) dumdata(:,:,1:1)
@@ -2582,6 +2594,8 @@ end subroutine retrieve_field
            grid%snow(I,J)=dumdata(I,J,1)
          ENDDO
         ENDDO
+	write(0,*) 'read snow in not rap branch: ', maxval(grid%snow)
+       flag_snow=1
 
 ! binary write of field: SKINTEMP  
        read(47) dumdata(:,:,1:1)
