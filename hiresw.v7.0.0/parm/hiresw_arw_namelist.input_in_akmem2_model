@@ -162,5 +162,5 @@
 
  &namelist_quilt
  nio_tasks_per_group = 24,
- nio_groups = 3,
+ nio_groups = 2,
  /

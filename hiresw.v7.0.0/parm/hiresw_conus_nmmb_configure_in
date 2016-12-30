@@ -26,8 +26,10 @@ sbd:  -17.570                # Grid's southern boundary (rotated degrees)
 
 # inpes: 31 ?? 31x48 = 1488 compute
 # jnpes: 48 ??
-inpes:  32             # Number of compute tasks in the I direction
-jnpes:  50            # Number of compute tasks in the J direction
+# inpes:  40             # Number of compute tasks in the I direction
+# jnpes:  72            # Number of compute tasks in the J direction
+inpes:  24             # Number of compute tasks in the I direction
+jnpes:  40            # Number of compute tasks in the J direction
 
 #################################
 ####  Specify the I/O tasks  ####
@@ -45,7 +47,7 @@ write_tasks_per_group: 10
 ############################################
 
 dt_int:  6                 # Integer seconds
-dt_num:  78                  # Numerator of fractional second
+dt_num:  78                 # Numerator of fractional second
 dt_den:  137                  # Denominator of fractional second
 
 filt_dt_int: 6            # Integer seconds
@@ -159,7 +161,7 @@ nsecs_fwdtdfi: 180         # HALF forward filter window (s)         (TDFI)
 #####  Global Summations ####
 #############################
 
-use_allreduce:  false       # False--> use mpi send/recv for global sums
+use_allreduce:  true       # False--> use mpi send/recv for global sums
                             # True--> use mpi_allreduce for global sums
 
 read_global_sums:  false    # Read in global summations or not
