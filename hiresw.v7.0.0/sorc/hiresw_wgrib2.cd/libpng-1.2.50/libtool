@@ -2,7 +2,7 @@
 
 # libtool - Provide generalized library-building support services.
 # Generated automatically by config.status (libpng) 1.2.50
-# Libtool was configured on host llogin1:
+# Libtool was configured on host slogin1:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 #
 #   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
@@ -240,10 +240,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib64/gcc/x86_64-suse-linux/4.3 /usr/lib64 /lib64 /usr/x86_64-suse-linux/lib"
+sys_lib_search_path_spec="/opt/gcc/4.9.2/snos/lib/gcc/x86_64-suse-linux/4.9.2 /opt/gcc/4.9.2/snos/lib64 /lib64 /usr/lib64"
 
 # Run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/X11R6/lib64/Xaw3d /usr/X11R6/lib64 /usr/lib64/Xaw3d /usr/X11R6/lib/Xaw3d /usr/X11R6/lib /usr/lib/Xaw3d /usr/x86_64-suse-linux/lib /usr/local/lib /opt/kde3/lib /usr/local/lib64 /opt/kde3/lib64 /lib64 /lib /usr/lib64 /usr/lib /opt/cray/alps/default/lib64 /opt/cray/alps/default/lib64 /opt/cray/alps/default/lib64 /opt/nvidia/cudatoolkit/default/extras/CUPTI/lib64 /opt/nvidia/cudatoolkit/default/extras/CUPTI/lib /opt/nvidia/cudatoolkit/default/lib64 /opt/nvidia/cudatoolkit/default/lib /opt/nvidia/cudatoolkit/default/nvvm/lib64 /opt/nvidia/cudatoolkit/default/nvvm/lib /opt/cray/dmapp/default/lib64 /opt/cray/nvidia/default/lib64 /opt/cray/lib64 /opt/cray/lib64/cce /opt/cray/pmi/default/lib64 /opt/cray/rca/default/lib64 /opt/cray/sysutils/default/lib64 /opt/cray/udreg/default/lib64 /opt/cray/ugni/default/lib64 /opt/cray/wlm_detect/default/lib64 /opt/cray/wlm_trans/default/lib64 /opt/cray/xpmem/default/lib64 /usr/lib64/ghostscript/Omni /cm/local/apps/mysql++/current/lib/cm/local/apps/cmd/lib "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/X11R6/lib64/Xaw3d /usr/X11R6/lib64 /usr/lib64/Xaw3d /usr/X11R6/lib/Xaw3d /usr/X11R6/lib /usr/lib/Xaw3d /usr/x86_64-suse-linux/lib /usr/local/lib /opt/kde3/lib /usr/local/lib64 /opt/kde3/lib64 /lib64 /lib /usr/lib64 /usr/lib /opt/cray/alps/default/lib64 /opt/cray/alps/default/lib64 /opt/cray/alps/default/lib64 /opt/nvidia/cudatoolkit/default/extras/CUPTI/lib64 /opt/nvidia/cudatoolkit/default/extras/CUPTI/lib /opt/nvidia/cudatoolkit/default/lib64 /opt/nvidia/cudatoolkit/default/lib /opt/nvidia/cudatoolkit/default/nvvm/lib64 /opt/nvidia/cudatoolkit/default/nvvm/lib /opt/nvidia/cudatoolkit6.5/default/extras/CUPTI/lib64 /opt/nvidia/cudatoolkit6.5/default/extras/CUPTI/lib /opt/nvidia/cudatoolkit6.5/default/lib64 /opt/nvidia/cudatoolkit6.5/default/lib /opt/nvidia/cudatoolkit6.5/default/nvvm/lib64 /opt/nvidia/cudatoolkit6.5/default/nvvm/lib /opt/cray/dmapp/default/lib64 /opt/cray/nvidia/default/lib64 /opt/cray/lib64 /opt/cray/lib64/cce /opt/cray/pmi/default/lib64 /opt/cray/rca/default/lib64 /opt/cray/sysutils/default/lib64 /opt/cray/udreg/default/lib64 /opt/cray/ugni/default/lib64 /opt/cray/wlm_detect/default/lib64 /opt/cray/wlm_trans/default/lib64 /opt/cray/xpmem/default/lib64 /usr/lib64/ghostscript/Omni /cm/local/apps/mysql++/current/lib/cm/local/apps/cmd/lib "
 
 # Whether dlopen is supported.
 dlopen_support=unknown
@@ -260,7 +260,7 @@ striplib="strip --strip-unneeded"
 
 
 # The linker used to build libraries.
-LD="/usr/x86_64-suse-linux/bin/ld -m elf_x86_64"
+LD="/usr/bin/ld -m elf_x86_64"
 
 # Commands used to build an old-style archive.
 old_archive_cmds="\$AR \$AR_FLAGS \$oldlib\$oldobjs~\$RANLIB \$oldlib"
