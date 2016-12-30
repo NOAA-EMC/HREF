@@ -160,7 +160,7 @@ nsecs_fwdtdfi: 180         # HALF forward filter window (s)         (TDFI)
 #####  Global Summations ####
 #############################
 
-use_allreduce:  false       # False--> use mpi send/recv for global sums
+use_allreduce:  true       # False--> use mpi send/recv for global sums
                             # True--> use mpi_allreduce for global sums
 
 read_global_sums:  false    # Read in global summations or not
