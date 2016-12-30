@@ -431,8 +431,8 @@ export MP_CMDFILE=wgrib2.poe
 time aprun -n 1 -N 1 -d $NTASK wgrib2.poe
 export err=$?;  err_chk
 
-#sleep 60
-sleep 2
+# sleep 60
+sleep 1
 
 # $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
@@ -443,7 +443,10 @@ while (! cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 mo
 ###	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
 	cp NDFD${fhr}.tm00 $prdgfl
 
+  if [ -e WRFPRS${fhr}.tm00 ]
+  then
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+  fi
 
   if [ $fhr -gt 0 ];then
 #-------------------------------------------------------------
