@@ -1,4 +1,4 @@
-prefix=/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.6/sorc/hiresw_wgrib2.cd
+prefix=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wgrib2.cd
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include/libpng12
