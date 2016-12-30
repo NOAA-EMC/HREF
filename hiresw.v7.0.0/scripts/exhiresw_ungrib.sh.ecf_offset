@@ -171,7 +171,7 @@ else
 echo mem2 branch
 
 icnt=0
-while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} ]
+while [ ! -e ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${suf} ]
 do
   sleep 10
   if [ $icnt -gt 90 ]; then 
@@ -182,7 +182,15 @@ do
    fi 
 done
 
-cp ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} $DATA/.
+# mv ${mod}.t${cyc}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
+
+if [ $whr = "06" ]
+then
+cp ${COMINnam}/${mod}.t${cyc}z.${type}00${suf}  $DATA/.
+cp ${COMINnam}/${mod}.t${cyc}z.${type}03${suf}  $DATA/.
+fi
+
+cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${suf} $DATA/.
   export err1=$?
   cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_2/Vtable 
@@ -282,31 +290,31 @@ mv ${mod}.t${cycold}z.${type}54${suf} ./run_ungrib_4/GRIBFILE.AAE
 
 else
 
-echo other branch using NAM...not cyc old
+echo other branch using NAM...only partially cyc old
 
 mv ${mod}.t${cyc}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
 mv ${mod}.t${cyc}z.${type}03${suf} ./run_ungrib_1/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}15${suf} ./run_ungrib_1/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_1/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_2/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}15${suf} ./run_ungrib_2/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}27${suf} ./run_ungrib_2/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_2/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_3/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}27${suf} ./run_ungrib_3/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}39${suf} ./run_ungrib_3/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_3/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_4/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}39${suf} ./run_ungrib_4/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAD
-mv ${mod}.t${cyc}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}51${suf} ./run_ungrib_4/GRIBFILE.AAD
+mv ${mod}.t${cycold}z.${type}54${suf} ./run_ungrib_4/GRIBFILE.AAE
 
 
 fi
