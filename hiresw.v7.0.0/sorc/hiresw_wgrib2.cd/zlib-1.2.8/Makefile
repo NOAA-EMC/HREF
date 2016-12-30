@@ -18,13 +18,13 @@
 
 CC=gcc
 
-CFLAGS=-Wall -Wmissing-prototypes -Wold-style-definition -Werror=format-security -ffast-math  -O3 -I/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.6/sorc/hiresw_wgrib2.cd/include -I/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.6/sorc/hiresw_wgrib2.cd/g2clib-1.4.0 -DGFORTRAN -I/usr/include   -D_LARGEFILE64_SOURCE=1
+CFLAGS=-Wall -Wmissing-prototypes -Wold-style-definition -Werror=format-security -ffast-math  -O3 -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wgrib2.cd/include -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wgrib2.cd/g2clib-1.4.0 -DGFORTRAN -I/usr/include   -D_LARGEFILE64_SOURCE=1
 #CFLAGS=-O -DMAX_WBITS=14 -DMAX_MEM_LEVEL=7
 #CFLAGS=-g -DDEBUG
 #CFLAGS=-O3 -Wall -Wwrite-strings -Wpointer-arith -Wconversion \
 #           -Wstrict-prototypes -Wmissing-prototypes
 
-SFLAGS=-Wall -Wmissing-prototypes -Wold-style-definition -Werror=format-security -ffast-math  -O3 -I/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.6/sorc/hiresw_wgrib2.cd/include -I/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.6/sorc/hiresw_wgrib2.cd/g2clib-1.4.0 -DGFORTRAN -I/usr/include   -fPIC -D_LARGEFILE64_SOURCE=1
+SFLAGS=-Wall -Wmissing-prototypes -Wold-style-definition -Werror=format-security -ffast-math  -O3 -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wgrib2.cd/include -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wgrib2.cd/g2clib-1.4.0 -DGFORTRAN -I/usr/include   -fPIC -D_LARGEFILE64_SOURCE=1
 LDFLAGS= 
 TEST_LDFLAGS=-L. libz.a
 LDSHARED=gcc -shared -Wl,-soname,libz.so.1,--version-script,zlib.map
@@ -45,7 +45,7 @@ TAR=tar
 SHELL=/bin/sh
 EXE=
 
-prefix =/gpfs/hps/nco/ops/nwtest/hiresw.v6.1.6/sorc/hiresw_wgrib2.cd
+prefix =/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wgrib2.cd
 exec_prefix =${prefix}
 libdir =${exec_prefix}/lib
 sharedlibdir =${libdir}
