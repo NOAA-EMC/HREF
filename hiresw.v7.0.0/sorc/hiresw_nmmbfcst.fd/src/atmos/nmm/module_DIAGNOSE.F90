@@ -1570,7 +1570,10 @@ new_nlice: IF (NLICE<NLImin .OR. NLICE>NLImax) THEN
                            ,AKHS,AKMS                 &
                            ,AKHSAVG,AKMSAVG           &
                            ,SNO,SNOAVG                &
-                           ,UPHLMAX                   &
+                           ,UPHLMAX25                 &
+                           ,UPHLMIN25                 &
+                           ,UPHLMAX03                 &
+                           ,UPHLMIN03                 &
                            ,DT,NPHS,NTSD              &
                            ,DXH,DYH                   &
                            ,FIS                       &
@@ -1610,7 +1613,9 @@ new_nlice: IF (NLICE<NLImin .OR. NLICE>NLImax) THEN
                                                    ,RH02MAX,RH02MIN         &
                                                    ,U10MAX,V10MAX           &
                                                    ,SPD10MAX,T10AVG,PSFCAVG &
-                                                   ,UPHLMAX,T10,AKHSAVG     &
+                                                   ,UPHLMAX25,UPHLMIN25     &
+                                                   ,UPHLMAX03,UPHLMIN03     &
+                                                   ,T10,AKHSAVG     &
                                                    ,AKMSAVG,SNOAVG 
 
       REAL, INTENT(IN) :: DYH, DXH(1:JDE)
@@ -1636,7 +1641,7 @@ new_nlice: IF (NLICE<NLImin .OR. NLICE>NLImax) THEN
       REAL :: T02, RH02, TERM
       REAL :: CAPPA_MOIST, VAPOR_PRESS, SAT_VAPOR_PRESS
       REAL, SAVE:: DTPHS, RDTPHS
-      REAL :: MAGW2
+      REAL :: MAGW2, HLOWER, HUPPER
 
       INTEGER :: LCTOP
       INTEGER :: I,J,L,NCOUNT,LL, RC, Ilook,Jlook
@@ -1677,7 +1682,8 @@ new_nlice: IF (NLICE<NLImin .OR. NLICE>NLImax) THEN
  L_LOOP: DO L=1,LM-1
           PLOW= PMID(I,J,L+1)
           PUP=  PMID(I,J,L)
-          IF (PLOW .ge. 40000. .and. PUP .le. 40000.) THEN
+! SPC requested search to 100 hPa
+          IF (PLOW .ge. 10000. .and. PUP .le. 10000.) THEN
             UPINDX(I,J)=L
             exit L_LOOP
           ENDIF 
@@ -1803,9 +1809,21 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       ENDDO
       ENDDO
 
-      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          &
-                      ,IMS,IME,JMS,JME                          &
+!      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          &
+!                      ,IMS,IME,JMS,JME                          &
+!                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+
+      HLOWER=2000.
+      HUPPER=5000.
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX25,UPHLMIN25,DXH,DYH          &
+                      ,HLOWER,HUPPER,IMS,IME,JMS,JME                          &
                       ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+      HLOWER=0000.
+      HUPPER=3000.
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX03,UPHLMIN03,DXH,DYH          &
+                      ,HLOWER,HUPPER,IMS,IME,JMS,JME                          &
+                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+
 
       NCOUNT=NCOUNT+1
       DO J=JTS,JTE
@@ -1833,8 +1851,8 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       END SUBROUTINE MAX_FIELDS
 !
 !----------------------------------------------------------------------
-      SUBROUTINE CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DX,DY            &
-                            ,IMS,IME,JMS,JME                          &
+      SUBROUTINE CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,UPHLMIN,DX,DY            &
+                            ,HLOWER,HUPPER,IMS,IME,JMS,JME            &
                             ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
 
       INTEGER, INTENT(IN) :: IMS,IME,JMS,JME,ITS,ITE
@@ -1845,6 +1863,8 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       REAL,INTENT(IN) :: Z(IMS:IME,JMS:JME,LM)
       REAL,INTENT(IN) :: ZINTSFC(IMS:IME,JMS:JME)
       REAL,INTENT(INOUT) :: UPHLMAX(IMS:IME,JMS:JME)
+      REAL,INTENT(INOUT) :: UPHLMIN(IMS:IME,JMS:JME)
+      REAL,INTENT(IN) :: HLOWER, HUPPER
       REAL,INTENT(IN) :: DX(1:JDE),DY
 
 ! local variables
@@ -1855,8 +1875,9 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       REAL :: RD2,RDY,RDX
       REAL :: DUDY,DVDX,VM1,VM2,UM1,UM2
 
-      REAL, PARAMETER:: HLOWER=2000.
-      REAL, PARAMETER:: HUPPER=5000.
+
+!      REAL, PARAMETER:: HLOWER=2000.
+!      REAL, PARAMETER:: HUPPER=5000.
 
       do J=JMS,JME
        do I=IMS,IME
@@ -2168,7 +2189,10 @@ dbz_mix: IF (RQR>RQmix .AND. RQLICE>RQmix) THEN
                            ,AKHS,AKMS                 &
                            ,AKHSAVG,AKMSAVG           &
                            ,SNO,SNOAVG                &
-                           ,UPHLMAX                   &
+                           ,UPHLMAX25                 &
+                           ,UPHLMIN25                 &
+                           ,UPHLMAX03                 &
+                           ,UPHLMIN03                 &
                            ,DT,NPHS,NTSD              &
                            ,DXH,DYH                   &
                            ,FIS                       &
@@ -2208,7 +2232,9 @@ dbz_mix: IF (RQR>RQmix .AND. RQLICE>RQmix) THEN
                                                    ,RH02MAX,RH02MIN         &
                                                    ,U10MAX,V10MAX           &
                                                    ,SPD10MAX,T10AVG,PSFCAVG &
-                                                   ,UPHLMAX,T10,AKHSAVG     &
+                                                   ,UPHLMAX25,UPHLMIN25     &
+                                                   ,UPHLMAX03,UPHLMIN03     &
+                                                   ,T10,AKHSAVG     &
                                                    ,AKMSAVG,SNOAVG 
 
       REAL, INTENT(IN) :: DYH, DXH(1:JDE)
@@ -2231,7 +2257,7 @@ dbz_mix: IF (RQR>RQmix .AND. RQLICE>RQmix) THEN
       REAL :: FS1Da,FS1Db,FS1D(2),DBZ1(2)
 
       REAL :: CUPRATE,CUREFL,CUREFL_I,ZFRZ,DBZ1avg,FCTR,DELZ,Z1KM,ZCTOP
-      REAL :: T02, RH02, TERM
+      REAL :: T02, RH02, TERM, HLOWER, HUPPER
       REAL,SAVE :: CAPPA_MOIST, VAPOR_PRESS, SAT_VAPOR_PRESS
       REAL, SAVE:: DTPHS, RDTPHS
       REAL :: MAGW2
@@ -2275,7 +2301,8 @@ dbz_mix: IF (RQR>RQmix .AND. RQLICE>RQmix) THEN
  L_LOOP: DO L=1,LM-1
           PLOW= PMID(I,J,L+1)
           PUP=  PMID(I,J,L)
-          IF (PLOW .ge. 40000. .and. PUP .le. 40000.) THEN
+! SPC requested search to 100 hPa
+          IF (PLOW .ge. 10000. .and. PUP .le. 10000.) THEN
             UPINDX(I,J)=L
             exit L_LOOP
           ENDIF 
@@ -2405,9 +2432,21 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       ENDDO
       ENDDO
 
-      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          & 
-                      ,IMS,IME,JMS,JME                          &
+
+      HLOWER=2000.
+      HUPPER=5000.
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX25,UPHLMIN25,DXH,DYH          &
+                      ,HLOWER,HUPPER,IMS,IME,JMS,JME                          &
                       ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+      HLOWER=0000.
+      HUPPER=3000.
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX03,UPHLMIN03,DXH,DYH          &
+                      ,HLOWER,HUPPER,IMS,IME,JMS,JME                          &
+                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+
+!      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          & 
+!                      ,IMS,IME,JMS,JME                          &
+!                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
 
       NCOUNT=NCOUNT+1
       DO J=JTS,JTE
@@ -2455,7 +2494,10 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
                            ,AKHS,AKMS                 &
                            ,AKHSAVG,AKMSAVG           &
                            ,SNO,SNOAVG                &
-                           ,UPHLMAX                   &
+                           ,UPHLMAX25                 &
+                           ,UPHLMIN25                 &
+                           ,UPHLMAX03                 &
+                           ,UPHLMIN03                 &
                            ,DT,NPHS,NTSD              &
                            ,DXH,DYH                   &
                            ,FIS                       &
@@ -2494,7 +2536,9 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
                                                    ,RH02MAX,RH02MIN         &
                                                    ,U10MAX,V10MAX           &
                                                    ,SPD10MAX,T10AVG,PSFCAVG &
-                                                   ,UPHLMAX,T10,AKHSAVG     &
+                                                   ,UPHLMAX25,UPHLMIN25     &
+                                                   ,UPHLMAX03,UPHLMIN03     &
+                                                   ,T10,AKHSAVG     &
                                                    ,AKMSAVG,SNOAVG 
 
       REAL, INTENT(IN) :: DYH, DXH(1:JDE)
@@ -2521,7 +2565,7 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       REAL :: T02, RH02, TERM, TREF
       REAL,SAVE :: CAPPA_MOIST, VAPOR_PRESS, SAT_VAPOR_PRESS
       REAL, SAVE:: DTPHS, RDTPHS, ZRADS,ZRADG,ZMIN
-      REAL :: MAGW2
+      REAL :: MAGW2, HLOWER, HUPPER
 
       INTEGER :: LCTOP
       INTEGER :: I,J,L,NCOUNT,LL, RC, Ilook,Jlook
@@ -2566,7 +2610,8 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
  L_LOOP: DO L=1,LM-1
           PLOW= PMID(I,J,L+1)
           PUP=  PMID(I,J,L)
-          IF (PLOW .ge. 40000. .and. PUP .le. 40000.) THEN
+! SPC requested search to 100 hPa
+          IF (PLOW .ge. 10000. .and. PUP .le. 10000.) THEN
             UPINDX(I,J)=L
             exit L_LOOP
           ENDIF 
@@ -2687,9 +2732,21 @@ vloop3:   IF (ZCTOP >= Z1KM) THEN
       ENDDO
       ENDDO
 
-      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          & 
-                      ,IMS,IME,JMS,JME                          &
+!      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX,DXH,DYH          & 
+!                      ,IMS,IME,JMS,JME                          &
+!                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+
+      HLOWER=2000.
+      HUPPER=5000.
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX25,UPHLMIN25,DXH,DYH          &
+                      ,HLOWER,HUPPER,IMS,IME,JMS,JME                          &
                       ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+      HLOWER=0000.
+      HUPPER=3000.
+      CALL CALC_UPHLCY(U,V,W,Z,ZINTSFC,UPHLMAX03,UPHLMIN03,DXH,DYH          &
+                      ,HLOWER,HUPPER,IMS,IME,JMS,JME                          &
+                      ,ITS,ITE,JTS,JTE,IDE,JDE,LM)
+
 
       NCOUNT=NCOUNT+1
       DO J=JTS,JTE

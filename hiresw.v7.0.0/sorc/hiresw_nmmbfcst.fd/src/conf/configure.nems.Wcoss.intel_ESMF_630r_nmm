@@ -69,7 +69,7 @@ TRAPS       =
 
 FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model precise -xAVX
 
-OPTS_NMM    = -O2 
+OPTS_NMM    = -O3 
 OPTS_GFS    = -O3
 OPTS_GEN    = -O2
 OPTS_FIM    = -O2
