@@ -1,0 +1,56 @@
+#BSUB -J %E%hiresw_%MODEL%_%DOMAIN%_prep_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_prep_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/hiresw_%MODEL%_%DOMAIN%_prep_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -q %QUEUE%
+#BSUB -cwd /tmp
+#BSUB -extsched "CRAYLINUX[]" -R "1*{select[craylinux && !vnode]} + %NTASK%*{select[craylinux && vnode] span [ptile=%PTILE%]}"
+#BSUB -M 500
+#BSUB -W 00:15
+#BSUB -P %PROJ%
+
+%include <head.h>
+%include <envir-xc40.h>
+
+set -x
+
+export job=hiresw_%MODEL%_%DOMAIN%_prep_%CYC%
+export cyc=%CYC%
+export NEST="%DOMAIN%"
+export MODEL="%MODEL%"
+export MEMBER="ctl"
+
+export MP_LABELIO=yes
+export NTASK=%NTASK%
+export PTILE=%PTILE%
+
+#module load NetCDF/4.2/serial
+module load NetCDF-intel-sandybridge/4.2
+
+VERSION_FILE=$NWROOT/versions/hiresw.ver
+if [ -f $VERSION_FILE ]; then
+  . $VERSION_FILE
+else
+  ecflow_client --msg="***JOB ${ECFNAME} ERROR: Version File $VERSION_FILE does not exist"
+  ecflow_client --abort
+  exit
+fi
+
+$NWROOT/hiresw.${hiresw_ver}/jobs/JHIRESW_PREPRAP
+
+%include <tail.h>
+%manual
+######################################################################
+#
+#  PURPOSE:
+#
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end

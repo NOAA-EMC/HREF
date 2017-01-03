@@ -1,0 +1,19 @@
+###############################################################################
+#
+#  GFS 
+#  OPAC aerosols
+#
+###############################################################################
+
+export TEST_DESCR="GFS, use the OPAC climo scheme for SW and LW"
+
+export CNTL_DIR=GFS_OPAC
+export LIST_FILES="sigf03 sigf06 sigf12 sigf24 \
+                   sfcf03 sfcf06 sfcf12 sfcf24 \
+                   flxf03 flxf06 flxf12 flxf24"
+
+export_gsm
+export IAER=11
+export NDAYS=1
+
+RUN_SCRIPT=rt_gfs.sh

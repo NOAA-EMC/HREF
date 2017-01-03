@@ -1,0 +1,157 @@
+#!/bin/ksh
+
+#
+# ESMF 3
+#
+if [[ $1 = 3_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel conf/configure.nems
+     cp conf/modules.nems.wcoss_ESMF_3 conf/modules.nems.wcoss
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp2 library on wcoss"
+elif [[ $1 = 3_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel_12 conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_310rAPI conf/modules.nems.zeus
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0r series library on zeus"
+elif [[ $1 = 3_gaea ]]; then
+     set -x
+     cp conf/configure.nems.Gaea.intel conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 library on gaea"
+elif [[ $1 = 3_yellowstone ]]; then
+     set -x
+     cp conf/configure.nems.Yellowstone.intel conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp2 library on yellowstone"
+
+#
+# ESMF 5
+#
+elif [[ $1 = 5.2_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_520rp2 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_520rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 5.2.0rp2 library"
+elif [[ $1 = 5.2.0rAPI_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_520rAPI conf/modules.nems.zeus
+     cp ESMFVersionDefine_ESMF_520rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 5.2.0r API compatible ESMF library (i.e. ESMF >= 5.2.0r)"
+
+#
+# ESMF 6
+#
+elif [[ $1 = 6.3r_nmm_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_630r_nmm conf/configure.nems
+     cp conf/modules.nems.wcoss_ESMF_630rAPI_nmm conf/modules.nems.wcoss
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library"
+elif [[ $1 = 6.3r_gsm_wcoss ]]; then
+     set -x
+     cp conf/configure.nems.Wcoss.intel_ESMF_630r_gsm conf/configure.nems
+     cp conf/modules.nems.wcoss_ESMF_630rAPI_gsm conf/modules.nems.wcoss
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library"
+elif [[ $1 = 6_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel_13 conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_630rAPI conf/modules.nems.zeus
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r series library on zeus"
+elif [[ $1 = 6_gaea ]]; then
+     set -x
+     cp conf/configure.nems.Gaea.intel conf/configure.nems
+     cp conf/modules.nems.Gaea_ESMF_630rAPI conf/modules.nems.gaea
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 6.3.0r library on gaea"
+
+#
+# NUOPC
+#
+elif [[ $1 = nuopc_zeus ]]; then
+     set -x
+     cp conf/configure.nems.Zeus.intel conf/configure.nems
+     cp conf/modules.nems.Zeus_ESMF_NUOPC conf/modules.nems.zeus
+     cp ESMFVersionDefine_ESMF_NUOPC.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot)"
+elif [[ $1 = nuopc_gaea ]]; then
+     set -x
+     cp conf/configure.nems.Gaea.intel conf/configure.nems
+     cp conf/modules.nems.Gaea_ESMF_NUOPC conf/modules.nems.Gaea
+     cp ESMFVersionDefine_ESMF_NUOPC.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot)"
+
+#
+# tacc,savoy,mic, ...
+#
+elif [[ $1 = tacc ]]; then
+     set -x
+     cp conf/configure.nems.tacc.ifort conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 series library"
+elif [[ $1 = savoy ]]; then
+     set -x
+     cp conf/configure.nems.savoy.ifort conf/configure.nems
+#     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     cp ESMFVersionDefine_ESMF_630rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 630r series library"
+elif [[ $1 = savoy-mic ]]; then
+     set -x
+     cp conf/configure.nems.savoy.ifort-mic conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 series library"
+elif [[ $1 = savoy-mic-esmf-7 ]]; then
+     set -x
+     cp conf/configure.nems.savoy.ifort-mic.esmf7 conf/configure.nems
+     cp ESMFVersionDefine_ESMF_520rAPI.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 7.0.0 series library"
+
+elif [[ $1 = tacc-mic ]]; then
+     set -x
+     cp conf/configure.nems.tacc.ifort-mic conf/configure.nems
+     cp ESMFVersionDefine_ESMF_3.h ESMFVersionDefine.h
+     set +x
+     echo "Use an ESMF 3.1.0rp5 series library"
+
+#
+# help message
+#
+else
+     echo;echo "     Run ./esmf_version with one argument:"
+     echo;
+     echo " 'esmf_version 3_wcoss'            : ESMF 3.1.0rp2 library on wcoss"
+     echo " 'esmf_version 3_zeus'             : ESMF 3.1.0r series library (i.e. ESMF 3.1.0rp2, 3.1.0rp5) on zeus"
+     echo " 'esmf_version 3_gaea'             : ESMF 3.1.0rp2 library on gaea"
+     echo " 'esmf_version 3_yellowstone'      : ESMF 3.1.0rp2 library on yellowstone"
+     echo;
+     echo " 'esmf_version 5.2_wcoss'          : ESMF 5.2.0rp2 library on wcoss"
+     echo " 'esmf_version 5.2.0rAPI_zeus'     : ESMF 5.2.0r API compatible library (i.e. ESMF >= 5.2.0r) on zeus"
+     echo;
+     echo " 'esmf_version 6.3r_nmm_wcoss'     : ESMF 6.3.0r library on wcoss for nmm"
+     echo " 'esmf_version 6.3r_gsm_wcoss'     : ESMF 6.3.0r library on wcoss for gsm"
+     echo " 'esmf_version 6_zeus'             : ESMF 6.3.0r series library on zeus gsm"
+     echo;
+     echo " 'esmf_version nuopc_zeus'         : ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot) on zeus"
+     echo " 'esmf_version nuopc_gaea'         : ESMF library with reference NUOPC Layer (currently ESMF 7.0.0 beta snapshot) on gaea"
+     echo;
+fi     

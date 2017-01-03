@@ -1,0 +1,14 @@
+MSLET:mean sea level:
+VIS:surface:
+PRES:surface:
+HGT:surface:
+:RH:2 m above ground:
+SPFH:2 m above ground:
+UGRD:10 m above ground:
+VGRD:10 m above ground:
+CAPE:surface:
+CIN:surface:
+PWAT:entire atmosphere (considered as a single layer):
+4LFTX:180-0 mb above ground:
+CAPE:180-0 mb above ground:
+CIN:180-0 mb above ground:
