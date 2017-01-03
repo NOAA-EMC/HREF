@@ -1,0 +1,60 @@
+#
+# Resource file for BC parameters. 
+# Emission factors in kg species / kg emissions (DM or species)
+#
+
+number_bc_classes:  2 
+
+
+#                                 ---------------
+#                                 Biomass Burning 
+#                                 ---------------
+
+
+# For emissions -- assume the units are kg m-2 s-1 of something
+# Use emission factors to scale.  E.g., if emissions provided are
+# BC already, the emission factor is 1; if the emissions are
+# something else (like dry matter) then use an appropriate scaling
+# factor
+
+  bb_srcfilen: ExtData/CMIP/sfc/BC/cmip5.BC_bioburn.x720_y361_t14.%y4.nc
+  biomass_burning_emission_factor: 1.
+
+
+#                               --------------------
+#                               Other External Files
+#                               --------------------
+
+# Biofuel Source
+  bf_srcfilen: ExtData/CMIP/sfc/BC/cmip5.bf_BC_src.sfc.x720_y361_t14.%y4.nc
+  biofuel_emission_factor: 1.
+
+
+# Anthropogenic (FF) emissions -- Possibly distribute in 2 levels
+  ebcant1_srcfilen: ExtData/CMIP/sfc/BC/cmip5.noship_BC_src.sfc.x720_y361_t14.%y4.nc
+  ebcant2_srcfilen: /dev/null
+
+# Ship emissions
+  bc_ship_srcfilen: ExtData/CMIP/sfc/BC/cmip5.ship_BC_src.sfc.x720_y361_t14.%y4.nc
+
+# Initially hydrophobic portion
+  hydrophobic_fraction: 0.8
+
+# Scavenging efficiency per bin [km-1]
+  fscav: 0.0  0.4   #  
+
+# Dry particle density [kg m-3]
+particle_density: 1000   1000
+
+# Molecular weight of species [kg mole-1]
+molecular_weight: 0.18  0.18
+
+# Number of particles per kg mass
+fnum: 1.50e19  1.50e19
+
+# Number median radius [um]
+particle_radius_number: 0.0118  0.0118
+
+# Sigma of lognormal number distribution
+sigma: 2.0  2.0
+

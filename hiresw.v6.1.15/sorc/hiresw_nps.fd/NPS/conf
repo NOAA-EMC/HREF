@@ -1,0 +1,30 @@
+#! /bin/sh
+
+if [ $# -ne 1 ]
+then
+echo "============================================"
+echo " NEED TO ENTER AN OPTION:                   "
+echo "                                            "
+echo " conf ccs (for cirrus/stratus)              "
+echo " conf zeus (for R&D Machine zeus)           "
+echo " conf wcoss (for tide/gyre)                 "
+echo "                                            "
+exit
+fi
+
+set -x
+
+if [ $1 == "ccs" -o $1 == "zeus" -o $1 == "wcoss" ]
+then
+cp arch/preamble.${1} arch/preamble
+else
+echo "bad option " $1
+echo " needs to be ccs, zeus, or wcoss"
+fi
+
+set +x
+
+if [ $1 == "wcoss" ]
+then
+echo "be sure to module load NetCDF/3.6.3"
+fi

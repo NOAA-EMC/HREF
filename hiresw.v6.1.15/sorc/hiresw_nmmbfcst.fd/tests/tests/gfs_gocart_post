@@ -1,0 +1,33 @@
+###############################################################################
+#
+#  GFS_GOCART_POST
+#  64 compute tasks / 1 thread
+#
+###############################################################################
+
+export TEST_DESCR="GFS_GOCART with POST"
+
+export CNTL_DIR=GFS_GOCART_POST
+export LIST_FILES="ngac.t00z.sigf00 ngac.t00z.sigf03 ngac.t00z.sigf06 ngac.t00z.sigf12 ngac.t00z.sigf24 \
+                   ngac.t00z.sfcf00 ngac.t00z.sfcf03 ngac.t00z.sfcf06 ngac.t00z.sfcf12 ngac.t00z.sfcf24 \
+                   ngac.t00z.flxf00 ngac.t00z.flxf03 ngac.t00z.flxf06 ngac.t00z.flxf12 ngac.t00z.flxf24 \
+                   ngac.t00z.aerf00 ngac.t00z.aerf03 ngac.t00z.aerf06 ngac.t00z.aerf12 ngac.t00z.aerf24 \
+                   NGAC2d.GrbF03 NGAC2d.GrbF06 NGAC2d.GrbF12  NGAC2d.GrbF24 \
+                   NGAC3d.GrbF03 NGAC3d.GrbF06 NGAC3d.GrbF12 NGAC3d.GrbF24"
+
+export_gsm
+
+export TASKS=64
+export PE1=64
+export QUILT=.true.
+export WRITE_DOPOST=.true.
+export NEMSIOIN=.true.
+export SIGIOIN=.false.
+export NEMSIOOUT=.true.
+export SIGIOOUT=.false.
+export SFCIOOUT=.false.
+export CDATE=2012071700
+#export SIGHDR=$NEMSIOGET
+export WTPG=4
+
+RUN_SCRIPT=rt_gocart.sh

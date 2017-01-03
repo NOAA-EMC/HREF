@@ -1,0 +1,23 @@
+
+#BSUB -oo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ungrib.out_hi_arw
+#BSUB -eo /meso/save/Matthew.Pyle/hiresw_vert/jobs/test_ungrib.err_hi_arw
+#BSUB -q "dev"
+#BSUB -W 0:09
+#BSUB -a poe
+#BSUB -n 1
+
+module load ics
+module load ibmpe
+
+# export TIME="RSS in KB (times 4): %M"
+export MP_LABELIO=yes
+
+cd /meso/save/Matthew.Pyle/hiresw_vert/sorc/hiresw_wps_v3.5.fd
+
+ln -sf /com/gfs/prod/gfs.20130509/gfs.t00z.pgrb2f00 GRIBFILE.AAA
+ln -sf /com/gfs/prod/gfs.20130509/gfs.t00z.pgrb2f03 GRIBFILE.AAB
+ln -sf /com/gfs/prod/gfs.20130509/gfs.t00z.pgrb2f06 GRIBFILE.AAC
+
+ln -sf ungrib/Variable_Tables/Vtable.GFS Vtable
+
+mpirun.lsf ungrib.exe

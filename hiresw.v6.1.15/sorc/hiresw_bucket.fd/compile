@@ -1,0 +1,17 @@
+set -x
+
+TARGDIR=../../exec/
+
+LIBDEF="-L/nwprod/lib -lw3emc_4 -lw3nco_4 -lbacio_4"
+LIBDEFG2="-L/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz"
+INCG2="-I/nwprod/lib/incmod/g2_4 -I/nwprod/lib/incmod/g2tmpl"
+
+OPT="-convert big_endian -assume noold_ldout_format"
+
+echo $LIBDEF
+
+ifort $OPT -o WRFBUCKET.x WRFBUCKET.F $LIBDEF
+mv WRFBUCKET.x $TARGDIR/hiresw_pcpbucket_general
+
+ifort $OPT -o WRFBUCKETG2.x WRFBUCKETG2.F $INCG2 $LIBDEFG2 $LIBDEF 
+mv WRFBUCKETG2.x $TARGDIR/hiresw_pcpbucket_general_g2
