@@ -362,6 +362,7 @@ integer::oops1,oops2
       !  depth, m) fields.
 
       IF      ( ( flag_snow .EQ. 0 ) .AND. ( flag_snowh .EQ. 0 ) ) THEN
+	write(0,*) 'flag_snow and flag_snowh both zero...set all zero'
          DO j=jts,MIN(jde-1,jte)
             DO i=its,MIN(ide-1,ite)
                IF ( skip_middle_points_t ( ids , ide , jds , jde , i , j , em_width , hold_ups ) ) CYCLE 
@@ -371,6 +372,7 @@ integer::oops1,oops2
          END DO
 
       ELSE IF ( ( flag_snow .EQ. 0 ) .AND. ( flag_snowh .EQ. 1 ) ) THEN
+	write(0,*) 'flag_snow only is  zero...5 to 1 ratio applied(a)'
          DO j=jts,MIN(jde-1,jte)
             DO i=its,MIN(ide-1,ite)
 !              ( m -> kg/m^2 )  & ( reduce to liquid, 5:1 ratio )
@@ -380,6 +382,7 @@ integer::oops1,oops2
          END DO
 
       ELSE IF ( ( flag_snow .EQ. 1 ) .AND. ( flag_snowh .EQ. 0 ) ) THEN
+	write(0,*) 'flag_snowh only is zero...5 to 1 ratio applied(b)'
          DO j=jts,MIN(jde-1,jte)
             DO i=its,MIN(ide-1,ite)
 !              ( kg/m^2 -> m)  & ( liquid to snow depth, 5:1 ratio )
