@@ -13,8 +13,7 @@ Fixes a bug that led to the NMMB model failure for the 00Z cycle on 1 January 20
 
 Update details (6.1.12 to 6.1.15):
 
-** Note: the ops v6.1.12 was the starting point.  This version DOES NOT include v6.1.13 changes for NAMv4,
-or the v6.1.14 changes for updated CO2 files for 2016 and 2017.
+** Note: the ops v6.1.12 was the starting point.  This version DOES NOT include v6.1.13 changes for NAMv4.
 
 Several items slightly changed in the ARW model code:
 
