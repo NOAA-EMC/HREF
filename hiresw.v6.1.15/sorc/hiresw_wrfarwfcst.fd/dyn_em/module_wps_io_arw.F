@@ -2569,6 +2569,7 @@ end subroutine retrieve_field
            grid%snow(I,J)=dumdata(I,J,1)
          ENDDO
         ENDDO
+	write(0,*) 'RAP maxval(grid%snowh): ', maxval(grid%snowh)
         flag_snow=1
 
 ! binary write of field: SOILHGT  
