@@ -93,8 +93,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x = 32
- nproc_y = 60
+ nproc_x = 42
+ nproc_y = 48
  /
 
  &physics

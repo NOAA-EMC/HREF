@@ -341,7 +341,8 @@ fi
 if [ $RUNLOC = "conusarw" ]
 then
 #export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 756/24 24/24 24/6`"
-runline="aprun -n 1920 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 4 ./hiresw_${MODEL}_fcst"
+# runline="aprun -n 1728 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
+runline="aprun -n 2016 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
 
 elif [ $RUNLOC = "conusmem2arw" ]
 then
