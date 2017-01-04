@@ -1,6 +1,6 @@
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_wrfbufrsnd.out__DOM___CYC___CORE_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_wrfbufrsnd.err__DOM___CYC___CORE_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_BUFR
 #BSUB -P HRW-T2O
 #BSUB -M 2000
