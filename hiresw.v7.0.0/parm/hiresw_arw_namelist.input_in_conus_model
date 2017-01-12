@@ -25,7 +25,7 @@
  frames_per_outfile                  = 1,
  restart                             = _RESTART_,
  restart_interval                    = 360,
- auxhist3_interval                   = 60
+ auxhist3_interval                   = 1440
  io_form_history                     = 1
  io_form_restart                     = 1
  io_form_input                       = 1
@@ -93,8 +93,8 @@
  zap_close_levels                    = 1000
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
- nproc_x = 42
- nproc_y = 48
+ nproc_x = 24
+ nproc_y = 80
  /
 
  &physics
@@ -163,5 +163,5 @@ do_radar_ref                        = 1,
 
  &namelist_quilt
  nio_tasks_per_group = 24,
- nio_groups = 3,
+ nio_groups = 4,
  /
