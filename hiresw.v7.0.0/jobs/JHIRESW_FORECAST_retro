@@ -65,7 +65,7 @@ fi
 
 # bsub post scripts  - clean these out before commit
 
-if [ $NEST = "conusmem2" ]
+if [ $NEST = "conusmem2" -o $NEST = "ak" -o $NEST = "akmem2" -o $NEST = "hi" -o $NEST = "pr" -o $NEST = "guam" ]
 then
 
 bsub < ${HOMEhiresw}/launch_info/sub_post.lsf_${NEST}_${MODEL}_${cyc}_retro
