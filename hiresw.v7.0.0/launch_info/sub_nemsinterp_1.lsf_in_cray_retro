@@ -24,6 +24,8 @@ export PTILE=4
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
+export KEEPDATA=NO
+
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
@@ -42,8 +44,11 @@ export DATE=_DATE_
 # export DATEroot=/gpfs/hps/nco/ops/com/date
 # DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export GESINnam=${GESROOTp1}/prod/nam.${DATE}
+# export GESINnam=${GESROOTp1}/prod/nam.${DATE}
 # export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
+
+export GESINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
+
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}

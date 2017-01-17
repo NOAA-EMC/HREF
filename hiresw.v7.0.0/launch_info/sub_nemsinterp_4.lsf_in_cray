@@ -15,6 +15,9 @@
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
 
+export KEEPDATA=NO
+
+
 export numprocs=4
 export spanprocs=4
 export NTASK=4
