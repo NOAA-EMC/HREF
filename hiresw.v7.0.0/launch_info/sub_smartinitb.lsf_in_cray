@@ -1,6 +1,6 @@
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinitb.out__DOM__CORE__CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinitb.err__DOM__CORE__CYC_
-#BSUB -q "dev_shared"
+#BSUB -q "devhigh_shared"
 #BSUB -J HIRESW_SMARTINITB
 #BSUB -P HRW-T2O
 #BSUB -M 40000

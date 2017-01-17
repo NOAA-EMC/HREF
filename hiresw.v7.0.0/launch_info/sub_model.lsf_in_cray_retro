@@ -64,4 +64,12 @@ export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export DATA=${DATAROOT}/hiresw.forecast_${NEST}_${MODEL}_${cyc}_${envir}_retro
 
+types="metgrid ungrib prepfinal"
+
+for typ in $types
+do
+rm -rf ${DATAROOT}/hiresw.${typ}_${NEST}_${MODEL}_${cyc}_${envir}_retro
+done
+
+
 $HOMEhiresw/jobs/JHIRESW_FORECAST_retro

@@ -1,6 +1,6 @@
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinitb.out__DOM__CORE__CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinitb.err__DOM__CORE__CYC_
-#BSUB -q "dev_shared"
+#BSUB -q "devhigh_shared"
 #BSUB -J HIRESW_SMARTINITB
 #BSUB -P HRW-T2O
 #BSUB -M 40000
@@ -42,6 +42,10 @@ export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
+export COMOUTPERM=${MYCOMROOTPERM}/${NET}/$envir/${RUN}.${DATE}
+
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 export INPUT_DATA=${DATAROOT}/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}_retro
 export PRDGEN_DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}_retro

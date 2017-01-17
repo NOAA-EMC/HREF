@@ -7,15 +7,15 @@
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}' rusage[mem=9000]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 18*{select[craylinux && vnode]span[ptile=6] cu[type=cabinet]}' rusage[mem=7000]
 
 # module load ics
 # module load ibmpe
 
 module load prod_util
 
-export NTASK=9
-export PTILE=3
+export NTASK=18
+export PTILE=6
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes

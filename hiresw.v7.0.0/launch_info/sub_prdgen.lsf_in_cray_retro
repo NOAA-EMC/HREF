@@ -49,8 +49,8 @@ export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
-export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
-export COMOUTPERM=${MYCOMROOTPERM}/${NET}/$envir/${RUN}.${DATE}
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}_small
+export COMOUTPERM=${MYCOMROOTPERM}/${NET}/$envir/${RUN}.${DATE}_small
 export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export INPUT_DATA=${DATAROOT}/hiresw.post_${NEST}_${MODEL}_${cyc}_${envir}_retro
@@ -62,7 +62,7 @@ $HOMEhiresw/jobs/JHIRESW_PRDGEN_retro
 
 ## increment the date by 12 hours
 
-sleep 30
+sleep 10
 
 CUR=${DATE}${cyc}
 
@@ -82,15 +82,7 @@ echo CUR is $CUR
 
 ## shift two two streams with 24 hour jumps?
 
-# if [ $MODEL = "nmmb" ]
-# then
-# NEW=`$NDATE 12 $CUR`
-# else
-
 NEW=`$NDATE +24 $CUR`
-
-# fi
-
 
 newdate=`echo $NEW | cut -c1-8`
 newcyc=`echo $NEW | cut -c9-10`
@@ -98,9 +90,4 @@ newcyc=`echo $NEW | cut -c9-10`
 echo newdate $newdate
 echo newcyc $newcyc
 
-if [ $newdate -lt 20160926 ]
-then
 $HOMEhiresw/launch_info/launch_cray_offset_retro ${NEST} ${MODEL} ${newcyc} ${newdate}
-else
-echo too late so quitting
-fi

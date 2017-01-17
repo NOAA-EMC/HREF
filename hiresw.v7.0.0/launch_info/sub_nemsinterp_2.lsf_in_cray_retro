@@ -23,6 +23,8 @@ export PTILE=4
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
+export KEEPDATA=NO
+
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
