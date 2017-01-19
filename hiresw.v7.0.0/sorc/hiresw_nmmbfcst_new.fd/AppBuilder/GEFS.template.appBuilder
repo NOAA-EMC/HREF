@@ -1,6 +1,0 @@
-# Global Ensemble Forecast System
-#
-# GEFS NEMS Application Builder file
-
-COMPONENTS=( "GSM" )
-
