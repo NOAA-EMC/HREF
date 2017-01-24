@@ -45,6 +45,7 @@ export cyc=_CYC_
 export MODEL=_CORE_
 
 export SENDDBN=NO
+export SENDCOM=YES
 
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
