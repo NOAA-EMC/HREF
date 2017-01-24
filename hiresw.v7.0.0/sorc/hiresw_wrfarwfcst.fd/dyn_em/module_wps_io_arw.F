@@ -1104,13 +1104,13 @@ CONTAINS
 
 !! bandaid for newly created WPS geogrid static files
         if (grid%msfu(I,J) .lt. 0.7) then
-        write(a_message,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
-        CALL wrf_message ( a_message )            
+!        write(a_message,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
+!        CALL wrf_message ( a_message )            
 
         if(J .eq. min(JTE,JDE-1)) then
         grid%msfu(I,J)=dumdata_u(I,J-1,1)
-        write(a_message,*) 'changing msfu to: ',I,J,  grid%msfu(I,J)
-        CALL wrf_message ( a_message )            
+!        write(a_message,*) 'changing msfu to: ',I,J,  grid%msfu(I,J)
+!        CALL wrf_message ( a_message )            
         endif
         
         endif
@@ -1129,12 +1129,12 @@ CONTAINS
            grid%msfv(I,J)=dumdata_v(I,J,1)
 
         if (grid%msfv(I,J) .lt. 0.7 ) then
-        write(a_message,*) 'weird msfv at I,J: ', I,J,grid%msfv(I,J)
-        CALL wrf_message ( a_message )            
+!        write(a_message,*) 'weird msfv at I,J: ', I,J,grid%msfv(I,J)
+!        CALL wrf_message ( a_message )            
         grid%msfv(I,J)=dumdata_v(I,J-1,1)
         if( J .eq. min(JTE,JDE)) then
-        write(a_message,*) 'changing msfv to: ',I,J,  grid%msfv(I,J)
-        CALL wrf_message ( a_message )            
+!        write(a_message,*) 'changing msfv to: ',I,J,  grid%msfv(I,J)
+!        CALL wrf_message ( a_message )            
         endif
 
         endif
@@ -3007,14 +3007,14 @@ end subroutine retrieve_field
 
            grid%msfu(I,J)=dumdata_u(I,J,1)
 
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'I,J,msfu: ', I,J,grid%msfu(I,J)
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'I,J,msfu: ', I,J,grid%msfu(I,J)
+!        endif
 
         if (grid%msfu(I,J) .lt. 0.7 ) then
-        write(0,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
+!        write(0,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
         grid%msfu(I,J)=dumdata_u(I-1,J-1,1)
-        write(0,*) 'changing msfu to: ',I,J,  grid%msfu(I,J)
+!        write(0,*) 'changing msfu to: ',I,J,  grid%msfu(I,J)
         endif
 
          ENDDO
@@ -3029,17 +3029,17 @@ end subroutine retrieve_field
            grid%msfv(I,J)=dumdata_v(I,J,1)
 
         if (grid%msfv(I,J) .lt. 0.7 ) then
-        write(0,*) 'weird msfv at I,J: ', I,J,grid%msfv(I,J)
+!        write(0,*) 'weird msfv at I,J: ', I,J,grid%msfv(I,J)
         grid%msfv(I,J)=dumdata_v(I,J-1,1)
-        if( J .eq. min(JTE,JDE)) then
-        write(0,*) 'changing msfv to: ',I,J,  grid%msfv(I,J)
-        endif
+!        if( J .eq. min(JTE,JDE)) then
+!        write(0,*) 'changing msfv to: ',I,J,  grid%msfv(I,J)
+!        endif
 
         endif
 
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'I,J,msfv: ', I,J,grid%msfv(I,J)
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'I,J,msfv: ', I,J,grid%msfv(I,J)
+!        endif
 
          ENDDO
         ENDDO
@@ -3052,9 +3052,9 @@ end subroutine retrieve_field
          DO I=ITS,min(ITE,IDE-1)
            grid%msft(I,J)=dumdata(I,J,1)
 
-        if (I .eq. 50 .and. J .eq. 50) then
-        write(0,*) 'I,J,msft: ', I,J,grid%msft(I,J)
-        endif
+!        if (I .eq. 50 .and. J .eq. 50) then
+!        write(0,*) 'I,J,msft: ', I,J,grid%msft(I,J)
+!        endif
 
          ENDDO
         ENDDO
