@@ -42,29 +42,39 @@ rm -rf poescript
 # Rename metgrid files with /com type names
 export send=1
 
-echo "#!/bin/bash" > poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL $send &" >> poescript
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL $send &" >> poescript
-echo "wait" >> poescript
+echo "#!/bin/bash" > poe.a
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send &" >> poe.a
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL $send &" >> poe.a
+echo "wait" >> poe.a
+
+echo "#!/bin/bash" > poe.b
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL $send &" >> poe.b
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL $send &" >> poe.b
+echo "wait" >> poe.b
+
+echo "#!/bin/bash" > poe.c
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL $send &" >> poe.c
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL $send &" >> poe.c
+echo "wait" >> poe.c
+
+echo "#!/bin/bash" > poe.d
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL $send &" >> poe.d
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL $send &" >> poe.d
+echo "wait" >> poe.d
+
+echo "#!/bin/bash" > poe.e
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL $send &" >> poe.e
+echo "wait" >> poe.e
 
  
-chmod 775 $DATA/poescript
-export MP_PGMMODEL=mpmd
-export MP_CMDFILE=poescript
-export MP_LABELIO=YES
-export MP_INFOLEVEL=3
-export MP_STDOUTMODE=ordered
+chmod 775 $DATA/poe.a $DATA/poe.b $DATA/poe.c $DATA/poe.d $DATA/poe.e
 
-#mpirun.lsf 
-aprun -n 1 -N 1 -d $NTASK ./poescript
-
+aprun -n 1 -N 1 -d 2 ./poe.a &
+aprun -n 1 -N 1 -d 2 ./poe.b &
+aprun -n 1 -N 1 -d 2 ./poe.c &
+aprun -n 1 -N 1 -d 2 ./poe.d &
+aprun -n 1 -N 1 -d 1 ./poe.e &
+wait
 export err=$?
 err_chk
 
