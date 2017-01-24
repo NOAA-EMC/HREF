@@ -42,6 +42,8 @@ if [ $SENDCOM = YES ]
 then
 cp hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2  $COMOUT
 $WGRIB2   $COMOUT/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2.idx
+cp hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2  $COMOUTPERM
+$WGRIB2   $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2 -s > $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_${res}.f${fhr}.${NEST}.grib2.idx
 export err=$?; err_chk
 fi
 

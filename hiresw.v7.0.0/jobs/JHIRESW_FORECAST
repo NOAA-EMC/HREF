@@ -72,7 +72,8 @@ fi
 
 bsub < ${HOMEhiresw}/launch_info/sub_prdgen.lsf_${NEST}_${MODEL}_${cyc}
 
-if [ ${NEST}${MODEL} = "conusnmmb" ]
+# if [ ${NEST}${MODEL} = "conusnmmb" ]
+if [ ${NEST} = "conus" ]
 then
 bsub < ${HOMEhiresw}/launch_info/sub_wrfbufrsndodd.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch_info/sub_wrfbufrsndeven.lsf_${NEST}_${MODEL}_${cyc}
