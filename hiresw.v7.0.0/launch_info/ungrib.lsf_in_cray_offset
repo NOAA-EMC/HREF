@@ -1,8 +1,8 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out__DOM___CORE_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err__DOM___CORE_
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_UNGRIB
-#BSUB -W 0:08
+#BSUB -W 0:13
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
@@ -50,6 +50,8 @@ export COMINnamold=$COMROOTp1/nam/prod/nam.${DATEgfs}
 export COMINnamx=$COMROOTp2/nam/para/nam.${DATE}
 export COMINnamxold=$COMROOTp2/nam/para/nam.${DATEgfs}
 
+export COMINnamx=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
+export COMINnamxold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATEgfs}
 
 # export COMINgfs=/gpfs/hps/ptmp/Matthew.Pyle/com/gfs/prod/gfs.${DATE}
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd

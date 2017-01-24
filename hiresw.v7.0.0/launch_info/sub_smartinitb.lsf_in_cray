@@ -40,6 +40,9 @@ export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
+export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
+export COMOUTPERM=${MYCOMROOTPERM}/${NET}/$envir/${RUN}.${DATE}
+
 export SENDDBN=NO
 export SENDCOM=YES
 
