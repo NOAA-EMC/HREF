@@ -26,7 +26,7 @@ DIO                     =       $(DEV_TOP)/dio
 DIO_INC                 =       -I${DIO}
 DIO_LIBS                =       -L${DIO} -ldio
 
-G2_LIBS                 =       ${G2_LIB4} $(COMPRESSION_LIBS)
+G2_LIBS                 =       ${G2_MYLIB4} $(COMPRESSION_LIBS)
 G2_INCMOD               =       -I${G2_INC4}
 
 W3_LIBS                 =       ${W3NCO_LIB4} ${W3EMC_LIB4}
