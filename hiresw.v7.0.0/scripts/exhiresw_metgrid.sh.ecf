@@ -43,38 +43,55 @@ rm -rf poescript
 export send=1
 
 echo "#!/bin/bash" > poe.a
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send &" >> poe.a
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL $send &" >> poe.a
-echo "wait" >> poe.a
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 00 03 1 $MODEL $send" >> poe.a
+
+echo "#!/bin/bash" > poe.aa
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 06 09 2 $MODEL $send" >> poe.aa
 
 echo "#!/bin/bash" > poe.b
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL $send &" >> poe.b
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL $send &" >> poe.b
-echo "wait" >> poe.b
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 12 15 3 $MODEL $send" >> poe.b
+
+echo "#!/bin/bash" > poe.bb
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 18 21 4 $MODEL $send" >> poe.bb
 
 echo "#!/bin/bash" > poe.c
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL $send &" >> poe.c
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL $send &" >> poe.c
-echo "wait" >> poe.c
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 24 27 5 $MODEL $send" >> poe.c
+
+echo "#!/bin/bash" > poe.cc
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 30 33 6 $MODEL $send" >> poe.cc
 
 echo "#!/bin/bash" > poe.d
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL $send &" >> poe.d
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL $send &" >> poe.d
-echo "wait" >> poe.d
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 36 39 7 $MODEL $send" >> poe.d
+
+echo "#!/bin/bash" > poe.dd
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 42 45 8 $MODEL $send" >> poe.dd
 
 echo "#!/bin/bash" > poe.e
-echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL $send &" >> poe.e
-echo "wait" >> poe.e
+echo "$USHhiresw/hiresw_wps_metgrid_gen.sh $NEST $cyc 48 48 9 $MODEL $send" >> poe.e
 
- 
-chmod 775 $DATA/poe.a $DATA/poe.b $DATA/poe.c $DATA/poe.d $DATA/poe.e
+chmod 775 poe.a poe.b poe.c poe.d poe.e
+chmod 775 poe.aa poe.bb poe.cc poe.dd
 
-aprun -n 1 -N 1 -d 2 ./poe.a &
-aprun -n 1 -N 1 -d 2 ./poe.b &
-aprun -n 1 -N 1 -d 2 ./poe.c &
-aprun -n 1 -N 1 -d 2 ./poe.d &
+aprun -n 1 -N 1 -d 1 ./poe.a &
+
+aprun -n 1 -N 1 -d 1 ./poe.b &
+
+aprun -n 1 -N 1 -d 1 ./poe.c &
+
+aprun -n 1 -N 1 -d 1 ./poe.d &
+
 aprun -n 1 -N 1 -d 1 ./poe.e &
+
+aprun -n 1 -N 1 -d 1 ./poe.aa &
+
+aprun -n 1 -N 1 -d 1 ./poe.bb &
+
+aprun -n 1 -N 1 -d 1 ./poe.cc &
+
+aprun -n 1 -N 1 -d 1 ./poe.dd &
+
 wait
+
 export err=$?
 err_chk
 
