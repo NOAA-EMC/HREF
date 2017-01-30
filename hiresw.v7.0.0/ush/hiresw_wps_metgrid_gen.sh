@@ -61,6 +61,10 @@ hend=`echo $end | cut -c9-10`
 
 cd $DATA
 
+myhost=`hostname`
+echo "running " $ICOUNT "on" $myhost
+date
+
 mkdir -p ./run_metgrid_${ICOUNT}
 
 if [ $MODEL = arw ] ; then
