@@ -132,8 +132,8 @@ else
 
 mod=nam
 type=awp151
-suf=".tm01.grib2"
-#ops suf=".tm00.grib2"
+#para suf=".tm01.grib2"
+suf=".tm00.grib2"
 sufold=".tm00.grib2"
 
 fi
@@ -173,11 +173,13 @@ else
 echo mem2 branch
 
 icnt=0
-while [ ! -e ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} ]
+#para while [ ! -e ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} ]
+while [ ! -e ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} ]
 do
   sleep 10
   if [ $icnt -gt 90 ]; then 
-    msg="FATAL ERROR: ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} STILL NOT AVAILABLE after 15 minutes waiting."
+#para    msg="FATAL ERROR: ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} STILL NOT AVAILABLE after 15 minutes waiting."
+    msg="FATAL ERROR: ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} STILL NOT AVAILABLE after 15 minutes waiting."
     export err=911; err_chk
    else 
      icnt=$((icnt + 1))
@@ -186,12 +188,12 @@ done
 
 if [ $whr = "06" ]    # first time
 then
-cp ${COMINnamx}/${mod}.t${cyc}z.${type}01${suf}  $DATA/.   # get f01 from tm01
-# cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+#para cp ${COMINnamx}/${mod}.t${cyc}z.${type}01${suf}  $DATA/.   # get f01 from tm01
+cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
 
 else
-cp ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
-# cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+#para cp ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
 fi
   export err1=$?
 
@@ -295,8 +297,8 @@ else
 
 echo other branch using NAM...only partially cyc old
 
-mv ${mod}.t${cyc}z.${type}01${suf} ./run_ungrib_1/GRIBFILE.AAA
-# mv ${mod}.t${cycold}z.${type}06${sufold} ./run_ungrib_1/GRIBFILE.AAA
+#para#namx  mv ${mod}.t${cyc}z.${type}01${suf} ./run_ungrib_1/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}06${sufold} ./run_ungrib_1/GRIBFILE.AAA
 
 mv ${mod}.t${cycold}z.${type}09${sufold} ./run_ungrib_1/GRIBFILE.AAB
 mv ${mod}.t${cycold}z.${type}12${sufold} ./run_ungrib_1/GRIBFILE.AAC

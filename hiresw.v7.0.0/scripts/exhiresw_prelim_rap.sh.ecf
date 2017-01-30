@@ -109,9 +109,9 @@ then
 
 # consider 1 h old RAP as a possibility
 
-1hold=`$NDATE -1 ${PDY}${cyc}`
-DATEold=`echo $1hold | cut -c1-8`
-cycold=`echo $1hold | cut -c9-10`
+onehold=`$NDATE -1 ${PDY}${cyc}`
+DATEold=`echo $onehold | cut -c1-8`
+cycold=`echo $onehold | cut -c9-10`
 
 # grab post-digital filter analysis file if available
 
