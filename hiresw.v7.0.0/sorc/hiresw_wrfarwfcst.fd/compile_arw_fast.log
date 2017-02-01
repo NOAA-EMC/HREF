@@ -29,51 +29,53 @@ make[2]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0
 ( cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib_share ; \
           make -j 2 CC="cc" CFLAGS="-w -O3 -ip  -DDM_PARALLEL -DMAX_HISTORY=25 -DNMM_CORE=0" RM="rm -f" RANLIB="ranlib" CPP="/lib/cpp -C -P" \
           FC="ftn -i4 -I. -g -traceback  -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback  " TRADFLAG="-traditional" AR="ar" ARFLAGS="ru" archive) 
-make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf'
-make[3]: warning: -jN forced in submake: disabling jobserver mode.
 make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90'
 make[3]: warning: -jN forced in submake: disabling jobserver mode.
-make[3]: Nothing to be done for `all'.
-make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf'
-( cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1 ; \
-          make -j 2 CC="cc" CFLAGS="-w -O3 -ip  -DDM_PARALLEL -DMAX_HISTORY=25 -DNMM_CORE=0" RM="rm -f" RANLIB="ranlib" CPP="/lib/cpp -C -P" \
-          FC="ftn -i4 -I. -g -traceback  -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback  " TRADFLAG="-traditional" AR="ar" ARFLAGS="ru" archive)
 make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/ioapi_share'
 make[3]: Nothing to be done for `all'.
 make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/ioapi_share'
+make[3]: Nothing to be done for `default'.
+make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90'
+( cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1 ; \
+          make -j 2 CC="cc" CFLAGS="-w -O3 -ip  -DDM_PARALLEL -DMAX_HISTORY=25 -DNMM_CORE=0" RM="rm -f" RANLIB="ranlib" CPP="/lib/cpp -C -P" \
+          FC="ftn -i4 -I. -g -traceback  -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback  " TRADFLAG="-traditional" AR="ar" ARFLAGS="ru" archive)
 ( cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int ; \
           make -j 2 CC="cc -DMPI2_SUPPORT -DFSEEKO64_OK " RM="rm -f" RANLIB="ranlib" CPP="/lib/cpp -C -P" \
           FC="ftn -i4 -g -traceback  -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback  " FGREP="fgrep -iq" \
           TRADFLAG="-traditional" AR="ar" ARFLAGS="ru" ARCHFLAGS="-DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DCOAMPS_CORE=0 -DDA_CORE=0 -DEXP_CORE=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC -DWRF_USE_CLM -DNO_IEEE_MODULE  -DDM_PARALLEL -DNETCDF -DUSE_ALLOCATABLES -DGRIB1 -DINTIO -DLIMIT_ARGS -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0" all )
-make[3]: Nothing to be done for `default'.
-make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90'
+make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib_share'
+make[3]: warning: -jN forced in submake: disabling jobserver mode.
+make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf'
+make[3]: warning: -jN forced in submake: disabling jobserver mode.
+make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int'
+make[3]: warning: -jN forced in submake: disabling jobserver mode.
+make[3]: Nothing to be done for `all'.
+make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf'
 ( cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/fftpack/fftpack5 ; \
           make -j 2 FC="ftn" FFLAGS="-i4 -g -traceback  -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback " RANLIB="ranlib" AR="ar" \
           ARFLAGS="ru" CPP="/lib/cpp -C -P" CPPFLAGS="-DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DCOAMPS_CORE=0 -DDA_CORE=0 -DEXP_CORE=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC -DWRF_USE_CLM -DNO_IEEE_MODULE  -DDM_PARALLEL -DNETCDF -DUSE_ALLOCATABLES -DGRIB1 -DINTIO -DLIMIT_ARGS -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0  -I. -traditional " RM="rm -f" )
-make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int'
-make[3]: warning: -jN forced in submake: disabling jobserver mode.
-make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/fftpack/fftpack5'
-make[3]: warning: -jN forced in submake: disabling jobserver mode.
 make[3]: Nothing to be done for `all'.
 make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int'
 ( if [ ! -e /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/tools/gen_comms.c ] ; then \
           /bin/cp /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/tools/gen_comms_warning /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/tools/gen_comms.c ; \
           cat /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/RSL_LITE/gen_comms.c >> /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/tools/gen_comms.c ; fi )
-( if [ ! -e module_dm.F ] ; then /bin/cp module_dm_warning module_dm.F ; \
-          cat /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/RSL_LITE/module_dm.F >> module_dm.F ; fi )
-make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib_share'
-make[3]: warning: -jN forced in submake: disabling jobserver mode.
-ake[3]: warning: -jN forced in submake: disabling jobserver mode.
-        Doing make archive on library subdirectory MEL_grib1
 make[4]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib_share'
 ar ru ./libio_grib_share.a io_grib_share.o get_region_center.o gridnav.o open_file.o
-make[4]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/MEL_grib1'
-ranlib ./libio_grib_share.a
+( if [ ! -e module_dm.F ] ; then /bin/cp module_dm_warning module_dm.F ; \
+          cat /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/RSL_LITE/module_dm.F >> module_dm.F ; fi )
+make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/fftpack/fftpack5'
+ranlib ./warning: -jN forced in submake: disabling jobserver mode.
 make[4]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib_share'
 make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib_share'
+ar ru libfftpack.a c1f2kb.o  cfft1b.o  cmf3kf.o  cosqb1.o  costmi.o   dcosq1f.o  dfftb1.o   mradb2.o  mrfti1.o  r1fgkf.o     rfft2i.o  sinqmi.o  z1f2kf.o  zfft1f.o  zmf4kb.o c1f2kf.o  cfft1f.o  cmf4kb.o  cosqf1.o  d1f2kb.o   dcosq1i.o  dfftf1.o   mradb3.o  msntb1.o  r4_factor.o  rfftb1.o  sint1b.o  z1f3kb.o  zfft1i.o  zmf4kf.o c1f3kb.o  cfft1i.o  cmf4kf.o  cosqmb.o  d1f2kf.o   dcosqb1.o  dffti1.o   mradb4.o  msntf1.o  r4_mcfti1.o  rfftf1.o  sint1f.o  z1f3kf.o  zfft2b.o  zmf5kb.o c1f3kf.o  cfft2b.o  cmf5kb.o  cosqmf.o  d1f3kb.o   dcosqf1.o  dsint1b.o  mradb5.o  r1f2kb.o  r4_tables.o  rffti1.o  sint1i.o  z1f4kb.o  zfft2f.o  zmf5kf.o c1f4kb.o  cfft2f.o  cmf5kf.o  cosqmi.o  d1f3kf.o   dcost1b.o  dsint1f.o  mradbg.o  r1f2kf.o  r8_factor.o  rfftmb.o  sintb1.o  z1f4kf.o  zfft2i.o  zmfgkb.o c1f4kf.o  cfft2i.o  cmfgkb.o  cost1b.o  d1f4kb.o   dcost1f.o  dsint1i.o  mradf2.o  r1f3kb.o  r8_mcfti1.o  rfftmf.o  sintf1.o  z1f5kb.o  zfftmb.o  zmfgkf.o c1f5kb.o  cfftmb.o  cmfgkf.o  cost1f.o  d1f4kf.o   dcost1i.o  dsintb1.o  mradf3.o  r1f3kf.o  r8_tables.o  rfftmi.o  sintmb.o  z1f5kf.o  zfftmf.o  zmfm1b.o c1f5kf.o  cfftmf.o  cmfm1b.o  cost1i.o  d1f5kb.o   dcostb1.o  dsintf1.o  mradf4.o  r1f4kb.o  rfft1b.o     sinq1b.o  sintmf.o  z1fgkb.o  zfftmi.o  zmfm1f.o c1fgkb.o  cfftmi.o  cmfm1f.o  costb1.o  d1f5kf.o   dcostf1.o  mcsqb1.o   mradf5.o  r1f4kf.o  rfft1f.o     sinq1f.o  sintmi.o  z1fgkf.o  zmf2kb.o c1fgkf.o  cmf2kb.o  cosq1b.o  costf1.o  d1fgkb.o   dfft1b.o   mcsqf1.o   mradfg.o  r1f5kb.o  rfft1i.o     sinq1i.o  xercon.o  z1fm1b.o  zmf2kf.o c1fm1b.o  cmf2kf.o  cosq1f.o  costmb.o  d1fgkf.o   dfft1f.o   mcstb1.o   mrftb1.o  r1f5kf.o  rfft2b.o     sinqmb.o  xerfft.o  z1fm1f.o  zmf3kb.o c1fm1f.o  cmf3kb.o  cosq1i.o  costmf.o  dcosq1b.o  dfft1i.o   mcstf1.o   mrftf1.o  r1fgkb.o  rfft2f.o     sinqmf.o  z1f2kb.o  zfft1b.o  zmf3kf.o 
+make[3]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1'
+make[3]: warning: -jN forced in submake: disabling jobserver mode.
+        Doing make archive on library subdirectory MEL_grib1
+make[4]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/MEL_grib1'
+ranlib libfftpack.a
 make[5]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/MEL_grib1'
 ar ru ../libio_grib1.a FTP_getfile.o apply_bitmap.o display_gribhdr.o gbyte.o grib_dec.o grib_enc.o grib_seek.o gribgetbds.o gribgetbms.o gribgetgds.o gribgetpds.o gribhdr2file.o gribputbds.o gribputgds.o gribputpds.o hdr_print.o init_dec_struct.o init_enc_struct.o init_gribhdr.o init_struct.o ld_dec_lookup.o ld_enc_input.o ld_enc_lookup.o ld_grib_origctrs.o make_default_grbfn.o make_grib_log.o map_lvl.o map_parm.o pack_spatial.o prt_inp_struct.o upd_child_errmsg.o prt_badmsg.o swap.o grib_uthin.o set_bytes.o
-ar ru libfftpack.a c1f2kb.o  cfft1b.o  cmf3kf.o  cosqb1.o  costmi.o   dcosq1f.o  dfftb1.o   mradb2.o  mrfti1.o  r1fgkf.o     rfft2i.o  sinqmi.o  z1f2kf.o  zfft1f.o  zmf4kb.o c1f2kf.o  cfft1f.o  cmf4kb.o  cosqf1.o  d1f2kb.o   dcosq1i.o  dfftf1.o   mradb3.o  msntb1.o  r4_factor.o  rfftb1.o  sint1b.o  z1f3kb.o  zfft1i.o  zmf4kf.o c1f3kb.o  cfft1i.o  cmf4kf.o  cosqmb.o  d1f2kf.o   dcosqb1.o  dffti1.o   mradb4.o  msntf1.o  r4_mcfti1.o  rfftf1.o  sint1f.o  z1f3kf.o  zfft2b.o  zmf5kb.o c1f3kf.o  cfft2b.o  cmf5kb.o  cosqmf.o  d1f3kb.o   dcosqf1.o  dsint1b.o  mradb5.o  r1f2kb.o  r4_tables.o  rffti1.o  sint1i.o  z1f4kb.o  zfft2f.o  zmf5kf.o c1f4kb.o  cfft2f.o  cmf5kf.o  cosqmi.o  d1f3kf.o   dcost1b.o  dsint1f.o  mradbg.o  r1f2kf.o  r8_factor.o  rfftmb.o  sintb1.o  z1f4kf.o  zfft2i.o  zmfgkb.o c1f4kf.o  cfft2i.o  cmfgkb.o  cost1b.o  d1f4kb.o   dcost1f.o  dsint1i.o  mradf2.o  r1f3kb.o  r8_mcfti1.o  rfftmf.o  sintf1.o  z1f5kb.o  zfftmb.o  zmfgkf.o c1f5kb.o  cfftmb.o  cmfgkf.o  cost1f.o  d1f4kf.o   dcost1i.o  dsintb1.o  mradf3.o  r1f3kf.o  r8_tables.o  rfftmi.o  sintmb.o  z1f5kf.o  zfftmf.o  zmfm1b.o c1f5kf.o  cfftmf.o  cmfm1b.o  cost1i.o  d1f5kb.o   dcostb1.o  dsintf1.o  mradf4.o  r1f4kb.o  rfft1b.o     sinq1b.o  sintmf.o  z1fgkb.o  zfftmi.o  zmfm1f.o c1fgkb.o  cfftmi.o  cmfm1f.o  costb1.o  d1f5kf.o   dcostf1.o  mcsqb1.o   mradf5.o  r1f4kf.o  rfft1f.o     sinq1f.o  sintmi.o  z1fgkf.o  zmf2kb.o c1fgkf.o  cmf2kb.o  cosq1b.o  costf1.o  d1fgkb.o   dfft1b.o   mcsqf1.o   mradfg.o  r1f5kb.o  rfft1i.o     sinq1i.o  xercon.o  z1fm1b.o  zmf2kf.o c1fm1b.o  cmf2kf.o  cosq1f.o  costmb.o  d1fgkf.o   dfft1f.o   mcstb1.o   mrftb1.o  r1f5kf.o  rfft2b.o     sinqmb.o  xerfft.o  z1fm1f.o  zmf3kb.o c1fm1f.o  cmf3kb.o  cosq1i.o  costmf.o  dcosq1b.o  dfft1i.o   mcstf1.o   mrftf1.o  r1fgkb.o  rfft2f.o     sinqmf.o  z1f2kb.o  zfft1b.o  zmf3kf.o 
+make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/fftpack/fftpack5'
 ranlib ../libio_grib1.a
 make[5]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/MEL_grib1'
 make[4]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/MEL_grib1'
@@ -85,8 +87,6 @@ ranlib ../libio_grib1.a
 make[5]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util'
 make[4]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util'
         Doing make archive on library subdirectory WGRIB
-ranlib libfftpack.a
-make[3]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/fftpack/fftpack5'
 make[4]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB'
 make[4]: Nothing to be done for `archive'.
 make[4]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB'
@@ -185,6 +185,17 @@ if [ 0  -eq 0 ] ; then \
 ( cd dyn_em ; make -i -r -j 2 CF="" )
 make[2]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/dyn_em'
 make[2]: warning: -jN forced in submake: disabling jobserver mode.
+rm -f module_wps_io_arw.o
+/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/tools/standard.exe module_wps_io_arw.F > module_wps_io_arw.b 
+/lib/cpp -C -P -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/inc -DEM_CORE=1 -DNMM_CORE=0 -DNMM_MAX_DIM=2600 -DCOAMPS_CORE=0 -DDA_CORE=0 -DEXP_CORE=0 -DIWORDSIZE=4 -DDWORDSIZE=8 -DRWORDSIZE=4 -DLWORDSIZE=4 -DNONSTANDARD_SYSTEM_FUNC -DWRF_USE_CLM -DNO_IEEE_MODULE  -DDM_PARALLEL -DNETCDF -DUSE_ALLOCATABLES -DGRIB1 -DINTIO -DLIMIT_ARGS -DCONFIG_BUF_LEN=65536 -DMAX_DOMAINS_F=21 -DMAX_HISTORY=25 -DNMM_NEST=0  -I. -traditional   module_wps_io_arw.b  > module_wps_io_arw.f90
+rm -f module_wps_io_arw.b
+if fgrep -iq '!$OMP' module_wps_io_arw.f90 ; then \
+          if [ -n "" ] ; then echo COMPILING module_wps_io_arw.F WITH OMP ; fi ; \
+	  ftn -c -i4 -O0 -fno-inline -fno-ip -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback  -I../dyn_em -I../dyn_nmm   -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90  -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/main -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/frame -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/share -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/phys -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/chem -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/inc -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include    module_wps_io_arw.f90 ; \
+        else \
+          if [ -n "" ] ; then echo COMPILING module_wps_io_arw.F WITHOUT OMP ; fi ; \
+	  ftn -c -i4 -O0 -fno-inline -fno-ip -ip -fp-model strict -w -ftz -align all -fno-alias -FR -convert big_endian  -g -traceback  -I../dyn_em -I../dyn_nmm   -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90  -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/main -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/frame -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/share -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/phys -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/chem -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/inc -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include   module_wps_io_arw.f90 ; \
+        fi
 ar ru ../main/libwrflib.a module_advect_em.o module_diffusion_em.o module_small_step_em.o module_big_step_utilities_em.o module_em.o module_solvedebug_em.o module_bc_em.o module_init_utilities.o module_wps_io_arw.o module_damping_em.o module_polarfft.o module_force_scm.o module_first_rk_step_part1.o module_first_rk_step_part2.o module_avgflx_em.o module_sfs_nba.o module_convtrans_prep.o module_sfs_driver.o module_stoch.o module_after_all_rk_steps.o  init_modules_em.o solve_em.o start_em.o shift_domain_em.o couple_or_uncouple_em.o nest_init_utils.o adapt_timestep_em.o interp_domain_em.o
 make[2]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/dyn_em'
 make[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd'
@@ -200,8 +211,8 @@ make[1]: Leaving directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.
 if [ 0 -eq 1 ] ; then \
 	  ( cd main ; make -i -r MODULE_DIRS="-I../dyn_em -I../dyn_nmm   -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90  -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/main -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/frame -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/share -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/phys -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/chem -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/inc -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include " SOLVER=em em_wrf_SST_ESMF ) ; \
 	fi
-build started:   Tue Nov  8 15:15:26 UTC 2016
-build completed: Tue Nov 8 15:15:52 UTC 2016
+build started:   Thu Jan  5 20:54:30 UTC 2017
+build completed: Thu Jan 5 20:54:55 UTC 2017
 --------------------------------------
 ( cd main ; make -i -r MODULE_DIRS="-I../dyn_em -I../dyn_nmm   -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/esmf_time_f90  -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/main -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_netcdf -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/external/io_int -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/frame -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/share -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/phys -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/chem -I/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/inc -I/gpfs/hps/usrx/local/prod/NetCDF/3.6.3/intel/sandybridge/include " SOLVER=em IDEAL_CASE=real em_real )
 make[1]: Entering directory `/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/hiresw_wrfarwfcst.fd/main'
@@ -337,5 +348,5 @@ if [ 0 -eq 1 ] ; then \
 ( cd run ; if test -f namelist.input ; then \
 		/bin/cp -f namelist.input namelist.input.backup ; fi ; \
 		/bin/rm -f namelist.input ; cp ../test/em_real/namelist.input . )
-build started:   Tue Nov  8 15:15:26 UTC 2016
-build completed: Tue Nov 8 15:16:25 UTC 2016
+build started:   Thu Jan  5 20:54:30 UTC 2017
+build completed: Thu Jan 5 20:55:32 UTC 2017
