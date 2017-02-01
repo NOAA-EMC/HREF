@@ -334,6 +334,11 @@ then
 export MPICH_RANK_REORDER_METHOD=3
 cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
 
+elif [ $MODEL = "arw" -a  $NEST = "akmem2"  ]
+then
+export MPICH_RANK_REORDER_METHOD=3
+cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
+
 fi
 
 aprun  -n $NTASK -N $PTILE $EXEChiresw/hiresw_post  <  itag  > $pgmout 2>errfile
