@@ -6,7 +6,7 @@
 #BSUB -W 0:29
 #BSUB -P HRW-T2O
 #BSUB -M 3000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=2] cu[type=cabinet]}' rusage[mem=3000]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 9*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=3000]
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
@@ -16,7 +16,7 @@ module load prod_envir
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
 export NTASK=9
-export PTILE=2
+export PTILE=1
 
 export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
