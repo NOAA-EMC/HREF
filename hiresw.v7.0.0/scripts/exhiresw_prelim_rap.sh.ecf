@@ -129,15 +129,15 @@ cycold=`echo $onehold | cut -c9-10`
  suf="df.grib2"
  NUMLEVS=41
 
+        elif [ -e ${COMINrap}/rap.${DATEold}/rap.t${cycold}.awip32f${whrp1}.grib2 ]
+        then
+ cp ${COMINrap}/rap.${DATEold}/rap.t${cycold}.awip32f${whrp1}.grib2 $DATA/run_ungrib/.
+ suf=".grib2"
+ NUMLEVS=41
+
         elif [ -e ${COMINrap}/rap.t${cyc}z.awip32f${whr}.grib2 ]
         then
  cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}.grib2 $DATA/run_ungrib/.
- suf=".grib2"
- NUMLEVS=41
-      
-        elif [ -e ${COMINrap}/../rap.${DATEold}/rap.t${cycold}.awip32f${whrp1}.grib2 ]
-        then
- cp ${COMINrap}/../rap.${DATEold}/rap.t${cycold}.awip32f${whrp1}.grib2 $DATA/run_ungrib/.
  suf=".grib2"
  NUMLEVS=41
 
