@@ -85,7 +85,7 @@ case $RUNTYP in
   prarw|prnmmb) rg=pr; outres="2p5km"; outreg=pr; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
   prmem2arw) rg=pr; outres="2p5km"; outreg=prmem2; wgrib2def="mercator:20 291.804:177:2500:296.028 16.829:129:2500:19.747";;
   akarw|aknmmb) rg=ak; outres="3km"; outreg=ak; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
-  akmem2) rg=ak; outres="3km"; outreg=akmem2; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
+  akmem2arw) rg=ak; outres="3km"; outreg=akmem2; wgrib2def="nps:210:60 181.429:1649:2976 40.53:1105:2976";;
   guamarw|guamnmmb) rg=guam; outres="2p5km"; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
 esac
 
@@ -183,6 +183,8 @@ grdextmerc=" 0 64 2500 2500"
      prnmmb)            sgrb=212;ogrd=195
       grid="255 1 177 129 16829  -68196 128 19747  -63972 20000 $grdextmerc";;
      akarw)  sgrb=216;ogrd=91
+      grid="255 5 1649 1105 40530 181429 8 210000 2976 2976 0 64 0 25000 25000";;
+     akmem2arw)  sgrb=216;ogrd=91
       grid="255 5 1649 1105 40530 181429 8 210000 2976 2976 0 64 0 25000 25000";;
      aknmmb)  sgrb=216;ogrd=91
       grid="255 5 1649 1105 40530 181429 8 210000 2976 2976 0 64 0 25000 25000";;
@@ -566,6 +568,8 @@ sleep 2 # safety sleep
 echo START env AT CALL OF g2 script
 env
 echo END env AT CALL OF g2 script
+
+echo RUNTYP is $RUNTYP
 
 if [ $RUNTYP != "conusmem2arw" -a $RUNTYP != "akmem2arw" -a $RUNTYP != "himem2arw" -a $RUNTYP != "prmem2arw" ]
 then

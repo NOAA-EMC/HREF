@@ -371,7 +371,7 @@ if [ ! -f $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01_rap ]; then
 fi
 
 # Cat REAL log files and send to COM
-cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >  $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.real.log
+cat $DATA/rsl.error.000? $DATA/rsl.out.000? >  $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.realrap.log
 
 else # nmmb case
 export pgm=hiresw_nemsinterp
