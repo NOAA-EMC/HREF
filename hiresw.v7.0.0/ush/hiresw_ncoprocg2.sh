@@ -19,7 +19,7 @@ echo BEGIN NCO sminit Post-Processing for REG $RGIN $outreg $ogrd CYC $cyc FHR $
 
 RGUSE=`echo $RGIN | cut -c1-4`
 
-if [ $outreg = "ak" ]
+if [ $outreg = "ak" -o $outreg = "akmem2" ]
 then
 res="3km"
 else
