@@ -2552,7 +2552,7 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
        flag_snowh=1
-	write(0,*) 'maxval(grid%snowh): ', maxval(grid%snowh)
+	write(0,*) 'RAP maxval(grid%snowh): ', maxval(grid%snowh)
 
 ! binary write of field: SKINTEMP  
        read(47) dumdata(:,:,1:1)
@@ -2570,6 +2570,7 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
         flag_snow=1
+	write(0,*) 'RAP maxval(grid%snow): ', maxval(grid%snow)
 
 ! binary write of field: SOILHGT  
        read(47) dumdata(:,:,1:1)
@@ -3465,6 +3466,7 @@ end subroutine retrieve_field
 
 
             flag_sst = 1
+            flag_toposoil = 1
 
 !new
         sw_inputx=0.
@@ -3482,10 +3484,9 @@ end subroutine retrieve_field
          enddo
         enddo
 
-        write(0,*) 'maxval st_input(1): ', maxval(st_input(:,1,:))
-        write(0,*) 'maxval st_input(2): ', maxval(st_input(:,2,:))
-        write(0,*) 'maxval st_input(3): ', maxval(st_input(:,3,:))
-        write(0,*) 'maxval st_input(4): ', maxval(st_input(:,4,:))
+         do K=1,num_st_levels_alloc
+        write(0,*) 'maxval st_input(K): ',K, maxval(st_input(:,K,:))
+	 enddo
 
      end subroutine read_wps_bin_arw
 ! ------------------------------------------------------------
