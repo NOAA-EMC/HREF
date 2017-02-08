@@ -93,7 +93,7 @@ export COMINsref=${COMINsref:-$COMsref/sref.${SREF_PDY}/${srefcyc2}/ensprod}
 export COMINgefs=${COMINgefs:-$COMsref/sref.${GEFS_PDY}/ensprod_gefs}
 
 #export IOBUF_PARAMS='*:verbose'
-export IOBUF_PARAMS='fort.11:size=64M:count=8:verbose'
+export IOBUF_PARAMS='fort.11:size=64M:count=16:verbose'
 ########################################################
 # Execute the script.
 $HOMEhiresw/scripts/exhiresw_smartinitb.sh.ecf
