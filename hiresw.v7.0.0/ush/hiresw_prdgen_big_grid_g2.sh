@@ -263,18 +263,30 @@ $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid $
 if [ $DOMIN_SMALL = "conus"  -a $subpiece = "1" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud ceiling" -grib inputs_budget_b.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud base" -grib inputs_budget_c.grb
+cat inputs_budget_b.grb >> inputs_budget.grb
+cat inputs_budget_c.grb >> inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
 if [ $DOMIN_SMALL = "conusmem2"  -a $subpiece = "1" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud ceiling" -grib inputs_budget_b.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud base" -grib inputs_budget_c.grb
+cat inputs_budget_b.grb >> inputs_budget.grb
+cat inputs_budget_c.grb >> inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
 if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusmem2" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud ceiling" -grib inputs_budget_b.grb
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud base" -grib inputs_budget_c.grb
+cat inputs_budget_b.grb >> inputs_budget.grb
+cat inputs_budget_c.grb >> inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
 fi
 
