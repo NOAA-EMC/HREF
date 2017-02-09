@@ -1,0 +1,138 @@
+#! /bin/ksh
+
+regs="nw nc ne sw sc se"
+
+hr=${1}
+
+mkdir -p ${basedir}/${TYP}_${hr}_t2ms_regs
+
+rm ${basedir}/${TYP}_${hr}_t2ms_regs/*
+cd ${basedir}/${TYP}_${hr}_t2ms_regs/
+
+cp ../*.grd .
+
+for reg in $regs
+do
+
+if [ $reg = "conus" ]
+then
+llat=19
+llon=-126
+ulat=51
+ulon=-56
+skip="1;1"
+
+elif [ $reg = "nw" ]
+then
+llat=36
+llon=-126
+ulat=53
+ulon=-108
+skip=0
+
+elif [ $reg = "nc" ]
+then
+llat=36
+llon=-112
+ulat=52.5
+ulon=-82
+skip=0
+
+elif [ $reg = "ne" ]
+then
+llat=39
+llon=-89
+ulat=49
+ulon=-63
+skip=0
+
+elif [ $reg = "sw" ]
+then
+llat=22
+llon=-122
+ulat=41
+ulon=-106
+skip=0
+
+elif [ $reg = "sc" ]
+then
+llat=24
+llon=-109
+ulat=41
+ulon=-85
+skip=0
+
+elif [ $reg = "se" ]
+then
+llat=24
+llon=-91
+ulat=38
+ulon=-68
+skip=0
+fi
+
+
+# hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+# for hr in $hrs
+# do
+
+echo here I am
+echo MYFILE is $MYFILE
+echo GDATTIM is f${hr}
+
+echo skip $skip
+echo LL $llat $llon
+echo UR $ulat $ulon
+
+which gdplot
+
+gdplot << endplot
+
+\$MAPFIL = HICNUS.NWS + HIPOWO.CIA
+
+ GDFILE   = ${MYFILE}
+ GDATTIM  = f${hr}
+ gvcord=hght
+ glev=2
+ gfun = tmpc
+ PANEL    = 0
+ SKIP     = 0
+ SCALE    = 0
+ CTYPE    = f
+ CONTUR   = 3
+ CINT     = 0
+ LINE     = 3
+ FINT     = -21;-18;-15;-12;-9;-6;-3;0;3;6;9;12;15;18;22;26;30
+ FLINE    = 30;29;28;27;26;25;0;21;22;23;19;18;17;16;15;14;13;32
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32
+ GVECT    =
+ WIND     = BM1
+ REFVEC   =
+ TITLE    = 32/ ^ _ ${TYP}
+ TEXT     = 1
+ CLEAR    = YES
+ IJSKIP   = $skip
+ PROJ     = lcc/25;-95;25
+ MAP      = 32/12/1
+ garea    = $llat;$llon;$ulat;$ulon
+ proj     = lcc/35;-100;35
+ MSCALE   = 0
+ LATLON   =
+ DEVICE   = gif|${TYP}_href_${reg}_t2ms_f${hr}.gif|960;720
+ STNPLT   =
+r
+
+ex
+
+endplot
+
+# done
+
+done
+
+gpend
+
+cp *.gif ../

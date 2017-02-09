@@ -1,0 +1,192 @@
+#! /bin/ksh
+
+hr=$1
+
+mkdir -p ${basedir}/${TYP}_${hr}_apcp_regs
+
+rm ${basedir}/${TYP}_${hr}_apcp_regs/*
+cd ${basedir}/${TYP}_${hr}_apcp_regs/
+
+cp ../*.grd .
+
+regs="nw nc ne sw sc se"
+
+for reg in $regs
+do
+
+if [ $reg = "conus" ]
+then
+llat=19
+llon=-126
+ulat=51
+ulon=-56
+skip="1;1"
+
+elif [ $reg = "nw" ]
+then
+llat=36
+llon=-126
+ulat=53
+ulon=-108
+skip=0
+
+elif [ $reg = "nc" ]
+then
+llat=36
+llon=-112
+ulat=52.5
+ulon=-82
+skip=0
+
+elif [ $reg = "ne" ]
+then
+llat=39
+llon=-89
+ulat=49
+ulon=-63
+skip=0
+
+elif [ $reg = "sw" ]
+then
+llat=22
+llon=-122
+ulat=41
+ulon=-106
+skip=0
+
+elif [ $reg = "sc" ]
+then
+llat=24
+llon=-109
+ulat=41
+ulon=-85
+skip=0
+
+elif [ $reg = "se" ]
+then
+llat=24
+llon=-91
+ulat=38
+ulon=-68
+skip=0
+fi
+
+
+# hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+# for hr in $hrs
+# do
+
+gdplot << endplot
+
+\$MAPFIL = HICNUS.NWS + HIPOWO.CIA
+
+ GDFILE   = ${MYFILE}
+ GDATTIM  = f${hr}
+ gvcord=none
+ glev=0
+ gfun = p03i
+ PANEL    = 0
+ SKIP     = 0
+ SCALE    = 0
+ CTYPE    = f
+ CONTUR   = 3
+ CINT     = 0
+ LINE     = 3
+ FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0
+ FLINE    = 0;21-29;14-20
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32
+ GVECT    =
+ WIND     = BM1
+ REFVEC   =
+ TITLE    = 32/ ^ _ ${TYP}
+ TEXT     = 1
+ CLEAR    = YES
+ IJSKIP   = $skip
+ PROJ     = lcc/25;-95;25
+ MAP      = 32/12/1
+ garea    = $llat;$llon;$ulat;$ulon
+ proj     = lcc/35;-100;35
+ MSCALE   = 0
+ LATLON   =
+ DEVICE   = gif|${TYP}_href_${reg}_p03i_f${hr}.gif|960;720
+ STNPLT   =
+r
+
+ex
+
+endplot
+
+gpend
+
+# done
+
+
+if [ $hr%6 -eq 0 ]
+then
+# hrs="06 12 18 24 30 36"
+# for hr in $hrs
+# do
+
+gdplot << endplot
+
+ GDFILE   = ${MYFILE}
+ GDATTIM  = f${hr}
+ gvcord=none
+ glev=0
+ gfun = p06i
+ PANEL    = 0
+ SKIP     = 0
+ SCALE    = 0
+ CTYPE    = f
+ CONTUR   = 0
+ CINT     = 0
+ LINE     = 3
+ FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4
+ FLINE    = 0;21-29;14-20
+ DEVICE   = gif|${TYP}_href_${reg}_p06i_f${hr}.gif|960;720
+r
+
+ex
+
+endplot
+
+# done
+
+gpend
+
+fi
+
+if [ $hr -eq 36 ]
+then
+gdplot << endplot
+
+gdattim=f24
+gfun=p24i
+ FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4;5;6;7;8
+ DEVICE   = gif|${TYP}_href_${reg}_p24i_f24.gif|960;720
+r
+
+gdattim=f36
+gfun=p24i
+ FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4;5;6;7;8
+ DEVICE   = gif|${TYP}_href_${reg}_p24i_f36.gif|960;720
+r
+
+gfun=p36i
+ DEVICE   = gif|${TYP}_href_${reg}_p36i_f36.gif|960;720
+r
+
+ex
+
+endplot
+
+gpend
+
+fi
+
+done
+
+cp *.gif ../

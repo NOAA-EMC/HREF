@@ -1,0 +1,25 @@
+<HTML>
+<BODY bgcolor=FFFFFF>
+<CENTER>
+<H2> parallel HREF precipitation output </H2>
+<p>
+The current forecast cycle is _CYCWEB_Z on _DATEIN_
+</CENTER>
+<p>
+<p>
+<p>
+DISCLAIMER:
+While run routinely, information displayed here is considered EXPERIMENTAL.  
+The graphics represent output from a non-operational NCEP model run, and the 
+graphics generation and display are also non-operational.  Products here may 
+not always be available or up to date.  Neither the 4.0 km model run nor the 
+graphics generation are subject to 24x7 monitoring from NCO.
+<p>
+Please contact Matthew Pyle (Matthew.Pyle@noaa.gov) with questions and/or 
+concerns about this page or the model information it is displaying.
+<p>
+ =================================================================================
+<p>
+</BODY>
+</HTML>
+

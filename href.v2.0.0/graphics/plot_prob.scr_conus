@@ -1,0 +1,252 @@
+#! /bin/ksh
+
+regs="conus"
+
+hr=${1}
+
+mkdir -p ${basedir}/${TYP}_${hr}_prob_conus
+rm ${basedir}/${TYP}_${hr}_prob_conus/*
+cd ${basedir}/${TYP}_${hr}_prob_conus/
+
+cp ../*.grd .
+
+for reg in $regs
+do
+
+if [ $reg = "conus" ]
+then
+llat=19
+llat=22
+llon=-126
+llon=-123
+ulat=51
+ulat=50
+ulon=-56
+ulon=-65
+skip="1;1"
+
+elif [ $reg = "nw" ]
+then
+llat=36
+llon=-126
+ulat=53
+ulon=-108
+skip=0
+
+elif [ $reg = "nc" ]
+then
+llat=36
+llon=-112
+ulat=52.5
+ulon=-82
+skip=0
+
+elif [ $reg = "ne" ]
+then
+llat=39
+llon=-89
+ulat=49
+ulon=-63
+skip=0
+
+elif [ $reg = "sw" ]
+then
+llat=22
+llon=-122
+ulat=41
+ulon=-106
+skip=0
+
+elif [ $reg = "sc" ]
+then
+llat=24
+llon=-109
+ulat=41
+ulon=-85
+skip=0
+
+elif [ $reg = "se" ]
+then
+llat=24
+llon=-91
+ulat=38
+ulon=-68
+skip=0
+fi
+
+
+# hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+# for hr in $hrs
+# do
+
+gdplot << endplot
+
+\$MAPFIL = HIPOWO.CIA
+
+ GDFILE   = ${MYFILE_FFRI}
+ GDATTIM  = f${hr}
+ gvcord=none
+ glev=0
+ gfun = PP030003PA
+ PANEL    = 0
+ SKIP     = 0
+ SCALE    = 0
+ CTYPE    = f
+ CONTUR   = 3
+ CINT     = 0
+ LINE     = 3
+ FINT     = .01;0.1;0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0
+ fint     = 2;5;10;15;20;25;30;40;50;60;70;80;90
+ FLINE    = 0;21-29;14-20
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32
+ GVECT    =
+ WIND     = BM1
+ REFVEC   =
+ TITLE    = 32/ ^ _ ${TYP}
+ TEXT     = 1
+ CLEAR    = YES
+ IJSKIP   = $skip
+ PROJ     = lcc/25;-95;25
+ MAP      = 32/12/1
+ garea    = $llat;$llon;$ulat;$ulon
+ proj     = lcc/35;-100;35
+ MSCALE   = 0
+ LATLON   =
+ DEVICE   = gif|${TYP}_href_${reg}_probffg3h_f${hr}.gif|960;720
+ STNPLT   =
+r
+
+ gfun = PP030004PA
+ DEVICE   = gif|${TYP}_href_${reg}_probffg3hsmooth_f${hr}.gif|960;720
+r
+
+gfun=PP060006PA
+ DEVICE   = gif|${TYP}_href_${reg}_probffg6h_f${hr}.gif|960;720
+r
+
+gfun=PP060007PA
+ DEVICE   = gif|${TYP}_href_${reg}_probffg6hsmooth_f${hr}.gif|960;720
+r
+
+gfun=PP120012PA
+ DEVICE   = gif|${TYP}_href_${reg}_probffg12h_f${hr}.gif|960;720
+r
+
+ GDFILE   = ${MYFILE}
+
+glev=1000
+gvcord=hght
+fint     = 10;20;30;40;50;60;70;80;90
+fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+gfun=REFD0040PA
+device=gif|${TYP}_href_${reg}_probrefd40_f${hr}.gif|960;720
+r
+
+
+gfun=MXDBZ0040PA
+device=gif|${TYP}_href_${reg}_probmxrefd40_f${hr}.gif|960;720
+r
+
+gfun=MXDBZ0050PA
+device=gif|${TYP}_href_${reg}_probmxrefd50_f${hr}.gif|960;720
+r
+
+
+fint     = 2;5;10;15;20;25;30;40;50;60;70;80;90
+ FLINE    = 0;21-29;14-20
+ gvcord=none
+ glev=0
+GFUN=PP030012PA
+device=gif|${TYP}_href_${reg}_3hpcpgt0p5_f${hr}.gif|960;720
+r
+
+GFUN=PP030025PA
+device=gif|${TYP}_href_${reg}_3hpcpgt1p0_f${hr}.gif|960;720
+r
+
+GDFI=${MYFILE_FFRI}
+ gvcord=none
+ glev=0
+gfun=PP030002PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_3h_2yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP030010PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_3h_10yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP030050PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_3h_50yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP030100PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_3h_100yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP060002PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_6h_2yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP060010PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_6h_10yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP060050PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_6h_50yr_ri_f${hr}.gif|960;720
+r
+
+gfun=PP060100PA
+ DEVICE   = gif|${TYP}_href_${reg}_prob_6h_100yr_ri_f${hr}.gif|960;720
+r
+
+ex
+
+endplot
+
+gpend
+
+done
+
+if [ $hr = "03" ]
+then
+
+gdplot << endplot
+
+CONTUR=0
+gdfi=ffg3h.grd
+gfun=p03i
+fint=0.25;0.5;0.75;1.0;1.25;1.5;1.75;2.0;2.5;3;4;5
+FLINE    = 0;21-29;14-20
+device=gif|ffg3h.gif|960;720
+r
+
+gdfi=ffg6h.grd
+gfun=p06i
+gdattim=first
+device=gif|ffg6h.gif|960;720
+r
+
+gdfi=ffg12h.grd
+gfun=p12i
+device=gif|ffg12h.gif|960;720
+r
+
+gdfi=ffg24h.grd
+gfun=p24i
+device=gif|ffg24h.gif|960;720
+r
+
+ex
+
+
+endplot
+
+gpend
+
+fi
+
+
+cp *.gif ../
