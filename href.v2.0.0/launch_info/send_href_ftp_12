@@ -1,0 +1,48 @@
+#! /bin/ksh
+
+#BSUB -oo send_files.out_pyth
+#BSUB -eo send_files.err_pyth
+#BSUB -P HRW-T2O
+#BSUB -M 1500
+#BSUB -J HREF_TRANS
+#BSUB -q "dev_transfer"
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools
+#BSUB -n 1
+#BSUB -W 0:19
+
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+cd /gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/
+export NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.5/exec/ndate
+
+cyc=12
+dom=conus
+
+cp /gpfs/hps/nco/ops/com/date/t${cyc}z .
+
+PDY=`cat t${cyc}z | cut -c7-14`
+
+PDYdel=`$NDATE -72 $PDY${cyc} | cut -c1-8`
+
+echo PDYdel $PDYdel
+
+
+cd href.${PDY}_awips2
+
+ssh mpyle@emcrzdm.ncep.noaa.gov "rm -rf /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDYdel}"
+ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDY}"
+
+scp href.t${cyc}z.${dom}.mean.f??.grib2 \
+    href.t${cyc}z.${dom}.pmmn.f??.grib2 \
+    href.t${cyc}z.${dom}.prob.f??.grib2 \
+    href.t${cyc}z.${dom}.sprd.f??.grib2 \
+mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDY}/

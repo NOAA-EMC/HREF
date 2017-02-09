@@ -1,0 +1,21 @@
+cyc=$1
+date=$2
+
+module load prod_util
+
+echo cyc $cyc
+
+dstart=$date$cyc
+
+dend=`$NDATE -24 $dstart`
+
+datem1=`echo $dend | cut -c1-8`
+
+echo $date $datem1
+
+cat runpoe.sh_in_cray_retro | sed s:_CYC_:${cyc}:g | sed s:_DATE_:${date}:g | \
+                              sed s:_DATEm1_:${datem1}:g  > launch_hrefrunpoe_${cyc}
+
+
+bsub < launch_hrefrunpoe_${cyc}
+# rm launch_hrefrunpoe_${cyc}

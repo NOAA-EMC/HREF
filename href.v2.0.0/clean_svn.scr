@@ -1,0 +1,10 @@
+rm -rf ./.svn
+rm -rf ./*/.svn
+rm -rf ./*/*/.svn
+rm -rf ./*/*/*/.svn
+rm -rf ./*/*/*/*/.svn
+rm -rf ./*/*/*/*/*/.svn
+rm -rf ./*/*/*/*/*/*/.svn
+rm -rf ./*/*/*/*/*/*/*/.svn
+rm -rf ./*/*/*/*/*/*/*/*/.svn
+rm -rf ./*/*/*/*/*/*/*/*/*/.svn

@@ -1,0 +1,128 @@
+#! /bin/ksh
+
+hr=${1}
+
+mkdir -p ${basedir}/${TYP}_${hr}_refd_regs
+
+rm ${basedir}/${TYP}_${hr}_refd_regs/*
+cd ${basedir}/${TYP}_${hr}_refd_regs/
+
+cp ../*.grd .
+
+regs="nw nc ne sw sc se"
+
+for reg in $regs
+do
+
+if [ $reg = "conus" ]
+then
+llat=19
+llon=-126
+ulat=51
+ulon=-56
+skip="1;1"
+
+elif [ $reg = "nw" ]
+then
+llat=36
+llon=-126
+ulat=53
+ulon=-108
+skip=0
+
+elif [ $reg = "nc" ]
+then
+llat=36
+llon=-112
+ulat=52.5
+ulon=-82
+skip=0
+
+elif [ $reg = "ne" ]
+then
+llat=39
+llon=-89
+ulat=49
+ulon=-63
+skip=0
+
+elif [ $reg = "sw" ]
+then
+llat=22
+llon=-122
+ulat=41
+ulon=-106
+skip=0
+
+elif [ $reg = "sc" ]
+then
+llat=24
+llon=-109
+ulat=41
+ulon=-85
+skip=0
+
+elif [ $reg = "se" ]
+then
+llat=24
+llon=-91
+ulat=38
+ulon=-68
+skip=0
+fi
+
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+# for hr in $hrs
+# do
+
+gdplot << endplot
+
+\$MAPFIL = HICNUS.NWS + HIPOWO.CIA
+
+ GDFILE   = ${MYFILE}
+ GDATTIM  = f${hr}
+ gvcord=hght
+ glev=1000
+ gfun = refd
+ PANEL    = 0
+ SKIP     = 0
+ SCALE    = 0
+ CTYPE    = f
+ CONTUR   = 3
+ CINT     = 0
+ LINE     = 3
+ fint=5;10;15;20;25;30;35;40;45;50;55;60;65
+ fline=0;25;24;4;21;22;23;5;18;17;15;14;28;29
+ HILO     =
+ HLSYM    =
+ CLRBAR   = 32
+ GVECT    =
+ WIND     = BM1
+ REFVEC   =
+ TITLE    = 32/ ^ _ ${TYP}
+ TEXT     = 1
+ CLEAR    = YES
+ IJSKIP   = $skip
+ PROJ     = lcc/25;-95;25
+ MAP      = 32/12/1
+ garea    = $llat;$llon;$ulat;$ulon
+ proj     = lcc/35;-100;35
+ MSCALE   = 0
+ LATLON   =
+ DEVICE   = gif|${TYP}_href_${reg}_refd_f${hr}.gif|960;720
+ STNPLT   =
+r
+
+ex
+
+endplot
+
+gpend
+
+done
+
+# done
+
+cp *.gif ../
