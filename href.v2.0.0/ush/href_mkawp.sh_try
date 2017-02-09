@@ -13,7 +13,7 @@
 
 set -xa
 
-cyc=12
+cyc=00
 cycle=t${cyc}z
 
 NEST=conus
@@ -23,7 +23,7 @@ types="mean pmmn sprd prob"
 for type in $types
 do
 
-DIR=/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/href.20170201_awips2
+DIR=/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/href.20170208_awips2
 
 TOCGRIB2=/gpfs/hps/nco/ops/nwprod/grib_util.v1.0.3/exec/tocgrib2
 GRB2INDEX=/gpfs/hps/nco/ops/nwprod/grib_util.v1.0.3/exec/grb2index

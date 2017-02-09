@@ -6,7 +6,7 @@
 #BSUB -M 3000
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 ####BSUB -extsched 'CRAYLINUX[]'
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 39*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 36*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}'
 #BSUB -W 0:59
 
 export KEEPDATA=NO

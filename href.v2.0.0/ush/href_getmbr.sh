@@ -264,16 +264,16 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
 	if [ -e $filecheck ]
         then
-        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib namx.f${ff} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|APCP):" -grib nn.f${ff}.grb
-        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.f${ff}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.f${ff}.grb
-        cat nn.f${ff}.grb  nn2.f${ff}.grb ceiling.f${ff}.grb > inputs_nn.f${ff}.grb
+        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib namx.m${m}.f${ff} $filecheck
+        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|APCP):" -grib nn.m${m}.f${ff}.grb
+        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.m${m}.f${ff}.grb
+        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.m${m}.f${ff}.grb
+        cat nn.m${m}.f${ff}.grb  nn2.m${m}.f${ff}.grb ceiling.m${m}.f${ff}.grb > inputs_nn.m${m}.f${ff}.grb
 
-        $WGRIB2 namx.f${ff} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.f${ff}
-        $WGRIB2  inputs_nn.f${ff}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.f${ff}
+        $WGRIB2 namx.m${m}.f${ff} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.m${m}.f${ff}
+        $WGRIB2  inputs_nn.m${m}.f${ff}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.m${m}.f${ff}
 
-        cat interp.f${ff}  interp_nn.f${ff}  > $DATA/href.m${m}.t${cyc}z.f${ff}
+        cat interp.m${m}.f${ff}  interp_nn.m${m}.f${ff}  > $DATA/href.m${m}.t${cyc}z.f${ff}
 
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
@@ -292,7 +292,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 10
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -337,7 +337,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 10
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -393,7 +393,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 10
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -498,7 +498,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 10
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
