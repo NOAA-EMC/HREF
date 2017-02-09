@@ -1827,8 +1827,11 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
                jpd27=-999
                derv_mn(:,1)=ptype_mn(:,jp)     !for precip type, Lm,lp,Lth all are 1
                derv_sp=0.0
-!              derv_pr(:,1,1)=ptype_pr(:,jp)
+
+! ptype_pr2 has out of members defining a type
                derv_pr(:,1,1)=ptype_pr2(:,jp)
+! ptype_pr has out of all members 
+!               derv_pr(:,1,1)=ptype_pr(:,jp)
 
                gfld_temp=gfld
 
@@ -1848,34 +1851,36 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
 
               end do
 
-              do jp=1,4
-               jpd1=1
-               jpd2=jptyp2(jp)
-               jpd10=1
-               jpd12=0
-               jpd27=-999
-               derv_mn(:,1)=ptype_mn(:,jp)     !for precip type, Lm,lp,Lth all are 1
-               derv_sp=0.0
-               derv_pr(:,1,1)=ptype_pr2(:,jp)  ! % of members at a point reporting a ptype 
+! cannot remember why this block was here twice.
+
+!              do jp=1,4
+!               jpd1=1
+!               jpd2=jptyp2(jp)
+!               jpd10=1
+!               jpd12=0
+!               jpd27=-999
+!               derv_mn(:,1)=ptype_mn(:,jp)     !for precip type, Lm,lp,Lth all are 1
+!               derv_sp=0.0
+!               derv_pr(:,1,1)=ptype_pr2(:,jp)  ! % of members at a point reporting a ptype 
 !orig               derv_pr(:,1,1)=ptype_pr(:,jp)  ! % of members at a point reporting a ptype 
 
-               gfld_temp=gfld
+!               gfld_temp=gfld
 
-               if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
+!               if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
+!
+!               call packGB2_mean_derv(imean,isprd,derv_mn,
+!     +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+!     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables 
+!      
+!              gfld_temp=gfld                           !some of idrtmpl() fields have been changed after packGB2_prob,
 
-               call packGB2_mean_derv(imean,isprd,derv_mn,
-     +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables 
-      
-              gfld_temp=gfld                           !some of idrtmpl() fields have been changed after packGB2_prob,
-
-              if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
+!              if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
 
 !avoid               call packGB2_prob_derv(iprob,derv_pr,
 !avoid     +              nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
 !avoid     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables
 
-              end do
+!              end do
 
               deallocate (ptype_mn)
               deallocate (ptype_pr)
