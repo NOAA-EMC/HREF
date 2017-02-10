@@ -1,6 +1,0 @@
-here 1
-makefile_4
-ftn -c -O3 -axCore-AVX2 -g -assume noold_ldout_format -module ../intel/include/g2_4 gridtemplates.f
-ar  -ruv ../intel/libg2_4.a gridtemplates.o
-ar: ../intel/libg2_4.a: File format not recognized
-make: *** [../intel/libg2_4.a(gridtemplates.o)] Error 1
