@@ -3397,7 +3397,7 @@
             else
                fld_info(cfld)%ntrange=0
             endif
-            fld_info(cfld)%tinvstat=ITSRFC
+            fld_info(cfld)%tinvstat=IFHR-ID(18)
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
           END IF 
@@ -3449,12 +3449,12 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(043))
             if(ITSRFC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+!               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
                fld_info(cfld)%ntrange=1
             else
                fld_info(cfld)%ntrange=0
             endif
-            fld_info(cfld)%tinvstat=ITSRFC
+            fld_info(cfld)%tinvstat=IFHR-ID(18)
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
            endif
          ENDIF
@@ -3502,12 +3502,12 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(135))
             if(ITSRFC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+!               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
                fld_info(cfld)%ntrange=1
             else
                fld_info(cfld)%ntrange=0
             endif
-            fld_info(cfld)%tinvstat=ITSRFC
+            fld_info(cfld)%tinvstat=IFHR-ID(18)
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
           endif
          ENDIF
@@ -3554,11 +3554,12 @@
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(136))
             if(ITSRFC>0) then
-               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+!               fld_info(cfld)%ntrange=(IFHR-ID(18))/ITSRFC
+               fld_info(cfld)%ntrange=1
             else
                fld_info(cfld)%ntrange=0
             endif
-            fld_info(cfld)%tinvstat=ITSRFC
+            fld_info(cfld)%tinvstat=IFHR-ID(18)
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
               endif
          ENDIF
