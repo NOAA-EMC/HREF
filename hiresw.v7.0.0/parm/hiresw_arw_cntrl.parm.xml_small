@@ -446,21 +446,6 @@
       </param>
 
        <param>
-       <shortname>AVE_GFLUX_ON_SURFACE</shortname>
-       <pname>GFLUX</pname>
-              <stats_proc>AVE</stats_proc>
-       <table_info>NCEP</table_info>
-         <scale> -3.0</scale>
-      </param>
-
-       <param>
-       <shortname>AVE_LHTFL_ON_SURFACE</shortname>
-       <pname>LHTFL</pname>
-              <stats_proc>AVE</stats_proc>
-         <scale>-3.0</scale>
-      </param>
-
-       <param>
        <shortname>INST_SHTFL_ON_SURFACE</shortname>
        <pname>SHTFL</pname>
          <scale> -3.0</scale>

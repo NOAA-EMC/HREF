@@ -4,7 +4,7 @@ module purge
 module load ncep
 module load craype-sandybridge
 module use -a /opt/cray/modulefiles
-module load ../modulefiles/HIRESW/v6.1.7
+module load ../modulefiles/HIRESW/v7.0.0
 module list
 
 sleep 1
@@ -15,35 +15,30 @@ BASE=`pwd`
 
 
 cd ${BASE}/hiresw_wrfarwfcst.fd
-# ./compile_arw.sc_noclean
 # ./compile_arw.sc
+# ./compile_arw.sc_noclean
 
 echo hiresw_wrfarwfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 
 ##############################
 
 
 cd ${BASE}/hiresw_bucket.fd
-# make
+make
 
 echo hiresw_bucket.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_wrfbufr.fd
-# make clean
-# ./fill_wrflibs.scr
-# make
+make clean
+./fill_wrflibs.scr
+make
 
 echo hiresw_wrfbufr.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
-# fixes bad NAM case, screws up RAP?  Now seems okay with latest library build (maybe loading modules before g2 compilation helped??)
-export G2_MYLIB4=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/sorc/v2.5.2/intel/libg2_4.a
-# export G2_MYLIB4=${G2_LIB4}
-
 cd ${BASE}/hiresw_wps.fd
-./build.scr
+# ./build.scr
 
 echo hiresw_wps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -62,14 +57,15 @@ cd ${BASE}/hiresw_nps.fd/NPS/
 ./build.scr
  
 echo hiresw_nps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
 ##############################
 
-exit
 
 module load iobuf/2.0.7
 cd ${BASE}/hiresw_smartinitg2.fd
-# make clean
-# make
+make clean
+make
 
 module unload iobuf/2.0.7
 
@@ -78,33 +74,35 @@ echo hiresw_smartinitg2.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_smartprecipg2.fd
-# make clean
-# make
+make clean
+make
 
 echo hiresw_smartprecipg2.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_coldstart.fd
-# make clean
-# make
+make clean
+make
 
 echo hiresw_coldstart.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_sndp.fd
-# make -f makefile_nmm
-# make -f makefile_em
-# make -f makefile_em_mem2
+make -f makefile_nmm
+make -f makefile_em
+make -f makefile_em_mem2
 
 echo hiresw_sndp.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_stnmlist.fd
-# make clean
-# make
+make clean
+make
 
 echo hiresw_stnmlist.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
+
+exit
 
 cd ${BASE}/hiresw_nmmbfcst.fd/src
 gmake clean
@@ -113,13 +111,4 @@ gmake nmm > makenmm.log  2>&1
 cp ${BASE}/hiresw_nmmbfcst.fd/exe/NEMS.x ${BASE}/../exec/hiresw_nmmbfcst
 echo hiresw_nmmbfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-
-##############################
-
-module swap PrgEnv-intel PrgEnv-gnu
-cd ${BASE}/hiresw_wgrib2.cd
-make
-cp ./wgrib2/wgrib2 ${BASE}/../exec/hiresw_wgrib2
-
-echo hiresw_wgrib2.cd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
