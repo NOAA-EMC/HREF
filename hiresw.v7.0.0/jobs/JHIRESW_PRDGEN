@@ -48,8 +48,8 @@ export USHhiresw=${USHhiresw:-$HOMEhiresw/ush}
 ###################################
 #module load grib_util
 
-# keep using local version
-export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
+# no keep using local version
+# export WGRIB2=$HOMEhiresw/exec/hiresw_wgrib2
 
 # Run setpdy and initialize PDY variables
 setpdy.sh

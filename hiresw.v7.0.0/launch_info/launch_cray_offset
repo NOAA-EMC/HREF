@@ -18,9 +18,11 @@ fi
 
 
 module load -a /gpfs/hps/nco/ops/nwprod/modulefiles
-module load prod_envir/1.0.0
-module load prod_util/1.0.4
-module load grib_util/1.0.3
+module load prod_envir
+module load prod_util
+module use /gpfs/hps/nco/ops/nwtest/modulefiles
+module load grib_util/1.0.5
+
 
 cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/launch_info/
 
