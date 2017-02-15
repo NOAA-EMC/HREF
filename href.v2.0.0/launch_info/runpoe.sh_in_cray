@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.awips2_sample/logs/test_hrefpoe__CYC_.out
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.awips2_sample/logs/test_hrefpoe__CYC_.err
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__CYC_.out
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__CYC_.err
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
@@ -55,7 +55,7 @@ export COMINffg=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/ffg_input
 module load grib_util/1.0.3
 module load prod_util
 
-href_ver=`cat /u/$LOGNAME/href_awips2`
+href_ver=`cat /u/$LOGNAME/href_para`
 
 export HOMEhref=/gpfs/hps/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 
