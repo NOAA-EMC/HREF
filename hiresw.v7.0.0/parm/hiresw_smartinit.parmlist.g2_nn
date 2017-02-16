@@ -6,3 +6,5 @@ CFRZR:surface
 CRAIN:surface
 :HGT:cloud base:
 :HGT:cloud ceiling:
+REFC:
+VIS:surface

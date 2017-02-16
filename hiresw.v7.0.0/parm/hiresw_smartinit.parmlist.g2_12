@@ -3,8 +3,6 @@ UGRD:50 hybrid lev
 VGRD:50 hybrid lev
 PRES:surface
 HGT:surface
-REFC:
-VIS:surface
 GUST:surface
 TMP:500 mb
 TMP:700 mb
