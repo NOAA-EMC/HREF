@@ -62,6 +62,14 @@
       </param>
 
        <param>
+       <shortname>TCDC_ON_HYBRID_LVL</shortname>
+       <pname>TCDC</pname>
+        <level>  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50</level>
+        <scale>3.0</scale>
+       </param>
+
+
+       <param>
        <shortname>HGT_ON_ISOBARIC_SFC</shortname>
        <pname>HGT</pname>
        <level>  10000.0  20000.0  25000.0  30000.0  35000.0  40000.0  45000.0  50000.0  52500.0  55000.0  57500.0  60000.0  62500.0  65000.0  67500.0  70000.0  72500.0  75000.0  77500.0  80000.0  82500.0  85000.0
