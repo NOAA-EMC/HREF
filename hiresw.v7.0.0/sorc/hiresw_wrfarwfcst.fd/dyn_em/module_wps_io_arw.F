@@ -2222,6 +2222,11 @@ end subroutine retrieve_field
         if ((garb1 .ge. 39.99 .and. garb1 .le. 40.01) .and. &
             (num_metgrid_levels .ge. 38 .and. num_metgrid_levels .le. 40)  ) then
         RAP=.true.
+
+        elseif ((garb1 .ge. 17.999 .and. garb1 .le. 18.001) .and. & 
+            (num_metgrid_levels .ge. 38 .and. num_metgrid_levels .le. 40)  ) then
+        RAP=.true.
+
         else
         RAP=.false.
         endif
