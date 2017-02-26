@@ -104,7 +104,7 @@ cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib/Vtable
 while [ $whr -le $last ]
 do
 
-if [ $NEST = "conus"  ]
+if [ $NEST = "conus" -o $NEST = "pr"  ]
 then
 
 # consider 1 h old RAP as a possibility
@@ -129,14 +129,16 @@ cycold=`echo $onehold | cut -c9-10`
  suf="df.grib2"
  NUMLEVS=41
 
-        elif [ -e ${COMINrap}/rap.${DATEold}/rap.t${cycold}.awip32f${whrp1}.grib2 ]
+        elif [ -e ${COMINrap}/rap.t${cycold}z.awip32f${whrp1}.grib2 ]
         then
- cp ${COMINrap}/rap.${DATEold}/rap.t${cycold}.awip32f${whrp1}.grib2 $DATA/run_ungrib/.
+ echo USING 1h OLD
+ cp ${COMINrap}/rap.t${cycold}z.awip32f${whrp1}.grib2 $DATA/run_ungrib/.
  suf=".grib2"
  NUMLEVS=41
 
         elif [ -e ${COMINrap}/rap.t${cyc}z.awip32f${whr}.grib2 ]
         then
+ echo USING ON TIME RAP
  cp ${COMINrap}/rap.t${cyc}z.awip32f${whr}.grib2 $DATA/run_ungrib/.
  suf=".grib2"
  NUMLEVS=41
@@ -159,7 +161,7 @@ fi
 
 else
 
-msg="FATAL ERROR: JHIRESW_PREPRAP attempted to run for non-conus domain."
+msg="FATAL ERROR: JHIRESW_PREPRAP attempted to run for non CONUS or PR domain."
 err_exit $msg
 
 fi
@@ -191,7 +193,12 @@ done
 
 cd $DATA/run_ungrib
 
+if [ -e ${mod}.t${cyc}z.${type}00${suf} ]
+then
 mv ${mod}.t${cyc}z.${type}00${suf} GRIBFILE.AAA
+else
+mv ${mod}.t${cycold}z.${type}01${suf} GRIBFILE.AAA
+fi
 
 pwd
 
@@ -262,21 +269,21 @@ mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 hend=`echo $end | cut -c9-10`
 
-if [ $NEST = "conus" ] ; then
+if [ $NEST = "conus" -o $NEST = "pr" ] ; then
 
 if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus_model namelist.input_in_model
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_${NEST} namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_${NEST}_model namelist.input_in_model
 elif [ $MODEL = "nmmb" ]; then
-  cp $PARMhiresw/hiresw_conus_${MODEL}_configure_in configure_in
+  cp $PARMhiresw/hiresw_${NEST}_${MODEL}_configure_in configure_in
 else
-  echo BAD MODEL CHOICE FOR CONUS DOMAIN
+  echo BAD MODEL CHOICE FOR CONUS/PR DOMAIN
   err=99
 fi
 
 else
 
-  echo RAP processing only available for CONUS domain
+  echo RAP processing only available for CONUS/PR domains
   echo do not use for domain $NEST
 
   err=99

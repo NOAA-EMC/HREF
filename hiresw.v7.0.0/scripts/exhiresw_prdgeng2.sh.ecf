@@ -87,10 +87,11 @@ echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 e
 echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 east &" >> $DATA/poescript_${fhr}
 echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 1 west &" >> $DATA/poescript_${fhr}
 echo "$USHhiresw/hiresw_prdgen_oldgrid_g2.sh_eastwest $fhr $NEST $cyc $MODEL 2 west &" >> $DATA/poescript_${fhr}
+echo "$USHhiresw/hiresw_prdgen_3km_grid_g2.sh     $fhr $NEST $cyc $MODEL 1 &" >> $DATA/poescript_${fhr}
 echo "wait" >> $DATA/poescript_${fhr}
 chmod 775 $DATA/poescript_${fhr}
 #command="aprun -n 1 -N 1 -d 5 $DATA/poescript_${fhr}_1 : -n 1 -N 1 -d 5 $DATA/poescript_${fhr}_2 : -n 1 -N 1 -d 3 $DATA/poescript_${fhr}_3 "
-command="aprun -n 1 -N 1 -d 13 $DATA/poescript_${fhr} "
+command="aprun -n 1 -N 1 -d 14 $DATA/poescript_${fhr} "
 
 elif [ $NEST = "ak" -o $NEST = "akmem2" ]
 then
@@ -139,17 +140,22 @@ cat $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2_1 $DATA/hiresw.t${cyc
 $WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -ncep_uv $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
 $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.idx
 
-## subset the full CONUS grid to approximate the CAM common grid list
+$WGRIB2 $DATA/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -ncep_uv $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 -s > $COMOUTPERM/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2.idx
 
+## subset the full CONUS grid to approximate the CAM common grid list
+## now likely will interpolate subset products to 3 km grid instead for CONUS
 
 ### change to use a PARM .txt file, and do for CONUS and AK
 
-cp $PARMhiresw/hiresw_subset.txt .
+# cp $PARMhiresw/hiresw_subset.txt .
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 |  grep -F -f hiresw_subset.txt | \
-$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 
+# $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 |  grep -F -f hiresw_subset.txt | \
+# $WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2 
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.subset.grib2.idx
+cat $DATA/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conus.grib2_1  > $COMOUT/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conus.subset.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conus.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conus.subset.grib2.idx
+
 
     if [ $SENDDBN = YES ]; then
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conus.grib2
@@ -227,10 +233,11 @@ $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 -s > $COMOU
 
 cp $PARMhiresw/hiresw_subset.txt .
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 |  grep -F -f hiresw_subset.txt | \
-$WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 
+# $WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 |  grep -F -f hiresw_subset.txt | \
+# $WGRIB2  -i -grib $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2  $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2 
 
-$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.subset.grib2.idx
+cat $DATA/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conus.grib2_1  > $COMOUT/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conusmem2.subset.grib2
+$WGRIB2 $COMOUT/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conusmem2.subset.grib2 -s > $COMOUT/hiresw.t${cyc}z.${MODEL}_3km.f${fhr}.conusmem2.subset.grib2.idx
 
     if [ $SENDDBN = YES ]; then
        $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE}      $job $COMOUT/hiresw.t${cyc}z.${MODEL}_5km.f${fhr}.conusmem2.grib2
