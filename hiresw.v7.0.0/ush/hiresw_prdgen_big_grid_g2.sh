@@ -255,9 +255,8 @@ done
 
 ### extract just needed items
 
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 
-$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt \
-          | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
 $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
 
 if [ $DOMIN_SMALL = "conus"  -a $subpiece = "1" ] 

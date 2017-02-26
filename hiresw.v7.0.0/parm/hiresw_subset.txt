@@ -29,8 +29,8 @@
 :MAXDVV:100-1000 mb:
 :MXUPHL:5000-2000 m above ground:
 :MXUPHL:3000-0 m above ground:
-:parm=200:5000-2000 m above ground:
-:parm=200:3000-0 m above ground:
+:var discipline=0 center=7 local_table=1 parmcat=7 parm=200:5000-2000 m above ground:
+:var discipline=0 center=7 local_table=1 parmcat=7 parm=200:3000-0 m above ground:
 :MAXUW:10 m above ground:
 :MAXVW:10 m above ground:
 :LCDC:low cloud layer:

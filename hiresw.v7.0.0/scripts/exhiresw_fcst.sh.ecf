@@ -161,7 +161,7 @@ then
 cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.wrfbdy_d01 wrfbdy_d01
 export err1=$?
 
-if [ $NEST = "conus" ]
+if [ $NEST = "conus" -o $NEST = "pr" ]
 then
 cp $COMIN/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01_rap wrfinput_d01
 else
@@ -213,7 +213,7 @@ fi
 
 done
 
-if [ $NEST = "conus" ]
+if [ $NEST = "conus" -o $NEST = "pr" ]
 then
 
 ### CONUS input based on RAP produced by different job than the boundary files

@@ -220,7 +220,7 @@ export err=$?; err_chk
 cp wrfbdy_d01 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfbdy_d01
 cp namelist.input_model $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.namelist.input
 
-if [ $NEST != "conus" ]
+if [ $NEST != "conus" -a $NEST != "pr" ]
 then
  cp wrfinput_d01 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.wrfinput_d01
 
