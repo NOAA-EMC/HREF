@@ -1,0 +1,42 @@
+
+
+#######################
+####  Hurricane    ####
+#######################
+
+run_tc:             false    # true=use hwrf phys
+
+sas_pgcon:          0.55     # convectively forced pressure gradient factor,default=0.55
+sas_shal_pgcon:     -1       # convectively forced pressure gradient factor sas shallow conv, 
+                             # '-1' means sas_pgcon is used
+sas_shalconv:       1        # 1=enable shallow conv,better with gfspblhur scheme
+sas_mass_flux:      9.0e9    # mass flux limit,default=9e9
+sas_mommix:         1.0      # SAS momentum mixing coef
+var_ric:            1.0      # 1=use variable critical Ri# in gfspblhur
+coef_ric_l:         0.16     # Regression coef for land Ric,default=0.16
+coef_ric_s:         0.16     # Regression coef for sea Ric,default=0.16
+alpha:              0.7      # adjustment coef for K in gfspblhur
+sfenth:             0.0      # GFDL surface-layer enhancement coef
+disheat:            true     # true='consider diss heating'
+
+
+
+#######################
+####  Hurricane    ####
+#######################
+
+run_tc:             false    # true=use hwrf phys
+
+sas_pgcon:          0.55     # convectively forced pressure gradient factor,default=0.55
+sas_shal_pgcon:     -1       # convectively forced pressure gradient factor sas shallow conv, 
+                             # '-1' means sas_pgcon is used
+sas_shalconv:       1        # 1=enable shallow conv,better with gfspblhur scheme
+sas_mass_flux:      9.0e9    # mass flux limit,default=9e9
+sas_mommix:         1.0      # SAS momentum mixing coef
+var_ric:            1.0      # 1=use variable critical Ri# in gfspblhur
+coef_ric_l:         0.16     # Regression coef for land Ric,default=0.16
+coef_ric_s:         0.16     # Regression coef for sea Ric,default=0.16
+alpha:              0.7      # adjustment coef for K in gfspblhur
+sfenth:             0.0      # GFDL surface-layer enhancement coef
+disheat:            true     # true='consider diss heating'
+

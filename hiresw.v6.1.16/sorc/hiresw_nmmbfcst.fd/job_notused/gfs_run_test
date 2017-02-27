@@ -1,0 +1,272 @@
+!/bin/ksh
+#
+# @ job_name = run_gfs_test
+# @ job_type = parallel
+# @ account_no = GFS-T2O
+# @ output = /ptmp/wx23hh/gfs_test_00/out2_atmos
+# @ error =  /ptmp/wx23hh/gfs_test_00/out2_atmos
+##### @ node_usage = shared
+##### @ blocking=unlimited
+##### @ resources = ConsumableMemory(4GB)
+##### @ total_tasks = 32
+##### @ task_affinity = core(1)
+##### @ parallel_threads = 2
+# @ node_usage = not_shared
+# @ tasks_per_node = 16
+# @ node = 1
+# @ resources = ConsumableMemory(4GB)
+# @ task_affinity = core(2)
+# @ parallel_threads = 4
+# @ network.MPI=sn_all,shared,us
+# @ bulkxfer = yes
+##### @ class = 1
+##### @ group = class1onprod
+# @ class = dev
+# @ group = dev
+# @ wall_clock_limit = 03:00:00
+# @ queue
+#
+
+set -x
+#
+#
+ export CDATE=2010091500
+
+
+#export EXPLICIT=.true.
+ export ADIAB=.false.
+ export REDUCED_GRID=.true.
+
+# SFCPRESS_ID=0 or 1 for ln(psfc), 2 for psfc
+ export SFCPRESS_ID=2
+# THERMODYN_ID=3 for enthalphy, 0 or 1 for virtual T, 2 for T
+ export THERMODYN_ID=3
+#
+ export IDVC=3
+ export hybrid=NO
+ export GEN_COORD_HYBRID=YES
+# SPECTRAL_LOOP       2 for old option, 1 is for one loop.
+ export SPECTRAL_LOOP=1
+#***************************************************************
+#                    N2 ,    H2O,     O3,        CLW,    O,      O2
+#export CPIlist=" 1039.645, 1846.0, 820.2391,    0.0, 1299.185, 918.0969"
+#export RIlist="  296.8034, 461.50, 173.2247,    0.0,  519.674, 259.837 "
+#***************************************************************
+#                   Dry ,    H2O,     O3,        CLW,    O,      O2
+export CPIlist=" 1004.6,   1846.0, 820.2391,    0.0"
+export RIlist="  286.05,   461.50, 173.2247,    0.0"
+#***************************************************************
+#
+#    Set up horizontal and vertical resolution ; default will be T6264
+#
+#export wave=382 ; export lm=64 ; export lsoil=4
+ export wave=126 ; export lm=64 ; export lsoil=4
+#export wave=62 ; export lm=64 ; export lsoil=2 ; export lsm=0
+#
+export NCP=cp
+export FTSFS=0.0
+export FAISS=0.0
+#
+#  This script is NOT complete for running multiple ensemble members
+#
+ export ENS_NUM=1
+#
+ tasks=32  ; export PE1=30 
+#
+  export WRT_GROUP=1
+  export WRTPE_PER_GROUP=2
+export MP_STDOUTMODE=ordered
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+export MEMORY_AFFINITY=MCM
+##export BIND_TASKS=yes
+export NTHREADS=4
+export XLSMPOPTS="parthds=$NTHREADS:spins=0:yields=0:stack=512000000"
+export SPINLOOPTIME=500
+export YIELDLOOPTIME=500
+export AIXTHREAD_SCOPE=S
+export MALLOCMULTIHEAP=true
+#
+ export FHROT=0
+#
+#    Set up experiment and directory names
+#
+ export expt=gfs_test_00
+ 
+#
+ export NSCDIR=/global/noscrub
+ export TOPDIR=/global/save
+ export DUMPDIR=/global/shared/dump
+ export MP_COREFILE_FORMAT=lite 
+ export RUNDIR=${RUNDIR:-/ptmp/$LOGNAME/$expt}
+ export SCRIPTS=${SCRIPTS:-$TOPDIR/wx23sm/gsm/scripts}
+
+ export fcst_begin=${fcst_begin:-YES}
+ export cold_sfc=${cold_sfc:-NO}
+ export hybrid=${hybrid:-NO}
+#
+ export NCP=${NCP:-/u/wx20mi/bin/ncp}
+#
+#
+#
+#    nhourb is the beginig hour.  If nhourb=0, then initial condition
+#    needs to be specified. ndays is the Length of #orecast in days
+#    begining from nhourb
+#
+ export ndays=2
+if [[ ${fcst_begin} = YES ]] ; then
+ export nhourb=0
+else
+ if [[ -s $RUNDIR/sigr1$FM ]] ; then
+   export nhourb=`/nwprod/exec/global_sighdr $RUNDIR/sigr1$FM ifhr`
+   export FHROT=${FHROT:-$nhourb}
+ else
+   nhourb=$((ndays*24))
+ fi
+fi
+#
+#
+export nhours=`expr $ndays \* 24`
+
+#
+# For two tracers
+  export ntrc=3  ; export varid=21  ; export numcld=1
+#
+#
+ export fmax=$nhours
+ export fout=3  
+ export fzer=3  
+ export fcyc=0 
+ export fdfi=0 
+ export FHRES=$nhours
+#
+#    Forecast model : horizontal truncation  and vertical levels
+#                     ---------------------
+#
+export wave=${wave:-62}
+export lm=${lm:-64}
+export lsoil=${lsoil:-4}
+#
+export NTRAC=${NTRAC:-3}
+export NTOZ=${NTOZ:-2}
+export NTCW=${NTCW:-3}
+export NCLD=${NCLD:-1}
+export NMTVR=${NMTVR:-14}
+#
+export nsout=${nsout:-0}
+export lsm=${lsm:-1}
+#
+#   Control for post and time averaging  If "YES" then run
+#   -- Defaults to "NO" 
+#
+ export gfsio_in=.true.
+ export gfsio_out=.true.
+#
+ export DYNVARS="liope=.F.,gfsio_in=$gfsio_in,gfsio_out=$gfsio_out"
+ export PHYVARS="liope=.F.,gfsio_in=$gfsio_in,gfsio_out=$gfsio_out"
+
+ export TRACERVARS="RI=$RIlist,CPI=$CPIlist,"
+#
+export NGPTC=12
+export NGPTC=${NGPTC:-$((wave/10))}
+export LEVR=${levr:-0}
+#
+#     Forecaset script and executable name
+#
+ export FCSTSCRIPT=/global/save/${USER}/trunk/job/exglobal_fcst.sh.sms_nems
+ export FCSTEXEC=/global/save/${USER}/trunk/exe/NEMS.x
+# export FCSTEXEC=/global/save/${USER}/global_atmos.fd/nems_main_gfs.x
+#
+#
+# ***************************************************************
+#    Below here no change needed most of the time
+#    ____________________________________________
+#
+mkdir -p $RUNDIR
+cp configfile_global_new configure_file
+cp configure_file $RUNDIR
+cd $RUNDIR
+
+ export COMOUT=$RUNDIR
+#
+ export FIXGLOBAL=/nwprod/fix
+ export FIX_RAD=/global/save/wx23hh/00wkgfs/fix/fix_rad
+#
+ export POSTGPDIR=$TOPDIR/wx23hh/00wkgfs/src/global_postgp.fd
+ export POSTGPEXEC=$POSTGPDIR/global_postgp
+ export POSTGPSH=/nwprod/ush/global_postgp.sh
+#
+ export LANDICE_OPT=1
+#export CLIMO_FIELDS_OPT=3
+ export CLIMO_FIELDS_OPT=2
+#
+if [[ $wave -eq 62 ]] ; then
+  export LONF=192 ; export LATG=94 ; export LONR=192 ; export LATR=94
+  export im=$LONR ; export jm=$LATR ; export iop=144 ; export jop=73
+  if [[ $lm -eq 64 ]] ; then
+    export DELTIM=${DELTIM:-900}
+  fi
+  if [[ $lm -eq 150 ]] ; then
+    export DELTIM=${DELTIM:-180}
+  fi
+  export DELTIM=${DELTIM:-1200}
+elif [[ $wave -eq 126 ]] ; then
+  export LONF=384 ; export LATG=190 ; export LONR=384 ; export LATR=190
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-600}
+elif [[ $wave -eq 170 ]] ; then
+  export LONF=512 ; export LATG=256 ; export LONR=512 ; export LATR=256
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-450}
+elif [[ $wave -eq 190 ]] ; then
+  export LONF=576 ; export LATG=288 ; export LONR=576 ; export LATR=288
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+elif [[ $wave -eq 254 ]] ; then
+  export LONF=768 ; export LATG=384 ; export LONR=768 ; export LATR=384
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-300}
+elif [[ $wave -eq 382 ]] ; then
+  export LONF=1152 ; export LATG=576 ; export LONR=1152 ; export LATR=576
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-180}
+elif [[ $wave -eq 510 ]] ; then
+  export LONF=1536 ; export LATG=766 ; export LONR=1536 ; export LATR=766
+  export im=$LONR ; export jm=$LATR ; export iop=360 ; export jop=181
+  export DELTIM=${DELTIM:-120}
+  export OROGRAPHY=$TOPDIR/wx23ys/fix.all/global_orography.t${wave}.grb
+  export MTNVAR=$TOPDIR/wx23my/fix.all/global_mtnvar.t${wave}.f77
+fi
+#
+# ------------------------ initial condition ----------------
+#
+  export JCAP=$wave
+  export LEVS=$lm
+  export LONB=$im
+  export LATB=$jm
+  export VERBOSE=YES
+#
+  export SIGI=$RUNDIR/gfsanl.$CDATE
+  export SFCI=$RUNDIR/sfcanl.$CDATE
+  export FHINI=00
+#
+# ---------------------------------------- fcst ----------------------
+#
+if [[ $nhourb -lt $nhours ]] ; then
+
+  export FNTSFA=
+  export FNACNA=
+#
+  export FHOUT=$fout
+  export FHZER=$fzer
+  export FHCYC=$fcyc
+  export FHDFI=$fdfi
+  export FHLWR=${FHLWR:-3}
+  export FHSWR=${FHSWR:-1}
+  export FHMAX=$nhours
+  export FHRES=${FHRES:-$FHMAX}
+  export FHROT=${FHROT:-0}
+#
+  $FCSTSCRIPT || exit
+fi
+#

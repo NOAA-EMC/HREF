@@ -1,0 +1,35 @@
+v6.1.15 - Released Jan 4, 2017
+
+Installation details:
+
+Check out https://svnemc.ncep.noaa.gov/projects/hrw/tags/hiresw.v6.1.15/ to pick
+up the needed updates.
+
+----------------------
+
+Fixes a problem with the initial snow in the WRF-ARW member, correcting a warm bias issue over snow cover.
+
+Fixes a bug that led to the NMMB model failure for the 00Z cycle on 1 January 2017.  
+
+Update details (6.1.12 to 6.1.15):
+
+** Note: the ops v6.1.12 was the starting point.  This version DOES NOT include v6.1.13 changes for NAMv4.
+
+Several items slightly changed in the ARW model code:
+
+sorc/hiresw_wrfarwfcst.fd/dyn_em/module_wps_io_arw.F (read snow and set flags appropriately)
+sorc/hiresw_wrfarwfcst.fd/dyn_em/module_initialize_real.F (just adds prints to make clear how snow is being processed).
+sorc/hiresw_wrfarwfcst.fd/dyn_em/depend.dyn_em (forces more recompilation if module_wps_io_arw.F is modified).
+
+Two line change for the NMMB filter issue fix in:
+
+sorc/hiresw_nmmbfcst.fd/src/atmos/nmm/module_NMM_INTEGRATE.F90 
+
+Unrelated to either are modifications to the module file to get around compilation issues I had with the v6.1.7 one in the ops code:
+
+modulefiles/HIRESW/v6.1.7
+
+
+
+
+

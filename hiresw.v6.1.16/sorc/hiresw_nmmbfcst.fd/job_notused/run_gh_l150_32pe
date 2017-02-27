@@ -1,0 +1,385 @@
+#! /bin/sh -l
+#
+#BSUB -oo out_wam
+#BSUB -eo err_wam
+#BSUB -J wamtest
+####BSUB -n 1
+#BSUB -n 32
+#BSUB -x
+#BSUB -R span[ptile=16]
+#BSUB -W 00:30
+#BSUB -q "debug"
+#BSUB -a poe
+
+ulimit -s unlimited
+export OMP_NUM_THREADS=1
+export MP_EUIDEVICE=sn_all
+export MP_EUILIB=us
+export MP_TASK_AFFINITY=core:1
+export MP_EUIDEVELOP=min
+export KMP_STACKSIZE=4096m
+export F_UFMTENDIAN=big
+export MPICH_ALLTOALL_THROTTLE=0
+export MP_SINGLE_THREAD=yes
+export MP_EAGER_LIMIT=65536
+export MP_USE_BULK_XFER=yes
+export MP_COLLECTIVE_OFFLOAD=yes
+export MP_SHARED_MEMORY=no
+export MP_MPILIB=mpich2
+export MP_LABELIO=yes
+export MP_STDOUTMODE=unordered
+
+set -aeux
+
+export SCHEDULER=lsf
+export MACHINE_ID=wcoss
+
+export CDATE=2007041700
+export expt=testwam_${CDATE}
+export RUNDIR=${RUNDIR:-/ptmpd2/$LOGNAME/$expt}
+mkdir -p $RUNDIR/restart
+cd $RUNDIR
+
+ export TASKSIZE=32
+#export TASKSIZE=1
+
+#
+ export fcst_begin=YES
+ export ADIAB=.false.
+ export IDEA=.true.
+ export IAER=0
+ export GOCART=0
+# reduced_grid default is true
+ export REDUCED_GRID=.true.
+ export SLG=.false.
+ export EXPLICIT=.false.
+ export ICO2=2
+ export ISOL=1
+ export IEMS=0
+ export A2OI_OUT=${A2OI_OUT:-.false.}
+ export NGRID_A2OI=${NGRID_A2OI:-32}
+ export CPLFLX=${CPLFLX:-.false.}
+ export CLIMATE=${CLIMATE:-.false.}
+#
+ NST_FCST=0         # valid values are 0 (AM), 1(am,nst) and 2(cpld nstnst)
+ if [[ $ADIAB = .true. ]] ; then
+     export NUM_FILE=1 ;
+    export FILENAME_BASE="'SIG.F'"
+    export FILE_IO_FORM="'grib'"
+#   export FILE_IO_FORM="'bin4'"
+ else
+    export FILENAME_BASE="'SIG.F' 'SFC.F' 'FLX.F'"
+    export FILE_IO_FORM="'grib' 'bin4' 'grib'"
+#   export FILE_IO_FORM="'bin4' 'bin4' 'grib'"
+    export NUM_FILE=3
+    if [ $NST_FCST -gt 0 ] ; then
+      export FILENAME_BASE=${FILENAME_BASE}" 'NST.F'"
+      export FILE_IO_FORM=${FILE_IO_FORM}" 'bin4'"
+      NUM_FILE=`expr $NUM_FILE + 1`
+      export NUM_FILE
+    fi
+    echo "NUM_FILE=$NUM_FILE,NST_FCST=$NST_FCST,FILENAME_BASE=$FILENAME_BASE"
+ fi
+
+#
+ export NEMSIO_IN=.false.
+ export NEMSIO_OUT=.false.
+ export SIGIO_OUT=.true.
+ export SFCIO_OUT=.true.
+ export ldiag3d=.false.
+#
+ export MACHINE_ID=${MACHINE_ID:-ccs}
+ export SCHEDULER=${SCHEDULER:-loadleveler}
+#
+ export hybrid=NO
+ export GEN_COORD_HYBRID=YES
+# -------------------------------------------------------------
+# SFCPRESS_ID=0 or 1 for ln(psfc), 2 for psfc
+# THERMODYN_ID=3 for enthalphy, 0 or 1 for virtual T, 2 for T
+# -------------------------------------------------------------
+if [[ $hybrid = YES ]] ; then
+ export IDVC=2
+ export SFCPRESS_ID=1
+ export THERMODYN_ID=1
+fi
+if [[ $GEN_COORD_HYBRID = YES ]] ; then
+ export IDVC=3
+ export SFCPRESS_ID=2
+ export THERMODYN_ID=3
+ export IDVM=32
+ export NDSLFV=.false.
+fi
+#
+# SPECTRAL_LOOP       2 for old option, 1 is for one loop.default is 2
+ export SPECTRAL_LOOP=2
+#***************************************************************
+#                    N2 ,    H2O,     O3,        CLW,    O,      O2
+#export CPIlist=" 1039.645, 1846.0, 820.2391,    0.0, 1299.185, 918.0969"
+#export RIlist="  296.8034, 461.50, 173.2247,    0.0,  519.674, 259.837 "
+#***************************************************************
+#                   Dry ,    H2O,     O3,        CLW,    O,      O2
+#jw export CPIlist=" 1004.6,   1846.0, 820.2391,    0.0"
+#jw export RIlist="  286.05,   461.50, 173.2247,    0.0"
+ export RIlist="  296.8034, 461.50, 173.2247,    0.0, 519.674, 259.837"
+ export CPIlist=" 1039.645, 1846.0, 820.2391,    0.0, 1299.185, 918.0969"
+#***************************************************************
+#
+#    Set up horizontal and vertical resolution ; default will be T6264
+#
+#export wave=1148 ; export waveg=764 ; export lm=64 ; export lsoil=4
+#export wave=878 ; export waveg=574 ; export lm=64 ; export lsoil=4
+#export wave=574 ; export waveg=382 ; export lm=64 ; export lsoil=4
+#export wave=382 ; export waveg=254 ; export lm=64 ; export lsoil=4
+#export wave=254 ; export waveg=170 ; export lm=64 ; export lsoil=4
+#export wave=188 ; export waveg=126 ; export lm=64 ; export lsoil=4
+#export wave=126 ; export waveg=126 ; export lm=64 ; export lsoil=4
+ export wave=62 ; export im=192 ; export jm=94 ; export lm=150 ; export lsoil=4 ; export levr=90 ; export dt=180
+#export wave=92  ; export waveg=62  ; export lm=64 ; export lsoil=2 ; export lsm=0
+#
+export NCP=cp
+export FTSFS=0.0
+export FAISS=0.0
+#
+#  This script is NOT complete for running multiple ensemble members
+#
+ export ENS_NUM=1
+#
+ tasks=32  ; export PE1=32 
+#tasks=1   ; export PE1=1 
+#jw export tasks=1   ; export PE1=1
+export QUILTING=.false.   
+export WRT_GROUP=1
+  export WRITE_DOPOST=.false.
+  export POST_GRIBVERSION="grib1"
+  export GOCART_AER2POST=.false.
+  export liope=.false.
+if [ $SLG = .true. ] ; then
+    export ZFLXTVD=.false.
+    export SHUFF_LATS_A=.false.
+    export SHUFF_LATS_R=.false.
+else
+    export ZFLXTVD=.true.
+    export SHUFF_LATS_A=.true.
+    export SHUFF_LATS_R=.true.
+    export A2OI_OUT=.false.
+
+fi
+
+#
+export MP_STDOUTMODE=ordered
+export MP_LABELIO=yes
+export MP_SHARED_MEMORY=yes
+#
+ export FHROT=0
+#
+#    Set up experiment and directory names
+#
+#
+ export TOPDIR=/global/save
+ export DUMPDIR=/global/shared/dump
+
+ export fcst_begin=${fcst_begin:-YES}
+ export cold_sfc=${cold_sfc:-NO}
+ export hybrid=${hybrid:-NO}
+ export ldiag3d=${ldiag3d:-.false.}
+#
+ export nemsioget=${nemsiOget:-/nems/save/Jun.Wang/util/nemsio_get}
+ if [ $NEMSIO_IN = .true. ]; then
+   export SIGHDR=${nemsiOget:-/nems/save/Jun.Wang/util/nemsio_get}
+ else
+   export SIGHDR=${SIGHDR:-/nwprod/exec/global_sighdr}
+ fi
+#
+#
+#
+#    nhourb is the beginig hour.  If nhourb=0, then initial condition
+#    needs to be specified. ndays is the Length of #orecast in days
+#    begining from nhourb
+#
+ export ndays=3
+#
+ export nhours=`expr $ndays \* 24`
+ export nhours=12
+
+#
+# For two tracers
+  export ntrc=5  ; export varid=21  ; export numcld=1
+# export ntrc=5  ; export varid=200  ; export numcld=1
+#
+#
+ export fmax=$nhours
+ export fout=1  
+ export fzer=6  
+ export fcyc=24 
+ export fdfi=3 
+ export FHRES=24
+#
+#    Forecast model : horizontal truncation  and vertical levels
+#                     ---------------------
+#
+export wave=${wave:-62}
+export lm=${lm:-64}
+#
+export LSOIL=${lsoil:-4}
+export NTRAC=${NTRAC:-$ntrc}
+export NTOZ=${NTOZ:-2}
+export NTCW=${NTCW:-3}
+export NCLD=${NCLD:-1}
+export NMTVR=${NMTVR:-14}
+#
+export nsout=${nsout:-0}
+export lsm=${lsm:-1}
+#
+#   Control for post and time averaging  If "YES" then run
+#   -- Defaults to "NO" 
+#
+ export gfsio_in=.false.
+ export gfsio_out=.false.
+ export FHOUT_HF=1
+#
+ export FCSTVARS="adiab=$ADIAB,liope=.F.,"
+ export TRACERVARS="RI=$RIlist,CPI=$CPIlist,"
+#
+ export DYNVARS="nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,\
+                 sigio_out=$SIGIO_OUT,liope=.F."
+# export PHYVARS="nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,\
+#                 sfcio_out=$SFCIO_OUT,ldiag3d=$ldiag3d,liope=.F."
+export PHYVARS=liope=$liope,ras=.false.,zhao_mic=.true.,lsm=1,old_monin=.false.,sashal=.true.,newsas=.true.,shal_cnv=.true.,shuff_lats_r=$SHUFF_LATS_R,ialb=0,pre_rad=.false.,random_clds=.false.,iovr_lw=1,iovr_sw=1,IEMS=$IEMS,ISOL=$ISOL,ICO2=$ICO2,IAER=$IAER,ictm=0,nsout=0,ldiag3d=.false.,sfcio_out=$SFCIO_OUT,ncw=20,120,crtrh=0.85,0.85,0.85,flgmin=0.200,0.300,cnvgwd=.false.,ctei_rm=,mstrat=.false.,ccnorm=.false.,mom4ice=.false.,A2OI_OUT=$A2OI_OUT,CPLFLX=$CPLFLX,NGRID_A2OI=$NGRID_A2OI,NST_FCST=0,NST_SPINUP=.false.,lgoc3d=.false.,trans_trac=.true.,cal_pre=.false.,bkgd_vdif_m=3.0,bkgd_vdif_h=1.0,bkgd_vdif_s=0.2,climate=$CLIMATE,psautco=4.0e-4,4.0e-4,prautco=1.0e-4,1.0e-4,evpco=2.0e-5,wminco=1.0e-5,1.0e-5,CCWF=1.0,1.0,dlqf=0.0,0.0,shal_cnv=.true.,nemsio_in=$NEMSIO_IN,nemsio_out=$NEMSIO_OUT,cdmbgwd=1.0,1.0,grid_aldata=.false.
+
+
+#
+export NGPTC=12
+#export NGPTC=${NGPTC:-$((waveg/10))}
+export LEVR=${levr:-0}
+#
+#     Forecaset script and executable name
+#
+ export NEMSDIR=/nems/save/Jun.Wang/nems/20140513/trunk
+ cp -p ${NEMSDIR}/job/exglobal_fcst.sh.sms_nems .
+ cp -p ${NEMSDIR}/exe/NEMS.x .
+ export FCSTSCRIPT=${RUNDIR}/exglobal_fcst.sh.sms_nems
+ export FCSTEXEC=${RUNDIR}/NEMS.x
+ export FCST_LAUNCHER=mpirun.lsf
+#
+#
+# ***************************************************************
+#    Below here no change needed most of the time
+#    ____________________________________________
+#
+#ic
+ if [ $fcst_begin == YES ]; then
+   if [ $SCHEDULER = 'loadleveler' ]; then
+     cp /climate/save/wx20wa/wam/Fei_Wu/data/*anl*${CDATE} $RUNDIR
+   elif [ $SCHEDULER = 'pbs' ]; then
+     cp /scratch1/portfolios/NCEPDEV/nems/save/Jun.Wang/wam/data/ic/t62/*anl*${CDATE} $RUNDIR
+   elif [ $SCHEDULER = 'lsf' ]; then
+#jw      cp /gpfs/*d1/emc/nems/save/Jun.Wang/wam/data/IC/*anl*${CDATE} $RUNDIR
+#jw     cp /gpfs/*d1/emc/nems/noscrub/Jun.Wang/wam/ic/ic_dump/*anl*${CDATE} $RUNDIR
+     cp /nems/noscrub/Jun.Wang/wam/ic/FeiWu/*anl*${CDATE} $RUNDIR
+   fi
+ fi 
+ export COMOUT=$RUNDIR
+#
+#cp -p ${NEMSDIR}/job/regression_tests/ocean.configure $RUNDIR
+ cp -p ${NEMSDIR}/job/regression_tests/Chem_Registry.rc $RUNDIR
+ cp -p ${NEMSDIR}/job/regression_tests/MAPL.rc $RUNDIR
+
+ export FIXGLOBAL=/global/noscrub/Shrinivas.Moorthi/para_new/para/fix/fix_am
+ export FIX_RAD=/global/noscrub/Shrinivas.Moorthi/para_new/para/fix/fix_am
+ export FIX_IDEA=/meso/noscrub/wx20rv/REGRESSION_TEST/WAM_gh_l150
+#
+# export POSTGPDIR=$TOPDIR/wx23hh/00wkgfs/src/global_postgp.fd
+# export POSTGPEXEC=$POSTGPDIR/global_postgp
+# export POSTGPSH=/nwprod/ush/global_postgp.sh
+#
+ export LANDICE_OPT=1
+#export CLIMO_FIELDS_OPT=3
+ export CLIMO_FIELDS_OPT=2
+#
+#
+# ------------------------ initial condition ----------------
+#
+  export JCAP=$wave
+#  export JCAPG=$waveg
+  export LEVS=$lm
+  export LONB=$im
+  export LATB=$jm
+  export LONR=$im
+  export LATR=$jm
+  export LONF=$im
+  export LATG=$jm
+  export DELTIM=$dt
+  export VERBOSE=YES
+#
+#
+  export FHROT=00
+  if [[ ${fcst_begin} = YES ]] ; then
+    export GRDI=$RUNDIR/gfsanl.$CDATE
+    export SIGI=$RUNDIR/siganl.$CDATE
+    export SFCI=$RUNDIR/sfcanl.$CDATE
+    export nhourb=0
+    export FHINI=00
+
+  else
+    if [ -f $RUNDIR/grdr1 -a -f $RUNDIR/grdr2 -a -f $RUNDIR/sigr1 -a -f $RUNDIR/sigr2 -a -f $RUNDIR/sfcr ];
+    then
+      cp $RUNDIR/grdr1 $RUNDIR/restart/grdr1
+      cp $RUNDIR/grdr2 $RUNDIR/restart/grdr2
+      cp $RUNDIR/sigr1 $RUNDIR/restart/sigr1
+      cp $RUNDIR/sigr2 $RUNDIR/restart/sigr2
+      cp $RUNDIR/sfcr $RUNDIR/restart/sfcr
+      export GRDI=$RUNDIR/grdr1
+      export GRDI2=$RUNDIR/grdr2
+      export SIGI=$RUNDIR/sigr1
+      export SIGI2=$RUNDIR/sigr2
+      export SFCI=$RUNDIR/sfcr
+      export FHINI=`$nemsioget $GRDI nfhour |grep -i "nfhour"|awk -F"= " '{print $2}'`
+      export nhourb=$FHINI
+      export FHROT=${FHROT:-$nhourb}
+
+    elif [ -f $RUNDIR/restart/grdr1 -a -f $RUNDIR/restart/grdr2 -a -f $RUNDIR/restart/sigr1 -a -f $RUNDIR/restart/sigr2 -a -f $RUNDIR/restart/sfcr ];
+    then
+      export GRDI=$RUNDIR/restart/grdr1
+      export GRDI2=$RUNDIR/restart/grdr2
+      export SIGI=$RUNDIR/restart/sigr1
+      export SIGI2=$RUNDIR/restart/sigr2
+      export SFCI=$RUNDIR/restart/sfcr
+      export FHINI=`$nemsioget $GRDI nfhour |grep -i "nfhour"|awk -F"= " '{print $2}'`
+      export nhourb=$FHINI
+      export FHROT=${FHROT:-$nhourb}
+    else
+      export GRDI=$RUNDIR/gfsanl.$CDATE
+      export SIGI=$RUNDIR/siganl.$CDATE
+      export SFCI=$RUNDIR/sfcanl.$CDATE
+      export FHINI=00
+      nhourb=$((ndays*24))
+    fi
+  fi
+#
+  export NDATE=/nwprod/util/exec/ndate
+  export SIGO='sigf$($NDATE $FH $CDATE)'
+  export SFCO='sfcf$($NDATE $FH $CDATE)'
+  export FLXO='flxf$($NDATE $FH $CDATE)'
+  export LOGO='logf$($NDATE $FH $CDATE)'
+  export D3DO='d3df$($NDATE $FH $CDATE)'
+#
+# ---------------------------------------- fcst ----------------------
+#
+if [[ $nhourb -lt $nhours ]] ; then
+
+  export FNTSFA=
+  export FNACNA=
+#
+  export FHOUT=$fout
+  export FHZER=$fzer
+  export FHCYC=$fcyc
+  export FHDFI=$fdfi
+  export FHLWR=${FHLWR:-10800}
+  export FHSWR=${FHSWR:-3600}
+  export FHMAX=$nhours
+  export FHRES=${FHRES:-$FHMAX}
+  export FHROT=${FHROT:-0}
+#
+  $FCSTSCRIPT || exit
+fi
+#

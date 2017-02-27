@@ -1,0 +1,49 @@
+#
+# This the GOCART Grid Component Registry. It defines Import,
+# Internal and Export states for this component as well as
+# any 
+#
+# !REVISION HISTORY:
+#  16Aug2006  da Silva  First Version
+#
+# -----------------------------------------------------------------
+
+  COMP_NAME: OC
+
+# Only change the Registry version when major structural changes
+# occurs, not changes in content
+# --------------------------------------------------------------
+  GEOS_REGISTRY_VERSION: 1.00  
+<OC::ExportSpec cols="SHORT UNITS DIMS VLOC STAT REFRESH AVG SUBTILES LONG">
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+#  Short   |            |     | V |Item|Intervl|# Sub|          Long
+#  Name    |   Units    | Dim |Loc|Type| R | A |Tiles|          Name
+# ---------|------------|-----|---|----|---|---|-----|---------------------------------
+  OCMASS   | kg kg-1    | xyz | C |    |   |   |     | Organic Carbon Mass Mixing Ratio             __ENSEMBLE__
+  OCCONC   | kg m-3     | xyz | C |    |   |   |     | Organic Carbon Mass Concentration            __ENSEMBLE__
+  OCEXTCOEF| m-1        | xyz | C |    |   |   |     | Organic Carbon Ext.   Coefficient [550 nm]   __ENSEMBLE__
+  OCSCACOEF| m-1        | xyz | C |    |   |   |     | Organic Carbon Scatt. Coefficient [550 nm]   __ENSEMBLE__
+# .........|............|.....|...|....|...|...|.....|..................................
+  OCEM001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 001              __ENSEMBLE__     
+  OCEM002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Emission Bin 002              __ENSEMBLE__    
+  OCSD001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Sedimentation Bin 001         __ENSEMBLE__    
+  OCSD002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Sedimentation Bin 002         __ENSEMBLE__    
+  OCDP001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 001        __ENSEMBLE__    
+  OCDP002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Dry Deposition Bin 002        __ENSEMBLE__    
+  OCWT001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 001        __ENSEMBLE__    
+  OCWT002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Wet Deposition Bin 002        __ENSEMBLE__    
+  OCSV001  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 001 __ENSEMBLE__    
+  OCSV002  | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Convective Scavenging Bin 002 __ENSEMBLE__    
+  OCHYPHIL | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Hydrophobic to Hydrophilic    __ENSEMBLE__  
+  OCEMAN   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Anthropogenic Emissions       __ENSEMBLE__
+  OCEMBB   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biomass Burning Emissions     __ENSEMBLE__
+  OCEMBF   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biofuel Emissions             __ENSEMBLE__
+  OCEMBG   | kg m-2 s-1 | xy  |   |    |   |   |     | Organic Carbon Biogenic Emissions            __ENSEMBLE__
+  OCSMASS  | kg m-3     | xy  |   |    |   |   |     | Organic Carbon Surface Mass Concentration    __ENSEMBLE__ 
+  OCCMASS  | kg m-2     | xy  |   |    |   |   |     | Organic Carbon Column Mass Density           __ENSEMBLE__ 
+  OCEXTTAU |      1     | xy  |   |    |   |   |     | Organic Carbon Extinction AOT [550 nm]       __ENSEMBLE__
+  OCSCATAU |      1     | xy  |   |    |   |   |     | Organic Carbon Scattering AOT [550 nm]       __ENSEMBLE__  
+  OCANGSTR |      1     | xy  |   |    |   |   |     | Organic Carbon Angstrom parameter [470-870 nm] __ENSEMBLE__
+  OCFLUXU  | kg m-1 s-1 | xy  |   |    |   |   |     | Organic Carbon column u-wind mass flux       __ENSEMBLE__
+  OCFLUXV  | kg m-1 s-1 | xy  |   |    |   |   |     | Organic Carbon column v-wind mass flux       __ENSEMBLE__
+</OC::ExportSpec>
