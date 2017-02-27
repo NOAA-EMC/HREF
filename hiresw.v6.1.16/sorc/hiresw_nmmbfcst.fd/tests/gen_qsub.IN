@@ -1,0 +1,32 @@
+#! /bin/sh -l
+
+#PBS -o out
+#PBS -e err
+#PBS -N _JBNME_
+#PBS -A _ACCNR_
+#PBS -l procs=_TASKS_
+#PBS -l walltime=00:_WLCLK_:00
+
+set -aeux
+export MPI_GROUP_MAX=96
+
+export SCHEDULER=_SCHED_
+if [ ${SCHEDULER} = pbs ]; then
+  export MACHINE_ID=zeus
+fi
+
+cd _RUND_
+
+echo "Model started:  " `date`
+
+module load intel
+module load mpt
+module load adaptive
+
+export TASKSIZE=_TASKS_
+
+_RUND_/gen_fcst_run
+
+echo "Model ended:    " `date`
+
+exit

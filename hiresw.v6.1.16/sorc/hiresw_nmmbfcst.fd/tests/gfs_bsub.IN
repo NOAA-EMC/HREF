@@ -1,0 +1,55 @@
+#!/bin/ksh
+#BSUB -a poe
+#BSUB -e _RUND_/fcst._CDATE_.out.%J
+#BSUB -o _RUND_/fcst._CDATE_.out.%J
+#BSUB -J _JBNME_
+#BSUB -network type=sn_all:mode=US
+#####BSUB -q debug
+#BSUB -q "dev"
+#BSUB -n _TASKS_
+#BSUB -R span[ptile=_TPN_]
+#BSUB -R affinity[core(_THRDS_)]
+#BSUB -x
+#####BSUB -W 00:25
+#BSUB -W 00:_WLCLK_
+set -x
+#ulimit -s unlimited
+export OMP_NUM_THREADS=_THRDS_
+#export MP_EUIDEVICE=sn_all
+#export MP_EUILIB=us
+#if [ $OMP_NUM_THREADS -gt 1 ] ; then
+#  export MP_TASK_AFFINITY=cpu:_THRDS_
+#else
+#  export MP_TASK_AFFINITY=core
+#fi
+export MP_EUIDEVELOP=min
+export KMP_STACKSIZE=1024m
+#export F_UFMTENDIAN=big
+#export MPICH_ALLTOALL_THROTTLE=0
+#export MP_SINGLE_THREAD=yes
+#export MP_EAGER_LIMIT=65536
+#export MP_USE_BULK_XFER=yes
+#export MP_COLLECTIVE_OFFLOAD=yes
+#export MP_SHARED_MEMORY=no
+export MP_MPILIB=mpich2
+export MP_LABELIO=yes
+export MP_STDOUTMODE=unordered
+
+
+export SCHEDULER=_SCHED_
+if [ ${SCHEDULER} = lsf ]; then
+  export MACHINE_ID=wcoss
+fi
+
+cd _RUND_
+
+echo "Model started:  " `date`
+
+#export TASKSIZE=_TASKS_
+
+env
+_RUND_/gfs_fcst_run
+
+echo "Model ended:    " `date`
+
+exit

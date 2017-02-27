@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# This script is responsible for loading modules that are compatible with
+# the NUOPC Layer version used in NEMS.
+
+module swap PrgEnv-pgi PrgEnv-intel
+#module load esmf/6.3.0r
+# -> MOM5 needs a NetCDF enabled ESMF
+# -> NEMS now uses methods from the ESMF v7 NUOPC Layer API
+module use ~Gerhard.Theurich/Modulefiles
+module load esmf/7.0.0bs10

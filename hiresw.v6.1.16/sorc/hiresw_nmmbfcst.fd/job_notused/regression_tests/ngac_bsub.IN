@@ -1,0 +1,52 @@
+#!/bin/bash
+#BSUB -a poe
+#BSUB -oo _RUND_/out
+#BSUB -eo _RUND_/err
+#BSUB -J _JBNME_
+#BSUB -network type=sn_all:mode=US
+#BSUB -q "_ACCNR_"
+#BSUB -n _TASKS_
+#BSUB -R span[ptile=_TPN_]
+#BSUB -R affinity[core(_THRDS_)]
+#BSUB -x
+#BSUB -W 00:_WLCLK_
+
+. /usrx/local/Modules/3.2.9/init/bash
+ module load ibmpe
+ module load ics
+ export OMP_NUM_THREADS=_THRDS_
+ export MP_MPILIB=mpich2
+ export MP_EUIDEVELOP=min
+ export KMP_STACKSIZE=1024m
+ export MP_LABELIO=yes
+ export MP_STDOUTMODE=ordered
+ export LD_PRELOAD=/u/James.A.Abeles/mpi_trace_linux_x86_64/shared/libmpitrace.so
+
+set -x
+
+echo "Model started:  " `date`
+
+export MACHINE_ID=_MACHINE_ID_
+export SCHEDULER=_SCHED_
+cd _RUND_
+
+##mpirun.lsf ./NEMS.x
+export RUN_ENVIR=dev
+export cyc=00
+export envir=dev
+export PARA_CONFIG=_CONFIG_
+export NEMSDIR=_NEMSDIR_
+export WORKDIR=_WORKDIR_
+export REGSDIR=_REGSDIR_
+export FCST_SCRIPT_DIR=_NEMSDIR_/job
+export PDY=20120717
+
+export GRDI=_REGSDIR_/GFS_GOCART_POST/ngac.t00z.gfsanl
+export SFCI=_REGSDIR_/GFS_GOCART_POST/ngac.t00z.sfcanl
+export FIXGLOBAL=/global/noscrub/Shrinivas.Moorthi/para_new/para/fix/fix_am
+
+_RUND_/JNGAC_FORECAST.sms.para
+
+echo "Model ended:    " `date`
+
+exit
