@@ -9,7 +9,7 @@ up the needed updates.
 
 Update details:
 
- Note: used ops v6.1.14 was the starting point. 
+ Note: used ops v6.1.14 as the starting point. 
 
 THEN
 
@@ -28,9 +28,4 @@ M       parm/hiresw_METGRID.TBL.nmmb
 M       parm/hiresw_METGRID.TBL.arw
 
 
-
-
-
-
-
-
+Technical details:  None of these changes will impact runtime, nodes, etc.
