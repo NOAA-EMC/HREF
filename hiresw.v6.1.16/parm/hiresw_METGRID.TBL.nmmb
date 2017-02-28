@@ -125,6 +125,8 @@ name=H0ML
 name=SNOW
         interp_option=four_pt+average_4pt
         masked=water 
+        interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=0.
 ========================================
 name=SKINTEMP
@@ -188,6 +190,7 @@ name=SM000010
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=1.
         flag_in_output=FLAG_SM000010
 ========================================
@@ -195,12 +198,14 @@ name=SM010040
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=1.
         flag_in_output=FLAG_SM010040
 ========================================
 name=SM040100
         interp_option=four_pt+average_4pt+search
         masked=water
+        missing_value=9.999e+20
         interp_mask=LANDSEA(0)
         fill_missing=1.
         flag_in_output=FLAG_SM040100
@@ -209,6 +214,7 @@ name=SM100200
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=1.
         flag_in_output=FLAG_SM100200
 ========================================
@@ -223,6 +229,7 @@ name=ST000010
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=285.
         flag_in_output=FLAG_ST000010
 ========================================
@@ -230,6 +237,7 @@ name=ST010040
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=285.
         flag_in_output=FLAG_ST010040
 ========================================
@@ -237,6 +245,7 @@ name=ST040100
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=285.
         flag_in_output=FLAG_ST040100
 ========================================
@@ -244,6 +253,7 @@ name=ST100200
         interp_option=four_pt+average_4pt+search
         masked=water
         interp_mask=LANDSEA(0)
+        missing_value=9.999e+20
         fill_missing=285.
         flag_in_output=FLAG_ST100200
 ========================================
