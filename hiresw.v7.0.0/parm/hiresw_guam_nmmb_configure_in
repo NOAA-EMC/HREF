@@ -14,7 +14,7 @@ jm:  342                    # J gridpoints
 lm:  50                     # Number of atmospheric layers
 
 tph0d:   15.0               # Central geographic latitude of grid (degrees)
-tlm0d: 145.0               # Central geographic longitude of grid (degrees, positive east)
+tlm0d: 146.0               # Central geographic longitude of grid (degrees, positive east)
 
 wbd:  -5.198                # Grid's western boundary (rotated degrees)
 sbd:  -4.604                # Grid's southern boundary (rotated degrees)
