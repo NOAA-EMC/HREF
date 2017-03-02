@@ -1829,9 +1829,9 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
                derv_sp=0.0
 
 ! ptype_pr2 has out of members defining a type
-               derv_pr(:,1,1)=ptype_pr2(:,jp)
+!               derv_pr(:,1,1)=ptype_pr2(:,jp)
 ! ptype_pr has out of all members 
-!               derv_pr(:,1,1)=ptype_pr(:,jp)
+               derv_pr(:,1,1)=ptype_pr(:,jp)
 
                gfld_temp=gfld
 

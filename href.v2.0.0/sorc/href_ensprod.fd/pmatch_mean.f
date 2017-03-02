@@ -3,6 +3,7 @@
 
         character(len=4) :: vname
 	real :: rawdata_mn(jf,iens,lm),vrbl_mn(jf,lm),vrbl_mn_pm(jf,lm)
+        real, allocatable :: rawdata_mn_loc(:,:,:)
 
 	real, allocatable :: rawdata_1d(:),vrbl_mn_hold(:,:)
         integer, allocatable :: listorderfull(:),listorder(:)
@@ -14,14 +15,32 @@
         allocate(listorder(jf))
 	allocate(rawdata_1d(jf*iens))
         allocate(vrbl_mn_hold(jf,lm))
+        allocate(rawdata_mn_loc(jf,iens,lm))
 
 	write(0,*) 'pmatch_mean iens, jf, lm: ', iens, jf, lm
+
+	write(0,*) 'jpd1, jpd2: ', jpd1, jpd2
+
+! set local copy to rawdata_mn
+	rawdata_mn_loc=rawdata_mn
 
         do I=1,iens
         do J=1,jf
         listorder(J)=J
         listorderfull((I-1)*jf+J)=(I-1)*jf+J
+	
+! force reflectivity type fields to be zero
+         if(jpd1.eq.16.and.(jpd2.eq.195 
+     &                 .or. jpd2.eq.196
+     &                 .or. jpd2.eq.198) .and. 
+     &   rawdata_mn(J,I,lv) .lt. 0.) then
+
+        rawdata_1d((I-1)*jf+J)=0.
+        rawdata_mn_loc(J,I,lv)=0.
+        else
         rawdata_1d((I-1)*jf+J)=rawdata_mn(J,I,lv)
+        endif
+
         enddo
         enddo
 
@@ -30,8 +49,16 @@
         call quick_sort(vrbl_mn,listorder,jf)
         call quick_sort(rawdata_1d,listorderfull,iens*jf)
 
-        write(0,*) 'maxval(rawdata_mn): ',maxval(rawdata_mn(:,:,lv))
+        write(0,*) 'min,maxval(rawdata_mn): ',minval(rawdata_mn(:,:,lv))
+     &                                       ,maxval(rawdata_mn(:,:,lv))
+        write(0,*) 'min,maxval(rawdata_mn_loc): ', 
+     &  minval(rawdata_mn_loc(:,:,lv)),maxval(rawdata_mn_loc(:,:,lv))
+
+        write(0,*) 'minval(vrbl_mn(:,lv)): ',minval(vrbl_mn(:,lv))
         write(0,*) 'maxval(vrbl_mn(:,lv)): ',maxval(vrbl_mn(:,lv))
+
+        write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
+        write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
 
         vrbl_mn_pm(:,lv)=-999.
 
@@ -50,31 +77,15 @@
           vrbl_mn_pm(iplace,lv)=0.
           cycle ens_loop
          end if
-         if(jpd1.eq.16.and.jpd2.eq.196.and.jpd10.eq.200.and. !REFC
-     +     vrbl_mn_hold(iplace,lv).eq.-20.0) then
-          vrbl_mn_pm(iplace,lv)=-20.
-          cycle ens_loop
-         end if
-         if(jpd1.eq.16.and.jpd2.eq.195.and.jpd10.eq.105.and. !REFD
-     +     vrbl_mn_hold(iplace,lv).eq.-20.0) then
-          vrbl_mn_pm(iplace,lv)=-20.
-          cycle ens_loop
-         end if
-         if(jpd1.eq.16.and.jpd2.eq.195.and.jpd10.eq.105.and. !RETOP
-     +     vrbl_mn_hold(iplace,lv).le.0.0) then
-          vrbl_mn_pm(iplace,lv)=vrbl_mn_hold(iplace,lv)
-          cycle ens_loop
-         end if
-
 
          amin=9999. 
          amax=-9999.
          do JJ=1,iens
-          if (rawdata_mn(iplace,JJ,lv) .gt. amax) then
-                amax=rawdata_mn(iplace,JJ,lv)
+          if (rawdata_mn_loc(iplace,JJ,lv) .gt. amax) then
+                amax=rawdata_mn_loc(iplace,JJ,lv)
           endif
-          if (rawdata_mn(iplace,JJ,lv) .lt. amin) then
-                amin=rawdata_mn(iplace,JJ,lv)
+          if (rawdata_mn_loc(iplace,JJ,lv) .lt. amin) then
+                amin=rawdata_mn_loc(iplace,JJ,lv)
           endif
          enddo
  
@@ -84,12 +95,14 @@
           vrbl_mn_pm(iplace,lv)=amax 
           ibound_max=ibound_max+1
 
-!	write(0,*) 'iplace,amax,rawdata_1d,vrbl_mn: ', iplace,
-!     &         amax, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
+!         if(jpd1.eq.16.and.(jpd2.eq.195 
+!     &                 .or. jpd2.eq.196
+!     &                 .or. jpd2.eq.198)) then 
 
-!	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
-!	write(0,*) 'BIG val: ',iplace, vrbl_mn_pm(iplace,lv)
-!	endif
+!  	  write(0,*) 'REF iplace,amax,rawdata_1d,vrbl_mn: ', iplace,
+!     &         amax, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
+!          endif
+
 
          elseif (rawdata_1d(J) .lt. amin) then
 
@@ -98,10 +111,6 @@
 
 !	write(0,*) 'iplace, amin, rawdata_1d, vrbl_mn: ',iplace,
 !     &         amin, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
-
-!	if (vrbl_mn_pm(iplace,lv) .ge. 150.) then	
-!	write(0,*) 'BIG val (on min side): ',iplace, vrbl_mn_pm(iplace,lv)
-!	endif
 
          else
 
@@ -122,5 +131,6 @@
         deallocate(listorder)
         deallocate(rawdata_1d)
         deallocate(vrbl_mn_hold)
+        deallocate(rawdata_mn_loc)
 
 	end subroutine pmatch_mean
