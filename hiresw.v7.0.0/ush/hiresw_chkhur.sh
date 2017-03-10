@@ -27,12 +27,11 @@ then
    exit
 fi
 
-export COMHUR=${COMHUR:-$COMROOTp1/hur/prod/inpdata}
 
 prodcyc=$cyc
 
-stormdate=`cat ${COMHUR}/stormdate`
-nstms=`cat ${COMHUR}/nstorms`
+stormdate=`cat ${COMINhur}/stormdate`
+nstms=`cat ${COMINhur}/nstorms`
 PDY2=`echo $PDY | cut -c3-`
 
 if [ "$PDY2$cyc" = "$stormdate" ] ; then
