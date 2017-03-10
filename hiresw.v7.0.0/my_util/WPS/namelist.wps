@@ -14,18 +14,18 @@
  i_parent_start =      1, 31
  j_parent_start =      1, 17
  s_we           = 1, 1,
- e_we           = 386,112,
+ e_we           = 578,112,
  s_sn           = 1, 1,
- e_sn           = 342,97,
+ e_sn           = 383,97,
  geog_data_res  = '2m','2m',
  dx = 3000.,
  dy = 3000.,
  map_proj = 'lambert',
- ref_lat   = 15.0
- ref_lon   = 146.0
- truelat1  =  15.0,
- truelat2  =  15.0,
- stand_lon = 146.0
+ ref_lat   = 17.98
+ ref_lon   = -69.0
+ truelat1  =  17.98,
+ truelat2  =  17.98,
+ stand_lon = -69.0
  geog_data_path = '/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/geog'
 /
  ref_x     = ,
