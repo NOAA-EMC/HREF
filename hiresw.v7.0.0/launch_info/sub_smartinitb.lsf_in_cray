@@ -19,8 +19,7 @@ export SENDCOM=YES
 
 module load prod_util
 module load prod_envir
-module use /gpfs/hps/nco/ops/nwtest/modulefiles
-module load grib_util/1.0.5
+module load grib_util/1.0.3
 
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
