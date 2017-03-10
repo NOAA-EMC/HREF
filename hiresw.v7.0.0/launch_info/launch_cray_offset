@@ -20,8 +20,8 @@ fi
 module load -a /gpfs/hps/nco/ops/nwprod/modulefiles
 module load prod_envir
 module load prod_util
-module use /gpfs/hps/nco/ops/nwtest/modulefiles
-module load grib_util/1.0.5
+# module use /gpfs/hps/nco/ops/nwtest/modulefiles
+module load grib_util/1.0.3
 
 
 cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/launch_info/
@@ -116,7 +116,7 @@ MODPROCS=1696
 MODSPAN=24
 POSTPROCS=16
 POSTSPAN=4
-PRDGENPROCS=13
+PRDGENPROCS=14
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
@@ -126,7 +126,7 @@ MODPROCS=2112
 MODSPAN=24
 POSTPROCS=22
 POSTSPAN=11
-PRDGENPROCS=13
+PRDGENPROCS=14
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
@@ -136,7 +136,7 @@ MODPROCS=1512
 MODSPAN=24
 POSTPROCS=16
 POSTSPAN=8
-PRDGENPROCS=13
+PRDGENPROCS=14
 PRDGENSPAN=5
 NPROCBUFR=1
 BUFRSPAN=1
@@ -247,7 +247,7 @@ sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
 chmod 775 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
 
-if [ $DOM == "conus" ]
+if [ $DOM == "conus" -o $DOM == "pr" ]
 then
 bsub < sub_preprap.lsf_${DOM}_${CORE}_${CYC}
 fi

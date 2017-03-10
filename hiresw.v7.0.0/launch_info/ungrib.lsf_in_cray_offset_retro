@@ -1,5 +1,5 @@
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out__DOM___CORE_
-BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err__DOM___CORE_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err__DOM___CORE_
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_UNGRIB
 #BSUB -W 0:15
