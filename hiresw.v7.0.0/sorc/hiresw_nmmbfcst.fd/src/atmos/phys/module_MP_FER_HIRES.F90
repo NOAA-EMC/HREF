@@ -1290,6 +1290,9 @@ ENDIF
             PIACWI=0.
             TCC=TC+XLV1*PCOND+XLS1*PIDEP
           ENDIF
+!
+          QSW0=0.
+          DWV0=0.
           IF (TC.GT.0. .AND. TCC.GT.0. .AND. ICE_logical) THEN
    !
    !--- Calculate melting and evaporation/condensation
@@ -1305,14 +1308,15 @@ ENDIF
             ELSE
               DIEVP=1.-EXP(-AIEVP)
             ENDIF
-            QSW0=EPS*ESW0/(PP-ESW0)
-            DWV0=MIN(WV,QSW)-QSW0
             DUM=QW+PCOND
             IF (WV.LT.QSW .AND. DUM.LE.EPSQ) THEN
    !
    !--- Evaporation from melting snow (sink of snow) or shedding
    !    of water condensed onto melting snow (source of rain)
    !
+              DUM=MIN(ESW0, 0.99*PP)             !- Limit on ESW0 at low pressures
+              QSW0=MAX(EPSQ, EPS*DUM/(PP-DUM) )  !- Constrain QSW0 to be >=EPSQ
+              DWV0=MIN(WV,QSW)-QSW0
               DUM=DWV0*DIEVP
               PIEVP=MAX( MIN(0., DUM), PILOSS)
               PICND=MAX(0., DUM)
