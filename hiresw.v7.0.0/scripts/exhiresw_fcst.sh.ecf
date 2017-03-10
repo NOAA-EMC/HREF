@@ -364,7 +364,7 @@ runline="aprun -n 880 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
 
 elif [ $RUNLOC = "akarw" ]
 then
-runline="aprun -n 1380 -N 24 ./hiresw_${MODEL}_fcst : -n 60 -N 10 ./hiresw_${MODEL}_fcst"
+runline="aprun -n 1320 -N 24 ./hiresw_${MODEL}_fcst : -n 60 -N 10 ./hiresw_${MODEL}_fcst"
 
 elif [ $RUNLOC = "akmem2arw" ]
 then
