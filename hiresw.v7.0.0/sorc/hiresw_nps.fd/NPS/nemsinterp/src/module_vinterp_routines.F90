@@ -2726,7 +2726,15 @@ CONTAINS
       DO j = jts , MIN ( jde-1 , jte )
             DO i = its , MIN (ide-1 , ite )
 !mp                  rh(i,j,k) = MIN ( MAX ( rh(i,j,k) ,  1. ) , 100. )
+
+! consider constraining at low pressures (< 75 hPa)
+             if (p(i,j,k) .lt. 5100.) then
+                  rh(i,j,k) = MIN ( MAX ( rh(i,j,k) ,  .001 ) , 70. )
+             elseif (p(i,j,k) .lt. 7500.) then
+                  rh(i,j,k) = MIN ( MAX ( rh(i,j,k) ,  .001 ) , 90. )
+             else
                   rh(i,j,k) = MIN ( MAX ( rh(i,j,k) ,  .001 ) , 100. )
+             endif
             END DO
          END DO
       END DO
