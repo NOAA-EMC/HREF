@@ -56,6 +56,7 @@ setpdy.sh
 export COMOUT=${COMOUT:-/${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
 export COMINgfs=${COMINgfs:-$(compath.py gfs/prod/gfs.$PDY)}
 export COMINnam=${COMINnam:-$(compath.py nam/prod/nam.$PDY)}
+export COMINhur=${COMINhur:-$(compath.py hur/prod/inpdata)}
 
 mkdir -p -m 775 $COMOUT
  

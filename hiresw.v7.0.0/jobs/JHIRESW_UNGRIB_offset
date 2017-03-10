@@ -60,6 +60,7 @@ PDYm6h=`$NDATE -6 $PDY$cyc | cut -c1-8`
 export COMOUT=${COMOUT:-/${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
 export COMINgfs=${COMINgfs:-$(compath.py gfs/prod/gfs.$PDYm6h)}
 export COMINnam=${COMINnam:-$(compath.py nam/prod/nam.$PDY)}
+export COMINhur=${COMINhur:-$(compath.py hur/prod/inpdata)}
 
 mkdir -p -m 775 $COMOUT
  
