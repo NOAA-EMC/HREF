@@ -94,7 +94,7 @@
  sfcp_to_sfcp                        = .false.
  adjust_heights                      = .false.
  nproc_x=5
- nproc_y=18
+ nproc_y=14
  /
 
  &physics
