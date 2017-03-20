@@ -116,7 +116,7 @@
  num_soil_layers                     = 4,
  sf_urban_physics                    = 0,
  mp_zero_out                         = 2,
- mp_zero_out_thresh                  = 1.e-8,
+ mp_zero_out_thresh                  = 1.e-10,
  maxiens                             = 1,
  maxens                              = 3,
  maxens2                             = 3,

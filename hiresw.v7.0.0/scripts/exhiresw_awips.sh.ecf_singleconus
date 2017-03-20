@@ -37,10 +37,12 @@ do
       sleep 30
     fi
   done
+
   if [ $icnt -ge $maxtries ]; then
      msg="FATAL ERROR - ABORTING after 50 minutes of waiting for ${NEST}${MODEL} 5km  F$fhr to become available."
      err_exit $msg
   fi
+
     export FORT11=$COMIN/${NET}.t${cyc}z.${MODEL}_5km.f${fhr}.${NEST}.grib2
     export FORT31=""
     export FORT51=grib2.t${cyc}z.awpreg_${RUNLOC}f${fhr}
@@ -57,7 +59,7 @@ do
        postmsg "$jlogfile" "$msg"
     fi
 
-fi
+# fi
 
 done
 
