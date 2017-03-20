@@ -121,6 +121,10 @@ fi
 
 rm -rf poe.*
 
+
+if [ $NEST = "conus" ]
+then
+
 echo "#!/bin/sh  "                             >  poe.aa
 echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 01 &" >> poe.aa
 echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 02 &" >> poe.aa
@@ -312,6 +316,268 @@ msg"JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 date
 
+elif [ $NEST = "ak" -o $NEST = "pr" ]
+then
+
+echo "#!/bin/sh  "                             >  poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 01 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 02 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 03 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 04 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 05 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 06 &" >> poe.aa
+echo "wait" >> poe.aa
+
+echo "#!/bin/sh  "                             >  poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 07 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 08 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 09 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 10 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 11 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 12 &" >> poe.bb
+echo "wait" >> poe.bb
+
+echo "#!/bin/sh  "                             >  poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 13 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 14 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 15 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 16 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 17 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 18 &" >> poe.cc
+echo "wait" >> poe.cc
+
+echo "#!/bin/sh  "                             >  poe.dd
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 19 &" >> poe.dd
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 20 &" >> poe.dd
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 21 &" >> poe.dd
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 22 &" >> poe.dd
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 23 &" >> poe.dd
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 24 &" >> poe.dd
+echo "wait" >> poe.dd
+
+echo "#!/bin/sh  "                             >  poe.ee
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 25 &" >> poe.ee
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 26 &" >> poe.ee
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 27 &" >> poe.ee
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 28 &" >> poe.ee
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 29 &" >> poe.ee
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 30 &" >> poe.ee
+echo "wait" >> poe.ee
+
+echo "#!/bin/sh  "                             >  poe.ff
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 31 &" >> poe.ff
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 32 &" >> poe.ff
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 33 &" >> poe.ff
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 34 &" >> poe.ff
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 35 &" >> poe.ff
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 36 &" >> poe.ff
+echo "wait" >> poe.ff
+
+echo "#!/bin/sh  "                             >  poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 01 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 02 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 04 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 05 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06 &" >> poe.a
+echo "wait"                                    >> poe.a
+
+echo "#!/bin/sh  "                             >  poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 07 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 08 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 09 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 10 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 11 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 12 &" >> poe.b
+echo "wait"                                    >> poe.b
+
+echo "#!/bin/sh  "                             >  poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 13 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 14 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 15 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 16 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 17 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 18 &" >> poe.c
+echo "wait"                                    >> poe.c
+
+echo "#!/bin/sh  "                             >  poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 19 &" >> poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 20 &" >> poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 21 &" >> poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 22 &" >> poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 23 &" >> poe.d
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 24 &" >> poe.d
+echo "wait"                                    >> poe.d
+
+echo "#!/bin/sh  "                             >  poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 25 &" >> poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 26 &" >> poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 27 &" >> poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 28 &" >> poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 29 &" >> poe.e
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 30 &" >> poe.e
+echo "wait"                                    >> poe.e
+
+echo "#!/bin/sh  "                             >  poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 31 &" >> poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 32 &" >> poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33 &" >> poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 34 &" >> poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 35 &" >> poe.f
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36 &" >> poe.f
+echo "wait"                                    >> poe.f
+
+chmod 775 ${DATA}/poe.aa  ${DATA}/poe.bb ${DATA}/poe.cc
+chmod 775 ${DATA}/poe.dd  ${DATA}/poe.ee ${DATA}/poe.ff
+
+chmod 775 ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
+chmod 775 ${DATA}/poe.d  ${DATA}/poe.e ${DATA}/poe.f
+
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.aa &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.bb &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.cc &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.dd &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.ee &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.ff &
+wait
+export err=$?; err_chk
+
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.a &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.b &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.c &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.d &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.e &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.f &
+wait
+export err=$?; err_chk
+
+msg"JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+date
+
+
+elif [ $NEST = "hi" ]
+then
+
+echo "#!/bin/sh  "                                  >  poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 01 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 02 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 03 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 04 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 05 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 06 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 07 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 08 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 09 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 10 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 11 &" >> poe.aa
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 12 &" >> poe.aa
+echo "wait"                                         >> poe.aa
+
+echo "#!/bin/sh  "                                  >  poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 13 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 14 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 15 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 16 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 17 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 18 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 19 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 20 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 21 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 22 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 23 &" >> poe.bb
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 24 &" >> poe.bb
+echo "wait"                                         >> poe.bb
+
+echo "#!/bin/sh  "                                  >  poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 25 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 26 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 27 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 28 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 29 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 30 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 31 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 32 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 33 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 34 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 35 &" >> poe.cc
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf 36 &" >> poe.cc
+echo "wait"                                         >> poe.cc
+
+echo "#!/bin/sh  "                             >  poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 01 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 02 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 03 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 04 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 05 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 06 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 07 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 08 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 09 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 10 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 11 &" >> poe.a
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 12 &" >> poe.a
+echo "wait"                                    >> poe.a
+
+echo "#!/bin/sh  "                             >  poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 13 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 14 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 15 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 16 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 17 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 18 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 19 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 20 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 21 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 22 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 23 &" >> poe.b
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 24 &" >> poe.b
+echo "wait"                                    >> poe.b
+
+echo "#!/bin/sh  "                             >  poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 25 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 26 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 27 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 28 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 29 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 30 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 31 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 32 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 33 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 34 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 35 &" >> poe.c
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf 36 &" >> poe.c
+echo "wait"                                    >> poe.c
+
+
+chmod 775 ${DATA}/poe.aa  ${DATA}/poe.bb ${DATA}/poe.cc
+
+chmod 775 ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
+
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.aa &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.bb &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.cc &
+wait
+export err=$?; err_chk
+
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.a &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.b &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.c &
+wait
+export err=$?; err_chk
+
+msg"JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+date
+
+
+fi
+
+
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+
+# cd ../
+# mv $DATAROOT  href_${NEST}_${PDY}${cyc}
+
 date

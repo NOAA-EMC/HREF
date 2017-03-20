@@ -43,8 +43,18 @@ cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.${vers}/launch_info/
 
 # ../scripts/interp_conv.scr ${DATE}${cyc}
 
+if [ $NEST = "conus" ]
+then
 cat runpoe.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+elif [ $NEST = "hi" ]
+then
+cat runpoe.sh_in_cray_smaller | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+else
+cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+fi
 
 bsub < launch_hrefrunpoe_${cyc}
+
+#  bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.${vers}/launch_info/send_href_ftp_${cyc} ;  bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/send_python_graphics_awip.sh_${cyc} &
 
 # rm launch_hrefrunpoe_${cyc}
