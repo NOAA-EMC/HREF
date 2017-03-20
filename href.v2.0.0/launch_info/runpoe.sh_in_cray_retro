@@ -1,12 +1,12 @@
 
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.ffair_cray_3mem/logs/test_hrefpoe__CYC_.out__DATE_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.ffair_cray_3mem/logs/test_hrefpoe__CYC_.err__DATE_
-#BSUB -q "dev"
+#BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
 #BSUB -M 3000
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 12*{select[craylinux && vnode]span[ptile=2] cu[type=cabinet]}'
-#BSUB -W 0:23
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 36*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}'
+#BSUB -W 0:49
 
 ###export NODES=6
 
@@ -21,7 +21,7 @@ export MP_MPILIB=mpich2
 export KMP_AFFINITY=disabled
 export OMP_NUM_THREADS=1
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 module load prod_envir
 
@@ -31,18 +31,23 @@ export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
 export DATE=_DATE_
 export DATEm1=_DATEm1_
 
+export NEST=_DOM_
+
 export COMINhireswb=${COMROOT}/hiresw/prod/hiresw
 export COMINnamb=${COMROOTp1}/nam/prod/nam
 
 export COMINhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/opshiresw/hiresw
+export COMINhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com/hiresw/test/hiresw
+export COMINhireswx=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com/hiresw/test/hiresw
 export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/opsnam/nam
+export COMINnamx=/gpfs/tp2/nco/ops/com/nam/para/nam
 
 export COMINffg=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/ffg_input
 
 module load grib_util
 module load prod_util
 
-href_ver=`cat /u/$LOGNAME/href.ffair_version_alt3`
+href_ver=`cat /u/$LOGNAME/href_para`
 
 export HOMEhref=/gpfs/hps/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 

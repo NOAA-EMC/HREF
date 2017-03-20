@@ -109,8 +109,8 @@ c    for derived variables
          
                  crain = 0.
                  cfrzr = 0.
-                 csnow = 0.
                  cslet = 0.
+                 csnow = 0.
 
                  do irun = 1,iens 
                   if(miss(irun).eq.0) then
@@ -127,9 +127,9 @@ cc  importance priority order:  freezing_rain(1) > snow(2) > sleet(3) > rain(4)
           if(crain.ge.1.0.or.cfrzr.ge.1.0.or.csnow.ge.1.0.or.
      +         cslet.ge.1.0) then
 
-            if(csnow.ge.cslet) then
+            if(csnow.gt.cslet) then
 
-              if(csnow.ge.cfrzr) then
+              if(csnow.gt.cfrzr) then
                   if(csnow.ge.crain) then
                    ptype_mn(igrid,4)=1.      !snow
                    cycle loop300
@@ -164,11 +164,6 @@ cc  importance priority order:  freezing_rain(1) > snow(2) > sleet(3) > rain(4)
 
             end if
 
-             if(igrid.eq.150000) then
-              write(*,*)'IN preciptype 150000 ptype_mn'
-              write(*,*)cfrzr,csnow,cslet,crain,
-     +        (ptype_mn(igrid,n),n=1,4)
-             end if
 
           end do loop300
 200      continue 

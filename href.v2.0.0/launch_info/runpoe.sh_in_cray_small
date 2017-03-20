@@ -6,10 +6,10 @@
 #BSUB -M 3000
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 ####BSUB -extsched 'CRAYLINUX[]'
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 36*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}'
-#BSUB -W 1:29
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 36*{select[craylinux && vnode]span[ptile=6] cu[type=cabinet]}'
+#BSUB -W 0:39
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export RUN_ENVIR=test
 export envir=test
@@ -70,6 +70,12 @@ bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC_.sh_
 elif [ $NEST = ak ]
 then
 bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__ak.sh_para
+elif [ $NEST = pr ]
+then
+bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__pr.sh_para
+elif [ $NEST = hi ]
+then
+bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__hi.sh_para
 fi
 
 # $HOMEhref/graphics/launch_href_plot _CYC_
