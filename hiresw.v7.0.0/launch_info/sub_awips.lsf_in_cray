@@ -1,0 +1,58 @@
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_awip.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_awip.err__DOM__CORE__CYC_
+#BSUB -q "devhigh_shared"
+#BSUB -J HIRESW_AWIP
+#BSUB -P HRW-T2O
+#BSUB -M 5000
+#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -R rusage[mem=40000]
+#BSUB -W 1:29
+#
+
+export MP_EUILIB=us
+export OMP_NUM_THREADS=1
+
+export SENDCOM=YES
+
+# module load ics
+# module load ibmpe
+
+module load prod_util
+module load prod_envir
+module load grib_util/1.0.3
+
+
+vers=`cat /u/Matthew.Pyle/hiresw_version_para`
+export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=_DOM_
+export cyc=_CYC_
+export MODEL=_CORE_
+
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
+
+export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export COMROOT=/gpfs/hps/nco/ops/com
+
+export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
+export COMOUTPERM=${MYCOMROOTPERM}/${NET}/$envir/${RUN}.${DATE}
+
+export SENDDBN=NO
+export SENDCOM=YES
+
+export PCOM=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+export DATA=${DATAROOT}/hiresw.awips_${NEST}_${MODEL}_${cyc}_${envir}
+
+mkdir -p $DATA
+
+$HOMEhiresw/jobs/JHIRESW_AWIPS
