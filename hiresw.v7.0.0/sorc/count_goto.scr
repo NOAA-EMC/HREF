@@ -1,0 +1,17 @@
+
+
+
+dirs="hiresw_bucket.fd hiresw_coldstart.fd hiresw_nmmbfcst.fd hiresw_nps.fd hiresw_post.fd hiresw_smartinitg2.fd hiresw_smartprecipg2.fd hiresw_sndp.fd hiresw_stnmlist.fd hiresw_wps.fd hiresw_wrfarwfcst.fd hiresw_wrfbufr.fd"
+
+dirs="../sorc"
+
+for dir in $dirs
+do
+
+echo dir $dir
+
+for file in `find ${dir} -name "*.[fF]*" -type f` 
+do egrep -iH "go[ ]*to" $file | grep -iv :c | grep -v svn | grep -iv :\! 
+done  | wc -l
+
+done
