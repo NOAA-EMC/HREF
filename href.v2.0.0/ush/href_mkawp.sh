@@ -32,7 +32,7 @@ if  echo $runhrs |grep $fhr;
 then
   # Processing AWIPS grid 227 
 
-  ln -sf $MYCOMROOT/${NET}/${envir}/${RUN}.${PDY}_awips2/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  ln -sf $MYCOMROOT/${NET}/${envir}/${RUN}.${PDY}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
 
   $GRBINDEX href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i 
   export pgm=tocgrib2

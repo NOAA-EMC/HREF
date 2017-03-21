@@ -36,7 +36,7 @@ PDYdel=`$NDATE -72 $PDY${cyc} | cut -c1-8`
 echo PDYdel $PDYdel
 
 
-cd href.${PDY}_awips2
+cd href.${PDY}
 
 ssh mpyle@emcrzdm.ncep.noaa.gov "rm -rf /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDYdel}"
 ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDY}"
