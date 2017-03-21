@@ -286,7 +286,7 @@ else
 ln -sf $PARMhref/href_variable_grib2.tbl    variable.tbl
 fi
 
-$EXEChref/sseo_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1
+$EXEChref/href_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1
 errsave=$?
 echo past sseo_ensprod for ff $ff
 export err=$errsave; err_chk;

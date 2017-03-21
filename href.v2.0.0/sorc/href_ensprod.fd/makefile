@@ -33,6 +33,6 @@ href_ensprod: $(OBJ)
 clean:
 	/bin/rm  *.o href_ensprod
 copy:
-	/bin/cp href_ensprod ../../exec/sseo_ensprod
+	/bin/cp href_ensprod ../../exec/
 #
 
