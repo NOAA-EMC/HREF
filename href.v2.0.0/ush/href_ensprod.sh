@@ -27,13 +27,6 @@ dom=${NEST}
 
 cd $DATA/${ff}/
 
-# ln -sf  $FIXhref/*href5km .
-
-# ln -sf $DATA/ffg*href5km .
-# ln -sf $COMINffg/ffg*href5km .
-
-
-
 ###############################
 
 typeset -Z2 cycloc     #temp variable here
@@ -45,7 +38,7 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
         echo "in conus block"
-     files="9 namnestx namnestx conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
       days="9 $PDY $PDYm1 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1"
@@ -111,7 +104,7 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-  files="9 namnestx namnestx conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+  files="9 namnest namnest conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8"
 
@@ -288,7 +281,7 @@ fi
 
 $EXEChref/href_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1
 errsave=$?
-echo past sseo_ensprod for ff $ff
+echo past href_ensprod for ff $ff
 export err=$errsave; err_chk;
 
 if [ $SENDCOM = YES ]; then
