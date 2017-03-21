@@ -35,7 +35,7 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
 	echo "in conus block"
-     files="9 namnestx namnestx conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
       days="9 $PDY $PDYm1 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
@@ -96,7 +96,7 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-  files="9 namnestx namnestx conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+  files="9 namnest namnest conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8"
 
@@ -257,9 +257,9 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
       echo href.m${m}.t${cyc}z.f${ff} 
 
-###### namnestx
-        filecheck=${COMINnamx}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2
-      if [  ${file[$m]} = 'namnestx'  -a $fcst -le 60  ] ; then     
+###### namnest
+        filecheck=${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2
+      if [  ${file[$m]} = 'namnest'  -a $fcst -le 60  ] ; then     
 	echo WGRIB2 is $WGRIB2
 
 	if [ -e $filecheck ]
