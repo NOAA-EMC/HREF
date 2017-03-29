@@ -13,7 +13,7 @@ msg="Begin job for $job"
 postmsg "$jlogfile" "$msg"
 
 #
-NAGRIB_TABLE=/nwprod/gempak/fix/nagrib.tbl
+NAGRIB_TABLE=$GEMTBL/nagrib.tbl
 NAGRIB=nagrib2
 #
 
@@ -40,7 +40,7 @@ else
 fi  
 pdsext=no
 
-FILETYPES="mean sprd prob"
+FILETYPES="mean pmmn prob sprd"
 
 for TYPE in $FILETYPES
 do
@@ -58,9 +58,9 @@ while [ $fhcnt -le $fend ] ; do
   fhr3=$fhcnt
   typeset -Z3 fhr3
 
-  GRIBIN=$COMIN/${RUN}.t${cyc}z.${TYPE}.f${fhr}.grib2
-  GEMGRD=${RUN}_${TYPE}_${PDY}${cyc}f${fhr3} 
-  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${TYPE}.f${fhr}.grib2.idx
+  GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2
+  GEMGRD=${RUN}_${NEST}_${TYPE}_${PDY}${cyc}f${fhr3} 
+  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2.idx
 
   icnt=1
   while [ $icnt -lt 1000 ]
