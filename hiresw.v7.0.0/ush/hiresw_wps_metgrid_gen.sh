@@ -92,7 +92,7 @@ cd  ./run_metgrid_${ICOUNT}
 
 if [ $MODEL != nmmb ]
 then
-cp $EXEChiresw/hiresw_metgrid  ./metgrid.exe
+cp $EXEChiresw/hiresw_wps_metgrid  ./metgrid.exe
 else
 cp $EXEChiresw/hiresw_nps_metgrid  ./metgrid.exe
 fi
