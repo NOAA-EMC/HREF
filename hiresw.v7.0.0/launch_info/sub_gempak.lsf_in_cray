@@ -1,13 +1,15 @@
-
 #BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_gempak.out__DOM__CORE__CYC_
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_gempak.err__DOM__CORE__CYC_
-#BSUB -q "devhigh_shared"
+####BSUB -q "devhigh_shared"
+#BSUB -q "devhigh"
 #BSUB -J HIRESW_GEMPAK
 #BSUB -P HRW-T2O
-#BSUB -W 1:59
+#BSUB -W 2:39
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
-#BSUB -M 5000
-#BSUB -R rusage[mem=5000]
+###BSUB -M 5000
+####BSUB -R rusage[mem=5000]
+#BSUB -M 3000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=10000]
 
 export MP_EUILIB=us
 
@@ -24,6 +26,9 @@ export envir=test
 export NET=hiresw
 export RUN=hiresw
 
+export IOBUF_PARAMS='hiresw_*:size=1048576:count=4:vbuffer_count=4096:prefetch=1:verbose'
+export DVS_DATASYNC=off
+export DVS_CLOSESYNC=off
 
 export NEST=_DOM_
 export cyc=_CYC_

@@ -3,7 +3,7 @@
 #BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prelimrap.err__DOM___CORE___CYC_
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_PREP_RAP
-#BSUB -W 0:15
+#BSUB -W 0:39
 #BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
@@ -42,7 +42,8 @@ export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 
-export GESINnam=${GESROOTp1}/prod/nam.${DATE}
+export GESINnam=${GESROOTp2}/prod/nam.${DATE}
+export GESINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
 # export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
 
 export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
@@ -53,7 +54,7 @@ export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 # export COMINrap=/gpfs/hps/ptmp/Matthew.Pyle/com/rap/prod/rap.${DATE}
 # export COMINrap=/gpfs/td1/ptmp/Corey.Guastini/com/rap/prod/rap.${DATE}
-
-export COMINrap=${COMROOTp2}/rap/prod/rap.${DATE}
+export COMINrap=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/rap_input/rap.${DATE}
+# export COMINrap=${COMROOTp2}/rap/prod/rap.${DATE}
 
 $HOMEhiresw/jobs/JHIRESW_PREPRAP
