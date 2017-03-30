@@ -79,6 +79,7 @@ C
       if (core .eq. 'arw' ) then
 	if (nlev .eq. 40 .or. nlev .eq. 50) then
           write(0,*) 'will call SNDPST_EM with ', nlev
+          call SNDPST_EM(nlev,nlev)
         else
           write(0,*) 'bad nlev: ', nlev
 	  STOP 67
@@ -86,6 +87,11 @@ C
 
       else
           write(0,*) 'will call SNDPST_NMM ', nlev
+	  if (nlev .ne. 50) then
+               write(0,*) 'nlev should be 50 for NMM, but see : ', nlev
+               STOP
+          endif
+          call SNDPST_NMM
       endif
 
       end program sndpst
