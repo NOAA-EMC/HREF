@@ -1,4 +1,4 @@
-      PROGRAM SNDPST
+      PROGRAM SNDPST_NMM(LM1)
 C$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C MAIN PROGRAM: ETA_SNDP
@@ -87,7 +87,10 @@ C              WE ARE COMPUTING SOME ADDITIONAL VARIABLES TO GO INTO
 C              BUFR IN THIS PROGRAM.
 C
 C--------------------------------------------------------------------
-      INCLUDE "parm.nmm"
+      PARAMETER (NSOIL=4)
+      PARAMETER (NSTP=88, LCL1SL1=58, NSTAT=1500)
+      PARAMETER (INCR=1, LENGTH=48, NFCST=LENGTH/INCR+1)
+
 cZhou      PARAMETER (LM=60,NPNT=85,NSTAT=1400
         PARAMETER (LM=LM1,NPNT=NSTP
      &, SPVAL=-99999.0,SMISS=1.E10
@@ -542,5 +545,4 @@ C
          ENDIF
 C
         WRITE(STDOUT,*) ' END OF SOUNDING POST '
-        STOP
-        END
+        END SUBROUTINE SNDPST_NMM
