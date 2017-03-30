@@ -85,6 +85,7 @@ fi
 
 bsub < ${HOMEhiresw}/launch_info/sub_smartinit.lsf_${NEST}_${MODEL}_${cyc}
 bsub < ${HOMEhiresw}/launch_info/sub_smartinitb.lsf_${NEST}_${MODEL}_${cyc}
+bsub < ${HOMEhiresw}/launch_info/sub_gempak.lsf_${NEST}_${MODEL}_${cyc}
 ### end bsub post scripts
  
 ###################################################

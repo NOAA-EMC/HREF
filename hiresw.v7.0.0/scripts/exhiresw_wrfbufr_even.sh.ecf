@@ -269,9 +269,16 @@ export FORT32="$DATA/hiresw_bufr.tbl"
 export FORT66="$DATA/profilm.c1.${tmmark}"
 export FORT78="$DATA/class1.bufr"
 
-startmsg
-#$EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
-aprun $EXEChiresw/hiresw_sndp_${MODEL} < $PARMhiresw/hiresw_modtop.parm >> $pgmout 2>$pgmout
+if [ ${RUNLOC} == "conusmem2arw" -o ${RUNLOC} == "akmem2arw" -o ${RUNLOC} == "himem2arw" -o ${RUNLOC} == "prmem2arw" ]
+then
+echo running mem2 version
+nlev=40
+else
+nlev=50
+fi
+
+echo "${MODEL} $nlev" > itag
+aprun $EXEChiresw/hiresw_sndp < itag >> $pgmout 2>$pgmout
 export err=$?;err_chk
 
 ############### Convert BUFR output into format directly readable by GEMPAK namsnd on WCOSS

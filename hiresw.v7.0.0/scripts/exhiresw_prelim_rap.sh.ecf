@@ -115,6 +115,7 @@ cycold=`echo $onehold | cut -c9-10`
 
 # grab post-digital filter analysis file if available
 
+
 	if [ -e  ${COMINrap}/rap.t${cyc}z.awip32f${whr}df.grib2 ]
 	then
 

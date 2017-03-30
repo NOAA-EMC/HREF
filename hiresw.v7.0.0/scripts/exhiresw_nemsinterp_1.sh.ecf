@@ -193,10 +193,13 @@ cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_0
 
 ### needs to be cleaned up for para NAM when becomes ops
 
-if [ -e $GESINnamx/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 ]
+echo GESINnamx is $GESINnamx
+echo GESINnam is $GESINnam
+
+if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 ]
 then
 #  INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
-  INPUT_FILE="$GESINnamx/nam.t${cyc}z.nmm_b_restart_nemsio.tm01"
+  INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01"
 else
   if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 ]
   then
