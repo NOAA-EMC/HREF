@@ -43,7 +43,8 @@ export MODEL=_CORE_
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export GESINnam=${GESROOTp1}/prod/nam.${DATE}
+export GESINnam=${GESROOTp2}/prod/nam.${DATE}
+export GESINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
 # export GESINnam=/gpfs/hps/ptmp/Matthew.Pyle/com/nam/prod/nam.${DATE}
 # export GESINnam=/gpfs/td3/emc/meso/noscrub/Eric.Rogers/nwges/para/nam.${DATE}
 
