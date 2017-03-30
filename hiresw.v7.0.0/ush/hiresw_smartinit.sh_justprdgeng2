@@ -17,6 +17,7 @@
 # 2014-11-04  Matthew Pyle : SREF probs taken from GRIB2 files
 #======================================================================
 
+
 lnsf() # safe version of "ln -sf", waits until "ls" shows correct link
 {
     set +x
@@ -341,7 +342,14 @@ cp ${PARMhiresw}/hiresw_smartinit.parmlist.g2_nn list_nn.txt
 if [ -e inputs.grb2_1 ]
 then
 rm inputs.grb2_1 inputs.grb2_2 inputs.grb2_3 inputs.grb2_4 inputs.grb2_5 inputs.grb2_6 inputs.grb2_7 inputs.grb2_8 
+
+if [ $outreg != "conusmem2" -a $outreg != "himem2" -a  $outreg != "prmem2" -a $outreg != "akmem2" ]
+then
 rm inputs.grb2_9 inputs.grb2_10 inputs.grb2_11 inputs.grb2_12  inputs.grb2_nn 
+else
+rm inputs.grb2_9 inputs.grb2_12  inputs.grb2_nn 
+fi
+
 fi
 
 $WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1 $INF
@@ -353,8 +361,11 @@ $WGRIB2 $INF | grep -F -f list_6.txt | $WGRIB2 -i -grib inputs.grb2_6 $INF
 $WGRIB2 $INF | grep -F -f list_7.txt | $WGRIB2 -i -grib inputs.grb2_7 $INF
 $WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8 $INF
 $WGRIB2 $INF | grep -F -f list_9.txt | $WGRIB2 -i -grib inputs.grb2_9 $INF
+if [ $outreg != "conusmem2" -a $outreg != "himem2" -a  $outreg != "prmem2" -a $outreg != "akmem2" ]
+then
 $WGRIB2 $INF | grep -F -f list_10.txt | $WGRIB2 -i -grib inputs.grb2_10 $INF
 $WGRIB2 $INF | grep -F -f list_11.txt | $WGRIB2 -i -grib inputs.grb2_11 $INF
+fi
 $WGRIB2 $INF | grep -F -f list_12.txt | $WGRIB2 -i -grib inputs.grb2_12 $INF
 $WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
 
@@ -408,6 +419,9 @@ chmod 775 k.poe
 chmod 775 l.poe
 chmod 775 m.poe
 
+if [ $outreg != "conusmem2" -a $outreg != "himem2" -a  $outreg != "prmem2" -a $outreg != "akmem2" ]
+then
+
 echo "#!/bin/ksh" > wgrib2.poe
 echo "a.poe &" >> wgrib2.poe
 echo "b.poe &" >> wgrib2.poe
@@ -431,13 +445,48 @@ export MP_CMDFILE=wgrib2.poe
 time aprun -n 1 -N 1 -d $NTASK wgrib2.poe
 export err=$?;  err_chk
 
+else
+
+echo "#!/bin/ksh" > wgrib2.poe
+echo "a.poe &" >> wgrib2.poe
+echo "b.poe &" >> wgrib2.poe
+echo "c.poe &" >> wgrib2.poe
+echo "d.poe &" >> wgrib2.poe
+echo "e.poe &" >> wgrib2.poe
+echo "f.poe &" >> wgrib2.poe
+echo "g.poe &" >> wgrib2.poe
+echo "h.poe &" >> wgrib2.poe
+echo "i.poe &" >> wgrib2.poe
+echo "l.poe &" >> wgrib2.poe
+echo "m.poe &" >> wgrib2.poe
+echo "wait" >> wgrib2.poe
+
+chmod 775 wgrib2.poe
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=wgrib2.poe
+#time mpirun.lsf
+time aprun -n 1 -N 1 -d 11 wgrib2.poe
+export err=$?;  err_chk
+
+fi
+
 # sleep 60
 sleep 1
 
 # $WGRIB2 inputs.grb2_nn  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} model.ndfd_nn
 
+if [ $outreg != "conusmem2" -a $outreg != "himem2" -a  $outreg != "prmem2" -a $outreg != "akmem2" ]
+then
+
 while (! cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_6 \
     model.ndfd_7 model.ndfd_8 model.ndfd_9 model.ndfd_10 model.ndfd_11 model.ndfd_12 model.ndfd_nn > NDFD${fhr}.tm00 ) ; do sleep 1; done
+
+else
+
+while (! cat model.ndfd_1 model.ndfd_2 model.ndfd_3 model.ndfd_4 model.ndfd_5 model.ndfd_6 \
+    model.ndfd_7 model.ndfd_8 model.ndfd_9 model.ndfd_12 model.ndfd_nn > NDFD${fhr}.tm00 ) ; do sleep 1; done
+
+fi
 
 
 ###	cp NDFD${fhr}.tm00 $COMIN/$mdl.t${cyc}z.NDFD${fhr}
