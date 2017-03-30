@@ -1,4 +1,4 @@
-      PROGRAM SNDPST
+      SUBROUTINE SNDPST(LM1)
 C$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C MAIN PROGRAM: ETA_SNDP
@@ -49,7 +49,7 @@ C  08-07-01  BINBIN ZHOU    -MODIFY TO WORK ON NCAR WRF
 C
 C USAGE:   
 C   INPUT ARGUMENT LIST:
-C     NONE    
+C     LM1 - number of model layers
 C     
 C   OUTPUT FILES:
 C     NONE
@@ -93,7 +93,11 @@ C              WE ARE COMPUTING SOME ADDITIONAL VARIABLES TO GO INTO
 C              BUFR IN THIS PROGRAM.
 C
 C--------------------------------------------------------------------
-      INCLUDE "parm.em"
+
+      PARAMETER (NSOIL=4)
+      PARAMETER (NSTP=88,  NSTAT=1500)
+      PARAMETER (INCR=1, LENGTH=48, NFCST=LENGTH/INCR+1)
+
 
 cBinbin      PARAMETER (LM=60,NPNT=61,NSTAT=1400 !For eta
 cBinbin     &, SPVAL=-99999.0,SMISS=1.E10        !For eta
@@ -624,7 +628,6 @@ c     &                            FRODAT(1),FRODAT(2)
           IF(IER.NE.0)WRITE(6,1080)ISTAT,IER,FRODAT(1)
 
 C
-C
          ENDDO
          ENDDO
 C
@@ -637,6 +640,4 @@ C
          ENDIF
 C
         WRITE(STDOUT,*) ' END OF SOUNDING POST '
-C      CALL W3TAGE('ETA_SNDP')
-        STOP
-        END
+        END SUBROUTINE SNDPST_EM
