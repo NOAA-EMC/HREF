@@ -36,7 +36,7 @@ cp $PARMhiresw/hiresw_Vtable.${GRIBSRC} Vtable
 if [ $MODEL != "nmmb" ]
 then
 cp ${DATA}/namelist.wps.${stream} namelist.wps
-cp $EXEChiresw/hiresw_ungrib ungrib.exe
+cp $EXEChiresw/hiresw_wps_ungrib ./ungrib.exe
 export pgm=ungrib
 startmsg
 ./ungrib.exe >> $pgmout 2>errfile
@@ -48,7 +48,7 @@ cp ${DATA}/namelist.wps.${stream} ../run_ungrib/
 else
 
 cp ${DATA}/namelist.nps.${stream} namelist.nps
-cp $EXEChiresw/hiresw_nps_ungrib ungrib.exe
+cp $EXEChiresw/hiresw_nps_ungrib ./ungrib.exe
 export pgm=ungrib
 startmsg
 ./ungrib.exe >> $pgmout 2>errfile

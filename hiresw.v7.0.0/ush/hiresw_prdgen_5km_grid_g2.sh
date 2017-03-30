@@ -47,7 +47,6 @@ DOMOUT=${DOMIN_SMALL}${modelout}
 if [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS05"
-  DOMIN_bucket="general_g2"
   IM=1473
   JM=1025
 fi
@@ -55,7 +54,6 @@ fi
 if [ $DOMIN = "conusarw" -o $DOMIN = "conusmem2arw" ]
 then
   filenamthree="wrf.EMCONUS05"
-  DOMIN_bucket="general_g2"
   IM=1473
   JM=1025
 fi
@@ -193,8 +191,8 @@ done
   echo $reflag >> input.card
   echo $IM $JM >> input.card
 
- export pgm=hiresw_pcpbucket_${DOMIN_bucket}
- $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
+ export pgm=hiresw_bucket
+ $EXEChiresw/hiresw_bucket < input.card >> $pgmout 2>errfile
  export err=$?; err_chk
 
   if [ $model = "arw" ] ; then
@@ -225,8 +223,8 @@ done
   echo $reflag >> input.card
   echo $IM $JM >> input.card
 
- export pgm=hiresw_pcpbucket_${DOMIN_bucket}
- $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
+ export pgm=hiresw_bucket
+ $EXEChiresw/hiresw_bucket < input.card >> $pgmout 2>errfile
  export err=$?; err_chk
 
 	if [ $fhr -ne 3 ]

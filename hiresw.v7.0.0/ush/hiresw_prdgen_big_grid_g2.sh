@@ -58,7 +58,6 @@ DOMOUTtwo="cent"${modelout}
 if [ $DOMIN = "conusnmmb" ]
 then
   filenamthree="wrf.CONUS04"
-  DOMIN_bucket="general_g2"
   rg="conus"
   gres="2p5km"
   IM=2145
@@ -68,7 +67,6 @@ then
 elif [ $DOMIN = "aknmmb" ]
 then
   filenamthree="wrf.AK04"
-  DOMIN_bucket="general_g2"
   rg="ak"
   gres="3km"
   IM=1649
@@ -79,7 +77,6 @@ then
 elif [ $DOMIN = "guamnmmb" ]
 then
   filenamthree="wrf.GU04"
-  DOMIN_bucket="general_g2"
   rg="guam"
   gres="2p5km"
   IM=193
@@ -89,7 +86,6 @@ then
 elif [ $DOMIN = "hinmmb" ]
 then
   filenamthree="wrf.HI04"
-  DOMIN_bucket="general_g2"
   rg="hi"
   gres="2p5km"
   IM=321
@@ -99,7 +95,6 @@ then
 elif [ $DOMIN = "prnmmb" ]
 then
   filenamthree="wrf.PR04"
-  DOMIN_bucket="general_g2"
   rg="pr"
   gres="2p5km"
   IM=177
@@ -111,7 +106,6 @@ fi
 if [ $DOMIN = "akarw" -o $DOMIN = "akmem2arw" ]
 then
   filenamthree="wrf.EMAK04"
-  DOMIN_bucket="general_g2"
   rg="ak"
   gres="3km"
   IM=1649
@@ -122,7 +116,6 @@ then
 elif [ $DOMIN = "conusarw" -o $DOMIN = "conusmem2arw" ]
 then
   filenamthree="wrf.EMCONUS04"
-  DOMIN_bucket="general_g2"
   rg="conus"
   gres="2p5km"
   IM=2145
@@ -133,7 +126,6 @@ then
 elif [ $DOMIN = "guamarw" ]
 then
   filenamthree="wrf.EMGU04"
-  DOMIN_bucket="general_g2"
   rg="guam"
   gres="2p5km"
   IM=193
@@ -143,7 +135,6 @@ then
 elif [ $DOMIN = "hiarw" -o $DOMIN = "himem2arw" ]
 then
   filenamthree="wrf.EMHI04"
-  DOMIN_bucket="general_g2"
   rg="hi"
   gres="2p5km"
   IM=321
@@ -154,7 +145,6 @@ then
 elif [ $DOMIN = "prarw" -o $DOMIN = "prmem2arw"  ]
 then
   filenamthree="wrf.EMPR04"
-  DOMIN_bucket="general_g2"
   rg="pr"
   gres="2p5km"
   IM=177
@@ -446,8 +436,8 @@ done
 fi
 
 
-   export pgm=hiresw_pcpbucket_${DOMIN_bucket}
-   $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
+   export pgm=hiresw_bucket
+   $EXEChiresw/hiresw_bucket < input.card >> $pgmout 2>errfile
 #   export err=$?; err_chk
 
      if [ $model = "arw" ] ; then
@@ -490,8 +480,8 @@ fi
   echo $reflag >> input.card
   echo $IM $JM >> input.card
 
-  export pgm=hiresw_pcpbucket_${DOMIN_bucket}
-  $EXEChiresw/hiresw_pcpbucket_${DOMIN_bucket} < input.card >> $pgmout 2>errfile
+  export pgm=hiresw_bucket
+  $EXEChiresw/hiresw_bucket < input.card >> $pgmout 2>errfile
 #   export err=$?; err_chk
 
      cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 > hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2

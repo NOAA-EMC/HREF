@@ -209,7 +209,7 @@ cd $DATA/run_ungrib/
 
 if [ $MODEL != "nmmb" ]
 then
-cp $EXEChiresw/hiresw_ungrib ungrib.exe
+cp $EXEChiresw/hiresw_wps_ungrib ungrib.exe
 
 export pgm=ungrib
 ./ungrib.exe >> $pgmout 2>errfile
@@ -382,7 +382,7 @@ fi
 cat $DATA/rsl.error.000? $DATA/rsl.out.000? >  $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.realrap.log
 
 else # nmmb case
-export pgm=hiresw_nemsinterp
+export pgm=hiresw_nps_nemsinterp
 . prep_step
 startmsg
 
@@ -393,9 +393,8 @@ unset MP_CMDFILE
 echo NEED TO RUN NEMSINTERP
 cp $DATA/run_ungrib/namelist.nps .
 
-cp $EXEChiresw/hiresw_nemsinterp .
-#mpirun.lsf ./hiresw_nemsinterp
-aprun -n $NTASK -N $PTILE ./hiresw_nemsinterp
+cp $EXEChiresw/hiresw_nps_nemsinterp .
+aprun -n $NTASK -N $PTILE ./hiresw_nps_nemsinterp
 
 export err=$?; err_chk
 

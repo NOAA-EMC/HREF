@@ -163,10 +163,10 @@ hh5=`echo $t5 | cut -c9-10`
 
 cp $INPUT_DATA/hiresw.t${cyc}z.${NEST}${MODEL}.met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio met_nmb.d01.${yy5}-${mm5}-${dd5}_${hh5}:00:00.dio
 
-export pgm=hiresw_nemsinterp
-cp $EXEChiresw/hiresw_nemsinterp .
-#mpirun.lsf ./hiresw_nemsinterp
-aprun -n $NTASK -N $PTILE ./hiresw_nemsinterp
+export pgm=hiresw_nps_nemsinterp
+cp $EXEChiresw/hiresw_nps_nemsinterp .
+#mpirun.lsf ./hiresw_nps_nemsinterp
+aprun -n $NTASK -N $PTILE ./hiresw_nps_nemsinterp
 export err=$?; err_chk
 
 cp boco.0000 $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.0012
