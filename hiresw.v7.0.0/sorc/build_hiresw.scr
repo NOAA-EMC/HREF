@@ -15,8 +15,8 @@ BASE=`pwd`
 
 
 cd ${BASE}/hiresw_wrfarwfcst.fd
-# ./compile_arw.sc
-# ./compile_arw.sc_noclean
+./compile_arw.sc
+./compile_arw.sc_noclean
 
 echo hiresw_wrfarwfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -38,7 +38,7 @@ echo hiresw_wrfbufr.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_wps.fd
-# ./build.scr
+./build.scr
 
 echo hiresw_wps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -46,8 +46,8 @@ echo hiresw_wps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_post.fd
-# make clean
-# make
+make clean
+make
 
 echo hiresw_post.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -88,9 +88,7 @@ echo hiresw_coldstart.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
 cd ${BASE}/hiresw_sndp.fd
-make -f makefile_nmm
-make -f makefile_em
-make -f makefile_em_mem2
+make 
 
 echo hiresw_sndp.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
@@ -102,7 +100,6 @@ make
 echo hiresw_stnmlist.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ##############################
 
-exit
 
 cd ${BASE}/hiresw_nmmbfcst.fd/src
 gmake clean
