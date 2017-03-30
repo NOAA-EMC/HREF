@@ -11,8 +11,8 @@ cp configure.nps_wcoss_dmpara configure.nps
 ./compile nemsinterp
 ./compile geogrid
 
-cp nemsinterp.exe $TARGDIR/hiresw_nemsinterp
-cp geogrid.exe $TARGDIR/hiresw_nps_geogrid_util
+cp nemsinterp.exe $TARGDIR/hiresw_nps_nemsinterp
+# cp geogrid.exe $TARGDIR/hiresw_nps_geogrid_util
 
 ./clean
 

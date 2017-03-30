@@ -1,4 +1,4 @@
-      SUBROUTINE SNDPST(LM1)
+      SUBROUTINE SNDPST_EM(LM1,LM)
 C$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C MAIN PROGRAM: ETA_SNDP
@@ -106,7 +106,7 @@ cBinbin     &, LCL1ML1=13,LCL1SL1=50             !For eta,
 cBinbin     &, NWORD=(LCL1ML+1)*LM+2*LCL1SL+NSOIL*LCL1SOIL
 cBinbin     &, ROG=287.04/9.8)
 
-      PARAMETER (LM=LM1,NPNT=NSTP                
+      PARAMETER (NPNT=NSTP                
      &, SPVAL=-99999.0,SMISS=1.E10                
      &, LCL1ML=15,LCL1SL=52,LCL1SOIL=2  
      &, LCL1ML1=15,LCL1SL1=58,ROG=287.04/9.8
@@ -153,7 +153,6 @@ C--------------------------------------------------------------------
                             L O G I C A L
      & MONOL,BRKOUT
 C--------------------------------------------------------------------     
-       NAMELIST /MODTOP/ ETOP
        NAMELIST /OPTION/ MONOL,BRKOUT
                             D A T A
      & LCLAS1 / 76 /
@@ -172,13 +171,9 @@ c      CALL W3TAGB('ETA_SNDP',1999,0267,0084,'NP22')
       FMTO='("ln -s ${DIRD}",I5.5,".",I4.4,3I2.2,'//
      &     '"  fort.",I2.2)'
 C
-C   GET MODEL TOP PRESSURE
+C   SET MODEL TOP PRESSURE
 C
-       PTOP=25.0*100.0
-       READ(5,MODTOP,END=12321)  !read from standard io (screen)
-12321  CONTINUE
-       PTOP=ETOP*100.0
-
+       PTOP=50.0*100.0
         write(0,*) 'PTOP is: ', PTOP
 C
 C   READ IN SWITCHES TO CONTROL WHETHER TO DO...

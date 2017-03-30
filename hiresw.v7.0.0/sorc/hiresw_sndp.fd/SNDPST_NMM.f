@@ -1,4 +1,4 @@
-      PROGRAM SNDPST_NMM(LM1)
+      SUBROUTINE SNDPST_NMM
 C$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 C                .      .    .                                       .
 C MAIN PROGRAM: ETA_SNDP
@@ -87,16 +87,17 @@ C              WE ARE COMPUTING SOME ADDITIONAL VARIABLES TO GO INTO
 C              BUFR IN THIS PROGRAM.
 C
 C--------------------------------------------------------------------
-      PARAMETER (NSOIL=4)
+      PARAMETER (NSOIL=4,LM=50,LM1=50)
       PARAMETER (NSTP=88, LCL1SL1=58, NSTAT=1500)
       PARAMETER (INCR=1, LENGTH=48, NFCST=LENGTH/INCR+1)
 
 cZhou      PARAMETER (LM=60,NPNT=85,NSTAT=1400
-        PARAMETER (LM=LM1,NPNT=NSTP
+        PARAMETER (NPNT=NSTP
      &, SPVAL=-99999.0,SMISS=1.E10
      &, LCL1ML=15,LCL1SL=52,LCL1SOIL=2
      &, LCL1ML1=14 
-     &, NWORD=(LCL1ML)*LM+2*LCL1SL+NSOIL*LCL1SOIL  !Binbin: NWORD is the # of data in output for each record (each station)
+     &, NWORD=(LCL1ML)*LM+2*LCL1SL+NSOIL*LCL1SOIL ! Binbin: NWORD is the # of data in
+                                                  ! output for each record (each station) 
      &, ROG=287.04/9.8)
       PARAMETER (SNOCON=1.4594E5,RAINCON=1.1787E4)
 C
@@ -137,7 +138,6 @@ C--------------------------------------------------------------------
                             L O G I C A L
      & MONOL,BRKOUT
 C--------------------------------------------------------------------     
-       NAMELIST /MODTOP/ ETOP
        NAMELIST /OPTION/ MONOL,BRKOUT
                             D A T A
      & LCLAS1 / 76 /
@@ -154,12 +154,9 @@ C--------------------------------------------------------------------
       FMTO='("ln -s ${DIRD}",I5.5,".",I4.4,3I2.2,'//
      &     '"  fort.",I2.2)'
 C
-C   GET MODEL TOP PRESSURE
+C   SET MODEL TOP PRESSURE
 C
-       PTOP=25.0*100.0
-       READ(5,MODTOP,END=12321)
-12321  CONTINUE
-       PTOP=ETOP*100.0
+       PTOP=50.0*100.0
 C
 C   READ IN SWITCHES TO CONTROL WHETHER TO DO...
 C     MONOL=.TRUE.   DO MONOLITHIC FILE
