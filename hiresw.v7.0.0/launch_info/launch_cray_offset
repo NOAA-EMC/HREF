@@ -243,7 +243,7 @@ sub_gempak.lsf_${DOM}_${CORE}_${CYC}
 cat sub_smartinit.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
 sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
 
-if [ ${DOM} == "conus" -o ${DOM} == "ak" -o  ${DOM} == "conusmem2" ]
+if [ ${DOM} == "conus" -o ${DOM} == "ak" -o  ${DOM} == "conusmem2" -o ${DOM} == "akmem2" ]
 then
 cat sub_smartinitb.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
 sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
