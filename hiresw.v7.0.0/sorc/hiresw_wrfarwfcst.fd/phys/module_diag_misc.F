@@ -585,8 +585,8 @@ CONTAINS
 
 ! Calculate the max radar reflectivity between output times
 
-       IF ( refl_10cm(i,16,j) .GT. refd_max(i,j) ) THEN
-         refd_max(i,j) = refl_10cm(i,16,j)
+       IF ( refl_10cm(i,10,j) .GT. refd_max(i,j) ) THEN
+         refd_max(i,j) = refl_10cm(i,10,j)
        ENDIF
      ENDDO
      ENDDO
