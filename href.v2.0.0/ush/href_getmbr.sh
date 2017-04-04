@@ -318,50 +318,6 @@ typeset -Z2 fcheckloc
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
       fi
 
-###### namnest
-
-      if [  ${file[$m]} = 'namnest'  -a $fcst -le 60 ] ; then     
-
-        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-
-
-	echo namnest $m $ff
-
-
-	fcheckloc=$fcheck
-	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
-        do
-	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
-        loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
-	do
-	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
-          let loop=loop+1
-        done	
-        let fcheckloc=fcheckloc+1
-typeset -Z2 fcheckloc
-        echo new fcheckloc is $fcheckloc
-        done
-	
-        if [ $ff -gt 0 ]
-        then
-	echo here a $ff
-        if [ ${ff}%3 -eq 0 ]
-        then
-        echo href.m${m}.t${cyc}z. $ff .true. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
-        fi
-        fi
-        echo href.m${m}.t${cyc}z. $ff .true. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
-
-        if [ ${ff}%3 -eq 0 ] 
-        then
-        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
-	fi
-
-        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
-      fi
  
 ###### HIRESWarw
 
