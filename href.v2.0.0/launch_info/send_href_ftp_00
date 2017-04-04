@@ -24,7 +24,7 @@ fi
 cd /gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/
 
 cyc=00
-dom=conus
+doms="conus hi"
 
 export NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.5/exec/ndate
 
@@ -36,10 +36,11 @@ PDYdel=`$NDATE -72 $PDY${cyc} | cut -c1-8`
 
 echo PDYdel $PDYdel
 
-
 cd href.${PDY}
 
-ssh mpyle@emcrzdm.ncep.noaa.gov "rm -rf /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDYdel}"
+for dom in $doms
+do
+
 ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDY}"
 
 scp href.t${cyc}z.${dom}.mean.f??.grib2 \
@@ -47,3 +48,7 @@ scp href.t${cyc}z.${dom}.mean.f??.grib2 \
     href.t${cyc}z.${dom}.prob.f??.grib2 \
     href.t${cyc}z.${dom}.sprd.f??.grib2 \
 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDY}/
+
+done
+
+ssh mpyle@emcrzdm.ncep.noaa.gov "rm -rf /home/ftp/emc/mmb/WRFtesting/mpyle/href/href.${PDYdel}"

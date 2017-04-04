@@ -17,7 +17,7 @@ export RUN=${RUN:-href}
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/${job}.${pid}}
+export DATA=${DATA:-${DATAROOT}/href_gempak_${cyc}_${envir}.${pid}}
 mkdir $DATA
 cd $DATA 
 
@@ -47,9 +47,9 @@ export SENDDBN=${SENDDBN:-YES}
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export GEMPAKhref=${GEMPAKhref:-$HOMEhref/gempak}
 
-export finc=3
+export finc=1
 export fend=36
-export fstart=03
+export fstart=01
 
 export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 
@@ -64,7 +64,7 @@ cp $GEMPAKhref/fix/*.tbl .
 # Now set up GEMPAK/NTRANS environment
 #
 
-. /nwprod/gempak/.gempak
+# . /nwprod/gempak/.gempak
 
 # Run setpdy and initialize PDY variables
 setpdy.sh

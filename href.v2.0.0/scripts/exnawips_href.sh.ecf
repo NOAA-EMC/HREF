@@ -42,8 +42,6 @@ pdsext=no
 
 FILETYPES="mean pmmn prob sprd"
 
-for TYPE in $FILETYPES
-do
 
 maxtries=180
 fhcnt=$fstart
@@ -57,6 +55,9 @@ while [ $fhcnt -le $fend ] ; do
 
   fhr3=$fhcnt
   typeset -Z3 fhr3
+
+for TYPE in $FILETYPES
+do
 
   GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2
   GEMGRD=${RUN}_${NEST}_${TYPE}_${PDY}${cyc}f${fhr3} 
@@ -126,11 +127,11 @@ EOF
     echo "##### DBN_ALERT_TYPE is: ${DBN_ALERT_TYPE} #####"
     fi
   fi
+done # $TYPE
 
   let fhcnt=fhcnt+finc
-done
+done # while fhcnt -lt fend
 
-done # $TYPE
 
 #####################################################################
 # GOOD RUN
