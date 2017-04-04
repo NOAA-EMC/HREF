@@ -53,7 +53,10 @@ else
 cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
 fi
 
+cat run_nawips.sh_in_cray  | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_nawips_${cyc}
+
 bsub < launch_hrefrunpoe_${cyc}
+bsub < launch_nawips_${cyc}
 
 #  bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.${vers}/launch_info/send_href_ftp_${cyc} ;  bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/send_python_graphics_awip.sh_${cyc} &
 
