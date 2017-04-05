@@ -216,7 +216,7 @@ CONTAINS
 ! consider doing from lim_alt:lim_alt, but need the max code to key 
 ! on the same level
 
-               lim_alt=16
+               lim_alt=10
                call refl10cm_wsm6 (qv1d(lim_alt:lim_alt), qr1d(lim_alt:lim_alt), &
                       qs1d(lim_alt:lim_alt), qg1d(lim_alt:lim_alt),              &
                        t1d(lim_alt:lim_alt), p1d(lim_alt:lim_alt),               &
