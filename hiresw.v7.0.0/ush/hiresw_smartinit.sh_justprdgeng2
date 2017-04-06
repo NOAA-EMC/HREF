@@ -377,6 +377,7 @@ $WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8 $INF
 export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_9.txt | $WGRIB2 -i -grib inputs.grb2_9 $INF
 export err=$?; err_chk
+
 if [ $outreg != "conusmem2" -a $outreg != "himem2" -a  $outreg != "prmem2" -a $outreg != "akmem2" ]
 then
 $WGRIB2 $INF | grep -F -f list_10.txt | $WGRIB2 -i -grib inputs.grb2_10 $INF
@@ -384,6 +385,7 @@ export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_11.txt | $WGRIB2 -i -grib inputs.grb2_11 $INF
 export err=$?; err_chk
 fi
+
 $WGRIB2 $INF | grep -F -f list_12.txt | $WGRIB2 -i -grib inputs.grb2_12 $INF
 export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
@@ -516,7 +518,6 @@ fi
   then
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
   export err=$?; err_chk
-	echo here a with err $err
   fi
 
   if [ $fhr -gt 0 ];then
@@ -856,7 +857,6 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
 #  RUN PRODUCT GENERATOR
 #=================================================================
 
-	echo "here 23"
  if [ -e WRFPRS${fhr}i.tm00 ];then rm WRFPRS${fhr}i.tm00;fi
 
 	if [ -e  WRFPRS${fhr}.tm00 ]
