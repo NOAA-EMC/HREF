@@ -245,30 +245,35 @@ echo srefcyc_3= $srefcyc
 	echo "get PCP>0.01 over: " ${PHR} ${pcphr}
 
     $WGRIB2 SREFPROB | grep APCP |  grep "prob >0.25" | grep ":${PHR}-${pcphr} hour" | $WGRIB2 -i SREFPROB  -grib dump
+    export err=$?; err_chk
     let IP=IP+1
     mv dump srefpcp$IP
 
 #   prob of pcp > 0.05
 #    $EXECutil/wgrib -PDS10 SREFPROB |grep "${grbpre} 65 20 81 236"| grep "0 1 $PHR $pcphr 4"|$EXECutil/wgrib -i -grib -o dump SREFPROB
     $WGRIB2 SREFPROB | grep APCP | grep "prob >1.27" | grep ":${PHR}-${pcphr} hour" | $WGRIB2 -i SREFPROB  -grib  dump
+    export err=$?; err_chk
     let IP=IP+1
     mv dump srefpcp$IP
 
 #   prob of pcp > 0.10
 #    $EXECutil/wgrib -PDS10 SREFPROB |grep "${grbpre} 65 40 163 215"| grep "0 1 $PHR $pcphr 4"|$EXECutil/wgrib -i -grib -o dump SREFPROB
     $WGRIB2 SREFPROB | grep APCP |  grep "prob >2.54" | grep ":${PHR}-${pcphr} hour"  | $WGRIB2 -i SREFPROB -grib dump
+    export err=$?; err_chk
     let IP=IP+1
     mv dump srefpcp$IP
 
 #   prob of pcp > 0.25
 #    $EXECutil/wgrib -PDS10 SREFPROB |grep "${grbpre} 65 101 153 154"| grep "0 1 $PHR $pcphr 4"|$EXECutil/wgrib -i -grib -o dump SREFPROB
     $WGRIB2 SREFPROB | grep APCP |  grep "prob >6.35" | grep ":${PHR}-${pcphr} hour"  | $WGRIB2 -i SREFPROB -grib dump
+    export err=$?; err_chk
     let IP=IP+1
     mv dump srefpcp$IP
 
 #   prob of pcp > 0.50
 #    $EXECutil/wgrib -PDS10 SREFPROB |grep "${grbpre} 65 203 51 51"| grep "0 1 $PHR $pcphr 4"|$EXECutil/wgrib -i -grib -o dump SREFPROB
     $WGRIB2 SREFPROB | grep APCP |  grep "prob >12.7" | grep ":${PHR}-${pcphr} hour" | $WGRIB2 -i SREFPROB -grib dump
+    export err=$?; err_chk
     let IP=IP+1
     mv dump srefpcp$IP
   done
@@ -284,7 +289,9 @@ echo srefcyc_3= $srefcyc
 ### budget maybe not correct for probabilities here
 ###  $WGRIB2  srefallpcp -set_grib_type ${compress} -new_grid_interpolation budget -new_grid_winds grid -new_grid ${wgrib2def} srefpcp${rg}_${SREF_PDY}${srefcy}cf0${pcphrl}
   $WGRIB2  srefallpcp -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl}
+  export err=$?; err_chk
   $GRB2INDEX srefpcp${rg}_${SREF_PDY}${srefcyc}f0${pcphrl} srefpcp${rg}i_${SREF_PDY}${srefcyc}f0${pcphrl}
+  export err=$?; err_chk
 
 fi #fhr -ge 0
 
@@ -353,21 +360,34 @@ fi
 fi
 
 $WGRIB2 $INF | grep -F -f list_1.txt | $WGRIB2 -i -grib inputs.grb2_1 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_2.txt | $WGRIB2 -i -grib inputs.grb2_2 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_3.txt | $WGRIB2 -i -grib inputs.grb2_3 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_4.txt | $WGRIB2 -i -grib inputs.grb2_4 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_5.txt | $WGRIB2 -i -grib inputs.grb2_5 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_6.txt | $WGRIB2 -i -grib inputs.grb2_6 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_7.txt | $WGRIB2 -i -grib inputs.grb2_7 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_8.txt | $WGRIB2 -i -grib inputs.grb2_8 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_9.txt | $WGRIB2 -i -grib inputs.grb2_9 $INF
+export err=$?; err_chk
 if [ $outreg != "conusmem2" -a $outreg != "himem2" -a  $outreg != "prmem2" -a $outreg != "akmem2" ]
 then
 $WGRIB2 $INF | grep -F -f list_10.txt | $WGRIB2 -i -grib inputs.grb2_10 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_11.txt | $WGRIB2 -i -grib inputs.grb2_11 $INF
+export err=$?; err_chk
 fi
 $WGRIB2 $INF | grep -F -f list_12.txt | $WGRIB2 -i -grib inputs.grb2_12 $INF
+export err=$?; err_chk
 $WGRIB2 $INF | grep -F -f list_nn.txt | $WGRIB2 -i -grib inputs.grb2_nn $INF
+export err=$?; err_chk
 
 rm wgrib2.poe
 
@@ -495,6 +515,8 @@ fi
   if [ -e WRFPRS${fhr}.tm00 ]
   then
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00
+  export err=$?; err_chk
+	echo here a with err $err
   fi
 
   if [ $fhr -gt 0 ];then
@@ -605,6 +627,7 @@ fi
 
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${fhr}.tm00.g2
        mv WRFPRS${fhr}.tm00.g2 WRFPRS${fhr}.tm00
@@ -613,6 +636,7 @@ fi
 	echo here with FHRFRQ $FHRFRQ
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${FHRFRQ}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${FHRFRQ}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${FHRFRQ}.tm00.g2
          mv WRFPRS${FHRFRQ}.tm00.g2 WRFPRS${FHRFRQ}.tm00
@@ -653,6 +677,7 @@ fi
 
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr9}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr9}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${fhr9}.tm00.g2
       mv WRFPRS${fhr9}.tm00.g2 WRFPRS${fhr9}.tm00
@@ -669,6 +694,7 @@ fi
 
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr3}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${fhr3}.tm00.g2
 	mv  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
@@ -679,6 +705,7 @@ fi
 	ls -l  WRFPRS${fhr3}.tm00
 
         $GRB2INDEX WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00.temp
+        export err=$?; err_chk
 	$FSYNC WRFPRS${fhr3}i.tm00.temp
 	mv WRFPRS${fhr3}i.tm00.temp WRFPRS${fhr3}i.tm00
 
@@ -688,6 +715,7 @@ fi
            else
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr6}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${fhr6}.tm00.g2
        mv WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
@@ -695,6 +723,7 @@ fi
 
 #####
         $GRB2INDEX WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00.temp
+        export err=$?; err_chk
 	$FSYNC WRFPRS${fhr6}i.tm00.temp
 	mv WRFPRS${fhr6}i.tm00.temp WRFPRS${fhr6}i.tm00
 
@@ -715,6 +744,7 @@ fi
 	   else
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr3}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr3}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${fhr3}.tm00.g2
 	mv  WRFPRS${fhr3}.tm00.g2 WRFPRS${fhr3}.tm00
@@ -722,6 +752,7 @@ fi
 
 #####
         $GRB2INDEX WRFPRS${fhr3}.tm00 WRFPRS${fhr3}i.tm00.temp
+        export err=$?; err_chk
 	$FSYNC WRFPRS${fhr3}i.tm00.temp
 	mv WRFPRS${fhr3}i.tm00.temp WRFPRS${fhr3}i.tm00
 
@@ -734,6 +765,7 @@ fi
            else
         INF=$COMIN/hiresw.t${cyc}z.${mdl}.${natgrd}${fhr6}
         $WGRIB2 $INF | grep -F -f $PARMhiresw/hiresw_smartinit.g2_rainsnow | $WGRIB2 -i -grib  WRFPRS${fhr6}.tm00.g2 $INF
+        export err=$?; err_chk
 
 	$FSYNC WRFPRS${fhr6}.tm00.g2
 	mv WRFPRS${fhr6}.tm00.g2 WRFPRS${fhr6}.tm00
@@ -741,6 +773,7 @@ fi
 
 #####
         $GRB2INDEX WRFPRS${fhr6}.tm00 WRFPRS${fhr6}i.tm00.temp
+        export err=$?; err_chk
 	$FSYNC WRFPRS${fhr6}i.tm00.temp
 	mv WRFPRS${fhr6}i.tm00.temp WRFPRS${fhr6}i.tm00
 
@@ -789,6 +822,7 @@ export err=$?; err_chk
 echo WGRIB2 for ${freq}precip
 
 $WGRIB2 ${freq}precip.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def}  ${freq}precip
+export err=$?; err_chk
 
 echo copy to ${freq}precip.${fhr}_interp
 cp ${freq}precip ${freq}precip.${fhr}_interp
@@ -804,14 +838,17 @@ cp ${freq}precip ${freq}precip.${fhr}_interp
 
 	echo here with freq $freq and fhr $fhr
      $GRB2INDEX ${freq}precip ${freq}precipi
+     export err=$?; err_chk
 	ls -l  ${freq}precip ${freq}precipi
 $WGRIB2 ${freq}snow.${fhr} -set_grib_type ${compress} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def}  ${freq}snow
+export err=$?; err_chk
 cp ${freq}snow ${freq}snow.${fhr}_interp
 	if [ $err -ne 0 ]
 	then
 	echo "bad copygb to generate ${freq}snow"
 	fi
      $GRB2INDEX ${freq}snow ${freq}snowi
+     export err=$?; err_chk
     fi #MKPCP>0
   done #MKPCP loop
 
@@ -819,11 +856,16 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
 #  RUN PRODUCT GENERATOR
 #=================================================================
 
+	echo "here 23"
  if [ -e WRFPRS${fhr}i.tm00 ];then rm WRFPRS${fhr}i.tm00;fi
 
+	if [ -e  WRFPRS${fhr}.tm00 ]
+        then
   $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00.temp
+  export err=$?; err_chk
   $FSYNC WRFPRS${fhr}i.tm00.temp
   mv WRFPRS${fhr}i.tm00.temp WRFPRS${fhr}i.tm00
+	fi
 
   cpfs ${COMROOT}/date/t${cyc}z DATE
 
@@ -839,6 +881,7 @@ cp ${freq}snow ${freq}snow.${fhr}_interp
   fi
 
   $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+  export err=$?; err_chk
 
 echo "DONE" > smartinitprdgendone${fhr}
 datestr=`date`

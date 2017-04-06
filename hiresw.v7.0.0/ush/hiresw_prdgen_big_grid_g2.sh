@@ -236,47 +236,75 @@ fi
 fi
 
 
+looplim=90
+loop=1
 
-while [ ! -e $INPUT_DATA/postdone${fhr} ]
+while [ $loop -le $looplim ]
 do
-sleep 6
+ echo in while
+ if [ -s $INPUT_DATA/postdone${fhr} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $INPUT_DATA/postdone${fhr}"
+   err_exit $msg
+ fi
 done
 
 
 ### extract just needed items
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
+export err=$?; err_chk
 
 $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+export err=$?; err_chk
 
 if [ $DOMIN_SMALL = "conus"  -a $subpiece = "1" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud ceiling" -grib inputs_budget_b.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud base" -grib inputs_budget_c.grb
+export err=$?; err_chk
 cat inputs_budget_b.grb >> inputs_budget.grb
 cat inputs_budget_c.grb >> inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+export err=$?; err_chk
 fi
 
 if [ $DOMIN_SMALL = "conusmem2"  -a $subpiece = "1" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud ceiling" -grib inputs_budget_b.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud base" -grib inputs_budget_c.grb
+export err=$?; err_chk
 cat inputs_budget_b.grb >> inputs_budget.grb
 cat inputs_budget_c.grb >> inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+export err=$?; err_chk
 fi
 
 if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusmem2" ] 
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud ceiling" -grib inputs_budget_b.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":HGT:cloud base" -grib inputs_budget_c.grb
+export err=$?; err_chk
 cat inputs_budget_b.grb >> inputs_budget.grb
 cat inputs_budget_c.grb >> inputs_budget.grb
 $WGRIB2 inputs_budget.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+export err=$?; err_chk
 fi
 
      if [ $fhr -ne 0 ]
@@ -300,7 +328,9 @@ then
 if [ $subpiece = "1" ]
 then
   $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
+  export err=$?; err_chk
   $WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+  export err=$?; err_chk
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget  > ${filenamthree}${fhr}.tm00
 else
   mv ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00
@@ -312,8 +342,9 @@ fi
 if [ $DOMIN_SMALL != "conus" -a $DOMIN_SMALL != "conusmem2" ]
 then
   $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HINDEX" -grib nn.grb
+  export err=$?; err_chk
   $WGRIB2 nn.grb  -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
-	ls -l ${filenamthree}${fhr}.tm00_budget
+  export err=$?; err_chk
   cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget  > ${filenamthree}${fhr}.tm00
 fi
 

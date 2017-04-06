@@ -161,10 +161,26 @@ fi
 fi
 
 
-while [ ! -e $INPUT_DATA/postdone${fhr} ]
+looplim=90
+loop=1
+
+while [ $loop -le $looplim ]
 do
-sleep 6
+ echo in while
+ if [ -s $INPUT_DATA/postdone${fhr} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $INPUT_DATA/postdone${fhr}"
+   err_exit $msg
+ fi
 done
+
 
 ### extract just needed items
 

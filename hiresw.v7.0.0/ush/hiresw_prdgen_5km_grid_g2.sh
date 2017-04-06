@@ -96,27 +96,50 @@ fi
 
 
 
-while [ ! -e $INPUT_DATA/postdone${fhr} ]
+looplim=90
+loop=1
+
+while [ $loop -le $looplim ]
 do
-sleep 6
+ echo in while
+ if [ -s $INPUT_DATA/postdone${fhr} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $INPUT_DATA/postdone${fhr}"
+   err_exit $msg
+ fi
 done
+
 
 ### extract just needed items
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
+export err=$?; err_chk
 
 $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00_bilin
+export err=$?; err_chk
 
 if [ $subpiece = "1" ]
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF):" -grib nn.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
+export err=$?; err_chk
 cat nn.grb ceiling.grb > inputs_nn.grb
 
 $WGRIB2  inputs_nn.grb -new_grid_interpolation neighbor -set_grib_type ${compress} -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00_nn
+export err=$?; err_chk
 
 $WGRIB2  inputs_budget.grb -new_grid_interpolation budget -set_grib_type ${compress} -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079 ${filenamthree}${fhr}.tm00_budget
+export err=$?; err_chk
 fi
 
 

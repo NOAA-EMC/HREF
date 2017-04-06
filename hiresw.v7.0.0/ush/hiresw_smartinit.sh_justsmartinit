@@ -89,7 +89,6 @@ case $RUNTYP in
   guamarw|guamnmmb) rg=guam; outres="2p5km"; outreg=guam; wgrib2def="mercator:20 143.687:193:2500:148.280 12.35:193:2500:16.794";;
 esac
 
-# WGRIB2=$EXEChiresw/hiresw_wgrib2
 compress=complex2
 
 
@@ -307,6 +306,7 @@ cpfs $INPUT_DATA/meso${rg}.NDFDf${fhr} .
 err1=$?
 
 $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+export err=$?; err_chk
 
 echo err1 on copy $err1
 
@@ -332,7 +332,9 @@ echo err1 on copy $err1
     cpfs MAXMING2.f${fhr1} MAXMIN1
 
     $GRB2INDEX MAXMIN1 MAXMIN1i
+    export err=$?; err_chk
     $GRB2INDEX MAXMIN2 MAXMIN2i
+    export err=$?; err_chk
   fi
 
   freq=6;fmx=21   #fmx =  maxmin unit number for 1st maxmin file
@@ -374,9 +376,11 @@ echo copy ${freq}snow.${fhr} $err2
 
      mv ${freq}precip.${fhr}_interp ${freq}precip
      $GRB2INDEX ${freq}precip ${freq}precipi
+     export err=$?; err_chk
 
      mv ${freq}snow.${fhr}_interp ${freq}snow
      $GRB2INDEX ${freq}snow ${freq}snowi
+     export err=$?; err_chk
 
 	fi
 
@@ -385,6 +389,7 @@ echo copy ${freq}snow.${fhr} $err2
 
         cpfs 3precip.${fhr}_interp 3precip
         $GRB2INDEX 3precip 3precipi
+        export err=$?; err_chk
         
 	fi
 
@@ -395,6 +400,7 @@ echo copy ${freq}snow.${fhr} $err2
 	cat 3precip meso${rg}.NDFDf${fhr} > new_meso${rg}.NDFDf${fhr}
 	mv new_meso${rg}.NDFDf${fhr} meso${rg}.NDFDf${fhr}
         $GRB2INDEX meso${rg}.NDFDf${fhr} meso${rg}.NDFDif${fhr}
+        export err=$?; err_chk
         fi
 
 ls -l meso${rg}.NDFDf${fhr}
@@ -424,6 +430,7 @@ ls -l meso${rg}.NDFDf${fhr}
 mv ${freq}precipi ${freq}precipi_was
 
 $GRB2INDEX ${freq}precip ${freq}precipi
+export err=$?; err_chk
 
   lnsf "${freq}precipi"           fort.16
         fi
@@ -448,9 +455,11 @@ $GRB2INDEX ${freq}precip ${freq}precipi
     cpfs $COMOUT/hiresw.t${cyc}z.${MODEL}_${outres}.f${fhr9}.${outreg}.grib2 MAXMIN5
 
     $GRB2INDEX MAXMIN3 MAXMIN3i
+    export err=$?; err_chk
     $GRB2INDEX MAXMIN4 MAXMIN4i
+    export err=$?; err_chk
     $GRB2INDEX MAXMIN5 MAXMIN5i
-
+    export err=$?; err_chk
 
 #     READ 6/12 hr precip from special files created by makeprecip
 
@@ -460,14 +469,14 @@ $GRB2INDEX ${freq}precip ${freq}precipi
 cpfs $INPUT_DATA/12precip.${fhr}_interp .
 cpfs $INPUT_DATA/6snow.${fhr}_interp .
 
-### change to WGRIB2
-
      mv 12precip.${fhr}_interp 12precip
      $GRB2INDEX 12precip 12precipi
+     export err=$?; err_chk
 
 
      mv 6snow.${fhr}_interp 6snow
      $GRB2INDEX 6snow 6snowi
+     export err=$?; err_chk
 
       lnsf "6snow"      fort.17
       lnsf "6snowi"     fort.18
@@ -506,6 +515,7 @@ then
 cpfs $INPUT_DATA/${freq}snow.${fhr}_interp ${freq}snow
 rm ${freq}snowi
 $GRB2INDEX ${freq}snow ${freq}snowi
+export err=$?; err_chk
 fi
 
          lnsf "${freq}snow"  fort.17
