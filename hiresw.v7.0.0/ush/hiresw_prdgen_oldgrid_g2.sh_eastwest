@@ -105,9 +105,24 @@ fi
 fi
 
 
-while [ ! -e $INPUT_DATA/postdone${fhr} ]
+looplim=90
+loop=1
+
+while [ $loop -le $looplim ]
 do
-sleep 6
+ echo in while
+ if [ -s $INPUT_DATA/postdone${fhr} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $INPUT_DATA/postdone${fhr}"
+   err_exit $msg
+ fi
 done
 
 
@@ -116,24 +131,34 @@ done
 compress_type=jpeg
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
+export err=$?; err_chk
 
 $WGRIB2 inputs.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_vectors default -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+export err=$?; err_chk
 
 if [ $subpiece =  "1" ]
 then
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP):" -grib nn.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:1000 m above ground:" -grib 1000refd.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:4000 m above ground:" -grib 4000refd.grb
+export err=$?; err_chk
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:263 K level:" -grib 263krefd.grb
+export err=$?; err_chk
 cat nn.grb ceiling.grb 1000refd.grb 4000refd.grb 263krefd.grb > inputs_nn.grb
 
 rm nn.grb ceiling.grb 1000refd.grb 4000refd.grb 263krefd.grb
 
 $WGRIB2 inputs_nn.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+export err=$?; err_chk
 
 $WGRIB2 inputs_budget.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+export err=$?; err_chk
 
 # cat inputs_nn.grb inputs_nn.grb inputs_budget.grb > input_copygb2.grb
 # copygb2 -g"${reg}" 

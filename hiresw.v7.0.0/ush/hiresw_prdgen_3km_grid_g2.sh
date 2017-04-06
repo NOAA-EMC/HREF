@@ -95,15 +95,32 @@ fi
 
 
 
-while [ ! -e $INPUT_DATA/postdone${fhr} ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-sleep 6
+ if [ -s $INPUT_DATA/postdone${fhr} ]
+ then
+   break
+ else
+  loop=$((loop+1))
+  sleep 20
+ fi
+
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $INPUT_DATA/postdone${fhr}"
+   err_exit $msg
+ fi
+
 done
 
 ### extract just needed items
 
 $WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
+ export err=$?; err_chk
 $WGRIB2  inputs.grb  -set_grib_type ${compress} -new_grid_interpolation neighbor -new_grid_winds grid -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+ export err=$?; err_chk
 
 
 if [ $subpiece = "1" ]
@@ -160,10 +177,25 @@ echo COMPUTING PRECIP BUCKETS
 ### do precip buckets if model is ARW
 
 # precip bucket subpieces can be changed to "1" if needed, as only will run for the first subpiece
-while [ ! -e $DATA/prdgen_3km_${subpiece}/$filenamthree$onehrprev.tm00 ]
+
+looplim=90
+loop=1
+
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_3km_${subpiece}/$filenamthree$onehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_3km_${subpiece}/$filenamthree$onehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $DATA/prdgen_3km_${subpiece}/$filenamthree$onehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 
@@ -192,10 +224,24 @@ done
 
 echo "3 hourly, do 3H precip bucket"
 
-while [ ! -e $DATA/prdgen_3km_${subpiece}/$filenamthree$threehrprev.tm00 ]
+looplim=90
+loop=1
+
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_3km_${subpiece}/$filenamthree$threehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s  $DATA/prdgen_3km_${subpiece}/$filenamthree$threehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for  $DATA/prdgen_3km_${subpiece}/$filenamthree$threehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 
