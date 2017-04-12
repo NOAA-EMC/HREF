@@ -273,8 +273,8 @@ cp $PARMhiresw/hiresw_nests.txt                 nests.txt
 cp $PARMhiresw/hiresw_atmos.configure_nmm       atmos.configure
 cp $FIXhiresw/hiresw_aerosol.dat                aerosol.dat
 
-ln -sf ${FIXgsm}/global_o3prdlos.f77 fort.28
-ln -sf ${FIXgsm}/global_o3clim.txt   fort.48
+ln -sf ${FIXhiresw}/global_o3prdlos.f77 fort.28
+ln -sf ${FIXhiresw}/global_o3clim.txt   fort.48
 
 # nmmb specific versions
 
@@ -344,7 +344,7 @@ then
 # runline="aprun -n 1728 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
 # runline="aprun -n 2016 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
 #was runline="aprun -n 1920 -N 24 ./hiresw_${MODEL}_fcst : -n 96 -N 12 ./hiresw_${MODEL}_fcst"
-runline="aprun -n 1800 -N 24 ./hiresw_${MODEL}_fcst : -n 96 -N 12 ./hiresw_${MODEL}_fcst"
+runline="aprun -n 1440 -N 24 ./hiresw_${MODEL}_fcst : -n 96 -N 12 ./hiresw_${MODEL}_fcst"
 
 elif [ $RUNLOC = "conusmem2arw" ]
 then

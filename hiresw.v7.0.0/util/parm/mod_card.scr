@@ -1,0 +1,192 @@
+#! /bin/ksh
+
+types="89 98 00 86 20 25 30 40 50 70 73 01 85 92 99"
+
+input=grib2_conus_hiresw.awpreg_f00
+TIME=A
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f06
+TIME=B
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f12
+TIME=C
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f18
+TIME=D
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f24
+TIME=E
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f30
+TIME=F
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f36
+TIME=G
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f42
+TIME=H
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f48
+TIME=I
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+# --------------------
+
+input=grib2_conus_hiresw.awpreg_f03
+TIME=B
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f09
+TIME=E
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f15
+TIME=H
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f21
+TIME=K
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f27
+TIME=L
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f33
+TIME=O
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f39
+TIME=P
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input
+
+input=grib2_conus_hiresw.awpreg_f45
+TIME=Q
+
+cp $input tmp
+for typ in $types
+do
+cat tmp | sed s:A${TIME}${typ}:M${TIME}${typ}:g  >  tmp.new
+mv tmp.new tmp
+done
+cp tmp $input

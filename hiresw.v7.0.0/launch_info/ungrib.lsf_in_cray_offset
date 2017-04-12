@@ -44,6 +44,8 @@ echo CYCgfs $CYCgfs
 # export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATE}
 # export COMINgfs=/gpfs/hps/ptmp/emc.glopara/com2/gfs/para/gfs.${DATEgfs}
 export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATEgfs}
+export COMINgfs=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/gfs_input/gfs.${DATEgfs}
+
 
 export COMINnam=$COMROOTp2/nam/prod/nam.${DATE}
 export COMINnamold=$COMROOTp2/nam/prod/nam.${DATEgfs}
