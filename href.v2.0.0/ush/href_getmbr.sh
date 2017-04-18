@@ -349,7 +349,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 3
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -399,7 +399,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 3
           let loop=loop+1
         done
         let fcheckloc=fcheckloc+1
@@ -454,7 +454,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 3
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
