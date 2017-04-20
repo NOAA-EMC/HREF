@@ -168,7 +168,7 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 
         p_earlier=gfld%fld
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
         write(0,*) 'maxval(p_earlier): ', maxval(p_earlier)
@@ -193,7 +193,7 @@ C    &                  UNPACK,K,GFLD,IRET)
 
         s_earlier=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_SNOW_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -222,7 +222,7 @@ C    &                  UNPACK,K,GFLD,IRET)
         p_later=gfld%fld
         write(0,*) 'maxval(p_later): ', maxval(p_later)
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -249,7 +249,7 @@ C    &                  UNPACK,K,GFLD,IRET)
         write(0,*) 'set s_later to gfld%fld'
         s_later=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_SNOW_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -283,7 +283,7 @@ C    &                  UNPACK,K,GFLD,IRET)
 
         write(0,*) 'define gfld%fld with dprecip'
 
-!        do J=1,200
+!        do J=1,gfld%ipdtlen
 
 !        if (PDS_RAIN_HOLD(J) .ne. PDS_RAIN_HOLD_EARLY(J)) then
 !        write(0,*) 'rain diff, J, early, later: ', 

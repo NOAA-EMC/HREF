@@ -2990,20 +2990,8 @@ end subroutine retrieve_field
          ENDDO
         ENDDO
 
-        write(0,*) 'MAPFAC_VY skip'
-       read(47) ! MAPFAC_VY
-
-        write(0,*) 'MAPFAC_MY'
-       read(47) ! MAPFAC_MY
-
         write(0,*) 'MAPFAC_UX skip'
        read(47) ! MAPFAC_UX
-
-        write(0,*) 'MAPFAC_VX skip'
-       read(47) ! MAPFAC_VX
-
-        write(0,*) 'MAPFAC_MX skip'
-       read(47) ! MAPFAC_MX
 
                ! MAPFAC_U
         write(0,*) 'MAPFAC_U'
@@ -3013,10 +3001,6 @@ end subroutine retrieve_field
 
            grid%msfu(I,J)=dumdata_u(I,J,1)
 
-!        if (I .eq. 50 .and. J .eq. 50) then
-!        write(0,*) 'I,J,msfu: ', I,J,grid%msfu(I,J)
-!        endif
-
         if (grid%msfu(I,J) .lt. 0.7 ) then
 !        write(0,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
         grid%msfu(I,J)=dumdata_u(I-1,J-1,1)
@@ -3025,6 +3009,12 @@ end subroutine retrieve_field
 
          ENDDO
         ENDDO
+
+        write(0,*) 'MAPFAC_VY'
+       read(47) ! MAPFAC_VY
+
+        write(0,*) 'MAPFAC_VX skip'
+       read(47) ! MAPFAC_VX
 
                       ! MAPFAC_V
         write(0,*) 'MAPFAC_V'
@@ -3037,18 +3027,16 @@ end subroutine retrieve_field
         if (grid%msfv(I,J) .lt. 0.7 ) then
 !        write(0,*) 'weird msfv at I,J: ', I,J,grid%msfv(I,J)
         grid%msfv(I,J)=dumdata_v(I,J-1,1)
-!        if( J .eq. min(JTE,JDE)) then
-!        write(0,*) 'changing msfv to: ',I,J,  grid%msfv(I,J)
-!        endif
-
         endif
-
-!        if (I .eq. 50 .and. J .eq. 50) then
-!        write(0,*) 'I,J,msfv: ', I,J,grid%msfv(I,J)
-!        endif
 
          ENDDO
         ENDDO
+
+        write(0,*) 'MAPFAC_MY skip'
+       read(47) ! MAPFAC_MY
+
+        write(0,*) 'MAPFAC_MX skip'
+       read(47) ! MAPFAC_MX
 
 
         ! MAPFAC_M
@@ -3057,11 +3045,6 @@ end subroutine retrieve_field
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%msft(I,J)=dumdata(I,J,1)
-
-!        if (I .eq. 50 .and. J .eq. 50) then
-!        write(0,*) 'I,J,msft: ', I,J,grid%msft(I,J)
-!        endif
-
          ENDDO
         ENDDO
 
