@@ -185,7 +185,7 @@
         APCP1=gfld%fld
 
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -230,7 +230,7 @@
 
         SNOW1=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_SNOW_HOLD_EARLY(K)=gfld%ipdtmpl(K)
         enddo
         
@@ -260,7 +260,7 @@
                     UNPACK,K,GFLD,IRET)
         APCP2=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -290,7 +290,7 @@
 
         SNOW2=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_SNOW_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -325,7 +325,7 @@
                     UNPACK,K,GFLD,IRET)
         APCP3=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -354,7 +354,7 @@
                     UNPACK,K,GFLD,IRET)
         SNOW3=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_SNOW_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -386,7 +386,7 @@
                     UNPACK,K,GFLD,IRET)
         APCP4=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 
@@ -430,7 +430,7 @@
                     UNPACK,K,GFLD,IRET)
         SNOW4=gfld%fld
 
-        do K=1,200
+        do K=1,gfld%ipdtlen
         PDS_SNOW_HOLD(K)=gfld%ipdtmpl(K)
         enddo
 

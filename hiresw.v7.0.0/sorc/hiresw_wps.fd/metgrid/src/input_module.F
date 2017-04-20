@@ -246,7 +246,7 @@ module input_module
             qd = q_remove(unit_desc)
             cunits = qd%units
             cdesc = qd%description
-            stagger = qd%stagger
+!corrupts   stagger = qd%stagger
             sr_x = qd%sr_x
             sr_y = qd%sr_y
          else
