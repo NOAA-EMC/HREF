@@ -227,13 +227,24 @@ echo "DONE" > ../nemsinterpdone4
 
 cd $DATA
 
-count=`ls $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.* | wc -l`
+looplim=90
+loop=1
 
-while [ $count -lt 16 ]
+while [ $loop -le $looplim ]
 do
-sleep 20
-count=`ls $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.* | wc -l`
-echo now see $count boco files in com
+ count=`ls $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.boco.* | wc -l`
+ if [ $count -eq 16 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 8
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 12 minutes of waiting for all boco files to be produced from nemsinterp_4"
+   err_exit $msg
+ fi
 done
 
 cp configure_file $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.configure_file

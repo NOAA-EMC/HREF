@@ -55,10 +55,25 @@ echo start smartinit with hr $hr
 while [ $hr -le $hrlim ]
 do
 
-while [ ! -e $INPUT_DATA/prdgendone${hr} ]
+looplim=45
+loop=1
+while [ $loop -le $looplim ]
 do
-sleep 10
+ echo in while
+ if [ -s $INPUT_DATA/prdgendone${hr} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $INPUT_DATA/prdgendone${fhr}"
+   err_exit $msg
+ fi
 done
+
 
 $USHhiresw/hiresw_smartinit.sh_justprdgeng2 ${hr}
 
