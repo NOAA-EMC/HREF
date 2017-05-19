@@ -198,12 +198,24 @@ echo COMPUTING PRECIP BUCKETS
 ### do precip buckets if model is ARW
 
 # precip bucket subpieces can be changed to "1" if needed, as only will run for the first subpiece
-while [ ! -e $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00 ]
-do
-echo waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00
-sleep 10
-done
 
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
+do
+ if [ -s $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 10
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00"
+   err_exit $msg
+ fi
+done
 
   rm PCP1HR${fhr}.tm00
   rm input.card
@@ -230,12 +242,23 @@ done
 
 echo "3 hourly, do 3H precip bucket"
 
-while [ ! -e $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00
-sleep 10
+ if [ -s $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 10
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00"
+   err_exit $msg
+ fi
 done
-
 
   rm PCP3HR${fhr}.tm00
   rm input.card

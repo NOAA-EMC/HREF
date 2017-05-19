@@ -238,7 +238,6 @@ fi
 
 looplim=90
 loop=1
-
 while [ $loop -le $looplim ]
 do
  echo in while
@@ -450,18 +449,44 @@ fi
 if [ $subpiece = "1" ]
 then
 
-while [ ! -e $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $DATA/prdgen_full_1/$filenamthree$onehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 else
 
-while [ ! -e $DATA/prdgen_full/$filenamthree$onehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting_a for $DATA/prdgen_full/$filenamthree$onehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_full/$filenamthree$onehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $DATA/prdgen_full/$filenamthree$onehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 fi
@@ -481,19 +506,44 @@ fi
 if [ $subpiece = "1" ]
 then
 
-while [ ! -e $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $DATA/prdgen_full_1/$filenamthree$threehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 else
 
-while [ ! -e $DATA/prdgen_full/$filenamthree$threehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting_b for $DATA/prdgen_full/$filenamthree$threehrprev.tm00
-
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_full/$filenamthree$threehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 10
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $DATA/prdgen_full/$filenamthree$threehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 fi

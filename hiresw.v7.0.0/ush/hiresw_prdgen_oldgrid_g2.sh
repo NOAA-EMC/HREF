@@ -163,7 +163,6 @@ fi
 
 looplim=90
 loop=1
-
 while [ $loop -le $looplim ]
 do
  echo in while
@@ -248,10 +247,23 @@ then
 
 ### do precip buckets if model is ARW
 
-while [ ! -e $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$onehrprev.tm00"
+   err_exit $msg
+ fi
 done
 
 
@@ -275,12 +287,24 @@ mv errfile errfile_${fhr}
   if [ $fhr%3 -eq 0 ]
   then
 
-while [ ! -e $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00 ]
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
 do
-echo waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00
-sleep 10
+ echo in while
+ if [ -s $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 10
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $DATA/prdgen_5km_${subpiece}/$filenamthree$threehrprev.tm0"
+   err_exit $msg
+ fi
 done
-
 
   rm PCP3HR${fhr}.tm00
   rm input.card
