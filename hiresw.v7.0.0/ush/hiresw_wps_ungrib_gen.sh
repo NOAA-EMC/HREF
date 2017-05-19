@@ -23,11 +23,8 @@
 # 2013-11-01  Matthew Pyle - Original script for parallel
 # 2014-02-10  Matthew Pyle - Added this documentation block 
 
-NEST=${1}
-MODEL=${2}
-cyc=${3}
-envir=${4}
-stream=${5}
+MODEL=${1}
+stream=${2}
 
 cd $DATA/run_ungrib_${stream}/
 
