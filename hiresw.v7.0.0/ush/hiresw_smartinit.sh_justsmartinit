@@ -417,6 +417,7 @@ ls -l meso${rg}.NDFDf${fhr}
         fi
 
         $GRB2INDEX SREFPCP SREFPCPi
+        export err=$?; err_chk
         lnsf "SREFPCPi"                 fort.14
 	fi
 
