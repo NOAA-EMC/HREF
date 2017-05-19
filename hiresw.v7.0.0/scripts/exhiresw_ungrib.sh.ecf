@@ -348,7 +348,7 @@ export MP_LABELIO=YES
 export MP_INFOLEVEL=3
 export MP_STDOUTMODE=ordered
 
-export pgm=hiresw_wps_ungrib_gen.sh_offset
+export pgm=hiresw_wps_ungrib_gen.sh
 # ./poescript
 aprun -n 1 -N 1 -d $NTASK ./poescript
 export err=$?; err_chk
