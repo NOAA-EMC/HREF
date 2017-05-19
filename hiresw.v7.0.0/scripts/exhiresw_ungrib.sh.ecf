@@ -20,6 +20,7 @@
 # 2009-09-24  Shawna Cokley - Streamlines way script obtains date information -
 #                             pulls from $PDY rather than copying a file to the working directory
 # 2013-09-30  Matthew Pyle - Broken out from prelim job (non-RAP prelim job now in three distinct pieces)
+# 2016-10-19  Matthew Pyle - Changes to use 6 h old GFS when needed
 
 set -x
 
@@ -42,6 +43,16 @@ mstart=`echo $PDY | cut -c5-6`
 dstart=`echo $PDY | cut -c7-8`
 
 start=$ystart$mstart$dstart$cyc
+
+let cycold=cyc-6
+
+if [ $cycold -lt 0 ]
+then
+let cycold=cycold+24
+fi
+
+typeset -Z2 cycold
+echo cycold is $cycold
 
 int1=`$NDATE +12 $start`
 yyint1=`echo $int1 | cut -c1-4`
@@ -73,9 +84,11 @@ yend=`echo $end | cut -c1-4`
 mend=`echo $end | cut -c5-6`
 dend=`echo $end | cut -c7-8`
 
-whr=00
+whr=06
 count=0
-last=$LENGTH
+last=${LENGTH}
+let last=last+6
+echo last is $last
 incr=3
 
 #
@@ -107,18 +120,23 @@ mkdir -p $DATA/run_ungrib_2
 mkdir -p $DATA/run_ungrib_3
 mkdir -p $DATA/run_ungrib_4
 
-if [ $NEST = 'conusmem2' -o $NEST = 'akmem2' -o $NEST = 'himem2' -o $NEST = 'prmem2' ]
+if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != "prmem2" ]
 then
-
-mod=nam
-type=awp151
-suf=".tm00.grib2"
-
-else
 
 mod=gfs
 type=pgrb2.0p50.f0
+type=pgrb2.0p25.f0
 suf=""
+
+else
+
+mod=nam
+type=awp151
+
+# suf=".tm01.grib2"
+suf=".tm00.grib2"
+
+sufold=".tm00.grib2"
 
 fi
 
@@ -131,18 +149,19 @@ if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != 
 then
 
 icnt=0
-while [ ! -e ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} ]
+
+while [ ! -e ${COMINgfs}/${mod}.t${cycold}z.${type}${whr} ]
 do
   sleep 10
   if [ $icnt -gt 90 ]; then 
-    msg="FATAL ERROR: ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} STILL NOT AVAILABLE after 15 minutes waiting."
+    msg="FATAL ERROR: ${COMINgfs}/${mod}.t${cycold}z.${type}${whr} STILL NOT AVAILABLE after 15 minutes waiting."
     export err=911; err_chk
    else 
      icnt=$((icnt + 1))
    fi 
 done
 
-cp ${COMINgfs}/${mod}.t${cyc}z.${type}${whr} $DATA/.
+cp ${COMINgfs}/${mod}.t${cycold}z.${type}${whr} $DATA/.
   export err1=$?
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.GFS  $DATA/run_ungrib_2/Vtable 
@@ -156,19 +175,30 @@ else
 echo mem2 branch
 
 icnt=0
-while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} ]
+#prod while [ ! -e ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} ]
+while [ ! -e ${COMINnamx}/${mod}.t${cyc}z.${type}00${suf} ]
 do
   sleep 10
   if [ $icnt -gt 90 ]; then 
-    msg="FATAL ERROR: ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} STILL NOT AVAILABLE after 15 minutes waiting."
+    msg="FATAL ERROR: ${COMINnamx}/${mod}.t${cyc}z.${type}00${suf} STILL NOT AVAILABLE after 15 minutes waiting."
     export err=911; err_chk
    else 
      icnt=$((icnt + 1))
    fi 
 done
 
-cp ${COMINnam}/${mod}.t${cyc}z.${type}${whr}${suf} $DATA/.
+if [ $whr = "06" ]    # first time
+then
+# cp ${COMINnamx}/${mod}.t${cyc}z.${type}01${suf}  $DATA/.   # get f01 from tm01
+cp ${COMINnamx}/${mod}.t${cyc}z.${type}00${suf}  $DATA/.   # get f00 from tm00
+#prod cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+
+else
+cp ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+#prod cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+fi
   export err1=$?
+
   cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_1/Vtable 
   cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_2/Vtable 
   cp $PARMhiresw/hiresw_Vtable.NAM  $DATA/run_ungrib_3/Vtable 
@@ -237,30 +267,64 @@ done
 
 ### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
+if [ $NEST != "conusmem2" -a  $NEST != "akmem2" -a $NEST != "himem2" -a  $NEST != "prmem2" ]
+then
+
+
+mv ${mod}.t${cycold}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}15${suf} ./run_ungrib_1/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_1/GRIBFILE.AAE
+
+mv ${mod}.t${cycold}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}27${suf} ./run_ungrib_2/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_2/GRIBFILE.AAE
+
+mv ${mod}.t${cycold}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}39${suf} ./run_ungrib_3/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_3/GRIBFILE.AAE
+
+mv ${mod}.t${cycold}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}51${suf} ./run_ungrib_4/GRIBFILE.AAD
+mv ${mod}.t${cycold}z.${type}54${suf} ./run_ungrib_4/GRIBFILE.AAE
+
+else
+
+echo other branch using NAM...only partially cyc old
 
 mv ${mod}.t${cyc}z.${type}00${suf} ./run_ungrib_1/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}03${suf} ./run_ungrib_1/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_1/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}09${sufold} ./run_ungrib_1/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}12${sufold} ./run_ungrib_1/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}15${sufold} ./run_ungrib_1/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}18${sufold} ./run_ungrib_1/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}12${suf} ./run_ungrib_2/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}15${suf} ./run_ungrib_2/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}18${suf} ./run_ungrib_2/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}21${suf} ./run_ungrib_2/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_2/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}18${sufold} ./run_ungrib_2/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}21${sufold} ./run_ungrib_2/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}24${sufold} ./run_ungrib_2/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}27${sufold} ./run_ungrib_2/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}30${sufold} ./run_ungrib_2/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}24${suf} ./run_ungrib_3/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}27${suf} ./run_ungrib_3/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}30${suf} ./run_ungrib_3/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}33${suf} ./run_ungrib_3/GRIBFILE.AAD
-cp ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_3/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}30${sufold} ./run_ungrib_3/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}33${sufold} ./run_ungrib_3/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}36${sufold} ./run_ungrib_3/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}39${sufold} ./run_ungrib_3/GRIBFILE.AAD
+cp ${mod}.t${cycold}z.${type}42${sufold} ./run_ungrib_3/GRIBFILE.AAE
 
-mv ${mod}.t${cyc}z.${type}36${suf} ./run_ungrib_4/GRIBFILE.AAA
-mv ${mod}.t${cyc}z.${type}39${suf} ./run_ungrib_4/GRIBFILE.AAB
-mv ${mod}.t${cyc}z.${type}42${suf} ./run_ungrib_4/GRIBFILE.AAC
-mv ${mod}.t${cyc}z.${type}45${suf} ./run_ungrib_4/GRIBFILE.AAD
-mv ${mod}.t${cyc}z.${type}48${suf} ./run_ungrib_4/GRIBFILE.AAE
+mv ${mod}.t${cycold}z.${type}42${sufold} ./run_ungrib_4/GRIBFILE.AAA
+mv ${mod}.t${cycold}z.${type}45${sufold} ./run_ungrib_4/GRIBFILE.AAB
+mv ${mod}.t${cycold}z.${type}48${sufold} ./run_ungrib_4/GRIBFILE.AAC
+mv ${mod}.t${cycold}z.${type}51${sufold} ./run_ungrib_4/GRIBFILE.AAD
+mv ${mod}.t${cycold}z.${type}54${sufold} ./run_ungrib_4/GRIBFILE.AAE
+
+
+fi
 
 pwd
 
@@ -271,10 +335,10 @@ cd $DATA
 rm -rf poescript
 
 echo "#!/bin/bash" > poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 2 &" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 1 &" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 3 &" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $NEST $MODEL $cyc $envir 4 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 2 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 1 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 3 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 4 &" >> poescript
 echo "wait" >> poescript
 
 chmod 775 $DATA/poescript
@@ -284,8 +348,8 @@ export MP_LABELIO=YES
 export MP_INFOLEVEL=3
 export MP_STDOUTMODE=ordered
 
-export pgm=hiresw_wps_ungrib_gen.sh
-#./poescript
+export pgm=hiresw_wps_ungrib_gen.sh_offset
+# ./poescript
 aprun -n 1 -N 1 -d $NTASK ./poescript
 export err=$?; err_chk
 
