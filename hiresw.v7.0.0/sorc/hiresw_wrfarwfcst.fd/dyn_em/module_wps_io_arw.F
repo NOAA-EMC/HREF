@@ -2311,6 +2311,8 @@ end subroutine retrieve_field
 
         IF (RAP) THEN
 
+        flag_soil_levels=1
+
 ! binary write of field: LANDSEA 
        read(47) dumdata(:,:,1:1) ! ignored
 
@@ -2516,6 +2518,7 @@ end subroutine retrieve_field
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%soilm010(I,J)=dumdata(I,J,1)
+           if (grid%soilm010(I,J) .lt. .01) grid%soilm010(I,J)=0.01
          ENDDO
         ENDDO
         write(0,*) 'grid%soilm010(its+5,jts+5): ', grid%soilm010(its+5,jts+5)
@@ -2525,6 +2528,7 @@ end subroutine retrieve_field
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%soilm004(I,J)=dumdata(I,J,1)
+           if (grid%soilm004(I,J) .lt. .01) grid%soilm004(I,J)=0.01
          ENDDO
         ENDDO
 
@@ -2533,6 +2537,7 @@ end subroutine retrieve_field
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%soilm001(I,J)=dumdata(I,J,1)
+           if (grid%soilm001(I,J) .lt. .01) grid%soilm001(I,J)=0.01
          ENDDO
         ENDDO
         endif
@@ -2542,6 +2547,7 @@ end subroutine retrieve_field
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%soilm000(I,J)=dumdata(I,J,1)
+           if (grid%soilm000(I,J) .lt. .01) grid%soilm000(I,J)=0.01
          ENDDO
         ENDDO
 
