@@ -335,10 +335,10 @@ cd $DATA
 rm -rf poescript
 
 echo "#!/bin/bash" > poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 2 &" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 1 &" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 3 &" >> poescript
-echo "$USHhiresw/hiresw_wps_ungrib_gen.sh_offset $MODEL 4 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $MODEL 2 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $MODEL 1 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $MODEL 3 &" >> poescript
+echo "$USHhiresw/hiresw_wps_ungrib_gen.sh $MODEL 4 &" >> poescript
 echo "wait" >> poescript
 
 chmod 775 $DATA/poescript
