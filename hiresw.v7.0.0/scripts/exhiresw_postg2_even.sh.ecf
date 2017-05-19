@@ -259,12 +259,25 @@ elif [ $MODEL = arw ] ; then
 
 export POSTMOD=NCAR
 
-count=0
-while [ ! -e $INPUT_DATA/fcstdone${fhr}.${tmmark} -a $count -lt 200 ]
+looplim=45
+loop=1
+while [ $loop -le $looplim ]
 do
-sleep 3
-let count=count+1
+ echo in while
+ if [ -s $INPUT_DATA/fcstdone${fhr}.${tmmark} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $INPUT_DATA/fcstdone${fhr}.${tmmark}"
+   err_exit $msg
+ fi
 done
+
 
 # cat > itag <<EOF
 # $INPUT_DATA/wrfout_d01_${timeform}
@@ -289,9 +302,23 @@ else
 
 export POSTMOD=NMM
 
-while [ ! -e $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
+looplim=45
+loop=1
+while [ $loop -le $looplim ]
 do
-sleep 3
+ echo in while
+ if [ -s $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $INPUT_DATA/fcstdone.01.00${fhr}h_00m_00.00s"
+   err_exit $msg
+ fi
 done
 
 # cat > itag <<EOF
