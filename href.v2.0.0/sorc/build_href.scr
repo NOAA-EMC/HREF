@@ -2,7 +2,7 @@
 
 module purge
 
-module load ../modulefiles/HREF/v1.1.0_luna
+module load ../modulefiles/HREF/v2.0.0
 
 module list
 
