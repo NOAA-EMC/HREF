@@ -164,7 +164,7 @@ wdate=$wyr$wmn$wdy$whr
 
 timeform=$STARTDATE
 
-if [ $NEST = pr -o $NEST = guam -o $NEST = hi ] ; then
+if [ $NEST = pr -o $NEST = guam -o $NEST = hi -o $NEST = prmem2 -o $NEST = himem2 ] ; then
  if [ $MODEL = nmmb ] ; then
     cp $PARMhiresw/hiresw_nmmb_cntrl.parm.xml_small postcntrl.xml
  else
