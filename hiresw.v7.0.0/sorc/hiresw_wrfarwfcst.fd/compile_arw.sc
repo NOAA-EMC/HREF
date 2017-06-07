@@ -20,6 +20,8 @@ cp configure.wrf_wcoss configure.wrf
 
 cp ./main/real.exe $TARGDIR/hiresw_arw_real
 cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
+cp ./main/real.exe $TARGDIR/hiresw_wrfarwfcst_init
+cp ./main/wrf.exe  $TARGDIR/hiresw_wrfarwfcst
 
 ############################
 
