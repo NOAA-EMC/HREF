@@ -8,9 +8,7 @@ BASE=`pwd`
 ##############################
 
 cd ${BASE}/hiresw_wrfarwfcst.fd
-
 clean -a
-
 
 ##############################
 
@@ -55,9 +53,7 @@ make clean
 ##############################
 
 cd ${BASE}/hiresw_sndp.fd
-make -f makefile_nmm clean
-make -f makefile_em clean
-make -f makefile_em_mem2 clean
+make clean
 
 ##############################
 
