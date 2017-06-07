@@ -46,9 +46,11 @@ start=$ystart$mstart$dstart$cyc
 
 let cycold=cyc-6
 
-if [ $cycold -lt 0 ]
+echo first cycold is $cycold
+
+if [ $cycold = "-6" ]
 then
-let cycold=cycold+24
+cycold=18
 fi
 
 typeset -Z2 cycold
