@@ -178,11 +178,11 @@ echo mem2 branch
 
 icnt=0
 #prod while [ ! -e ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} ]
-while [ ! -e ${COMINnamx}/${mod}.t${cyc}z.${type}00${suf} ]
+while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}00${suf} ]
 do
   sleep 10
   if [ $icnt -gt 90 ]; then 
-    msg="FATAL ERROR: ${COMINnamx}/${mod}.t${cyc}z.${type}00${suf} STILL NOT AVAILABLE after 15 minutes waiting."
+    msg="FATAL ERROR: ${COMINnam}/${mod}.t${cyc}z.${type}00${suf} STILL NOT AVAILABLE after 15 minutes waiting."
     export err=911; err_chk
    else 
      icnt=$((icnt + 1))
@@ -191,12 +191,11 @@ done
 
 if [ $whr = "06" ]    # first time
 then
-# cp ${COMINnamx}/${mod}.t${cyc}z.${type}01${suf}  $DATA/.   # get f01 from tm01
-cp ${COMINnamx}/${mod}.t${cyc}z.${type}00${suf}  $DATA/.   # get f00 from tm00
+cp ${COMINnam}/${mod}.t${cyc}z.${type}00${suf}  $DATA/.   # get f00 from tm00
 #prod cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
 
 else
-cp ${COMINnamxold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
+cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
 #prod cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
 fi
   export err1=$?
