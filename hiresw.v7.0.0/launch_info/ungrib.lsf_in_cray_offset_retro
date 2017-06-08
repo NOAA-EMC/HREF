@@ -50,11 +50,11 @@ echo CYCgfs $CYCgfs
 
 export COMINgfs=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
 
-export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
-export COMINnamold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
+# export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
+# export COMINnamold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
 
-export COMINnamx=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
-export COMINnamxold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATEgfs}
+export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
+export COMINnamold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATEgfs}
 
 
 # export COMINgfs=/gpfs/hps/ptmp/Matthew.Pyle/com/gfs/prod/gfs.${DATE}
