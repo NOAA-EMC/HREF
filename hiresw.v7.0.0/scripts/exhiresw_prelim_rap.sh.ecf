@@ -355,7 +355,7 @@ cp $FIXhiresw/hiresw_tr67t85 tr67t85
 if [ $MODEL != nmmb ]
 then
 
-export pgm=hiresw_${MODEL}_real
+export pgm=hiresw_${MODEL}_init
 . prep_step
 
 startmsg
@@ -364,7 +364,8 @@ export MP_PGMMODEL=spmd
 unset MP_CMDFILE
 
 #mpirun.lsf $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
-aprun -n $NTASK -N $PTILE $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+# aprun -n $NTASK -N $PTILE $EXEChiresw/hiresw_${MODEL}_real > $pgmout 2>&1
+aprun -n $NTASK -N $PTILE $EXEChiresw/hiresw_wrfarwfcst_init > $pgmout 2>&1
 
 export err=$?
 err_chk
