@@ -13,20 +13,19 @@ BASE=`pwd`
 
 ##############################
 
-
 cd ${BASE}/hiresw_wrfarwfcst.fd
 ./compile_arw.sc
-./compile_arw.sc_noclean
+# ./compile_arw.sc_noclean
 
 echo hiresw_wrfarwfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ##############################
 
-
 cd ${BASE}/hiresw_bucket.fd
 make
 
 echo hiresw_bucket.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 ##############################
 
 cd ${BASE}/hiresw_wrfbufr.fd
@@ -35,13 +34,13 @@ make clean
 make
 
 echo hiresw_wrfbufr.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 ##############################
 
 cd ${BASE}/hiresw_wps.fd
 ./build.scr
 
 echo hiresw_wps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 
 ##############################
 
@@ -58,9 +57,7 @@ cd ${BASE}/hiresw_nps.fd/NPS/
  
 echo hiresw_nps.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-
 ##############################
-
 
 module load iobuf/2.0.7
 cd ${BASE}/hiresw_smartinitg2.fd
@@ -78,6 +75,7 @@ make clean
 make
 
 echo hiresw_smartprecipg2.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 ##############################
 
 cd ${BASE}/hiresw_coldstart.fd
@@ -85,12 +83,14 @@ make clean
 make
 
 echo hiresw_coldstart.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 ##############################
 
 cd ${BASE}/hiresw_sndp.fd
 make 
 
 echo hiresw_sndp.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 ##############################
 
 cd ${BASE}/hiresw_stnmlist.fd
@@ -98,8 +98,8 @@ make clean
 make
 
 echo hiresw_stnmlist.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-##############################
 
+##############################
 
 cd ${BASE}/hiresw_nmmbfcst.fd/src
 gmake clean
