@@ -17,9 +17,8 @@ TARGDIR=../../exec
 cp configure.wrf_wcoss configure.wrf
 
 ./compile -j4 em_real > compile_arw_fast.log 2>&1
+./compile -j4 em_real > compile_arw_fastrealbonus.log 2>&1
 
-cp ./main/real.exe $TARGDIR/hiresw_arw_real
-cp ./main/wrf.exe  $TARGDIR/hiresw_arw_fcst
 cp ./main/real.exe $TARGDIR/hiresw_wrfarwfcst_init
 cp ./main/wrf.exe  $TARGDIR/hiresw_wrfarwfcst
 
