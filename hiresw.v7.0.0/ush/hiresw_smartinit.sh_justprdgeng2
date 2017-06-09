@@ -646,26 +646,14 @@ fi
       $GRB2INDEX WRFPRS${fhr}.tm00 WRFPRS${fhr}i.tm00.temp
        export err=$?; err_chk
 
-#	err1=$?
-#	if [ $err1 -ne 0 ]
-#	then
-#	echo trouble running grb2index on WRFPRS${fhr}.tm00
-#	fi
 	$FSYNC WRFPRS${fhr}i.tm00.temp
 	mv WRFPRS${fhr}i.tm00.temp WRFPRS${fhr}i.tm00
 
       $GRB2INDEX WRFPRS${FHRFRQ}.tm00 WRFPRS${FHRFRQ}i.tm00.temp
        export err=$?; err_chk
-#	err1=$?
-#	if [ $err1 -ne 0 ]
-#	then
-#	echo trouble running grb2index on WRFPRS${FHRFRQ}.tm00
-#	fi
 	$FSYNC WRFPRS${FHRFRQ}i.tm00.temp WRFPRS${FHRFRQ}i.tm00
 	mv WRFPRS${FHRFRQ}i.tm00.temp WRFPRS${FHRFRQ}i.tm00
 	
-
-
       export pgm=nam_smartprecip; . prep_step
       lnsf "WRFPRS${FHRFRQ}.tm00"  fort.13  
       lnsf "WRFPRS${FHRFRQ}i.tm00" fort.14

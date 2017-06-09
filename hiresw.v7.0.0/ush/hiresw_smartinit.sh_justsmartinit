@@ -576,10 +576,6 @@ fi
 
 sleep 2 # safety sleep
 
-echo START env AT CALL OF g2 script
-env
-echo END env AT CALL OF g2 script
-
 echo RUNTYP is $RUNTYP
 
 if [ $RUNTYP != "conusmem2arw" -a $RUNTYP != "akmem2arw" -a $RUNTYP != "himem2arw" -a $RUNTYP != "prmem2arw" ]
