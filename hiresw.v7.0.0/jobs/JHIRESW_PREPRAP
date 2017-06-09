@@ -49,7 +49,6 @@ setpdy.sh
 
 export COMOUT=${COMOUT:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
 export GESINnam=${GESINnam:-${GESROOTp2:?}/prod/nam.${PDY}}
-export GESINnamx=${GESINnamx:-${GESROOTp2:?}/prod/nam.${PDY}}
 export COMINrap=${COMINrap:-${COMROOTp2:?}/rap/prod/rap.${PDY}}
 export COMINhur=${COMINhur:-$(compath.py hur/prod/inpdata)}
 

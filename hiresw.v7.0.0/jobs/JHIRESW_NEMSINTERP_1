@@ -48,7 +48,6 @@ setpdy.sh
 
 export COMOUT=${COMOUT:-${COMROOT:?}/${NET}/${envir}/${RUN}.${PDY}}
 export GESINnam=${GESINnam:-${GESROOTp2:?}/prod/nam.${PDY}}
-export GESINnamx=${GESINnamx:-${GESROOTp2:?}/prod/nam.${PDY}}
 
 mkdir -p -m 775 $COMOUT
 

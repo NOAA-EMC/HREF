@@ -55,7 +55,7 @@ mkdir -p $PCOM
 ########################################################
 # Run the ex-script
 #
-$HOMEhiresw/scripts/exhiresw_awips.sh.ecf_singleconus
+$HOMEhiresw/scripts/exhiresw_awips.sh.ecf
 #
 ########################################################
 
