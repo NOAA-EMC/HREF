@@ -64,13 +64,7 @@ fhrend=47
 while [ $fhr -le $fhrend ]
 do
 
-# if [ ${fhr}%2 -eq 0 ]
-# then
-# incr=1
-# else
 incr=2
-# fi
-
 
 if [ -e postdone${fhr} ]
 then
@@ -172,7 +166,7 @@ wdate=$wyr$wmn$wdy$whr
 
 timeform=$STARTDATE
 
-if [ $NEST = pr -o $NEST = guam -o $NEST = hi ] ; then
+if [ $NEST = pr -o $NEST = guam -o $NEST = hi -o $NEST = prmem2 -o $NEST = himem2 ] ; then
  if [ $MODEL = nmmb ] ; then
     cp $PARMhiresw/hiresw_nmmb_cntrl.parm.xml_small postcntrl.xml
  else
@@ -351,8 +345,26 @@ export pgm=hiresw_${MODEL}_post
 
 export FORT_BUFFERED=true
 
-# mpirun.lsf $EXEChiresw/ncep_post < itag  > $pgmout 2>errfile
-#mpirun.lsf $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
+echo RUNLOC $RUNLOC
+
+if [ $RUNLOC = "conusarw"  ]
+then
+ export MPICH_RANK_REORDER_METHOD=3
+ cp $FIXhiresw/hiresw_post_rank_order_22task MPICH_RANK_ORDER
+elif [ $RUNLOC = "conusmem2arw" ]
+then
+ export MPICH_RANK_REORDER_METHOD=3
+ cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
+elif [ $RUNLOC = "akarw" ]
+then
+ export MPICH_RANK_REORDER_METHOD=3
+ cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
+elif [ $RUNLOC = "akmem2arw" ]
+then
+ export MPICH_RANK_REORDER_METHOD=3
+ cp $FIXhiresw/hiresw_post_rank_order_16task MPICH_RANK_ORDER
+fi
+
 aprun -n $NTASK -N $PTILE  $EXEChiresw/hiresw_post < itag  > $pgmout 2>errfile
 export err=$?;err_chk
 

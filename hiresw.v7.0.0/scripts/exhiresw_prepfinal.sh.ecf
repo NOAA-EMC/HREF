@@ -78,68 +78,11 @@ hend=`echo $end | cut -c9-10`
 
 ### this could be generalized and simplified
 
-if [ $NEST = "pr" ] ; then
+if [ $NEST = "pr" -o $NEST = "prmem2" -o $NEST = "hi" -o  $NEST = "himem2" -o \
+     $NEST = "guam" -o $NEST = "ak" -o $NEST = "conus" -o "conusmem2"  -o $NEST = "akmem2"  ] ; then
 
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_pr_model namelist.input_in_model
-fi
-
-elif [ $NEST = "prmem2" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_prmem2 namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_prmem2_model namelist.input_in_model
-fi
-
-elif [ $NEST = "hi" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_hi_model namelist.input_in_model
-fi
-
-elif [ $NEST = "himem2" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_himem2 namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_himem2_model namelist.input_in_model
-fi
-
-elif [ $NEST = "guam" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_guam_model namelist.input_in_model
-fi
-
-elif [ $NEST = "ak" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_ak_model namelist.input_in_model
-fi
-
-elif [ $NEST = "conus" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conus_model namelist.input_in_model
-fi
-
-elif [ $NEST = "conusmem2" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusmem2 namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_conusmem2_model namelist.input_in_model
-fi
-
-elif [ $NEST = "akmem2" ] ; then
-
-if [ $MODEL = "arw" ]; then
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_akmem2 namelist.input_in
-  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_akmem2_model namelist.input_in_model
-fi
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_${NEST} namelist.input_in
+  cp $PARMhiresw/hiresw_${MODEL}_namelist.input_in_${NEST}_model namelist.input_in_model
 
 else
 

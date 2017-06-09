@@ -184,35 +184,26 @@ cp input_domain_01_nemsio $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.input_domain_0
 
 # NAM nmmb file with the land states you want
 
-# make sure 00 h NAM restart file exists; 
-# use 1 h forecast from tm01 if it does not
-# use GDAS cold started analysis as last resort
 
+# first try to use:
 # nam.t??z.nmm_b_restart_nemsio.tm01 (1 h forecast valid at tm00)
+
+# if that is not found, utilize 1 h old file
 # nam.t??z.nmm_b_restart_nemsio_anl.tm01 (valid at tm01)
 
-### needs to be cleaned up for para NAM when becomes ops
-
+# nam.t00z.nmm_b_restart_nemsio.tm01
+# nam.t00z.nmm_b_restart_nemsio_anl.tm01
 if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 ]
 then
-#  INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
   INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01"
 else
-  if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 ]
-  then
-    INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01"
-  else
-    if [ -e $GESINnam/nam.t${cyc}z.input_domain_01_nemsio.anl.tm00 ]
-    then
-      INPUT_FILE="$GESINnam/nam.t${cyc}z.input_domain_01_nemsio.anl.tm00"
-    elif [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 ]
+    if [ -e $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm01 ]
      then
-      INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00"
+      INPUT_FILE="$GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm01"
     else
-      msg="FATAL ERROR: NEITHER $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm00 NOR $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 NOR $GESINnam/nam.t${cyc}z.input_domain_01_nemsio.anl.tm00 EXIST!"
+      msg="FATAL ERROR: NEITHER $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio.tm01 NOR $GESINnam/nam.t${cyc}z.nmm_b_restart_nemsio_anl.tm01 EXISTS!"
       err_exit $msg
     fi
-  fi
 fi
 
 INPUT_FILE_TYPE="nems"

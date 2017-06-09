@@ -261,7 +261,6 @@ cp $PARMhiresw/hiresw_ocean.configure           ocean.configure
 
 ####
 #
-# cp $PARMhiresw/hiresw_solver_state_new.txt          solver_state.txt
 cp $PARMhiresw/hiresw_solver_state.txt          solver_state.txt
 #
 ####
@@ -323,83 +322,52 @@ fi
 fi
 
 
-export pgm=hiresw_${MODEL}_fcst
+if [ $MODEL == "arw" ]
+then
+export pgm=hiresw_wrfarwfcst
+else
+export pgm=hiresw_nmmbfcst
+fi
+
 . prep_step
 
 export FORT_BUFFERED=true
 
 
+# define default runline option, which will be overridden
+# for certain large domain runs
+
 if [ $MODEL = "nmmb" ]; then
-#    cp $EXEChiresw/hiresw_nmmbfcst_new ./hiresw_nmmbfcst
     cp $EXEChiresw/hiresw_nmmbfcst ./hiresw_nmmbfcst
     runline="aprun -n $NTASK -N $PTILE ./hiresw_nmmbfcst"
 else
-#    cp $EXEChiresw/hiresw_${MODEL}_fcst .
     cp $EXEChiresw/hiresw_wrfarwfcst .
-#    runline="aprun -n $NTASK -N $PTILE ./hiresw_${MODEL}_fcst"
     runline="aprun -n $NTASK -N $PTILE ./hiresw_wrfarwfcst"
 fi
 
 if [ $RUNLOC = "conusarw" ]
 then
-#export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 756/24 24/24 24/6`"
-# runline="aprun -n 1728 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
-# runline="aprun -n 2016 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 6 ./hiresw_${MODEL}_fcst"
-#was runline="aprun -n 1920 -N 24 ./hiresw_${MODEL}_fcst : -n 96 -N 12 ./hiresw_${MODEL}_fcst"
-# runline="aprun -n 1440 -N 24 ./hiresw_${MODEL}_fcst : -n 96 -N 12 ./hiresw_${MODEL}_fcst"
-runline="aprun -n 1440 -N 24 ./hiresw_wrfarwfcst : -n 96 -N 12 ./hiresw_wrfarwfcst"
-
+#was runline="aprun -n 1920 -N 24 ./hiresw_wrfarwfcst : -n 96 -N 12 ./hiresw_wrfarwfcst"
+ runline="aprun -n 1440 -N 24 ./hiresw_wrfarwfcst : -n 96 -N 12 ./hiresw_wrfarwfcst"
 elif [ $RUNLOC = "conusmem2arw" ]
 then
-# runline="aprun -n 912 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 8 ./hiresw_${MODEL}_fcst"
-# runline="aprun -n 1104 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 8 ./hiresw_${MODEL}_fcst"
-#runline="aprun -n 1200 -N 24 ./hiresw_${MODEL}_fcst : -n 96 -N 12 ./hiresw_${MODEL}_fcst"
-runline="aprun -n 1200 -N 24 ./hiresw_wrfarwfcst : -n 96 -N 12 ./hiresw_wrfarwfcst"
-
+ runline="aprun -n 1200 -N 24 ./hiresw_wrfarwfcst : -n 96 -N 12 ./hiresw_wrfarwfcst"
 elif [ $RUNLOC = "conusnmmb" ]
 then
-#export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 624/24 48/16`"
-# runline="aprun -n 1800 -N 24 ./hiresw_nmmbfcst : -n 24 -N 6 ./hiresw_nmmbfcst"
-# runline="aprun -n 1600 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
-# runline="aprun -n 1536 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
-runline="aprun -n 880 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
-# runline="aprun -n 2100 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
-# runline="aprun -n 2880 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
-
+ runline="aprun -n 880 -N 24 ./hiresw_nmmbfcst : -n 40 -N 10 ./hiresw_nmmbfcst"
 elif [ $RUNLOC = "akarw" ]
 then
-# runline="aprun -n 1140 -N 24 ./hiresw_${MODEL}_fcst : -n 60 -N 10 ./hiresw_${MODEL}_fcst"
-runline="aprun -n 1140 -N 24 ./hiresw_wrfarwfcst : -n 60 -N 10 ./hiresw_wrfarwfcst"
-
+ runline="aprun -n 1140 -N 24 ./hiresw_wrfarwfcst : -n 60 -N 10 ./hiresw_wrfarwfcst"
 elif [ $RUNLOC = "akmem2arw" ]
 then
-# runline="aprun -n 768 -N 24 ./hiresw_${MODEL}_fcst : -n 24 -N 12 ./hiresw_${MODEL}_fcst : -n 24 -N 8 ./hiresw_${MODEL}_fcst" 
-runline="aprun -n 768 -N 24 ./hiresw_wrfarwfcst : -n 24 -N 12 ./hiresw_wrfarwfcst : -n 24 -N 8 ./hiresw_wrfarwfcst" 
-
+ runline="aprun -n 768 -N 24 ./hiresw_wrfarwfcst : -n 24 -N 12 ./hiresw_wrfarwfcst : -n 24 -N 8 ./hiresw_wrfarwfcst" 
 fi
 
 startmsg
 
-#if [ $MODEL = "nmmb" ]
-#then
-
-#cp $EXEChiresw/hiresw_nmmbfcst .
-#mpirun.lsf ./hiresw_nmmbfcst
-#export err=$?;err_chk
-
-#else
-
-#cp $EXEChiresw/hiresw_${MODEL}_fcst .
-#mpirun.lsf ./hiresw_${MODEL}_fcst
-#export err=$?;err_chk
-
-#cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 > $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.fcst.log
-#cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >>$pgmout
-
-#fi
-
 $runline
 export err=$?;err_chk
+
 if [ $MODEL != "nmmb" ] ; then
     cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 > $COMOUT/hiresw.t${cyc}z.${NEST}${MODEL}.fcst.log
     cat $DATA/rsl.error.0000 $DATA/rsl.out.0000 >>$pgmout
