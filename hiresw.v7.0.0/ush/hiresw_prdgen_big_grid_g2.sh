@@ -186,8 +186,6 @@ use_3h=1
 elif [ $fhr%3 -eq 0 ]
 then
 
-echo "here for 3hrly beyond f00 with DOMIN_SMALL" $DOMIN_SMALL
-
 if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
 then
 cp $PARMhiresw/hiresw_ndfd.txt_3h_conus_${subpiece} hiresw_grid_extract.txt
@@ -198,10 +196,6 @@ fi
 use_3h=1
 
 else
-
-
-echo here not three hourly and not zero
-
 
 
 if [ $DOMIN_SMALL = "conus" -o  $DOMIN_SMALL = "conusmem2" ]
@@ -401,9 +395,6 @@ then
 if [ $DOMIN_SMALL = "conus" -o $DOMIN_SMALL = "conusmem2" ] 
 then
 	echo COPYING f00 file to hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
-	echo where am I
-	pwd
-
        cp ${filenamthree}${fhr}.tm00 ${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2_${subpiece}
 else
        cp ${filenamthree}${fhr}.tm00 ${DATA}/hiresw.t${CYC}z.${model}_${gres}.f${fhr}.${DOMIN_SMALL}.grib2
@@ -422,8 +413,6 @@ valcheck=`echo $DOMIN_SMALL | cut -c1-5`
 
 if [ $subpiece = "1" -o $valcheck != "conus" ]
 then
-
-	echo here13 with subpiece $subpiece
 
 
 ### do one hour precip for everyone (arw,nmm)
