@@ -15,7 +15,7 @@ FFLAGS =        -fp-model strict -g -traceback -O3 -assume noold_ldout_format -g
 all:	clean href_get_prcip copy
 
 href_get_prcip:
-	$(FC) $(FFLAGS) -o $(@) href_get_prcip_combo.f $(LIBS)
+	$(FC) $(FFLAGS) -o $(@) href_get_prcip.f $(LIBS)
 clean:
 	/bin/rm   href_get_prcip
 copy:
