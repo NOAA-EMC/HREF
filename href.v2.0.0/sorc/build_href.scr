@@ -13,7 +13,7 @@ BASE=`pwd`
 #########################
 
 cd ${BASE}/href_get_prcip.fd
-make clean
+# make clean
 make href_get_prcip
 make copy
 make clean
