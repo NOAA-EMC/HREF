@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__CYC_.out
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__CYC_.err
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__NEST__CYC_.out
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__NEST__CYC_.err
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
