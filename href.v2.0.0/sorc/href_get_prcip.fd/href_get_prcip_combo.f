@@ -196,11 +196,6 @@ c      so use previously saved gfld_save
         ounit=50+nff
         call baopen(ounit,output,ierr)
 
-!!! believe this might not be correct
-!!!
-!!!
-!!! GEMPAK cannot unpack the resulting prcip file completely...date information in PDS
-!!! not correct?  Wants everything to be 3 h totals
 
 
 	write(0,*) 'setting gfld to gfld_save'
@@ -732,11 +727,6 @@ c      so use previously saved gfld_save
         ounit=50+nff
         call baopen(ounit,output,ierr)
 
-!!! believe this might not be correct
-!!!
-!!!
-!!! GEMPAK cannot unpack the resulting prcip file completely...date information in PDS
-!!! not correct?  Wants everything to be 3 h totals
 
 
 !!        Add a 1 h total for everyone
