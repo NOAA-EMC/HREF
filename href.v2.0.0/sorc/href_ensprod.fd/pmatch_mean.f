@@ -95,22 +95,10 @@
           vrbl_mn_pm(iplace,lv)=amax 
           ibound_max=ibound_max+1
 
-!         if(jpd1.eq.16.and.(jpd2.eq.195 
-!     &                 .or. jpd2.eq.196
-!     &                 .or. jpd2.eq.198)) then 
-
-!  	  write(0,*) 'REF iplace,amax,rawdata_1d,vrbl_mn: ', iplace,
-!     &         amax, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
-!          endif
-
-
          elseif (rawdata_1d(J) .lt. amin) then
 
           vrbl_mn_pm(iplace,lv)=amin
           ibound_min=ibound_min+1
-
-!	write(0,*) 'iplace, amin, rawdata_1d, vrbl_mn: ',iplace,
-!     &         amin, rawdata_1d(J),vrbl_mn_hold(iplace,lv)
 
          else
 
