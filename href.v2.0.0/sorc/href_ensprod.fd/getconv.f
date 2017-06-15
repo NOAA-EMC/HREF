@@ -74,7 +74,7 @@ c    for derived variables
         end if
          
 
-        do 400 i = 1, iens
+        iensloop: do i = 1, iens
 
          call readGB2(ipunit(i),jpdtnp,1,10,1,0,1,gfld,eps,ie)
 
@@ -82,7 +82,7 @@ c    for derived variables
            CNVP(:)=gfld%fld
           else
            miss(i)=1
-           goto 400
+           cycle iensloop
           end if
 
          call smooth_points(CNVP,CNVPSMTH,im,jm,mid,jf)
@@ -113,7 +113,7 @@ c    for derived variables
             CNV(igrid,i)=CNVapnt(i)
           end do
 
-  400    continue
+         end do iensloop
 
 
            do 30 lv=1,dPlvl(nv)
