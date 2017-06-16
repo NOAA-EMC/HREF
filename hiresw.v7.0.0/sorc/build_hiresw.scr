@@ -15,7 +15,6 @@ BASE=`pwd`
 
 cd ${BASE}/hiresw_wrfarwfcst.fd
 ./compile_arw.sc
-# ./compile_arw.sc_noclean
 
 echo hiresw_wrfarwfcst.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -28,10 +27,14 @@ echo hiresw_bucket.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ##############################
 
+module load iobuf/2.0.7
+
 cd ${BASE}/hiresw_wrfbufr.fd
 make clean
 ./fill_wrflibs.scr
 make
+
+module unload iobuf/2.0.7
 
 echo hiresw_wrfbufr.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
