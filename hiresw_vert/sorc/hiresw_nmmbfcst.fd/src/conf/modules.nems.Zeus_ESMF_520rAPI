@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# This script is responsible for loading modules that are compatible with
-# the ESMF 5.2.0r API. ESMF releases 5.2.0r and later are backward compatible
-# with this API.
-
-module purge
-module load mpt intel esmf/5.2.0rp2
