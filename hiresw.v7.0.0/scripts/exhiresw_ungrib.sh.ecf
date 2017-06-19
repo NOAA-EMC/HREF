@@ -126,7 +126,6 @@ if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != 
 then
 
 mod=gfs
-type=pgrb2.0p50.f0
 type=pgrb2.0p25.f0
 suf=""
 
@@ -134,18 +133,13 @@ else
 
 mod=nam
 type=awp151
-
-# suf=".tm01.grib2"
 suf=".tm00.grib2"
-
 sufold=".tm00.grib2"
 
 fi
 
-
 while [ $whr -le $last ]
 do
-
 
 if [ $NEST != "conusmem2" -a $NEST != "akmem2" -a $NEST != "himem2" -a $NEST != "prmem2" ]
 then
@@ -177,7 +171,6 @@ else
 echo mem2 branch
 
 icnt=0
-#prod while [ ! -e ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} ]
 while [ ! -e ${COMINnam}/${mod}.t${cyc}z.${type}00${suf} ]
 do
   sleep 10
@@ -192,11 +185,8 @@ done
 if [ $whr = "06" ]    # first time
 then
 cp ${COMINnam}/${mod}.t${cyc}z.${type}00${suf}  $DATA/.   # get f00 from tm00
-#prod cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
-
 else
 cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
-#prod cp ${COMINnamold}/${mod}.t${cycold}z.${type}${whr}${sufold} $DATA/.
 fi
   export err1=$?
 
@@ -265,12 +255,10 @@ fi
 
 done
 
-
 ### Get the needed GRIB files into each of the four run_ungrib subdirectories
 
 if [ $NEST != "conusmem2" -a  $NEST != "akmem2" -a $NEST != "himem2" -a  $NEST != "prmem2" ]
 then
-
 
 mv ${mod}.t${cycold}z.${type}06${suf} ./run_ungrib_1/GRIBFILE.AAA
 mv ${mod}.t${cycold}z.${type}09${suf} ./run_ungrib_1/GRIBFILE.AAB
@@ -323,7 +311,6 @@ mv ${mod}.t${cycold}z.${type}45${sufold} ./run_ungrib_4/GRIBFILE.AAB
 mv ${mod}.t${cycold}z.${type}48${sufold} ./run_ungrib_4/GRIBFILE.AAC
 mv ${mod}.t${cycold}z.${type}51${sufold} ./run_ungrib_4/GRIBFILE.AAD
 mv ${mod}.t${cycold}z.${type}54${sufold} ./run_ungrib_4/GRIBFILE.AAE
-
 
 fi
 
