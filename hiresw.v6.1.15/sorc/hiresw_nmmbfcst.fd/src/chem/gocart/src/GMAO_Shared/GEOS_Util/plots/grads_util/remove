@@ -1,3 +1,0 @@
-#!/bin/csh -f
-if( -e $1 ) /bin/rm $1
-exit
