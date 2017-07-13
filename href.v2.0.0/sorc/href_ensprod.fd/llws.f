@@ -243,7 +243,8 @@ c          hsfc : sfc height
 
 609       llws=abs(sqrt((u2-u10)**2+(v2-v10)**2))
      &              /609.9
-          llws=llws*1.943*609.9                             !unit--> knot/2000ft
+!          llws=llws*1.943*609.9                             !unit--> knot/2000ft
+          llws=llws*609.9                             !unit--> m per s / 2000ft
 
      
        return
