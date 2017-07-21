@@ -1,11 +1,11 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_gempak.out__DOM__CORE__CYC_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_gempak.err__DOM__CORE__CYC_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_gempak.out__DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_gempak.err__DOM__CORE__CYC_
 ####BSUB -q "devhigh_shared"
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_GEMPAK
 #BSUB -P HRW-T2O
 #BSUB -W 2:39
-#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 ###BSUB -M 5000
 ####BSUB -R rusage[mem=5000]
 #BSUB -M 3000
@@ -14,12 +14,11 @@
 export MP_EUILIB=us
 
 module load prod_util
-# module use /gpfs/hps/nco/ops/nwtest/modulefiles
 module load grib_util/1.0.3
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
-export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export HOMEhiresw=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 
 export RUN_ENVIR=test
 export envir=test
@@ -42,9 +41,9 @@ export SENDDBN_GB2=NO
 export SENDECF=NO
 export SENDCOM=YES
 
-export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
-export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps3/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/nawips/$envir/${RUN}.${DATE}

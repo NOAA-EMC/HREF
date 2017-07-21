@@ -24,7 +24,7 @@ module load prod_util
 module load grib_util/1.0.3
 
 
-cd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/launch_info/
+cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/launch_info/
 
 which bsub
 
