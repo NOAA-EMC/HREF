@@ -1,10 +1,10 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__NEST___CYC_.out
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__NEST___CYC_.err
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__NEST___CYC_.out
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__NEST___CYC_.err
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
 #BSUB -M 3000
-#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 ####BSUB -extsched 'CRAYLINUX[]'
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 36*{select[craylinux && vnode]span[ptile=6] cu[type=cabinet]}'
 #BSUB -W 0:39
@@ -26,13 +26,13 @@ export OMP_NUM_THREADS=1
 module load prod_envir
 
 export COMROOT=/gpfs/hps/nco/ops/com
-export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
-export MYCOMROOTPERM=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps3/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
 # export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
-export COMINhireswx=/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
+export COMINhireswx=/gpfs/hps3/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
 export COMINnam=${COMROOTp1}/nam/prod/nam
 
 if [ -e /gpfs/gp2 ]
@@ -42,18 +42,18 @@ else
 export COMINnam=/gpfs/tp2/nco/ops/com/nam/prod/nam
 fi
 
-export PCOM=/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/awip
+export PCOM=/gpfs/hps3/ptmp/Matthew.Pyle/com/hiresw/awip
 
 mkdir -p $PCOM
 
-export COMINffg=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/ffg_input
+export COMINffg=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/ffg_input
 
 module load grib_util/1.0.3
 module load prod_util
 
 href_ver=`cat /u/$LOGNAME/href_para`
 
-export HOMEhref=/gpfs/hps/emc/meso/noscrub/$LOGNAME/href.${href_ver}
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 
 export SENDCOM=YES
 export SENDDBN=NO
@@ -62,16 +62,16 @@ ${HOMEhref}/jobs/JHREF_ENSPROD
 
 if [ $NEST = conus ]
 then
-bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC_.sh_para
+bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC_.sh_para
 elif [ $NEST = ak ]
 then
-bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__ak.sh_para
+bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__ak.sh_para
 elif [ $NEST = pr ]
 then
-bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__pr.sh_para
+bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__pr.sh_para
 elif [ $NEST = hi ]
 then
-bsub < /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__hi.sh_para
+bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__hi.sh_para
 fi
 
 # $HOMEhref/graphics/launch_href_plot _CYC_

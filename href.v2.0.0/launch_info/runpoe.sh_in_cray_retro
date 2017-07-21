@@ -25,8 +25,8 @@ export KEEPDATA=YES
 
 module load prod_envir
 
-export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 
 export DATE=_DATE_
 export DATEm1=_DATEm1_
@@ -34,22 +34,18 @@ export DATEm1=_DATEm1_
 export NEST=_DOM_
 
 export COMINhireswb=${COMROOT}/hiresw/prod/hiresw
-export COMINnamb=${COMROOTp2}/nam/prod/nam
 
-export COMINhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/opshiresw/hiresw
-export COMINhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com/hiresw/test/hiresw
-export COMINhireswx=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/com/hiresw/test/hiresw
-export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/opsnam/nam
-export COMINnamx=/gpfs/tp2/nco/ops/com/nam/para/nam
+export COMINhireswx=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
+export COMINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam
 
-export COMINffg=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/ffg_input
+export COMINffg=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/ffg_input
 
 module load grib_util
 module load prod_util
 
 href_ver=`cat /u/$LOGNAME/href_para`
 
-export HOMEhref=/gpfs/hps/emc/meso/noscrub/$LOGNAME/href.${href_ver}
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 
 export SENDCOM=YES
 
