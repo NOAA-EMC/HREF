@@ -1,10 +1,10 @@
 
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.out__DOM___CORE___CYC_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.err__DOM___CORE___CYC_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.out__DOM___CORE___CYC_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_prepfinal.err__DOM___CORE___CYC_
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_PREPFINAL
 #BSUB -W 0:18
-#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 18*{select[craylinux && vnode]span[ptile=6] cu[type=cabinet]}' rusage[mem=7000]
@@ -25,7 +25,7 @@ export OMP_NUM_THREADS=1
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
-export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export HOMEhiresw=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
 export envir=test
 export NET=hiresw
@@ -38,8 +38,8 @@ export MODEL=_CORE_
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps3/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}

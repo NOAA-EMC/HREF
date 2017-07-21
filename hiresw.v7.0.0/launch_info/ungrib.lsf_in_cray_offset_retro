@@ -1,9 +1,9 @@
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out__DOM___CORE_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err__DOM___CORE_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out__DOM___CORE_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err__DOM___CORE_
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_UNGRIB
 #BSUB -W 0:15
-#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}' rusage[mem=3000]
@@ -19,7 +19,7 @@ export OMP_NUM_THREADS=1
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
-export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export HOMEhiresw=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
 export envir=test
 export NET=hiresw
@@ -48,18 +48,18 @@ echo CYCgfs $CYCgfs
 # export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATEgfs}
 # export COMINnam=$COMROOTp1/nam/prod/nam.${DATE}
 
-export COMINgfs=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
+export COMINgfs=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
 
-# export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
-# export COMINnamold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
+export COMINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
+export COMINnamold=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/${DATEgfs}${CYCgfs}
 
-export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
-export COMINnamold=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATEgfs}
+# export COMINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
+# export COMINnamold=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATEgfs}
 
 
 # export COMINgfs=/gpfs/hps/ptmp/Matthew.Pyle/com/gfs/prod/gfs.${DATE}
-export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}

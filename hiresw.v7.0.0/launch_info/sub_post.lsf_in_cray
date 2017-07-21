@@ -1,11 +1,11 @@
 
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_post.out_DOM__CORE__CYC_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_post.err_DOM__CORE__CYC_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_post.out_DOM__CORE__CYC_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_post.err_DOM__CORE__CYC_
 #BSUB -J HIRESW_POST
 #BSUB -q "devhigh"
 #BSUB -P HRW-T2O
-#BSUB -W 1:29
-#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -W 1:49
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -M 3000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_POSTSPAN_] cu[type=cabinet]}'
 
@@ -31,7 +31,7 @@ export MP_EUILIB=us
 
 module list > ~/filename_postg2.launch 2>&1
 
-export HOMEhiresw=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export HOMEhiresw=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
 export RUN_ENVIR=test
 export envir=test
 export NET=hiresw
@@ -45,8 +45,8 @@ export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 
-export DATAROOT=/gpfs/hps/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps/ptmp/Matthew.Pyle/com
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps3/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
