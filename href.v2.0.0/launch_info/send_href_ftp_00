@@ -6,7 +6,7 @@
 #BSUB -M 1500
 #BSUB -J HREF_TRANS
 #BSUB -q "dev_transfer"
-#BSUB -cwd /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools
 #BSUB -n 1
 #BSUB -W 0:19
 
@@ -21,12 +21,12 @@ if [ -a .bashrc ]; then
    . ./.bashrc
 fi
 
-cd /gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/
+cd /gpfs/hps3/ptmp/Matthew.Pyle/com/hiresw/test/
 
 cyc=00
 doms="conus hi"
 
-export NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.5/exec/ndate
+export NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.12/exec/ndate
 
 cp /gpfs/hps/nco/ops/com/date/t${cyc}z .
 
