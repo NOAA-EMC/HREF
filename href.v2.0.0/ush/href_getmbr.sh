@@ -325,17 +325,10 @@ typeset -Z2 fcheckloc
 
 	echo "in HIRESWarw block"
 
-	if [ -e ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
-        then
-        ln -sf ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-        elif [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
+	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-        else
-        ln -sf ${COMINhiresw}.${day[$m]}/${dom}arw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/${dom}arw.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 	fi
 
 	echo ${dom}arw $m $ff
@@ -382,10 +375,10 @@ typeset -Z2 fcheckloc
 
       if [ ${file[$m]} = ${dom}'mem2arw' -a $fcst -le 48  ] ; then
 	echo ${dom}mem2arw check
-        if [ -e ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
+        if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
         then
-        ln -sf ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         fi
 
         echo ${dom}mem2arw $m $ff
@@ -430,17 +423,10 @@ typeset -Z2 fcheckloc
 
       if [ ${file[$m]} = ${dom}'nmmb' -a $fcst -le 48 ] ; then
 	echo "in HIRESWnmmb block"
-	if [ -e ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 ]
-        then
-        ln -sf ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhireswx}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-        elif [ -e  ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 ]
+	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 ]
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-        else
-        ln -sf ${COMINhiresw}.${day[$m]}/${dom}nmmb.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/${dom}nmmb.t${cycloc[$m]}z.awp5kmf${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 	fi
 
 	echo ${dom}nmmb $m $ff
