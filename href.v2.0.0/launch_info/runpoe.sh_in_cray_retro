@@ -34,7 +34,10 @@ export DATEm1=_DATEm1_
 export NEST=_DOM_
 
 export COMINhireswb=${COMROOT}/hiresw/prod/hiresw
+export COMINnam=${COMROOTp2}/nam/prod/nam
+export COMINnamx=${COMROOTp2}/nam/prod/nam
 
+export COMINhiresw=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
 export COMINhireswx=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
 export COMINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam
 
