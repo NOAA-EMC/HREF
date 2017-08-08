@@ -43,7 +43,7 @@ export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
 export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/gpfs/hps3/ptmp/Matthew.Pyle/com
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
 
 export DATA=${DATAROOT}/hiresw.nemsinterp_2_${NEST}_${MODEL}_${cyc}_${envir}
