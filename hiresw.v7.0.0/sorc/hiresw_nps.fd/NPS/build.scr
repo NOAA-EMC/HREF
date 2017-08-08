@@ -9,7 +9,7 @@ TARGDIR=../../../exec/
 cp configure.nps_wcoss_dmpara configure.nps
 
 ./compile nemsinterp
-./compile geogrid
+# ./compile geogrid
 
 cp nemsinterp.exe $TARGDIR/hiresw_nps_nemsinterp
 # cp geogrid.exe $TARGDIR/hiresw_nps_geogrid_util
