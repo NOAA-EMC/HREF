@@ -177,7 +177,8 @@ void c_fbseekset (int *iunit, uint64_t *seek, int *ierr)
    off_t seek_result;
    seek_result = lseek(*iunit, *seek, SEEK_SET);
    if ( seek_result != *seek ) {
-      fprintf(stderr," in c_fbseekset seek_result = %ld   seek = "PRIu64" \n", seek_result, *seek );
+     /* fprintf(stderr," in c_fbseekset seek_result = %ld   seek = "PRIu64" \n", seek_result, *seek ); */
+      fprintf(stderr," in c_fbseekset seek_result = %ld   seek = %llu \n", seek_result, *seek );
       *ierr = -1;
    } else {
       *ierr = 0;
