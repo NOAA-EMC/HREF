@@ -122,9 +122,9 @@ hh=`echo $time | cut -c9-10`
 ### provision for use from preprap job
 if [ -e ../FILE:${yy}-${mm}-${dd}_${hh} ]
 then
-mv ../FILE:${yy}-${mm}-${dd}_${hh} .
+ln -sf ../FILE:${yy}-${mm}-${dd}_${hh} .
 else
-mv $INPUT_DATA/hiresw.t${CYC}z.${DOMNAM}${MODEL}.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
+ln -sf $INPUT_DATA/hiresw.t${CYC}z.${DOMNAM}${MODEL}.FILE:${yy}-${mm}-${dd}_${hh} FILE:${yy}-${mm}-${dd}_${hh}
 fi
 export err=$?
 
