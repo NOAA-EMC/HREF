@@ -2833,7 +2833,9 @@
 
 !  ---  output:
       real, dimension(:,:), intent(out) ::                              &
-     &       cwatp, cicep, rainp, snowp, recwat, rerain, resnow, snden
+!     &       cwatp, cicep, rainp, snowp, recwat, rerain, resnow, snden
+     &       cwatp, cicep, rainp, snowp, recwat, rerain, snden
+      real, dimension(:,:) :: resnow 
 
 !  ---  locals:
 !     real,    dimension(IM,LEVS) :: delp, pp1, pp2

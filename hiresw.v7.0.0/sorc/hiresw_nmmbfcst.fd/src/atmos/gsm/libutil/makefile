@@ -37,10 +37,6 @@ else
 	DEPEND_FILES = ${OBJS01A:.o=.f90} ${OBJS02:.o=.f90}
 endif
 
-.SUFFIXES: .F90 .f90 .o
-.F90.f90:
-	$(CPP) $(CPPFLAGS) $< > $*.f90
-
 all default: depend
 	@gmake -f $(MAKEFILE) $(LIBRARY)
 
