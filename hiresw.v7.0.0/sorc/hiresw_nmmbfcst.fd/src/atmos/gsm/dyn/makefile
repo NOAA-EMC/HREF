@@ -234,8 +234,10 @@ else
 	DEPEND_FILES = ${OBJS0:.o=.f} ${OBJ_MOD:.o=.f} ${OBJ_TRAC_stub:.o=.f} ${OBJS:.o=.f} ${OBJS_PORT:.o=.f} ${OBJS_IO:.o=.f} ${OBJS1:.o=.c}
 endif
 
-all default: depend
-	@gmake -f $(MAKEFILE) $(LIBRARY)
+# all default: depend
+#	@gmake -f $(MAKEFILE) $(LIBRARY)
+
+all default: depend $(LIBRARY)
 
 $(LIBRARY): $(OBJ_MOD) $(OBJ_TRAC_stub) $(OBJS0) $(OBJS1) $(OBJS) $(OBJS_IO)
 	$(AR) $(ARFLAGS) $@ $?
@@ -270,76 +272,13 @@ clean:
 # *****************************************************************
 #
 
-.SUFFIXES: .f .c .f90 .o
+# .SUFFIXES: .f .c .f90 .o
 
-.f.f90:
-	$(CPP) $< > $*.f90
+# .f.f90:
+# 	$(CPP) $< > $*.f90
 
 .c.o:
 	$(CC) $(CFLAG) $(INC) -c $<
-
-
-gfs_dyn_physcons.o:	gfs_dyn_physcons.f90
-		$(FC) $(FFLAG90) -c gfs_dyn_physcons.f90
-
-sigio_module.o:	 sigio_module.f90
-		$(FC) $(FFLAG90I) -c sigio_module.f90
-
-sigio_r_module.o:	 sigio_r_module.f90
-		$(FC) $(FFLAG90I) -c sigio_r_module.f90
-
-#spect_tv_enthalpy_ps.o:	 spect_tv_enthalpy_ps.f90
-#		$(FC) $(FFLAG90I) -c spect_tv_enthalpy_ps.f90
-#
-gfs_dynamics_err_msg_mod.o:	 gfs_dynamics_err_msg_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_err_msg_mod.f90
-
-gfs_dynamics_namelist_mod.o:	 gfs_dynamics_namelist_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_namelist_mod.f90
-
-gfs_dynamics_start_time_get_mod.o:	 gfs_dynamics_start_time_get_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_start_time_get_mod.f90
-
-gfs_dynamics_grid_create_mod.o:	 gfs_dynamics_grid_create_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_grid_create_mod.f90
-
-gfs_dynamics_output.o:	 gfs_dynamics_output.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_output.f90
-
-gfs_dynamics_getcf_mod.o:	 gfs_dynamics_getcf_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_getcf_mod.f90
-
-gfs_dynamics_internal_state_mod.o:	 gfs_dynamics_internal_state_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_internal_state_mod.f90
-
-GFS_AddParameterToStateMod.o:    GFS_AddParameterToStateMod.f90
-	        $(FC) $(FFLAG90) -c GFS_AddParameterToStateMod.f90
-
-gfs_dynamics_add_get_state_ESMFField_mod.o:	 gfs_dynamics_add_get_state_ESMFField_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_add_get_state_ESMFField_mod.f90
-
-gfs_dynamics_states_mod.o:	 gfs_dynamics_states_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_states_mod.f90
-
-gfs_dynamics_initialize_mod.o:	 gfs_dynamics_initialize_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_initialize_mod.f90
-
-gfs_dynamics_initialize_slg_mod.o:	 gfs_dynamics_initialize_slg_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_initialize_slg_mod.f90
-
-gfs_dynamics_run_mod.o:	 gfs_dynamics_run_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_run_mod.f90
-
-gfs_dynamics_finalize_mod.o:	 gfs_dynamics_finalize_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_finalize_mod.f90
-
-gfs_dynamics_grid_comp_mod.o:	 gfs_dynamics_grid_comp_mod.f90
-		$(FC) $(FFLAG90) -c gfs_dynamics_grid_comp_mod.f90
-
-
-#
-#
-#
 
 MKDEPENDS = ../../../../exe/mkDepends.pl
 

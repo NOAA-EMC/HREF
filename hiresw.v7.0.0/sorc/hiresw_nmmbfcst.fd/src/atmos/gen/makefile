@@ -9,16 +9,19 @@ LIBRARY = libgen.a
 OPTS     = $(FFLAGS_GEN) $(R8) -O3  $(UTILINCS)
 FFLAG90  = $(OPTS) $(FREE)
 
-OBJS   = module_GEN_INTERNAL_STATE.o module_GEN_GRID_COMP.o
+# OBJS   = module_GEN_INTERNAL_STATE.o module_GEN_GRID_COMP.o
+MODULES = module_GEN_INTERNAL_STATE.o module_GEN_GRID_COMP.o
 
-DEPEND_FILES = ${OBJS:.o=.F90}
+# DEPEND_FILES = ${OBJS:.o=.F90}
 
 MODULES_STUB  = module_GEN_INTERNAL_STATE.o module_GEN_GRID_COMP_stub.o 
 
-all default: depend
-	@gmake -f makefile $(LIBRARY)
+# all default: depend
+#	@gmake -f makefile $(LIBRARY)
 
-$(LIBRARY): $(OBJS) 
+all default: depend $(LIBRARY)
+
+$(LIBRARY): $(MODULES) 
 	$(AR) $(ARFLAGS) $@ $?
 
 stub: $(MODULES_STUB)

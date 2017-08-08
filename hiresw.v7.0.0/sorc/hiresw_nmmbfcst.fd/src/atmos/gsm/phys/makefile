@@ -100,10 +100,10 @@ $(LIBRARY):  $(OBJ_MOD) $(OBJS0) $(OBJS)
 clean:
 	$(RM) -f $(LIBRARY) *.o *.mod *.lst *.f90 lm map depend
 
-.SUFFIXES: .f .f90 .o
+# .SUFFIXES: .f .f90 .o
 
-.f.f90:
-	$(CPP) $< > $*.f90
+# .f.f90:
+#	$(CPP) $< > $*.f90
 
 ${OBJ_MOD}: %.o: %.f
 	$(CPP) $< > $*.f90
@@ -120,73 +120,6 @@ ${OBJS}: %.o: %.f
 #
 # *****************************************************************
 #
-
-gbphys_adv_hyb_gc.o:	gbphys_adv_hyb_gc.f90
-		$(FC) $(FFLAGS1) -c gbphys_adv_hyb_gc.f90
-
-gbphys_adv_hyb_gc_h.o:	gbphys_adv_hyb_gc_h.f90
-		$(FC) $(FFLAGS1) -c gbphys_adv_hyb_gc_h.f90
-
-mpi_def.o:	mpi_def.f
-	        ${CPP} mpi_def.f > mpi_def.f90
-		$(FC) $(FFLAGS1) -c mpi_def.f90
-
-sfcio_module.o:	sfcio_module.f90
-	        ${CPP} sfcio_module.f > sfcio_module.f90
-		$(FC) $(FFLAGS) -c sfcio_module.f90
-
-gloopr.o:	gloopr.f90
-		$(FC) $(FFLAGS1) -c gloopr.f90
-
-gloopb.o:	gloopb.f90
-		$(FC) $(FFLAGS1) -c gloopb.f90
-
-gcycle.o:	gcycle.f90
-		$(FC) $(FFLAGS1) -c gcycle.f90
-
-getaer.o:	getaer.f90
-		$(FC) $(FFLAGS1) -c getaer.f90
-
-gribit_gsm.o:	gribit_gsm.f90
-		$(FC) $(FFLAGS1) -c gribit_gsm.f90
-
-wrt3d_hyb.o:    wrt3d_hyb.f
-		$(FC) $(FFLAGS1) -c wrt3d_hyb.f
-
-wrt3d.o:        wrt3d.f
-		$(FC) $(FFLAGS1) -c wrt3d.f
-
-fld_collect.o:  fld_collect.f90
-	        $(FC) $(FFLAGS1) -c fld_collect.f90
-
-fld_collect_nst.o:  fld_collect_nst.f90
-	        $(FC) $(FFLAGS1) -c fld_collect_nst.f90
-
-read_fix.o: read_fix.f90
-	        $(FC) $(FFLAGS1) -c read_fix.f90
-
-para_fixio_w.o:  para_fixio_w.f90
-		$(FC) $(FFLAGS1) -c para_fixio_w.f90
-
-para_nst_w.o:  para_nst_w.f90
-		$(FC) $(FFLAGS1) -c para_nst_w.f90
-
-para_nstio_w.o:  para_nstio_w.f90
-		$(FC) $(FFLAGS1) -c para_nstio_w.f90
-
-wrtout_physics.o: wrtout_physics.f90
-		$(FC) $(FFLAGS1) -c wrtout_physics.f90
-
-aoicpl_prep.o:	  aoicpl_prep.f90
-		$(FC) $(FFLAGS1) -c aoicpl_prep.f90
-
-nstio_module.o:	  nstio_module.f
-	        ${CPP} nstio_module.f > nstio_module.f90
-		$(FC) $(FFLAG90) -c nstio_module.f90
-
-gfs_physics_err_msg_mod.o:      gfs_physics_err_msg_mod.f
-	        ${CPP} gfs_physics_err_msg_mod.f > gfs_physics_err_msg_mod.f90
-		$(FC) $(FFLAG90) -c gfs_physics_err_msg_mod.f90
 
 MKDEPENDS = ../../../../exe/mkDepends.pl
 
