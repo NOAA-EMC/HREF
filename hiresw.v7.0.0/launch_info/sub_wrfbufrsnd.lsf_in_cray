@@ -4,7 +4,7 @@
 #BSUB -J HIRESW_BUFR
 #BSUB -P HRW-T2O
 #BSUB -M 2000
-#BSUB -W 1:29
+#BSUB -W 1:59
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 ###BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROCBUFR_*{select[craylinux && vnode]span[ptile=_PTILEBUFR_] cu[type=cabinet]}' rusage[mem=3000]
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}' rusage[mem=50000]

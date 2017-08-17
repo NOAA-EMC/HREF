@@ -4,7 +4,7 @@
 #BSUB -q "devhigh"
 #BSUB -J HIRESW_PRDGEN
 #BSUB -P HRW-T2O
-#BSUB -W 1:49
+#BSUB -W 1:59
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -M 1000
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + _NPROC_*{select[craylinux && vnode]span[ptile=_NPROC_] cu[type=cabinet]}' rusage[mem=1000]

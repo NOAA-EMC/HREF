@@ -6,7 +6,7 @@
 #BSUB -M 40000
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -R rusage[mem=40000]
-#BSUB -W 1:45
+#BSUB -W 1:59
 #
 
 export MP_EUILIB=us
