@@ -109,7 +109,13 @@ fi
 
 cat run_nawips.sh_in_cray  | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_nawips_${cyc}
 
+cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_awips_${cyc}
+
 bsub < launch_hrefrunpoe_${cyc}
 bsub < launch_nawips_${cyc}
+
+sleep 180
+
+bsub < launch_awips_${cyc}
 
 # rm launch_hrefrunpoe_${cyc}
