@@ -13,10 +13,7 @@
 
 set -xa
 
-fhr=$1
-NEST=${2}
-
-fhr=$(printf "%02d" $fhr)
+NEST=${1}
 
 echo running awp script
 pwd
@@ -38,11 +35,35 @@ types="mean pmmn prob"
 for type in $types
 do
 
-if  echo $runhrs |grep $fhr;
-then
+# if  echo $runhrs |grep $fhr;
+# then
+
+for fhr in $runhrs
+do
   # Processing AWIPS grid 227 
 
-  ln -sf $MYCOMROOT/${NET}/${envir}/${RUN}.${PDY}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  icnt=1
+  maxtries=180
+
+  GRIBIN=${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+
+  while [ $icnt -lt 1000 ]
+  do
+    if [ -r $GRIBIN ] ; then
+      break
+    else
+      let "icnt=icnt+1"
+      sleep 20
+    fi
+    if [ $icnt -ge $maxtries ]
+    then
+      msg="FATAL ERROR: ABORTING after 1 hour of waiting for F$fhr to become available for AWIPS processing."
+      err_exit $msg
+    fi
+  done
+
+
+  ln -sf ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
 
   $GRBINDEX href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i 
   export pgm=tocgrib2
@@ -67,7 +88,8 @@ then
 #    $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awphref227_f${fhr}_${cyc} 
 #  fi
 
+# fi
 
-fi
 
+done
 done
