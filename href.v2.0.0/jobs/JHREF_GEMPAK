@@ -72,10 +72,10 @@ setpdy.sh
 
 if [ "$RUN_ENVIR" != nco ] ; then
  export COMOUT=${COMOUT:-${MYCOMROOT}/nawips/${envir}/${RUN}.${PDY}}
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
 else
  export COMOUT=${COMOUT:-${COMROOT}/nawips/${envir}/href.${PDY}}
- export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}}
+ export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
 fi
 
 if [ ! -f $COMOUT ] ; then

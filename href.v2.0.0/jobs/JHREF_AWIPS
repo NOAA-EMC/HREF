@@ -54,10 +54,10 @@ setpdy.sh
 
 if [ "$RUN_ENVIR" != nco ] ; then
  export PCOM=${PCOM:-${MYCOMROOT}/${NET}/${envir}/awip}
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
 else
  export PCOM=${PCOM:-${PCOMROOT}/${NET}/${envir}}
- export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}}
+ export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
 fi
 
 if [ ! -f $PCOM ] ; then

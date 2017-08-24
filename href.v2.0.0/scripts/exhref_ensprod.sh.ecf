@@ -29,8 +29,6 @@ echo running on $location
 #
 
 $USHhref/href_ensprod.sh ${NEST}
-$USHhref/href_mkawp.sh ${fhr} ${NEST}
-
 
 #####################################################################
 # GOOD RUN
