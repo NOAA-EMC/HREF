@@ -289,12 +289,18 @@ echo working things with ff as $ff and  fcheck as $fcheck
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 20
           let loop=loop+1
         done	
+
+	if [ $loop -gt 28 ]
+        then
+          echo "abandoned waiting(a) for $DATA/href.m${m}.t${cyc}z.f${fcheckloc}"
+        fi
+
         let fcheckloc=fcheckloc+1
 typeset -Z2 fcheckloc
         echo new fcheckloc is $fcheckloc
@@ -339,12 +345,18 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 3
+          sleep 15
           let loop=loop+1
         done	
+
+	if [ $loop -gt 28 ]
+        then
+          echo "abandoned waiting(b) for $DATA/href.m${m}.t${cyc}z.f${fcheckloc}"
+        fi
+
         let fcheckloc=fcheckloc+1
 typeset -Z2 fcheckloc
         done
@@ -389,12 +401,16 @@ typeset -Z2 fcheckloc
         do
         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 3
+          sleep 15
           let loop=loop+1
         done
+	if [ $loop -gt 28 ]
+        then
+          echo "abandoned waiting(c) for $DATA/href.m${m}.t${cyc}z.f${fcheckloc}"
+        fi
         let fcheckloc=fcheckloc+1
 typeset -Z2 fcheckloc
         done
@@ -437,12 +453,16 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 3
+          sleep 15
           let loop=loop+1
         done	
+	if [ $loop -gt 28 ]
+        then
+          echo "abandoned waiting(d) for $DATA/href.m${m}.t${cyc}z.f${fcheckloc}"
+        fi
         let fcheckloc=fcheckloc+1
 typeset -Z2 fcheckloc
         done

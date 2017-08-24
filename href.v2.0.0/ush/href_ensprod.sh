@@ -284,57 +284,47 @@ errsave=$?
 echo past href_ensprod for ff $ff
 export err=$errsave; err_chk;
 
+types="mean pmmn avrg prob sprd"
+
 if [ $SENDCOM = YES ]; then
- cp $DATA/$ff/href.mean.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.${dom}.mean.f$ff.grib2
- $WGRIB2 $COMOUT/href.t${cyc}z.${dom}.mean.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.${dom}.mean.f$ff.grib2.idx
 
- cp $DATA/$ff/href.pmmn.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.${dom}.pmmn.f$ff.grib2
- $WGRIB2 $COMOUT/href.t${cyc}z.${dom}.pmmn.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.${dom}.pmmn.f$ff.grib2.idx
+ for typ in $types
+ do
+  cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+ done
 
-#cp $DATA/$ff/href.ffri.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.${dom}.ffri.f$ff.grib2
-#$WGRIB2 $COMOUT/href.t${cyc}z.${dom}.ffri.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.${dom}.ffri.f$ff.grib2.idx
 
- cp $DATA/$ff/href.avrg.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.${dom}.avrg.f$ff.grib2
- $WGRIB2 $COMOUT/href.t${cyc}z.${dom}.avrg.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.${dom}.avrg.f$ff.grib2.idx
+ types="mean pmmn avrg prob"
+ for typ in $types
+ do
+  cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+ done
 
- cp $DATA/$ff/href.prob.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.${dom}.prob.f$ff.grib2
- $WGRIB2 $COMOUT/href.t${cyc}z.${dom}.prob.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.${dom}.prob.f$ff.grib2.idx
+ if [ ${ff}%3 -eq 0 ]
+ then
 
- cp $DATA/$ff/href.sprd.t${cyc}z.f$ff $COMOUT/href.t${cyc}z.${dom}.sprd.f$ff.grib2
- $WGRIB2 $COMOUT/href.t${cyc}z.${dom}.sprd.f$ff.grib2  -s >  $COMOUT/href.t${cyc}z.${dom}.sprd.f$ff.grib2.idx
-
- cp $DATA/$ff/href.mean.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.mean.f$ff.grib2
- $WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.mean.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.mean.f$ff.grib2.idx
-
- cp $DATA/$ff/href.pmmn.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.pmmn.f$ff.grib2
- $WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.pmmn.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.pmmn.f$ff.grib2.idx
-
-#cp $DATA/$ff/href.ffri.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.ffri.f$ff.grib2
-#$WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.ffri.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.ffri.f$ff.grib2.idx
-
- cp $DATA/$ff/href.avrg.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.avrg.f$ff.grib2
- $WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.avrg.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.avrg.f$ff.grib2.idx
-
- cp $DATA/$ff/href.prob.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.prob.f$ff.grib2
- $WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.prob.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.prob.f$ff.grib2.idx
-
-# cp $DATA/$ff/href.sprd.t${cyc}z.f$ff $COMOUTPERM/href.t${cyc}z.${dom}.sprd.f$ff.grib2
-# $WGRIB2 $COMOUTPERM/href.t${cyc}z.${dom}.sprd.f$ff.grib2  -s >  $COMOUTPERM/href.t${cyc}z.${dom}.sprd.f$ff.grib2.idx
-
+  if [ ! -e $COMOUT/verf_g2g ]
+  then
+   mkdir -p $COMOUT/verf_g2g
+  fi
+  
+  for m in $mbrs ; do
+   cp -d $DATA/href.m${m}.t${cyc}z.f${ff}  $COMOUT/verf_g2g/href.m${m}.t${cyc}z.${NEST}.f${ff}
+   cp -d $DATA/prcip.m${m}.t${cyc}z.f${ff} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${NEST}.f${ff}
+   cp -d $DATA/${ff}/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${NEST}.f${ff}
+  done
+ fi
 fi
+
 if [ $SENDDBN = YES ]; then
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.${dom}.mean.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/href.t${cyc}z.${dom}.mean.f$ff.grib2.idx
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.${dom}.pmmn.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/href.t${cyc}z.${dom}.pmmn.f$ff.grib2.idx
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.${dom}.ffri.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/href.t${cyc}z.${dom}.ffri.f$ff.grib2.idx
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.${dom}.avrg.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/href.t${cyc}z.${dom}.avrg.f$ff.grib2.idx
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.${dom}.prob.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/href.t${cyc}z.${dom}.prob.f$ff.grib2.idx
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/href.t${cyc}z.${dom}.sprd.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/href.t${cyc}z.${dom}.sprd.f$ff.grib2.idx
+ types="mean pmmn avrg prob sprd"
+ for typ in $types
+ do
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+ done
 fi
 
 exit

@@ -34,7 +34,6 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
-export PARMutil=${PARMutil:-$HOMEhref/util/parm}
 export USHhref=${USHhref:-$HOMEhref/ush}
 export FIXhref=${FIXhref:-$HOMEhref/fix}
 export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
@@ -44,7 +43,7 @@ export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 ###########################################################
 
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/href_ensprod_${cyc}_${envir}.${pid}}
+export DATA=${DATA:-${DATAROOT}/href_ensprod_${NEST}_${cyc}_${envir}.${pid}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
@@ -103,7 +102,8 @@ fi
 # env
 
 if [ ! -d $COMOUT ] ; then 
- mkdir -p $COMOUT
+ mkdir -p $COMOUT/ensprod
+ mkdir -p $COMOUT/verf_g2g
 fi
 
 if [ ! -d $COMOUTPERM ] ; then 
@@ -278,7 +278,7 @@ chmod 775 ${DATA}/poe.gg  ${DATA}/poe.hh ${DATA}/poe.ii
 chmod 775 ${DATA}/poe.jj  ${DATA}/poe.kk ${DATA}/poe.ll
 
 chmod 775 ${DATA}/poe.a ${DATA}/poe.b ${DATA}/poe.c
-chmod 775 ${DATA}/poe.d  ${DATA}/poe.e ${DATA}/poe.f
+chmod 775 ${DATA}/poe.d ${DATA}/poe.e ${DATA}/poe.f
 chmod 775 ${DATA}/poe.g ${DATA}/poe.h ${DATA}/poe.i
 chmod 775 ${DATA}/poe.j ${DATA}/poe.k ${DATA}/poe.l
 
