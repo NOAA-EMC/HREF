@@ -9,11 +9,19 @@ echo "History: Mar 2000 - First implementation of this new script."
 cd $DATA
 
 set -xa
+
+export TYPE=$1
+export  'PS4=$TYPE:$SECONDS + '
+mkdir -p $DATA/$TYPE
+cd $DATA/$TYPE
+
 msg="Begin job for $job"
 postmsg "$jlogfile" "$msg"
 
+cp $GEMPAKhref/fix/*.tbl .
+
 #
-NAGRIB_TABLE=$GEMTBL/nagrib.tbl
+NAGRIB_TABLE=$GEMPAKhref/fix/nagrib.tbl
 NAGRIB=nagrib2
 #
 
@@ -40,24 +48,18 @@ else
 fi  
 pdsext=no
 
-FILETYPES="mean pmmn prob sprd"
-
-
 maxtries=180
 fhcnt=$fstart
 while [ $fhcnt -le $fend ] ; do
   if [ $fhcnt -ge 100 ] ; then
-    typeset -Z3 fhr
+    fhcnt=$(printf "%03d" $fhcnt)
   else
-    typeset -Z2 fhr
+    fhcnt=$(printf "%02d" $fhcnt)
   fi
   fhr=$fhcnt
 
   fhr3=$fhcnt
-  typeset -Z3 fhr3
-
-for TYPE in $FILETYPES
-do
+  fhr3=$(printf "%03d" $fhr3)
 
   GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2
   GEMGRD=${RUN}_${NEST}_${TYPE}_${PDY}${cyc}f${fhr3} 
@@ -127,8 +129,6 @@ EOF
     echo "##### DBN_ALERT_TYPE is: ${DBN_ALERT_TYPE} #####"
     fi
   fi
-done # $TYPE
-
   let fhcnt=fhcnt+finc
 done # while fhcnt -lt fend
 

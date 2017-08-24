@@ -57,7 +57,7 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 # Copy model specific GEMPAK tables into working directory
 #
 
-cp $GEMPAKhref/fix/*.tbl .
+#cp $GEMPAKhref/fix/*.tbl .
 
 
 #
@@ -86,7 +86,20 @@ env
 
 #################################################################
 # Execute the script
-$HOMEhref/scripts/exnawips_href.sh.ecf
+rm -f poescript
+
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf mean &> $DATA/${NEST}_mean.$$ " >>poescript
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf pmmn &> $DATA/${NEST}_pmmn.$$ " >>poescript
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
+
+aprun -N $PTILE -n $TASKS cfp poescript
+export err=$?; err_chk
+
+cat $DATA/${NEST}_mean.$$
+cat $DATA/${NEST}_pmmn.$$
+cat $DATA/${NEST}_prob.$$
+cat $DATA/${NEST}_sprd.$$
 #################################################################
 
 cd ${DATAROOT}
