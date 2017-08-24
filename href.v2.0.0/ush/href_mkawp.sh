@@ -82,14 +82,10 @@ do
     cp xtrn.${cycle}.href.${NEST}_${type}_${fhr} $PCOM/grib2.t${cyc}z.awphref_${NEST}_${type}_f${fhr}_${cyc}
   fi
 
-#  if test "$SENDDBN" = 'YES'
-#  then
-##    $DBNROOT/bin/dbn_alert MODEL NTC_LOW${ALERT_EXT} $job $PCOM/grib2.${cycle}.awphref227_f${fhr}_${cyc} 
-#    $DBNROOT/bin/dbn_alert NTC_LOW $NET $job $PCOM/grib2.${cycle}.awphref227_f${fhr}_${cyc} 
-#  fi
-
-# fi
-
+  if test "$SENDDBN_NTC" = 'YES'
+  then
+    $DBNROOT/bin/dbn_alert NTC_LOW HREF_AWIPS $job $PCOM/grib2.t${cyc}z.awphref_${NEST}_${type}_f${fhr}_${cyc}
+  fi
 
 done
 done
