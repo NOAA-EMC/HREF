@@ -5327,7 +5327,7 @@ END
 !***  This logic applies to forecasts shorter than a month.
 !
       if(idif_year>0)idif_month=idif_month+12
-      if(idif_month>0)idif_day=idif_day+days_per_month(start_month)
+      if(idif_month>0)idif_day=idif_day+days_per_month(sim_start_month)
       ntstart=nint(tstart)
       n_fcsthour=idif_hour+idif_day*24+ntstart
       write(0,*)' finished with forecast hour=',n_fcsthour              &
@@ -5497,7 +5497,7 @@ END
 !***  This logic applies to forecasts shorter than a month.
 !
       if(idif_year>0)idif_month=idif_month+12
-      if(idif_month>0)idif_day=idif_day+days_per_month(start_month)
+      if(idif_month>0)idif_day=idif_day+days_per_month(sim_start_month)
       ntstart=nint(tstart)
       n_fcsthour=idif_hour+idif_day*24+ntstart
       write(0,*)' finished with forecast hour=',n_fcsthour              &
