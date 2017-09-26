@@ -255,8 +255,8 @@ done
 
 fi
 
-cat $DATA/profilm.c1.${tmmark}  $DATA/profilm.c1.${tmmark}.f${fhr} > $DATA/profilm_int
-mv $DATA/profilm_int $DATA/profilm.c1.${tmmark}
+# cat $DATA/profilm.c1.${tmmark}  $DATA/profilm.c1.${tmmark}.f${fhr} > $DATA/profilm_int
+# mv $DATA/profilm_int $DATA/profilm.c1.${tmmark}
 
 fhr=`expr $fhr + $INCRTWO`
 
@@ -275,6 +275,10 @@ cd $DATA
 ########################################################
 ############### SNDP code
 ########################################################
+
+## cat together profilm pieces
+
+cat profilm.c1.${tmmark}.f?? > profilm.c1.${tmmark}
 
 export pgm=hiresw_sndp_${RUNLOC}
 
