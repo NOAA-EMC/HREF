@@ -225,8 +225,8 @@ export err=$?;err_chk
 mv $DATA/bufrpost_odd/profilm.c1.${tmmark} $DATA/profilm.c1.${tmmark}.f${fhr}
 echo done > $DATA/sndpostdone${fhr}.${tmmark}
 
-cat $DATA/profilm.c1.${tmmark}  $DATA/profilm.c1.${tmmark}.f${fhr} > $DATA/profilm_int
-mv $DATA/profilm_int $DATA/profilm.c1.${tmmark}
+# cat $DATA/profilm.c1.${tmmark}  $DATA/profilm.c1.${tmmark}.f${fhr} > $DATA/profilm_int
+# mv $DATA/profilm_int $DATA/profilm.c1.${tmmark}
 
 fhr=`expr $fhr + $INCRTWO`
 
