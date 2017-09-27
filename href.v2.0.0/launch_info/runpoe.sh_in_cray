@@ -57,6 +57,7 @@ export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 
 export SENDCOM=YES
 export SENDDBN=NO
+export SENDDBN_NTC=NO
 
 ${HOMEhref}/jobs/JHREF_ENSPROD
 
