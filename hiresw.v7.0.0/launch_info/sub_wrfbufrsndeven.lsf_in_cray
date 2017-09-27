@@ -50,7 +50,7 @@ export SENDCOM=YES
 export DATEroot=/gpfs/hps/nco/ops/com/date
 DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
 
-export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export COMROOT=/gpfs/hps/nco/ops/com
 
