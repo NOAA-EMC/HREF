@@ -90,6 +90,7 @@ rm -f poescript
 
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf mean &> $DATA/${NEST}_mean.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf pmmn &> $DATA/${NEST}_pmmn.$$ " >>poescript
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
 
@@ -98,6 +99,7 @@ export err=$?; err_chk
 
 cat $DATA/${NEST}_mean.$$
 cat $DATA/${NEST}_pmmn.$$
+cat $DATA/${NEST}_avrg.$$
 cat $DATA/${NEST}_prob.$$
 cat $DATA/${NEST}_sprd.$$
 #################################################################

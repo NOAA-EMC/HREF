@@ -9,7 +9,7 @@
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 36*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}'
 #BSUB -W 0:39
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export RUN_ENVIR=test
 export envir=test
@@ -56,6 +56,7 @@ export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
 
 export SENDCOM=YES
 export SENDDBN=NO
+export SENDDBN_NTC=NO
 
 ${HOMEhref}/jobs/JHREF_ENSPROD
 
