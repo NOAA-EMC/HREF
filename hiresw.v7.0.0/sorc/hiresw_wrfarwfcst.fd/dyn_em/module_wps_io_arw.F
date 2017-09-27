@@ -2725,6 +2725,10 @@ end subroutine retrieve_field
         DO J=JTS,min(JTE,JDE-1)
          DO I=ITS,min(ITE,IDE-1)
            grid%rh_gc(I,K,J)=dumdata(I,J,K)
+
+           if(grid%rh_gc(I,K,J) .lt. 1.) grid%rh_gc(I,K,J)=1.0
+           if(grid%rh_gc(I,K,J) .gt. 100.) grid%rh_gc(I,K,J)=99.0
+
         if (I .eq. 50 .and. J .eq. 50) then
         write(0,*) 'K, grid%rh_gc: ', K, grid%rh_gc(I,K,J)
         endif

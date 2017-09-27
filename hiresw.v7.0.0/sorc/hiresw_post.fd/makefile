@@ -13,7 +13,7 @@ CPP      = /lib/cpp -P
 CPPFLAGS = -DLINUX 
 CFLAGS= -DLINUX -Dfunder -DFortranByte=char -DFortranInt=int -DFortranLlong='long long'
 # OPTS     = -O3 -fp-model strict -assume noold_ldout_format 
-OPTS     = -O3 -fp-model fast -assume noold_ldout_format 
+OPTS     = -O3 -fp-model precise -assume noold_ldout_format 
 FREE     = -FR
 TRAPS    = # -ftrapuv  -check all  -fp-stack-check  -fstack-protector
 DEBUG    = -g  -traceback
