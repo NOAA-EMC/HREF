@@ -7168,7 +7168,15 @@ end do
             !  Special case where near the ocean level.  Assume that the SLP is a good value.
 
             IF      ( ter(i,j) .LT. 50 ) THEN
+
+               if (abs(height(i,2,j)-height(i,3,j)) .gt. 10.) then
                psfc(i,j) = slp(i,j) + ( p(i,2,j)-p(i,3,j) ) / ( height(i,2,j)-height(i,3,j) ) * ter(i,j)
+                else
+	       write(0,*) 'avoiding computation of revised psfc due to thin layer'
+               write(0,*) 'I,J, layer diff, psfc from slp: : ', I,J, height(i,2,j)-height(i,3,j),slp(i,j)
+               psfc(i,j) = slp(i,j)
+               endif
+
                CYCLE
             END IF
 
