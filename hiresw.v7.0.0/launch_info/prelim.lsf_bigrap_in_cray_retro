@@ -23,7 +23,7 @@ module load prod_envir
 
 # export TIME="RSS in KB (times 4): %M"
 export MP_LABELIO=yes
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 vers=`cat /u/Matthew.Pyle/hiresw_version_para`
 
@@ -43,7 +43,7 @@ export DATE=_DATE_
 export GESINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/${DATE}${cyc}
 
 
-export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
 export DATA=${DATAROOT}/hiresw.preprap_${NEST}_${MODEL}_${cyc}_${envir}_retro
 export COMROOT=/gpfs/hps/nco/ops/com
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
