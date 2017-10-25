@@ -47,11 +47,11 @@ mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
 
-if [ $NEST = "conus" ]
-then
-rm -rf $DATAROOT/hiresw.forecast*_${cyc}_test
-rm -rf $DATAROOT/hiresw.post*_${cyc}_test
-fi
+# if [ $NEST = "conus" ]
+# then
+# rm -rf $DATAROOT/hiresw.forecast*_${cyc}_test
+# rm -rf $DATAROOT/hiresw.post*_${cyc}_test
+# fi
 
 ####################################
 # File To Log Msgs
