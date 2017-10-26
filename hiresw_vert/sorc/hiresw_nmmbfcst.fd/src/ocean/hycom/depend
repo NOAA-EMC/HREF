@@ -1,2 +1,0 @@
-module_HYCOM_GRID_COMP.o : module_HYCOM_GRID_COMP.F90  ../../ESMFVersionDefine.h
-module_HYCOM_INTERNAL_STATE.o : module_HYCOM_INTERNAL_STATE.F90  ../../ESMFVersionDefine.h
