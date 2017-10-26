@@ -1,4 +1,0 @@
-module_GFS_CORE_SETUP.o : module_GFS_CORE_SETUP.F90  ../../ESMFVersionDefine.h
-module_GFS_GRID_COMP.o : module_GFS_GRID_COMP.F90 module_GFS_INTEGRATE.o module_GFS_INTERNAL_STATE.o module_GFS_CORE_SETUP.o  ../../ESMFVersionDefine.h
-module_GFS_INTEGRATE.o : module_GFS_INTEGRATE.F90  ../../ESMFVersionDefine.h
-module_GFS_INTERNAL_STATE.o : module_GFS_INTERNAL_STATE.F90  ../../ESMFVersionDefine.h
