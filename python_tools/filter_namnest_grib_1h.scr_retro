@@ -1,0 +1,37 @@
+#! /bin/ksh
+
+module load prod_util
+module load prod_envir
+module load grib_util/1.0.3
+
+cyc=${1}
+type=${2}
+dom=${3}
+PDY=${4}
+
+export cycle=t${cyc}z
+
+# setpdy.sh
+# . PDY
+
+echo PDY is $PDY
+
+echo "DATE__${PDY}${cyc}00xx" > T${cyc}Z
+
+nam_dir=${COMROOTp2}/nam/prod/nam.${PDY}
+
+hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+
+for hr in $hrs
+do
+
+$WGRIB2 $nam_dir/nam.t${cyc}z.conusnest.hiresf${hr}.tm00.grib2  -match ":(MXUPHL|MSLET|MAXUVV|MAXDVV|WEASD|APCP|REFD|REFC|MAXREF):" -grib para.f${hr}.grb2_${type}1
+
+cat para.f${hr}.grb2_${type}1 para.f${hr}.grb2_${type}2  para.f${hr}.grb2_${type}3 para.f${hr}.grb2_${type}4 >> para.f${hr}.grb2_${type}
+rm para.f${hr}.grb2_${type}1 para.f${hr}.grb2_${type}2   para.f${hr}.grb2_${type}3 para.f${hr}.grb2_${type}4
+
+######
+
+done
+
+

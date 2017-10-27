@@ -1,0 +1,79 @@
+#! /bin/ksh
+
+#BSUB -oo /meso/save/Matthew.Pyle/spcprodlike/jobs/test_graphics.out_pyth
+#BSUB -eo /meso/save/Matthew.Pyle/spcprodlike/jobs/test_graphics.err_pyth
+#BSUB -R span[ptile=1]
+#BSUB -x
+#BSUB -P HRW-T2O
+#BSUB -J SPCPROD_GRAPHICS
+#BSUB -q "debug"
+#BSUB -n 1
+#BSUB -W 0:12
+#BSUB -a poe
+
+
+module load ics
+module load ibmpe
+
+module use -a /u/Rahul.Mahajan/modulefiles
+module load anaconda
+export PYTHONPATH=/meso/save/Jacob.Carley/python/lib
+
+cd /meso/save/Matthew.Pyle/python_tools
+base=/meso/save/Matthew.Pyle/python_tools
+
+config=config.test
+
+cyc=00
+PDY=`cat /com/date/t${cyc}z | cut -c7-14`
+
+datestart=${PDY}${cyc}
+
+
+hrs="06 12 18 24 30 36 42 48"
+
+for hr in $hrs
+do 
+
+let hr2=hr-3
+let hr3=hr2-3
+
+idate=`ndate +${hr} $datestart`
+echo idate is $idate
+typeset -Z2 hr2
+typeset -Z2 hr3
+
+echo $hr2 $hr
+
+echo "[myvars]" > $config
+echo "comb_or_sub:1" >>  $config
+echo "gb1:/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/hiresw.${PDY}/hiresw.t${cyc}z.arw_5km.f${hr}.conusnssl.grib2" >> $config
+echo "gb2:/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/test/hiresw.${PDY}/hiresw.t${cyc}z.arw_5km.f${hr2}.conusnssl.grib2" >> $config
+echo "gbout:${base}/precip_6h_${hr}.grib2" >> $config
+echo "startfhr:$hr3" >> $config
+echo "idate:$idate" >> $config
+echo "frange:6" >> $config
+echo "model_bucket:3" >> $config
+
+python add_sub_pcp.py $config
+
+done
+
+config2=new_lump
+
+idate=`ndate +48 $datestart`
+
+echo "[myvars]" > $config2
+echo "gb1:${base}/precip_6h_06.grib2" >> $config2
+echo "gb2:${base}/precip_6h_12.grib2" >> $config2
+echo "gb3:${base}/precip_6h_18.grib2" >> $config2
+echo "gb4:${base}/precip_6h_24.grib2" >> $config2
+echo "gb5:${base}/precip_6h_30.grib2" >> $config2
+echo "gb6:${base}/precip_6h_36.grib2" >> $config2
+echo "gb7:${base}/precip_6h_42.grib2" >> $config2
+echo "gb8:${base}/precip_6h_48.grib2" >> $config2
+echo "gbout:${base}/precip_48h_48.grib2" >> $config2
+echo "idate:${idate}" >> $config2
+echo "frange:48" >> $config2
+
+python my48hcombo.py $config2

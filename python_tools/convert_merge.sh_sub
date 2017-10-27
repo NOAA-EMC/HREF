@@ -1,0 +1,127 @@
+#! /bin/sh
+
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.out_convert_tst
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.err_convert_tst
+#BSUB -M 1500
+#BSUB -P HRW-T2O
+#BSUB -J AWIPS_GRAPHICS
+#BSUB -q "devhigh"
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}'
+#BSUB -W 1:19
+
+# module load ics
+# module load ibmpe
+
+module load prod_envir
+module load prod_util
+module load grib_util/1.0.3
+
+if [ $# -eq 1 ]
+then
+ cyc=${1}
+else
+ echo default to 00Z cycle
+ cyc=00
+fi
+
+hrs="03 06 09 12 15 18 21 24 27 30 33"
+
+doms="CONUS NW NC NE SW SC SE MIDATL Great_Lakes"
+
+dirbase=/gpfs/hps3/ptmp/Matthew.Pyle
+
+opsdir=${dirbase}/href_ops_python_${cyc}
+paradir=${dirbase}/href_v2awip_python_${cyc}
+
+cd $opsdir
+
+for hr in $hrs
+do
+mkdir $hr
+done
+
+rm combo*.gif ./??/combo*.gif
+
+# MEAN
+
+vars="apcp3h vis pwat"
+vars36="apcp3h vis pwat apcp36h"
+
+
+for var in $vars
+do
+for dom in $doms
+do
+for hr in $hrs
+do
+convert ${opsdir}/href_${var}_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_${var}_${dom}_f${hr}_CONUSMEAN.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_${var}_${dom}_f${hr}_CONUSMEAN.gif
+
+if [ $var = "apcp3h" ]
+then
+convert ${opsdir}/href_${var}_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_${var}_${dom}_f${hr}_CONUSAVRG.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_${var}_${dom}_f${hr}_CONUSAVRG.gif
+fi
+
+done
+done
+done
+
+
+
+hr=36
+mkdir $hr
+
+for var in $vars36
+do
+for dom in $doms
+do
+convert ${opsdir}/href_${var}_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_${var}_${dom}_f${hr}_CONUSMEAN.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_${var}_${dom}_f${hr}_CONUSMEAN.gif
+if [ $var = "apcp3h" ]
+then
+convert ${opsdir}/href_${var}_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_${var}_${dom}_f${hr}_CONUSAVRG.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_${var}_${dom}_f${hr}_CONUSAVRG.gif
+fi
+done
+done
+
+echo past 36 hours of mean
+
+# PROB 
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+vars="ceil305 ceil610 mx1kmrefdprob40 onekmrefdprob40 pwat37p5 windprobgt20 vis800 windprobgt30 mxuphlprob25 refcgt50"
+
+for var in $vars
+do
+for dom in $doms
+do
+for hr in $hrs
+do
+convert ${opsdir}/href_${var}_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_${var}_${dom}_f${hr}_CONUSPROB.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_${var}_${dom}_f${hr}_CONUSPROB.gif
+done
+echo done $dom $var
+done
+done
+
+echo past all norm prob
+
+for dom in $doms
+do
+for hr in $hrs
+do
+convert ${opsdir}/href_apcp3h12p4_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_apcp3h12p7_${dom}_f${hr}_CONUSPROB.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_apcp3h12p7_${dom}_f${hr}_CONUSPROB.gif
+convert ${opsdir}/href_apcp3h25p1_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_apcp3h25p4_${dom}_f${hr}_CONUSPROB.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_apcp3h25p4_${dom}_f${hr}_CONUSPROB.gif
+convert ${opsdir}/href_etopgt10000_${dom}_f${hr}_CONUSOPS.gif ${paradir}/href_etopgt10668_${dom}_f${hr}_CONUSPROB.gif \
++append -scale 1400x700 ${opsdir}/${hr}/combo_etopgt10668_${dom}_f${hr}_CONUSPROB.gif
+done
+done
+
+echo past last of  prob
+
+mv ./??/combo*.gif .

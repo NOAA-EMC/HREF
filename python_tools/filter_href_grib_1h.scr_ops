@@ -1,0 +1,29 @@
+#! /bin/ksh
+
+module load prod_util
+module load prod_envir
+module load grib_util/1.0.3
+
+cyc=${1}
+para_href_type=${2}
+dom=${3}
+
+export cycle=t${cyc}z
+
+setpdy.sh
+. PDY
+
+echo PDY is $PDY
+
+ops_href_dir=${COMROOTp2}/hiresw/prod/href.${PDY}
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+for hr in $hrs
+do
+
+$WGRIB2 $ops_href_dir/href.t${cyc}z.mean.f${hr}.grib2 -match ":(APCP|TMP|DPT|REFC|PWAT|VIS):" -grib ops.f${hr}.grb2
+$WGRIB2 $ops_href_dir/href.t${cyc}z.prob.f${hr}.grib2 -match ":(APCP|REFD|MAXREF|MXUPHL|FLGHT|REFC|RETOP|PWAT|VIS|UPHL|WIND|HGT):" -grib ops.f${hr}.grb2_2
+cat ops.f${hr}.grb2_2 >> ops.f${hr}.grb2
+
+done

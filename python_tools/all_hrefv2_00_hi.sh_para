@@ -1,0 +1,94 @@
+#! /bin/sh
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.out_pyth_00z_hrefv2_hi
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.err_pyth_00z_hrefv2_hi
+#BSUB -M 1500
+#BSUB -P HRW-T2O
+#BSUB -J AWIPS_GRAPHICS
+#BSUB -q "devhigh"
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 144*{select[craylinux && vnode]span[ptile=18] cu[type=cabinet]}'
+#BSUB -W 0:19
+
+# module load ics
+# module load ibmpe
+
+module load prod_envir
+module load prod_util
+module load grib_util/1.0.3
+
+module use -a /u/Rahul.Mahajan/modulefiles
+module load anaconda
+export PYTHONPATH=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/lib
+
+srcdir=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools
+
+cyc=00
+
+mkdir -p /gpfs/hps3/ptmp/Matthew.Pyle/href_v2awip_python_${cyc}_hi/
+cd  /gpfs/hps3/ptmp/Matthew.Pyle/href_v2awip_python_${cyc}_hi/
+rm  /gpfs/hps3/ptmp/Matthew.Pyle/href_v2awip_python_${cyc}_hi/*
+
+cp $srcdir/filter_href_grib_1h.scr .
+cp $srcdir/*href*.py .
+cp $srcdir/test_precip_add.sh_hrefv2awip .
+
+./filter_href_grib_1h.scr ${cyc} awips2 hi
+
+# # generate 6 h and 36 h precips
+./test_precip_add.sh_hrefv2awip ${cyc} hi
+
+types="mean pmmn avrg"
+for typ in $types
+do
+cat ${typ}_36h_36.grib2 >>  para.f36.grb2_${typ}
+done
+
+types="prob mean pmmn avrg"
+hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18"
+
+for typ in $types
+do
+rm poe.script.${typ}.1
+echo "#! /bin/bash" > poe.script.${typ}.1
+
+for hr in $hrs
+do
+echo "python href_generic_hi.py para.f${hr}.grb2_${typ} HI ${typ} &" >> poe.script.${typ}.1
+done
+echo "wait" >> poe.script.${typ}.1
+chmod 775 poe.script.${typ}.1
+done
+
+hrs="19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36"
+for typ in $types
+do
+rm poe.script.${typ}.2
+echo "#! /bin/bash" > poe.script.${typ}.2
+
+for hr in $hrs
+do
+echo "python href_generic_hi.py para.f${hr}.grb2_${typ} HI ${typ} &" >> poe.script.${typ}.2
+done
+
+echo "wait" >> poe.script.${typ}.2
+chmod 775 poe.script.${typ}.2
+done
+
+aprun -n 1 -N 1 -d 18 ./poe.script.prob.1 & 
+aprun -n 1 -N 1 -d 18 ./poe.script.mean.1 & 
+aprun -n 1 -N 1 -d 18 ./poe.script.pmmn.1 & 
+aprun -n 1 -N 1 -d 18 ./poe.script.avrg.1 &
+aprun -n 1 -N 1 -d 18 ./poe.script.prob.2 & 
+aprun -n 1 -N 1 -d 18 ./poe.script.mean.2 & 
+aprun -n 1 -N 1 -d 18 ./poe.script.pmmn.2 & 
+aprun -n 1 -N 1 -d 18 ./poe.script.avrg.2 &
+wait
+
+
+
+cd $srcdir
+
+
+# bsub < $srcdir/send_python_graphics_awip.sh_00
+
+echo "DONE" >  /gpfs/hps3/ptmp/Matthew.Pyle/href_v2awip_python_${cyc}_hi/graphicsdone

@@ -1,0 +1,67 @@
+#! /bin/sh
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.out_pyth_00z_ops_ops
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.err_pyth_00z_ops_ops
+#BSUB -M 1500
+#BSUB -P HRW-T2O
+#BSUB -J AWIPS_GRAPHICS
+#BSUB -q "devhigh"
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 12*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}'
+#BSUB -W 1:29
+
+# module load ics
+# module load ibmpe
+
+module load prod_envir
+module load prod_util
+module load grib_util/1.0.3
+
+module use -a /u/Rahul.Mahajan/modulefiles
+module load anaconda
+export PYTHONPATH=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/lib
+
+srcdir=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools
+
+cyc=00
+
+mkdir -p /gpfs/hps3/ptmp/Matthew.Pyle/href_ops_python_${cyc}/
+cd  /gpfs/hps3/ptmp/Matthew.Pyle/href_ops_python_${cyc}/
+rm  /gpfs/hps3/ptmp/Matthew.Pyle/href_ops_python_${cyc}/*
+
+cp $srcdir/filter_href_grib_1h.scr_ops .
+cp $srcdir/*href*.py .
+cp $srcdir/test_precip_add.sh_hrefops .
+
+./filter_href_grib_1h.scr_ops ${cyc} awips2 conus
+
+# # generate 6 h and 36 h precips
+./test_precip_add.sh_hrefops ${cyc} conus
+
+types="ops"
+for typ in $types
+do
+cat ${typ}_36h_36.grib2 >>  ops.f36.grb2
+cat ${typ}_24h_24.grib2 >>  ops.f24.grb2
+done
+
+######### ops
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36"
+
+rm poe.script.a
+
+echo "#! /bin/bash" > poe.script.a
+for hr in $hrs
+do
+echo "python href_generic.py ops.f${hr}.grb2 CONUS ops &" >> poe.script.a
+done
+
+echo "wait" >> poe.script.a
+chmod 775 poe.script.a
+aprun -n 1 -N 1 -d 12 poe.script.a
+
+cd $srcdir
+
+./convert_merge.sh_sub 00
+
+echo "DONE" > /gpfs/hps3/ptmp/Matthew.Pyle/href_ops_python_${cyc}/graphicsdone

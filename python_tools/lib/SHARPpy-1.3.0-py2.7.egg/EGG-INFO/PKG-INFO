@@ -1,0 +1,12 @@
+Metadata-Version: 1.1
+Name: SHARPpy
+Version: 1.3.0
+Summary: Sounding/Hodograph Analysis and Research Program for Python
+Home-page: https://github.com/sharppy/SHARPpy
+Author: Patrick Marsh, Kelton Halbert, Greg Blumberg, and Tim Supinie
+Author-email: patrick.marsh@noaa.gov, keltonhalbert@ou.edu, wblumberg@ou.edu, tsupinie@ou.edu
+License: BSD
+Description: UNKNOWN
+Keywords: meteorology soundings analysis
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta

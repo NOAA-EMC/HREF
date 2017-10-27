@@ -1,0 +1,40 @@
+#! /bin/ksh
+
+mycyc=$1
+
+echo "<HTML>" > info.html
+echo "<BODY bgcolor="FFFFFF">" >> info.html
+echo "<CENTER>" >> info.html
+echo "<H2>NCEP 4.0 km NSSLlike WRF-ARW run  </H2>" >> info.html
+echo "<p>" >> info.html
+dayofrun=`cat /com/date/t${mycyc}z | cut -c7-14`
+cyc=`cat /com/date/t${mycyc}z | cut -c15-16`
+daym1=`ndate -24 $dayofrun$cyc`
+daym2=`ndate -48 $dayofrun$cyc`
+date=`date -u`
+echo "The current forecast cycle is ${cyc}Z on $dayofrun ; graphics finished at $date" >> info.html
+echo "</CENTER>" >> info.html
+echo "<p>" >> info.html
+echo "<p>" >> info.html
+echo "<CENTER>run made on WCOSS machine</CENTER>" >> info.html
+echo "<p>" >> info.html
+echo "<p>" >> info.html
+echo "<p>" >> info.html
+echo "DISCLAIMER:" >> info.html
+echo "While run routinely, information displayed here is considered EXPERIMENTAL.  The graphics represent output from a non-operational NCEP model run, and the graphics generation and display are also non-operational.  Products here may not always be available or up to date.  Neither the 4.0 km model run nor the graphics generation are subject to 24x7 monitoring from NCO." >> info.html
+echo "<p>" >> info.html
+if [ $mycyc -eq 12 ]
+then
+echo "This job runs on a busy computer, so 12Z runs may become available quite late certain days." >> info.html
+fi
+echo "<p>" >> info.html
+echo "You may wish to check out graphics produced from <A HREF="http://www.emc.ncep.noaa.gov/mmb/mmbpll/nestpage_4km/" target="blank">the operational HiresWindow</A>" >> info.html
+echo "<p>" >> info.html
+echo "Please contact Matthew Pyle (Matthew.Pyle@noaa.gov) with questions and/or concerns about this page or the model information it is displaying." >> info.html
+echo "<p>" >> info.html
+echo " =================================================================================" >> info.html
+echo "<p>" >> info.html
+echo "</TR>" >> info.html
+echo "</TABLE>" >> info.html
+echo "</BODY>" >> info.html
+echo "</HTML>" >> info.html
