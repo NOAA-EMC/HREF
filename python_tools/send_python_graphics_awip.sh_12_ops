@@ -1,0 +1,56 @@
+#! /bin/ksh
+
+#BSUB -oo send_graphics.out_pyth
+#BSUB -eo send_graphics.err_pyth
+#BSUB -P HRW-T2O
+#BSUB -M 1500
+#BSUB -J NSSL_GRAPHICS_TRANS
+#BSUB -q "dev_transfer"
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools
+#BSUB -n 1
+#BSUB -W 0:49
+
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+base=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools
+
+cd /gpfs/hps3/ptmp/Matthew.Pyle/href_ops_python_12
+
+cyc=12
+
+cp /gpfs/hps/nco/ops/com/date/t${cyc}z .
+
+NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.0.12/exec/ndate
+
+PDY=`cat t${cyc}z | cut -c7-14`
+
+#?? scp *.gif  mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href_v2awips/${cyc}/
+
+# ${base}/gen_info_ijk.scr_hrefv2awips $cyc
+
+# scp info.html mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href_v2awips/${cyc}/
+
+ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir /home/www/emc/htdocs/mmb/mpyle/href_v2awips/${PDY}${cyc}"
+
+# ${base}/convert_merge.sh 00
+
+scp combo*.gif info.html mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href_v2awips/${cyc}/
+scp combo*.gif info.html mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href_v2awips/${PDY}${cyc}/
+
+rm *.gif
+
+scp /gpfs/hps/nco/ops/com/date/t${cyc}z mpyle@emcrzdm.ncep.noaa.gov:/home/www/emc/htdocs/mmb/mpyle/href_v2awips/${cyc}/combo_t${cyc}z
+
+ssh mpyle@emcrzdm.ncep.noaa.gov "cp -R /home/www/emc/htdocs/mmb/mpyle/href_v2awips/raw_pieces/* /home/www/emc/htdocs/mmb/mpyle/href_v2awips/${PDY}${cyc}/"
+ssh  mpyle@emcrzdm.ncep.noaa.gov "cp /home/www/emc/htdocs/mmb/mpyle/href_v2awips/${cyc}/main_compare.php /home/www/emc/htdocs/mmb/mpyle/href_v2awips/${PDY}${cyc}/"
+
+# /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test.sh

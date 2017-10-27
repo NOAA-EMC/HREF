@@ -1,0 +1,165 @@
+#! /bin/sh
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.out_pyth_00z_hiresw_conusarw
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/test_graphics.err_pyth_00z_hiresw_conusarw
+#BSUB -M 1500
+#BSUB -P HRW-T2O
+#BSUB -J AWIPS_GRAPHICS
+#BSUB -q "devhigh"
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 48*{select[craylinux && vnode]span[ptile=16] cu[type=cabinet]}'
+#BSUB -W 1:59
+
+# module load ics
+# module load ibmpe
+
+module load prod_envir
+module load prod_util
+module load grib_util/1.0.3
+
+module use -a /u/Rahul.Mahajan/modulefiles
+module load anaconda
+export PYTHONPATH=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/lib
+
+srcdir=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools
+
+dom=conus
+core=arw
+cyc=00
+
+mkdir -p /gpfs/hps3/ptmp/Matthew.Pyle/hiresw_python_${cyc}_arw_${dom}/
+cd  /gpfs/hps3/ptmp/Matthew.Pyle/hiresw_python_${cyc}_arw_${dom}/
+rm  /gpfs/hps3/ptmp/Matthew.Pyle/hiresw_python_${cyc}_arw_${dom}/*
+
+cp $srcdir/filter_hiresw_grib_1h.scr .
+cp $srcdir/*hiresw*.py .
+
+filter_hiresw_grib_1h.scr ${cyc} arw conus
+
+runtypes="para ops"
+
+types="arw"
+
+for runtype in $runtypes
+do
+
+if [ $runtype = "para" ]
+then
+OPS=""
+elif [ $runtype = "ops" ]
+then
+OPS="OPS"
+fi
+
+for typ in $types
+do
+hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16"
+rm poe.script.${runtype}.${typ}.1
+echo "#! /bin/bash" > poe.script.${runtype}.${typ}.1
+
+for hr in $hrs
+do
+echo "python hiresw_generic.py ${runtype}.f${hr}.grb2_${typ} CONUS ${typ}${OPS} &" >> poe.script.${runtype}.${typ}.1
+done
+echo "wait" >> poe.script.${runtype}.${typ}.1
+chmod 775 poe.script.${runtype}.${typ}.1
+done
+
+hrs="17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32"
+for typ in $types
+do
+rm poe.script.${runtype}.${typ}.2
+echo "#! /bin/bash" > poe.script.${runtype}.${typ}.2
+
+for hr in $hrs
+do
+echo "python hiresw_generic.py ${runtype}.f${hr}.grb2_${typ} CONUS ${typ}${OPS} &" >> poe.script.${runtype}.${typ}.2
+done
+
+echo "wait" >> poe.script.${runtype}.${typ}.2
+chmod 775 poe.script.${runtype}.${typ}.2
+done
+
+hrs="33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+
+for typ in $types
+do
+rm poe.script.${runtype}.${typ}.3
+echo "#! /bin/bash" > poe.script.${runtype}.${typ}.3
+
+for hr in $hrs
+do
+echo "python hiresw_generic.py ${runtype}.f${hr}.grb2_${typ} CONUS ${typ}${OPS} &" >> poe.script.${runtype}.${typ}.3
+done
+
+echo "wait" >> poe.script.${runtype}.${typ}.3
+chmod 775 poe.script.${runtype}.${typ}.3
+done
+
+aprun -n 1 -N 1 -d 16 ./poe.script.${runtype}.arw.1 & 
+aprun -n 1 -N 1 -d 16 ./poe.script.${runtype}.arw.2 & 
+aprun -n 1 -N 1 -d 16 ./poe.script.${runtype}.arw.3 & 
+wait
+
+done
+
+
+############################
+
+runtype=paramem2
+types="arw"
+OPS="mem2"
+
+for typ in $types
+do
+
+
+hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16"
+rm poe.script.${runtype}.${typ}.1
+
+echo "#! /bin/bash" > poe.script.${runtype}.${typ}.1
+for hr in $hrs
+do
+echo "python hiresw_generic.py ${runtype}.f${hr}.grb2_${typ} CONUS ${typ}${OPS} &" >> poe.script.${runtype}.${typ}.1
+done
+echo "wait" >> poe.script.${runtype}.${typ}.1
+chmod 775 poe.script.${runtype}.${typ}.1
+done
+
+hrs="17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32"
+for typ in $types
+do
+rm poe.script.${runtype}.${typ}.2
+echo "#! /bin/bash" > poe.script.${runtype}.${typ}.2
+for hr in $hrs
+do
+echo "python hiresw_generic.py ${runtype}.f${hr}.grb2_${typ} CONUS ${typ}${OPS} &" >> poe.script.${runtype}.${typ}.2
+done
+
+echo "wait" >> poe.script.${runtype}.${typ}.2
+chmod 775 poe.script.${runtype}.${typ}.2
+done
+
+hrs="33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+for typ in $types
+do
+rm poe.script.${runtype}.${typ}.3
+echo "#! /bin/bash" > poe.script.${runtype}.${typ}.3
+
+for hr in $hrs
+do
+echo "python hiresw_generic.py ${runtype}.f${hr}.grb2_${typ} CONUS ${typ}${OPS} &" >> poe.script.${runtype}.${typ}.3
+done
+
+echo "wait" >> poe.script.${runtype}.${typ}.3
+chmod 775 poe.script.${runtype}.${typ}.3
+done
+
+aprun -n 1 -N 1 -d 16 ./poe.script.${runtype}.arw.1 & 
+aprun -n 1 -N 1 -d 16 ./poe.script.${runtype}.arw.2 & 
+aprun -n 1 -N 1 -d 16 ./poe.script.${runtype}.arw.3 & 
+wait
+
+
+cd $srcdir
+
+bsub < convert_merge_hiresw.sh_${cyc}_${core}_${dom}

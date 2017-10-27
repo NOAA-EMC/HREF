@@ -1,0 +1,67 @@
+import numpy as np
+import fortranfile as F
+import sys,ncepy,os
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap, cm, maskoceans
+
+
+def savetxt_3d(name,data):
+# from stack overflow
+# http://stackoverflow.com/questions/3685265/how-to-write-a-multidimensional-array-to-a-text-file
+  with file(name, 'w') as outfile:
+    outfile.write('# Array shape: {0}\n'.format(data.shape))
+    for data_slice in data:
+        np.savetxt(outfile, data_slice)
+
+if __name__ == '__main__':
+  
+ print('Starting...assuming single precision (32 bit) and BIG endian!  This can be changed if needed.')
+ if len(sys.argv)!=5:
+   sys.exit('Incorrect number of arguments! Usage:python %s %s' %(sys.argv[0],'input_file','im','jm','lm'))
+
+ fname=sys.argv[1]
+ im=int(sys.argv[2])
+ jm=int(sys.argv[3])
+ lm=int(sys.argv[4])
+#--open first file
+ fil=F.FortranFile(fname,endian='>')
+
+ #--Now read the imput file
+ fld=np.zeros([jm,im,lm])
+ fld1d=np.zeros([lm])
+ zeroln=np.zeros([lm])
+
+ for k in np.arange(0,lm):
+   fld[:,:,k] = [fil.readReals('f') for y in np.arange(0,jm)]
+
+ print np.shape(fld)
+ print np.max(fld),np.min(fld)
+ print np.where(fld == np.max(fld))
+
+#719 139
+ for k in np.arange(0,lm):
+#   fld1d[k]=fld[78,76,k]
+   fld1d[k]=fld[100,100,k]
+
+ # create figure and axes instances
+ fig = plt.figure(figsize=(11,11))
+#  ax = fig.add_axes([0.1,0.1,0.8,0.8])
+
+ # Get the lower left and upper right lat and lons in addition to
+ # the map background resolution to use for plotting (res, 
+ # similar to mpdset in grads)
+ #     use again later   
+#  keep_ax_lst = ax.get_children()[:]
+
+#--Plot each vertical level cover the domain outlined above
+#  for k in np.arange(0,lm): 
+# for k in np.arange(9,59,5): 
+#    if k==30: savetxt_3d('vdiff.txt',vdiff)
+#     print "%s %d" % ('Working on model level',k+1)
+#  plt.plot(k,fld1d,'r--',k,zeroln,'r')
+ plt.plot(fld1d,'r')
+ plt.ylim(-80,80)
+ plt.title('Lev '+repr(k+1)+fname)
+# plt.show
+ plt.savefig('./'+os.path.basename(fname)+'zoom_prof.png')
+# ncepy.clear_plotables(ax,keep_ax_lst,fig)
