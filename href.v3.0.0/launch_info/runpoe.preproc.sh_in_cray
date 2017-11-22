@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v3.0.0/logs/test_hrefpreprocpoe_NEST___CYC_.out
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v3.0.0/logs/test_hrefpreprocpoe_NEST___CYC_.err
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpreprocpoe_NEST___CYC_.out
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpreprocpoe_NEST___CYC_.err
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
@@ -52,7 +52,7 @@ module load prod_util
 
 href_ver=`cat /u/$LOGNAME/href_exp`
 
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/git_repo/EMC_hrw/href.${href_ver}
 
 export SENDCOM=YES
 export SENDDBN=NO

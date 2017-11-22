@@ -40,7 +40,7 @@ echo vers is $vers
 
 DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 
-cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.${vers}/launch_info/
+cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch_info/
 
 if [ $NEST = "conus" ]
 then
