@@ -347,7 +347,7 @@ C	endif
 	write(0,*) 'call just_hrly(b) with jf: ', jf
         call just_hrly(filehead, ff, jf, do_old )
 
-	if (filehead(6:8) .eq. 'm06' .or. filehead(6:8) .eq. 'm07') then
+	if (filehead(6:8) .eq. 'm03' .or. filehead(6:8) .eq. 'm04') then
 	write(0,*) 'calling just_hrrr_3hrly'
         call just_hrrr_3hrly(filehead, ff, jf)
         endif
