@@ -1,0 +1,16 @@
+#! /bin/sh
+
+val=$1
+
+if [ $val -eq 12 ]
+then
+delcyc=00
+fi
+
+if [ $val -eq 18 ]
+then
+delcyc=06
+fi
+
+
+echo delcyc is $delcyc

@@ -1,0 +1,127 @@
+#!/bin/sh
+
+#############################################################
+# HREF RUNALL 
+# 02/02/2015 Binbin Zhou, create for run all scripts 
+#############################################################
+
+########################################
+# Preliminary data setup step
+########################################
+
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+###################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href}
+
+export IOBUF_PARAMS='*:size=8M:count=8'
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+
+## PDY not included here as pull data from PDYm1 as well
+
+export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
+export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
+export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+export PARMhref=${PARMhref:-$HOMEhref/parm}
+export USHhref=${USHhref:-$HOMEhref/ush}
+export FIXhref=${FIXhref:-$HOMEhref/fix}
+export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/href_ensprodpreproc_${NEST}_${cyc}_${envir}.${pid}}
+mkdir -p $DATA
+rm -rf $DATA/*
+cd $DATA
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-$COMROOT/logs/jlogfile}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.$$"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+
+###################################
+# Set up the UTILITIES
+###################################
+
+msg="JOB $job HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+#
+# Run setpdy and initialize PDY variables
+#
+
+setpdy.sh
+. PDY
+
+##############################################
+# Define running directory and COM directories
+##############################################
+
+if [ "$RUN_ENVIR" != nco ] ; then
+  export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_exp
+else
+  export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+fi
+
+if [ ! -d $COMOUT ] ; then 
+ mkdir -p $COMOUT/ensprod
+ mkdir -p $COMOUT/verf_g2g
+fi
+
+#######################################################
+# Pass information which is needed to run the Script
+#######################################################
+
+# export VERBOSE=YES
+
+###################################################
+# Execute the Script exhref_ensprod.sh.ecf
+
+rm -rf poe.*
+
+
+$USHhref/preprocess_hrrr.sh.ecf_get ${cyc}
+
+export err=$?; err_chk
+
+
+msg"JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+date
+
+fi
+
+cd $DATAROOT
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+
+date

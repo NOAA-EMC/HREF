@@ -1,0 +1,241 @@
+#!/bin/sh
+
+#############################################################
+# HREF RUNALL 
+# 02/02/2015 Binbin Zhou, create for run all scripts 
+#############################################################
+
+########################################
+# Preliminary data setup step
+########################################
+
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+###################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href}
+
+export IOBUF_PARAMS='*:size=8M:count=8'
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+
+## PDY not included here as pull data from PDYm1 as well
+
+export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
+export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
+export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+export PARMhref=${PARMhref:-$HOMEhref/parm}
+export USHhref=${USHhref:-$HOMEhref/ush}
+export FIXhref=${FIXhref:-$HOMEhref/fix}
+export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/href_ensprodpreproc_${NEST}_${cyc}_${envir}.${pid}}
+mkdir -p $DATA
+rm -rf $DATA/*
+cd $DATA
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-$COMROOT/logs/jlogfile}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.$$"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+
+###################################
+# Set up the UTILITIES
+###################################
+
+msg="JOB $job HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+#
+# Run setpdy and initialize PDY variables
+#
+
+setpdy.sh
+. PDY
+
+##############################################
+# Define running directory and COM directories
+##############################################
+
+if [ "$RUN_ENVIR" != nco ] ; then
+  export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_exp
+else
+  export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+fi
+
+if [ ! -d $COMOUT ] ; then 
+ mkdir -p $COMOUT/ensprod
+ mkdir -p $COMOUT/verf_g2g
+fi
+
+#######################################################
+# Pass information which is needed to run the Script
+#######################################################
+
+# export VERBOSE=YES
+
+###################################################
+# Execute the Script exhref_ensprod.sh.ecf
+
+rm -rf poe.*
+
+
+if [ $NEST = "conus" ]
+then
+
+echo "#!/bin/sh  "                             >  poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 01 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 02 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 03 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 04 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 05 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 06 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 07 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 08 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 09 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 10 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 11 &" >> poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 12 &" >> poe.a
+echo "wait" >> poe.a
+
+echo "#!/bin/sh  "                             >  poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 13 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 14 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 15 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 16 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 17 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 18 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 19 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 20 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 21 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 22 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 23 &" >> poe.b
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 24 &" >> poe.b
+echo "wait" >> poe.b
+
+echo "#!/bin/sh  "                             >  poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 25 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 26 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 27 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 28 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 29 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 30 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 31 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 32 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 33 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 34 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 35 &" >> poe.c
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 36 &" >> poe.c
+echo "wait" >> poe.c
+
+
+echo "#!/bin/sh  "                             >  poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 01 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 02 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 03 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 04 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 05 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 06 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 07 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 08 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 09 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 10 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 11 &" >> poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 12 &" >> poe.d
+echo "wait" >> poe.d
+
+echo "#!/bin/sh  "                             >  poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 13 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 14 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 15 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 16 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 17 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 18 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 19 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 20 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 21 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 22 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 23 &" >> poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 24 &" >> poe.e
+echo "wait" >> poe.e
+
+echo "#!/bin/sh  "                             >  poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 25 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 26 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 27 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 28 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 29 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 30 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 31 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 32 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 33 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 34 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 35 &" >> poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 36 &" >> poe.f
+echo "wait" >> poe.f
+
+echo "#!/bin/sh  "                             >  poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 37 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 38 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 39 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 40 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 41 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 42 &" >> poe.g
+echo "wait" >> poe.g
+
+
+chmod 775 ${DATA}/poe.a  ${DATA}/poe.b ${DATA}/poe.c
+chmod 775 ${DATA}/poe.d  ${DATA}/poe.e ${DATA}/poe.f  ${DATA}/poe.g
+
+
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.a &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.b &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.c &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.d &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.e &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.f &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.g &
+wait
+export err=$?; err_chk
+
+
+msg"JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+date
+
+fi
+
+cd $DATAROOT
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+
+date
