@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoe_NEST___CYC_.out
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoe_NEST___CYC_.err
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoe_NEST___CYC_.out_2
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoe_NEST___CYC_.err_2
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
@@ -51,4 +51,4 @@ export SENDCOM=YES
 export SENDDBN=NO
 export SENDDBN_NTC=NO
 
-${HOMEhref}/jobs/JHREF_ENSPROD
+${HOMEhref}/jobs/JHREF_ENSPROD_2

@@ -9,7 +9,7 @@ C  raw data
        character*40 filehead,filename(8), output, outdone
        
        integer ff
-       logical do_old, do_old3
+       logical do_old, do_hrrr
        character*3 fhr(12)
        character*5 domain
        integer iunit,ounit, pdt9_orig, acclength
@@ -19,7 +19,7 @@ C  raw data
      + /'f03','f06','f09','f12','f15','f18','f21',
      +  'f24','f27','f30','f33','f36'/
  
-       read (*,*) filehead, ff, do_old, acclength, domain
+       read (*,*) filehead, ff, do_old, do_hrrr, acclength, domain
 	if (domain(1:5) .eq. 'conus') then
          GRIBID=227            !namnest grid
         else if (domain(1:2) .eq. 'ak') then
@@ -347,7 +347,8 @@ C	endif
 	write(0,*) 'call just_hrly(b) with jf: ', jf
         call just_hrly(filehead, ff, jf, do_old )
 
-	if (filehead(6:8) .eq. 'm03' .or. filehead(6:8) .eq. 'm04') then
+CC	if (filehead(6:8) .eq. 'm03' .or. filehead(6:8) .eq. 'm04') then
+	if (do_hrrr) then
 	write(0,*) 'calling just_hrrr_3hrly'
         call just_hrrr_3hrly(filehead, ff, jf)
         endif

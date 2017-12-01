@@ -9,7 +9,7 @@
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 84*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}'
 #BSUB -W 0:19
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export RUN_ENVIR=test
 export envir=test

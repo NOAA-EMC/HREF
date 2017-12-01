@@ -16,8 +16,6 @@ typeset -Z2 m
 fhr=$1
 dom=${2}
 
-wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
-
 echo here in ush script with dom $dom
 
 # fcheck=$fhr
@@ -33,12 +31,12 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
 	echo "in conus block"
-     files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
-      days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
-      cycs="9 00    18     00    18   00  00    00    12     12    12"
-      ages="9  0     6      0     6    0   0    0     12     12    12"
+      days="9 $PDY $PDYm1 $PDYm1 $PDY $PDYm1 $PDY $PDY $PDY $PDYm1 $PDYm1" 
+      cycs="9 00    18     12     00    18     00  00    00    12     12"
+      ages="9  0     6     12      0     6      0   0    0     12     12"
      fi
      set -A  day  $days
      set -A  cycloc $cycs
@@ -94,28 +92,28 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-  files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+  files="9 namnest namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusmem2arw"
   set -A file  $files
-  mbrs="1  2  3  4  5  6  7  8  9 10"
+  mbrs="1  2  3  4  5  6  7  8  9  10"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
-    cycs="9 06 00 06 00 00 00 00 12 12 12"
-    ages="9  0  6  0  6  6  6  6 18 18 18"
+    days="9 $PDY $PDY $PDYm1 $PDY $PDY $PDY $PDY $PDY $PDYm1 $PDYm1" 
+    cycs="9 06 00 18 06 00 00 00 00 12 12"
+    ages="9  0  6 12  0  6  6  6  6 18 18"
   fi
 
   if [ $cyc = '12' ] ; then
     days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY" 
-    cycs="9 12 06 12 06 12  12 12 00  00 00"
-    ages="9  0  6  0  6  0   0  0 12  12 12"
+    cycs="9 12 06 00 12 06 12  12 12 00 00"
+    ages="9  0  6 12  0  6  0   0  0 12 12"
 	echo cycs $cycs
         echo ages $ages
   fi
 
   if [ $cyc = '18' ] ; then
     days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY" 
-    cycs="9 18 12 18 12 12 12 12 00 00 00"
-    ages="9  0  6  0  6  6  6 6  18 18 18"
+    cycs="9 18 12 06 18 12 12 12 12 00 00"
+    ages="9  0  6  12 0  6  6  6 6  18 18"
   fi
 
   set -A  day $days
@@ -281,7 +279,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 1
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -297,7 +295,7 @@ typeset -Z2 fcheckloc
         echo href.m${m}.t${cyc}z. $ff .true. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
         fi
         fi
-        echo href.m${m}.t${cyc}z. $ff .true. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .true. .false.  1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
 
         if [ ${ff}%3 -eq 0 ] 
         then

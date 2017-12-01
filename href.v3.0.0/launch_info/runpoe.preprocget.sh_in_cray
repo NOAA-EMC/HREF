@@ -7,7 +7,7 @@
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 #BSUB -W 0:29
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export RUN_ENVIR=test
 export envir=test
