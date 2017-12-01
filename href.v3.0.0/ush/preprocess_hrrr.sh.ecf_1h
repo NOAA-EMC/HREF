@@ -18,7 +18,7 @@ PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
 mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
 cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
 
-PARMhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v3.0.0/parm
+# PARMhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/parm
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
 
 # for hr in $hrs

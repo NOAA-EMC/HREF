@@ -211,6 +211,12 @@ echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 39 &" >> poe.g
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 40 &" >> poe.g
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 41 &" >> poe.g
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 42 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 43 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 44 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 45 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 46 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 47 &" >> poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 48 &" >> poe.g
 echo "wait" >> poe.g
 
 
@@ -224,7 +230,7 @@ aprun -n 1 -N 1 -d 12 ${DATA}/poe.c &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.d &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.e &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.f &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.g &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.g &
 wait
 export err=$?; err_chk
 

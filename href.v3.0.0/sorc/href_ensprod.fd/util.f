@@ -634,7 +634,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
           end if
            end do loop2
                      
-         if( count .le. half ) then           !only most of member happen                                                             
+         if( count .le. half ) then           !only most of member happen   
            mean = alarge
          end if 
                                                                                             
