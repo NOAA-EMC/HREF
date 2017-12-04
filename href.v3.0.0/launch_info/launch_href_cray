@@ -67,10 +67,6 @@ sleep 10
 echo loop now $loop
 fi
 let loop=loop+1
-if [ $loop -eq 90 ]
-then
-exit
-fi
 
 done
 

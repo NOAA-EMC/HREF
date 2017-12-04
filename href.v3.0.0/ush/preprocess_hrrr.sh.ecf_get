@@ -10,7 +10,7 @@ fi
 loc=`hostname | cut -c1`
 echo loc is $loc
 
-if [ $loc -eq 's' ]
+if [ $loc == 's' ]
 then
 targ=luna
 else
