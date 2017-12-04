@@ -68,10 +68,6 @@ echo loop now $loop
 fi
 let loop=loop+1
 done
-if [ $loop -eq 90 ]
-then
-exit
-fi
 
 
 fi
