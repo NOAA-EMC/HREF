@@ -7,15 +7,7 @@ echo need cycle only
 exit
 fi
 
-loc=`hostname | cut -c1`
-echo loc is $loc
-
-if [ $loc == 's' ]
-then
-targ=luna
-else
-targ=surge
-fi
+targ=`cat /etc/prod`
 
 echo targ is $targ
 
