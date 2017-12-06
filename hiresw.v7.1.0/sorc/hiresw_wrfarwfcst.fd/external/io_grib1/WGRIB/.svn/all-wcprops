@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB
+END
+ibm2flt.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ibm2flt.c
+END
+cptectable_254.c
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/cptectable_254.c
+END
+wrtieee.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/wrtieee.c
+END
+BDSunpk.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/BDSunpk.c
+END
+dwdtable_002.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/dwdtable_002.c
+END
+ec_ext.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ec_ext.c
+END
+nceptab_129.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/nceptab_129.c
+END
+dwdtable_201.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/dwdtable_201.c
+END
+dwdtable_202.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/dwdtable_202.c
+END
+missing.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/missing.c
+END
+nceptable_opn.c
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/nceptable_opn.c
+END
+dwdtable_203.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/dwdtable_203.c
+END
+bds.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/bds.h
+END
+wgrib_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/wgrib_main.c
+END
+nceptable_reanal.c
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/nceptable_reanal.c
+END
+gds_grid.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/gds_grid.c
+END
+gds.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/gds.h
+END
+ectable_130.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_130.c
+END
+ectable_131.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_131.c
+END
+PDS_date.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/PDS_date.c
+END
+ectable_150.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_150.c
+END
+ectable_151.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_151.c
+END
+ombtable.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ombtable.c
+END
+ectable_170.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_170.c
+END
+Changes
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/Changes
+END
+levels.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/levels.c
+END
+gribtable.c
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/gribtable.c
+END
+seekgrib.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/seekgrib.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/Makefile
+END
+flt2ieee.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/flt2ieee.c
+END
+nceptab_130.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/nceptab_130.c
+END
+nceptab_131.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/nceptab_131.c
+END
+cnames.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/cnames.c
+END
+intpower.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/intpower.c
+END
+cnames.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/cnames.h
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/README
+END
+pds4.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/pds4.h
+END
+readgrib.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/readgrib.c
+END
+src2all
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/src2all
+END
+ectable_140.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_140.c
+END
+ectable_160.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_160.c
+END
+bms.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/bms.h
+END
+ectable_180.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_180.c
+END
+grib.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/grib.h
+END
+PDStimes.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/PDStimes.c
+END
+ectable_128.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_128.c
+END
+ensemble.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ensemble.c
+END
+ectable_129.c
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/WGRIB/ectable_129.c
+END

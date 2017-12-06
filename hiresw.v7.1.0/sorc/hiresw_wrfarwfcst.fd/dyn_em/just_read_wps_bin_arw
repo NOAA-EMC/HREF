@@ -1,0 +1,1492 @@
+! ------------------------------------------------------------
+
+      SUBROUTINE read_wps_bin_arw ( grid, filename, file_date_string, num_metgrid_levels )
+
+      USE module_soil_pre
+      USE module_domain
+
+      IMPLICIT NONE
+      INCLUDE "mpif.h"
+
+
+      TYPE(domain) , INTENT(INOUT)  :: grid
+      CHARACTER (LEN=19) , INTENT(IN) :: file_date_string
+      CHARACTER (LEN=19)              :: VarName
+      CHARACTER (LEN=150)             :: chartemp
+      CHARACTER (*) , INTENT(IN) :: filename
+
+      INTEGER :: ids,ide,jds,jde,kds,kde           &
+                ,ims,ime,jms,jme,kms,kme           &
+                ,its,ite,jts,jte,kts,kte
+
+      INTEGER :: i , j , k , loop, IMAX, JMAX
+      INTEGER :: DATAHANDLE, num_metgrid_levels
+      INTEGER :: Sysdepinfo, Status, N
+      INTEGER :: istatus,ioutcount,iret,index,ierr
+
+      integer :: nrecs,iunit, L,hor_size
+
+      LOGICAL :: RAP
+
+!!
+      character*132, allocatable,save :: datestr_all(:)
+      character*132, allocatable,save :: varname_all(:)
+      integer, allocatable,save       :: domainend_all(:,:)
+      integer, allocatable,save       :: start_block(:)
+      integer, allocatable,save       :: end_block(:)
+      integer, allocatable,save       :: start_byte(:)
+      integer, allocatable,save       :: end_byte(:)
+      integer(kind=i_llong), allocatable, save           :: file_offset(:)
+!!
+
+      REAL :: dummy,tmp,garb,garb1,garb2,garb3,garb4
+      REAL,ALLOCATABLE,save:: dumdata(:,:,:),dumdata_soil(:,:,:)
+      REAL,ALLOCATABLE,save:: dumdata_flex(:,:,:)
+      REAL, ALLOCATABLE,save:: dumdata_u(:,:,:)
+      REAL, ALLOCATABLE,save:: dumdata_v(:,:,:)
+      REAL , DIMENSION(:,:,:), ALLOCATABLE,save :: st_inputx , sm_inputx, sw_inputx
+
+      CHARACTER (LEN= 8) :: dummy_char
+
+      INTEGER :: ok , map_proj , ok_open, igarb
+      REAL :: pt
+      INTEGER :: num_veg_cat , num_soil_top_cat , num_soil_bot_cat
+
+      SELECT CASE ( model_data_order )
+         CASE ( DATA_ORDER_ZXY )
+            kds = grid%sd31 ; kde = grid%ed31 ;
+            ids = grid%sd32 ; ide = grid%ed32 ;
+            jds = grid%sd33 ; jde = grid%ed33 ;
+
+            kms = grid%sm31 ; kme = grid%em31 ;
+            ims = grid%sm32 ; ime = grid%em32 ;
+            jms = grid%sm33 ; jme = grid%em33 ;
+
+            kts = grid%sp31 ; kte = grid%ep31 ; ! tile is entire patch
+            its = grid%sp32 ; ite = grid%ep32 ; ! tile is entire patch
+            jts = grid%sp33 ; jte = grid%ep33 ; ! tile is entire patch
+
+         CASE ( DATA_ORDER_XYZ )
+            ids = grid%sd31 ; ide = grid%ed31 ;
+            jds = grid%sd32 ; jde = grid%ed32 ;
+            kds = grid%sd33 ; kde = grid%ed33 ;
+
+            ims = grid%sm31 ; ime = grid%em31 ;
+            jms = grid%sm32 ; jme = grid%em32 ;
+            kms = grid%sm33 ; kme = grid%em33 ;
+
+            its = grid%sp31 ; ite = grid%ep31 ; ! tile is entire patch
+            jts = grid%sp32 ; jte = grid%ep32 ; ! tile is entire patch
+            kts = grid%sp33 ; kte = grid%ep33 ; ! tile is entire patch
+
+         CASE ( DATA_ORDER_XZY )
+            ids = grid%sd31 ; ide = grid%ed31 ;
+            kds = grid%sd32 ; kde = grid%ed32 ;
+            jds = grid%sd33 ; jde = grid%ed33 ;
+
+            ims = grid%sm31 ; ime = grid%em31 ;
+            kms = grid%sm32 ; kme = grid%em32 ;
+            jms = grid%sm33 ; jme = grid%em33 ;
+
+            its = grid%sp31 ; ite = grid%ep31 ; ! tile is entire patch
+            kts = grid%sp32 ; kte = grid%ep32 ; ! tile is entire patch
+            jts = grid%sp33 ; jte = grid%ep33 ; ! tile is entire patch
+
+      END SELECT
+
+      !  Initialize what soil temperature and moisture is available.
+
+
+      flag_st000010 = 0
+      flag_st010040 = 0
+      flag_st040100 = 0
+      flag_st100200 = 0
+      flag_sm000010 = 0
+      flag_sm010040 = 0
+      flag_sm040100 = 0
+      flag_sm100200 = 0
+      flag_st010200 = 0
+      flag_sm010200 = 0
+
+      flag_soilt000 = 0
+      flag_soilt001 = 0
+      flag_soilt004 = 0
+      flag_soilt010 = 0
+      flag_soilt030 = 0
+      flag_soilt040 = 0
+      flag_soilt060 = 0
+      flag_soilt100 = 0
+      flag_soilt160 = 0
+      flag_soilt200 = 0 
+      flag_soilt300 = 0 
+
+      flag_soilm000 = 0
+      flag_soilm001 = 0
+      flag_soilm004 = 0
+      flag_soilm010 = 0 
+      flag_soilm030 = 0 
+      flag_soilm040 = 0
+      flag_soilm060 = 0
+      flag_soilm100 = 0
+      flag_soilm160 = 0
+      flag_soilm200 = 0
+      flag_soilm300 = 0
+
+      flag_sst      = 0
+      flag_toposoil = 0
+
+      !  How many soil levels have we found?  Well, right now, none.
+
+      num_st_levels_input = 0
+      num_sm_levels_input = 0
+      st_levels_input = -1
+      sm_levels_input = -1
+
+!tryelim         CALL nl_set_mminlu ( grid%id, 'USGS')
+         CALL nl_set_iswater (grid%id, 16 )
+         CALL nl_set_isice (grid%id, 24 )
+
+
+      !  Get the space for the data if this is the first time here.
+
+!	write(6,*) 'pre allocations'
+!        call summary()
+
+        IF (.NOT. ALLOCATED (pmsl)              ) ALLOCATE ( pmsl(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (psfc_in)           ) ALLOCATE ( psfc_in(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (st_inputx)) ALLOCATE (st_inputx(its:ite,jts:jte,num_st_levels_alloc))
+        IF (.NOT. ALLOCATED (sm_inputx)) ALLOCATE (sm_inputx(its:ite,jts:jte,num_st_levels_alloc))
+        IF (.NOT. ALLOCATED (sw_inputx)) ALLOCATE (sw_inputx(its:ite,jts:jte,num_st_levels_alloc))
+        IF (.NOT. ALLOCATED (soilt010_input)    ) ALLOCATE ( soilt010_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilt040_input)    ) ALLOCATE ( soilt040_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilt100_input)    ) ALLOCATE ( soilt100_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilt200_input)    ) ALLOCATE ( soilt200_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilm010_input)    ) ALLOCATE ( soilm010_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilm040_input)    ) ALLOCATE ( soilm040_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilm100_input)    ) ALLOCATE ( soilm100_input(its:ite,jts:jte) )
+        IF (.NOT. ALLOCATED (soilm200_input)    ) ALLOCATE ( soilm200_input(its:ite,jts:jte) )
+
+!       write(6,*) 'past allocations'
+!       call summary()
+
+        !  Local arrays
+
+      VarName='CEN_LAT'
+!      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+!      if (iret /= 0) then
+!        print*,VarName," not found in file"
+!      else
+
+!        call mpi_file_read_at(iunit,file_offset(index)+5*4,      &
+!                              garb,1,mpi_real4,                  &
+!                              mpi_status_ignore, ierr)
+
+!        if (ierr /= 0) then
+!          print*,"Error reading ", VarName," using MPIIO"
+!        else
+!          print*,VarName, ' from MPIIO READ= ',garb
+!          CALL nl_set_cen_lat ( grid%id , garb )
+!          write(0,*) 'cenlat= ', garb
+!        end if
+!      end if
+
+      VarName='CEN_LON'
+!      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+!       call mpi_file_read_at(iunit,file_offset(index)+5*4,      &
+!                              garb,1,mpi_real4,                  &
+!                              mpi_status_ignore, ierr)
+!          CALL nl_set_cen_lon ( grid%id , garb )
+!          CALL nl_set_stand_lon ( grid%id , garb )
+
+      VarName='TRUELAT1'
+!      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+!        call mpi_file_read_at(iunit,file_offset(index)+5*4,      &
+!                              garb,1,mpi_real4,                  &
+!                              mpi_status_ignore, ierr)
+!          CALL nl_set_truelat1 ( grid%id , garb )
+!
+      VarName='TRUELAT2'
+!     call retrieve_index(index,VarName,varname_all,nrecs,iret)
+!        call mpi_file_read_at(iunit,file_offset(index)+5*4,      &
+!!                              garb,1,mpi_real4,                  &
+!                              mpi_status_ignore, ierr)
+!          CALL nl_set_truelat2 ( grid%id , garb )
+!
+      VarName='MAP_PROJ'
+!      call retrieve_index(index,VarName,varname_all,nrecs,iret)
+!        call mpi_file_read_at(iunit,file_offset(index)+5*4,     &
+!                              igarb,1,mpi_integer4,             &
+!                              mpi_status_ignore, ierr)
+!!
+!          CALL  nl_set_map_proj( grid%id, igarb)
+
+
+!    CALL ext_int_ioinit(SysDepInfo,Status)
+!    CALL ext_int_open_for_read( trim(fileName), 0, 0, " ", &
+!                                DataHandle, Status)
+
+    hor_size=(IDE-IDS)*(JDE-JDS)
+        write(0,*) 'hor_size: ', hor_size
+        write(0,*) 'IDE, JDE: ', IDE, JDE
+
+        open(unit=47,file=trim(fileName),form='unformatted')
+
+        read(47) garb1,garb2,garb3,garb4,igarb
+
+! if CONUS, expect RAP data, but not if generating boundaries
+
+        if ((garb1 .ge. 39.99 .and. garb1 .le. 40.01) .and. &
+            (num_metgrid_levels .ge. 38 .and. num_metgrid_levels .le. 40)  ) then
+        RAP=.true.
+        else
+        RAP=.false.
+        endif
+
+
+        write(0,*) 'garb1: ', garb1
+        write(0,*) 'garb3: ', garb3
+        write(0,*) 'garb4: ', garb4
+        write(0,*) 'igarb: ', igarb
+
+          CALL nl_set_cen_lat ( grid%id , garb1 )
+
+          CALL nl_set_cen_lon ( grid%id , garb2 )
+          CALL nl_set_stand_lon ( grid%id , garb2 )
+
+          CALL nl_set_truelat1 ( grid%id , garb3 )
+          CALL nl_set_truelat2 ( grid%id , garb4 )
+
+          CALL  nl_set_map_proj( grid%id, igarb)
+
+	if (.not. allocated(dumdata)) then
+        write(0,*) 'num_metgrid_levels: ', num_metgrid_levels
+    allocate(dumdata(IDS:IDE-1,JDS:JDE-1,num_metgrid_levels))
+    allocate(dumdata_u(IDS:IDE,JDS:JDE-1,num_metgrid_levels))
+    allocate(dumdata_v(IDS:IDE-1,JDS:JDE,num_metgrid_levels))
+
+        
+        if (RAP) then
+            allocate(dumdata_soil(IDS:IDE-1,JDS:JDE-1,6))
+        else
+             allocate(dumdata_soil(IDS:IDE-1,JDS:JDE-1,4))
+        endif
+
+	endif
+
+        write(0,*) 'size dumdata_v post alloc block: ', size(dumdata_v,dim=1),&
+                                       size(dumdata_v,dim=2),&
+                                       size(dumdata_v,dim=3)
+
+! binary write of field: PRES        
+        write(0,*) 'to read for PRES'
+        write(0,*) 'shape(dumdata): ', shape(dumdata)
+       read(47) dumdata
+        write(0,*) 'read PRES'
+        DO J=JTS,min(JTE,JDE-1)
+         DO K=1,num_metgrid_levels
+         DO I=ITS,min(ITE,IDE-1)
+           grid%p_gc(I,K,J)=dumdata(I,J,K)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'K, grid%p_gc: ', K, grid%p_gc(I,K,J)
+        endif
+         ENDDO
+        ENDDO
+       ENDDO
+
+        write(0,*) 'size(dumdata_soil): ', size(dumdata_soil,dim=1), &
+                   size(dumdata_soil,dim=2), size(dumdata_soil,dim=3)
+        write(0,*) 'to dumdata_soil read'
+        read(47) ! ignore dumdata_soil
+        write(0,*) 'read SOIL_LAYERS'
+       read(47) dumdata_soil  ! will fill with ST000010 type fields
+        write(0,*) 'read SM'
+
+        read(47) !inogre  dumdata_soil ! will fill with ST000010 type fields
+        write(0,*) 'read ST'
+
+        write(0,*) 'to GHT read'
+! binary write of field: GHT        
+       read(47) dumdata
+        write(0,*) 'read GHT'
+        DO J=JTS,min(JTE,JDE-1)
+       DO K=1,num_metgrid_levels
+         DO I=ITS,min(ITE,IDE-1)
+           grid%ght_gc(I,K,J)=dumdata(I,J,K)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'K, grid%ght_gc: ', K, grid%ght_gc(I,K,J)
+        endif
+         ENDDO
+        ENDDO
+       ENDDO
+
+
+        IF (RAP) THEN
+
+! binary write of field: LANDSEA 
+       read(47) dumdata(:,:,1:1) ! ignored
+
+! binary write of field: SEAICE 
+        write(0,*) 'to SEAICE'
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%xice(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILT300
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt300(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        write(0,*) 'grid%soilt300(its+5,jts+5): ', grid%soilt300(its+5,jts+5)
+
+! binary write of field: SOILT160
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt160(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        if (num_metgrid_levels .eq. 40) then
+
+! binary write of field: SOILT100
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt100(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILT060
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt060(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        write(0,*) 'grid%soilt060(its+5,jts+5): ', grid%soilt060(its+5,jts+5)
+
+! binary write of field: SOILT030
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt030(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+         endif
+
+
+        if (num_metgrid_levels .eq. 38 .or. &
+            num_metgrid_levels .eq. 39) then ! old RAP
+
+! binary write of field: SOILT040
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt040(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILT020
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt020(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILT005
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt005(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        
+        endif
+
+        if (num_metgrid_levels .eq. 40) then ! para RAP
+        
+! binary write of field: SOILT010
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt010(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        write(0,*) 'grid%soilt010(its+5,jts+5): ', grid%soilt010(its+5,jts+5)
+
+! binary write of field: SOILT004
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt004(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILT001
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt001(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        endif
+
+! binary write of field: SOILT000
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilt000(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! binary write of field: SOILM300
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm300(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILM160
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm160(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        if (num_metgrid_levels .eq. 40) then
+
+! binary write of field: SOILM100
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm100(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILM060
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm060(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILM030
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm030(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        endif
+
+        if (num_metgrid_levels .eq. 38 .or. &
+            num_metgrid_levels .eq. 39) then ! old RAP
+
+! binary write of field: SOILM040
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm040(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILM020
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm020(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILM005
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm005(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        endif
+
+        if (num_metgrid_levels .eq. 40) then
+! binary write of field: SOILM010
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm010(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        write(0,*) 'grid%soilm010(its+5,jts+5): ', grid%soilm010(its+5,jts+5)
+
+! binary write of field: SOILM004
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm004(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILM001
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm001(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+        endif
+
+! binary write of field: SOILM000
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilm000(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SNOWH   
+        read(47) 
+
+! binary write of field: SKINTEMP  
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%tsk_gc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SNOW   
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%snow(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILHGT  
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%toposoil(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        write(0,*) 'maxval(grid%toposoil): ', maxval(grid%toposoil)
+
+
+        ELSE ! NOT RAP
+
+! binary write of field: SNOWH   
+!mp        read(47) 
+
+! binary write of field: SNOW   
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%snow(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SKINTEMP  
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%tsk_gc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SOILHGT  
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%toposoil(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: LANDSEA 
+       read(47) dumdata(:,:,1:1) ! ignored
+
+! binary write of field: SEAICE 
+        write(0,*) 'to SEAICE'
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%xice(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: ST100200       
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%st100200(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: ST040100      
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%st040100(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: ST010040     
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%st010040(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: ST000010    
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%st000010(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SM100200   
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%sm100200(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SM040100  
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%sm040100(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SM010040 
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%sm010040(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SM000010        
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%sm000010(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        ENDIF ! RAP
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!! similar from here down?
+
+! binary write of field: PSFC        
+        write(0,*) 'to PSFC'
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%psfc_gc(I,J)=dumdata(I,J,1)
+           grid%psfc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        write(0,*) 'min/max of PSFC: ', minval(grid%psfc), &
+                                        maxval(grid%psfc)
+
+
+! binary write of field: RH         
+       read(47) dumdata
+       DO K=1,num_metgrid_levels
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%rh_gc(I,K,J)=dumdata(I,J,K)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'K, grid%rh_gc: ', K, grid%rh_gc(I,K,J)
+        endif
+         ENDDO
+        ENDDO
+       ENDDO
+        
+        write(0,*) 'min/max of grid%rh_gc: ', minval(grid%rh_gc), &
+                                              maxval(grid%rh_gc)
+
+! binary write of field: VV        
+        write(0,*) 'size dumdata_v: ', size(dumdata_v,dim=1),&
+                                       size(dumdata_v,dim=2),&
+                                       size(dumdata_v,dim=3)
+       read(47) dumdata_v
+        write(0,*) 'read dumdata_v'
+       DO K=1,num_metgrid_levels
+        DO J=JTS,min(JTE,JDE)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%v_gc(I,K,J)=dumdata_v(I,J,K)
+         ENDDO
+        ENDDO
+       ENDDO
+
+! binary write of field: UU       
+        write(0,*) 'size dumdata_u: ', size(dumdata_u,dim=1),&
+                                       size(dumdata_u,dim=2),&
+                                       size(dumdata_u,dim=3)
+       read(47) dumdata_u
+        write(0,*) 'read dumdata_u'
+       DO K=1,num_metgrid_levels
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE)
+           grid%u_gc(I,K,J)=dumdata_u(I,J,K)
+         ENDDO
+        ENDDO
+       ENDDO
+
+! binary write of field: TT           
+       read(47) dumdata
+        write(0,*) 'read dumdata for TT'
+       DO K=1,num_metgrid_levels
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%t_gc(I,K,J)=dumdata(I,J,K)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'K, grid%t_gc: ', K, grid%t_gc(I,K,J)
+        endif
+         ENDDO
+        ENDDO
+       ENDDO
+
+! binary write of field: PMSL 
+       read(47) dumdata(:,:,1:1)
+
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%pslv_gc(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'grid%pslv_gc: ',  grid%pslv_gc(I,J)
+        endif
+         ENDDO
+        ENDDO
+
+! binary write of field:  VAR_SSO
+        read(47) dumdata(:,:,1:1)
+        write(0,*) 'read VAR_SSO'
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%var_sso(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+
+! binary write of field: SLOPECAT        
+       read(47) dumdata(:,:,1:1)
+        write(0,*) 'read SLOPECAT'
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%slopecat(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: SNOALB         
+       read(47) dumdata(:,:,1:1)
+        write(0,*) 'read SNOALB'
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%snoalb(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: GREENFRAC 
+        write(0,*) 'to read of GREENFRAC'
+        write(0,*) 'size(dumdata): ', &
+                   size(dumdata,dim=1), &
+                   size(dumdata,dim=2), &
+                   size(dumdata,dim=3)
+       read(47) dumdata(:,:,1:12)
+        write(0,*) 'read GREENFRAC'
+       DO K=1,12
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%greenfrac(I,K,J)=dumdata(I,J,K)
+         ENDDO
+        ENDDO
+       ENDDO
+
+! binary write of field: ALBEDO12M  
+        write(0,*) 'to ALBEDO12M'
+       read(47) dumdata(:,:,1:12)
+       DO K=1,12
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%albedo12m(I,K,J)=dumdata(I,J,K)
+         ENDDO
+        ENDDO
+       ENDDO
+
+       read(47) ! ignore SCB_DOM
+
+! binary write of field: SOILCBOT  
+        write(0,*) 'to SOILCBOT'
+       read(47) dumdata(:,:,1:16)
+       DO K=1,16
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilcbot(I,K,J)=dumdata(I,J,K)
+         ENDDO
+        ENDDO
+       ENDDO
+
+! SCT_DOM
+       read(47) dumdata(:,:,1:1)
+
+! binary write of field: SOILCTOP         291         379          16
+       read(47) dumdata(:,:,1:16)
+       DO K=1,16
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%soilctop(I,K,J)=dumdata(I,J,K)
+         ENDDO
+        ENDDO
+       ENDDO
+
+! binary write of field: SOILTEMP         291         379           1
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%tmn_gc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: HGT_V         291         379           1
+!       read(47) dumdata(:,:,1:1)
+!        DO J=JTS,min(JTE,JDE-1)
+!         DO I=ITS,min(ITE,IDE-1)
+!           grid%htv_gc(I,J)=dumdata(I,J,1)
+!         ENDDO
+!        ENDDO
+
+! binary write of field: HGT_U         291         379           1
+!       read(47) dumdata(:,:,1:1)
+!        DO J=JTS,min(JTE,JDE-1)
+!         DO I=ITS,min(ITE,IDE-1)
+!           grid%htv_gc(I,J)=dumdata(I,J,1)
+!         ENDDO
+!        ENDDO
+
+
+        read(47) ! SLPY
+        read(47) ! SLPX
+
+! binary write of field: HGT_M 
+        write(0,*) 'to HGT_M'
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%ht_gc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: LU_INDEX  
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%lu_index(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: LANDUSEF 
+       read(47) dumdata(:,:,1:24)
+       DO K=1,24
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%landusef(I,K,J)=dumdata(I,J,K)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,landusef_: ', I,J,grid%landusef(I,K,J)
+        endif
+         ENDDO
+        ENDDO
+       ENDDO
+
+! binary write of field: LANDMASK 
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%landmask(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,landmask:: ', I,J,grid%landmask(I,J)
+        endif
+         ENDDO
+        ENDDO
+
+        write(0,*) 'COSALPHA'
+        read(47) dumdata(:,:,1:1)  ! COSALPHA
+
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%cosa(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,cosa:: ', I,J,grid%cosa(I,J)
+        endif
+         ENDDO
+        ENDDO
+
+        write(0,*) 'SINALPHA'
+        read(47) dumdata(:,:,1:1)  ! SINALPHA
+
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%sina(I,J)=dumdata(I,J,1)
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,sina:: ', I,J,grid%sina(I,J)
+        endif
+         ENDDO
+        ENDDO
+
+        write(0,*) 'F'
+       read(47) dumdata(:,:,1:1) ! F
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%f(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        write(0,*) 'E'
+       read(47) dumdata(:,:,1:1) ! E
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%e(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+        write(0,*) 'to read for MAPFAC_UY'
+                       ! MAPFAC_UY
+       read(47) dumdata_u(:,:,1:1)
+        write(0,*) 'past read for MAPFAC_UY'
+
+        write(0,*) 'read dumdata_u for MAPFAC_UY'
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE)
+
+           grid%msfuy(I,J)=dumdata_u(I,J,1)
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msfuy: ', I,J,grid%msfuy(I,J)
+        endif
+         ENDDO
+        ENDDO
+
+        write(0,*) 'MAPFAC_VY skip'
+       read(47) ! MAPFAC_VY
+
+        write(0,*) 'MAPFAC_MY'
+       read(47) ! MAPFAC_MY
+
+        write(0,*) 'MAPFAC_UX skip'
+       read(47) ! MAPFAC_UX
+
+        write(0,*) 'MAPFAC_VX skip'
+       read(47) ! MAPFAC_VX
+
+        write(0,*) 'MAPFAC_MX skip'
+       read(47) ! MAPFAC_MX
+
+               ! MAPFAC_U
+        write(0,*) 'MAPFAC_U'
+       read(47) dumdata_u(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE)
+
+           grid%msfu(I,J)=dumdata_u(I,J,1)
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msfu: ', I,J,grid%msfu(I,J)
+        endif
+
+        if (grid%msfu(I,J) .lt. 0.7 ) then
+        write(0,*) 'weird msfu at I,J: ', I,J,grid%msfu(I,J)
+        grid%msfu(I,J)=dumdata_u(I-1,J-1,1)
+        write(0,*) 'changing msfu to: ',I,J,  grid%msfu(I,J)
+        endif
+
+         ENDDO
+        ENDDO
+
+                      ! MAPFAC_V
+        write(0,*) 'MAPFAC_V'
+       read(47) dumdata_v(:,:,1:1)
+
+        DO J=JTS,min(JTE,JDE)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%msfv(I,J)=dumdata_v(I,J,1)
+
+        if (grid%msfv(I,J) .lt. 0.7 ) then
+        write(0,*) 'weird msfv at I,J: ', I,J,grid%msfv(I,J)
+        grid%msfv(I,J)=dumdata_v(I,J-1,1)
+        if( J .eq. min(JTE,JDE)) then
+        write(0,*) 'changing msfv to: ',I,J,  grid%msfv(I,J)
+        endif
+
+        endif
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msfv: ', I,J,grid%msfv(I,J)
+        endif
+
+         ENDDO
+        ENDDO
+
+
+        ! MAPFAC_M
+        write(0,*) 'MAPFAC_M'
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%msft(I,J)=dumdata(I,J,1)
+
+        if (I .eq. 50 .and. J .eq. 50) then
+        write(0,*) 'I,J,msft: ', I,J,grid%msft(I,J)
+        endif
+
+         ENDDO
+        ENDDO
+
+        write(0,*) 'CLONG'
+       read(47) ! CLONG
+        write(0,*) 'CLAT'
+       read(47) ! CLAT
+
+        write(0,*) 'XLONG_U'
+       read(47) dumdata_u(:,:,1:1) ! XLONG_U
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE)
+           grid%xlong_u(I,J)=dumdata_u(I,J,1)
+         ENDDO
+        ENDDO
+
+        write(0,*) 'XLAT_U'
+       read(47) dumdata_u(:,:,1:1) ! XLAT_U
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE)
+           grid%xlat_u(I,J)=dumdata_u(I,J,1)
+         ENDDO
+        ENDDO
+
+
+
+! binary write of field: XLONG_V        
+        write(0,*) 'to XLONG_V'
+       read(47) dumdata_v(:,:,1:1)
+        DO J=JTS,min(JTE,JDE)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%xlong_v(I,J)=dumdata_v(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: XLAT_V        
+       read(47) dumdata_v(:,:,1:1)
+        DO J=JTS,min(JTE,JDE)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%xlat_v(I,J)=dumdata_v(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: XLONG_M      
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%xlong_gc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+! binary write of field: XLAT_M         291         379           1
+       read(47) dumdata(:,:,1:1)
+        DO J=JTS,min(JTE,JDE-1)
+         DO I=ITS,min(ITE,IDE-1)
+           grid%xlat_gc(I,J)=dumdata(I,J,1)
+         ENDDO
+        ENDDO
+
+         num_veg_cat      = SIZE ( grid%landusef , DIM=2 )
+         write(0,*) 'num_veg_cat: ', num_veg_cat
+         num_soil_top_cat = SIZE ( grid%soilctop , DIM=2 )
+         num_soil_bot_cat = SIZE ( grid%soilcbot , DIM=2 )
+
+
+       IF (.not. RAP) THEN
+
+       varName='ST000010'
+       flag_st000010 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%st000010(i,j)
+        ENDDO
+       ENDDO
+
+       varName='ST010040'
+       flag_st010040 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+            st_inputx(I,J,num_st_levels_input + 1) = grid%st010040(i,j)
+        ENDDO
+       ENDDO
+
+       varName='ST040100'
+       flag_st040100 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              st_inputx(I,J,num_st_levels_input + 1) = grid%st040100(i,j)
+        ENDDO
+       ENDDO
+
+       varName='ST100200'
+       flag_st100200 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              st_inputx(I,J,num_st_levels_input + 1) = grid%st100200(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SM000010'
+       flag_sm000010 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           sm_inputx(I,J,num_sm_levels_input + 1) = grid%sm000010(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SM010040'
+       flag_sm010040 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+            sm_inputx(I,J,num_sm_levels_input + 1) = grid%sm010040(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SM040100'
+       flag_sm040100 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%sm040100(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SM100200'
+       flag_sm100200 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(3:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%sm100200(i,j)
+        ENDDO
+       ENDDO
+
+
+       ELSE ! RAP
+
+       varName='SOILT000'
+       flag_soilt000 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt000(i,j)
+        ENDDO
+       ENDDO
+
+        if (num_metgrid_levels .eq. 40) then
+       varName='SOILT001'
+       flag_soilt001 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt001(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILT004'
+       flag_soilt004 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt004(i,j)
+        ENDDO
+       ENDDO
+
+
+       varName='SOILT010'
+       flag_soilt010 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt010(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILT030'
+       flag_soilt030 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt030(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILT060'
+       flag_soilt060 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt060(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILT100'
+       flag_soilt100 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt100(i,j)
+        ENDDO
+       ENDDO 
+
+       else ! old RAP
+
+       varName='SOILT005'
+       flag_soilt005 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt005(i,j)
+        ENDDO
+       ENDDO
+
+
+       varName='SOILT020'
+       flag_soilt020 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt020(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILT040'
+       flag_soilt040 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt040(i,j)
+        ENDDO
+       ENDDO
+
+       endif
+
+       varName='SOILT160'
+       flag_soilt160 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt160(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILT300'
+       flag_soilt300 = 1
+       num_st_levels_input = num_st_levels_input + 1
+       st_levels_input(num_st_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+           st_inputx(I,J,num_st_levels_input + 1) = grid%soilt300(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM000'
+       flag_soilm000 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm000(i,j)
+        ENDDO
+       ENDDO
+
+
+        if (num_metgrid_levels .eq. 40) then
+       varName='SOILM001'
+       flag_soilm001 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm001(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM004'
+       flag_soilm004 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm004(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM010'
+       flag_soilm010 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm010(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM030'
+       flag_soilm030 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm030(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM060'
+       flag_soilm060 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm060(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM100'
+       flag_soilm100 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm100(i,j)
+        ENDDO
+       ENDDO
+
+       else ! old RAP
+
+       varName='SOILM005'
+       flag_soilm005 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm005(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM020'
+       flag_soilm020 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm020(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM040'
+       flag_soilm040 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm040(i,j)
+        ENDDO
+       ENDDO
+
+        endif
+
+       varName='SOILM160'
+       flag_soilm160 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm160(i,j)
+        ENDDO
+       ENDDO
+
+       varName='SOILM300'
+       flag_soilm300 = 1
+       num_sm_levels_input = num_sm_levels_input + 1
+       sm_levels_input(num_sm_levels_input) = char2int2(varName(6:8))
+       DO J=JTS,min(JTE,JDE-1)
+        DO I=ITS,min(ITE,IDE-1)
+              sm_inputx(I,J,num_sm_levels_input + 1) = grid%soilm300(i,j)
+        ENDDO
+       ENDDO
+
+
+
+       ENDIF ! on rap
+
+
+            flag_sst = 1
+
+!new
+        sw_inputx=0.
+!new
+
+      sw_input=0.
+
+        do J=JTS,min(JDE-1,JTE)
+         do K=1,num_st_levels_alloc
+          do I=ITS,min(IDE-1,ITE)
+             st_input(I,K,J)=st_inputx(I,J,K)
+             sm_input(I,K,J)=sm_inputx(I,J,K)
+             sw_input(I,K,J)=sw_inputx(I,J,K)
+          enddo
+         enddo
+        enddo
+
+        write(0,*) 'maxval st_input(1): ', maxval(st_input(:,1,:))
+        write(0,*) 'maxval st_input(2): ', maxval(st_input(:,2,:))
+        write(0,*) 'maxval st_input(3): ', maxval(st_input(:,3,:))
+        write(0,*) 'maxval st_input(4): ', maxval(st_input(:,4,:))
+
+     end subroutine read_wps_bin_arw

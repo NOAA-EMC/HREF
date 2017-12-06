@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio
+END
+fbioc.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio/fbioc.c
+END
+wrfheader.f90
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio/wrfheader.f90
+END
+dio.f90
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio/dio.f90
+END
+fbioc.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio/fbioc.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio/Makefile
+END
+diodump.f90
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/dio/diodump.f90
+END

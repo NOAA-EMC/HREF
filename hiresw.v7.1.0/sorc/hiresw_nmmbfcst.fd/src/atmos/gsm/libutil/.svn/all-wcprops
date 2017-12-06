@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil
+END
+gfs_dyn_phy_cpl_comp_mod.F90
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/gfs_dyn_phy_cpl_comp_mod.F90
+END
+module_digital_filter_gfs.F90
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_digital_filter_gfs.F90
+END
+module_include_gfs.F90
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_include_gfs.F90
+END
+module_gfs_funcphys.F90
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_gfs_funcphys.F90
+END
+module_gfs_mpi_def.F90
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_gfs_mpi_def.F90
+END
+atmos_phy_chem_cpl_comp_mod_stub.F90
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/atmos_phy_chem_cpl_comp_mod_stub.F90
+END
+atmos_chem_phy_cpl_comp_mod_stub.F90
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/atmos_chem_phy_cpl_comp_mod_stub.F90
+END
+module_gfs_tropp.F90
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_gfs_tropp.F90
+END
+module_gfs_machine.F90
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_gfs_machine.F90
+END
+module_export_import_data.F90
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_export_import_data.F90
+END
+module_gfs_physcons.F90
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_gfs_physcons.F90
+END
+atmos_phy_chem_cpl_comp_mod.F90
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/atmos_phy_chem_cpl_comp_mod.F90
+END
+atmos_chem_phy_cpl_comp_mod.F90
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/atmos_chem_phy_cpl_comp_mod.F90
+END
+module_DM_PARALLEL_GFS.F90
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/module_DM_PARALLEL_GFS.F90
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/libutil/makefile
+END

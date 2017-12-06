@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src
+END
+ingest_metgrid.F90
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/ingest_metgrid.F90
+END
+module_assorted_definitions.F90
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/module_assorted_definitions.F90
+END
+module_vinterp_routines.F90
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/module_vinterp_routines.F90
+END
+nemsinterp.F90
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/nemsinterp.F90
+END
+gridinfo_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/gridinfo_module.F90
+END
+output_nemsinit.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/output_nemsinit.F90
+END
+module_boundary.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/module_boundary.F90
+END
+process_domain_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/process_domain_module.F90
+END
+process_domain_module.F90_pius
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/process_domain_module.F90_pius
+END
+misc_definitions_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/misc_definitions_module.f90
+END
+module_data.F90
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/module_data.F90
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/Makefile
+END
+module_date_pack.f90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/module_date_pack.f90
+END
+parallel_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/nemsinterp/src/parallel_module.F90
+END

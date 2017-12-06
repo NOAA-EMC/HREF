@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl
+END
+peuc.f
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/peuc.f
+END
+ENS_Cpl_ESMFMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_Cpl_ESMFMod.f
+END
+ENS_CplState_ESMFMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_CplState_ESMFMod.f
+END
+pran.f
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/pran.f
+END
+prana.f
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/prana.f
+END
+DistributeForStep1.f
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/DistributeForStep1.f
+END
+machine.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/machine.f
+END
+kinds.f
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/kinds.f
+END
+ENS_CplComp_ESMFMod_STUB.f
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_CplComp_ESMFMod_STUB.f
+END
+ENS_GetParameterFromStateMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_GetParameterFromStateMod.f
+END
+ENS_CplComp_ESMFMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_CplComp_ESMFMod.f
+END
+ENS_bcst_global.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_bcst_global.f
+END
+ENS_Sto_Per_Scheme_Step1.f
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_Sto_Per_Scheme_Step1.f
+END
+Cal_Sto_Coef.f
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/Cal_Sto_Coef.f
+END
+ENS_Sto_Per_Scheme_Step2.f
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_Sto_Per_Scheme_Step2.f
+END
+ENS_Cpl_Run_ESMFMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_Cpl_Run_ESMFMod.f
+END
+ENS_CplComp_ESMFMod_STUB.F90
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_CplComp_ESMFMod_STUB.F90
+END
+Cal_Sto_Coef_STU
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/Cal_Sto_Coef_STU
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/makefile
+END
+Lib_ESMFStateAddGetMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/Lib_ESMFStateAddGetMod.f
+END
+ENS_Cpl_InternalState_ESMFMod.f
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_Cpl_InternalState_ESMFMod.f
+END
+ENS_Cpl_ESMFMod_STUB.f
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ENS_Cpl/ENS_Cpl_ESMFMod_STUB.f
+END

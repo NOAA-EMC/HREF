@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel
+END
+ext_mcel_open_for_read.F90
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/ext_mcel_open_for_read.F90
+END
+timeconvert.c
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/timeconvert.c
+END
+io_mcel.F90
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/io_mcel.F90
+END
+configure.wrf.example
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/configure.wrf.example
+END
+ext_mcel_write_field.F90
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/ext_mcel_write_field.F90
+END
+ext_mcel_read_field.F90
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/ext_mcel_read_field.F90
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/makefile
+END
+ext_mcel_open_for_write.F90
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_mcel/ext_mcel_open_for_write.F90
+END

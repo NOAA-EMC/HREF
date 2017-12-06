@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid
+END
+gribmap.txt
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/gribmap.txt
+END
+GEOGRID.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/GEOGRID.TBL
+END
+GEOGRID.TBL.ARW_CHEM
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/GEOGRID.TBL.ARW_CHEM
+END
+GEOGRID.TBL.FIRE
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/GEOGRID.TBL.FIRE
+END
+GEOGRID.TBL.NMM
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/GEOGRID.TBL.NMM
+END
+GEOGRID.TBL.ARW
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/GEOGRID.TBL.ARW
+END
+GEOGRID.TBL.ARW_full
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/GEOGRID.TBL.ARW_full
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid/Makefile
+END

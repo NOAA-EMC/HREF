@@ -1,0 +1,5 @@
+#
+for i in `ls *.f`
+do
+diff $i /nwprod/sorc/hiresw_post.fd/$i  >  $i.diff
+done

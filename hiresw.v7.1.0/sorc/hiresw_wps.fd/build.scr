@@ -1,0 +1,15 @@
+#! /bin/sh --login
+
+./clean -a
+
+cp configure.wps_serial_nowrf configure.wps
+
+./compile ungrib >& build_ungrib.log
+cp ungrib.exe ../../exec/hiresw_wps_ungrib
+
+# ./compile geogrid >& build_geogrid.log
+
+cp configure.wps_serial configure.wps
+
+./compile metgrid >& build_metgrid.log
+cp metgrid.exe ../../exec/hiresw_wps_metgrid

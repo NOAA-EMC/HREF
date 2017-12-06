@@ -1,0 +1,322 @@
+#! /bin/ksh
+
+################################################################################
+####  UNIX Script Documentation Block
+#                      .                                             .
+# Script name:            hiresw_prdgen_oldgrid.sh_eastwest
+# Script description:     Runs prdgen for the legacy (old) grid distributed to AWIPS
+#
+#
+# Author:        Matthew Pyle       Org: NP22         Date: 2014-02-11
+#
+# Abstract:         Runs prdgen for a specific forecast hour for the CONUS domain
+#                  to horizontally interpolate the native grid GRIB output onto
+#                  the EAST or WEST 5 km grid for distribution.
+#
+# Script history log:
+# 2013-11-01  Matthew Pyle - Original script for parallel
+# 2014-09-18  Matthew Pyle - Combined East and West legacy grid ush scripts
+#                            into single script
+
+
+set -x
+
+
+fhr=$1
+DOMIN_SMALL=$2
+CYC=${3}
+model=$4
+subpiece=$5
+region=$6
+
+reflag=1
+
+mkdir ${DATA}/prdgen_5km_${region}_${subpiece}
+cd ${DATA}/prdgen_5km_${region}_${subpiece}/
+
+DOMIN=${DOMIN_SMALL}${model}
+
+modelout=$model
+if [ $model = "arw" ]
+then
+modelout="arw"
+reflag=0
+fi
+
+if [ $DOMIN = "conusnmmb" ]
+then
+  filenamthree="wrf.CONUS05"
+  IM=884
+  JM=614
+elif [ $DOMIN = "conusarw" -o $DOMIN = "conusmem2arw" ]
+then
+  filenamthree="wrf.EMCONUS05"
+  IM=884
+  JM=614
+else
+echo "Improperly used for " $DOMIN " domain"
+err_exit "hiresw_prdgen_oldgrid.sh_eastwest only for CONUS DOMAIN"
+fi
+
+echo HERE region $region
+
+if [ $region = "west" ] 
+then
+wgrib2def="lambert:252:40.5:40.5 230.800:884:5000 24.500:614:5000"
+reg="30 6 0 0 0 0 0 0 884 614 24500000 -129200000 136 40500000 -108000000 5000000 5000000 0 64 40500000 4050000"
+elif [ $region = "east" ]
+then 
+wgrib2def="lambert:271:38.0:38.0 250.200:884:5000 22.100:614:5000"
+reg="30 6 0 0 0 0 0 0 884 614 22100000 -109800000 136 38000000 -89000000 5000000 5000000 0 64 38000000 38000000"
+else
+err_exit "No proper definition for variable region provided to hiresw_prdgen_oldgrid.sh_eastwest"
+fi
+
+echo wgrib2def $wgrib2def
+
+filedir=$DATA
+
+export fhr
+export tmmark=tm00
+
+###############################################################
+###############################################################
+###############################################################
+
+#
+# make GRIB file with pressure data every 25 mb for EMC's FVS
+# verification
+
+cp $PARMhiresw/hiresw_conus_awpregeastwest.txt_${subpiece} hiresw_grid_extract.txt
+
+if [ $DOMIN_SMALL = "conus" ]
+then
+
+if [ $fhr -eq 00 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+elif [ $fhr%2 -eq 0 ]
+then
+INPUT_DATA=$INPUT_DATA_EVEN
+else
+INPUT_DATA=$INPUT_DATA_ODD
+fi
+
+fi
+
+
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
+do
+ echo in while
+ if [ -s $INPUT_DATA/postdone${fhr} ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 20
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 30 minutes of waiting for $INPUT_DATA/postdone${fhr}"
+   err_exit $msg
+ fi
+done
+
+
+### extract just needed items
+
+compress_type=jpeg
+
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 | grep -F -f hiresw_grid_extract.txt | $WGRIB2 -i -grib inputs.grb $INPUT_DATA/WRFPRS${fhr}.tm00
+export err=$?; err_chk
+
+$WGRIB2 inputs.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_vectors default -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_bilin
+export err=$?; err_chk
+
+if [ $subpiece =  "1" ]
+then
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(APCP|WEASD):" -grib inputs_budget.grb
+export err=$?; err_chk
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match ":(TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP):" -grib nn.grb
+export err=$?; err_chk
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "HGT:cloud ceiling:" -grib ceiling.grb
+export err=$?; err_chk
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:1000 m above ground:" -grib 1000refd.grb
+export err=$?; err_chk
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:4000 m above ground:" -grib 4000refd.grb
+export err=$?; err_chk
+$WGRIB2 $INPUT_DATA/WRFPRS${fhr}.tm00 -match "REFD:263 K level:" -grib 263krefd.grb
+export err=$?; err_chk
+cat nn.grb ceiling.grb 1000refd.grb 4000refd.grb 263krefd.grb > inputs_nn.grb
+
+rm nn.grb ceiling.grb 1000refd.grb 4000refd.grb 263krefd.grb
+
+$WGRIB2 inputs_nn.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_nn
+export err=$?; err_chk
+
+$WGRIB2 inputs_budget.grb -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_interpolation budget -new_grid ${wgrib2def} ${filenamthree}${fhr}.tm00_budget
+export err=$?; err_chk
+
+# cat inputs_nn.grb inputs_nn.grb inputs_budget.grb > input_copygb2.grb
+# copygb2 -g"${reg}" 
+
+fi
+
+if [ $subpiece = "1" ]
+then
+cat ${filenamthree}${fhr}.tm00_bilin ${filenamthree}${fhr}.tm00_nn ${filenamthree}${fhr}.tm00_budget > ${filenamthree}${fhr}.tm00
+else
+mv ${filenamthree}${fhr}.tm00_bilin  ${filenamthree}${fhr}.tm00
+fi
+
+###############################################################
+###############################################################
+###############################################################
+
+# compute precip buckets
+
+threehrprev=`expr $fhr - 3`
+onehrprev=`expr $fhr - 1`
+
+if [ $threehrprev -lt 10 ]
+then
+threehrprev=0$threehrprev
+fi
+
+if [ $onehrprev -lt 10 ]
+then
+onehrprev=0$onehrprev
+fi
+
+echo "to f00 test"
+
+if [ $fhr -eq 00 ]
+then
+echo "inside f00 test"
+
+      cp ${filenamthree}${fhr}.tm00 $DATA/hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2_${subpiece}
+
+else
+
+if [ ${subpiece} = "1" ]
+then
+
+### do precip buckets if model is ARW
+
+echo doing 1h bucket
+
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
+do
+ echo in while
+ if [ -s $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$onehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 10
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$onehrprev.tm00"
+   err_exit $msg
+ fi
+done
+
+
+  rm PCP1HR${fhr}.tm00
+  rm input.card
+  echo "$DATA/prdgen_5km_${region}_${subpiece}" > input.card
+  echo $filenamthree >> input.card
+  echo $onehrprev >> input.card
+  echo $fhr >> input.card
+  echo $reflag >> input.card
+  echo $IM $JM >> input.card
+
+ export pgm=hiresw_bucket
+ $EXEChiresw/hiresw_bucket < input.card >> $pgmout 2>errfile
+ export err=$?; err_chk
+
+  if [ $model = "arw" ] ; then
+
+  if [ $fhr%3 -eq 0 ]
+  then
+
+looplim=90
+loop=1
+while [ $loop -le $looplim ]
+do
+ echo in while
+ if [ -s $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$threehrprev.tm00 ]
+ then
+   break
+ else
+   loop=$((loop+1))
+   sleep 10
+ fi
+ if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 15 minutes of waiting for $DATA/prdgen_5km_${region}_${subpiece}/$filenamthree$threehrprev.tm00"
+   err_exit $msg
+ fi
+done
+
+
+  rm PCP3HR${fhr}.tm00
+  rm input.card
+  echo "$DATA/prdgen_5km_${region}_${subpiece}" > input.card
+  echo $filenamthree >> input.card
+  echo $threehrprev >> input.card
+  echo $fhr >> input.card
+  echo $reflag >> input.card
+  echo $IM $JM >> input.card
+
+ export pgm=hiresw_bucket
+ $EXEChiresw/hiresw_bucket < input.card >> $pgmout 2>errfile
+ export err=$?; err_chk
+
+  if [ $fhr -ne 3 ]
+  then
+   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00 PCP3HR${fhr}.tm00 > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  else
+   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  fi
+
+  fi # ARW 3 h
+
+  if [ $fhr%3 -ne 0 ]
+  then
+  if [ $fhr -ne 1 ]
+  then
+   cat ${filenamthree}${fhr}.tm00 PCP1HR${fhr}.tm00  > hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  else
+   cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+  fi
+  fi
+
+  else
+## model = "nmm"
+
+   if [ $fhr%3 -ne 1 ]
+   then
+   cat ${filenamthree}${fhr}.tm00  PCP1HR${fhr}.tm00  >                                  hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+   else
+   cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+   fi
+
+  fi
+
+  else
+
+  cp ${filenamthree}${fhr}.tm00 hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2
+
+###### DONE PRECIP BUCKET
+
+  fi #subpiece=1
+
+    cp hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2 $DATA/hiresw.t${CYC}z.${MODEL}_5km.f${fhr}.conus${region}.grib2_${subpiece}
+
+fi

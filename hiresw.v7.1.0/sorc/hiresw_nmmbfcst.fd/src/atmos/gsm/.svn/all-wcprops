@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm
+END
+module_GFS_GRID_COMP_stub.F90
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GFS_GRID_COMP_stub.F90
+END
+module_GFS_INTEGRATE.F90
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GFS_INTEGRATE.F90
+END
+module_GFS_GRID_COMP.F90
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GFS_GRID_COMP.F90
+END
+module_GOCART_ROUTINES_stub.F90
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GOCART_ROUTINES_stub.F90
+END
+module_GFS_CORE_SETUP.F90
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GFS_CORE_SETUP.F90
+END
+module_GOCART_ROUTINES.F90
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GOCART_ROUTINES.F90
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/makefile
+END
+module_GFS_INTERNAL_STATE.F90
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/module_GFS_INTERNAL_STATE.F90
+END

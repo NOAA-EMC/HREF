@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/projects/!svn/ver/99256/hrw/tags/hiresw.v7.1.0/launch_info
+END
+sub_prdgen.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_prdgen.lsf_in_cray
+END
+sub_wrfbufrsnd.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_wrfbufrsnd.lsf_in_cray
+END
+metgrid.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/metgrid.lsf_in_cray
+END
+sub_awips.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_awips.lsf_in_cray
+END
+ungrib.lsf_in_cray_offset
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/98401/hrw/tags/hiresw.v7.1.0/launch_info/ungrib.lsf_in_cray_offset
+END
+sub_post.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_post.lsf_in_cray
+END
+prelimfinal.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/prelimfinal.lsf_in_cray
+END
+launch_cray_offset
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/99256/hrw/tags/hiresw.v7.1.0/launch_info/launch_cray_offset
+END
+sub_wrfbufrsndeven.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_wrfbufrsndeven.lsf_in_cray
+END
+sub_model.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_model.lsf_in_cray
+END
+prelim.lsf_bigrap_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/prelim.lsf_bigrap_in_cray
+END
+sub_posteven.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_posteven.lsf_in_cray
+END
+sub_smartinitb.lsf_in_cray_small
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_smartinitb.lsf_in_cray_small
+END
+sub_gempak.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_gempak.lsf_in_cray
+END
+sub_nemsinterp_1.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_nemsinterp_1.lsf_in_cray
+END
+sub_nemsinterp_2.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_nemsinterp_2.lsf_in_cray
+END
+sub_nemsinterp_3.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_nemsinterp_3.lsf_in_cray
+END
+sub_nemsinterp_4.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_nemsinterp_4.lsf_in_cray
+END
+sub_wrfbufrsndodd.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_wrfbufrsndodd.lsf_in_cray
+END
+sub_smartinit.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_smartinit.lsf_in_cray
+END
+sub_postodd.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_postodd.lsf_in_cray
+END
+sub_smartinitb.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/sub_smartinitb.lsf_in_cray
+END
+ungrib.lsf_in_cray
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/98381/hrw/tags/hiresw.v7.1.0/launch_info/ungrib.lsf_in_cray
+END

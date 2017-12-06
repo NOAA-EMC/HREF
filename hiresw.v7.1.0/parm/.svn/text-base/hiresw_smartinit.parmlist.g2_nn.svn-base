@@ -1,0 +1,10 @@
+VGTYP:surface
+LAND:surface
+CSNOW:surface
+CICEP:surface
+CFRZR:surface
+CRAIN:surface
+:HGT:cloud base:
+:HGT:cloud ceiling:
+REFC:
+VIS:surface

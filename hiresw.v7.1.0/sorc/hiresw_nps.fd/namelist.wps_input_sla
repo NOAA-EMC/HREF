@@ -1,0 +1,53 @@
+&share
+ wrf_core = 'COREIN',
+ max_dom = MAX_DOM,
+ start_date = 'YSTART-MSTART-DSTART_HSTART:00:00', 'YSTART-MSTART-DSTART_HSTART:00:00',
+ end_date   = 'YEND-MEND-DEND_HEND:00:00', 'YEND-MEND-DEND_HEND:00:00', 
+ interval_seconds = INTERVAL
+ io_form_geogrid = 2,
+ debug_level = 50 
+/
+
+&geogrid
+ parent_id =           0, 1
+ parent_grid_ratio =   1, 3
+ i_parent_start =      1, 27
+ j_parent_start =      1, 27
+ s_we           = 1, 1
+ e_we           = NUMX, NUMX_NEST1, 
+ s_sn           = 1, 1
+ e_sn           = NUMY, NUMY_NEST1,
+ geog_data_res  = '2m', '2m'
+ dx = DELTAX
+ dy = DELTAY
+ map_proj = 'PROJIN'
+ ref_lat   = CENLAT
+ ref_lon   = CENLON
+ dom_cen_lat = CENLAT, NEST1_CENTLAT, 
+ dom_cen_lon = CENLON, NEST1_CENTLON,
+ truelat1  =  TRUELAT1
+ truelat2  =  TRUELAT2
+ stand_lon =  PROJCENLON
+ geog_data_path = '/meso/noscrub/wx20py/geog'
+/
+
+&ungrib
+ out_format = 'SI'
+/
+
+&metgrid
+ fg_name = './FILE'
+ io_form_metgrid = IOFORM, 
+/
+ opt_output_from_metgrid_path = './',
+ opt_metgrid_tbl_path         = 'metgrid/',
+ opt_ignore_dom_center        = .false.
+ constants_name = './TAVGSFC'
+
+&nemsinterp
+ pt = PTIN
+ ptsgm = PTSGMIN
+ nz = NZIN
+ direct_temp = TDIRECT_IN
+ global = GLOBALIN
+/

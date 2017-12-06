@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/projects/!svn/ver/98109/hrw/tags/hiresw.v7.1.0/ush
+END
+hiresw_prdgen_3km_grid_g2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_prdgen_3km_grid_g2.sh
+END
+hiresw_prdgen_5km_grid_g2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/98109/hrw/tags/hiresw.v7.1.0/ush/hiresw_prdgen_5km_grid_g2.sh
+END
+hiresw_smartinit.sh_justprdgeng2
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_smartinit.sh_justprdgeng2
+END
+hiresw_wps_ungrib_gen.sh
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_wps_ungrib_gen.sh
+END
+hiresw_prdgen_oldgrid_g2.sh_eastwest
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_prdgen_oldgrid_g2.sh_eastwest
+END
+hiresw_smartinit.sh_justsmartinit
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_smartinit.sh_justsmartinit
+END
+hiresw_prdgen_oldgrid_g2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/98109/hrw/tags/hiresw.v7.1.0/ush/hiresw_prdgen_oldgrid_g2.sh
+END
+hiresw_ncoprocg2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_ncoprocg2.sh
+END
+hiresw_prdgen_big_grid_g2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/98109/hrw/tags/hiresw.v7.1.0/ush/hiresw_prdgen_big_grid_g2.sh
+END
+hiresw_wps_metgrid_gen.sh
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_wps_metgrid_gen.sh
+END
+hiresw_chkhur.sh
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ush/hiresw_chkhur.sh
+END

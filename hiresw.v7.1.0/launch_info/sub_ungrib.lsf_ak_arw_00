@@ -1,0 +1,74 @@
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.out_ak_arw
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_ungrib.err_ak_arw
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_UNGRIB
+#BSUB -W 0:13
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -P HRW-T2O
+#BSUB -M 3000
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 4*{select[craylinux && vnode]span[ptile=4] cu[type=cabinet]}' rusage[mem=3000]
+
+
+export NTASK=4
+export PTILE=4
+
+export MP_LABELIO=yes
+
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+vers=`cat /u/Matthew.Pyle/hiresw_version_next`
+
+export HOMEhiresw=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=ak
+export cyc=00
+export MODEL=arw
+
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
+
+DATEgfs=`$NDATE -6 ${DATE}${cyc} | cut -c1-8`
+CYCgfs=`$NDATE -6 ${DATE}${cyc} | cut -c9-10`
+
+
+echo DATEgfs $DATEgfs
+echo CYCgfs $CYCgfs
+
+# export COMGFS=/gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}
+# export COMINgfs=/gpfs/tp1/nco/ops/com/gfs/prod/gfs.${DATE}
+# export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATE}
+# export COMINgfs=/gpfs/hps/ptmp/emc.glopara/com2/gfs/para/gfs.${DATEgfs}
+export COMINgfs=$COMROOTp2/gfs/prod/gfs.${DATEgfs}
+export COMINgfs=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/gfs_input/gfs.${DATEgfs}
+
+
+# export COMINnam=$COMROOTp2/nam/prod/nam.${DATE}
+# export COMINnamold=$COMROOTp2/nam/prod/nam.${DATEgfs}
+
+export COMINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATE}
+export COMINnamold=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam.${DATEgfs}
+
+# export COMINgfs=/gpfs/hps/ptmp/Matthew.Pyle/com/gfs/prod/gfs.${DATE}
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
+export COMROOT=/gpfs/hps/nco/ops/com
+
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export DATA=${DATAROOT}/hiresw.ungrib_${NEST}_${MODEL}_${cyc}_${envir}
+
+types="metgrid bufrpost bufrpostodd bufrposteven forecast post postodd posteven prdgen smartinit smartinitb gempak"
+for typ in $types
+do
+echo delete $typ
+rm -rf ${DATAROOT}/hiresw.${typ}_${NEST}_${MODEL}_${cyc}_${envir}
+done
+
+$HOMEhiresw/jobs/JHIRESW_UNGRIB
+
+bsub < ${HOMEhiresw}/launch_info/sub_metgrid.lsf_ak_arw_00
+## rm sub_metgrid.lsf_ak_arw_00

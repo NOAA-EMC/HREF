@@ -1,0 +1,261 @@
+#! /bin/sh
+
+DOM=${1}
+CORE=${2}
+CYC=${3}
+
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+
+
+module load -a /gpfs/hps/nco/ops/nwprod/modulefiles
+module load prod_envir
+module load prod_util
+# module use /gpfs/hps/nco/ops/nwtest/modulefiles
+module load grib_util/1.0.3
+
+
+cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.1.0/launch_info/
+
+which bsub
+
+
+if [ $DOM$CORE == "hinmmb"  ]
+then
+MODPROCS=46
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "hiarw" ]
+then
+MODPROCS=72
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "himem2arw" ]
+then
+MODPROCS=72
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "prnmmb"  ]
+then
+MODPROCS=116
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "prarw" ]
+then
+MODPROCS=144
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "prmem2arw" ]
+then
+MODPROCS=116
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "guamnmmb"  ]
+then
+MODPROCS=72
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "guamarw" ]
+then
+MODPROCS=94
+MODSPAN=24
+POSTPROCS=2
+POSTSPAN=2
+PRDGENPROCS=2
+PRDGENSPAN=2
+BUFRSPAN=1
+NPROCBUFR=1
+elif [ $DOM$CORE == "conusnmmb" ]
+then
+MODPROCS=976
+MODSPAN=24
+POSTPROCS=16
+POSTSPAN=4
+PRDGENPROCS=14
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "conusarw" ]
+then
+MODPROCS=1692
+MODSPAN=24
+POSTPROCS=22
+POSTSPAN=11
+PRDGENPROCS=14
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "conusmem2arw" ]
+then
+MODPROCS=1392
+MODSPAN=24
+POSTPROCS=16
+POSTSPAN=8
+PRDGENPROCS=14
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "aknmmb" ]
+then
+MODPROCS=648
+MODSPAN=24
+POSTPROCS=24
+POSTSPAN=8
+PRDGENPROCS=5
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "akarw" ]
+then
+MODPROCS=1284
+MODSPAN=24
+POSTPROCS=16
+POSTSPAN=8
+PRDGENPROCS=5
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+elif [ $DOM$CORE == "akmem2arw" ]
+then
+MODPROCS=938
+MODSPAN=24
+POSTPROCS=16
+POSTSPAN=8
+PRDGENPROCS=5
+PRDGENSPAN=5
+NPROCBUFR=1
+BUFRSPAN=1
+fi
+
+
+
+cat ungrib.lsf_in_cray_offset | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+cat metgrid.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+sub_metgrid.lsf_${DOM}_${CORE}_${CYC}
+
+
+if [ $CORE == "nmmb" ]
+then
+
+cat sub_nemsinterp_1.lsf_in_cray |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_nemsinterp_1.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_nemsinterp_2.lsf_in_cray |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+ sed s:_CYC_:${CYC}:g > sub_nemsinterp_2.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_nemsinterp_3.lsf_in_cray |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_nemsinterp_3.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_nemsinterp_4.lsf_in_cray |  sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_nemsinterp_4.lsf_${DOM}_${CORE}_${CYC}
+
+cat prelim.lsf_bigrap_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+
+else
+
+cat prelimfinal.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_prelimfinal.lsf_${DOM}_${CORE}_${CYC}
+
+cat prelim.lsf_bigrap_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | \
+sed s:_CYC_:${CYC}:g > sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+
+fi
+
+cat sub_model.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_SPAN_:${MODSPAN}:g |  sed s:_NPROC_:${MODPROCS}:g  > sub_model.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_post.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_post.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_postodd.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_postodd.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_posteven.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_POSTSPAN_:${POSTSPAN}:g |  sed s:_NPROC_:${POSTPROCS}:g  > sub_posteven.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_prdgen.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_SPAN_:${PRDGENSPAN}:g |  sed s:_NPROC_:${PRDGENPROCS}:g  > sub_prdgen.lsf_${DOM}_${CORE}_${CYC}
+
+if [ ${DOM} == "conus" ]
+then
+
+cat sub_wrfbufrsndodd.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsndodd.lsf_${DOM}_${CORE}_${CYC}
+cat sub_wrfbufrsndeven.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsndeven.lsf_${DOM}_${CORE}_${CYC}
+
+else
+cat sub_wrfbufrsnd.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g | \
+  sed s:_PTILEBUFR_:${BUFRSPAN}:g |  sed s:_NPROCBUFR_:${NPROCBUFR}:g  > sub_wrfbufrsnd.lsf_${DOM}_${CORE}_${CYC}
+
+fi
+
+cat sub_gempak.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+sub_gempak.lsf_${DOM}_${CORE}_${CYC}
+
+cat sub_smartinit.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+sub_smartinit.lsf_${DOM}_${CORE}_${CYC}
+
+if [ ${DOM} == "conus" -o ${DOM} == "ak" -o  ${DOM} == "conusmem2" -o ${DOM} == "akmem2" ]
+then
+cat sub_smartinitb.lsf_in_cray | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
+else
+cat sub_smartinitb.lsf_in_cray_small | sed s:_DOM_:${DOM}:g | sed s:_CORE_:${CORE}:g | sed s:_CYC_:${CYC}:g > \
+sub_smartinitb.lsf_${DOM}_${CORE}_${CYC}
+fi
+
+chmod 775 sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+bsub < sub_ungrib.lsf_${DOM}_${CORE}_${CYC}
+
+if [ $DOM == "conus" -o $DOM == "pr" ]
+then
+bsub < sub_preprap.lsf_${DOM}_${CORE}_${CYC}
+fi

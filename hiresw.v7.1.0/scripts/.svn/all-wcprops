@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts
+END
+exhiresw_fcst.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_fcst.sh.ecf
+END
+exnawips_hiresw.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exnawips_hiresw.sh.ecf
+END
+exhiresw_wrfbufr_odd.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_wrfbufr_odd.sh.ecf
+END
+exhiresw_postg2_odd.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_postg2_odd.sh.ecf
+END
+exhiresw_nemsinterp_1.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_nemsinterp_1.sh.ecf
+END
+exhiresw_nemsinterp_2.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_nemsinterp_2.sh.ecf
+END
+exhiresw_nemsinterp_3.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_nemsinterp_3.sh.ecf
+END
+exhiresw_nemsinterp_4.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_nemsinterp_4.sh.ecf
+END
+exhiresw_prdgeng2.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_prdgeng2.sh.ecf
+END
+exhiresw_awips.sh.ecf_20170814
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_awips.sh.ecf_20170814
+END
+exhiresw_smartinit.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_smartinit.sh.ecf
+END
+exhiresw_smartinitb.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_smartinitb.sh.ecf
+END
+exhiresw_wrfbufr.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_wrfbufr.sh.ecf
+END
+exhiresw_postg2.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_postg2.sh.ecf
+END
+exhiresw_prepfinal.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_prepfinal.sh.ecf
+END
+exhiresw_awips.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_awips.sh.ecf
+END
+exhiresw_ungrib.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_ungrib.sh.ecf
+END
+exhiresw_prelim_rap.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_prelim_rap.sh.ecf
+END
+exhiresw_wrfbufr_even.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_wrfbufr_even.sh.ecf
+END
+exhiresw_postg2_even.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_postg2_even.sh.ecf
+END
+exhiresw_metgrid.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/scripts/exhiresw_metgrid.sh.ecf
+END
