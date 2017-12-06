@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2
+END
+io_grib2.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/io_grib2.F
+END
+test_read_grib2map.F
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/test_read_grib2map.F
+END
+grib2tbls_types.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/grib2tbls_types.F
+END
+read_grib2map.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/read_grib2map.F
+END
+README.io_grib2
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/README.io_grib2
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/Makefile
+END

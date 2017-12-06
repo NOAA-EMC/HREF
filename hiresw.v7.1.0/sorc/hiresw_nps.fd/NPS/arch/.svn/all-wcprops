@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch
+END
+Config.pl
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/Config.pl
+END
+preamble.lnx280
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/preamble.lnx280
+END
+preamble.wcoss
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/preamble.wcoss
+END
+postamble
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/postamble
+END
+configure.defaults
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/configure.defaults
+END
+preamble
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/preamble
+END
+preamble.zeus
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/preamble.zeus
+END
+preamble.ccs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/arch/preamble.ccs
+END

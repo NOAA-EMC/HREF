@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int
+END
+diffwrf.F90
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/diffwrf.F90
+END
+io_int_idx.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/io_int_idx.c
+END
+module_io_int_idx.F90
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/module_io_int_idx.F90
+END
+test_io_idx.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/test_io_idx.F90
+END
+test_io_mpi.f90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/test_io_mpi.f90
+END
+io_int_idx.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/io_int_idx.h
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/makefile
+END
+io_int.F90
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/io_int.F90
+END
+module_io_int_read.F90
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_int/module_io_int_read.F90
+END

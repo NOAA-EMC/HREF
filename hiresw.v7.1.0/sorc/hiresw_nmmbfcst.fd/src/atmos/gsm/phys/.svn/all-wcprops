@@ -1,0 +1,479 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys
+END
+lon_lat_para.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/lon_lat_para.f
+END
+do_physics_one_step.f
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/do_physics_one_step.f
+END
+resol_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/resol_def.f
+END
+gfs_physics_states_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_states_mod.f
+END
+gcycle.f
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gcycle.f
+END
+para_fixio_w.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/para_fixio_w.f
+END
+mpi_more.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/mpi_more.f
+END
+gfs_physics_nst_var_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_nst_var_mod.f
+END
+get_prs_gc.f
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/get_prs_gc.f
+END
+getcon_physics.f
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/getcon_physics.f
+END
+function_indlsev
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/function_indlsev
+END
+physics_to_common_vars.f
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/physics_to_common_vars.f
+END
+info.f
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/info.f
+END
+fld_collect_nst.f
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/fld_collect_nst.f
+END
+gfs_physics_err_msg_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_err_msg_mod.f
+END
+nstio_module.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/nstio_module.f
+END
+compns_physics.f
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/compns_physics.f
+END
+mpi_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/mpi_def.f
+END
+gfs_physics_grid_comp_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_grid_comp_mod.f
+END
+setlats_r_slg.f
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/setlats_r_slg.f
+END
+gfs_physics_grid_create_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_grid_create_mod.f
+END
+glats_physics.f
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/glats_physics.f
+END
+gfs_physics_namelist_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_namelist_mod.f
+END
+reduce_lons_grid_module.f
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/reduce_lons_grid_module.f
+END
+gfs_physics_aoi_var_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_aoi_var_mod.f
+END
+tiles.f
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/tiles.f
+END
+dfi_fixwr.f
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/dfi_fixwr.f
+END
+function2
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/function2
+END
+d3d_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/d3d_def.f
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/makefile
+END
+namelist_physics_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/namelist_physics_def.f
+END
+aoicpl_prep.f
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/aoicpl_prep.f
+END
+coordinate_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/coordinate_def.f
+END
+wrt3d_hyb.f
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/wrt3d_hyb.f
+END
+wrtout_physics.f
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/wrtout_physics.f
+END
+gbphys_adv_hyb_gc_h.f
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gbphys_adv_hyb_gc_h.f
+END
+sfcio_module.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/sfcio_module.f
+END
+cmp.comm.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/cmp.comm.f
+END
+gfs_physics_start_time_get_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_start_time_get_mod.f
+END
+gg_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gg_def.f
+END
+gfs_physics_internal_state_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_internal_state_mod.f
+END
+fix_fields.f
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/fix_fields.f
+END
+GFS_simple_scatter.f
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/GFS_simple_scatter.f
+END
+function_indlsod
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/function_indlsod
+END
+gfs_physics_g3d_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_g3d_mod.f
+END
+mod_state.f
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/mod_state.f
+END
+coundummy.f
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/coundummy.f
+END
+gfs_phy_states_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_phy_states_mod.f
+END
+gloopb.f
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gloopb.f
+END
+para_nstio_w.f
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/para_nstio_w.f
+END
+gribit_gsm.f
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gribit_gsm.f
+END
+common_to_physics_vars.f
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/common_to_physics_vars.f
+END
+get_lats_node_shuff_r_fix.f
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/get_lats_node_shuff_r_fix.f
+END
+para_nst_w.f
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/para_nst_w.f
+END
+layout1.f
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/layout1.f
+END
+lats_shuff.f
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/lats_shuff.f
+END
+vert_def.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/vert_def.f
+END
+mymaxmin.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/mymaxmin.f
+END
+gfs_physics_sfc_flx_set_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_sfc_flx_set_mod.f
+END
+hpmdummy.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/hpmdummy.f
+END
+gfs_physics_output.f
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_output.f
+END
+gfs_physics_initialize_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_initialize_mod.f
+END
+gbphys_adv_hyb_gc.f
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gbphys_adv_hyb_gc.f
+END
+gfs_physics_finalize_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_finalize_mod.f
+END
+sortrx.f
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/sortrx.f
+END
+gloopr.f
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gloopr.f
+END
+wrt3d.f
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/wrt3d.f
+END
+gfs_physics_run_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_run_mod.f
+END
+gfs_physics_add_get_state_ESMFField_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_add_get_state_ESMFField_mod.f
+END
+fld_collect.f
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/fld_collect.f
+END
+atm.comm.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/atm.comm.f
+END
+gfs_physics_g2d_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_g2d_mod.f
+END
+gfs_physics_gridgr_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_gridgr_mod.f
+END
+setlats.f
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/setlats.f
+END
+read_fix.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/read_fix.f
+END
+module_alarms.f
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/module_alarms.f
+END
+gfs_physics_sfc_flx_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_sfc_flx_mod.f
+END
+mpi_quit.f
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/mpi_quit.f
+END
+gfs_physics_getcf_mod.f
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/gsm/phys/gfs_physics_getcf_mod.f
+END

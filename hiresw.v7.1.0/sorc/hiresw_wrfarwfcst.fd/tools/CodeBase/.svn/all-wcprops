@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase
+END
+nocontf90.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/nocontf90.c
+END
+subinfo_calls.c
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/subinfo_calls.c
+END
+deftab.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/deftab.c
+END
+wrfvar.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/wrfvar.c
+END
+sym.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/sym.c
+END
+symtab_gen.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/symtab_gen.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/Makefile
+END
+callgraph.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/callgraph.c
+END
+sym.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/sym.h
+END
+util.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/tools/CodeBase/util.c
+END

@@ -1,0 +1,76 @@
+
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinit.out_akmem2arw00
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.v7.0.0/logs/test_smartinit.err_akmem2arw00
+#BSUB -q "devhigh"
+#BSUB -J HIRESW_SMARTINIT
+#BSUB -P HRW-T2O
+#BSUB -M 2000
+#BSUB -W 1:59
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 24*{select[craylinux && vnode]span[ptile=24] cu[type=cabinet]}' rusage[mem=2000]
+#
+
+export numprocs=13
+export NTASK=13
+
+export MP_EUILIB=us
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+
+# module load ics
+# module load ibmpe
+
+vers=`cat /u/Matthew.Pyle/hiresw_version_next`
+export HOMEhiresw=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/hiresw.${vers}
+
+export RUN_ENVIR=test
+export envir=test
+export NET=hiresw
+export RUN=hiresw
+
+export NEST=akmem2
+export cyc=00
+export MODEL=arw
+
+module load prod_util
+module load prod_envir
+# module use /gpfs/hps/nco/ops/nwtest/modulefiles
+module load grib_util/1.0.3
+
+
+export DATEroot=/gpfs/hps/nco/ops/com/date
+DATE=`cat $DATEroot/t${cyc}z | cut -c7-14`
+
+DATEM1=`$NDATE -24 ${DATE}${cyc} | cut -c1-8`
+
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
+export COMROOT=/gpfs/hps/nco/ops/com
+
+export COMOUT=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+export COMIN=${MYCOMROOT}/${NET}/$envir/${RUN}.${DATE}
+
+if [ ${cyc} = "00" ]
+then
+	echo "setting COMINsref here"
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATEM1}/21/ensprod
+export srefcyc=21
+elif [ ${cyc} = "06" ]
+then
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/03/ensprod
+export srefcyc=03
+elif [ ${cyc} = "12" ]
+then
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/09/ensprod
+export srefcyc=09
+elif [ ${cyc} = "18" ]
+then
+export COMINsref=${COMROOTp2}/sref/prod/sref.${DATE}/15/ensprod
+export srefcyc=15
+fi
+
+export INPUT_DATA=${DATAROOT}/hiresw.prdgen_${NEST}_${MODEL}_${cyc}_${envir}
+export DATA=${DATAROOT}/hiresw.smartinit_${NEST}_${MODEL}_${cyc}_${envir}
+
+$HOMEhiresw/jobs/JHIRESW_SMARTINIT

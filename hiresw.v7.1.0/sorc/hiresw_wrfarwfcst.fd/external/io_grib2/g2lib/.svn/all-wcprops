@@ -1,0 +1,413 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib
+END
+gettemplates.F
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gettemplates.F
+END
+mkieee.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/mkieee.F
+END
+gbytesc.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gbytesc.F
+END
+putgb2.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/putgb2.F
+END
+getg2ir.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getg2ir.F
+END
+gridtemplates.F
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gridtemplates.F
+END
+proto.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/proto.h
+END
+enc_png.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/enc_png.c
+END
+reduce.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/reduce.F
+END
+gribcreate.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gribcreate.F
+END
+gribend.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gribend.F
+END
+getgb2.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getgb2.F
+END
+ixgb2.F
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/ixgb2.F
+END
+gf_unpack2.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack2.F
+END
+realloc.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/realloc.F
+END
+gf_unpack4.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack4.F
+END
+gf_unpack6.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack6.F
+END
+getidx.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getidx.F
+END
+grib2.doc
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/grib2.doc
+END
+simpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/simpack.F
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/Makefile
+END
+getlocal.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getlocal.F
+END
+simunpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/simunpack.F
+END
+dec_png.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/dec_png.c
+END
+addfield.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/addfield.F
+END
+rdieee.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/rdieee.F
+END
+getgb2s.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getgb2s.F
+END
+gb_info.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gb_info.F
+END
+pack_gp.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/pack_gp.F
+END
+getdim.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getdim.F
+END
+jpcpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/jpcpack.F
+END
+jpcunpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/jpcunpack.F
+END
+gf_getfld.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_getfld.F
+END
+cmplxpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/cmplxpack.F
+END
+addgrid.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/addgrid.F
+END
+dec_jpeg2000.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/dec_jpeg2000.c
+END
+addlocal.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/addlocal.F
+END
+pdstemplates.F
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/pdstemplates.F
+END
+drstemplates.F
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/drstemplates.F
+END
+compack.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/compack.F
+END
+gf_unpack1.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack1.F
+END
+gf_unpack3.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack3.F
+END
+comunpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/comunpack.F
+END
+getg2i.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getg2i.F
+END
+gf_unpack5.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack5.F
+END
+params.F
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/params.F
+END
+getpoly.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getpoly.F
+END
+gf_unpack7.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_unpack7.F
+END
+CHANGES
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/CHANGES
+END
+getgb2l.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getgb2l.F
+END
+skgb.F
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/skgb.F
+END
+specpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/specpack.F
+END
+getgb2p.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getgb2p.F
+END
+getgb2r.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getgb2r.F
+END
+specunpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/specunpack.F
+END
+gf_free.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gf_free.F
+END
+gdt2gds.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gdt2gds.F
+END
+gribinfo.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gribinfo.F
+END
+g2grids.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/g2grids.F
+END
+enc_jpeg2000.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/enc_jpeg2000.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/README
+END
+misspack.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/misspack.F
+END
+getgb2rp.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getgb2rp.F
+END
+pngpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/pngpack.F
+END
+gribmod.F
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/gribmod.F
+END
+getfield.F
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/getfield.F
+END
+pngunpack.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/pngunpack.F
+END
+mova2i.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib2/g2lib/mova2i.c
+END

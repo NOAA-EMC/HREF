@@ -1,0 +1,103 @@
+SHELL       = /bin/sh
+
+include $(ESMF_DIR)/lib/libg/Linux.intel.64.intelmpi.default/esmf.mk
+ESMF_INC    = $(ESMF_F90COMPILEPATHS)
+ESMF_LIB    = $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) $(ESMF_F90ESMFLINKLIBS)
+
+gfs=gsm
+gfsdir=atmos/$(gfs)
+
+#NETCDF_LIB  = /usrx/local/NetCDF/3.6.3/lib/libnetcdf.a
+
+NETCDF_INC  = -I$(NETCDF_INCLUDE)
+NETCDF_LIB  = -L$(NETCDF_LDFLAGS) -lnetcdff -lnetcdf
+
+
+NEMS_LIB_DATA=/home/michalak/NEMS-MIC/NEMS+LIBS_r19677/19677_libs
+NEMS_LIBS=/home/michalak/NEMS-MIC/NEMS+LIBS_r19677/19677_libs/../lib-snb
+NEMS_INC=/home/michalak/NEMS-MIC/NEMS+LIBS_r19677/19677_libs/../incmod-snb
+NEMS_BIN=/home/michalak/NEMS-MIC/NEMS+LIBS_r19677/19677_libs/../bin-snb
+
+NEMSIO_INC  = -I$(NEMS_INC)/nemsio
+NEMSIO_LIB  = -L$(NEMS_LIBS) -lnemsio
+
+W3_LIB      = -L$(NEMS_LIBS) -lw3nco_d -lw3emc 
+BACIO_LIB   = -L$(NEMS_LIBS) -lbacio
+SP_LIB      = -L$(NEMS_LIBS) -lsp_2.0.2g_d
+SYS_LIB     =
+
+##POSTDIR     = /nwprod/lib
+#POSTDIR    = /global/save/Hui-Ya.Chuang/nceppost/post_tag_2013_GFS_SummerSchool/lib
+POSTDIR     = /gpfs/gd1/emc/global/save/Hui-Ya.Chuang/nceppost/post_tag_2013_GFS_SummerSchool/lib
+POSTMOD     = ${POSTDIR}/incmod/post_4
+POST_INC    = -I${POSTDIR}/incmod/post_4
+POST_LIB    = -L${POSTDIR} -lnceppost
+W3_POST_LIB = -L/nwprod/lib -lw3nco_4 -lw3emc_4
+CRTM_LIB    = -L/nwprod/lib -lcrtm_v2.0.6
+G2_LIB      = -L/nwprod/lib -lg2tmpl -lg2_4 -ljasper -lpng -lz
+XML_LIB     = -L/nwprod/lib -lxmlparse
+SIGIO_LIB   = -L$(NEMS_LIBS) -lsigio
+SFCIO_LIB   = -L$(NEMS_LIBS) -lsfcio_4
+
+EXTLIBS     = $(NEMSIO_LIB) \
+              $(W3_LIB) \
+              $(BACIO_LIB) \
+              $(SP_LIB) \
+              $(ESMF_LIB) \
+              $(NETCDF_LIB) \
+              $(SYS_LIB)
+
+
+EXTLIBS_POST = $(POST_LIB) \
+               $(NEMSIO_LIB) \
+               $(W3_POST_LIB) \
+               $(XML_LIB) \
+               $(G2_LIB) \
+               $(BACIO_LIB) \
+               $(SIGIO_LIB) \
+               $(SFCIO_LIB) \
+               $(SP_LIB) \
+               $(CRTM_LIB) \
+               $(ESMF_LIB) \
+               $(NETCDF_LIB) \
+               $(SYS_LIB)
+
+FC          = mpiifort -openmp -openmp-report2 -mkl=sequential
+FPP         = -fpp
+CC          = mpiicc
+FREE        = -free
+FIXED       = -fixed
+R8          = -r8
+
+FINCS       = $(ESMF_INC) $(NEMSIO_INC) $(NETCDF_INC)
+TRAPS       =
+#TRAPS       = -ftrapuv -check all -fp-stack-check -fpe0 -traceback
+#TRAPS       = -ftrapuv -check bounds -check format -check output_conversion -check pointers -check uninit -fp-stack-check
+
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model fast=1  -ftz \
+                 -prec-div  -no-prec-sqrt \
+                 -align array64byte
+FFLAGS      = $(TRAPS) $(FINCS) -convert big_endian -assume byterecl -fp-model precise 
+
+OPTS_NMM    = -O2
+OPTS_GFS    = -O3
+OPTS_GEN    = -O2
+OPTS_FIM    = -O2
+
+FFLAGS_NMM  = $(OPTS_NMM) $(FFLAGS)
+FFLAGS_GFS  = $(OPTS_GFS) $(FFLAGS) $(FREE)
+FFLAGS_GFSF = $(OPTS_GFS) $(FFLAGS) $(FIXED)
+FFLAGS_GEN  = $(OPTS_GEN) $(FFLAGS)
+FFLAGS_FIM  = $(OPTS_FIM) $(FFLAGS)
+
+CPP         = /lib/cpp -P -traditional
+CPPFLAGS    = -DENABLE_SMP  -DTHREAD_2D -DCHNK_RRTM=8
+
+AR          = ar
+ARFLAGS     = -r
+
+RM          = rm
+
+#MAKEDEPF90  = /nwprod/util/exec/makedepf90
+MAKEDEPF90  = makedepf90
+

@@ -1,0 +1,3 @@
+Build the hiresw_post executable by issuing a 
+"make" command.  "make clean" will remove
+objects from a previous build.

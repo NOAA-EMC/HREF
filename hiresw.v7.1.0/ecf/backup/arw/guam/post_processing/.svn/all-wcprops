@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ecf/backup/arw/guam/post_processing
+END
+jhiresw_smartinit.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ecf/backup/arw/guam/post_processing/jhiresw_smartinit.ecf
+END
+jhiresw_smartinitb.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ecf/backup/arw/guam/post_processing/jhiresw_smartinitb.ecf
+END
+jhiresw_wrfbufrsnd.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ecf/backup/arw/guam/post_processing/jhiresw_wrfbufrsnd.ecf
+END
+jhiresw_awips.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ecf/backup/arw/guam/post_processing/jhiresw_awips.ecf
+END
+jhiresw_gempak.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/ecf/backup/arw/guam/post_processing/jhiresw_gempak.ecf
+END

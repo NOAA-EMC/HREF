@@ -1,0 +1,305 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd
+END
+co2.35_hybrid_50mbtop
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/co2.35_hybrid_50mbtop
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/configure
+END
+VEGPARM.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/VEGPARM.TBL
+END
+namelist.wps.global
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps.global
+END
+build.scr
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/build.scr
+END
+build_ungrib.log
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/build_ungrib.log
+END
+sub.lsf_metgrid
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/sub.lsf_metgrid
+END
+compile
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/compile
+END
+GEOGRID.TBL.ARW
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/GEOGRID.TBL.ARW
+END
+co2_trans
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/co2_trans
+END
+build_metgrid.log
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/build_metgrid.log
+END
+geogrid.log
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/geogrid.log
+END
+namelist.input_in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.input_in
+END
+tr67t85
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/tr67t85
+END
+tr49t85
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/tr49t85
+END
+tr49t67
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/tr49t67
+END
+namelist.wps.fire
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps.fire
+END
+namelist.wps_new_ak
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps_new_ak
+END
+ETAMPNEW_DATA
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ETAMPNEW_DATA
+END
+namelist.input
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.input
+END
+metgrid.log
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/metgrid.log
+END
+LANDUSE.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/LANDUSE.TBL
+END
+namelist.output
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.output
+END
+RRTM_DATA
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/RRTM_DATA
+END
+sub_real.lsf
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/sub_real.lsf
+END
+namelist.input_in_model
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.input_in_model
+END
+clean
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/clean
+END
+sub.lsf_ungrib
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/sub.lsf_ungrib
+END
+namelist.wps
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps
+END
+configure.wps_serial.orig
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/configure.wps_serial.orig
+END
+configure.wps_serial
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/configure.wps_serial
+END
+namelist.input_model
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.input_model
+END
+configure.wps.backup
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/configure.wps.backup
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/README
+END
+configure.wps_be
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/configure.wps_be
+END
+namelist.wps_v3.5
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps_v3.5
+END
+hiresw_hi_arw.namelist.wps_in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/hiresw_hi_arw.namelist.wps_in
+END
+configure.wps_serial_nowrf
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/configure.wps_serial_nowrf
+END
+namelist.wps_new_conus
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps_new_conus
+END
+SOILPARM.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/SOILPARM.TBL
+END
+namelist.wps.all_options
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps.all_options
+END
+ungrib.log
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib.log
+END
+micro_lookup.dat
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/micro_lookup.dat
+END
+GENPARM.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/GENPARM.TBL
+END
+namelist.wps.nmm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/namelist.wps.nmm
+END
+exhiresw_prelim.sh.ecf
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/exhiresw_prelim.sh.ecf
+END
+METGRID.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/METGRID.TBL
+END
+link_grib.csh
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/link_grib.csh
+END
+sub.lsf_geogrid
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/sub.lsf_geogrid
+END
+Vtable
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/Vtable
+END

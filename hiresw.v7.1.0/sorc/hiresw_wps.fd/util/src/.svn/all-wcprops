@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src
+END
+module_debug.F
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/module_debug.F
+END
+misc_definitions_module.F
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/misc_definitions_module.F
+END
+avg_tsfc.F
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/avg_tsfc.F
+END
+int2nc.F
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/int2nc.F
+END
+rd_intermediate.F
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/rd_intermediate.F
+END
+elev_angle.F
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/elev_angle.F
+END
+module_map_utils.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/module_map_utils.F
+END
+calc_ecmwf_p.F
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/calc_ecmwf_p.F
+END
+height_ukmo.F
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/height_ukmo.F
+END
+write_met_module.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/write_met_module.F
+END
+gridinfo_module.F
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/gridinfo_module.F
+END
+cio.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/cio.c
+END
+plotgrids.F
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/plotgrids.F
+END
+mod_levs.F
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/mod_levs.F
+END
+module_stringutil.F
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/module_stringutil.F
+END
+module_date_pack.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/module_date_pack.F
+END
+constants_module.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/constants_module.F
+END
+met_data_module.F
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/met_data_module.F
+END
+plotfmt.F
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/plotfmt.F
+END
+read_met_module.F
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/read_met_module.F
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/src/Makefile
+END

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share
+END
+module_ERR_MSG.F90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/module_ERR_MSG.F90
+END
+ffsync.F90
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/ffsync.F90
+END
+module_INCLUDE.F90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/module_INCLUDE.F90
+END
+module_CPLFIELDS.F90
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/module_CPLFIELDS.F90
+END
+idea_composition.f
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/idea_composition.f
+END
+check_esmf_pet.F90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/check_esmf_pet.F90
+END
+kind.inc
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/kind.inc
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/makefile
+END
+module_CONSTANTS.F90
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/atmos/share/module_CONSTANTS.F90
+END

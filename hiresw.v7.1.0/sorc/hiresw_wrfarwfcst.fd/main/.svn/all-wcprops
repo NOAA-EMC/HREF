@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main
+END
+wrf.F
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/wrf.F
+END
+ideal_em.F
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/ideal_em.F
+END
+convert_em.F
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/convert_em.F
+END
+wrf_SST_ESMF.F
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/wrf_SST_ESMF.F
+END
+depend.common
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/depend.common
+END
+nup_em.F
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/nup_em.F
+END
+real_em.F
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/real_em.F
+END
+ideal_nmm.F
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/ideal_nmm.F
+END
+module_wrf_top.F
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/module_wrf_top.F
+END
+ndown_em.F
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/ndown_em.F
+END
+tc_em.F
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/tc_em.F
+END
+wrf_ESMFMod.F
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/wrf_ESMFMod.F
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/Makefile
+END
+real_nmm.F
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/main/real_nmm.F
+END

@@ -1,0 +1,57 @@
+HLCY:3000-0 m above ground:
+USTM:6000-0 m above ground:
+VSTM:6000-0 m above ground:
+VUCSH:0-6000 m above ground:
+VVCSH:0-6000 m above ground:
+CPOFP:surface:
+TMP:30-0 mb above ground:
+RH:30-0 mb above ground:
+UGRD:30-0 mb above ground:
+VGRD:30-0 mb above ground:
+PLI:30-0 mb above ground:
+TMP:60-30 mb above ground:
+UGRD:60-30 mb above ground:
+VGRD:60-30 mb above ground:
+TMP:90-60 mb above ground:
+RH:90-60 mb above ground:
+UGRD:90-60 mb above ground:
+VGRD:90-60 mb above ground:
+TMP:120-90 mb above ground:
+UGRD:120-90 mb above ground:
+VGRD:120-90 mb above ground:
+TMP:150-120 mb above ground:
+RH:150-120 mb above ground:
+UGRD:150-120 mb above ground:
+VGRD:150-120 mb above ground:
+4LFTX:180-0 mb above ground:
+CAPE:180-0 mb above ground:
+CIN:180-0 mb above ground:
+LFTX:500-1000 mb:
+RH:60-30 mb above ground:
+RH:120-90 mb above ground:
+ABSV:500 mb:
+VVEL:200 mb:
+VVEL:250 mb:
+VVEL:300 mb:
+VVEL:350 mb:
+VVEL:400 mb:
+VVEL:450 mb:
+VVEL:500 mb:
+VVEL:525 mb:
+VVEL:550 mb:
+VVEL:575 mb:
+VVEL:600 mb:
+VVEL:625 mb:
+VVEL:650 mb:
+VVEL:675 mb:
+VVEL:700 mb:
+VVEL:725 mb:
+VVEL:750 mb:
+VVEL:775 mb:
+VVEL:800 mb:
+VVEL:825 mb:
+VVEL:850 mb:
+VVEL:875 mb:
+VVEL:900 mb:
+VVEL:925 mb:
+VVEL:950 mb:

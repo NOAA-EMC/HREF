@@ -1,0 +1,64 @@
+&nam_phy
+  FHOUT=3, FHMAX=24, IGEN=0, DELTIM=180,
+  FHRES=24, FHROT=0, FHCYC=0,
+  FHZER=3, FHLWR=2, FHSWR=2,
+  nxpt=1, nypt=2, jintmx=2, lonr=192, latr=94,
+  jcap=62, levs=64, levr=0,
+  ntrac=3, ntoz=2, ntcw=3, ncld=1,
+  lsoil=4, nmtvr=14,
+  ngptc=12, hybrid=.false., tfiltc=0.85,
+  gen_coord_hybrid=.true.,
+  thermodyn_id=3, sfcpress_id=2,
+  IEMS=0,ISOL=0,IAER=0,ICO2=0,ICTM=1,
+  liope=.F./
+
+&SOIL_VEG
+  LPARAM = .FALSE./
+
+&TRACER_CONSTANT
+  RI=  286.05,   461.50, 173.2247,    0.0,CPI= 1004.6,   1846.0, 820.2391,    0.0, /
+
+&NAMSFC
+  FNGLAC="global_glacier.2x2.grb",
+  FNMXIC="global_maxice.2x2.grb",
+  FNTSFC="cfs_oi2sst1x1monclim19822001.grb",
+  FNSNOC="global_snoclim.1.875.grb",
+  FNZORC="global_zorclim.1x1.grb",
+  FNALBC="global_albedo4.1x1.grb",
+  FNALBC2="global_albedo4.1x1.grb",
+  FNAISC="cfs_ice1x1monclim19822001.grb",
+  FNTG3C="global_tg3clim.2.6x1.5.grb",
+  FNVEGC="global_vegfrac.0.144.decpercent.grb",
+  FNVETC="global_vegtype.1x1.grb",
+  FNSOTC="global_soiltype.1x1.grb",
+  FNSMCC="global_soilmcpc.1x1.grb",
+  FNMSKH="seaice_newland.grb",
+  FNTSFA="",
+  FNACNA="",
+  FNSNOA="",
+  FNVMNC="global_shdmin.0.144x0.144.grb",
+  FNVMXC="global_shdmax.0.144x0.144.grb",
+  FNSLPC="global_slope.1x1.grb",
+  FNABSC="",
+  LDEBUG=.false.,
+  FSMCL(2)=99999,
+  FSMCL(3)=99999,
+  FSMCL(4)=99999,
+  FTSFS=0.0,
+  FAISS=0.0,
+  FSNOL=99999,
+  FTSFL=99999,
+  FAISL=99999,
+  FVETL=0.0,
+  FSOTL=0.0,
+  FvmnL=0.0,
+  FvmxL=0.0,
+  FSLPL=0.0,
+  FABSL=0.0,
+  FSNOS=0.0,
+  FSIHL=0.0,
+  FSIHS=0.0,
+  FSICL=0.0,
+  FSICS=0.0,
+
+   /

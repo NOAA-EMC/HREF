@@ -1,0 +1,157 @@
+ &time_control
+ run_days                            = 2,
+ run_hours                           = 00,
+ run_minutes                         = 0,
+ run_seconds                         = 0,
+ sim_start_year                      = YSTART,
+ sim_start_month                     = MSTART,
+ sim_start_day                       = DSTART,
+ sim_start_hour                      = HSTART,
+ start_year                          = YSTART, 
+ start_month                         = MSTART,   
+ start_day                           = DSTART,   
+ start_hour                          = HSTART,   
+ start_minute                        = 00,   
+ start_second                        = 00,   
+ end_year                            = YEND, 
+ end_month                           = MEND,   
+ end_day                             = DEND,   
+ end_hour                            = HEND,   
+ end_minute                          = 00,   
+ end_second                          = 00,   
+ interval_seconds                    = 10800
+ input_from_file                     = .true.,
+ history_interval                    = 60,  
+ frames_per_outfile                  = 1,
+ restart                             = .false.,
+ restart_interval                    = 5000,
+ auxhist3_interval                   = 60
+ io_form_history                     = 1
+ io_form_restart                     = 1
+ io_form_input                       = 1
+ io_form_auxinput1                   = 1
+ io_form_boundary                    = 1
+ debug_level                         = 0
+ nwp_diagnostics  =  1,
+ output_diagnostics  =  1,
+ /
+
+ &dfi_control
+ dfi_opt                             = 0,
+ dfi_nfilter                         = 7,
+ dfi_cutoff_seconds                  = 3600,
+ dfi_write_filtered_input            = .true.
+ dfi_write_dfi_history               = .true.
+ dfi_bckstop_year                    = FILT_YS,
+ dfi_bckstop_month                   = FILT_MS,
+ dfi_bckstop_day                     = FILT_DS,
+ dfi_bckstop_hour                    = FILT_HS,
+ dfi_bckstop_minute                  = 30,
+ dfi_bckstop_second                  = 00,
+ dfi_fwdstop_year                    = FILT_YE,
+ dfi_fwdstop_month                   = FILT_ME,
+ dfi_fwdstop_day                     = FILT_DE,
+ dfi_fwdstop_hour                    = FILT_HE,
+ dfi_fwdstop_minute                  = 15,
+ dfi_fwdstop_second                  = 00,
+ /
+
+
+ &domains
+ time_step                           = 18,
+ time_step_fract_num                 = 3,
+ time_step_fract_den                 = 4,
+ max_dom                             = 1,
+ s_we                                = 1,     
+ e_we                                = 386,    
+ s_sn                                = 1,     
+ e_sn                                = 342,    
+ s_vert                              = 1,     
+ e_vert                              = 51,    
+ num_metgrid_levels                  = NUMLEV 
+ dx                                  = 3000, 
+ dy                                  = 3000, 
+ grid_id                             = 1,     
+ parent_id                           = 0,     
+ i_parent_start                      = 0,   
+ j_parent_start                      = 0,   
+ parent_grid_ratio                   = 1,   
+ parent_time_step_ratio              = 1,   
+ feedback                            = 1,
+ smooth_option                       = 0
+ p_top_requested                     = 5000
+ eta_levels= 1.00,0.9964,0.992064499,0.987212253,0.981839566,0.976016655,0.969743543,0.962892776,0.954883533,0.944825795,
+               0.931793646,0.915691137,0.896874787,0.875889432,0.852895705,0.827744976,0.800231762,0.769937055,0.736977691,
+               0.701283314,0.663409891,0.623582118,0.582252509,0.539702057,0.497172547,0.455771373,0.416627404,0.380207952,
+               0.346667571,0.316524008,0.289661319,0.265805731,0.24400726,0.223617065,0.204217365,0.185688101,0.167952566,
+               0.150977412,0.134759303,0.119334924,0.104760971,0.091074127,0.078274394,0.066328421,0.055189518,0.0447543,
+               0.034896038,0.025504676,0.016543352,0.00800575,0.00
+ interp_type                         = 1
+ lowest_lev_from_sfc                 = .false.
+ lagrange_order                      = 1
+ force_sfc_in_vinterp                = 1
+ zap_close_levels                    = 1000
+ sfcp_to_sfcp                        = .false.
+ adjust_heights                      = .false.
+ /
+
+ &physics
+ mp_physics                          = 6,  
+ ra_lw_physics                       = 1,  
+ ra_sw_physics                       = 1,   
+ radt                                = 10,  
+ sf_sfclay_physics                   = 1,  
+ sf_surface_physics                  = 2,  
+ bl_pbl_physics                      = 1,  
+ bldt                                = 0,   
+ cu_physics                          = 0,     
+ cudt                                = 5,     
+ isfflx                              = 1,
+ ifsnow                              = 1,
+ icloud                              = 1,
+ surface_input_source                = 1,
+ num_soil_layers                     = 4,
+ sf_urban_physics                    = 0,
+ maxiens                             = 1,
+ maxens                              = 3,
+ maxens2                             = 3,
+ maxens3                             = 16,
+ ensdim                              = 144,
+ do_radar_ref                        = 1,
+ /
+
+ &fdda
+ /
+
+ &dynamics
+ w_damping                           = 1,
+ diff_opt                            = 1,
+ km_opt                              = 4,
+ diff_6th_opt                        = 0,
+ diff_6th_factor                     = 0.12,
+ damp_opt                            = 0,
+ base_temp                           = 290.
+ zdamp                               = 5000.,  
+ dampcoef                            = 0.01,   
+ khdif                               = 0,      
+ kvdif                               = 0,      
+ non_hydrostatic                     = .true., 
+ moist_adv_opt                       = 1,
+ scalar_adv_opt                      = 1,
+ /
+
+ &bdy_control
+ spec_bdy_width                      = 5,
+ spec_zone                           = 1,
+ relax_zone                          = 4,
+ specified                           = .true., 
+ nested                              = .false., .true., .true.,
+ /
+
+ &grib2
+ /
+
+ &namelist_quilt
+ nio_tasks_per_group = 1,
+ nio_groups = 1,
+ /

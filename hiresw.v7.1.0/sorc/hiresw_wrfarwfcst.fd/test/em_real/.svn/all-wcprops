@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real
+END
+namelist.input.ndown_2
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.ndown_2
+END
+namelist.input.ndown_3
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.ndown_3
+END
+namelist.input.jan00
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.jan00
+END
+namelist.input.chem
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.chem
+END
+wind-turbine-1.tbl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/wind-turbine-1.tbl
+END
+examples.namelist
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/examples.namelist
+END
+run_1way.tar
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/run_1way.tar
+END
+run_2way.tar
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/run_2way.tar
+END
+windturbines.txt
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/windturbines.txt
+END
+README.obs_fdda
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/README.obs_fdda
+END
+run_restart.tar
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/run_restart.tar
+END
+namelist.input.fire
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.fire
+END
+README.grid_fdda
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/README.grid_fdda
+END
+sample.txt
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/sample.txt
+END
+namelist.input.diags
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.diags
+END
+landFilenames
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/landFilenames
+END
+namelist.input.4km
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.4km
+END
+namelist.input.jun01
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.jun01
+END
+namelist.input.global
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.global
+END
+namelist.input
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input
+END
+namelist.input.volc
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.volc
+END
+namelist.input.ndown_1
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_real/namelist.input.ndown_1
+END

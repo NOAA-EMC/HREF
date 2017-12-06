@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy
+END
+make_scm_forcing.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/make_scm_forcing.ncl
+END
+input_soil
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/input_soil
+END
+input_sounding
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/input_sounding
+END
+forcing_file.cdl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/forcing_file.cdl
+END
+run_me_first.csh
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/run_me_first.csh
+END
+namelist.input
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/namelist.input
+END
+force_ideal.nc
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/force_ideal.nc
+END
+GABLS_II_forcing.txt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/GABLS_II_forcing.txt
+END
+README.scm
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/test/em_scm_xy/README.scm
+END

@@ -1,0 +1,443 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame
+END
+nl_set_1_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_1_routines.F
+END
+module_driver_constants.F
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_driver_constants.F
+END
+nl_set_5_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_5_routines.F
+END
+hires_timer.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/hires_timer.c
+END
+module_alloc_space.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space.h
+END
+nl_get_0_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_0_routines.F
+END
+nl_access_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_access_routines.F
+END
+nl_get_4_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_4_routines.F
+END
+module_streams.F
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_streams.F
+END
+module_cpl.F
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_cpl.F
+END
+collect_on_comm.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/collect_on_comm.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/Makefile
+END
+wrf_shutdown.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/wrf_shutdown.F
+END
+module_alloc_space_1.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_1.F
+END
+nl_set_0_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_0_routines.F
+END
+module_timing.F
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_timing.F
+END
+module_alloc_space_3.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_3.F
+END
+just_fcstdone_stuff
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/just_fcstdone_stuff
+END
+module_alloc_space_5.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_5.F
+END
+nl_set_4_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_4_routines.F
+END
+module_alloc_space_7.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_7.F
+END
+module_comm_dm_1.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_dm_1.F
+END
+module_alloc_space_9.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_9.F
+END
+module_comm_dm_3.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_dm_3.F
+END
+new_module_io_quilt.F
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/new_module_io_quilt.F
+END
+module_io_quilt.F_was
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_io_quilt.F_was
+END
+module_dm_warning
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_dm_warning
+END
+module_quilt_outbuf_ops.F
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_quilt_outbuf_ops.F
+END
+module_wrf_error.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_wrf_error.F
+END
+module_io.F
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_io.F
+END
+module_domain_type.F
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_domain_type.F
+END
+clog.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/clog.c
+END
+nl_get_3_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_3_routines.F
+END
+module_dm_stubs.F
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_dm_stubs.F
+END
+nl_get_7_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_7_routines.F
+END
+module_internal_header_util.F
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_internal_header_util.F
+END
+wrf_num_bytes_between.c
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/wrf_num_bytes_between.c
+END
+pack_utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/pack_utils.c
+END
+nl_set_3_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_3_routines.F
+END
+module_bdywrite.F
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_bdywrite.F
+END
+nl_set_7_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_7_routines.F
+END
+wrf_debug.F
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/wrf_debug.F
+END
+module_machine.F
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_machine.F
+END
+libmassv.F
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/libmassv.F
+END
+nl_get_2_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_2_routines.F
+END
+nl_get_6_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_6_routines.F
+END
+module_configure.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_configure.F
+END
+loop_based_x_shift_code.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/loop_based_x_shift_code.h
+END
+module_alloc_space_0.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_0.F
+END
+module_alloc_space_2.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_2.F
+END
+nl_set_2_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_2_routines.F
+END
+module_alloc_space_4.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_4.F
+END
+module_alloc_space_6.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_6.F
+END
+module_comm_dm_0.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_dm_0.F
+END
+module_alloc_space_8.F
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_alloc_space_8.F
+END
+module_comm_dm_2.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_dm_2.F
+END
+nl_set_6_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_set_6_routines.F
+END
+module_comm_dm_4.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_dm_4.F
+END
+xxx_template_ioapi.F
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/xxx_template_ioapi.F
+END
+module_cpl_oasis3.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_cpl_oasis3.F
+END
+module_comm_nesting_dm.F
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_nesting_dm.F
+END
+md_calls.m4
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/md_calls.m4
+END
+module_nesting.F
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_nesting.F
+END
+module_domain.F
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_domain.F
+END
+nl_get_1_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_1_routines.F
+END
+module_comm_dm.F
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_comm_dm.F
+END
+nl_get_5_routines.F
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/nl_get_5_routines.F
+END
+module_sm.F
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_sm.F
+END
+module_tiles.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_tiles.F
+END
+module_intermediate_nmm.F
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_intermediate_nmm.F
+END
+module_integrate.F
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_integrate.F
+END
+loop_based_y_shift_code.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/loop_based_y_shift_code.h
+END
+module_io_quilt.F
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/frame/module_io_quilt.F
+END

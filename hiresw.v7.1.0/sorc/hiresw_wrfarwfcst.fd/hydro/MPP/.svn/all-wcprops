@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/hydro/MPP
+END
+CPL_WRF.F
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/hydro/MPP/CPL_WRF.F
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/hydro/MPP/Makefile
+END
+mpp_land.F
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/hydro/MPP/mpp_land.F
+END

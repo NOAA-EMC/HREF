@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid
+END
+gribmap.txt
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/gribmap.txt
+END
+GEOGRID.TBL
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/GEOGRID.TBL
+END
+testb.nml_input_wcoss
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml_input_wcoss
+END
+testb.nml_input_igbp_wcoss
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml_input_igbp_wcoss
+END
+testb.nml_input
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml_input
+END
+GEOGRID.TBL.NMM
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/GEOGRID.TBL.NMM
+END
+testb.nml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml
+END
+testb.nml_input_igbp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml_input_igbp
+END
+GEOGRID.TBL.ARW
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/GEOGRID.TBL.ARW
+END
+GEOGRID.TBL.NMB
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/GEOGRID.TBL.NMB
+END
+testb.nml_input_zeus
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml_input_zeus
+END
+testb.nml_input_igbp_zeus
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/testb.nml_input_igbp_zeus
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/Makefile
+END
+GEOGRID.TBL.SLA
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/GEOGRID.TBL.SLA
+END

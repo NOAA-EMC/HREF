@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src
+END
+bitarray_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/bitarray_module.f90
+END
+geogrid.F90_nest_levels
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/geogrid.F90_nest_levels
+END
+hash_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/hash_module.f90
+END
+process_ncep_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/process_ncep_module.F90
+END
+queue_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/queue_module.F90
+END
+module_debug.F90
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/module_debug.F90
+END
+misc_definitions_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/misc_definitions_module.f90
+END
+llxy_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/llxy_module.F90
+END
+cio.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/cio.c
+END
+source_data_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/source_data_module.F90
+END
+read_geogrid.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/read_geogrid.c
+END
+process_tile_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/process_tile_module.F90
+END
+parallel_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/parallel_module.F90
+END
+module_map_utils.f90
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/module_map_utils.f90
+END
+one_record_to_ij.f90
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/one_record_to_ij.f90
+END
+despace.f90
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/despace.f90
+END
+wrf_debug.f90
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/wrf_debug.f90
+END
+output_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/output_module.F90
+END
+interp_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/interp_module.f90
+END
+gridinfo_module.F90
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/gridinfo_module.F90
+END
+smooth_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/smooth_module.f90
+END
+write_geogrid.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/write_geogrid.c
+END
+list_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/list_module.f90
+END
+geogrid.F90
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/geogrid.F90
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/Makefile
+END
+constants_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/constants_module.f90
+END
+proc_point_module.f90
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/NPS/geogrid/src/proc_point_module.f90
+END

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util
+END
+vertical_grid_70_20m_80km.txt
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/vertical_grid_70_20m_80km.txt
+END
+plotfmt_nc.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/plotfmt_nc.ncl
+END
+plotgrids.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/plotgrids.ncl
+END
+plotgrids_new.ncl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/plotgrids_new.ncl
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/Makefile
+END
+vertical_grid_38_20m_G3.txt
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/vertical_grid_38_20m_G3.txt
+END
+vertical_grid_50_20m_63km.txt
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/util/vertical_grid_50_20m_63km.txt
+END

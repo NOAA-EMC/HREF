@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/98107/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry
+END
+Registry.EM_COMMON
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/98107/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM_COMMON
+END
+registry.lake
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.lake
+END
+Registry.NMM_HWRF
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.NMM_HWRF
+END
+Registry.CONVERT
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.CONVERT
+END
+registry.bdy_perturb
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.bdy_perturb
+END
+registry.les
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.les
+END
+registry.var_chem
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.var_chem
+END
+Registry.NMM
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.NMM
+END
+registry.avgflx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.avgflx
+END
+registry.var
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.var
+END
+Registry.EM_COMMON_real_v7
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM_COMMON_real_v7
+END
+Registry.EM_COMMON_stripped_version
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM_COMMON_stripped_version
+END
+registry.tracker
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.tracker
+END
+Registry.EM_COMMON.var
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM_COMMON.var
+END
+Registry.EM
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM
+END
+Registry.backup
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.backup
+END
+registry.clm
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.clm
+END
+registry.chem
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.chem
+END
+registry.afwa
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.afwa
+END
+registry.stoch
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.stoch
+END
+Registry.NMM_NEST
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.NMM_NEST
+END
+registry.sbm
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.sbm
+END
+registry.dimspec
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.dimspec
+END
+registry.fire
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.fire
+END
+Registry.EM_COMMON_start
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM_COMMON_start
+END
+registry.diags
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.diags
+END
+registry.io_boilerplate
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.io_boilerplate
+END
+Registry.EM_CHEM
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.EM_CHEM
+END
+registry.ssib
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.ssib
+END
+registry.cam
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.cam
+END
+registry.tornado
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/registry.tornado
+END
+Registry.wrfvar
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/Registry/Registry.wrfvar
+END

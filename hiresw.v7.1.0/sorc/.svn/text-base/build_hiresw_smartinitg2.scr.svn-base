@@ -1,0 +1,25 @@
+set -x
+module purge
+
+module load ncep
+module load craype-sandybridge
+module use -a /opt/cray/modulefiles
+module load ../modulefiles/HIRESW/v7.0.0
+module list
+
+sleep 1
+
+BASE=`pwd`
+
+##############################
+
+module load iobuf/2.0.7
+cd ${BASE}/hiresw_smartinitg2.fd
+make clean
+make
+
+module unload iobuf/2.0.7
+
+echo hiresw_smartinitg2.fd done XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+##############################

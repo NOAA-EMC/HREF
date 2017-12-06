@@ -1,0 +1,467 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3
+END
+w3doxdat.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3doxdat.f
+END
+start.f
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/start.f
+END
+getgbens.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbens.f
+END
+w3utcdat.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3utcdat.f
+END
+w3fi01.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi01.f
+END
+getgbem.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbem.f
+END
+lengds.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/lengds.f
+END
+getbit.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getbit.f
+END
+errexit.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/errexit.c
+END
+getgir.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgir.f
+END
+bacio_module.f
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/bacio_module.f
+END
+w3fi83.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi83.f
+END
+grib1.doc
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/grib1.doc
+END
+w3fi68.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi68.f
+END
+putgbe.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/putgbe.f
+END
+w3tagb.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3tagb.f
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/Makefile
+END
+w3fs26.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fs26.f
+END
+getgb1r.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgb1r.f
+END
+summary.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/summary.f
+END
+getgbe.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbe.f
+END
+iw3jdn.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/iw3jdn.f
+END
+getgi.f
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgi.f
+END
+pdseup.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/pdseup.f
+END
+fparser.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/fparser.f
+END
+w3movdat.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3movdat.f
+END
+w3difdat.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3difdat.f
+END
+getgbm.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbm.f
+END
+clib.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/clib.h
+END
+w3reddat.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3reddat.f
+END
+w3fi71.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi71.f
+END
+putgb.f
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/putgb.f
+END
+w3fi73.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi73.f
+END
+baciof.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/baciof.f
+END
+w3fi75.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi75.f
+END
+w3fi58.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi58.f
+END
+baciof.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/baciof.h
+END
+sbyte.f
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/sbyte.f
+END
+putgbens.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/putgbens.f
+END
+ixgb.f
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/ixgb.f
+END
+w3log.f
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3log.f
+END
+pdsens.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/pdsens.f
+END
+gbytes.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/gbytes.f
+END
+bacio.v1.3.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/bacio.v1.3.c
+END
+getgb1re.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgb1re.f
+END
+getgbexm.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbexm.f
+END
+getgbeh.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbeh.f
+END
+instrument.f
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/instrument.f
+END
+sbytes.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/sbytes.f
+END
+r63w72.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/r63w72.f
+END
+getgbep.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbep.f
+END
+getgbmh.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbmh.f
+END
+w3locdat.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3locdat.f
+END
+w3fi63.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi63.f
+END
+getgbemh.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbemh.f
+END
+w3fi82.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi82.f
+END
+CHANGES
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/CHANGES
+END
+getgbex.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbex.f
+END
+getgbmp.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbmp.f
+END
+w3fs21.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fs21.f
+END
+getgb.f
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgb.f
+END
+fparsei.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/fparsei.f
+END
+getgbemp.f
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbemp.f
+END
+getgb1s.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgb1s.f
+END
+idsdef.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/idsdef.f
+END
+putgbn.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/putgbn.f
+END
+errmsg.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/errmsg.f
+END
+getgbh.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbh.f
+END
+putgben.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/putgben.f
+END
+getgbp.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/getgbp.f
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/README
+END
+putgbex.f
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/putgbex.f
+END
+w3fi72.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi72.f
+END
+w3fi74.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi74.f
+END
+w3fi76.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi76.f
+END
+w3fi59.f
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/w3fi59.f
+END
+gbytes_char.f
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wps.fd/ungrib/src/ngl/w3/gbytes_char.f
+END

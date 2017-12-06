@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util
+END
+read_grib.c
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/read_grib.c
+END
+alloc_2d.c
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/alloc_2d.c
+END
+gribsize.incl
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/gribsize.incl
+END
+cfortran.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/cfortran.h
+END
+read_grib.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/read_grib.h
+END
+alloc_2d.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/alloc_2d.h
+END
+dump
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/dump
+END
+test_advance_time_str.c
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/test_advance_time_str.c
+END
+test_rg_gribmap.c
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/test_rg_gribmap.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/Makefile
+END
+write_grib.c
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_wrfarwfcst.fd/external/io_grib1/grib1_util/write_grib.c
+END

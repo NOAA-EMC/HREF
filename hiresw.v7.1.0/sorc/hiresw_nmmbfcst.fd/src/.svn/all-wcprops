@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src
+END
+module_EARTH_GENERIC_COMP.F90
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/module_EARTH_GENERIC_COMP.F90
+END
+ESMFVersionDefine_ESMF_NUOPC.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ESMFVersionDefine_ESMF_NUOPC.h
+END
+ESMFVersionDefine_ESMF_630rAPI.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ESMFVersionDefine_ESMF_630rAPI.h
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/configure
+END
+build.scr
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/build.scr
+END
+module_NEMS_GRID_COMP.F90
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/module_NEMS_GRID_COMP.F90
+END
+module_EARTH_GRID_COMP.F90
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/module_EARTH_GRID_COMP.F90
+END
+ESMFVersionDefine_ESMF_3.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ESMFVersionDefine_ESMF_3.h
+END
+esmf_version
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/esmf_version
+END
+module_NEMS_INTERNAL_STATE.F90
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/module_NEMS_INTERNAL_STATE.F90
+END
+ESMFVersionDefine.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ESMFVersionDefine.h
+END
+module_EARTH_INTERNAL_STATE.F90
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/module_EARTH_INTERNAL_STATE.F90
+END
+MAIN_NEMS.F90
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/MAIN_NEMS.F90
+END
+ESMFVersionLogic.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/ESMFVersionLogic.h
+END
+makenmm.log
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/makenmm.log
+END
+module_MEDIATOR.F90
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/module_MEDIATOR.F90
+END
+makefile
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nmmbfcst.fd/src/makefile
+END

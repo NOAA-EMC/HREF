@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd
+END
+run_geo.lsf
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/run_geo.lsf
+END
+testb.nml_ak
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/testb.nml_ak
+END
+namelist.nps_conus
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.nps_conus
+END
+run_wps.ll_input
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/run_wps.ll_input
+END
+find_factors.F
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/find_factors.F
+END
+namelist.nps_ak
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.nps_ak
+END
+testb.nml_hi
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/testb.nml_hi
+END
+run_nemsinterp.lsf
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/run_nemsinterp.lsf
+END
+namelist.nps_hi
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.nps_hi
+END
+run_met.lsf
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/run_met.lsf
+END
+run_ungrib.lsf
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/run_ungrib.lsf
+END
+fort.81
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/fort.81
+END
+namelist.wps_input_sla
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.wps_input_sla
+END
+testb.nml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/testb.nml
+END
+find_factors.x
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/find_factors.x
+END
+namelist.nps_3.5_conus
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.nps_3.5_conus
+END
+testb.nml_pr
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/testb.nml_pr
+END
+namelist.nps
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.nps
+END
+namelist.nps_pr
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/namelist.nps_pr
+END
+testb.nml_conus
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/projects/!svn/ver/97976/hrw/tags/hiresw.v7.1.0/sorc/hiresw_nps.fd/testb.nml_conus
+END
