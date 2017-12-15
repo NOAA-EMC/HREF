@@ -1,6 +1,6 @@
 
-#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__CYC_.out__DATE_
-#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoe__CYC_.err__DATE_
+#BSUB -oo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoe__CYC_.out__DATE_
+#BSUB -eo /gpfs/hps/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoe__CYC_.err__DATE_
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
@@ -25,31 +25,31 @@ export KEEPDATA=YES
 
 module load prod_envir
 
-export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 
 export DATE=_DATE_
 export DATEm1=_DATEm1_
 
-export NEST=_DOM_
+export COMROOT=/gpfs/hps/nco/ops/com
+export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
-export COMINhireswb=${COMROOT}/hiresw/prod/hiresw
-export COMINnam=${COMROOTp2}/nam/prod/nam
-export COMINnamx=${COMROOTp2}/nam/prod/nam
+# export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
+export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
+# export COMINnam=${COMROOTp2}/nam/prod/nam
 
-export COMINhiresw=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
-export COMINhireswx=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
-export COMINnam=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/nam_input/nam
+export PCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/awip
 
-export COMINffg=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/ffg_input
 
 module load grib_util
 module load prod_util
 
 href_ver=`cat /u/$LOGNAME/href_exp`
 
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${href_ver}
 
 export SENDCOM=YES
 
-${HOMEhref}/jobs/JHREF_ENSPROD_retro
+${HOMEhref}/jobs/JHREF_ENSPROD_retro _DATE_ _DATEm1_
