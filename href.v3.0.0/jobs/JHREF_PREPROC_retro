@@ -86,6 +86,8 @@ postmsg "$jlogfile" "$msg"
 export PDY=${DATE}
 export PDYm1=`$NDATE -24 ${DATE}00 | cut -c1-8`
 
+echo PDY PDYm1 in job $PDY $PDYm1
+
 
 ##############################################
 # Define running directory and COM directories

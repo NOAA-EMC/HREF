@@ -60,4 +60,4 @@ export SENDDBN_NTC=NO
 
 export DATE=_DATE_
 
-${HOMEhref}/jobs/JHREF_PREPROC_retro $DATE
+${HOMEhref}/jobs/JHREF_PREPROC_retro 
