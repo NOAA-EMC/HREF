@@ -119,8 +119,6 @@ msg"JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 date
 
-fi
-
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 
