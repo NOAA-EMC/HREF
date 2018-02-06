@@ -114,6 +114,7 @@ if [ $NEST = "conus" ]
 then
 
 echo "#!/bin/sh  "                             >  poe.a
+echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 00 &" >> poe.a
 echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 01 &" >> poe.a
 echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 02 &" >> poe.a
 echo "$USHhref/preprocess_hrrr.sh.ecf_1h ${cyc} 03 &" >> poe.a
@@ -160,6 +161,7 @@ echo "wait" >> poe.c
 
 
 echo "#!/bin/sh  "                             >  poe.d
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 00 &" >> poe.d
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 01 &" >> poe.d
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 02 &" >> poe.d
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 03 &" >> poe.d
@@ -171,10 +173,10 @@ echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 08 &" >> poe.d
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 09 &" >> poe.d
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 10 &" >> poe.d
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 11 &" >> poe.d
-echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 12 &" >> poe.d
 echo "wait" >> poe.d
 
 echo "#!/bin/sh  "                             >  poe.e
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 12 &" >> poe.e
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 13 &" >> poe.e
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 14 &" >> poe.e
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 15 &" >> poe.e
@@ -186,10 +188,10 @@ echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 20 &" >> poe.e
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 21 &" >> poe.e
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 22 &" >> poe.e
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 23 &" >> poe.e
-echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 24 &" >> poe.e
 echo "wait" >> poe.e
 
 echo "#!/bin/sh  "                             >  poe.f
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 24 &" >> poe.f
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 25 &" >> poe.f
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 26 &" >> poe.f
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 27 &" >> poe.f
@@ -201,10 +203,10 @@ echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 32 &" >> poe.f
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 33 &" >> poe.f
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 34 &" >> poe.f
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 35 &" >> poe.f
-echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 36 &" >> poe.f
 echo "wait" >> poe.f
 
 echo "#!/bin/sh  "                             >  poe.g
+echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 36 &" >> poe.g
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 37 &" >> poe.g
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 38 &" >> poe.g
 echo "$USHhref/preprocess_nam.sh.ecf_1h ${cyc} 39 &" >> poe.g
@@ -224,14 +226,16 @@ chmod 775 ${DATA}/poe.a  ${DATA}/poe.b ${DATA}/poe.c
 chmod 775 ${DATA}/poe.d  ${DATA}/poe.e ${DATA}/poe.f  ${DATA}/poe.g
 
 
-aprun -n 1 -N 1 -d 12 ${DATA}/poe.a &
+aprun -n 1 -N 1 -d 13 ${DATA}/poe.a &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.b &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.c &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.d &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.e &
 aprun -n 1 -N 1 -d 12 ${DATA}/poe.f &
-aprun -n 1 -N 1 -d 12 ${DATA}/poe.g &
+aprun -n 1 -N 1 -d 13 ${DATA}/poe.g &
 wait
+
+$USHhref/preprocess_hrrr.sh.ecf_3hapcp ${cyc}
 export err=$?; err_chk
 
 
