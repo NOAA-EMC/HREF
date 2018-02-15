@@ -1,0 +1,23 @@
+#! /bin/ksh
+
+cd  /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/launch_info
+
+CYC=${1}
+dom=${2}
+
+cat run_qpfclimo.lsf_in |  sed s:_CYC_:${CYC}:g > run_qpfclimo.lsf
+cat run_qpfcalibrate.lsf_in |  sed s:_CYC_:${CYC}:g > run_qpfcalibrate.lsf
+
+cat run_eas.lsf_in |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas.lsf
+# cat run_snow_eas.lsf_in | sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_snow_eas.lsf
+
+
+if [ $dom = "conus" ]
+then
+bsub < run_qpfclimo.lsf
+
+else
+
+bsub < run_eas.lsf
+
+fi
