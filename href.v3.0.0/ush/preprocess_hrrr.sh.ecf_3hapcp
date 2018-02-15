@@ -32,6 +32,9 @@ fi
 
 filecheck=hrrr.t${cyc}z.f${hr}.grib2
 
+if [ -e $filecheck ]
+then
+
         if [ $hr -gt 0 ]
         then
         echo here a $hr
@@ -45,4 +48,5 @@ filecheck=hrrr.t${cyc}z.f${hr}.grib2
         fi
         fi
 
+fi
 done
