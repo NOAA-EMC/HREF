@@ -184,7 +184,7 @@ fi
 
 if [ $SENDCOM == 'YES' ]
 then
-cp $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 $COMOUT
+cp $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
 fi
 
 let fhr=fhr+1

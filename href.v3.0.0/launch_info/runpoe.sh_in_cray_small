@@ -31,17 +31,8 @@ export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
 # export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
-export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
-export COMINhireswx=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
-export COMINhiresw=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
-export COMINnam=${COMROOTp1}/nam/prod/nam
 
-if [ -e /gpfs/gp2 ]
-then
-export COMINnam=/gpfs/gp2/nco/ops/com/nam/prod/nam
-else
-export COMINnam=/gpfs/tp2/nco/ops/com/nam/prod/nam
-fi
+export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
 
 export PCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/awip
 
@@ -54,26 +45,11 @@ module load prod_util
 
 href_ver=`cat /u/$LOGNAME/href_exp`
 
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/href.${href_ver}
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/git_repo/EMC_hrw/href.${href_ver}
+
 
 export SENDCOM=YES
 export SENDDBN=NO
 export SENDDBN_NTC=NO
 
 ${HOMEhref}/jobs/JHREF_ENSPROD
-
-if [ $NEST = conus ]
-then
-bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC_.sh_para
-elif [ $NEST = ak ]
-then
-bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__ak.sh_para
-elif [ $NEST = pr ]
-then
-bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__pr.sh_para
-elif [ $NEST = hi ]
-then
-bsub < /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/python_tools/all_hrefv2__CYC__hi.sh_para
-fi
-
-# $HOMEhref/graphics/launch_href_plot _CYC_

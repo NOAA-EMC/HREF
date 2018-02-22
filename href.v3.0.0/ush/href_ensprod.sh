@@ -27,6 +27,10 @@ dom=${NEST}
 
 cd $DATA/${ff}/
 
+ln -sf $FIXhref/*href5km .
+ln -sf $COMINffg/ffg*href5km .
+
+
 ###############################
 
 typeset -Z2 cycloc     #temp variable here

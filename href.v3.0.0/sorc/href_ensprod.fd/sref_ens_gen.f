@@ -452,14 +452,14 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
         iprob=203
         ipmmn=204
         iavg=205
-!        iffri=206
+        iffri=206
 
       mnout=trim(eps)//'.mean.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       pmmnout=trim(eps)//'.pmmn.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       spout=trim(eps)//'.sprd.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       prout=trim(eps)//'.prob.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       avgout=trim(eps)//'.avrg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
-!      ffriout=trim(eps)//'.ffri.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
+      ffriout=trim(eps)//'.ffri.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
 
       call baopen (imean, mnout, iret)
       if (iret.ne.0) write(*,*) 'open ', mnout, 'err=', iret
@@ -471,8 +471,10 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       if (iret.ne.0) write(*,*) 'open ', pmmnout, 'err=', iret
       call baopen (iavg, avgout, iret)
       if (iret.ne.0) write(*,*) 'open ', avgout, 'err=', iret
-!      call baopen (iffri, ffriout, iret)
-!      if (iret.ne.0) write(*,*) 'open ', ffriout, 'err=', iret
+        if (mod(ifhr,3) .eq. 0) then
+      call baopen (iffri, ffriout, iret)
+      if (iret.ne.0) write(*,*) 'open ', ffriout, 'err=', iret
+        endif
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c (IV) Main tasks:
@@ -567,6 +569,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
              end if
 
              jpd1=k4(nv)
+	write(0,*) 'jpd1 defined(a): ', jpd1
              jpd2=k5(nv)
              jpd10=k6(nv)
              !jpd12 is determined by a specific level MeanLevel(nv,lv) to !ProbLevel(nv,lv) later on
@@ -604,6 +607,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
           ELSE                   !Non-APCP/Snow
 
             jpd1=k4(nv)
+	write(0,*) 'jpd1 defined(b): ', jpd1
             jpd2=k5(nv)
             !jpd12 is determined by a specific level MeanLevel(nv,lv) to
             !!ProbLevel(nv,lv) later on
@@ -695,10 +699,10 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
             jpd27=10    !only 0-10 cm layer soil temperature is requested
           end if
 
-          write(0,*)'a - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(0,*)'a1 - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld, eps, jret)
-          write(0,*) 'a - readGB ',igrb2,' for mean kret=',kret 
+          write(0,*) 'a2 - readGB ',igrb2,' for mean kret=',kret 
 
 
          if (jret .eq. 0.and.trim(eps).eq.'href') then
@@ -1007,21 +1011,19 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
 	if (vname(nv) .eq. 'A6RI') then
 	write(0,*) 'defining fname for A6RI ' , thr1
-	if (thr1 .eq. 1) fname="6h_1yr.grib.href5km"
-	if (thr1 .eq. 2) fname="6h_2yr.grib.href5km"
-	if (thr1 .eq. 5) fname="6h_5yr.grib.href5km"
-	if (thr1 .eq. 10) fname='6h_10yr.grib.href5km'
-	if (thr1 .eq. 25) fname='6h_25yr.grib.href5km'
-	if (thr1 .eq. 50) fname='6h_50yr.grib.href5km'
-	if (thr1 .eq. 100) fname='6h_100yr.grib.href5km'
-	if (thr1 .eq. 200) fname='6h_200yr.grib.href5km'
-	if (thr1 .eq. 500) fname='6h_500yr.grib.href5km'
-	if (thr1 .eq. 1000) fname='6h_1000yr.grib.href5km'
+        if (thr1 .eq. 1) fname="new_1y_6h.grib2.g227"
+        if (thr1 .eq. 2) fname="new_2y_6h.grib2.g227"
+        if (thr1 .eq. 5) fname="new_5y_6h.grib2.g227"
+        if (thr1 .eq. 10) fname='new_10y_6h.grib2.g227'
+        if (thr1 .eq. 25) fname='new_25y_6h.grib2.g227'
+        if (thr1 .eq. 50) fname='new_50y_6h.grib2.g227'
+        if (thr1 .eq. 100) fname='new_100y_6h.grib2.g227'
+
 
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=81
         call baopenr(igrb2,trim(fname),ier1)
-	write(0,*) 'ier1 from baopenr: ', ier1
+	write(0,*) 'ier1 from baopenr for A6RI: ', ier1
               jpdtn=-1
               jpd27=-9999
             jpd1=-9999
@@ -1029,7 +1031,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             jpd10=-9999
             jpd12=-9999
             jpd27=-9999
-          write(*,*)'a - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(*,*)'a3 - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
 
 	gfld_neighb_restore=gfld
 
@@ -1045,7 +1047,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (jret .eq. 0) then
 	do J=1,jf
 	if (gfld_ri%fld(j) .gt. 0. .and. gfld_ri%bmap(j)) then
-	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+!old	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+            return_int(J)=gfld_ri%fld(j)  ! believe new data is in mm
         else
             return_int(J)=-9999.
 	endif
@@ -1075,7 +1078,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=82
         call baopenr(igrb2,trim(fname),ier1)
-	write(0,*) 'ier1 from baopenr: ', ier1
+	write(0,*) 'ier1 from baopenr for A3RI: ', ier1
               jpdtn=-1
               jpd27=-9999
             jpd1=-9999
@@ -1099,7 +1102,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (jret .eq. 0) then
 	do J=1,jf
 	if (gfld_ri%fld(j) .gt. 0. .and. gfld_ri%bmap(j)) then
-	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+!old	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+            return_int(J)=gfld_ri%fld(j)  ! believe new data is in mm
         else
             return_int(J)=-9999.
 	endif
@@ -1152,7 +1156,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (jret .eq. 0) then
 	do J=1,jf
 	if (gfld_ri%fld(j) .gt. 0. .and. gfld_ri%bmap(j)) then
-	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+!old	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+            return_int(J)=gfld_ri%fld(j)  ! believe new data is in mm
         else
             return_int(J)=-9999.  ! set large so will not be exceeded
 	endif
@@ -1166,16 +1171,13 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      &                maxval(return_int)
 
         elseif (vname(nv) .eq. 'A24R' ) then
-	if (thr1 .eq. 1) fname='24h_1yr.grib.href5km'
-	if (thr1 .eq. 2) fname='24h_2yr.grib.href5km'
-	if (thr1 .eq. 5) fname='24h_5yr.grib.href5km'
-	if (thr1 .eq. 10) fname='24h_10yr.grib.href5km'
-	if (thr1 .eq. 25) fname='24h_25yr.grib.href5km'
-	if (thr1 .eq. 50) fname='24h_50yr.grib.href5km'
-	if (thr1 .eq. 100) fname='24h_100yr.grib.href5km'
-	if (thr1 .eq. 200) fname='24h_200yr.grib.href5km'
-	if (thr1 .eq. 500) fname='24h_500yr.grib.href5km'
-	if (thr1 .eq. 1000) fname='24h_1000yr.grib.href5km'
+        if (thr1 .eq. 1) fname="new_1y_24h.grib2.g227"
+        if (thr1 .eq. 2) fname="new_2y_24h.grib2.g227"
+        if (thr1 .eq. 5) fname="new_5y_24h.grib2.g227"
+        if (thr1 .eq. 10) fname='new_10y_24h.grib2.g227'
+        if (thr1 .eq. 25) fname='new_25y_24h.grib2.g227'
+        if (thr1 .eq. 50) fname='new_50y_24h.grib2.g227'
+        if (thr1 .eq. 100) fname='new_100y_24h.grib2.g227'
 
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=83
@@ -1204,7 +1206,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (jret .eq. 0) then
 	do J=1,jf
 	if (gfld_ri%fld(j) .gt. 0. .and. gfld_ri%bmap(j)) then
-	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+!old	    return_int(J)=gfld_ri%fld(j)*0.0254  ! convert from "milliinches" to mm
+            return_int(J)=gfld_ri%fld(j)  ! believe new data is in mm
         else
             return_int(J)=-9999.  ! set large so will not be exceeded
 	endif
@@ -1657,12 +1660,14 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      &     vname(nv) .eq. 'FFG3' .or. vname(nv) .eq. 'FFG6' .or.
      &     vname(nv) .eq. 'FF12' .or. vname(nv) .eq. 'FF24')  then
 
+	write(0,*) 'calling packGB2_prob for FFG/ARI'
          call packGB2_prob(iffri,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
      +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
 
         else
 
+	write(0,*) 'calling packGB2_prob for normal'
          call packGB2_prob(iprob,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
      +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
@@ -1735,6 +1740,7 @@ c   Loop 2-0: allocation
          gfld%discipline=0   !reset discipline# in case it was changed (i.e. fire weather)
 
          jpd1=dk4(nv)
+	write(0,*) 'jpd1 defined(c): ', jpd1
          jpd2=dk5(nv)
          jpd10=dk6(nv)
          jpd27=-9999
@@ -2054,6 +2060,7 @@ C
 !
           else                                       !Non-precip type
                jpd1=dk4(nv)
+	write(0,*) 'jpd1 defined(d): ', jpd1
                jpd2=dk5(nv)
                jpd10=dk6(nv)
                jpd27=-9999
@@ -2161,6 +2168,7 @@ c Loop 3-2: Packing
          gfld_temp=gfld
 
          jpd1=qk4(nv)
+	write(0,*) 'jpd1 defined(e): ', jpd1
          jpd2=qk5(nv)
          jpd10=qk6(nv)
          jpd27=-9999

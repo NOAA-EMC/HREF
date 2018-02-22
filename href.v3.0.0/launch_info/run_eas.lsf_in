@@ -43,6 +43,7 @@ export COMINclimo=/meso/noscrub/Matthew.Pyle/com/hiresw/test/climo
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/hrefpy.${DATE}
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp
 export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_eas_${dom}_${cyc}_${envir}
 
 $HOMEhref/jobs/JHREF_EAS
