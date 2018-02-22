@@ -245,6 +245,71 @@ date
 
 fi
 
+if [ $NEST = "ak" ]
+then
+
+echo "IN ak NEST part"
+
+echo "#!/bin/sh  "                             >  poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 00 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 01 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 02 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 03 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 04 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 05 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 06 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 07 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 08 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 09 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 10 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 11 &" >> poe.a
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 12 &" >> poe.a
+echo "wait" >> poe.a
+
+echo "#!/bin/sh  "                             >  poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 13 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 14 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 15 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 16 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 17 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 18 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 19 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 20 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 21 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 22 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 23 &" >> poe.b
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 24 &" >> poe.b
+echo "wait" >> poe.b
+
+echo "#!/bin/sh  "                             >  poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 25 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 26 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 27 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 28 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 29 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 30 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 31 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 32 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 33 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 34 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 35 &" >> poe.c
+echo "$USHhref/preprocess_hrrrak.sh.ecf_1h ${cyc} 36 &" >> poe.c
+echo "wait" >> poe.c
+
+chmod 775 ${DATA}/poe.a  ${DATA}/poe.b ${DATA}/poe.c
+
+aprun -n 1 -N 1 -d 13 ${DATA}/poe.a &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.b &
+aprun -n 1 -N 1 -d 12 ${DATA}/poe.c &
+wait
+
+$USHhref/preprocess_hrrrak.sh.ecf_3hapcp ${cyc}
+export err=$?; err_chk
+
+
+fi
+
+
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 

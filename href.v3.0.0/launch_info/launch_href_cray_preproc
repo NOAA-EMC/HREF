@@ -40,7 +40,7 @@ DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 
 cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch_info/
 
-if [ $NEST = "conus" ]
+if [ $NEST = "conus" -o $NEST = "ak" ]
 then
 cat runpoe.preprocget.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
 cat runpoe.preproc.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocpoe_${cyc}

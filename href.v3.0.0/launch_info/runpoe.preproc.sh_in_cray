@@ -1,7 +1,7 @@
 #BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpreprocpoe_NEST___CYC_.out
 #BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpreprocpoe_NEST___CYC_.err
 #BSUB -q "devhigh"
-#BSUB -J HREF__CYC_
+#BSUB -J HREFPREP__CYC_
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
