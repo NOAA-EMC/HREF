@@ -288,7 +288,12 @@ errsave=$?
 echo past href_ensprod for ff $ff
 export err=$errsave; err_chk;
 
+if [ $dom = 'conus' -a ${ff}%3 -eq 0 ]
+then
+types="mean pmmn avrg prob sprd ffri"
+else
 types="mean pmmn avrg prob sprd"
+fi
 
 if [ $SENDCOM = YES ]; then
 
