@@ -1,8 +1,8 @@
-#BSUB -oo /meso/save/Matthew.Pyle/logs/test_all_easfrac.out__CYC___DOM_
-#BSUB -eo /meso/save/Matthew.Pyle/logs/test_all_easfrac.err__CYC___DOM_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.err__CYC___DOM_
 #BSUB -q "dev2"
 #BSUB -J HREF_EAS
-#BSUB -R "span[ptile=20]"
+#BSUB -R "span[ptile=13]"
 #BSUB -R affinity[cpu(2):distribute=balance]
 ###BSUB -R rusage[mem=2000]
 #BSUB -W 0:30
@@ -19,7 +19,7 @@ module load cfp/2.0.0
 
 
 export CFP_NPROCS=130      -  The total number of cores to be used by CFP
-export CFP_PTILE=20     -  The number of cores per node to be used by CFP
+export CFP_PTILE=13    -  The number of cores per node to be used by CFP
 export OMP_NUM_THREADS=2        -  This variable must be set to 2.
 
 
