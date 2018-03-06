@@ -205,12 +205,14 @@ if os.path.exists(dir):
       shour = fhour - 3
       newfile = 'arw%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile
+      climofile_bin = climohref + '/' + newfile + '.bin'
       print climofile
       if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
         os.system('rm '+climofile2)
       if not os.path.exists(climofile2) and (fhour%3 == 0):
         print 'Creating '+climofile
         os.system(WGRIB2+' '+arwfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)   
+        os.system(WGRIB2+' '+arwfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)   
     elif (len(file) == 36 and (file[8:10] == cyc[0:2]) and file[12:20] == 'nmmb_5km' and (1 <= int(file[22:24])) and file[25:30] == 'conus'):
       nmmbfile = dir + '/' + file
       print 'Found',nmmbfile
@@ -225,12 +227,14 @@ if os.path.exists(dir):
       shour = fhour - 3
       newfile = 'nmmb%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile
+      climofile_bin = climohref + '/' + newfile + '.bin'
       print climofile
       if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
         os.system('rm '+climofile2)
       if not os.path.exists(climofile2) and (fhour%3 == 0):
         print 'Creating '+climofile
         os.system(WGRIB2+' '+nmmbfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)
+        os.system(WGRIB2+' '+nmmbfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)
     elif (len(file) == 39 and (file[8:10] == cyc[0:2]) and file[12:19] == 'arw_5km' and (1 <= int(file[21:23])) and file[24:33] == 'conusmem2'):
 
       nsslfile = dir + '/' + file
@@ -246,12 +250,14 @@ if os.path.exists(dir):
       shour = fhour - 3
       newfile = 'nssl%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile
+      climofile_bin = climohref + '/' + newfile + '.bin'
       print climofile
       if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
         os.system('rm '+climofile2)
       if not os.path.exists(climofile2) and (fhour%3 == 0):
         print 'Creating '+climofile
         os.system(WGRIB2+' '+nsslfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)
+        os.system(WGRIB2+' '+nsslfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)
 
 # copy HRRR from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
@@ -275,12 +281,14 @@ if os.path.exists(dir):
       newfile = 'hrrr%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile + '_copy'
       climofile2 = climohref + '/' + newfile
+      climofile2_bin = climohref + '/' + newfile + '.bin'
       print climofile2
       if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
         os.system('rm '+climofile2)
       if not os.path.exists(climofile2) and (fhour%3 == 0):
         print 'Creating '+climofile2
         os.system(WGRIB2+' '+hrrrfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile2)   
+        os.system(WGRIB2+' '+hrrrfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile2_bin)   
 #        os.system(WGRIB2+' '+hrrrfile+' -match "APCP:surface:" -end -grib '+climofile)   
 
 # copy NAM from the realtime directory to climo
@@ -306,12 +314,14 @@ if os.path.exists(dir):
       newfile = 'nam%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile + '_copy'
       climofile2 = climohref + '/' + newfile
+      climofile2_bin = climohref + '/' + newfile + '.bin'
       print climofile2
       if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
         os.system('rm '+climofile2)
       if not os.path.exists(climofile2) and (fhour%3 == 0):
         print 'Creating '+climofile2
         os.system(WGRIB2+' '+namxfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile2)   
+        os.system(WGRIB2+' '+namxfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+ climofile2_bin)   
 
 
 # Remove old Stage-IV and HREFv2 files

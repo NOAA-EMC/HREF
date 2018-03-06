@@ -25,7 +25,8 @@ export cyc=_CYC_
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hrefpy.${DATE}
+# export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hrefpy.${DATE}
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp
 export COMOUTcalib=${COMOUT}/../calib
 export COMOUTcal=${COMOUT}/../cal
 export COMOUTclimo=${COMOUT}/../climo
