@@ -27,7 +27,8 @@ dom=${NEST}
 
 cd $DATA/${ff}/
 
-ln -sf $FIXhref/*href5km .
+# ln -sf $FIXhref/*href5km .
+ln -sf $FIXhref/new*g227* .
 ln -sf $COMINffg/ffg*href5km .
 
 
@@ -287,6 +288,7 @@ $EXEChref/href_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1
 errsave=$?
 echo past href_ensprod for ff $ff
 export err=$errsave; err_chk;
+cp $DATA/$ff/output_ensprod.$ff $COMOUT/test_output_ensprod.$ff
 
 if [ $dom = 'conus' -a ${ff}%3 -eq 0 ]
 then
