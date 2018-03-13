@@ -24,7 +24,6 @@ from cal_functions import quantile_map
 ### parms imported from PQPF config file
 from eas_config import *
 
-
 ####################
 # GET ENVIRO VARS
 ####################

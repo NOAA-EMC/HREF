@@ -1,5 +1,5 @@
-#BSUB -oo /meso/save/Matthew.Pyle/logs/test_qpfclimo.out
-#BSUB -eo /meso/save/Matthew.Pyle/logs/test_qpfclimo.err
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo.err__CYC___DOM_
 #BSUB -q "dev2"
 #BSUB -J HREF_QPFCLIMO
 ###BSUB -R "span[ptile=1]"

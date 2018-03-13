@@ -126,7 +126,6 @@ print 'found DATA as ', DATA
 
 # input directory and config file
 sys.path.append(HOMEhref)
-from sseox_config import *
 
 def process_hrrr_qpf(file3,file4,fcst_hour):
     print 'process_hrrr_qpf'
