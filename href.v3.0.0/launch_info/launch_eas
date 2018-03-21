@@ -6,6 +6,7 @@ CYC=${1}
 dom=${2}
 
 cat run_qpfclimo.lsf_in |  sed s:_CYC_:${CYC}:g > run_qpfclimo.lsf
+cat run_qpfclimo_bin.lsf_in |  sed s:_CYC_:${CYC}:g > run_qpfclimo_bin.lsf
 cat run_qpfcalibrate.lsf_in |  sed s:_CYC_:${CYC}:g > run_qpfcalibrate.lsf
 
 cat run_eas.lsf_in |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas.lsf
@@ -15,6 +16,10 @@ cat run_eas.lsf_in |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas.lsf
 if [ $dom = "conus" ]
 then
 bsub < run_qpfclimo.lsf
+
+elif [ $dom = "conusbin" ]
+then
+bsub < run_qpfclimo_bin.lsf
 
 else
 

@@ -9,8 +9,10 @@
 # 2017-05-31  T Alcott  calculate_eas_probability function added
 #                       computational resources reduced from 16 cores to 1 core
 # 2017-06-01  B Blake   modified script containing loops over each ensemble member type
+# 2018-03-20  M Pyle    replace pygrib with wgrib2
 
-import os, sys, time, pygrib
+# import os, sys, time, pygrib
+import os, sys, time
 import numpy as np
 import math as m
 from datetime import datetime, timedelta
@@ -130,11 +132,17 @@ start_hour = int(fcst_hour - qpf_interval)
 slim = max(rlist)
 alpha = 0.5
 
+os.system(WGRIB2+' '+template+' -record 1 -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
+
+lons,nx,ny=simplewgrib2('lon.txt')
+lats,nx,ny=simplewgrib2('lat.txt')
+
 # get dimensions and message from template file
-grbs = pygrib.open(template)
-grbtmp = grbs[record]
-lats, lons = grbtmp.latlons()
-grbs.close()
+# grbs = pygrib.open(template)
+# grbtmp = grbs[record]
+# lats, lons = grbtmp.latlons()
+# grbs.close()
+
 nlats, nlons = np.shape(lats)
 
 # define mask - NAM nest grid interpolated to grid 227 has undefined values
@@ -144,11 +152,15 @@ if dom == 'ak':
   maskfile = HOMEhref + '/fix/akhref_mask.grib2'
 
 if dom == 'conus' or dom == 'ak':
-  grbs2 = pygrib.open(maskfile)
-  undefmask = grbs2[1].values
+  os.system(WGRIB2+' '+maskfile+' -record 1 -text mask.txt ')
+#  grbs2 = pygrib.open(maskfile)
+  undefmask,nx,ny=simplewgrib2('mask.txt')
+#  undefmask = grbs2[1].values
+
+  undefmask=np.ma.masked_greater(undefmask,9.0e+20)
   maskregion = np.ma.filled(undefmask,-9999)
   print 'maskregion defined'
-  grbs2.close()
+#  grbs2.close()
 
 if not os.path.exists(COMOUT):
   os.system("mkdir -p " + COMOUT)
@@ -227,38 +239,74 @@ for mem in members:
 #--------------------------------------------------------------------------------
 #### FUNCTIONS AND ROUTINES ####
 
+def simplewgrib2(txtfile):
+  tmps= []
+  with open(txtfile) as F1:
+    i=1
+    nx,ny=[int(x) for x in next(F1).split()]
+    ilim=nx*ny
+    while i <= ilim:
+      tmp=[float(x) for x in next(F1).split()]
+      tmps.append(tmp)
+      i=i+1
+    array2d = np.asarray(tmps,dtype=np.float32)
+    array2d.shape = (nx,ny)
+    return array2d,nx,ny
+  F1.close()
+
+
 def process_nam_qpf(file3,file4,fhr):
 
 
+    fhour=fhr
     if fhr%3 is 1:
+      shour=fhour-1
       print 'process_nam_qpf remainder 1'
-      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
-      qpf1 = grb.values
-      idx.close()
+#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
+#      qpf1 = grb.values
+#      idx.close()
+      os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
+      qpf1,nx,ny=simplewgrib2('qpf.txt')
+
 
     if fhr%3 is 2:
+      shour1=fhour-2
+      shour2=fhour-1
       print 'process_nam_qpf remainder 2 - f02 minus f01'
-      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
-      qpfa = grb.values
-      idx.close()
-      idx = pygrib.index(file4,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
-      qpfb = grb.values
-      idx.close()
+      os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
+      qpfa,nx,ny=simplewgrib2('qpf.txt')
+#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
+#      qpfa = grb.values
+#      idx.close()
+
+      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
+      qpfb,nx,ny=simplewgrib2('qpf.txt')
+#      idx = pygrib.index(file4,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
+#      qpfb = grb.values
+#      idx.close()
+
       qpf1=qpfa-qpfb
 
     if fhr%3 is 0:
+      shour1=fhour-3
+      shour2=fhour-2
       print 'process_nam_qpf remainder 3 - f03 minus f02'
-      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation', lengthOfTimeRange=3)[0]
-      qpfa = grb.values
-      idx.close()
-      idx = pygrib.index(file4,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
-      qpfb = grb.values
-      idx.close()
+      os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
+      qpfa,nx,ny=simplewgrib2('qpf.txt')
+#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation', lengthOfTimeRange=3)[0]
+#      qpfa = grb.values
+#      idx.close()
+
+      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
+      qpfb,nx,ny=simplewgrib2('qpf.txt')
+#      idx = pygrib.index(file4,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
+#      qpfb = grb.values
+#      idx.close()
       qpf1=qpfa-qpfb
 
     return qpf1
@@ -542,14 +590,26 @@ for mem in members:
 # Process first 6 hours
       print 'Processing member',(1+memcount),'of',nm_use
 
-      idx = pygrib.index(file1,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf1 = grb.values
-      idx.close()
-      idx = pygrib.index(file2,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf2 = grb.values
-      idx.close()
+## how get the proper hours for each file??
+      fhour=fhr
+      shour=fhour-3
+      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
+      qpf1,nx,ny=simplewgrib2('qpf.txt')
+
+#      idx = pygrib.index(file1,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf1 = grb.values
+#      idx.close()
+## how get the proper hours for each file??
+      fhour=fhr
+      shour=fhour-3
+      os.system(WGRIB2+' '+file2+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
+      qpf2,nx,ny=simplewgrib2('qpf.txt')
+#      idx = pygrib.index(file2,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf2 = grb.values
+#      idx.close()
+
       qpf12 = qpf1 + qpf2    
 
       print 'max of qpf12: ', np.max(qpf12)
@@ -592,15 +652,20 @@ for mem in members:
          print 'itime assigned: ', itime
 
     if qpf_interval == 24 or qpf_interval == 12 :
+
+## figure out fhour for two pieces here
+
 # Process second 6 hours
-      idx = pygrib.index(file3,'name','lengthOfTimeRange') # hayayaya
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf3 = grb.values
-      idx.close()
-      idx = pygrib.index(file4,'name','lengthOfTimeRange') # hayayaya
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf4 = grb.values
-      idx.close()
+#      idx = pygrib.index(file3,'name','lengthOfTimeRange') # hayayaya
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf3 = grb.values
+#      idx.close()
+
+#      idx = pygrib.index(file4,'name','lengthOfTimeRange') # hayayaya
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf4 = grb.values
+#      idx.close()
+
       qpf34 = qpf3 + qpf4    
 
     # adjust QPF based on calibration coefficients
@@ -623,14 +688,17 @@ for mem in members:
     if qpf_interval == 24 :
 
 # Process third 6 hours
-      idx = pygrib.index(file5,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf5 = grb.values
-      idx.close()
-      idx = pygrib.index(file6,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf6 = grb.values
-      idx.close()
+## figure out fhour for two pieces here
+#      idx = pygrib.index(file5,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf5 = grb.values
+#      idx.close()
+
+#      idx = pygrib.index(file6,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf6 = grb.values
+#      idx.close()
+
       qpf56 = qpf5 + qpf6
 
       if pqpf_6h_calibrate == 'yes':
@@ -646,14 +714,18 @@ for mem in members:
         qpf56 = (np.where(np.greater(qpf56,0),adjqpf,0.0)) 	#hayayayaya
 
 # Process last 6 hours
-      idx = pygrib.index(file7,'name','lengthOfTimeRange') 
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf7 = grb.values
-      idx.close()
-      idx = pygrib.index(file8,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf8 = grb.values
-      idx.close()
+## figure out fhour for two pieces here
+
+#      idx = pygrib.index(file7,'name','lengthOfTimeRange') 
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf7 = grb.values
+#      idx.close()
+
+#      idx = pygrib.index(file8,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#      qpf8 = grb.values
+#      idx.close()
+
       qpf78 = qpf7 + qpf8
 
     # adjust QPF based on calibration coefficients
@@ -681,13 +753,18 @@ for mem in members:
 # Process first 3 hours
       print 'Processing member',(1+memcount),'of',nm_use
 
-      idx = pygrib.index(file1,'name','lengthOfTimeRange')
-      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-      qpf[itime] = grb.values
+      fhour=fhr
+      shour=fhour-3
+#      idx = pygrib.index(file1,'name','lengthOfTimeRange')
+#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
+#       qpf[itime] = grb.values
+      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
+      qpfhere,nx,ny=simplewgrib2('qpf.txt')
+      qpf[itime]=qpfhere
       print 'from file1: ', file1
       print 'max 3 h qpf: ', np.max(qpf[itime])
       print 'mean 3 h qpf: ', np.mean(qpf[itime])
-      idx.close()
+#      idx.close()
 
 ######### 1 h APCP
 
@@ -699,11 +776,16 @@ for mem in members:
       print 'Processing member',(1+memcount),'of',nm_use
 
       if mem != 'nam':
+        fhour=fhr
+        shour=fhour-1
         print 'from memfiles file1 for 1 h qpf: ', file1
-        idx = pygrib.index(file1,'name','lengthOfTimeRange')
-        grb = idx(name='Total Precipitation',lengthOfTimeRange=1)[0]
-        qpf[itime] = grb.values
-        idx.close()
+#        idx = pygrib.index(file1,'name','lengthOfTimeRange')
+        os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
+        qpfhere,nx,ny=simplewgrib2('qpf.txt')
+        qpf[itime] = qpfhere
+#        grb = idx(name='Total Precipitation',lengthOfTimeRange=1)[0]
+#        qpf[itime] = grb.values
+#        idx.close()
       else:
         print 'call process_nam_qpf with: '
         print 'file1: ', file1
