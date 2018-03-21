@@ -1,0 +1,35 @@
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin.out__CYC_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin.err__CYC_
+#BSUB -q "dev2"
+#BSUB -J HREF_QPFCLIMO_BIN
+###BSUB -R "span[ptile=1]"
+#BSUB -R affinity[core(1)]
+###BSUB -R rusage[mem=2000]
+#BSUB -W 0:20
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -n 1
+
+module load ics
+module load ibmpe
+
+export MP_LABELIO=yes
+
+
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
+export RUN_ENVIR=test
+export envir=test
+
+export cyc=_CYC_
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+
+export dom=conus
+# 
+# export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/$RUN_ENVIR/hrefpy.${DATE}
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_expbin
+export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_qpfclimo_bin_${cyc}_${envir}
+
+$HOMEhref/jobs/JHREF_QPFCLIMO_BIN
+
+# bsub < run_qpfcalibrate.lsf

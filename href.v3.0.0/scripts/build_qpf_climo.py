@@ -17,7 +17,7 @@
 # PACKAGE IMPORTS
 ###################
 
-import os, sys, time, pygrib
+import os, sys, time
 from netCDF4 import Dataset
 import numpy as np
 from datetime import datetime, timedelta
@@ -127,19 +127,6 @@ print 'found DATA as ', DATA
 # input directory and config file
 sys.path.append(HOMEhref)
 
-def process_hrrr_qpf(file3,file4,fcst_hour):
-    print 'process_hrrr_qpf'
-    idx = pygrib.index(file3,'name','lengthOfTimeRange')
-    grb = idx(name='Total Precipitation', lengthOfTimeRange=fcst_hour)[0]
-    qpfa = grb.values
-    idx.close()
-    idx = pygrib.index(file4,'name','lengthOfTimeRange')
-    grb = idx(name='Total Precipitation', lengthOfTimeRange=fcst_hour-3)[0]
-    qpfb = grb.values
-    idx.close()
-    qpf3=qpfa-qpfb
-    print 'min max of derived qpf3: ', np.min(qpf3),np.max(qpf3)
-    return qpf3
 
 #################
 # SCRIPT
@@ -165,6 +152,7 @@ for dirpath, dirnames, files in os.walk(COMINpcpanl):
             if (dom == 'conus'):
               climofile = COMINclimo + '/qpe/conus/stageIV_'+ymd+h+'_06h.gz'	# was .nc
               climofile2 = COMINclimo + '/qpe/conus/stageIV_'+ymd+h+'_06h'	# unzipped file
+              climofile2_bin = COMINclimo + '/qpe/conus/stageIV_'+ymd+h+'_06h.bin'	# unzipped file
             if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
               os.system('rm '+climofile2)
             if not os.path.exists(climofile2+'.grb'):
@@ -181,6 +169,9 @@ for dirpath, dirnames, files in os.walk(COMINpcpanl):
                   print 'Budget interpolating to the HREF CONUS grid:',rtfile
                   os.system(COPYGB+' -xg "255 3 1473 1025 12190 -133459 \
                             8 -95000 5079 5079 0 64 25000 25000" -i "3" '+climofile2+' '+climofile2+'.grb')
+                  climofull = climofile2 + '.bin'
+                  os.system(WGRIB2+' '+climofull+' -bin '+climofile2_bin)   
+                  
 
 # copy HiResW (ARW + NMMB) from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command

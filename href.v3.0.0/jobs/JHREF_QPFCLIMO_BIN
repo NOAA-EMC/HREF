@@ -1,0 +1,101 @@
+#!/bin/sh 
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+export PS4='$SECONDS + ' 
+date
+
+######################################################
+# Default to NCO production run environment
+#######################################################
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-href}
+export RUN=${RUN:-href}
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+if [ "$RUN_ENVIR" = prod -a $envir != prod ]; then
+  export jlogfile=/com/logs/${envir}/jlogfile
+  export SENDDBN=NO
+fi
+
+########################################################### 
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-/tmpnwprd2/href_qpfclimo_${cyc}_${envir}}
+mkdir -p $DATA
+cd $DATA 
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.$job.$pid}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+export HOMEhref=${HOMEhref:-/nw${envir}/href.${model_ver}}
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+export FIXhref=${FIXhref:-$HOMEhref/fix}
+export PARMhref=${PARMhref:-$HOMEhref/parm}
+export USHhref=${USHhref:-$HOMEhref/ush}
+
+###################################
+# Set up the UTILITIES
+###################################
+export utilscript=/nwprod/util/ush
+export utilexec=/nwprod/util/exec
+
+# Run setup to initialize working directory and utility scripts
+sh $utilscript/setup.sh
+
+# Run setpdy and initialize PDY variables
+sh $utilscript/setpdy.sh
+. PDY
+
+export COMIN=${COMIN:-/com/${NET}/${envir}/href.${PDY}}
+export COMOUT=${COMOUT:-/com/${NET}/${envir}/href.${PDY}}
+
+mkdir -p -m 775 $COMOUT
+ 
+########################################################
+# Execute the script.
+
+export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
+export COMINnam=/com2/nam/prod
+export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
+
+export COMINpcpanl=/com2/pcpanl/prod
+export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
+export COMINclimo=${COMOUT}/../climo
+
+python ${HOMEhref}/scripts/build_qpf_climo_bin.py 
+########################################################
+
+msg="JOB $job HREF_QPFCLIMO HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+date
