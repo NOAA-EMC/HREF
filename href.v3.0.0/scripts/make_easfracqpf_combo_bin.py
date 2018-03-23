@@ -21,6 +21,7 @@ from scipy.stats import threshold
 from netCDF4 import Dataset
 
 WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
+WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
 
 starttime = time.time()
 
@@ -887,10 +888,12 @@ for t in thresh_use:
   print 'mean of probfinal: ', np.mean(probfinal)
 
 # Write variables to grib file
-  grbout = open(outfile,'a')
-  grbtmp['values'] = probfinal.astype(int)
-  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*25.4,3))
-  grbout.write(grbtmp.tostring())
-  print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
-  grbout.close()
+#  grbout = open(outfile,'a')
+#  grbtmp['values'] = probfinal.astype(int)
+#  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*25.4,3))
+#  grbout.write(grbtmp.tostring())
+
+
+   print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
+#  grbout.close()
 # End of loop over thresholds
