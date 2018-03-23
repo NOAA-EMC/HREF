@@ -23,6 +23,7 @@ from scipy.stats import threshold
 from netCDF4 import Dataset
 
 WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
+WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
 
 starttime = time.time()
 
@@ -587,11 +588,17 @@ for t in thresh_use:
   print 'Time for get final probability routine for ',t, 'inch threshold: ',t5-t4
   print 'max of probfinal: ', np.max(probfinal)
 
+  binout = 'bin.dat'
+
+# write binary file out of probfinal array, then import it into grib file using WGRIB2
+
 # Write variables to grib file
-  grbout = open(outfile,'a')
-  grbtmp['values'] = probfinal.astype(int)
-  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*2.54,3))
-  grbout.write(grbtmp.tostring())
+#  grbout = open(outfile,'a')
+#  grbtmp['values'] = probfinal.astype(int)
+#  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*2.54,3))
+#  grbout.write(grbtmp.tostring())
+
+  
   print 'Wrote PSNOW for ', qpf_interval, ' to:',outfile, 'for ',t, 'inch threshold'
 
   grbout.close()

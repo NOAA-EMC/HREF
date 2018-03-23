@@ -1,4 +1,4 @@
-  35      row variables and mean/spread/prob info
+  36      row variables and mean/spread/prob info
 AP1h   1 8     1 P1  0  A1  0   > A4 12.7 25.4 50.8 76.2
 AP1h   1 8     1 M0     P1  0   > P2 0.25 6.35
 REFD  16 195 103 P1 1000    A1 1000 > A3 30 40 50
@@ -34,6 +34,7 @@ LCLD  6  3  214  M1  0
 MCLD  6  4  224  M1  0
 HCLD  6  5  234  M1  0
 TCDC  6  1  200  M1  0
+FFG1  1  8    1  M0     A1  0   > A1 1
 
    14       special derived variables, each  of which, needs code to process specially
 PTYP  1 19     1 M1  0  P1  0  = T1 1.0
@@ -60,6 +61,7 @@ A3RI   1 8     1 M0     A1  0   > A3 1 5 500
 A6RI   1 8     1 M0     A1  0   > A3 1 5 500
 A12R   1 8     1 M0     A1  0   > A3 1 5 500
 A24R   1 8     1 M0     A1  0   > A3 1 5 500
+FFG1   1 8     1 M0     A1  0   > A1 1
 FFG3   1 8     1 M0     A1  0   > A1 3
 FFG6   1 8     1 M0     A1  0   > A1 6
 FF24   1 8     1 M0     A1  0   > A1 24

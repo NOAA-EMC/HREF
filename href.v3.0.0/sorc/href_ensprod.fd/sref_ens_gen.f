@@ -471,10 +471,10 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       if (iret.ne.0) write(*,*) 'open ', pmmnout, 'err=', iret
       call baopen (iavg, avgout, iret)
       if (iret.ne.0) write(*,*) 'open ', avgout, 'err=', iret
-        if (mod(ifhr,3) .eq. 0) then
+!        if (mod(ifhr,3) .eq. 0) then
       call baopen (iffri, ffriout, iret)
-      if (iret.ne.0) write(*,*) 'open ', ffriout, 'err=', iret
-        endif
+!      if (iret.ne.0) write(*,*) 'open ', ffriout, 'err=', iret
+!        endif
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c (IV) Main tasks:
@@ -574,7 +574,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
              jpd10=k6(nv)
              !jpd12 is determined by a specific level MeanLevel(nv,lv) to !ProbLevel(nv,lv) later on
 
-             if (vname(nv).eq.'AP1h'.or.vname(nv).eq.'SN1h') then        !AP1h,Ap3h,Ap6h, AP12,Ap24 should be hardcopy in the variable tbl
+             if (vname(nv).eq.'AP1h'.or.vname(nv).eq.'SN1h'.or. 
+     &           vname(nv).eq.'FFG1') then        !AP1h,Ap3h,Ap6h, AP12,Ap24 should be hardcopy in the variable tbl
 	     write(0,*) 'jpd27=1 for AP1h or SN1h'
              jpd27=1
              else if (vname(nv).eq.'AP3h'.or.vname(nv).eq.'SN3h' .or. 
@@ -1220,6 +1221,59 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	write(0,*) 'min/max of 24 h return_int: ', minval(return_int),
      &                maxval(return_int)
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	elseif (vname(nv) .eq. 'FFG1') then
+	write(0,*) 'defining fname for FFG1 ' , thr1
+	if (thr1 .eq. 1) fname="ffg1h.grib2.href5km"
+
+	write(0,*) 'trim(fname): ', trim(fname)
+               igrb2=81
+        call baopenr(igrb2,trim(fname),ier1)
+	write(0,*) 'ier1 from baopenr: ', ier1
+              jpdtn=-1
+              jpd27=-9999
+            jpd1=-9999
+            jpd2=-9999
+            jpd10=-9999
+            jpd12=-9999
+            jpd27=-9999
+          write(*,*)'readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+
+	gfld_neighb_restore=gfld
+
+          call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
+     +          gfld_ffg, eps, jret)
+
+	write(0,*) 'jret from readGB2: ', jret
+            jpd1=1
+            jpd2=8
+            jpd10=1
+            jpd27=1
+
+!           if (Tsignal(nv).ne.'A') then
+
+	if (jret .eq. 0) then
+	do J=1,jf
+	if (gfld_ffg%fld(j) .gt. 0.01 .and. gfld_ffg%bmap(j)) then
+	    return_int(J)=gfld_ffg%fld(j)
+        else
+            return_int(J)=-9999.
+	endif
+	enddo
+	endif
+
+	gfld=gfld_neighb_restore
+
+	call baclose(igrb2,ier1)
+
+	write(0,*) 'min/max of FFG1: ', minval(return_int),
+     &                maxval(return_int)
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	elseif (vname(nv) .eq. 'FFG3') then
 	write(0,*) 'defining fname for FFG3 ' , thr1
 	if (thr1 .eq. 3) fname="ffg3h.grib2.href5km"
@@ -1267,6 +1321,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	write(0,*) 'min/max of FFG3: ', minval(return_int),
      &                maxval(return_int)
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	elseif (vname(nv) .eq. 'FFG6') then
 	write(0,*) 'defining fname for FFG6 ' , thr1
 	if (thr1 .eq. 6) fname="ffg6h.grib2.href5km"
@@ -1456,7 +1511,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
              thr1 = Thrs(nv,lt)
              thr2 = 0.
              if (vname(nv) .ne. 'A3RI' .and. vname(nv) .ne. 'A6RI' .and.
-     &           vname(nv) .ne. 'A24R' .and. vname(nv) .ne. 'FFG3' .and.
+     &           vname(nv) .ne. 'A24R' .and. vname(nv) .ne. 'FFG1' .and.
+     &           vname(nv) .ne. 'FFG3' .and.
      &           vname(nv) .ne. 'FFG6' .and. vname(nv) .ne. 'FF24' .and.
      &           vname(nv) .ne. 'FF12' .and. vname(nv) .ne. 'A12R')then
              call getprob(apoint,iens,thr1,thr2,op(nv),aprob,
@@ -1657,6 +1713,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
        if (vname(nv) .eq. 'A3RI' .or. vname(nv) .eq. 'A6RI' .or. 
      &     vname(nv) .eq. 'A12R' .or. vname(nv) .eq. 'A24R' .or.
+     &     vname(nv) .eq. 'FFG1' .or.
      &     vname(nv) .eq. 'FFG3' .or. vname(nv) .eq. 'FFG6' .or.
      &     vname(nv) .eq. 'FF12' .or. vname(nv) .eq. 'FF24')  then
 

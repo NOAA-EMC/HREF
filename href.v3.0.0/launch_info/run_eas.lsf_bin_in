@@ -1,0 +1,48 @@
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.err__CYC___DOM_
+#BSUB -q "dev2"
+#BSUB -J HREF_EAS
+#BSUB -R "span[ptile=13]"
+#BSUB -R affinity[cpu(2):distribute=balance]
+###BSUB -R rusage[mem=2000]
+#BSUB -W 0:30
+#BSUB -a poe
+#BSUB -P HRW-T2O
+#BSUB -n 130
+
+module switch ics/15.0.6
+module load ibmpe
+module load prod_util/v1.0.22
+
+module use /usrx/local/dev/modulefiles
+module load cfp/2.0.0
+
+
+export CFP_NPROCS=130      -  The total number of cores to be used by CFP
+export CFP_PTILE=13    -  The number of cores per node to be used by CFP
+export OMP_NUM_THREADS=2        -  This variable must be set to 2.
+
+
+export SENDCOM=YES
+export MP_LABELIO=yes
+
+
+# export HOMEhref=/meso/save/Matthew.Pyle/blake_sseox
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
+
+export RUN_ENVIR=test
+export envir=test
+
+export cyc=_CYC_
+export dom=_DOM_
+
+export COMINcal=/meso/noscrub/Matthew.Pyle/com/hiresw/test/cal
+export COMINcalib=/meso/noscrub/Matthew.Pyle/com/hiresw/test/calib
+export COMINclimo=/meso/noscrub/Matthew.Pyle/com/hiresw/test/climo
+
+DATE=`cat /com/date/t${cyc}z | cut -c7-14`
+
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp_bin
+export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_eas_${dom}_${cyc}_${envir}_bin
+
+$HOMEhref/jobs/JHREF_EAS_BIN
