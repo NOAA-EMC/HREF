@@ -21,6 +21,8 @@ from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
 from scipy.stats import threshold
 from netCDF4 import Dataset
+import fortranfile as F
+
 
 WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
 WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
@@ -120,52 +122,20 @@ qpf_interval = int(sys.argv[2])
 
 DATArun=DATA+'/snow_'+str(fcst_hour)
 if not os.path.exists(DATArun):
-  os.system("mkdir -p " + DATArun)
-os.system("cd " + DATArun)
+  os.system("mkdir -p "+DATArun)
+os.system("cd "+DATArun)
 
 start_hour = int(fcst_hour - qpf_interval)
+
+fhr_range=str(start_hour)+'-'+str(fcst_hour)
+
 
 print 'fcst_hour, qpf_interval, start_hour: ', fcst_hour, qpf_interval, start_hour
 
 # maximum radius (km)
 slim = max(rlist)
+alpha = 0.5
 
-# get dimensions and message from template file
-# grbs = pygrib.open(template)
-# grbtmp = grbs[record]
-# lats, lons = grbtmp.latlons()
-# grbs.close()
-
-os.system(WGRIB2+' '+template+' -record 1 -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
-
-lons,nx,ny=simplewgrib2('lon.txt')
-lats,nx,ny=simplewgrib2('lat.txt')
-
-nlats, nlons = np.shape(lats)
-
-# define mask - NAM nest grid interpolated to grid 227 has undefined values
-print 'dom here at decision point: ', dom
-if dom == 'conus':
-  print 'defining conus maskfile'
-  maskfile = HOMEhref + '/fix/nam_mask.grib2'
-
-print 'dom here at decision point2: ', dom
-if dom == 'ak':
-  print 'defining ak maskfile'
-  maskfile = HOMEhref + '/fix/akhref_mask.grib2'
-
-print 'dom here at decision point3: ', dom
-if dom == 'conus' or dom == 'ak':
-  print 'opening the maskregion stuff'
-  print 'maskfile is: ', maskfile
-#  grbs2 = pygrib.open(maskfile)
-#  undefmask = grbs2[1].values
-
-  os.system(WGRIB2+' '+maskfile+' -record 1 -text mask.txt ')
-  undefmask,nx,ny=simplewgrib2('mask.txt')
-  undefmask=np.ma.masked_greater(undefmask,9.0e+20)
-  maskregion = np.ma.filled(undefmask,-9999)
-#  grbs2.close()
 
 
 
@@ -195,7 +165,7 @@ def simplewgrib2(txtfile):
       tmps.append(tmp)
       i=i+1
     array2d = np.asarray(tmps,dtype=np.float32)
-    array2d.shape = (nx,ny)
+    array2d.shape = (ny,nx)
     return array2d,nx,ny
   F1.close()
 
@@ -221,9 +191,11 @@ def process_nam_qpf(file3,file4,fhr):
       print 'process_nam_qpf remainder 2 - f02 minus f01'
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 
       os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 
 #      idx = pygrib.index(file3,'name','lengthOfTimeRange')
 #      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=2)[0]
@@ -242,9 +214,11 @@ def process_nam_qpf(file3,file4,fhr):
       print 'process_nam_qpf remainder 3 - f03 minus f02'
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 
       os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 
 #      idx = pygrib.index(file3,'name','lengthOfTimeRange')
 #      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=3)[0]
@@ -319,20 +293,62 @@ memfiles = {}
 memfiles4 = {}
 latency4 = {}
 itimes = []
+fhours = []
+
 latency = min_latency
 stop = max_latency
 stopnam = max_latency_nam
 
+wgribdate=PDY+cyc
+
+# get dimensions and message from template file
+# grbs = pygrib.open(template)
+# grbtmp = grbs[record]
+# lats, lons = grbtmp.latlons()
+# grbs.close()
+
+os.system(WGRIB2+' '+template+' -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
+
+lons,nx,ny=simplewgrib2('lon.txt')
+lats,nx,ny=simplewgrib2('lat.txt')
+
+nlats, nlons = np.shape(lats)
+
+# define mask - NAM nest grid interpolated to grid 227 has undefined values
+print 'dom here at decision point: ', dom
+if dom == 'conus':
+  print 'defining conus maskfile'
+  maskfile = HOMEhref + '/fix/nam_mask.grib2'
+
+print 'dom here at decision point2: ', dom
+if dom == 'ak':
+  print 'defining ak maskfile'
+  maskfile = HOMEhref + '/fix/akhref_mask.grib2'
+
+print 'dom here at decision point3: ', dom
+if dom == 'conus' or dom == 'ak':
+  print 'opening the maskregion stuff'
+  print 'maskfile is: ', maskfile
+#  grbs2 = pygrib.open(maskfile)
+#  undefmask = grbs2[1].values
+
+  os.system(WGRIB2+' '+maskfile+'  -text mask.txt ')
+  undefmask,nx,ny=simplewgrib2('mask.txt')
+  undefmask=np.ma.masked_greater(undefmask,9.0e+20)
+  maskregion = np.ma.filled(undefmask,-9999)
+#  grbs2.close()
+
+
 # create grib messages from template (only need to do this once)
-grbtmp['dataDate']=int('%i'%d0.year+'%02d'%d0.month+'%02d'%d0.day)
-grbtmp['dataTime']=int('%02d'%d0.hour+'00')
-grbtmp['startStep']=int(start_hour)
-grbtmp['endStep']=int(start_hour+qpf_interval)
-grbtmp['yearOfEndOfOverallTimeInterval']=endtime.year
-grbtmp['monthOfEndOfOverallTimeInterval']=endtime.month
-grbtmp['dayOfEndOfOverallTimeInterval']=endtime.day
-grbtmp['hourOfEndOfOverallTimeInterval']=endtime.hour
-grbtmp['scaleFactorOfUpperLimit']=3
+# grbtmp['dataDate']=int('%i'%d0.year+'%02d'%d0.month+'%02d'%d0.day)
+# grbtmp['dataTime']=int('%02d'%d0.hour+'00')
+# grbtmp['startStep']=int(start_hour)
+# grbtmp['endStep']=int(start_hour+qpf_interval)
+# grbtmp['yearOfEndOfOverallTimeInterval']=endtime.year
+# grbtmp['monthOfEndOfOverallTimeInterval']=endtime.month
+# grbtmp['dayOfEndOfOverallTimeInterval']=endtime.day
+# grbtmp['hourOfEndOfOverallTimeInterval']=endtime.hour
+# grbtmp['scaleFactorOfUpperLimit']=3
 
 if qpf_interval == 1:
   print 'defined 1 h outbase'
@@ -398,6 +414,7 @@ for mem in members:
     if qpf_interval != 6:
       if os.path.exists(file3):
         print 'Found:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+        fhours.append(start_hour+qpf_interval+latency)
         itimes.append(itime)
         memfiles[itime] = file3
         print 'utilizing file3 in memfiles: ', file3
@@ -405,6 +422,8 @@ for mem in members:
         print 'Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
         if os.path.exists(file3alt):
           print 'alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency)
+          fhours.append(start_hour+qpf_interval+latency+6)
+          print 'defined file3 fhours: ', start_hour+qpf_interval+latency+6
           itimes.append(itime_alt)
           memfiles[itime_alt] = file3alt
           print 'using file3alt which is: ', file3alt
@@ -415,12 +434,16 @@ for mem in members:
       if os.path.exists(file3) and os.path.exists(file6):
         print 'Found:',itime,'forecast hour',(start_hour+qpf_interval+latency)
         itimes.append(itime)
+        fhours.append(start_hour+qpf_interval+latency)
+        print 'defined file3 for 6h fhours: ', start_hour+qpf_interval+latency
         memfiles[itime] = [file3,file6]
       else:
         print 'Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
         if os.path.exists(file3alt) and os.path.exists(file6alt):
           print 'alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency)
           itimes.append(itime_alt)
+          fhours.append(start_hour+qpf_interval+latency+6)
+          print 'defined fhours in alt 6h block: ', start_hour+qpf_interval+latency+6
           memfiles[itime_alt] = [file3alt,file6alt]
           print 'using file3alt which is: ', file3alt
           print 'using file6alt which is: ', file6alt
@@ -454,21 +477,22 @@ for mem in members:
     print 'file3 near read is ', file3
 
     if qpf_interval != 1:
-       fhour=fhr
-       shour=fhr-3
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=3)[0]
-#      qpf3 = grb.values
-#      idx.close()
+      if qpf_interval == 3:
+        fhour=fhours[memcount]
+        shour=fhour-3
+      if qpf_interval == 6:
+        fhour=fhours[memcount]-3
+        shour=fhour-3
+      print 'for file3 shour fhour: ', shour,fhour
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf3,nx,ny=simplewgrib2('qpf.txt')
     else:
       if mem != 'nam':
         print 'ready from file3 in 1h: ', file3
-        fhour=fhr
-        shour=fhr-1
-      os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
-      qpf1,nx,ny=simplewgrib2('qpf.txt')
+        fhour=fhours[memcount]
+        shour=fhour-1
+        os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
+        qpf1,nx,ny=simplewgrib2('qpf.txt')
 
 
 #        idx = pygrib.index(file3,'name','lengthOfTimeRange')
@@ -476,6 +500,7 @@ for mem in members:
 #        qpf1 = grb.values
 #        idx.close()
       else:
+        fcst_hour=fhours[memcount]
         print 'call process_nam_qpf with file3: ', file3
         print 'call process_nam_qpf with file4: ', file4
         print 'call process_nam_qpf with fcst_hour: ', fcst_hour
@@ -484,15 +509,15 @@ for mem in members:
       print 'defining qpf from qpf1'
       qpf[itime] = qpf1*0.39370079
 
-
-
-
     if qpf_interval == 6:
 #      idx = pygrib.index(file6,'name','lengthOfTimeRange')
 #      grb = idx(name='Water equivalent of accumulated snow depth',lengthOfTimeRange=3)[0]
 #      qpf6 = grb.values
 #      idx.close()
-      os.system(WGRIB2+' '+file6+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
+      fhour=fhours[memcount]
+      shour=fhour-3
+      print '6h shour fhour: ', shour,fhour
+      os.system(WGRIB2+' '+file6+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf6,nx,ny=simplewgrib2('qpf.txt')
       qpf[itime] = (qpf3 + qpf6) * 0.39370079
     if qpf_interval == 3:
@@ -588,9 +613,32 @@ for t in thresh_use:
   print 'Time for get final probability routine for ',t, 'inch threshold: ',t5-t4
   print 'max of probfinal: ', np.max(probfinal)
 
-  binout = 'bin.dat'
 
 # write binary file out of probfinal array, then import it into grib file using WGRIB2
+
+  myfort = F.FortranFile('record_out.bin',mode='w')
+  myfort.writeReals(probfinal)
+  myfort.close()
+  
+  probstr=str(t*2.54)
+  print 'probstr is: ', probstr
+
+  byte=int(t*2.54*1000)
+  byte44=0
+  byte45=int(byte/65536)
+  byte45rem=byte%65536
+  byte46=int(byte45rem/256)
+  byte47=byte45rem%256
+
+  string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob > "+probstr
+  print 'string used: ', string
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+
+  os.system(WGRIB2+' premod.grb -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
+
+  print 'byte, byte45, byte46, byte47: ', byte, byte45, byte46, byte47
+
+  os.system('rm record_out.bin')
 
 # Write variables to grib file
 #  grbout = open(outfile,'a')
@@ -598,8 +646,7 @@ for t in thresh_use:
 #  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*2.54,3))
 #  grbout.write(grbtmp.tostring())
 
-  
   print 'Wrote PSNOW for ', qpf_interval, ' to:',outfile, 'for ',t, 'inch threshold'
 
-  grbout.close()
+#  grbout.close()
 # End of loop over thresholds

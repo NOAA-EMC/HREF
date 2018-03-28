@@ -290,7 +290,7 @@ echo past href_ensprod for ff $ff
 export err=$errsave; err_chk;
 cp $DATA/$ff/output_ensprod.$ff $COMOUT/test_output_ensprod.$ff
 
-if [ $dom = 'conus' -a ${ff}%3 -eq 0 ]
+if [ $dom = 'conus' ]
 then
 types="mean pmmn avrg prob sprd ffri"
 else
