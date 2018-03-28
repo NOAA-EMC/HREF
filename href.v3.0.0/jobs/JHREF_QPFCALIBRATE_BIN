@@ -32,7 +32,7 @@ fi
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/href_qpfclimo_${cyc}_${envir}}
+export DATA=${DATA:-/tmpnwprd2/href_qpfcalibrate_${cyc}_${envir}}
 mkdir -p $DATA
 cd $DATA 
 
@@ -84,18 +84,11 @@ mkdir -p -m 775 $COMOUT
 ########################################################
 # Execute the script.
 
-export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
-export COMINnam=/com2/nam/prod
-export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
+python ${HOMEhref}/scripts/calibrate_pqpf_6h_bin.py
 
-export COMINpcpanl=/com2/pcpanl/prod
-export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
-export COMINclimo=${COMOUT}/../climo_bin
-
-python ${HOMEhref}/scripts/build_qpf_climo_bin.py 
 ########################################################
 
-msg="JOB $job HREF_QPFCLIMO HAS COMPLETED NORMALLY."
+msg="JOB $job FOR CALIBRATE_PQPF HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
 date

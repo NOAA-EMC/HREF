@@ -19,9 +19,26 @@ from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
 from scipy.stats import threshold
 from netCDF4 import Dataset
+import fortranfile as F
 
 WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
 WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
+
+
+def simplewgrib2(txtfile):
+  tmps= []
+  with open(txtfile) as F1:
+    i=1
+    nx,ny=[int(x) for x in next(F1).split()]
+    ilim=nx*ny
+    while i <= ilim:
+      tmp=[float(x) for x in next(F1).split()]
+      tmps.append(tmp)
+      i=i+1
+    array2d = np.asarray(tmps,dtype=np.float32)
+    array2d.shape = (ny,nx)
+    return array2d,nx,ny
+  F1.close()
 
 starttime = time.time()
 
@@ -129,11 +146,20 @@ fcst_hour = int(sys.argv[1])
 qpf_interval = int(sys.argv[2])
 start_hour = int(fcst_hour - qpf_interval)
 
+DATArun=DATA+'/qpf_'+str(fcst_hour)
+if not os.path.exists(DATArun):
+  os.system("mkdir -p " + DATArun)
+os.system("cd "+DATArun)
+
+fhr=fcst_hour
+fhr_range=str(start_hour)+'-'+str(fcst_hour)
+
+
 # maximum radius (km)
 slim = max(rlist)
 alpha = 0.5
 
-os.system(WGRIB2+' '+template+' -record 1 -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
+os.system(WGRIB2+' '+template+' -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
 
 lons,nx,ny=simplewgrib2('lon.txt')
 lats,nx,ny=simplewgrib2('lat.txt')
@@ -145,6 +171,9 @@ lats,nx,ny=simplewgrib2('lat.txt')
 # grbs.close()
 
 nlats, nlons = np.shape(lats)
+# nlons, nlats = np.shape(lats)
+
+print 'nlons, nlats: ', nlons, nlats
 
 # define mask - NAM nest grid interpolated to grid 227 has undefined values
 if dom == 'conus':
@@ -153,7 +182,7 @@ if dom == 'ak':
   maskfile = HOMEhref + '/fix/akhref_mask.grib2'
 
 if dom == 'conus' or dom == 'ak':
-  os.system(WGRIB2+' '+maskfile+' -record 1 -text mask.txt ')
+  os.system(WGRIB2+' '+maskfile+' -text mask.txt ')
 #  grbs2 = pygrib.open(maskfile)
   undefmask,nx,ny=simplewgrib2('mask.txt')
 #  undefmask = grbs2[1].values
@@ -165,14 +194,6 @@ if dom == 'conus' or dom == 'ak':
 
 if not os.path.exists(COMOUT):
   os.system("mkdir -p " + COMOUT)
-
-DATArun=DATA+'/qpf_'+str(fcst_hour)
-if not os.path.exists(DATArun):
-  os.system("mkdir -p " + DATArun)
-
-
-os.system("cd " + DATArun)
-
 
 #------------------------------------------------------------------------------------------
 # read in calibration coefficients
@@ -240,20 +261,6 @@ for mem in members:
 #--------------------------------------------------------------------------------
 #### FUNCTIONS AND ROUTINES ####
 
-def simplewgrib2(txtfile):
-  tmps= []
-  with open(txtfile) as F1:
-    i=1
-    nx,ny=[int(x) for x in next(F1).split()]
-    ilim=nx*ny
-    while i <= ilim:
-      tmp=[float(x) for x in next(F1).split()]
-      tmps.append(tmp)
-      i=i+1
-    array2d = np.asarray(tmps,dtype=np.float32)
-    array2d.shape = (nx,ny)
-    return array2d,nx,ny
-  F1.close()
 
 
 def process_nam_qpf(file3,file4,fhr):
@@ -269,6 +276,7 @@ def process_nam_qpf(file3,file4,fhr):
 #      idx.close()
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
       qpf1,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 
 
     if fhr%3 is 2:
@@ -277,6 +285,7 @@ def process_nam_qpf(file3,file4,fhr):
       print 'process_nam_qpf remainder 2 - f02 minus f01'
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 #      idx = pygrib.index(file3,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
 #      qpfa = grb.values
@@ -284,6 +293,7 @@ def process_nam_qpf(file3,file4,fhr):
 
       os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 #      idx = pygrib.index(file4,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
 #      qpfb = grb.values
@@ -297,6 +307,7 @@ def process_nam_qpf(file3,file4,fhr):
       print 'process_nam_qpf remainder 3 - f03 minus f02'
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 #      idx = pygrib.index(file3,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation', lengthOfTimeRange=3)[0]
 #      qpfa = grb.values
@@ -304,6 +315,7 @@ def process_nam_qpf(file3,file4,fhr):
 
       os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 #      idx = pygrib.index(file4,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
 #      qpfb = grb.values
@@ -333,6 +345,7 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
     exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
     nm_use, isize, jsize = np.shape(exceed3d)
     print 'nm_use within get_footprint: ', nm_use
+    print 'isize, jsize within get_footprint: ', isize, jsize
     pr1, pr2 = [], []  # create lists of ens member pairs
     for m1 in range(nm_use-1):
       for m2 in range(m1+1,nm_use):
@@ -369,20 +382,25 @@ starttime = d0+timedelta(start_hour/24.0)
 endtime = d0+timedelta((start_hour+qpf_interval)/24.0)
 memfiles = {}
 itimes = []
+fhours = []
 latency = min_latency
 stop = max_latency
 stopnam = max_latency_nam
 
 # create grib messages from template (only need to do this once)
-grbtmp['dataDate']=int('%i'%d0.year+'%02d'%d0.month+'%02d'%d0.day)
-grbtmp['dataTime']=int('%02d'%d0.hour+'00')
-grbtmp['startStep']=int(start_hour)
-grbtmp['endStep']=int(start_hour+qpf_interval)
-grbtmp['yearOfEndOfOverallTimeInterval']=endtime.year
-grbtmp['monthOfEndOfOverallTimeInterval']=endtime.month
-grbtmp['dayOfEndOfOverallTimeInterval']=endtime.day
-grbtmp['hourOfEndOfOverallTimeInterval']=endtime.hour
-grbtmp['scaleFactorOfUpperLimit']=3
+
+wgribdate=PDY+cyc
+
+# grbtmp['dataDate']=int('%i'%d0.year+'%02d'%d0.month+'%02d'%d0.day)
+# grbtmp['dataTime']=int('%02d'%d0.hour+'00')
+# grbtmp['startStep']=int(start_hour)
+# grbtmp['endStep']=int(start_hour+qpf_interval)
+# grbtmp['yearOfEndOfOverallTimeInterval']=endtime.year
+# grbtmp['monthOfEndOfOverallTimeInterval']=endtime.month
+# grbtmp['dayOfEndOfOverallTimeInterval']=endtime.day
+# grbtmp['hourOfEndOfOverallTimeInterval']=endtime.hour
+# grbtmp['scaleFactorOfUpperLimit']=3
+
 if qpf_interval == 1:
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.pqpf01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 1
@@ -501,15 +519,22 @@ for mem in members:
       file7 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+7*incr+latency)+'.grib2'
       file8 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+8*incr+latency)+'.grib2'
 
+    if mem == 'nam' or mem == 'hrrr':
+      alt_fhrinc = 6
+    else:
+      alt_fhrinc = 6
+
     if qpf_interval == 1:
       if os.path.exists(file1):
         print 'Found:',itime,'forecast hour',(start_hour+1*incr+latency)
+        fhours.append(start_hour+1*incr+latency)
         itimes.append(itime)
 # define fully just in case
         memfiles[itime] = [file0,file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print 'trying to work file1alt: ', file1alt
         if (os.path.exists(file1alt)):
+          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
           itimes.append(itime_alt)
           memfiles[itime_alt] = [file0alt,file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
         else:
@@ -518,12 +543,14 @@ for mem in members:
     if qpf_interval == 3:
       if os.path.exists(file1):
         print 'Found:',itime,'forecast hour',(start_hour+1*incr+latency)
+        fhours.append(start_hour+1*incr+latency)
         itimes.append(itime)
 # define fully just in case
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print 'trying to work file1alt: ', file1alt
         if (os.path.exists(file1alt)):
+          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
           itimes.append(itime_alt)
           memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
         else:
@@ -533,10 +560,12 @@ for mem in members:
       if os.path.exists(file2):
         print 'Found:',itime,'forecast hour',(start_hour+2*incr+latency)
         itimes.append(itime)
+        fhours.append(start_hour+1*incr+latency)
 # define fully just in case
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         if (os.path.exists(file2alt)):
+          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
           itimes.append(itime_alt)
           memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
         else:
@@ -546,11 +575,13 @@ for mem in members:
       if os.path.exists(file4):
         print 'Found:',itime,'forecast hour',(start_hour+4*incr+latency)
         itimes.append(itime)
+        fhours.append(start_hour+1*incr+latency)
 # define fully just in case
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         if (os.path.exists(file4alt)):
           itimes.append(itime_alt)
+          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
           memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
         else:
           print 'Alt cycle is missing as well'
@@ -561,10 +592,12 @@ for mem in members:
       if os.path.exists(file8):
         print 'Found:',itime,'forecast hour',(start_hour+8*incr+latency)
         itimes.append(itime)
+        fhours.append(start_hour+1*incr+latency)
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         if (os.path.exists(file8alt)):
           itimes.append(itime_alt)
+          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
           memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
         else:
           print 'Alt cycle is missing as well'
@@ -591,21 +624,20 @@ for mem in members:
 # Process first 6 hours
       print 'Processing member',(1+memcount),'of',nm_use
 
-## how get the proper hours for each file??
-      fhour=fhr
+      fhour=fhours[memcount]
       shour=fhour-3
-      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-      qpf1,nx,ny=simplewgrib2('qpf.txt')
+      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf1.txt ')
+      qpf1,nx,ny=simplewgrib2('qpf1.txt')
 
 #      idx = pygrib.index(file1,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
 #      qpf1 = grb.values
 #      idx.close()
 ## how get the proper hours for each file??
-      fhour=fhr
+      fhour=fhours[memcount]+incr
       shour=fhour-3
-      os.system(WGRIB2+' '+file2+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-      qpf2,nx,ny=simplewgrib2('qpf.txt')
+      os.system(WGRIB2+' '+file2+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf2.txt ')
+      qpf2,nx,ny=simplewgrib2('qpf2.txt')
 #      idx = pygrib.index(file2,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
 #      qpf2 = grb.values
@@ -656,6 +688,18 @@ for mem in members:
 
 ## figure out fhour for two pieces here
 
+      fhour=fhr+6
+      fhour=fhours[memcount]+incr*2
+      shour=fhour-3
+      os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf3.txt ')
+      qpf3,nx,ny=simplewgrib2('qpf3.txt')
+
+      fhour=fhr+9
+      fhour=fhours[memcount]+incr*3
+      shour=fhour-3
+      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf4.txt ')
+      qpf4,nx,ny=simplewgrib2('qpf4.txt')
+
 # Process second 6 hours
 #      idx = pygrib.index(file3,'name','lengthOfTimeRange') # hayayaya
 #      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
@@ -690,6 +734,18 @@ for mem in members:
 
 # Process third 6 hours
 ## figure out fhour for two pieces here
+      fhour=fhr+12
+      fhour=fhours[memcount]+incr*4
+      shour=fhour-3
+      os.system(WGRIB2+' '+file5+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf5.txt ')
+      qpf5,nx,ny=simplewgrib2('qpf5.txt')
+
+      fhour=fhr+15
+      fhour=fhours[memcount]+incr*5
+      shour=fhour-3
+      os.system(WGRIB2+' '+file6+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf6.txt ')
+      qpf6,nx,ny=simplewgrib2('qpf6.txt')
+
 #      idx = pygrib.index(file5,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
 #      qpf5 = grb.values
@@ -727,6 +783,18 @@ for mem in members:
 #      qpf8 = grb.values
 #      idx.close()
 
+      fhour=fhr+18
+      fhour=fhours[memcount]+incr*6
+      shour=fhour-3
+      os.system(WGRIB2+' '+file7+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf7.txt ')
+      qpf7,nx,ny=simplewgrib2('qpf7.txt')
+
+      fhour=fhr+21
+      fhour=fhours[memcount]+incr*7
+      shour=fhour-3
+      os.system(WGRIB2+' '+file8+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf8.txt ')
+      qpf8,nx,ny=simplewgrib2('qpf8.txt')
+
       qpf78 = qpf7 + qpf8
 
     # adjust QPF based on calibration coefficients
@@ -753,14 +821,20 @@ for mem in members:
 
 # Process first 3 hours
       print 'Processing member',(1+memcount),'of',nm_use
-
-      fhour=fhr
+      print 'fhours of mem: ', fhours[memcount]
+      fhour=fhours[memcount]
       shour=fhour-3
+
+      print 'shour: ', shour
+      print 'fhour: ', fhour
+
 #      idx = pygrib.index(file1,'name','lengthOfTimeRange')
 #      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
 #       qpf[itime] = grb.values
+
       os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
       qpfhere,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
       qpf[itime]=qpfhere
       print 'from file1: ', file1
       print 'max 3 h qpf: ', np.max(qpf[itime])
@@ -775,15 +849,18 @@ for mem in members:
 
 # Process first 1 hour
       print 'Processing member',(1+memcount),'of',nm_use
+      print 'fhours of mem: ', fhours[memcount]
+      fhour=fhours[memcount]
 
       if mem != 'nam':
-        fhour=fhr
+        fhour=fhours[memcount]
         shour=fhour-1
         print 'from memfiles file1 for 1 h qpf: ', file1
 #        idx = pygrib.index(file1,'name','lengthOfTimeRange')
         os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-        qpfhere,nx,ny=simplewgrib2('qpf.txt')
-        qpf[itime] = qpfhere
+        qpf1,nx,ny=simplewgrib2('qpf.txt')
+        qpf[itime] = qpf1
+
 #        grb = idx(name='Total Precipitation',lengthOfTimeRange=1)[0]
 #        qpf[itime] = grb.values
 #        idx.close()
@@ -792,6 +869,7 @@ for mem in members:
         print 'file1: ', file1
         print 'file0: ', file0
         print 'fcst_hour: ', fcst_hour
+        fcst_hour=fhours[memcount]
         qpf[itime]=process_nam_qpf(file1,file0,fcst_hour)
 
       print 'max of 1 h APCP: ', np.max(qpf[itime])
@@ -883,17 +961,44 @@ for t in thresh_use:
   if dom == 'conus' or dom == 'ak':
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
   t5 = time.time()
+
   print 'Time for get final probability routine for ',t, 'inch threshold: ',t5-t4
   print 'max of probfinal: ', np.max(probfinal)
   print 'mean of probfinal: ', np.mean(probfinal)
+  print 'probfinal dims: ', np.shape(probfinal)
+
+#  myfort = F.FortranFile('record_out.bin',endian='>',mode='w')
+  
+#  altprobfinal=np.transpose(probfinal)
+#  print 'altprobfinal dims: ', np.shape(altprobfinal)
+
+
+  myfort = F.FortranFile('record_out.bin',mode='w')
+  myfort.writeReals(probfinal)
+  myfort.close()
+
+  probstr=str(t*25.4)
+  byte=int(m.ceil(t*25.4*1000))
+  byte44=0
+  byte45=int(byte/65536)
+  byte45rem=byte%65536
+  byte46=int(byte45rem/256)
+  byte47=byte45rem%256
+
+  print 'byte, byte46, byte47: ', byte, byte46, byte47
+  string="0:0:d="+wgribdate+":APCP:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
+  os.system('ls -l record_out.bin')
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
+
+##  os.system('cat tmp.grib2 >> '+outfile)
+  print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
+
 
 # Write variables to grib file
 #  grbout = open(outfile,'a')
 #  grbtmp['values'] = probfinal.astype(int)
 #  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*25.4,3))
 #  grbout.write(grbtmp.tostring())
-
-
-   print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
 #  grbout.close()
 # End of loop over thresholds

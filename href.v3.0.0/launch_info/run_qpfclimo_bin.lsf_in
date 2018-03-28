@@ -1,6 +1,6 @@
 #BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin.out__CYC_
 #BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin.err__CYC_
-#BSUB -q "dev2"
+#BSUB -q "debug2"
 #BSUB -J HREF_QPFCLIMO_BIN
 ###BSUB -R "span[ptile=1]"
 #BSUB -R affinity[core(1)]
@@ -32,4 +32,4 @@ export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_qpfclimo_bin_${cyc}_${envir}
 
 $HOMEhref/jobs/JHREF_QPFCLIMO_BIN
 
-# bsub < run_qpfcalibrate.lsf
+bsub < run_qpfcalibrate_bin.lsf

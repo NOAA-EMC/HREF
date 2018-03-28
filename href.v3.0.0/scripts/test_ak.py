@@ -7,8 +7,25 @@ import fortranfile as F
 
 file='para.f27.grb2_mean'
 
-fhour = 27
-shour = fhour - 3
+# fhour = 27
+# shour = fhour - 3
+
+# accumulation interval (hours)
+fcst_hour = int(sys.argv[1])
+qpf_interval = int(sys.argv[2])
+start_hour = int(fcst_hour - qpf_interval)
+
+fhour=fcst_hour
+shour=start_hour
+
+PDY='20180326'
+cyc='07'
+
+cy, cm, cd, ch = int(PDY[0:4]), int(PDY[4:6]), int(PDY[6:8]), int(cyc[0:2])
+d0 = datetime(cy,cm,cd,ch,0)
+starttime = d0+timedelta(start_hour/24.0)
+endtime = d0+timedelta((start_hour+qpf_interval)/24.0)
+
 
 WGRIB2='./wgrib2'
 
@@ -159,4 +176,7 @@ maskregionnew = np.ma.filled(maskregion,-9999)
 os.system(WGRIB2+' '+file+' -match_fs ":TMP:500 mb:"  -set_metadata_str "0:0:d=2014101012:HGT:2 m above ground:14 hour fcst:90% level"  -set_grib_type c3 -grib_out noimppyth.grib2')
 
 os.system(WGRIB2+' '+file+' -match_fs ":TMP:500 mb:" -import_bin garbage_fortran.bin -set_metadata_str "0:0:d=2014101012:HGT:2 m above ground:18 hour fcst:2 m above ground" -set_grib_type c3 -grib_out imppythbin.grib2')
+
+
+# os.system(WGRIB2+' '+file+' -match_fs ":TMP:500 mb:" -import_bin garbage_fortran.bin -set_metadata_str "0:0:d=2014101012:HGT:2 m above ground:18 hour fcst:2 m above ground" -set_grib_type c3 -grib_out imppythbin.grib2')
 

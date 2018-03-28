@@ -1,11 +1,11 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.out__CYC___DOM_
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.err__CYC___DOM_
-#BSUB -q "dev2"
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bin.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bin.err__CYC___DOM_
+#BSUB -q "debug2"
 #BSUB -J HREF_EAS
 #BSUB -R "span[ptile=13]"
 #BSUB -R affinity[cpu(2):distribute=balance]
 ###BSUB -R rusage[mem=2000]
-#BSUB -W 0:30
+#BSUB -W 0:20
 #BSUB -a poe
 #BSUB -P HRW-T2O
 #BSUB -n 130
@@ -42,7 +42,8 @@ export COMINclimo=/meso/noscrub/Matthew.Pyle/com/hiresw/test/climo
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
-export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp_bin
-export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_eas_${dom}_${cyc}_${envir}_bin
+export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/hrefpy.${DATE}
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_expbin
+export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_easbin_${dom}_${cyc}_${envir}
 
 $HOMEhref/jobs/JHREF_EAS_BIN

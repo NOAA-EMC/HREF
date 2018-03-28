@@ -1,6 +1,6 @@
 #BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.out__CYC___DOM_
 #BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac.err__CYC___DOM_
-#BSUB -q "dev2"
+#BSUB -q "debug2"
 #BSUB -J HREF_EAS
 #BSUB -R "span[ptile=13]"
 #BSUB -R affinity[cpu(2):distribute=balance]
