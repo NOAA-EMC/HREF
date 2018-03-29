@@ -193,7 +193,10 @@ def process_nam_qpf(file3,file4,fhr):
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
-      os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
+      print 'shour1: ', shour1
+      print 'shour2: ', shour2
+      print 'file4: ', file4
+      os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
@@ -211,12 +214,13 @@ def process_nam_qpf(file3,file4,fhr):
     if fhr%3 is 0:
       shour1=fhour-3
       shour2=fhour-2
+      fhourm1=fhour-1
       print 'process_nam_qpf remainder 3 - f03 minus f02'
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
-      os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
@@ -401,6 +405,7 @@ for mem in members:
     elif mem == 'nam':
       file3 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
       file4 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
+      memfiles4[itime] = file4
       file6 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
@@ -501,6 +506,8 @@ for mem in members:
 #        idx.close()
       else:
         fcst_hour=fhours[memcount]
+        file4 = memfiles4[itime]
+
         print 'call process_nam_qpf with file3: ', file3
         print 'call process_nam_qpf with file4: ', file4
         print 'call process_nam_qpf with fcst_hour: ', fcst_hour
@@ -554,6 +561,7 @@ for mem in members:
 
 # redefine number of members (in case a TL member is missing)
 nm = len(itimes)
+nm_use=nm
 print 'nm members is: ', nm
 ensemble_qpf = np.zeros((nm,nlats,nlons)).astype(float)
 for mem in range(0,len(itimes)):
@@ -632,9 +640,9 @@ for t in thresh_use:
 
   string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob > "+probstr
   print 'string used: ', string
-  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3b -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 12 197  -set_byte 4 24:35 0:0:0:0:0:0:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3b -grib_out '+outfile)
 
-  os.system(WGRIB2+' premod.grb -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
 
   print 'byte, byte45, byte46, byte47: ', byte, byte45, byte46, byte47
 

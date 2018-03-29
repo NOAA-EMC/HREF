@@ -25,6 +25,10 @@ from cal_functions import quantile_map
 ### parms imported from PQPF config file
 from eas_config import *
 
+WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
+CNVGRIB = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/cnvgrib'
+
+
 ####################
 # GET ENVIRO VARS
 ####################
@@ -292,8 +296,9 @@ for fstart in fstarts:
 #          idx = pygrib.index(qpedir2+'/'+qpefile,'name')
 #          grb = idx(name='Total Precipitation')[0]
 
-          os.system(WGRIB2+' '+file+' -match "APCP:" -end -text tmptxt')
-          qpein,nx,ny=simplewgrib2('tmptxt')
+          os.system(CNVGRIB+' -g12 '+qpedir2+'/'+qpefile+' qpe.grib2')
+          os.system(WGRIB2+' qpe.grib2 -match "APCP:" -end -text tmp.txt')
+          qpein,nx,ny=simplewgrib2('tmp.txt')
 
 
 # assumption that qpein is masked??
@@ -317,15 +322,15 @@ for fstart in fstarts:
 
           qpfs= []
 ## rework to key on proper time periods
-          os.system(WGRIB2+' '+hreffile3+' -match "APCP:surface:%i'%fstart+'-%i'%fhr3+'" -end -text tmptxt')
-          qpf3,nx,ny=simplewgrib2('tmptxt')
+          os.system(WGRIB2+' '+hreffile3+' -match "APCP:surface:%i'%fstart+'-%i'%fhr3+'" -end -text tmp.txt')
+          qpf3,nx,ny=simplewgrib2('tmp.txt')
           
 
           qpfs= []
 ## rework to key on proper time periods
-#          os.system(WGRIB2+' '+hreffile6+' -match "APCP:" -end -text tmptxt')
-          os.system(WGRIB2+' '+hreffile6+' -match "APCP:surface:%i'%fhr3+'-%i'%fhr6+'" -end -text tmptxt')
-          qpf6,nx,ny=simplewgrib2('tmptxt')
+#          os.system(WGRIB2+' '+hreffile6+' -match "APCP:" -end -text tmp.txt')
+          os.system(WGRIB2+' '+hreffile6+' -match "APCP:surface:%i'%fhr3+'-%i'%fend+'" -end -text tmp.txt')
+          qpf6,nx,ny=simplewgrib2('tmp.txt')
 
           qpfin = qpf6 + qpf3
 

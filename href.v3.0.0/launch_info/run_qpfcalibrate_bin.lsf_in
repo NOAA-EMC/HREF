@@ -5,7 +5,7 @@
 ###BSUB -R "span[ptile=1]"
 #BSUB -R affinity[core(1)]
 ###BSUB -R rusage[mem=2000]
-#BSUB -W 0:15
+#BSUB -W 0:27
 #BSUB -a poe
 #BSUB -P HRW-T2O
 #BSUB -n 1
@@ -34,6 +34,6 @@ export dom=conus
 
 export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_qpfcalib_bin_${cyc}_${envir}
 
-$HOMEhref/jobs/JHREF_QPFCALIBRATE_bin
+$HOMEhref/jobs/JHREF_QPFCALIBRATE_BIN
 
 bsub < run_eas_bin.lsf__DOM_

@@ -603,7 +603,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
            igrb2=ipunit(irun)
 	
-	write(0,*) 'igrb2: ', igrb2
+	write(0,*) 'vname(nv), igrb2: ',vname(nv), igrb2
 
           ELSE                   !Non-APCP/Snow
 
@@ -1224,12 +1224,15 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	elseif (vname(nv) .eq. 'FFG1') then
 	write(0,*) 'defining fname for FFG1 ' , thr1
-	if (thr1 .eq. 1) fname="ffg1h.grib2.href5km"
-
+	if (thr1 .eq. 1) then
+          fname="ffg1h.grib2.href5km"
+        else
+          write(0,*) 'ffg1h with wrong thr1 ', thr1
+        endif
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=81
         call baopenr(igrb2,trim(fname),ier1)
-	write(0,*) 'ier1 from baopenr: ', ier1
+	write(0,*) 'ier1 from baopenr for ffg1: ', ier1
               jpdtn=-1
               jpd27=-9999
             jpd1=-9999
@@ -1237,14 +1240,14 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             jpd10=-9999
             jpd12=-9999
             jpd27=-9999
-          write(*,*)'readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(*,*)'readGB2 for ffg1:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
 
 	gfld_neighb_restore=gfld
 
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld_ffg, eps, jret)
 
-	write(0,*) 'jret from readGB2: ', jret
+	write(0,*) 'jret from readGB2 for ffg1: ', jret
             jpd1=1
             jpd2=8
             jpd10=1
@@ -1265,6 +1268,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	gfld=gfld_neighb_restore
 
 	call baclose(igrb2,ier1)
+        write(0,*) 'ier1 from baclose for ffg1: ', ier1
 
 	write(0,*) 'min/max of FFG1: ', minval(return_int),
      &                maxval(return_int)
@@ -1281,7 +1285,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=81
         call baopenr(igrb2,trim(fname),ier1)
-	write(0,*) 'ier1 from baopenr: ', ier1
+	write(0,*) 'ier1 from baopenr for ffg3: ', ier1
               jpdtn=-1
               jpd27=-9999
             jpd1=-9999
@@ -1521,6 +1525,10 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
              else
 
+             if (igrid .eq. jf/2) then
+             write(0,*) 'working on : ', vname(nv)
+             endif
+
 
 ! thr1 needs to come from the grid point of the RI data (and FFG data...using same return_int array)
 ! 
@@ -1528,6 +1536,13 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 ! over which the RI is computed
 
 	     thr1=return_int(igrid)
+             if (mod(igrid,100000) .eq. 0) then
+               write(0,*) 'for igrid: ', igrid
+               write(0,*) 'working using thr1: ', thr1
+               write(0,*) 'maxval(apoint): ', maxval(apoint)
+               write(0,*) 'op(nv): ', op(nv)
+
+              endif
              thr2=0.
 	if (thr1 .gt. 0 .and. thr1 .le. 99999.) then
              call getprob(apoint,iens,thr1,thr2,op(nv),aprob,
@@ -1718,6 +1733,10 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      &     vname(nv) .eq. 'FF12' .or. vname(nv) .eq. 'FF24')  then
 
 	write(0,*) 'calling packGB2_prob for FFG/ARI'
+        write(0,*) 'writing out: ', vname(nv)
+        write(0,*) 'max of vrbl_pr: ', maxval(vrbl_pr)
+
+
          call packGB2_prob(iffri,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
      +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
