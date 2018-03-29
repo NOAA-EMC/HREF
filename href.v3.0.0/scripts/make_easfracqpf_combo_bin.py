@@ -291,7 +291,7 @@ def process_nam_qpf(file3,file4,fhr):
 #      qpfa = grb.values
 #      idx.close()
 
-      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 #      idx = pygrib.index(file4,'name','lengthOfTimeRange')
@@ -304,6 +304,7 @@ def process_nam_qpf(file3,file4,fhr):
     if fhr%3 is 0:
       shour1=fhour-3
       shour2=fhour-2
+      fhourm1=fhour-1
       print 'process_nam_qpf remainder 3 - f03 minus f02'
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
@@ -313,7 +314,7 @@ def process_nam_qpf(file3,file4,fhr):
 #      qpfa = grb.values
 #      idx.close()
 
-      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour2+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 #      idx = pygrib.index(file4,'name','lengthOfTimeRange')
@@ -987,9 +988,8 @@ for t in thresh_use:
 
   print 'byte, byte46, byte47: ', byte, byte46, byte47
   string="0:0:d="+wgribdate+":APCP:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
-  os.system('ls -l record_out.bin')
-  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
-  os.system(WGRIB2+' premod.grb -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3b -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 24:35 0:0:0:0:0:0:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3b -grib_out '+outfile)
 
 ##  os.system('cat tmp.grib2 >> '+outfile)
   print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
