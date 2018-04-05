@@ -1,0 +1,38 @@
+#! /bin/sh
+
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+
+cd  /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/launch_info
+
+CYC=${1}
+dom=${2}
+
+if [ $dom = "conus" ]
+then
+cat run_qpfclimo_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf
+cat run_qpfcalibrate_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf
+fi
+
+if [ $dom = "conus" -o  $dom = "ak" ]
+then
+cat run_eas_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+else
+cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+fi
+
+if [ $dom = "conus" ]
+then
+bsub < run_qpfclimo_bin.lsf
+else
+bsub < run_eas_bin.lsf_${dom}
+fi
