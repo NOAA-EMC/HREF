@@ -1,7 +1,7 @@
 #BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bin.out__CYC___DOM_
 #BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bin.err__CYC___DOM_
 #BSUB -q "debug2"
-#BSUB -J HREF_EAS
+#BSUB -J HREF_EASBIN
 #BSUB -R "span[ptile=13]"
 #BSUB -R affinity[cpu(2):distribute=balance]
 ###BSUB -R rusage[mem=2000]
@@ -26,7 +26,6 @@ export OMP_NUM_THREADS=2        -  This variable must be set to 2.
 export SENDCOM=YES
 export MP_LABELIO=yes
 
-
 # export HOMEhref=/meso/save/Matthew.Pyle/blake_sseox
 export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
 
@@ -36,14 +35,14 @@ export envir=test
 export cyc=_CYC_
 export dom=_DOM_
 
-export COMINcal=/meso/noscrub/Matthew.Pyle/com/hiresw/test/cal
-export COMINcalib=/meso/noscrub/Matthew.Pyle/com/hiresw/test/calib
-export COMINclimo=/meso/noscrub/Matthew.Pyle/com/hiresw/test/climo
+export COMINcal=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/cal_bin
+export COMINcalib=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/calib_bin
+export COMINclimo=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/climo_bin
 
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/hrefpy.${DATE}
-export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_expbin
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp
 export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_easbin_${dom}_${cyc}_${envir}
 
 $HOMEhref/jobs/JHREF_EAS_BIN

@@ -1181,7 +1181,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
         if (thr1 .eq. 100) fname='new_100y_24h.grib2.g227'
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=83
+               igrb2=84
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr: ', ier1
               jpdtn=-1
@@ -1230,7 +1230,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
           write(0,*) 'ffg1h with wrong thr1 ', thr1
         endif
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=81
+               igrb2=91
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr for ffg1: ', ier1
               jpdtn=-1
@@ -1259,6 +1259,9 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	do J=1,jf
 	if (gfld_ffg%fld(j) .gt. 0.01 .and. gfld_ffg%bmap(j)) then
 	    return_int(J)=gfld_ffg%fld(j)
+            if (j .eq. 398683) then
+            write(0,*) 'ffg1 j, return_int(J): ', j, return_int(J)
+            endif
         else
             return_int(J)=-9999.
 	endif
@@ -1283,7 +1286,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (thr1 .eq. 3) fname="ffg3h.grib2.href5km"
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=81
+               igrb2=92
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr for ffg3: ', ier1
               jpdtn=-1
@@ -1312,6 +1315,9 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	do J=1,jf
 	if (gfld_ffg%fld(j) .gt. 0.01 .and. gfld_ffg%bmap(j)) then
 	    return_int(J)=gfld_ffg%fld(j)
+            if (j .eq. 398683) then
+            write(0,*) 'ffg3 j, return_int(J): ', j, return_int(J)
+            endif
         else
             return_int(J)=-9999.
 	endif
@@ -1331,7 +1337,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (thr1 .eq. 6) fname="ffg6h.grib2.href5km"
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=81
+               igrb2=93
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr: ', ier1
               jpdtn=-1
@@ -1379,7 +1385,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (thr1 .eq. 12) fname="ffg12h.grib2.href5km"
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=81
+               igrb2=94
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr: ', ier1
               jpdtn=-1
@@ -1424,7 +1430,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	if (thr1 .eq. 24) fname="ffg24h.grib2.href5km"
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=81
+               igrb2=95
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr: ', ier1
               jpdtn=-1

@@ -19,8 +19,8 @@ import numpy as np
 import math as m
 from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
-from scipy.stats import threshold
-from netCDF4 import Dataset
+# from scipy.stats import threshold
+# from netCDF4 import Dataset
 import fortranfile as F
 
 
@@ -144,6 +144,8 @@ alpha = 0.5
 
 if dom == 'conus':
   members = ['arw','nmmb','nssl','hrrr','nam']
+elif dom == 'ak':
+  members = ['arw','nmmb','nssl','hrrrak']
 else:
   members = ['arw','nmmb','nssl']
 
@@ -240,7 +242,7 @@ def process_nam_qpf(file3,file4,fhr):
 # calculate footprint routine
 def get_footprint(r):
     footprint = (np.ones(((r/dx)*2+1,(r/dx)*2+1))).astype(int)
-    footprint[m.ceil(r/dx),m.ceil(r/dx)] = 0
+    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
     dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
     footprint = np.where(np.greater(dist,r),0,1)
     return footprint
@@ -416,6 +418,12 @@ for mem in members:
       file3alt = 'garb'
       file6alt = 'garb'
 
+    elif mem == 'hrrrak':
+      file3 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.ak.grib2'
+      file6 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.ak.grib2'
+      file3alt = 'garb'
+      file6alt = 'garb'
+
     if qpf_interval != 6:
       if os.path.exists(file3):
         print 'Found:',itime,'forecast hour',(start_hour+qpf_interval+latency)
@@ -455,7 +463,7 @@ for mem in members:
         else:
           print 'Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
 
-    if mem == 'nam' or mem == 'hrrr' :
+    if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak' :
       latency = latency + 6
     else:
       print '12 hour latency member'
@@ -640,8 +648,8 @@ for t in thresh_use:
 
   string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob > "+probstr
   print 'string used: ', string
-  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3b -grib_out premod.grb')
-  os.system(WGRIB2+' premod.grb -set_byte 4 12 197  -set_byte 4 24:35 0:0:0:0:0:0:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3b -grib_out '+outfile)
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 12 197  -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
 
 
   print 'byte, byte45, byte46, byte47: ', byte, byte45, byte46, byte47

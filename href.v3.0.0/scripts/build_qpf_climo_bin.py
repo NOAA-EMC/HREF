@@ -18,7 +18,7 @@
 ###################
 
 import os, sys, time
-from netCDF4 import Dataset
+# from netCDF4 import Dataset
 import numpy as np
 from datetime import datetime, timedelta
 from cal_functions import quantile_map
@@ -32,9 +32,25 @@ from cal_functions import quantile_map
 # sys.path.append(staticdir)
 
 from eas_config import *
-WGRIB2 = '/nwprod/util/exec/wgrib2'
-COPYGB = '/nwprod/util/exec/copygb'
+# WGRIB2 = '/nwprod/util/exec/wgrib2'
+# COPYGB = '/nwprod/util/exec/copygb'
 
+
+try:
+  os.environ["WGRIB2"]
+except KeyError:
+  print "NEED TO DEFINE WGRIB2"
+  exit(1)
+WGRIB2=os.environ.get('WGRIB2','trash')
+print 'found WGRIB2 as ', WGRIB2 
+
+try:
+  os.environ["COPYGB"]
+except KeyError:
+  print "NEED TO DEFINE COPYGB"
+  exit(1)
+COPYGB=os.environ.get('COPYGB','trash')
+print 'found COPYGB as ', COPYGB 
 
 try:
   os.environ["HOMEhref"]

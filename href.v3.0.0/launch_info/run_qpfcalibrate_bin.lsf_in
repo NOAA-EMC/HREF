@@ -36,4 +36,6 @@ export DATA=/stmpd1/Matthew.Pyle/tmpnwprd/href_qpfcalib_bin_${cyc}_${envir}
 
 $HOMEhref/jobs/JHREF_QPFCALIBRATE_BIN
 
+cd $HOMEhref/launch_info
+
 bsub < run_eas_bin.lsf__DOM_

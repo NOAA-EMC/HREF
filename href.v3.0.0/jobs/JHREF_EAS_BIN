@@ -92,6 +92,8 @@ export COMINnam=/com2/nam/prod
 export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
 export COMINpcpanl=/com2/pcpanl/prod
 
+echo here with COMINcal $COMINcal
+
 if [ -e poe.all ] 
 then
 rm poe.all

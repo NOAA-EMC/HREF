@@ -142,6 +142,8 @@ echo to running of mpirun.lsf
 mpirun.lsf cfp poe.all
 
 export err=$?; err_chk
+echo past mpirun.lsf with $err
+
 
 
 if [ $err -eq 0 ]
