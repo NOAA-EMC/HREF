@@ -40,6 +40,11 @@ export COMINcal=/meso/noscrub/Matthew.Pyle/com/hiresw/test/cal
 export COMINcalib=/meso/noscrub/Matthew.Pyle/com/hiresw/test/calib
 export COMINclimo=/meso/noscrub/Matthew.Pyle/com/hiresw/test/climo
 
+export COMINcal=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/cal
+export COMINcalib=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/calib
+export COMINclimo=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/climo
+
+
 DATE=`cat /com/date/t${cyc}z | cut -c7-14`
 
 export COMOUT=/meso/noscrub/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/hrefpy.${DATE}

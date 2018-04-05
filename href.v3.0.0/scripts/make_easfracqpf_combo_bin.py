@@ -17,8 +17,8 @@ import numpy as np
 import math as m
 from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
-from scipy.stats import threshold
-from netCDF4 import Dataset
+# from scipy.stats import threshold
+# from netCDF4 import Dataset
 import fortranfile as F
 
 WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
@@ -201,6 +201,9 @@ if not os.path.exists(COMOUT):
 if dom == 'conus':
   nm_use = nm
   members = ['arw','nmmb','nssl','hrrr','nam']
+elif dom == 'ak':
+  nm_use = nm_ak
+  members = ['arw','nmmb','nssl','hrrrak']
 else:
   nm_use = nm_nonconus
   members = ['arw','nmmb','nssl']
@@ -328,7 +331,7 @@ def process_nam_qpf(file3,file4,fhr):
 # calculate footprint routine
 def get_footprint(r):
     footprint = (np.ones(((r/dx)*2+1,(r/dx)*2+1))).astype(int)
-    footprint[m.ceil(r/dx),m.ceil(r/dx)] = 0
+    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
     dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
     footprint = np.where(np.greater(dist,r),0,1)
     return footprint
@@ -519,11 +522,19 @@ for mem in members:
       file6 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+6*incr+latency)+'.grib2'
       file7 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+7*incr+latency)+'.grib2'
       file8 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+8*incr+latency)+'.grib2'
+    elif mem == 'hrrrak':
 
-    if mem == 'nam' or mem == 'hrrr':
-      alt_fhrinc = 6
-    else:
-      alt_fhrinc = 6
+      file0 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.ak.grib2'
+      file1 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+incr+latency)+'.ak.grib2'
+      file2 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+2*incr+latency)+'.ak.grib2'
+      file3 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+3*incr+latency)+'.ak.grib2'
+      file4 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+4*incr+latency)+'.ak.grib2'
+      file5 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+5*incr+latency)+'.ak.grib2'
+      file6 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+6*incr+latency)+'.ak.grib2'
+      file7 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+7*incr+latency)+'.ak.grib2'
+      file8 = COMINhrrr + '/hrrr.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.f%02d'%(start_hour+8*incr+latency)+'.ak.grib2'
+
+    alt_fhrinc = 6
 
     if qpf_interval == 1:
       if os.path.exists(file1):
@@ -605,7 +616,7 @@ for mem in members:
 
 
 
-    if mem == 'nam' or mem == 'hrrr':
+    if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak':
       latency = latency + 6
     else:
       latency = latency + 12
@@ -988,8 +999,8 @@ for t in thresh_use:
 
   print 'byte, byte46, byte47: ', byte, byte46, byte47
   string="0:0:d="+wgribdate+":APCP:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
-  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3b -grib_out premod.grb')
-  os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 24:35 0:0:0:0:0:0:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3b -grib_out '+outfile)
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
 
 ##  os.system('cat tmp.grib2 >> '+outfile)
   print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'

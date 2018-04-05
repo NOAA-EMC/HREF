@@ -9,7 +9,9 @@ exit
 fi
 
 cyc=$1
+CYC=$1
 export NEST=${2}
+export dom=${2}
 
 cd /u/$USER    # cron does this for us - this is here just to be safe
 . /etc/profile
@@ -111,6 +113,31 @@ fi
 cat run_nawips.sh_in_cray  | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_nawips_${cyc}
 
 cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_awips_${cyc}
+
+## EAS stuff
+
+if [ $dom = "conus" ]
+then
+cat run_qpfclimo_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf
+cat run_qpfcalibrate_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf
+fi
+
+if [ $dom = "conus" -o  $dom = "ak" ]
+then
+cat run_eas_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+else
+cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+fi
+
+if [ $dom = "conus" ]
+then
+bsub < run_qpfclimo_bin.lsf
+else
+bsub < run_eas_bin.lsf_${dom}
+fi
+
+
+## end EAS stuff
 
 bsub < launch_hrefrunpoe_${cyc}
 bsub < launch_nawips_${cyc}
