@@ -38,7 +38,7 @@ rlist = [10,25,40,55,70,85,100]
 
 # EAS settings
 alpha = 0.1	# similarity criteria parameter
-p_smooth = 7	# width of Gaussian filter for smoothing radius field (grid points) 
+p_smooth = 8	# width of Gaussian filter for smoothing radius field (grid points) 
 
 # forecast hour weighting
 pqpf_1h_weight1 = 1.0  # hour before
