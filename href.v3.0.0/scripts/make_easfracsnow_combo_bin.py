@@ -538,9 +538,12 @@ for mem in members:
     if qpf_interval == 3:
       qpf[itime] = qpf3*0.39370079   # Apply 10:1 SLR, convert to inches
 
+    
     print 'max of qpf as snow: ', np.max(qpf[itime])
     print 'dom is: ', dom
     if dom == 'conus' or dom == 'ak':
+      print 'qpf3 shape: ', np.shape(qpf3)
+      print 'maskregion shape: ', np.shape(maskregion)
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
     # calculate threshold exceedance

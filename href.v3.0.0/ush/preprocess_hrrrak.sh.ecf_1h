@@ -53,6 +53,9 @@ filecheck=hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
 
         cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > hrrr.t${cyc}z.f${hr}.ak.grib2
 
+        mkdir ak
+        cp hrrr.t${cyc}z.f${hr}.ak.grib2 ./ak/hrrr.t${cyc}z.f${hr}.grib2
+
         rm interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb   hrrr.t${cyc}z.f${hr}
         rm $filecheck
 

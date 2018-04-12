@@ -12,8 +12,8 @@ cyc=${1}
 hrs="03 06 09 12 15 18 21 24 27 30 33 36" 
 
 PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
-cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
+mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}/ak
+cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}/ak
 
 # PARMhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/parm
 
@@ -29,7 +29,7 @@ then
 hrold=0${hrold}
 fi
 
-filecheck=hrrr.t${cyc}z.f${hr}.ak.grib2
+filecheck=hrrr.t${cyc}z.f${hr}.grib2
 
 if [ -e $filecheck ]
 then
@@ -43,7 +43,7 @@ then
 
         if [ ${hr}%3 -eq 0 ]
         then
-        cat prcip3h.t${cyc}z.f${hr}.grib2 >> hrrr.t${cyc}z.f${hr}.ak.grib2
+        cat prcip3h.t${cyc}z.f${hr}.grib2 >> ../hrrr.t${cyc}z.f${hr}.ak.grib2
         fi
         fi
 
