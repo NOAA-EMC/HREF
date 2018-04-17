@@ -33,6 +33,7 @@ export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 # export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
 
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
+export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr
 
 export PCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/awip
 
