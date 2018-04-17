@@ -74,15 +74,17 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
 
   elif [ $dom = 'ak' ]
     then
-     files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw"
+     files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw hrrrak hrrrak"
      set -A file  $files
-     days="9 $PDYm1 $PDYm1 $PDYm1  $PDYm1 $PDYm1 $PDYm1"
-     cycs="9 18      18      18     06     06    06"
-     ages="9  6       6       6     18     18    18"
+     if [ $cyc = '00' ] ; then
+     days="9 $PDYm1 $PDYm1 $PDYm1  $PDYm1 $PDYm1 $PDYm1  $PDY   $PDYm1"
+     cycs="9 18      18      18     06     06    06       00     18"
+     ages="9  6       6       6     18     18    18        0      6"
+     fi
      set -A  day  $days
      set -A  cycloc $cycs
      set -A  age  $ages
-     mbrs="1  2  3  4  5  6"
+     mbrs="1  2  3  4  5  6  7  8"
 
   elif [ $dom = 'pr' ]
     then
@@ -139,26 +141,26 @@ elif [ $cyc -ge 6 ] ; then
 
   elif [ $dom = 'ak' ]
   then
-  files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw"
+  files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw hrrrak hrrrak"
   set -A file  $files
-  mbrs="1  2  3  4  5  6"
+  mbrs="1  2  3  4  5  6  7  8"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  0     0    0     12     12    12"
+    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1 $PDY $PDY"
+    cycs="9  06   06   06     18     18    18   06    00"
+    ages="9  0     0    0     12     12    12   0      6"
   fi
 
   if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  6     6    6     18     18    18"
+    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1 $PDY $PDY"
+    cycs="9  06   06   06     18     18    18     12  06"
+    ages="9  6     6    6     18     18    18      0   6"
   fi
 
   if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY  $PDY    $PDY  $PDY"
-    cycs="9  18   18   18     06     06    06"
-    ages="9  0     0    0     12     12    12"
+    days="9 $PDY $PDY $PDY  $PDY    $PDY  $PDY  $PDY $PDY"
+    cycs="9  18   18   18     06     06    06    18     12"
+    ages="9  0     0    0     12     12    12     0     6"
   fi
 
   set -A  day $days

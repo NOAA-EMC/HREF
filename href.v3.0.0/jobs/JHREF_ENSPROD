@@ -30,6 +30,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
 export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
+export COMINhrrr=${COMINhrrr:/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr}
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
