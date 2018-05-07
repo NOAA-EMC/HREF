@@ -1,12 +1,12 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoegempak__CYC_.out__NEST_
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.v2.0.0/logs/test_hrefpoegempak__CYC_.err__NEST_
+#BSUB -oo  /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoegempak__CYC_.out__NEST_
+#BSUB -eo  /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefpoegempak__CYC_.err__NEST_
 #BSUB -q "devhigh"
 #BSUB -J HREF_NAWIPS_CYC_
 #BSUB -P HRW-T2O
 #BSUB -M 1000
 #BSUB -W 1:29
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 5*{select[craylinux && vnode]span[ptile=5] cu[type=cabinet]}' rusage[mem=3000]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 6*{select[craylinux && vnode]span[ptile=6] cu[type=cabinet]}' rusage[mem=9000]
 
 export RUN_ENVIR=test
 export envir=test
@@ -15,8 +15,8 @@ export cyc=_CYC_
 export NEST=_NEST_
 
 # export NODES=1
-export PTILE=5
-export TASKS=5
+export PTILE=6
+export TASKS=6
 
 export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
 export COMROOT=/gpfs/tp2/nco/ops/com/
@@ -28,10 +28,10 @@ module load gempak/7.3.0
 
 href_ver=`cat /u/$LOGNAME/href_exp`
 
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/href.${href_ver}
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${href_ver}
 
 export SENDCOM=YES
 export SENDDBN=NO
 export KEEPDATA=NO
 
-${HOMEhref}/jobs/JHREF_GEMPAK
+${HOMEhref}/jobs/JHREF_GEMPAK_FFAIR

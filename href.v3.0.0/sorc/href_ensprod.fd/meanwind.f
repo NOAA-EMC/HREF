@@ -82,6 +82,11 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
      +   .or. p(k) .eq. 450 .or.p(k).eq.425.or.p(k).eq.375
      +   .or. p(k) .eq. 350 .or.p(k).eq.325)) cycle lvl_loop
 
+          if( (mbrname(irun)(1:4).eq.'hrrr')
+     +    .and.(p(k).eq.475
+     +   .or. p(k) .eq. 450 .or.p(k).eq.425.or.p(k).eq.375
+     +   .or. p(k) .eq. 350 .or.p(k).eq.325)) cycle lvl_loop
+
             call readGB2(ifunit(irun),jpdtn,2,2,100,p(k),jp27,gfld,
      +              eps,ie)
                 Upr(:,irun)=gfld%fld
