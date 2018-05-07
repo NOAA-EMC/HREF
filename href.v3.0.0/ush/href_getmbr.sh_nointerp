@@ -437,9 +437,14 @@ typeset -Z2 fcheckloc
 	echo here a $ff
 
 ## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
+## actually now have the summing of 3 h totals done in the HRRR preproc job
 
-## the hourly will sum up three hourly at the appropriate time.
-        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -484,9 +489,14 @@ typeset -Z2 fcheckloc
 
 ## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
 
-## the hourly will sum up three hourly at the appropriate time.
-        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+## actually now have the summing of 3 h totals done in the HRRR preproc job
+#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
 
+        if [ ${ff}%3 -eq 0 ] 
+        then
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        fi
+       
         if [ ${ff}%3 -eq 0 ] 
         then
         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
