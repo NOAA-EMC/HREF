@@ -19,7 +19,7 @@ fi
 #BSUB -P HRW-T2O
 #BSUB -M 3000
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
-#BSUB -W 1:29
+#BSUB -W 1:59
 
 export KEEPDATA=NO
 
@@ -69,7 +69,7 @@ numavail=`ls *${PDY}${cyc}f036 | wc -l`
 
 cnt=0
 
-while [ $numavail -lt 6 -a $cnt -lt 60 ]
+while [ $numavail -lt 6 -a $cnt -lt 90 ]
 do
 sleep 60
 numavail=`ls *${PDY}${cyc}f036 | wc -l`
