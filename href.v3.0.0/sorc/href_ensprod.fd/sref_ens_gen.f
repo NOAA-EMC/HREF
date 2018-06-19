@@ -1012,17 +1012,44 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
 	if (vname(nv) .eq. 'A6RI') then
 	write(0,*) 'defining fname for A6RI ' , thr1
-        if (thr1 .eq. 1) fname="new_1y_6h.grib2.g227"
-        if (thr1 .eq. 2) fname="new_2y_6h.grib2.g227"
-        if (thr1 .eq. 5) fname="new_5y_6h.grib2.g227"
-        if (thr1 .eq. 10) fname='new_10y_6h.grib2.g227'
-        if (thr1 .eq. 25) fname='new_25y_6h.grib2.g227'
-        if (thr1 .eq. 50) fname='new_50y_6h.grib2.g227'
-        if (thr1 .eq. 100) fname='new_100y_6h.grib2.g227'
+        if (thr1 .eq. 1) then
+          igrb2=71
+          fname="new_1y_6h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 2) then
+          igrb2=72
+          fname="new_2y_6h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 5) then
+          igrb2=73
+          fname="new_5y_6h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 10) then
+          igrb2=74
+           fname='new_10y_6h.grib2.g227'
+        endif
+
+        if (thr1 .eq. 25) then
+          igrb2=75
+           fname='new_25y_6h.grib2.g227'
+        endif
+
+        if (thr1 .eq. 50) then
+          igrb2=76
+           fname='new_50y_6h.grib2.g227'
+        endif
+
+        if (thr1 .eq. 100) then
+          igrb2=77
+            fname='new_100y_6h.grib2.g227'
+        endif
 
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=81
+!               igrb2=81
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr for A6RI: ', ier1
               jpdtn=-1
@@ -1172,16 +1199,45 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      &                maxval(return_int)
 
         elseif (vname(nv) .eq. 'A24R' ) then
-        if (thr1 .eq. 1) fname="new_1y_24h.grib2.g227"
-        if (thr1 .eq. 2) fname="new_2y_24h.grib2.g227"
-        if (thr1 .eq. 5) fname="new_5y_24h.grib2.g227"
-        if (thr1 .eq. 10) fname='new_10y_24h.grib2.g227'
-        if (thr1 .eq. 25) fname='new_25y_24h.grib2.g227'
-        if (thr1 .eq. 50) fname='new_50y_24h.grib2.g227'
-        if (thr1 .eq. 100) fname='new_100y_24h.grib2.g227'
+
+        if (thr1 .eq. 1) then 
+         igrb2=84
+         fname="new_1y_24h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 2) then
+         igrb2=85
+         fname="new_2y_24h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 5) then
+         igrb2=86
+         fname="new_5y_24h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 10) then
+         igrb2=87
+         fname="new_10y_24h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 25) then
+         igrb2=88
+         fname="new_25y_24h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 50) then
+         igrb2=89
+         fname="new_50y_24h.grib2.g227"
+        endif
+
+        if (thr1 .eq. 100) then
+         igrb2=90
+         fname="new_100y_24h.grib2.g227"
+        endif
 
 	write(0,*) 'trim(fname): ', trim(fname)
-               igrb2=84
+!               igrb2=84
+ 	write(0,*) 'open as igrb2: ', igrb2
         call baopenr(igrb2,trim(fname),ier1)
 	write(0,*) 'ier1 from baopenr: ', ier1
               jpdtn=-1
@@ -1198,7 +1254,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld_ri, eps, jret)
 
-	write(0,*) 'jret from readGB2: ', jret
+	write(0,*) 'jret from readGB2 for 24hRI: ', jret
             jpd1=1
             jpd2=8
             jpd10=1
