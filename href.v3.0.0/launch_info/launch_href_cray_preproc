@@ -42,12 +42,12 @@ cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch
 
 if [ $NEST = "conus" -o $NEST = "ak" ]
 then
-cat runpoe.preprocget.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
+# cat runpoe.preprocget.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
 cat runpoe.preproc.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocpoe_${cyc}
 fi
 
-bsub < launch_hrefpreprocgetpoe_${cyc}
+# bsub < launch_hrefpreprocgetpoe_${cyc}
 
-sleep 600
+# sleep 600
 
 bsub < launch_hrefpreprocpoe_${cyc}

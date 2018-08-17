@@ -31,7 +31,7 @@ module load prod_envir
 
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
 export COMINnam=${COMROOTp2}/nam/prod/nam
-export COMINhrrr=${COMROOTp2}/hrrr/prod/hrrr
+export COMINhrrr=${COMROOT}/hrrr/prod/hrrr
 
 vers=`cat ~/href_exp`
 
@@ -43,12 +43,7 @@ cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch
 
 if [ $NEST = "conus" ]
 then
-cat runpoe.preprocget.sh_in_cray_retro | sed s:_DATE_:${DATE}:g | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
 cat runpoe.preproc.sh_in_cray_retro | sed s:_DATE_:${DATE}:g | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocpoe_${cyc}
 fi
-
-bsub < launch_hrefpreprocgetpoe_${cyc}
-
-sleep 600
 
 bsub < launch_hrefpreprocpoe_${cyc}
