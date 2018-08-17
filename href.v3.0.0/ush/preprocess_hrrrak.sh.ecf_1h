@@ -24,7 +24,7 @@ wgrib2def="nps:210:60 185.5:825:5000 44.8:603:5000"
 # do
 
 
-filecheck=hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
+filecheck=${COMINhrrr}/alaska/hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
         if [ -e $filecheck ]
         then
 

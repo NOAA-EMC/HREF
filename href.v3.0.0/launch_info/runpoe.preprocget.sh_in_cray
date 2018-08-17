@@ -31,7 +31,7 @@ export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 # export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
 export COMINnam=${COMROOTp2}/nam/prod/nam
-export COMINhrrr=${COMROOTp2}/hrrr/prod/hrrr
+export COMINhrrr=${COMROOT}/hrrr/prod/hrrr
 
 if [ -e /gpfs/gp2 ]
 then

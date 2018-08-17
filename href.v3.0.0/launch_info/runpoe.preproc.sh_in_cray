@@ -6,7 +6,7 @@
 #BSUB -M 3000
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
 ####BSUB -extsched 'CRAYLINUX[]'
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 91*{select[craylinux && vnode]span[ptile=13] cu[type=cabinet]}'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 49*{select[craylinux && vnode]span[ptile=7] cu[type=cabinet]}'
 #BSUB -W 0:19
 
 export KEEPDATA=NO
@@ -33,6 +33,8 @@ export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 # export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
 export COMINnam=${COMROOTp2}/nam/prod/nam
+
+export COMINhrrr=${COMROOT}/hrrr/prod/hrrr
 
 if [ -e /gpfs/gp2 ]
 then
