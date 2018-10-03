@@ -113,6 +113,9 @@ fi
 
 # cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_awips_${cyc}
 
+
+cat runpoe.gempaksend.sh_in_cray_retro | sed s:_DATE_:${DATE}:g | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}
+
 bsub < launch_hrefrunpoe_${cyc}
 # bsub < launch_nawips_${cyc}
 # bsub < launch_awips_${cyc}

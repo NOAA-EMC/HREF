@@ -31,6 +31,7 @@ filecheck=${COMINhrrr}.${PDY}/conus/hrrr.t${cyc}z.wrfprsf${hr}.grib2
 
         $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
         $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
 
         $WGRIB2 $filecheck -match "RETOP" -set_byte 4 23 200 -grib retop.t${cyc}z.f${hr}.grb
         $WGRIB2 retop.t${cyc}z.f${hr}.grb -set_byte 4 11 197 -grib new_retop.t${cyc}z.f${hr}.grb
@@ -43,10 +44,10 @@ filecheck=${COMINhrrr}.${PDY}/conus/hrrr.t${cyc}z.wrfprsf${hr}.grib2
         $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
 
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
-        refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
+        refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
         rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
-        refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb
+        refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb
 
         $WGRIB2 hrrr.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
         $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}

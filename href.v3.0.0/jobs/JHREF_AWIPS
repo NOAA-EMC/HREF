@@ -52,7 +52,7 @@ setpdy.sh
 
 if [ "$RUN_ENVIR" != nco ] ; then
  export PCOM=${PCOM:-${MYCOMROOT}/${NET}/${envir}/awip}
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/ensprod}
 else
  export PCOM=${PCOM:-${PCOMROOT:?}/${RUN}}
  export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod}
