@@ -215,6 +215,7 @@ c   for max,min,10,25,50,90% mean products
 
         Integer missvar(maxvar,30)         !dynamically build a missing array for direct variable missing in each member
         Character Tsignal(maxvar)          !2015-12-09: new added to account on Gaussian smoothing sigma value   
+        Character dTsignal(maxvar)          !2018-10-02:  new for derived Gauss smooth  
 
 
         common /tbl/numvar,
@@ -232,7 +233,7 @@ c   for max,min,10,25,50,90% mean products
      +              qvname,qk4,qk5,qk6,qMlvl,
      +              qMeanLevel,qMsignal
 
-        common /Tsgn/Tsignal 
+        common /Tsgn/Tsignal ,dTsignal
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c       First, read direct variable information
@@ -398,6 +399,8 @@ c            write(*,*)'MPairLevel=',MPairLevel(n,i,1),MPairLevel(n,i,2)
 
            lng=len_trim(substr(np+2))
            dTn(n)=substr(np+2)(1:lng)
+           dTsignal(n)=dTn(n)(1:1)
+           write(0,*) 'pulled dTsignal(n): ',n, dTsignal(n)
 
            dTlvl(n) = getlvl(dTn(n))
                                                                                                                                                                                                              
@@ -943,6 +946,10 @@ c
            nbr=5
          else if (ns.eq.'K') then
            nbr=3
+         else if (ns.eq.'L') then
+           nbr=2
+         else if (ns.eq.'M') then
+           nbr=1
          else if (ns.eq.'B'.or.ns.eq.'F'.or.ns.eq.'I') then
            nbr=10
          else if (ns.eq.'C') then
@@ -957,6 +964,10 @@ c
            s=5
          else if (gs.eq.'K') then
            s=3
+         else if (ns.eq.'L') then
+           s=2
+         else if (ns.eq.'M') then
+           s=1
          else if (gs.eq.'B'.or.gs.eq.'F'.or.gs.eq.'I') then
            s=10
          else if (gs.eq.'C') then
@@ -1086,10 +1097,19 @@ c
          real nbr,dist 
          character s 
 
+	 write(0,*) 'in neighborhood_max with sign s: ', s
+
+	write(0,*) 'shape(A): ', shape(A)
+        write(0,*) 'jf, im, jm: ', jf, im,jm
+
          if(s.eq.'A') then
            nbr=8.  ! to mimic the 40 km radius
          else if (s.eq.'K') then
            nbr=4. ! try small neighborhood for mountain snow
+         else if (s.eq.'L') then
+           nbr=2. ! try very small neighborhood for lightning
+         else if (s.eq.'M') then
+           nbr=1. ! try very small neighborhood for lightning
          else if (s.eq.'B') then
            nbr=10.
          else if (s.eq.'C') then

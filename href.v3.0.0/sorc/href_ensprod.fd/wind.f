@@ -13,7 +13,7 @@ c
 c      04/10/2013: Binbin Z. Modified for grib2 
 c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-   	subroutine wind (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lt,
+   	subroutine wind (nv,ifunit,jpdtn,jf,im,jm,iens,Lm,Lp,Lt,
      +        derv_mn,derv_sp,derv_pr,wgt,mbrname)
 
             use grib_mod
@@ -38,12 +38,14 @@ c    for derived variables
      +              dMsignal,dPsignal,MPairLevel,PPairLevel,dop
 
 
-        INTEGER, intent(IN) :: nv, jf, iens
+        INTEGER, intent(IN) :: nv, jf, iens, im, jm
         REAL,dimension(jf,Lm),intent(INOUT) :: derv_mn
         REAL,dimension(jf,Lm),intent(INOUT) :: derv_sp
         REAL,dimension(jf,Lp,Lt),intent(INOUT) :: derv_pr
 
-        REAL, dimension(jf,iens) :: u,v        ! temporal vars      
+        REAL, dimension(jf,iens) :: u,v      ! temporal vars      
+        real, allocatable :: windspd(:,:)
+        real, allocatable :: windspdloc(:)
 
         INTEGER miss(iens)
         INTEGER missing(20,iens)
@@ -58,8 +60,13 @@ c    for derived variables
         jp27=-9999
 
         write(*,*) 'In wind .....'
+        write(0,*) 'trim(dpsignal(nv)): ', trim(dpsignal(nv))
         write(*,*) 'nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10',
      +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
+
+
+	allocate(windspd(jf,iens))
+	allocate(windspdloc(jf))
 
         miss=0
         missing=0
@@ -91,6 +98,14 @@ c    for derived variables
              missing(lv,irun)=1
              cycle loop400
             end if
+
+	write(0,*) 'define windspd for irun: ', irun
+           do igrid = 1,jf
+             windspd(igrid,irun)=sqrt(u(igrid,irun)*u(igrid,irun)+
+     +                             v(igrid,irun)*v(igrid,irun))
+           enddo
+
+	write(0,*) 'windspd(igrid/2,:) ', windspd(igrid/2,:)
 
            end do loop400
      
@@ -147,10 +162,53 @@ c    for derived variables
           write(*,*) 'get wind speed prob for level', jpd12
 !          write(*,*) 'missing=',missing(lv,:) 
 
+
+	if ( trim(dpsignal(nv)) .eq. 'K' .or. trim(dpsignal(nv)) .eq. 'L') then
+
+!       neighborhood max
+
+            write(*,*) 'Call  neighborhood_max inside wind!!!! .......'
+
+	do irun = 1, iens
+
+	write(0,*) 'irun: ', irun
+        write(0,*) 'dPsignal(nv): ', dPsignal(nv)
+	write(0,*) 'shape(windspd): ', shape(windspd)
+	write(0,*) 'pre windspd(jf/2,irun): ', windspd(jf/2,irun)
+
+
+!	write(0,*) 'maxval(windspd(:,irun)): ', maxval(windspd(:,irun))
+
+
+!! this modifies rawdata_pr
+             call neighborhood_max(windspd(:,irun),
+     +                          jf,im,jm,dPsignal(nv))
+
+	write(0,*) 'post windspd(jf/2,irun): ', windspd(jf/2,irun)
+!	write(0,*) 'post maxval(windspd(:,irun)): ', maxval(windspd(:,irun))
+       enddo
+
+
+	write(0,*) 'got past derv_pr for wind neighb max'
+
+        endif
+
           do lh = 1, dTlvl(nv)
            do igrid = 1,jf
              miss=missing(lv,:)
+	if ( trim(dpsignal(nv)) .eq. 'K' .or. trim(dpsignal(nv)) .eq. 'L') then
+             apoint=windspd(igrid,:)
+	if (igrid .eq. jf/2) then
+           write(0,*) 'defined apoint(nbrmax) as: ', apoint
+        endif
+
+        else
+
              apoint=sqrt(u(igrid,:)*u(igrid,:)+v(igrid,:)*v(igrid,:))
+	if (Igrid .eq. jf/2) then
+           write(0,*) 'defined apoint(pnt) as: ', apoint
+        endif
+        endif
               if(trim(dop(nv)).ne.'-') then
                      thr1 = dThrs(nv,lh)
                      thr2 = 0.
@@ -169,6 +227,7 @@ c    for derived variables
 
            end do
           end do
+
 600     CONTINUE
 
            return

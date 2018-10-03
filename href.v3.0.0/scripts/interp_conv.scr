@@ -13,6 +13,20 @@ rm /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/ffg_input/*
 
 scp mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/wpc/pyle/5kmffg_${daycyc}_pyle.grb2 5kmffg.grib2
 
+if [ ! -e 5kmffg.grib2 ]
+then
+
+if [ -e /gpfs/td1 ]
+then
+cp /gpfs/td1/emc//meso/noscrub/Matthew.Pyle/ffg_data/grid/5kmffg_${daycyc}_pyle.grb2 5kmffg.grib2
+elif [ -e /gpfs/gd1 ]
+then
+cp /gpfs/gd1/emc//meso/noscrub/Matthew.Pyle/ffg_data/grid/5kmffg_${daycyc}_pyle.grb2 5kmffg.grib2
+fi
+
+fi
+
+
 $WGRIB2 5kmffg.grib2 -match '0-1 hour' -new_grid_interpolation neighbor -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079  ffg1h.grib2.href5km
 $WGRIB2 5kmffg.grib2 -match '0-3 hour' -new_grid_interpolation neighbor -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079  ffg3h.grib2.href5km
 $WGRIB2 5kmffg.grib2 -match '0-6 hour' -new_grid_interpolation neighbor -new_grid_winds grid -new_grid lambert:265:25:25 226.541:1473:5079 12.190:1025:5079  ffg6h.grib2.href5km

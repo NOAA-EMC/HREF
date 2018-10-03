@@ -7,8 +7,8 @@
 # Author:      G Manikin /  EMC         Date: 2014-06-30
 #
 # Script history log:
-# 2016-12-13  M Pyle - adapted for HREF
 # 2014-06-30  G Manikin  - adapted for HRRR 
+# 2016-12-13  M Pyle - adapted for HREF
 #################################################################################
 
 set -xa

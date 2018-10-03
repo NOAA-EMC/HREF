@@ -117,7 +117,7 @@ C
        include 'parm.inc'
 
       type(gribfield) :: gfld, gfld_temp, gfld_neighb_restore, gfld_ffg, 
-     &                   gfld_ri
+     &                   gfld_ri, gfld_lightning
 C  raw data
       real,allocatable,dimension(:,:,:)   :: rawdata_mn, rawdata_pr   !jf,iens, maxmlvl
       real,allocatable,dimension(:,:,:)   :: precip                   !jf,iens, number of fcst output files
@@ -224,6 +224,7 @@ c   for max,min,10,25,50,90% mean products
         integer III
 
         character Tsignal(maxvar)                   !For Gaussian smoothing
+        character dTsignal(maxvar)                   !For Gaussian smoothing
 
         common /tbl/numvar,
      +              vname,k4,k5,k6,Mlvl,Plvl,Tlvl,
@@ -241,7 +242,7 @@ c   for max,min,10,25,50,90% mean products
      +              qMeanLevel,qMsignal
 
 
-       common /Tsgn/Tsignal 
+       common /Tsgn/Tsignal,dTsignal 
                                                                                                                                 
         data (iqout(i),i=1,8)
      +  /301,302,303,304,305,306,307,308/
@@ -748,6 +749,10 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
         call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld,eps, kret)
 
+	if (kret .eq. 0 .and. k5(nv) .eq. 192 .and. jpd1 .eq. 17) then
+            gfld_lightning=gfld
+        endif
+
          if (kret .ne. 0 .and. k5(nv) .eq. 220 ) then
 ! check for 100 hPa
 	 write(0,*) 'look for 100-1000 hPa UVV'
@@ -837,8 +842,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
            !Get neighborhood max value, where A,B,C,D: for different !neighborhood radius
            if (trim(Psignal(nv)).eq.'A'.or.trim(Psignal(nv)).eq.'K' .or.
-     +        trim(Psignal(nv)).eq.'B'.or.
-     +        trim(Psignal(nv)).eq.'C'.or.
+     +        trim(Psignal(nv)).eq.'B'.or. trim(Psignal(nv)).eq.'L' .or.
+     +        trim(Psignal(nv)).eq.'M'.or. trim(Psignal(nv)).eq.'C' .or.
      +        trim(Psignal(nv)).eq.'D' ) then
              
             write(*,*) 'Call  neighborhood_max .......'
@@ -1002,6 +1007,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      +      trim(Psignal(nv)).eq.'D'.or.
      +      trim(Psignal(nv)).eq.'H'.or.
      +      trim(Psignal(nv)).eq.'K'.or.
+     +      trim(Psignal(nv)).eq.'L'.or.
+     +      trim(Psignal(nv)).eq.'M'.or.
      +      trim(Psignal(nv)).eq.'I') THEN
 
 
@@ -1634,6 +1641,9 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
            if (Tsignal(nv).ne.'T') then
 
              !write(*,*) 'before smoothing',vrbl_pr(797267,lv,lt)
+
+	write(0,*) 'Tsignal(nv) at gsmoothing vrbl_pr: ',
+     &         nv,Tsignal(nv)
           
              call Gsmoothing(vrbl_pr(:,lv,lt),jf,im,jm,
      +           Psignal(nv),Tsignal(nv))
@@ -1785,6 +1795,8 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      +     trim(Psignal(nv)).eq.'F'.or.
      +     trim(Psignal(nv)).eq.'H'.or. 
      +     trim(Psignal(nv)).eq.'K'.or. 
+     +     trim(Psignal(nv)).eq.'L'.or. 
+     +     trim(Psignal(nv)).eq.'M'.or. 
      +     trim(Psignal(nv)).eq.'I'  ) then
 
 
@@ -1806,6 +1818,13 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
         else
 
 	write(0,*) 'calling packGB2_prob for normal'
+        write(0,*) 'writing out: ', vname(nv)
+        write(0,*) 'max of vrbl_pr: ', maxval(vrbl_pr)
+
+	if (vname(nv) .eq. 'LTNG') then
+            gfld=gfld_lightning
+        endif
+
          call packGB2_prob(iprob,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
      +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
@@ -1862,7 +1881,13 @@ c Loop 1-4: Deallocation
 2001     continue  !end of nv direct variables loop
 
 
+
+C --------------------------------------------------
+C --------------------------------------------------
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C --------------------------------------------------
+C --------------------------------------------------
+C
 c  Loop 2: for derived variables
 c    2-0: allocate necessary arrays
 c    2-1: compute all derived variable by calling their correspondent subroutines 
@@ -1979,37 +2004,6 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
 
               end do
 
-! cannot remember why this block was here twice.
-
-!              do jp=1,4
-!               jpd1=1
-!               jpd2=jptyp2(jp)
-!               jpd10=1
-!               jpd12=0
-!               jpd27=-999
-!               derv_mn(:,1)=ptype_mn(:,jp)     !for precip type, Lm,lp,Lth all are 1
-!               derv_sp=0.0
-!               derv_pr(:,1,1)=ptype_pr2(:,jp)  ! % of members at a point reporting a ptype 
-!orig               derv_pr(:,1,1)=ptype_pr(:,jp)  ! % of members at a point reporting a ptype 
-
-!               gfld_temp=gfld
-
-!               if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
-!
-!               call packGB2_mean_derv(imean,isprd,derv_mn,
-!     +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-!     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables 
-!      
-!              gfld_temp=gfld                           !some of idrtmpl() fields have been changed after packGB2_prob,
-
-!              if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
-
-!avoid               call packGB2_prob_derv(iprob,derv_pr,
-!avoid     +              nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
-!avoid     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables
-
-!              end do
-
               deallocate (ptype_mn)
               deallocate (ptype_pr)
               deallocate (ptype_pr2)
@@ -2023,7 +2017,7 @@ cc%%%%%%% 3. To see if there is wind speed computation, if yes, do it
      &             dk5(nv),dk6(nv)
 
           if (dk4(nv).eq.2.and.dk5(nv).eq.1.and.dk6(nv).ne.108) then
-            call wind (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
+            call wind (nv,ifunit,jpdtn,jf,im,jm,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind done'
           else if (dk4(nv).eq.2 .and. dk5(nv).eq.192 .and.
@@ -2204,6 +2198,28 @@ C
                jpd27=-9999
 
 
+           !Check if the probability needs to smooting? 
+
+	write(0,*) 'dTsignal(nv) at gsmoothing derv_pr: ',
+     &         nv,dTsignal(nv)
+	write(0,*) 'Psignal, dPsignal: ', Psignal(nv),dPsignal(nv)
+           if (dTsignal(nv).ne.'T') then
+
+         do lv = 1, dPlvl(nv)
+          do lt = 1, dTlvl(nv)
+
+         write(*,*) 'before smoothing of derv_pr ',derv_pr(jf/2,lv,lt)
+
+             call Gsmoothing(derv_pr(:,lv,lt),jf,im,jm,
+     +           dPsignal(nv),dTsignal(nv))
+
+          write(*,*) 'after smoothing of derv_pr ',derv_pr(jf/2,lv,lt)
+
+           enddo
+          enddo
+
+           end if 
+
 ! Reset gfld%bmap with the combined version bmap_f
         if(trim(eps).eq.'href') gfld%bmap=bmap_f
 
@@ -2217,6 +2233,7 @@ C
      +          iens,iyr,imon,idy,ihr,ifhr,gribid
 
 	write(0,*) 'min/max gfld%fld: ', minval(gfld%fld),maxval(gfld%fld)
+	write(0,*) 'calling packGB2_prob_derv here'
 
                call packGB2_prob_derv(iprob,derv_pr,
      +              nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,

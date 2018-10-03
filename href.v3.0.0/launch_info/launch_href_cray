@@ -146,9 +146,9 @@ bsub < launch_hrefrunpoe_${cyc}
 
 sleep 300
 
-bsub < launch_awips_${cyc}
 bsub < launch_nawips_${cyc}
 
 sleep 3000
 
+bsub < launch_awips_${cyc}
 bsub < launch_gempaksend_${cyc}

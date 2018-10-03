@@ -83,6 +83,9 @@ postmsg "$jlogfile" "$msg"
 setpdy.sh
 . PDY
 
+# export PDY=20180626
+# export PDYm1=20160625
+
 ##############################################
 # Define running directory and COM directories
 ##############################################

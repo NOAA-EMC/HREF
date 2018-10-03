@@ -39,6 +39,9 @@ C for variable table:
         integer pl
 
         write(*,*) 'packing direct prob for nv ',nv
+	write(0,*) 'HERE WITH IYR: ', iyr
+	write(0,*) 'here with idy: ', idy
+	write(0,*) 'here with ihr: ', ihr
 
 c        write(*,*) iprob, 
 c     +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lt,
