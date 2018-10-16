@@ -32,17 +32,18 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
 	echo "in conus block"
-     files="9 namnest namnest hrrr hrrr fv3 conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+#     files="9 namnest namnest hrrr hrrr fv3 conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest hrrr hrrr fv3 conusarw conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
-      days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
-      cycs="9 00    18     00    18    00   00  00    00    12     12    12"
-      ages="9  0     6      0     6     0    0   0    0     12     12    12"
+      days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY   $PDY  $PDY $PDYm1  $PDYm1" 
+      cycs="9 00    18     00    18     00     00    00    12      12"
+      ages="9  0     6      0     6      0      0    0     12      12"
      fi
      set -A  day  $days
      set -A  cycloc $cycs
      set -A  age  $ages
-     mbrs="1  2  3  4  5  6  7  8  9  10 11"
+     mbrs="1  2  3  4  5  6  7  8  9" 
 
   elif [ $dom = 'hi' ]
     then
@@ -496,6 +497,7 @@ typeset -Z2 fcheckloc
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
 
 #        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ]
         then
