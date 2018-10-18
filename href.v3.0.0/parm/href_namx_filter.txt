@@ -9,6 +9,8 @@ DPT:2 m above ground:
 SPFH:2 m above ground:
 UGRD:10 m above ground:
 VGRD:10 m above ground:
+MAXUW:10 m above ground:
+MAXVW:10 m above ground:
 CAPE:surface:
 CIN:surface:
 PWAT:entire atmosphere (considered as a single layer):
