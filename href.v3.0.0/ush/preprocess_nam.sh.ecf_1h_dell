@@ -1,0 +1,51 @@
+#! /bin/ksh
+
+
+if [ $# -ne 2 ]
+then
+echo need two arguments, cycle and forecast hour
+exit
+fi
+
+cyc=${1}
+hr=${2}
+
+
+# hrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42"
+
+COMnam=$COMROOTp2/nam/prod/nam
+# PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+mkdir -p /gpfs/dell2/ptmp/Matthew.Pyle/com/nam/prod/nam.${PDY}
+cd  /gpfs/dell2/ptmp/Matthew.Pyle/com/nam/prod/nam.${PDY}
+
+# PARMhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/parm
+wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
+
+# for hr in $hrs
+# do
+
+filecheck=$COMnam.${PDY}/nam.t${cyc}z.conusnest.hiresf${hr}.tm00.grib2
+
+        if [ -e $filecheck ]
+        then
+        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib nam.t${cyc}z.f${hr} $filecheck
+        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|REFC|MAXREF|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
+        cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
+
+        $WGRIB2 nam.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
+        $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
+
+        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > nam.t${cyc}z.f${hr}.grib2
+        rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} nam.t${cyc}z.f${hr} 
+        rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
+
+
+        else
+
+        echo ERR_EXIT $filecheck missing
+
+        fi
+
+# done

@@ -1,0 +1,58 @@
+#! /bin/ksh
+
+if [ $# -ne 2 ]
+then
+echo need cycle and forecast hour
+exit
+fi
+
+cyc=${1}
+hr=${2}
+
+PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+mkdir -p /gpfs/dell2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
+cd /gpfs/dell2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
+
+wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
+
+filecheck=${COMINhrrr}.${PDY}/conus/hrrr.t${cyc}z.wrfprsf${hr}.grib2
+        if [ -e $filecheck ]
+        then
+
+echo WGRIB2 is $WGRIB2
+
+        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
+        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
+
+        $WGRIB2 $filecheck -match "RETOP" -set_byte 4 23 200 -grib retop.t${cyc}z.f${hr}.grb
+        $WGRIB2 retop.t${cyc}z.f${hr}.grb -set_byte 4 11 197 -grib new_retop.t${cyc}z.f${hr}.grb
+        mv  new_retop.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb
+
+        $WGRIB2 $filecheck -match "REFC" -set_byte 4 23 200 -grib refc.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "TCDC" -set_byte 4 23 200 -grib tcdc.t${cyc}z.f${hr}.grb
+
+        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
+
+        ls -l nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb
+
+        cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+        refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
+
+#        rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+#        refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb
+
+        $WGRIB2 hrrr.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
+        $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
+
+	ls -l interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}
+        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > hrrr.t${cyc}z.f${hr}.grib2
+
+#         rm interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb   hrrr.t${cyc}z.f${hr}
+#        rm $filecheck
+
+        fi
+
+# done

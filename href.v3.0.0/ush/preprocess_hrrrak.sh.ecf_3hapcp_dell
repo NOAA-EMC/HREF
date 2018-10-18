@@ -1,0 +1,50 @@
+#! /bin/ksh
+
+
+if [ $# -ne 1 ]
+then
+echo need cycle 
+exit
+fi
+
+cyc=${1}
+
+hrs="03 06 09 12 15 18 21 24 27 30 33 36" 
+
+PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+mkdir -p /gpfs/dell2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}/ak
+cd /gpfs/dell2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}/ak
+
+
+EXEChref=${HOMEhref}/exec
+
+for hr in $hrs
+do
+
+let hrold=hr-3
+
+if [ $hrold -lt 10 ] 
+then
+hrold=0${hrold}
+fi
+
+filecheck=hrrr.t${cyc}z.f${hr}.grib2
+
+if [ -e $filecheck ]
+then
+
+        if [ $hr -gt 0 ]
+        then
+        echo here a $hr
+
+## the hourly will sum up three hourly at the appropriate time.
+        echo hrrr.t${cyc}z.f $hr .false. .false. .true. 1 ak |$EXEChref/href_get_prcip > output.hrefak_get_prcip1h.f${hr}
+
+        if [ ${hr}%3 -eq 0 ]
+        then
+        cat prcip3h.t${cyc}z.f${hr}.grib2 >> ../hrrr.t${cyc}z.f${hr}.ak.grib2
+        fi
+        fi
+
+fi
+done
