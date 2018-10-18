@@ -1,0 +1,67 @@
+#BSUB -oo /gpfs/dell2/emc/modeling/noscrub/Matthew.Pyle/EMC_hrw/href.v3.0.0/logs/test_hrefpreprocv3poe_NEST___CYC_.out
+#BSUB -eo /gpfs/dell2/emc/modeling/noscrub/Matthew.Pyle/EMC_hrw/href.v3.0.0/logs/test_hrefpreprocv3poe_NEST___CYC_.err
+#BSUB -q "debug"
+#BSUB -J HREFPREP__CYC_
+#BSUB -P HRW-T2O
+#BSUB -n 40
+#BSUB -R span[ptile=5]
+#BSUB -M 3000
+#BSUB -cwd /gpfs/dell2/emc/modeling/noscrub/Matthew.Pyle/
+#BSUB -W 0:20
+
+export KEEPDATA=NO
+
+export RUN_ENVIR=test
+export envir=test
+export SUB_ENVIR=dev
+export cyc=_CYC_
+export NEST=_NEST_
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+module load prod_envir/1.0.2
+module load prod_util/1.1.0
+module load EnvVars/1.0.2
+module load lsf/10.1
+module load ips/18.0.1.163
+module load impi/18.0.1
+module load CFP/2.0.1
+
+export COMROOT=/gpfs/hps/nco/ops/com
+export DATAROOT=/gpfs/dell2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/dell2/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/dell2/emc/modeling/noscrub/Matthew.Pyle/com
+
+# export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
+export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
+export COMINnam=${COMROOTp2}/nam/prod/nam
+
+export COMINhrrr=${COMROOT}/hrrr/prod/hrrr
+
+if [ -e /gpfs/gd1 ]
+then
+export COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+else
+export COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+fi
+
+export PCOM=/gpfs/dell2/ptmp/Matthew.Pyle/com/hiresw/awip
+
+mkdir -p $PCOM
+
+export COMINffg=/gpfs/dell2/emc/modeling/noscrub/Matthew.Pyle/ffg_input
+
+
+href_ver=`cat /u/$LOGNAME/href_exp`
+
+export HOMEhref=/gpfs/dell2/emc/modeling/noscrub/$LOGNAME/EMC_hrw/href.${href_ver}
+
+export SENDCOM=YES
+export SENDDBN=NO
+export SENDDBN_NTC=NO
+
+${HOMEhref}/jobs/JHREF_PREPROC_V3_dell

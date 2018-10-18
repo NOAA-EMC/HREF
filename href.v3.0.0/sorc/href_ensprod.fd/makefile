@@ -7,14 +7,9 @@
 #
 
 
-# FC=     ${COMP}
-#FC=     ${COMP} -convert big_endian
-#INC= /nwprod/lib/incmod/g2_4
-#LIBS=   -L/nwprod/lib -lip_4 -lw3nco_4 -lw3emc_4  -lbacio_4 -lsp_4 -lg2_4 -ljasper -lpng -lz
 INC=  ${G2_INC4} 
 LIBS=   ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \
         ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
-#FFLAGS = -O2 -g -convert big_endian -openmp -auto  -I$(INC)
 FFLAGS = -O3 -fp-model precise  -g -traceback -convert big_endian -assume noold_ldout_format -I $(INC) #  -ftrapuv  -check all  -fp-stack-check
 
 SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
