@@ -45,7 +45,6 @@ c    for derived variables
 
         REAL, dimension(jf,iens) :: u,v      ! temporal vars      
         real, allocatable :: windspd(:,:)
-        real, allocatable :: windspdloc(:)
 
         INTEGER miss(iens)
         INTEGER missing(20,iens)
@@ -66,7 +65,6 @@ c    for derived variables
 
 
 	allocate(windspd(jf,iens))
-	allocate(windspdloc(jf))
 
         miss=0
         missing=0
@@ -82,6 +80,19 @@ c    for derived variables
              jpd1=2
            end if
            
+
+
+	write(0,*) 'jpdtn, jpd1: ', jpdtn, jpd1
+           call readGB2(ifunit(irun),8,2,222,103,10,jp27,
+     +       gfld,eps,iret)   !UMAX mean -component
+
+           if (iret .eq. 0) then
+             write(0,*) 'found UMAX'
+             u(:,irun)=gfld%fld
+           else
+
+          
+	write(0,*) 'no UMAX'
            call readGB2(ifunit(irun),jpdtn,jpd1,2,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !U mean -component
             if (iret.eq.0) then
@@ -90,6 +101,17 @@ c    for derived variables
              missing(lv,irun)=1
              cycle loop400
             end if
+
+           endif
+
+           call readGB2(ifunit(irun),8,2,223,103,10,jp27,
+     +       gfld,eps,iret)   !VMAX mean -component
+
+           if (iret .eq. 0) then
+	     write(0,*) 'found VMAX'
+             v(:,irun)=gfld%fld
+           else
+	     write(0,*) 'no VMAX'
            call readGB2(ifunit(irun),jpdtn,jpd1,3,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !V mean -component
             if (iret.eq.0) then
@@ -98,6 +120,8 @@ c    for derived variables
              missing(lv,irun)=1
              cycle loop400
             end if
+
+           endif
 
 	write(0,*) 'define windspd for irun: ', irun
            do igrid = 1,jf
