@@ -542,7 +542,7 @@ for mem in members:
     print 'max of qpf as snow: ', np.max(qpf[itime])
     print 'dom is: ', dom
     if dom == 'conus' or dom == 'ak':
-      print 'qpf3 shape: ', np.shape(qpf3)
+      print 'qpf shape: ', np.shape(qpf)
       print 'maskregion shape: ', np.shape(maskregion)
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
