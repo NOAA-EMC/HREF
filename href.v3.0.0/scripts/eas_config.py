@@ -33,7 +33,7 @@ max_latency_nam = 6
 pqpf_1h_thresh = [.01,0.25,0.5]
 pqpf_3h_thresh = [.01,0.25,0.5,1.0]
 # 2" added to below for FFAIR
-pqpf_6h_thresh = [.01,0.25,0.5,1.0,2.0]
+pqpf_6h_thresh = [.01,0.25,0.5,1.0]
 pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0]
 pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0]
 
