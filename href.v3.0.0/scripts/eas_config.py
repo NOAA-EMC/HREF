@@ -6,6 +6,7 @@
 
 # number of ens members
 nm = 10
+nm_v3 = 10
 nm_ak = 8
 nm_nonconus = 6
 # model resolution (km)
@@ -64,6 +65,7 @@ pqpf_24h_starthours = [0,6,12]
 # PQPF calibration
 pqpf_6h_calibrate_arw = 'yes'
 pqpf_6h_calibrate_nmmb = 'yes'
+pqpf_6h_calibrate_fv3 = 'yes'
 pqpf_6h_calibrate_nssl = 'yes'
 pqpf_6h_calibrate_nam = 'yes'
 pqpf_6h_calibrate_hrrr = 'yes'
