@@ -10,7 +10,13 @@ fi
 cyc=${1}
 hr=${2}
 
+if [ -e /gpfs/td1 ]
+then
 COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+else
+COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+fi
+
 # PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
 mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
 cd  /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
