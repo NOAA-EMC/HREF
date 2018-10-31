@@ -77,6 +77,14 @@ COMINhrrr=os.environ.get('COMINhrrr','trash')
 print 'found COMINhrrr as ', COMINhrrr
 
 try:
+  os.environ["COMINfv3"]
+except KeyError:
+  print "NEED TO DEFINE COMINfv3"
+  exit(1)
+COMINfv3=os.environ.get('COMINfv3','trash')
+print 'found COMINfv3 as ', COMINfv3
+
+try:
   os.environ["COMINcal"]
 except KeyError:
   print "NEED TO DEFINE COMINcal"
@@ -487,15 +495,15 @@ for mem in members:
       file8alt = COMINhiresw + '/hiresw.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+8*incr+6)+'.'+dom+'.grib2'
 
     elif mem == 'fv3':
-      file0 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency)+'.'+dom+'.grib2'
-      file1 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'.grib2'
-      file2 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+2*incr)+'.'+dom+'.grib2'
-      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+3*incr)+'.'+dom+'.grib2'
-      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+4*incr)+'.'+dom+'.grib2'
-      file5 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+5*incr)+'.'+dom+'.grib2'
-      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+6*incr)+'.'+dom+'.grib2'
-      file7 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+7*incr)+'.'+dom+'.grib2'
-      file8 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+8*incr)+'.'+dom+'.grib2'
+      file0 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
+      file1 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file2 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+2*incr)+'.grib2'
+      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+3*incr)+'.grib2'
+      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+4*incr)+'.grib2'
+      file5 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+5*incr)+'.grib2'
+      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+6*incr)+'.grib2'
+      file7 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+7*incr)+'.grib2'
+      file8 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+8*incr)+'.grib2'
 
     elif mem == 'nssl':
       file0 = COMINhiresw + '/hiresw.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency)+'.'+dom+'mem2.grib2'
@@ -682,6 +690,8 @@ for mem in members:
           coeffs = coeffs_arw
         elif mem == 'nmmb':
           coeffs = coeffs_nmmb
+        elif mem == 'fv3':
+          coeffs = coeffs_fv3
         elif mem == 'nssl':
           coeffs = coeffs_nssl
         elif mem == 'nam':
@@ -881,7 +891,16 @@ for mem in members:
       print 'fhours of mem: ', fhours[memcount]
       fhour=fhours[memcount]
 
-      if mem != 'nam':
+      if mem == 'nam' or mem == 'fv3':
+        print 'call process_nam_qpf with: '
+        print 'file1: ', file1
+        print 'file0: ', file0
+        print 'fcst_hour: ', fcst_hour
+        fcst_hour=fhours[memcount]
+        qpf[itime]=process_nam_qpf(file1,file0,fcst_hour)
+
+      else:
+
         fhour=fhours[memcount]
         shour=fhour-1
         print 'from memfiles file1 for 1 h qpf: ', file1
@@ -893,13 +912,6 @@ for mem in members:
 #        grb = idx(name='Total Precipitation',lengthOfTimeRange=1)[0]
 #        qpf[itime] = grb.values
 #        idx.close()
-      else:
-        print 'call process_nam_qpf with: '
-        print 'file1: ', file1
-        print 'file0: ', file0
-        print 'fcst_hour: ', fcst_hour
-        fcst_hour=fhours[memcount]
-        qpf[itime]=process_nam_qpf(file1,file0,fcst_hour)
 
       print 'max of 1 h APCP: ', np.max(qpf[itime])
 

@@ -64,6 +64,14 @@ COMINhrrr=os.environ.get('COMINhrrr','trash')
 print 'found COMINhrrr as ', COMINhrrr
 
 try:
+  os.environ["COMINfv3"]
+except KeyError:
+  print "NEED TO DEFINE COMINfv3"
+  exit(1)
+COMINfv3=os.environ.get('COMINfv3','trash')
+print 'found COMINfv3 as ', COMINfv3
+
+try:
   os.environ["COMOUT"]
 except KeyError:
   print "NEED TO DEFINE COMOUT"
@@ -143,7 +151,7 @@ alpha = 0.5
 # read in calibration coefficients
 
 if dom == 'conus':
-  members = ['arw','nmmb','nssl','hrrr','nam']
+  members = ['arw','fv3','nssl','hrrr','nam']
 elif dom == 'ak':
   members = ['arw','nmmb','nssl','hrrrak']
 else:
@@ -404,6 +412,14 @@ for mem in members:
       file6 = COMINhiresw + '/hiresw.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'mem2.grib2'
       file6alt = COMINhiresw + '/hiresw.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'mem2.grib2'
 
+    elif mem == 'fv3':
+      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
+      memfiles4[itime] = file4
+      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file3alt = 'garb'
+      file6alt = 'garb'
+
     elif mem == 'nam':
       file3 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
       file4 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
@@ -500,19 +516,10 @@ for mem in members:
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf3,nx,ny=simplewgrib2('qpf.txt')
     else:
-      if mem != 'nam':
-        print 'ready from file3 in 1h: ', file3
-        fhour=fhours[memcount]
-        shour=fhour-1
-        os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
-        qpf1,nx,ny=simplewgrib2('qpf.txt')
 
+### HERE 
 
-#        idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#        grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=1)[0]
-#        qpf1 = grb.values
-#        idx.close()
-      else:
+      if mem == 'nam' or mem == 'fv3':
         fcst_hour=fhours[memcount]
         file4 = memfiles4[itime]
 
@@ -520,6 +527,18 @@ for mem in members:
         print 'call process_nam_qpf with file4: ', file4
         print 'call process_nam_qpf with fcst_hour: ', fcst_hour
         qpf1=process_nam_qpf(file3,file4,fcst_hour)
+
+      else:
+        print 'ready from file3 in 1h: ', file3
+        fhour=fhours[memcount]
+        shour=fhour-1
+        os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
+        qpf1,nx,ny=simplewgrib2('qpf.txt')
+
+#        idx = pygrib.index(file3,'name','lengthOfTimeRange')
+#        grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=1)[0]
+#        qpf1 = grb.values
+#        idx.close()
       
       print 'defining qpf from qpf1'
       qpf[itime] = qpf1*0.39370079

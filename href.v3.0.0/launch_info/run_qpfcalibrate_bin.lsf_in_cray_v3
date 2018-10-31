@@ -1,0 +1,44 @@
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfcalib_bin.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfcalib_bin.err__CYC___DOM_
+#BSUB -q "devhigh"
+#BSUB -J HREF_QPFCALIB
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}'
+#BSUB -W 0:27
+#BSUB -P HRW-T2O
+#BSUB -M 3000
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+
+
+module load ics
+module load ibmpe
+module load prod_envir
+module load prod_util
+
+export MP_LABELIO=yes
+export KEEPDATA=YES
+
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
+
+export RUN_ENVIR=test
+export envir=test
+
+export cyc=_CYC_
+
+DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
+
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
+
+export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_expv3
+export COMINcalib=${COMOUT}/../calib_bin
+export COMINcal=${COMOUT}/../cal_bin
+export COMINclimo=${COMOUT}/../climo_bin
+export dom=conus
+
+export DATA=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd/href_qpfcalib_bin_${cyc}_${envir}
+
+$HOMEhref/jobs/JHREF_QPFCALIBRATE_BIN_cray
+
+cd $HOMEhref/launch_info
+
+bsub < run_eas_bin.lsf__DOM_

@@ -1,0 +1,41 @@
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bincray.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bincray.err__CYC___DOM_
+#BSUB -q "devhigh"
+#BSUB -J HREF_EASBIN
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 132*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}'
+###BSUB -R rusage[mem=2000]
+#BSUB -W 0:29
+#BSUB -P HRW-T2O
+#BSUB -M 3000
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+
+
+module switch ics/15.0.6
+module load ibmpe
+module load prod_util/v1.0.22
+
+
+export SENDCOM=YES
+export MP_LABELIO=yes
+export KEEPDATA=YES
+
+
+# export HOMEhref=/meso/save/Matthew.Pyle/blake_sseox
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
+
+export RUN_ENVIR=test
+export envir=test
+
+export cyc=_CYC_
+export dom=_DOM_
+
+export COMINcal=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/cal
+export COMINcalib=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/calib
+export COMINclimo=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/climo
+
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
+
+export DATA=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd/href_easbinv3_${dom}_${cyc}_${envir}
+
+$HOMEhref/jobs/JHREF_EAS_BIN_cray_v3
