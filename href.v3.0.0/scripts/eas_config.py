@@ -6,7 +6,7 @@
 
 # number of ens members
 nm = 10
-nm_v3 = 10
+nm_v3 = 9
 nm_ak = 8
 nm_nonconus = 6
 # model resolution (km)
