@@ -50,4 +50,32 @@ fi
 
 # sleep 600
 
+# look for FV3 output
+
+if [ -e /gpfs/gd1 ]
+then
+COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+else
+COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+fi
+
+looplim=200
+loop=1
+
+while [ $loop -le $looplim ]
+do
+
+if [ -e ${COMINfv3}.${DATE}/fv3.t00z.conusf36.grib2 ]
+then
+echo found it
+let loop=loop+200
+else
+echo still looking for ${COMINfv3}.${DATE}/fv3.t00z.conusf36.grib2
+date
+sleep 90
+let loop=loop+1
+fi
+
+done
+
 bsub < launch_hrefv3preprocpoe_${cyc}

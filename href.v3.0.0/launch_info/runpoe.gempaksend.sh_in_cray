@@ -86,5 +86,7 @@ fi
 rsync -a *${PDY}${cyc}* mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
 
 cd ${MYCOMROOT}/hiresw/test/href.${PDY}_exp/ensprod/
-rsync -a href.t${cyc}z.*ffair*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
+rsync -a href.t${cyc}z.*meanhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
+rsync -a href.t${cyc}z.*probhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
+rsync -a href.t${cyc}z.*eashmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
 

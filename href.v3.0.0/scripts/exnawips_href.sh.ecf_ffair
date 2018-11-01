@@ -61,8 +61,8 @@ while [ $fhcnt -le $fend ] ; do
   fhr3=$fhcnt
   fhr3=$(printf "%03d" $fhr3)
 
-  GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}ffair.f${fhr}.grib2
-  GEMGRD=${RUN}_${NEST}_${TYPE}ffair_${PDY}${cyc}f${fhr3} 
+  GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}hmt.f${fhr}.grib2
+  GEMGRD=${RUN}_${NEST}_${TYPE}hmt_${PDY}${cyc}f${fhr3} 
   GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2.idx
 
   icnt=1
@@ -81,7 +81,7 @@ while [ $fhcnt -le $fend ] ; do
     fi
   done
 
-  sleep 10
+  sleep 5
 
   cp $GRIBIN grib$fhr
 

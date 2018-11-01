@@ -6,7 +6,7 @@
 #BSUB -M 1000
 #BSUB -W 1:29
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 6*{select[craylinux && vnode]span[ptile=6] cu[type=cabinet]}' rusage[mem=9000]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 3*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}' rusage[mem=9000]
 
 export RUN_ENVIR=test
 export envir=test
@@ -15,8 +15,8 @@ export cyc=_CYC_
 export NEST=_NEST_
 
 # export NODES=1
-export PTILE=6
-export TASKS=6
+export PTILE=3
+export TASKS=3
 
 export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
 export COMROOT=/gpfs/tp2/nco/ops/com/
