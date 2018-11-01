@@ -148,7 +148,7 @@ sleep 300
 
 bsub < launch_nawips_${cyc}
 
-sleep 3000
+sleep 1800
 
 bsub < launch_awips_${cyc}
 bsub < launch_gempaksend_${cyc}
