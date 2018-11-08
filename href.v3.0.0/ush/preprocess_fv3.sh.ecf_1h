@@ -10,12 +10,7 @@ fi
 cyc=${1}
 hr=${2}
 
-if [ -e /gpfs/td1 ]
-then
-COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
-else
-COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
-fi
+COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
 
 # PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
 mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
@@ -27,7 +22,7 @@ wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
 # for hr in $hrs
 # do
 
-filecheck=$COMINfv3.${PDY}/fv3.t${cyc}z.conusf${hr}.grib2
+filecheck=$COMINfv3.${PDY}/fv3sar.t${cyc}z.conus.f${hr}.grib2
 
         if [ -e $filecheck ]
         then

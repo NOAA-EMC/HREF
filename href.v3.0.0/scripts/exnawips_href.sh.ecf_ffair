@@ -63,7 +63,8 @@ while [ $fhcnt -le $fend ] ; do
 
   GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}hmt.f${fhr}.grib2
   GEMGRD=${RUN}_${NEST}_${TYPE}hmt_${PDY}${cyc}f${fhr3} 
-  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2.idx
+#  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2.idx
+  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}hmt.f${fhr}.grib2
 
   icnt=1
   while [ $icnt -lt 1000 ]
@@ -81,7 +82,7 @@ while [ $fhcnt -le $fend ] ; do
     fi
   done
 
-  sleep 5
+  sleep 10
 
   cp $GRIBIN grib$fhr
 

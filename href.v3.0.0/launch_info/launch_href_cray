@@ -110,7 +110,7 @@ else
 cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
 fi
 
-cat run_nawips.sh_in_cray  | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_nawips_${cyc}
+cat run_nawips.sh_in_cray  | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_nawips_${cyc}_${dom}
 
 cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_awips_${cyc}
 
@@ -144,11 +144,11 @@ fi
 
 bsub < launch_hrefrunpoe_${cyc}
 
-sleep 300
+sleep 1200
 
-bsub < launch_nawips_${cyc}
+bsub < launch_nawips_${cyc}_${dom}
 
-sleep 1800
+sleep 3600
 
 bsub < launch_awips_${cyc}
 bsub < launch_gempaksend_${cyc}
