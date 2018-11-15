@@ -152,7 +152,7 @@ C Return Interval fixed data
 C others 
        character*19, allocatable, dimension(:) :: fhead
        character*50 :: fname
-       real,allocatable,dimension(:) ::           p03mp01              !jf
+       real,allocatable,dimension(:) ::           p03mp01,slr_derv              !jf
        real,allocatable,dimension(:,:)  :: ptype_mn,ptype_pr,ptype_pr2 !jf,4 
 
        real,allocatable,dimension(:,:,:) :: derv_dtra                  !jf,maxmlvl,8 for DTRA requests
@@ -560,6 +560,32 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +       (k4(nv).eq.1.and.k5(nv).eq.13).or.
      +       (k4(nv).eq.1.and.k5(nv).eq.11) ) then
 
+!      here maybe for inserting?
+
+              if (.NOT.allocated(slr_derv)) then
+                allocate (slr_derv(jf))
+                slr_derv=0.
+              endif
+              if (.NOT.allocated(ptype_mn)) then
+                allocate (ptype_mn(jf,4))
+              end if
+              if (.NOT.allocated(ptype_pr)) then
+                allocate (ptype_pr(jf,4))
+              end if
+              if (.NOT.allocated(ptype_pr2)) then
+                allocate (ptype_pr2(jf,4))
+              end if
+             
+ 
+	      if (slr_derv(1)<0.01) then
+              call preciptype (nv,ifunit,jpdtn,jf,iens,
+     +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
+              endif
+
+	      write(0,*) 'maxval(slr_derv): ', maxval(slr_derv)
+
+!  end of inserted ptype stuff
+
 
          write(0,*) 'get APCP GRIB2 data for member ', irun
 
@@ -585,17 +611,14 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 jpd27=3
              else if (vname(nv).eq.'AP6h'.or.vname(nv).eq.'SN6h' .or.
      &                vname(nv).eq.'A6RI'.or.vname(nv).eq.'FFG6') then
-!mptest                if(ifhr.lt.6 .or. mod(ifhr,6) .ne. 0) exit loop222
                 if(ifhr.lt.6) exit loop222
                 jpd27=6
              else if (vname(nv).eq.'AP12'.or.vname(nv).eq.'SN12' .or. 
      &                vname(nv).eq.'A12R'.or.vname(nv).eq.'FF12') then
-!mptest                if(ifhr.lt.12 .or. mod(ifhr,12) .ne. 0) exit loop222
                 if(ifhr.lt.12) exit loop222
                 jpd27=12
              else if (vname(nv).eq.'AP24'.or.vname(nv).eq.'SN24' .or.
      &                vname(nv).eq.'A24R'.or.vname(nv).eq.'FF24') then
-!mptest                if(ifhr.lt.24 .or. mod(ifhr,24) .ne. 0) exit loop222
                 if(ifhr.lt.24) exit loop222
                 jpd27=24
              else
@@ -1950,6 +1973,9 @@ c
 cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
           if (dk4(nv).eq.1.and.dk5(nv).eq.19) then
 
+              if (.NOT.allocated(slr_derv)) then
+                allocate (slr_derv(jf))
+              endif
               if (.NOT.allocated(ptype_mn)) then
                 allocate (ptype_mn(jf,4))
               end if
@@ -1968,7 +1994,7 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
              else
  
               call preciptype (nv,ifunit,jpdtn,jf,iens,
-     +         ptype_mn,ptype_pr,ptype_pr2)
+     +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
 
              end if
 
