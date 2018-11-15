@@ -44,7 +44,7 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
     then
         echo "in conus block"
 #     files="9 namnest namnest hrrr hrrr fv3 conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
-     files="9 namnest namnest hrrr hrrr fv3 conusarw conusmem2arw conusarw conusmem2arw"
+     files="9 namnest namnest hrrr hrrr fv3s conusarw conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
       days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY  $PDY  $PDY $PDYm1  $PDYm1"

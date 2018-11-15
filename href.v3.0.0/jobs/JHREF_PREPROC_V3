@@ -336,6 +336,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.eee &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.fff &
 wait
 
+$USHhref/preprocess_fv3.sh.ecf_3hapcp ${cyc}
 
 fi
 

@@ -151,7 +151,7 @@ alpha = 0.5
 # read in calibration coefficients
 
 if dom == 'conus':
-  members = ['arw','fv3','nssl','hrrr','nam']
+  members = ['arw','fv3s','nssl','hrrr','nam']
 elif dom == 'ak':
   members = ['arw','nmmb','nssl','hrrrak']
 else:
@@ -412,11 +412,11 @@ for mem in members:
       file6 = COMINhiresw + '/hiresw.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'mem2.grib2'
       file6alt = COMINhiresw + '/hiresw.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'mem2.grib2'
 
-    elif mem == 'fv3':
-      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
+    elif mem == 'fv3s':
+      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
       memfiles4[itime] = file4
-      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
 
@@ -519,7 +519,7 @@ for mem in members:
 
 ### HERE 
 
-      if mem == 'nam' or mem == 'fv3':
+      if mem == 'nam':
         fcst_hour=fhours[memcount]
         file4 = memfiles4[itime]
 

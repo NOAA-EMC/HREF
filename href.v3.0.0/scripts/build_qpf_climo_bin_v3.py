@@ -339,12 +339,12 @@ if os.path.exists(dir):
 # copy FV3 from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
 # print dirs
-dir = COMINfv3 + '/' + 'fv3.'+PDY[:8]
+dir = COMINfv3 + '/' + 'fv3s.'+PDY[:8]
 print 'dir is : ', dir
 if os.path.exists(dir):
   files = next(os.walk(dir))[2]
   for file in files:
-    if (len(file) == 18) and (file[5:7] == cyc[0:2]) and (1 <= int(file[10:12])) and (file[13:18] == 'grib2'): 
+    if (len(file) == 19) and (file[6:8] == cyc[0:2]) and (1 <= int(file[11:13])) and (file[14:19] == 'grib2'): 
       fv3file = dir + '/' + file
       print 'Found',fv3file
       iyear = int(PDY[:4])
