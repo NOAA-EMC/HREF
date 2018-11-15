@@ -37,7 +37,7 @@ filecheck=$COMINfv3.${PDY}/fv3sar.t${cyc}z.conus.f${hr}.grib2
 
         ls -l interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr} 
 
-        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > fv3.t${cyc}z.f${hr}.grib2
+        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > fv3s.t${cyc}z.f${hr}.grib2
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
 

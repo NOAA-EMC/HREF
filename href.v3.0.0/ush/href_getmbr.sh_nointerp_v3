@@ -32,8 +32,8 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
 	echo "in conus block"
-#     files="9 namnest namnest hrrr hrrr fv3 conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
-     files="9 namnest namnest hrrr hrrr fv3 conusarw conusmem2arw conusarw conusmem2arw"
+#     files="9 namnest namnest hrrr hrrr fv3s conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest hrrr hrrr fv3s conusarw conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
       days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY   $PDY  $PDY $PDYm1  $PDYm1" 
@@ -309,9 +309,9 @@ typeset -Z2 fcheckloc
       fi
 
 ###### fv3
-      if [  ${file[$m]} = 'fv3'  -a $fcst -le 60  ] ; then
+      if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
 
-        filecheck=${COMINfv3}.${day[$m]}/fv3.t${cycloc[$m]}z.f${fcst}.grib2
+        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then

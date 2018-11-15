@@ -209,7 +209,7 @@ if not os.path.exists(COMOUT):
 
 if dom == 'conus':
   nm_use = nm_v3
-  members = ['arw','fv3','nssl','hrrr','nam']
+  members = ['arw','fv3s','nssl','hrrr','nam']
 elif dom == 'ak':
   nm_use = nm_ak
   members = ['arw','nmmb','nssl','hrrrak']
@@ -226,7 +226,7 @@ for mem in members:
     coeffs_file = coeffs_file_nmmb
     pqpf_6h_calibrate = pqpf_6h_calibrate_nmmb
     coeffs_nmmb = {}
-  elif mem == 'fv3':
+  elif mem == 'fv3s':
     coeffs_file = coeffs_file_fv3
     pqpf_6h_calibrate = pqpf_6h_calibrate_fv3
     coeffs_fv3 = {}
@@ -261,7 +261,7 @@ for mem in members:
         coeffs_arw[int(parms[1])] = np.array(coefflist).astype(float)    
       elif mem == 'nmmb':
         coeffs_nmmb[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'fv3':
+      elif mem == 'fv3s':
         coeffs_fv3[int(parms[1])] = np.array(coefflist).astype(float)    
       elif mem == 'nssl':
         coeffs_nssl[int(parms[1])] = np.array(coefflist).astype(float)    
@@ -494,16 +494,16 @@ for mem in members:
       file7alt = COMINhiresw + '/hiresw.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+7*incr+6)+'.'+dom+'.grib2'
       file8alt = COMINhiresw + '/hiresw.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+8*incr+6)+'.'+dom+'.grib2'
 
-    elif mem == 'fv3':
-      file0 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
-      file1 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file2 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+2*incr)+'.grib2'
-      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+3*incr)+'.grib2'
-      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+4*incr)+'.grib2'
-      file5 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+5*incr)+'.grib2'
-      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+6*incr)+'.grib2'
-      file7 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+7*incr)+'.grib2'
-      file8 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+8*incr)+'.grib2'
+    elif mem == 'fv3s':
+      file0 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
+      file1 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file2 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+2*incr)+'.grib2'
+      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+3*incr)+'.grib2'
+      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+4*incr)+'.grib2'
+      file5 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+5*incr)+'.grib2'
+      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+6*incr)+'.grib2'
+      file7 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+7*incr)+'.grib2'
+      file8 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+8*incr)+'.grib2'
 
     elif mem == 'nssl':
       file0 = COMINhiresw + '/hiresw.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency)+'.'+dom+'mem2.grib2'
@@ -690,7 +690,7 @@ for mem in members:
           coeffs = coeffs_arw
         elif mem == 'nmmb':
           coeffs = coeffs_nmmb
-        elif mem == 'fv3':
+        elif mem == 'fv3s':
           coeffs = coeffs_fv3
         elif mem == 'nssl':
           coeffs = coeffs_nssl
@@ -891,7 +891,7 @@ for mem in members:
       print 'fhours of mem: ', fhours[memcount]
       fhour=fhours[memcount]
 
-      if mem == 'nam' or mem == 'fv3':
+      if mem == 'nam' :
         print 'call process_nam_qpf with: '
         print 'file1: ', file1
         print 'file0: ', file0
