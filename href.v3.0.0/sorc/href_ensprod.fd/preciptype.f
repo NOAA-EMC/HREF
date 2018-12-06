@@ -146,7 +146,7 @@ c    for derived variables
 
 ! end SLR test
 
-cc  following is part is the code copy from Geoff Manikin doninant precip type decision
+cc  following is part is the code copy from Geoff Manikin dominant precip type decision
 cc  importance priority order:  freezing_rain(1) > snow(2) > sleet(3) > rain(4)            
 
           if(crain.ge.1.0.or.cfrzr.ge.1.0.or.csnow.ge.1.0.or.
