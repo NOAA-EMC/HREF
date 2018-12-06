@@ -52,7 +52,10 @@ fi
 
 # look for FV3 output
 
-COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+# COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/prod/fv3
+export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/para/fv3sar
+
 
 looplim=200
 loop=1
@@ -60,7 +63,7 @@ loop=1
 while [ $loop -le $looplim ]
 do
 
-if [ -e ${COMINfv3}.${DATE}/fv3sar.t00z.conus.f36.grib2 ]
+if [ -e ${COMINfv3}.${DATE}/${cyc}/fv3sar.t${cyc}z.conus.f36.grib2 ]
 then
 echo found it
 let loop=loop+200

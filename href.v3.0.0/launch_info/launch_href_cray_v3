@@ -62,7 +62,7 @@ fileone=$COMINhiresw.${DATE}/hiresw.t${cyc}z.nmmb_5km.f36.conus.grib2
 filetwo=$COMINhiresw.${DATE}/hiresw.t${cyc}z.arw_5km.f36.conus.grib2
 filethree=$COMINhiresw.${DATE}/hiresw.t${cyc}z.arw_5km.f36.conusmem2.grib2
 filefour=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${DATE}/hrrr.t${cyc}z.f24.grib2
-filefive=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${DATE}/fv3.t${cyc}z.f24.grib2
+filefive=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${DATE}/fv3s.t${cyc}z.f24.grib2
 
 ls -l $fileone $filetwo $filethree $filefour
 

@@ -152,7 +152,7 @@ C Return Interval fixed data
 C others 
        character*19, allocatable, dimension(:) :: fhead
        character*50 :: fname
-       real,allocatable,dimension(:) ::           p03mp01,slr_derv              !jf
+       real,allocatable,dimension(:) :: p03mp01,slr_derv,vrbl_mn_use             !jf
        real,allocatable,dimension(:,:)  :: ptype_mn,ptype_pr,ptype_pr2 !jf,4 
 
        real,allocatable,dimension(:,:,:) :: derv_dtra                  !jf,maxmlvl,8 for DTRA requests
@@ -564,7 +564,9 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
               if (.NOT.allocated(slr_derv)) then
                 allocate (slr_derv(jf))
+                allocate (vrbl_mn_use(jf))
                 slr_derv=0.
+	write(0,*) 'set slr_derv to zero'
               endif
               if (.NOT.allocated(ptype_mn)) then
                 allocate (ptype_mn(jf,4))
@@ -582,7 +584,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
               endif
 
-	      write(0,*) 'maxval(slr_derv): ', maxval(slr_derv)
+	      write(0,*) 'post def maxval(slr_derv): ', maxval(slr_derv)
 
 !  end of inserted ptype stuff
 
@@ -1773,10 +1775,31 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
         if (trim(Msignal(nv)).eq.'M') then
 
 	write(0,*) 'calling packGB2_mean for M 1,2,27 ', jpd1,jpd2, jpd27
+	write(0,*) 'here with maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
           call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
           write(*,*) 'packing mean direct var for', nv
+
+	if (jpd2 .eq. 13 .and. jpd27 .eq. 1)  then
+	write(0,*) 'defining vrbl_mn_use'
+	write(0,*) 'Lm is: ', Lm
+	write(0,*) 'max of slr_derv here: ', maxval(slr_derv)
+	write(0,*) 'maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
+	
+          jpd2loc=11
+          do JJJ=1,jf
+	  slr_derv(JJJ)=max(slr_derv(JJJ),1.0)
+	  vrbl_mn_use(JJJ)=vrbl_mn(JJJ,Lm)*slr_derv(JJJ)
+          enddo
+	 
+	write(0,*) 'min/max of SNOW field ', minval(vrbl_mn_use),
+     +                                       maxval(vrbl_mn_use)
+          call packGB2_mean(imean,isprd,vrbl_mn_use,vrbl_sp,   !jpd12 is determined inside 
+     +          nv,jpd1,jpd2loc,jpd10,jpd27,jf,Lm,
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
+
+        endif
 
 	endif
 
