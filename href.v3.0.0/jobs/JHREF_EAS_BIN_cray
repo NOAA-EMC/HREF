@@ -171,6 +171,7 @@ for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${HOMEhref}/scripts/make_easfracqpf_combo_bin.py ${fhr} 12 >&  qpf_combo_${dom}_${cyc}_12h_${fhr}.log &" >> poe.qpf_12
 done
+echo "wait" >> poe.qpf_12
 
 echo "#!/bin/sh  "                                  >  poe.qpf_24
 hrs="24 27 30 33 36"
