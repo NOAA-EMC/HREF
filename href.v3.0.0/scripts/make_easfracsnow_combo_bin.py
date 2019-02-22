@@ -283,7 +283,15 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
 #      p = np.where(np.less_equal(dijmean,dcrit),100.0*np.sum(frac,axis=0)/float(nm),p)
 # smooth radius grid and zero out any dry areas
 #    p = np.where(np.equal(fracsum,0),0,ndimage.filters.gaussian_filter(p,p_smooth))
-    optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
+
+# do a first pass for all points, not just non-zero fracsum value points
+#    optrad = ndimage.filters.gaussian_filter(optrad,p_smooth)
+# redo
+#    optrad = ndimage.filters.gaussian_filter(optrad,p_smooth)
+
+    optrad = np.where(np.equal(fracsum,0),slim,ndimage.filters.gaussian_filter(optrad,p_smooth))
+
+
     return optrad
 
 
@@ -625,6 +633,10 @@ for t in thresh_use:
         probfinal[row,column] = prob[t,100][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm)
         optrad[row,column] = 0
+
+# slight smoothing of probfinal?
+  probfinal = ndimage.filters.gaussian_filter(probfinal,1)
+
   if dom == 'conus' or dom == 'ak':
     print 'working final probability with mask'
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
