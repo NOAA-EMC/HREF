@@ -999,6 +999,10 @@ for t in thresh_use:
         probfinal[row,column] = prob[t,100][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm_use)
         optrad[row,column] = 0
+
+# slight smoothing of probfinal?
+  probfinal = ndimage.filters.gaussian_filter(probfinal,1)
+
   if dom == 'conus' or dom == 'ak':
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
   t5 = time.time()
