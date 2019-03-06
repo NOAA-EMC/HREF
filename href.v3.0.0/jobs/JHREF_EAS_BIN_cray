@@ -219,31 +219,56 @@ fi
 cat $DATA/href.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/href.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
+cat $DATA/href.t${cyc}z.${dom}.pqpf01_easlowfrac.f${fhr}.grib2 > $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.snow01_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+
+cat $DATA/href.t${cyc}z.${dom}.pqpf01_eashighfrac.f${fhr}.grib2 > $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.snow01_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
+
 if [ $((fhr%3)) -eq 0 ]
 then
 cat $DATA/href.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/href.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+
+cat $DATA/href.t${cyc}z.${dom}.pqpf03_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.snow03_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+
+cat $DATA/href.t${cyc}z.${dom}.pqpf03_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.snow03_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
 fi
 
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 6 ]
 then
 cat $DATA/href.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/href.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+
+cat $DATA/href.t${cyc}z.${dom}.pqpf06_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.snow06_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+
+cat $DATA/href.t${cyc}z.${dom}.pqpf06_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.snow06_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
 fi
 
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 12 ]
 then
 cat $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf12_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf12_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
 fi
 
 if [ $fhr -eq 24 -o $fhr -eq 27 -o  $fhr -eq 30 -o $fhr -eq 33 -o $fhr -eq 36 ]
 then
 cat $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf24_easlowfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf24_eashighfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2
 fi
 
 if [ $SENDCOM == 'YES' ]
 then
 cp $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
+cp $DATA/href.t${cyc}z.${dom}.easlow.f${fhr}.grib2 ${COMOUT}/ensprod/
+cp $DATA/href.t${cyc}z.${dom}.eashigh.f${fhr}.grib2 ${COMOUT}/ensprod/
+
 $WGRIB2 $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 -match WEASD -grib ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eashmt.f${fhr}.grib2
 $WGRIB2 ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
 fi
