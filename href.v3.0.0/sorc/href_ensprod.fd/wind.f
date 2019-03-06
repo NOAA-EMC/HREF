@@ -82,6 +82,9 @@ c    for derived variables
            
 
 
+	if (jpd12 .eq. 10) then
+
+
 	write(0,*) 'jpdtn, jpd1: ', jpdtn, jpd1
            call readGB2(ifunit(irun),8,2,222,103,10,jp27,
      +       gfld,eps,iret)   !UMAX mean -component
@@ -101,8 +104,22 @@ c    for derived variables
              missing(lv,irun)=1
              cycle loop400
             end if
+          endif
 
-           endif
+        else ! non level=10
+
+           call readGB2(ifunit(irun),jpdtn,jpd1,2,jpd10,jpd12,jp27,
+     +       gfld,eps,iret)   !U mean -component
+            if (iret.eq.0) then
+             u(:,irun)=gfld%fld
+            else
+             missing(lv,irun)=1
+             cycle loop400
+            end if
+
+       endif
+
+	if (jpd12 .eq. 10) then
 
            call readGB2(ifunit(irun),8,2,223,103,10,jp27,
      +       gfld,eps,iret)   !VMAX mean -component
@@ -122,6 +139,20 @@ c    for derived variables
             end if
 
            endif
+         
+
+         else ! not level 10
+           call readGB2(ifunit(irun),jpdtn,jpd1,3,jpd10,jpd12,jp27,
+     +       gfld,eps,iret)   !V mean -component
+            if (iret.eq.0) then
+             v(:,irun)=gfld%fld
+            else
+             missing(lv,irun)=1
+             cycle loop400
+            end if
+
+
+         endif
 
 	write(0,*) 'define windspd for irun: ', irun
            do igrid = 1,jf

@@ -284,13 +284,7 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
 # smooth radius grid and zero out any dry areas
 #    p = np.where(np.equal(fracsum,0),0,ndimage.filters.gaussian_filter(p,p_smooth))
 
-# do a first pass for all points, not just non-zero fracsum value points
-#    optrad = ndimage.filters.gaussian_filter(optrad,p_smooth)
-# redo
-#    optrad = ndimage.filters.gaussian_filter(optrad,p_smooth)
-
     optrad = np.where(np.equal(fracsum,0),slim,ndimage.filters.gaussian_filter(optrad,p_smooth))
-
 
     return optrad
 
@@ -367,19 +361,31 @@ if dom == 'conus' or dom == 'ak':
 if qpf_interval == 1:
   print 'defined 1 h outbase'
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase_low = 'href.t'+cyc[0:2]+'z.'+dom+'.snow01_easlowfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase_high = 'href.t'+cyc[0:2]+'z.'+dom+'.snow01_eashighfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr =  1
 if qpf_interval == 3:
   print 'defined 3 h outbase'
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow03_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase_low = 'href.t'+cyc[0:2]+'z.'+dom+'.snow03_easlowfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase_high = 'href.t'+cyc[0:2]+'z.'+dom+'.snow03_eashighfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr =  3
 if qpf_interval == 6:
   print 'defined 6 h outbase'
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow06_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase_low = 'href.t'+cyc[0:2]+'z.'+dom+'.snow06_easlowfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase_high = 'href.t'+cyc[0:2]+'z.'+dom+'.snow06_eashighfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr =  3
 
 outfile = DATA  + '/' + outbase
+outfile_low = DATA  + '/' + outbase_low
+outfile_high = DATA  + '/' + outbase_high
 if os.path.exists(outfile):
   os.system('rm -f '+outfile)
+if os.path.exists(outfile_low):
+  os.system('rm -f '+outfile_low)
+if os.path.exists(outfile_high):
+  os.system('rm -f '+outfile_high)
 
 prob = {}
 qpf = {}
@@ -589,6 +595,9 @@ for mem in range(0,len(itimes)):
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
+probfinal_low = np.zeros((nlats,nlons))
+probfinal_high = np.zeros((nlats,nlons))
+
 filter_footprint_10 = get_footprint(10)
 filter_footprint_25 = get_footprint(25)
 filter_footprint_40 = get_footprint(40)
@@ -600,12 +609,17 @@ filter_footprint_100 = get_footprint(100)
 for t in thresh_use:
   t3 = time.time()
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
+  optrad_low = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth_low)
+  optrad_high = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth_high)
   t4 = time.time()
   print 'Time for optrad routine:', t4-t3
 
   for row in range((slim/dx),nlats - (slim/dx)):
     for column in range((slim/dx),nlons - (slim/dx)):
       rad = (optrad[row,column]).astype(int)
+      rad_low = (optrad_low[row,column]).astype(int)
+      rad_high = (optrad_high[row,column]).astype(int)
+
 
 
       if (2.5 <= rad < 17.5):
@@ -634,19 +648,78 @@ for t in thresh_use:
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm)
         optrad[row,column] = 0
 
+## probfinal_low
+      if (2.5 <= rad_low < 17.5):
+        probfinal_low[row,column] = prob[t,10][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_10)*nm)
+      elif (17.5 <= rad_low < 32.5):
+        probfinal_low[row,column] = prob[t,25][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_25)*nm)    
+      elif (32.5 <= rad_low < 47.5):
+        probfinal_low[row,column] = prob[t,40][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_40)*nm)
+      elif (47.5 <= rad_low < 62.5):
+        probfinal_low[row,column] = prob[t,55][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_55)*nm)
+      elif (62.5 <= rad_low < 77.5):
+        probfinal_low[row,column] = prob[t,70][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_70)*nm)
+      elif (77.5 <= rad_low < 92.5):
+        probfinal_low[row,column] = prob[t,85][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_85)*nm)
+      elif (92.5 <= rad_low <= 100):
+        probfinal_low[row,column] = prob[t,100][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_100)*nm)
+      elif (rad_low > 100):
+        probfinal_low[row,column] = prob[t,100][row,column]
+        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_100)*nm)
+        optrad_low[row,column] = 0
+
+## probfinal_high
+      if (2.5 <= rad_high < 17.5):
+        probfinal_high[row,column] = prob[t,10][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_10)*nm)
+      elif (17.5 <= rad_high < 32.5):
+        probfinal_high[row,column] = prob[t,25][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_25)*nm)    
+      elif (32.5 <= rad_high < 47.5):
+        probfinal_high[row,column] = prob[t,40][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_40)*nm)
+      elif (47.5 <= rad_high < 62.5):
+        probfinal_high[row,column] = prob[t,55][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_55)*nm)
+      elif (62.5 <= rad_high < 77.5):
+        probfinal_high[row,column] = prob[t,70][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_70)*nm)
+      elif (77.5 <= rad_high < 92.5):
+        probfinal_high[row,column] = prob[t,85][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_85)*nm)
+      elif (92.5 <= rad_high <= 100):
+        probfinal_high[row,column] = prob[t,100][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_100)*nm)
+      elif (rad_high > 100):
+        probfinal_high[row,column] = prob[t,100][row,column]
+        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_100)*nm)
+        optrad_high[row,column] = 0
+
 # slight smoothing of probfinal?
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
+  probfinal_low = ndimage.filters.gaussian_filter(probfinal_low,1)
+  probfinal_high = ndimage.filters.gaussian_filter(probfinal_high,1)
 
   if dom == 'conus' or dom == 'ak':
     print 'working final probability with mask'
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
+    probfinal_low = np.where(np.equal(maskregion,-9999),0,probfinal_low)  # set to 0 for mask 
+    probfinal_high = np.where(np.equal(maskregion,-9999),0,probfinal_high)  # set to 0 for mask 
   t5 = time.time()
   print 'Time for get final probability routine for ',t, 'inch threshold: ',t5-t4
   print 'max of probfinal: ', np.max(probfinal)
+  print 'max of probfinal_low: ', np.max(probfinal_low)
+  print 'max of probfinal_high: ', np.max(probfinal_high)
 
 
 # write binary file out of probfinal array, then import it into grib file using WGRIB2
-
   myfort = F.FortranFile('record_out.bin',mode='w')
   myfort.writeReals(probfinal)
   myfort.close()
@@ -663,13 +736,48 @@ for t in thresh_use:
 
   string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob > "+probstr
   print 'string used: ', string
+
+# regular
+
+# write binary file out of probfinal array, then import it into grib file using WGRIB2
+  myfort = F.FortranFile('record_out.bin',mode='w')
+  myfort.writeReals(probfinal)
+  myfort.close()
+
   os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
   os.system(WGRIB2+' premod.grb -set_byte 4 12 197  -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile)
 
+  os.system('rm record_out.bin')
+  os.system('rm premod.grb')
 
-  print 'byte, byte45, byte46, byte47: ', byte, byte45, byte46, byte47
+# low 
+
+# write binary file out of probfinal array, then import it into grib file using WGRIB2
+  myfort_low = F.FortranFile('record_out.bin',mode='w')
+  myfort_low.writeReals(probfinal_low)
+  myfort_low.close()
+
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 12 197  -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile_low)
 
   os.system('rm record_out.bin')
+  os.system('rm premod.grb')
+
+# high
+
+# write binary file out of probfinal array, then import it into grib file using WGRIB2
+  myfort_high = F.FortranFile('record_out.bin',mode='w')
+  myfort_high.writeReals(probfinal_high)
+  myfort_high.close()
+
+  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
+  os.system(WGRIB2+' premod.grb -set_byte 4 12 197  -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile_high)
+
+  os.system('rm record_out.bin')
+
+
+
+## how do we give proper name for other files?
 
 # Write variables to grib file
 #  grbout = open(outfile,'a')
