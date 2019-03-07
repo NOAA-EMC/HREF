@@ -26,7 +26,7 @@ export OMP_NUM_THREADS=1
 module load prod_envir
 
 export COMROOT=/gpfs/hps/nco/ops/com
-export DATAROOT=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
@@ -36,12 +36,15 @@ export COMINnam=${COMROOTp2}/nam/prod/nam
 
 export COMINhrrr=${COMROOT}/hrrr/prod/hrrr
 
-if [ -e /gpfs/gd1 ]
-then
-export COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
-else
-export COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
-fi
+# if [ -e /gpfs/gd1 ]
+# then
+# export COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+# else
+# export COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
+# fi
+
+export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/prod/fv3
+export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/para/fv3sar
 
 export PCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/awip
 
