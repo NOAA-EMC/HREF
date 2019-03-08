@@ -1775,6 +1775,13 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
         if (trim(Msignal(nv)).eq.'M') then
 
 	write(0,*) 'calling packGB2_mean for M 1,2,27 ', jpd1,jpd2, jpd27
+
+
+! reset EMSL to write out as PMSL?
+!	if (jpd1 .eq. 3 .and. jpd2 .eq. 192) then
+!        jpd2=1
+!        endif
+
 	write(0,*) 'here with maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
           call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,

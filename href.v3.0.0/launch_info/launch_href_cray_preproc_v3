@@ -68,7 +68,7 @@ then
 echo found it
 let loop=loop+200
 else
-echo still looking for ${COMINfv3}.${DATE}/fv3sar.t00z.conus.f36.grib2
+echo still looking for ${COMINfv3}.${DATE}/${cyc}/fv3sar.t00z.conus.f36.grib2
 date
 sleep 90
 let loop=loop+1
