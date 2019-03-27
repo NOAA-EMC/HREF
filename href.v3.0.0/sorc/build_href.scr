@@ -20,6 +20,14 @@ make clean
 
 ############################
 
+cd ${BASE}/href_fv3bucket.fd
+make clean
+make href_fv3bucket
+make copy
+make clean
+
+############################
+
 
 cd ${BASE}/href_ensprod.fd
 make clean
