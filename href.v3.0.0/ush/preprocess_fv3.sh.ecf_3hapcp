@@ -24,22 +24,13 @@ then
 hrold=0${hrold}
 fi
 
-
 dir=`pwd`
 echo $dir > input
 echo "fv3s.t${cyc}z.f" >> input
 echo $hrold >> input
 echo $hr >> input
-
-# if [ $hrold == "00" ]
-# then
-# echo 1 >> input
-# else
 echo 0 >> input
-# fi
-
 echo "1473 1025" >> input
-
 
 EXEChref=${HOMEhref}/exec
 
@@ -68,30 +59,25 @@ EXEChref=${HOMEhref}/exec
 
 for hr in $hrs
 do
-let hrold=hr-3
-if [ $hrold -lt 10 ] 
-then
-hrold=0${hrold}
-fi
 
-dir=`pwd`
-echo $dir > input
-echo "fv3s.t${cyc}z.f" >> input
-echo $hrold >> input
-echo $hr >> input
-
-# if [ $hrold == "00" ]
+# let hrold=hr-3
+# if [ $hrold -lt 10 ] 
 # then
-# echo 1 >> input
-# else
-echo 0 >> input
+# hrold=0${hrold}
 # fi
-echo "1473 1025" >> input
+
+# dir=`pwd`
+# echo $dir > input
+# echo "fv3s.t${cyc}z.f" >> input
+# echo $hrold >> input
+# echo $hr >> input
+# echo 0 >> input
+# echo "1473 1025" >> input
 
 filecheck=fv3s.t${cyc}z.f${hr}.grib2
 
-$EXEChref/href_fv3bucket < input
-cat PCP3HR${hr}.tm00 >> $filecheck
+# $EXEChref/href_fv3bucket < input
+# cat PCP3HR${hr}.tm00 >> $filecheck
 
 if [ -e $filecheck ]
 then
