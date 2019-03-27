@@ -27,8 +27,15 @@ filecheck=$COMINfv3.${PDY}/${cyc}/fv3sar.t${cyc}z.conus.f${hr}.grib2
         if [ -e $filecheck ]
         then
         $WGRIB2 $filecheck | grep -F -f $PARMhref/href_fv3_filter.txt | $WGRIB2 -i -grib fv3.t${cyc}z.f${hr} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
-#tmp        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn2.t${cyc}z.f${hr}.grb
+
+        if [ $hr -eq 0 ]
+        then
+         $WGRIB2 $filecheck -match "WEASD" -match "anl" -grib nn2b.t${cyc}z.f${hr}.grb
+         cat nn2b.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
+        fi
+
         $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 

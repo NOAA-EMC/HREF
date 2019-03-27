@@ -744,11 +744,11 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
         endif
            endif
 
-! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR)
+! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR) (and REFC from FV3 now)
 
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
 
-           if (jpd2 .ne. 197 .and. jpd2 .ne. 5 ) then
+           if ( jpd2.ne.197 .and. jpd2.ne.5  ) then
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.
@@ -798,7 +798,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
 ! avoid accounting for echo top bitmap
-          if (jpd2 .ne. 197) then
+           if ( jpd2.ne.197 .and. jpd2.ne.5  ) then
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.
