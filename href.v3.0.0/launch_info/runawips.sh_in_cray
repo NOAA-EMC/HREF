@@ -31,8 +31,8 @@ export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
-export PCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/awip
-mkdir -p $PCOM
+# export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp/wmo
+# mkdir -p $COMOUT 
 
 module load grib_util/1.0.3
 module load prod_util

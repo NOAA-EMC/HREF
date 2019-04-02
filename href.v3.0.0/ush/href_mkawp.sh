@@ -47,17 +47,17 @@ do
   export FORT11=href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
   export FORT12=href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i
   export FORT51=xtrn.${cycle}.href.${NEST}_${type}_${fhr}
-  $TOCGRIB2 <$PARMutil/grib2_awips_href_${NEST}_${type}f${fhr} parm='KWBH'
+  $TOCGRIB2 <$PARMwmo/grib2_awips_href_${NEST}_${type}f${fhr} parm='KWBH'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
   then
-    cp xtrn.${cycle}.href.${NEST}_${type}_${fhr} $PCOM/grib2.t${cyc}z.awphref_${NEST}_${type}_f${fhr}_${cyc}
+    cp xtrn.${cycle}.href.${NEST}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awphref_${NEST}_${type}_f${fhr}_${cyc}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW HREF_AWIPS $job $PCOM/grib2.t${cyc}z.awphref_${NEST}_${type}_f${fhr}_${cyc}
+    $DBNROOT/bin/dbn_alert NTC_LOW HREF_AWIPS $job $COMOUT/grib2.t${cyc}z.awphref_${NEST}_${type}_f${fhr}_${cyc}
   fi
 
 done

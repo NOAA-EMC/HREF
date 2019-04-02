@@ -44,22 +44,22 @@ export SENDDBN=${SENDDBN:-YES}
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export USHhref=${USHhref:-$HOMEhref/ush}
-export PARMutil=${PARMutil:-$HOMEhref/util/parm}
+export PARMwmo=${PARMwmo:-$HOMEhref/parm/wmo}
 
 # Run setpdy and initialize PDY variables
 setpdy.sh
 . PDY
 
 if [ "$RUN_ENVIR" != nco ] ; then
- export PCOM=${PCOM:-${MYCOMROOT}/${NET}/${envir}/awip}
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/ensprod}
+ export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/wmo}
 else
- export PCOM=${PCOM:-${PCOMROOT:?}/${RUN}}
  export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod}
+ export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/wmo}
 fi
 
-if [ ! -f $PCOM ] ; then
-  mkdir -p -m 775 $PCOM
+if [ ! -f $COMOUT ] ; then
+  mkdir -p -m 775 $COMOUT
 fi
 
 #################################################################
@@ -68,5 +68,7 @@ $HOMEhref/scripts/exhref_awips.sh.ecf
 #################################################################
 
 cd ${DATAROOT}
+echo in AWIPS jobs down here with KEEPDATA $KEEPDATA
+echo in AWIPS jobs down here with DATA $DATA
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 date
