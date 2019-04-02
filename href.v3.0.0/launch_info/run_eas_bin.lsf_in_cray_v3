@@ -17,7 +17,7 @@ module load prod_util/v1.0.22
 
 export SENDCOM=YES
 export MP_LABELIO=yes
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 
 # export HOMEhref=/meso/save/Matthew.Pyle/blake_sseox
