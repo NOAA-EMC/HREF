@@ -99,6 +99,7 @@ fi
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT/ensprod
  mkdir -p $COMOUT/verf_g2g
+ mkdir -p $COMOUT/wmo
 fi
 
 if [ ! -d $COMOUTPERM ] ; then 

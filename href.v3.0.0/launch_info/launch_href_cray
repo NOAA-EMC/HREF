@@ -112,7 +112,7 @@ fi
 
 cat run_nawips.sh_in_cray  | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_nawips_${cyc}_${dom}
 
-cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_awips_${cyc}
+cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_awips_${cyc}_${dom}
 
 ## EAS stuff
 
@@ -148,7 +148,7 @@ sleep 1200
 
 bsub < launch_nawips_${cyc}_${dom}
 
-sleep 3600
+sleep 1200
 
-bsub < launch_awips_${cyc}
-bsub < launch_gempaksend_${cyc}
+bsub < launch_awips_${cyc}_${dom}
+bsub < launch_gempaksend_${cyc}_${dom}
