@@ -131,7 +131,7 @@ cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch
 
 if [ $dom = "conus" ]
 then
-cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}
+cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}_v3
 chmod 775 launch_gempaksend_${cyc}
 
 # avoid EAS for time being
@@ -161,9 +161,9 @@ bsub < launch_hrefrunpoe_${cyc}
 
 # sleep 300
 
-# bsub < launch_nawips_${cyc}
+# bsub < launch_nawips_${cyc}_v3
 
 # sleep 3000
 
-# bsub < launch_awips_${cyc}
-# bsub < launch_gempaksend_${cyc}
+# bsub < launch_awips_${cyc}_v3
+# bsub < launch_gempaksend_${cyc}_v3
