@@ -1800,11 +1800,12 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 	  vrbl_mn_use(JJJ)=vrbl_mn(JJJ,Lm)*slr_derv(JJJ)
           enddo
 	 
-	write(0,*) 'min/max of SNOW field ', minval(vrbl_mn_use),
+	write(0,*) 'min/max of test SNOW field ', minval(vrbl_mn_use),
      +                                       maxval(vrbl_mn_use)
-          call packGB2_mean(imean,isprd,vrbl_mn_use,vrbl_sp,   !jpd12 is determined inside 
-     +          nv,jpd1,jpd2loc,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
+
+!          call packGB2_mean(imean,isprd,vrbl_mn_use,vrbl_sp,   !jpd12 is determined inside 
+!     +          nv,jpd1,jpd2loc,jpd10,jpd27,jf,Lm,
+!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
 
         endif
 
