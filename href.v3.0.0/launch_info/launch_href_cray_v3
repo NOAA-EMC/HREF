@@ -37,14 +37,6 @@ export COMINhrrr=${COMROOTp2}/hrrr/prod/hrrr
 export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr
 export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3
 
-
-# if [ -e /gpfs/gd1 ]
-# then
-# export COMINfv3=/gpfs/gd1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
-# else
-# export COMINfv3=/gpfs/td1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
-# fi
-
 vers=`cat ~/href_exp`
 
 echo vers is $vers
@@ -86,7 +78,7 @@ done
 fi
 
 
-cat runpoe.sh_in_cray_fv3 | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+cat runpoe.sh_in_cray_v3 | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
 
 # elif [ $NEST = "hi" ]
 # then
