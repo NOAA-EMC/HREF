@@ -113,7 +113,7 @@ if (dom == 'conus'):
   coeffs_file_hrrr = COMOUTcal + '/pqpf_6h_coeffs_hrrr.csv'
 
 # directory for matched pairs files needed for calibration
-os.system("mkdir -p " + COMOUTcalib+"/sseox")
+os.system("mkdir -p " + COMOUTcalib+"/href")
 os.system("mkdir -p " + COMOUTcalib+"/realtimecoeffs")
 
 # where to store climo netCDF files
@@ -191,7 +191,7 @@ for fstart in fstarts:
 
   for mem in members:
     print 'Working with',mem,'members...'
-    climonc = COMOUTcalib+'/sseox/'+mem+'_qpf6_%02d'%fend+'.nc'
+    climonc = COMOUTcalib+'/href/'+mem+'_qpf6_%02d'%fend+'.nc'
 
     print '6-h QPF ending FHR',fend
     if not os.path.exists(climonc):
@@ -253,7 +253,7 @@ for fstart in fstarts:
         print itime, fhr3, fend
         ijul = dt2jul(itime.year,itime.month,itime.day)
         if (dom == 'conus'):
-          hrefdir = COMOUTclimo + '/sseox/qpf/conus/%i'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'%02d'%itime.hour
+          hrefdir = COMOUTclimo + '/href/qpf/conus/%i'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'%02d'%itime.hour
         if (mem == 'arw'):
           hreffile3 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
@@ -382,7 +382,7 @@ for mem in members:
   nc.close()
   for fstart in fstarts:
     fend = fstart+forecast_length
-    climonc = COMOUTcalib+'/sseox/'+mem+'_qpf6_%02d'%fend+'.nc'
+    climonc = COMOUTcalib+'/href/'+mem+'_qpf6_%02d'%fend+'.nc'
 
     print 'Reading time-matched QPF/QPE: FHRs',fstart,'-',fend
     nc = Dataset(climonc,'r')

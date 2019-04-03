@@ -29,12 +29,13 @@ export envir=test
 export cyc=_CYC_
 export dom=_DOM_
 
-export COMINcal=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/cal
-export COMINcalib=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/calib
-export COMINclimo=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/climo
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
+
+export COMINcal=${MYCOMROOTPERM}/hiresw/calib
+export COMINcalib=${MYCOMROOTPERM}/hiresw/calib
+export COMINclimo=${MYCOMROOTPERM}/hiresw/climo_bin
 
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
-export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
 export DATA=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd/href_easbinv3_${dom}_${cyc}_${envir}
 

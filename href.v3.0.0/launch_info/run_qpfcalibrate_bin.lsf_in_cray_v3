@@ -29,10 +29,13 @@ DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
-export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_expv3
-export COMINcalib=${COMOUT}/../calib_bin
-export COMINcal=${COMOUT}/../cal_bin
-export COMINclimo=${COMOUT}/../climo_bin
+export COMOUT=${MYCOMROOT}/hiresw/${RUN_ENVIR}/href.${DATE}_expv3
+export COMINcalib=${MYCOMROOTPERM}/hiresw/calib
+export COMOUTcalib=${MYCOMROOTPERM}/hiresw/calib
+export COMINcal=${MYCOMROOTPERM}/hiresw/calib
+export COMOUTcal=${MYCOMROOTPERM}/hiresw/calib
+export COMINclimo=${MYCOMROOTPERM}/hiresw/climo_bin
+export COMOUTclimo=${MYCOMROOTPERM}/hiresw/climo_bin
 export dom=conus
 
 export DATA=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd/href_qpfcalib_bin_${cyc}_${envir}

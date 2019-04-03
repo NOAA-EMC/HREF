@@ -32,9 +32,9 @@ export dom=conus
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
-export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_exp
+export COMOUT=${MYCOMROOT}/hiresw/${RUN_ENVIR}/href.${DATE}_exp
 export DATA=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd/href_qpfclimo_bin_${cyc}_${envir}
-export COMINclimo=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/climo_bin
+export COMINclimo=$MYCOMROOTPERM/hiresw/climo_bin
 
 $HOMEhref/jobs/JHREF_QPFCLIMO_BIN_cray
 
