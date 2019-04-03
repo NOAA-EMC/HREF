@@ -370,6 +370,9 @@ for mem in members:
   if (dom == 'conus'):
     l = nc.variables['LAND_GDS3_SFC'][:]	# The variable that was in the .nc file
     print 'landmask var has shape : ', np.shape(l)
+    lnew = np.transpose(l)
+    l = lnew
+    print ' after transpose, landmask var has shape : ', np.shape(l)
   elif (dom == 'alaska'):
     l = nc.variables['LAND_GDS5_SFC'][:]	# The variable that was in the .nc file
   nc.close()
