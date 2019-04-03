@@ -1,0 +1,48 @@
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_awips_NEST___CYC_.out_v3
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_awips_NEST___CYC_.err_v3
+#BSUB -q "devhigh"
+#BSUB -J AWIPSHREFV3__CYC_
+#BSUB -P HRW-T2O
+#BSUB -M 3000
+#BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
+####BSUB -extsched 'CRAYLINUX[]'
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}'
+#BSUB -W 0:40
+
+export KEEPDATA=NO
+
+
+export RUN_ENVIR=test
+export envir=test
+export SUB_ENVIR=dev
+export cyc=_CYC_
+export NEST=_NEST_
+
+export OMP_NUM_THREADS=1
+export MP_TASK_AFFINITY=core:1
+export MP_MPILIB=mpich2
+export KMP_AFFINITY=disabled
+export OMP_NUM_THREADS=1
+
+module load prod_envir
+
+export COMROOT=/gpfs/hps/nco/ops/com
+export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
+export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
+export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
+
+
+# export COMOUT=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/${RUN_ENVIR}/href.${DATE}_expv3/wmo
+# mkdir -p $COMOUT
+
+module load grib_util/1.1.0
+module load prod_util
+
+href_ver=`cat /u/$LOGNAME/href_exp`
+
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/$LOGNAME/git_repo/EMC_hrw/href.${href_ver}
+
+export SENDCOM=YES
+export SENDDBN=NO
+
+${HOMEhref}/jobs/JHREF_AWIPS_V3
