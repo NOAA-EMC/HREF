@@ -27,7 +27,7 @@ export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
 export COMINpcpanl=${COMROOTp2}/pcpanl/prod
 export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
 export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
-export COMINclimo=${COMOUT}/../climo_bin
+# export COMINclimo=${COMOUT}/../climo_bin
 
 export HOMEhref=${HOMEhref:-/nw${envir}/href.${model_ver}}
 export EXEChref=${EXEChref:-$HOMEhref/exec}

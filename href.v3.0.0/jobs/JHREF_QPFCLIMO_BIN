@@ -90,7 +90,7 @@ export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
 
 export COMINpcpanl=/com2/pcpanl/prod
 export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
-export COMINclimo=${COMOUT}/../climo_bin
+# export COMINclimo=${COMOUT}/../climo_bin
 
 python ${HOMEhref}/scripts/build_qpf_climo_bin.py 
 ########################################################
