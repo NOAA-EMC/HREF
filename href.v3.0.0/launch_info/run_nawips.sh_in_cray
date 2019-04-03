@@ -6,7 +6,7 @@
 #BSUB -M 1000
 #BSUB -W 1:29
 #BSUB -cwd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/
-#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 3*{select[craylinux && vnode]span[ptile=3] cu[type=cabinet]}' rusage[mem=14000]
+#BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 5*{select[craylinux && vnode]span[ptile=5] cu[type=cabinet]}' rusage[mem=14000]
 
 export RUN_ENVIR=test
 export envir=test
@@ -14,9 +14,9 @@ export SUB_ENVIR=dev
 export cyc=_CYC_
 export NEST=_NEST_
 
-# export NODES=1
-export PTILE=3
-export TASKS=3
+export NODES=1
+export PTILE=5
+export TASKS=5
 
 export DATAROOT=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd
 export COMROOT=/gpfs/tp2/nco/ops/com/
@@ -34,4 +34,4 @@ export SENDCOM=YES
 export SENDDBN=NO
 export KEEPDATA=NO
 
-${HOMEhref}/jobs/JHREF_GEMPAK_FFAIR
+${HOMEhref}/jobs/JHREF_GEMPAK

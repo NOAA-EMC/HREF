@@ -141,6 +141,9 @@ coeffs_file_nssl = COMINcal + '/pqpf_6h_coeffs_nssl.csv'
 coeffs_file_nam = COMINcal + '/pqpf_6h_coeffs_nam.csv' 
 coeffs_file_hrrr = COMINcal + '/pqpf_6h_coeffs_hrrr.csv' 
 
+
+print 'coeffs_file_arw is : ', coeffs_file_arw
+
 # accumulation interval (hours)
 fcst_hour = int(sys.argv[1])
 qpf_interval = int(sys.argv[2])

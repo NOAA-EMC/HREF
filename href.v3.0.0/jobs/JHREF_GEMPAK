@@ -71,10 +71,10 @@ setpdy.sh
 . PDY
 
 if [ "$RUN_ENVIR" != nco ] ; then
- export COMOUT=${COMOUT:-${MYCOMROOT}/nawips/${envir}/${RUN}.${PDY}_exp}
+ export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_exp/nawips}
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/ensprod}
 else
- export COMOUT=${COMOUT:-${COMROOT}/nawips/${envir}/href.${PDY}}
+ export COMOUT=${COMOUT:-${COMROOT}/hiresw/${envir}/href.${PDY}/nawips}
  export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
 fi
 
@@ -94,7 +94,7 @@ echo "$HOMEhref/scripts/exnawips_href.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>p
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
 
-aprun -N $PTILE -n $((NODES*PTILE)) cfp poescript
+aprun -N $PTILE -n $PTILE cfp poescript
 export err=$?; err_chk
 
 cat $DATA/${NEST}_mean.$$
