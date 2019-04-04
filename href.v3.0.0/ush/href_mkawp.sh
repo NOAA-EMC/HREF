@@ -36,7 +36,17 @@ for fhr in $runhrs
 do
   # Processing AWIPS grid 227 
 
+  if [ $type = "prob" ]
+  then
+# also want EAS prob
+  cp ${COMIN}/href.t${cyc}z.${NEST}.eas.f${fhr}.grib2 .
+  cp ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+
+  cat href.t${cyc}z.${NEST}.eas.f${fhr}.grib2 >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+
+  else
   ln -sf ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  fi
 
   $GRBINDEX href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i 
   export pgm=tocgrib2
