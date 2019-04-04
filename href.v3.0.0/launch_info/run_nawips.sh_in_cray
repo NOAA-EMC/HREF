@@ -14,7 +14,7 @@ export SUB_ENVIR=dev
 export cyc=_CYC_
 export NEST=_NEST_
 
-export NODES=1
+# export NODES=1
 export PTILE=5
 export TASKS=5
 
@@ -24,6 +24,7 @@ export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 
 module load grib_util
 module load prod_util
+module load cfp-intel-sandybridge/2.0.1
 module load gempak/7.3.0
 
 href_ver=`cat /u/$LOGNAME/href_exp`
