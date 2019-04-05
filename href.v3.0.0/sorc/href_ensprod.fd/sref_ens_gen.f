@@ -120,6 +120,7 @@ C
      &                   gfld_ri, gfld_lightning
 C  raw data
       real,allocatable,dimension(:,:,:)   :: rawdata_mn, rawdata_pr   !jf,iens, maxmlvl
+      real,allocatable,dimension(:,:,:) :: rawdata_mn_2d
       real,allocatable,dimension(:,:,:)   :: precip                   !jf,iens, number of fcst output files
       real,allocatable,dimension(:,:,:)   :: mrk_ice                  !jf,iens, number of fcst output files
       real,allocatable,dimension(:,:,:)   :: mrk_frz                  !jf,iens, number of fcst output files
@@ -130,6 +131,7 @@ C mean
       real,allocatable,dimension(:,:) :: vrbl_mn_pm                 !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_blend              !jf, maxmlvl
       real,allocatable,dimension(:,:) :: derv_mn                    !jf, maxmlvl
+      real,allocatable,dimension(:,:) :: vrbl_mn_2d, vrbl_lpm_2d
 
 C spread
       real,allocatable,dimension(:,:) :: vrbl_sp                    !jf, maxmlvl
@@ -161,6 +163,8 @@ C others
        integer,allocatable,dimension(:,:)   :: missing                 ! to deal with missing data 
        integer,allocatable,dimension(:)     :: miss
        real,allocatable,dimension(:) ::           apoint               !iens
+
+       integer :: patch_nx, patch_ny, ovx, ovy
 
 C for get grib size jf=im*jm
   
@@ -210,7 +214,7 @@ c   for max,min,10,25,50,90% mean products
         Character*1 qMsignal(maxvar)
         Integer qMlvl(maxvar), qMeanLevel(maxvar,maxmlvl)
         
-        real  weight(30)                               
+        real  weight(30), gauss_sig                         
         character*20 filenames
         character*3 cfhr                                       
         integer est                                 !east time for convection code
@@ -987,6 +991,52 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                !Currently, only for APCP, REFD,REFC and RETOP 
                call pmatch_mean(vname(nv),rawdata_mn,vrbl_mn,
      &             k4(nv),k5(nv),k6(nv),vrbl_mn_pm,lv,lm,jf,iens)
+
+
+               patch_nx=6
+               patch_ny=6
+               ovx=patch_nx*5
+               ovy=patch_ny*5
+               filt_min=0.01
+               gauss_sig=2.0
+
+
+!!! recast what is being passed in here as 2D arrays
+                  
+               allocate(vrbl_mn_2d(im,jm))
+               allocate(vrbl_lpm_2d(im,jm))
+               allocate(rawdata_mn_2d(im,jm,iens))
+
+!	       do JJ=1,jm
+!               do II=1,im
+!                 I1D=(JJ-1)*IM+II
+!                 vrbl_mn_2d(II,JJ)=vrbl_mn(I1D,1)
+!               enddo
+!               enddo
+!
+!               do I=1,iens
+!	       do JJ=1,jm
+!               do II=1,im
+!                 I1D=(JJ-1)*IM+II
+!                 rawdata_mn_2d(II,JJ,I)=rawdata_mn(I1D,I,1)
+!               enddo
+!               enddo
+!               enddo
+!
+	write(0,*) 'call to lpm'
+!tmp               call lpm(im,jm,iens,patch_nx,patch_ny,filt_min,
+!tmp     &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
+	write(0,*) 'return from lpm'
+
+	       do JJ=1,jm
+               do II=1,im
+                 I1D=(JJ-1)*IM+II
+!notyet                 vrbl_mn_pm(I1D,1)=vrbl_lpm_2d(II,JJ)
+               enddo
+               enddo
+
+	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
+
 
                write(6,*) 'minval(vrbl_mn_pm): ', minval(vrbl_mn_pm)
                write(6,*) 'maxval(vrbl_mn_pm): ', maxval(vrbl_mn_pm)

@@ -19,6 +19,7 @@ SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
 	get_mxp.f mxp.f packGB2_mxp.f packGB2_max.f packGB2_spag.f \
 	get_cptp_severe.f calibrate2_hrly_rgn3.f calibrate2_dryt.f  calibrate2_svr.f calibrate2.f \
 	meanwind.f meanomeg.f fosberg.f get_fosberg.f get_wind_rh_joint_prob.f pmatch_mean.f \
+        pmatch_mean_loc.f lpm.f \
 	snow4href.f get_time_packGB2.f
 
 OBJ=${SRCS:.f=.o}
