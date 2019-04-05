@@ -1,121 +1,140 @@
-	subroutine pmatch_mean_loc(rawdata_mn,vrbl_mn,
-     &         jpd1,jpd2,jpd10,vrbl_mn_pm,lv,lm,jf,im,jm,
+	subroutine pmatch_mean_loc(isize,jsize,rawdata_1d,vrbl_mn_2d,
+     &         vrbl_mn_pm_2d,
      &         ips,ipe,jps,jpe,iens)
 
-! recode to make it easy to consider a 2D subset of grid?
-!  rawdata_mn(im,jm,iens)
-!  vrbl_mn(im,jm)
 !  
 ! but ultimately easier to work with a 1D dataset to sort
 !
-        integer :: ips,ipe,jps,jpe
-	real :: rawdata_mn(jf,iens,lm),vrbl_mn(jf,lm),vrbl_mn_pm(jf,lm)
-        real, allocatable :: rawdata_mn_loc(:,:,:)
+        integer, intent(in) :: ips,ipe,jps,jpe, isize,jsize, iens
+!	real :: vrbl_mn(jf,lm),vrbl_mn_pm(jf,lm)
 
-	real, allocatable :: rawdata_1d(:),vrbl_mn_hold(:,:)
+	real, allocatable :: vrbl_mn_hold(:)
         integer, allocatable :: listorderfull(:),listorder(:)
         integer :: iplace,lm,lf,jf,JJ
-        integer :: ibound_max, ibound_min, im,jm
+        integer :: ibound_max, ibound_min
         real:: amin,amax
+        real :: rawdata_1d(isize*jsize*iens)
+        real :: vrbl_mn(isize*jsize)
+        real :: vrbl_mn_2d(isize,jsize)
+        real :: vrbl_mn_pm_2d(isize,jsize)
+        real :: vrbl_mn_pm(isize*jsize)
 
-        allocate(listorderfull(jf*iens))
-        allocate(listorder(jf))
-	allocate(rawdata_1d(jf*iens))
-        allocate(vrbl_mn_hold(jf,lm))
-        allocate(rawdata_mn_loc(jf,iens,lm))
+        isize_alt=ipe-ips+1
+        jsize_alt=jpe-jps+1
 
-! set local copy to rawdata_mn
-	rawdata_mn_loc=rawdata_mn
-
-        do I=1,iens
-        do J=1,jf
-        listorder(J)=J
-        listorderfull((I-1)*jf+J)=(I-1)*jf+J
-	
-! force reflectivity type fields to be zero
-         if(jpd1.eq.16.and.(jpd2.eq.195 
-     &                 .or. jpd2.eq.196
-     &                 .or. jpd2.eq.198) .and. 
-     &   rawdata_mn(J,I,lv) .lt. 0.) then
-
-        rawdata_1d((I-1)*jf+J)=0.
-        rawdata_mn_loc(J,I,lv)=0.
-        else
-        rawdata_1d((I-1)*jf+J)=rawdata_mn(J,I,lv)
+	if (isize .ne. isize_alt) then
+	write(0,*) 'mismatch...isize, isize_alt: ', isize, isize_alt
         endif
 
+        jf_loc=isize*jsize
+
+        allocate(listorderfull(jf_loc*iens))
+        allocate(listorder(jf_loc))
+        allocate(vrbl_mn_hold(jf_loc))
+
+! get a 1D array of the mean from the 2D subset
+
+        vrbl_mn = RESHAPE(vrbl_mn_2d, (/isize*jsize/))
+
+        do I=1,iens
+        do JJ=jps,jpe
+        do II=ips,ipe
+!
+        J=(JJ-JPS)*ISIZE+(II-IPS+1)
+
+        Jglb=(JJ-1)*IM + II
+
+
+        listorder(J)=J
+        listorderfull((I-1)*jf_loc+J)=(I-1)*jf_loc+J
+	
+! force reflectivity type fields to be zero
+!         if(jpd1.eq.16.and.(jpd2.eq.195 
+!     &                 .or. jpd2.eq.196
+!     &                 .or. jpd2.eq.198) .and. 
+!     &   rawdata_mn(J,I,lv) .lt. 0.) then
+!
+!        rawdata_1d((I-1)*jf_loc+J)=0.
+!        rawdata_mn_loc(J,I,lv)=0.
+!        else
+!        rawdata_1d((I-1)*jf_loc+J)=rawdata_mn(J,I,lv)
+!        endif
+
+        enddo
         enddo
         enddo
 
         vrbl_mn_hold=vrbl_mn
 
 ! first sort just getting the listorder from vrbl_mn.  The sorted vrbl_mn is not reused.
-        call quick_sort(vrbl_mn,listorder,jf)
+        call quick_sort(vrbl_mn,listorder,jf_loc)
 ! second sort puts rawdata_1d in order.  listorderfull ignored 
-        call quick_sort(rawdata_1d,listorderfull,iens*jf)
+        call quick_sort(rawdata_1d,listorderfull,iens*jf_loc)
 
-!        write(0,*) 'min,maxval(rawdata_mn): ',minval(rawdata_mn(:,:,lv))
-!     &                                       ,maxval(rawdata_mn(:,:,lv))
-!        write(0,*) 'min,maxval(rawdata_mn_loc): ', 
-!     &  minval(rawdata_mn_loc(:,:,lv)),maxval(rawdata_mn_loc(:,:,lv))
-!        write(0,*) 'minval(vrbl_mn(:,lv)): ',minval(vrbl_mn(:,lv))
-!        write(0,*) 'maxval(vrbl_mn(:,lv)): ',maxval(vrbl_mn(:,lv))
-!        write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
-!        write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
+         write(0,*) 'minval(vrbl_mn(:)): ',minval(vrbl_mn(:))
+         write(0,*) 'maxval(vrbl_mn(:)): ',maxval(vrbl_mn(:))
+         write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
+         write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
 
-        vrbl_mn_pm(:,lv)=-999.
+        vrbl_mn_pm(:)=-999.
 
         ibound_max=0
         ibound_min=0
 
-      ens_loop:  do J=1,jf*(iens),iens    ! loop over full ensemble, skipping
+      ens_loop:  do J=1,jf_loc*(iens),iens    ! loop over full ensemble, skipping
 
          I=1+(J-1)/(iens)
          iplace=listorder(I)
 
 !!!  use unsorted version if looking at iplace
 
-         if(jpd1.eq.1.and.jpd2.eq.8.and.jpd10.eq.1.and.     !APCP
-     +     vrbl_mn_hold(iplace,lv).eq.0) then
-          vrbl_mn_pm(iplace,lv)=0.
-          cycle ens_loop
+         if(vrbl_mn_hold(iplace).eq.0) then     ! was just APCP...removed pds checks as not passed
+            vrbl_mn_pm(iplace)=0.
+            cycle ens_loop
          end if
 
          amin=9999. 
          amax=-9999.
          do JJ=1,iens
-          if (rawdata_mn_loc(iplace,JJ,lv) .gt. amax) then
-                amax=rawdata_mn_loc(iplace,JJ,lv)
+          if (rawdata_1d(iplace*JJ) .gt. amax) then
+                amax=rawdata_1d(iplace*JJ)
           endif
-          if (rawdata_mn_loc(iplace,JJ,lv) .lt. amin) then
-                amin=rawdata_mn_loc(iplace,JJ,lv)
+          if (rawdata_1d(iplace*JJ) .lt. amin) then
+                amin=rawdata_1d(iplace*JJ)
           endif
          enddo
  
 !!!!!!!!!!!!!!!!!!!!!!!!!!
          if (rawdata_1d(J) .gt. amax) then
-          vrbl_mn_pm(iplace,lv)=amax 
+          vrbl_mn_pm(iplace)=amax 
           ibound_max=ibound_max+1
          elseif (rawdata_1d(J) .lt. amin) then
-          vrbl_mn_pm(iplace,lv)=amin
+          vrbl_mn_pm(iplace)=amin
           ibound_min=ibound_min+1
          else
-          vrbl_mn_pm(iplace,lv)=rawdata_1d(J)
+          vrbl_mn_pm(iplace)=rawdata_1d(J)
          endif
 
       enddo ens_loop
 
 ! restore the mean value for use in possible blending
 
-        vrbl_mn=vrbl_mn_hold
+!        vrbl_mn=vrbl_mn_hold
 
 !	write(0,*) 'ibound_min: ', ibound_min
 !	write(0,*) 'ibound_max: ', ibound_max
 
+
+! put PM mean back on 2D
+        do JJ=jps,jpe
+        do II=ips,ipe
+          I1D=(JJ-1)*isize+II
+          vrbl_mn_pm_2d(II,JJ)=vrbl_mn_pm(I1D)
+        enddo
+        enddo
+
 	deallocate(listorderfull)
         deallocate(listorder)
-        deallocate(rawdata_1d)
         deallocate(vrbl_mn_hold)
-        deallocate(rawdata_mn_loc)
 
 	end subroutine pmatch_mean_loc

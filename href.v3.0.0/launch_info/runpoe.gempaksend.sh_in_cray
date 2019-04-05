@@ -58,7 +58,9 @@ setpdy.sh
 echo PDY $PDY
 echo PDYm2 $PDYm2
 
-cd ${MYCOMROOT}/nawips/test/href.${PDY}_exp/
+# cd ${MYCOMROOT}/nawips/test/href.${PDY}_exp/
+
+cd ${MYCOMROOT}/hiresw/test/href.${PDY}_exp/nawips
 
 ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir -p /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp"
 
