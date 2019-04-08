@@ -43,7 +43,7 @@ echo vers is $vers
 
 DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 
-cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch_info/
+cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.${vers}/launch_info/
 
 if [ $NEST = "conus" ]
 then
@@ -121,30 +121,29 @@ cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch
 
 ## EAS stuff
 
-if [ $dom = "conus" ]
-then
-cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}_v3
-chmod 775 launch_gempaksend_${cyc}
+# if [ $dom = "conus" ]
+# then
+# cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}_v3
+# chmod 775 launch_gempaksend_${cyc}
+# cat run_qpfclimo_bin.lsf_in_cray_v3 |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf
+# cat run_qpfcalibrate_bin.lsf_in_cray_v3 |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf
+# fi
 
-# avoid EAS for time being
-cat run_qpfclimo_bin.lsf_in_cray_v3 |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf
-cat run_qpfcalibrate_bin.lsf_in_cray_v3 |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf
-fi
+# if [ $dom = "conus" -o  $dom = "ak" ]
+# then
+# cat run_eas_bin.lsf_in_cray_v3 |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+# else
+# cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+# fi
 
-if [ $dom = "conus" -o  $dom = "ak" ]
-then
-cat run_eas_bin.lsf_in_cray_v3 |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
-else
-cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
-fi
+# skip EAS
 
-
-if [ $dom = "conus" ]
-then
-bsub < run_qpfclimo_bin.lsf
-else
-bsub < run_eas_bin.lsf_${dom}
-fi
+# if [ $dom = "conus" ]
+# then
+# bsub < run_qpfclimo_bin.lsf
+# else
+# bsub < run_eas_bin.lsf_${dom}
+# fi
 
 
 ## end EAS stuff
