@@ -1007,33 +1007,33 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                allocate(vrbl_lpm_2d(im,jm))
                allocate(rawdata_mn_2d(im,jm,iens))
 
-	       do JJ=1,jm
-               do II=1,im
-                 I1D=(JJ-1)*IM+II
-                 vrbl_mn_2d(II,JJ)=vrbl_mn(I1D,1)
-               enddo
-               enddo
+!	       do JJ=1,jm
+!               do II=1,im
+!                 I1D=(JJ-1)*IM+II
+!                 vrbl_mn_2d(II,JJ)=vrbl_mn(I1D,1)
+!               enddo
+!               enddo
+!
+!               do I=1,iens
+!	       do JJ=1,jm
+!              do II=1,im
+!                I1D=(JJ-1)*IM+II
+!                 rawdata_mn_2d(II,JJ,I)=rawdata_mn(I1D,I,1)
+!               enddo
+!               enddo
+!               enddo
 
-               do I=1,iens
-	       do JJ=1,jm
-              do II=1,im
-                I1D=(JJ-1)*IM+II
-                 rawdata_mn_2d(II,JJ,I)=rawdata_mn(I1D,I,1)
-               enddo
-               enddo
-               enddo
+!	write(0,*) 'call to lpm'
+!               call lpm(im,jm,iens,patch_nx,patch_ny,filt_min,
+!     &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
+!	write(0,*) 'return from lpm'
 
-	write(0,*) 'call to lpm'
-               call lpm(im,jm,iens,patch_nx,patch_ny,filt_min,
-     &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
-	write(0,*) 'return from lpm'
-
-	       do JJ=1,jm
-               do II=1,im
-                 I1D=(JJ-1)*IM+II
-                 vrbl_mn_pm(I1D,1)=vrbl_lpm_2d(II,JJ)
-               enddo
-               enddo
+!	       do JJ=1,jm
+!               do II=1,im
+!                 I1D=(JJ-1)*IM+II
+!                 vrbl_mn_pm(I1D,1)=vrbl_lpm_2d(II,JJ)
+!               enddo
+!               enddo
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
 
