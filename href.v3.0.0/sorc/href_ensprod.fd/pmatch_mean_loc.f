@@ -2,9 +2,6 @@
      &         vrbl_mn_pm_2d,
      &         ips,ipe,jps,jpe,iens)
 
-!  
-! but ultimately easier to work with a 1D dataset to sort
-!
         integer, intent(in) :: ips,ipe,jps,jpe, isize,jsize, iens
 !	real :: vrbl_mn(jf,lm),vrbl_mn_pm(jf,lm)
 
