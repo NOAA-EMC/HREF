@@ -44,10 +44,6 @@ fi
 
 export COMINnam=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/nam_input/nam
 
-export PCOM=/gpfs/hps/ptmp/Matthew.Pyle/com/hiresw/awip
-
-mkdir -p $PCOM
-
 export COMINffg=/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/ffg_input
 
 module load grib_util/1.0.3
