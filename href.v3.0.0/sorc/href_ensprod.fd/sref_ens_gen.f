@@ -1024,6 +1024,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
 
 	write(0,*) 'call to lpm'
+
                call lpm(im,jm,iens,patch_nx,patch_ny,filt_min,
      &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
 	write(0,*) 'return from lpm'
