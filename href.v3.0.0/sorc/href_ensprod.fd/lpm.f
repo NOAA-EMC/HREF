@@ -107,6 +107,7 @@
 
 	write(0,*) 'nx, ny: ', nx, ny
 	write(0,*) 'patch_nx, patch_ny: ',patch_nx, patch_ny
+
       ipatches=(nx-3)/float(patch_nx)
       jpatches=(ny-3)/float(patch_ny)
 
