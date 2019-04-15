@@ -7,7 +7,7 @@
 
 	real, allocatable :: vrbl_mn_hold(:)
         integer, allocatable :: listorderfull(:),listorder(:)
-        integer :: iplace,lm,lf,jf,JJ
+        integer :: iplace,lm,lf,jf,JJ,Iloc,Jloc
         integer :: ibound_max, ibound_min
         real:: amin,amax
         real :: rawdata_1d(isize*jsize*iens)
@@ -68,10 +68,10 @@
 ! second sort puts rawdata_1d in order.  listorderfull ignored 
         call quick_sort(rawdata_1d,listorderfull,iens*jf_loc)
 
-         write(0,*) 'minval(vrbl_mn(:)): ',minval(vrbl_mn(:))
-         write(0,*) 'maxval(vrbl_mn(:)): ',maxval(vrbl_mn(:))
-         write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
-         write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
+!         write(0,*) 'minval(vrbl_mn(:)): ',minval(vrbl_mn(:))
+!         write(0,*) 'maxval(vrbl_mn(:)): ',maxval(vrbl_mn(:))
+!         write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
+!         write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
 
         vrbl_mn_pm(:)=-999.
 
@@ -124,9 +124,11 @@
 
 ! put PM mean back on 2D
         do JJ=jps,jpe
+          Jloc=JJ-jps+1
         do II=ips,ipe
-          I1D=(JJ-1)*isize+II
-          vrbl_mn_pm_2d(II,JJ)=vrbl_mn_pm(I1D)
+          Iloc=II-ips+1
+          I1D=(JJ-jps)*isize+(II-ips)
+          vrbl_mn_pm_2d(Iloc,Jloc)=vrbl_mn_pm(I1D)
         enddo
         enddo
 
