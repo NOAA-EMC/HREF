@@ -179,10 +179,9 @@
 ! var0 (as a 1D array)
 ! var2d_enmean (as patch of full 2D)
 
-	write(0,*) 'pmatch_mean_loc w calc_nx,calc_ny: ',calc_nx,calc_ny
-      
-        write(0,*) 'shape(var0): ', shape(var0)
-        write(0,*) 'shape(var2d_enmean): ', shape(var2d_enmean)
+!	write(0,*) 'pmatch_mean_loc w calc_nx,calc_ny: ',calc_nx,calc_ny
+!        write(0,*) 'shape(var0): ', shape(var0)
+!        write(0,*) 'shape(var2d_enmean): ', shape(var2d_enmean)
             CALL pmatch_mean_loc(calc_nx,calc_ny,var0, 
      &                 var2d_enmean(ce_west:ce_east, ce_south:ce_north),
      &                 lpm_calc,ce_west,ce_east,ce_south,ce_north,n_ens)
