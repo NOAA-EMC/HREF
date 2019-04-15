@@ -8,7 +8,7 @@
 	real, allocatable :: vrbl_mn_hold(:)
         integer, allocatable :: listorderfull(:),listorder(:)
         integer :: iplace,lm,lf,jf,JJ,Iloc,Jloc
-        integer :: ibound_max, ibound_min
+        integer :: ibound_max, ibound_min, idiag_print
         real:: amin,amax
         real :: rawdata_1d(isize*jsize*iens)
         real :: vrbl_mn(isize*jsize)
@@ -33,6 +33,15 @@
 
         vrbl_mn = RESHAPE(vrbl_mn_2d, (/isize*jsize/))
 
+	if (maxval(vrbl_mn) .gt. 3500.) then
+          idiag_print=1
+        else
+          idiag_print=0
+        endif
+
+!        write(0,*) 'min,max of vrbl_mn: ', minval(vrbl_mn), 
+!     &       maxval(vrbl_mn)
+
         do I=1,iens
         do JJ=jps,jpe
         do II=ips,ipe
@@ -41,21 +50,20 @@
 
         Jglb=(JJ-1)*IM + II
 
-
         listorder(J)=J
         listorderfull((I-1)*jf_loc+J)=(I-1)*jf_loc+J
 	
 ! force reflectivity type fields to be zero
-!         if(jpd1.eq.16.and.(jpd2.eq.195 
-!     &                 .or. jpd2.eq.196
-!     &                 .or. jpd2.eq.198) .and. 
-!     &   rawdata_mn(J,I,lv) .lt. 0.) then
-!
-!        rawdata_1d((I-1)*jf_loc+J)=0.
-!        rawdata_mn_loc(J,I,lv)=0.
-!        else
-!        rawdata_1d((I-1)*jf_loc+J)=rawdata_mn(J,I,lv)
-!        endif
+         if(jpd1.eq.16.and.(jpd2.eq.195 
+     &                 .or. jpd2.eq.196
+     &                 .or. jpd2.eq.198) .and. 
+     &   rawdata_mn(J,I,lv) .lt. 0.) then
+
+        rawdata_1d((I-1)*jf_loc+J)=0.
+        rawdata_mn_loc(J,I,lv)=0.
+        else
+        rawdata_1d((I-1)*jf_loc+J)=rawdata_mn(J,I,lv)
+        endif
 
         enddo
         enddo
@@ -68,10 +76,13 @@
 ! second sort puts rawdata_1d in order.  listorderfull ignored 
         call quick_sort(rawdata_1d,listorderfull,iens*jf_loc)
 
-!         write(0,*) 'minval(vrbl_mn(:)): ',minval(vrbl_mn(:))
-!         write(0,*) 'maxval(vrbl_mn(:)): ',maxval(vrbl_mn(:))
-!         write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
-!         write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
+	if (idiag_print .eq. 1) then
+         write(0,*) ' --------  '
+         write(0,*) 'minval(vrbl_mn(:)): ',minval(vrbl_mn(:))
+         write(0,*) 'maxval(vrbl_mn(:)): ',maxval(vrbl_mn(:))
+         write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
+         write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
+	endif
 
         vrbl_mn_pm(:)=-999.
 
@@ -104,7 +115,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!
          if (rawdata_1d(J) .gt. amax) then
           vrbl_mn_pm(iplace)=amax 
-          ibound_max=ibound_max+1
+         ibound_max=ibound_max+1
          elseif (rawdata_1d(J) .lt. amin) then
           vrbl_mn_pm(iplace)=amin
           ibound_min=ibound_min+1
@@ -116,11 +127,10 @@
 
 ! restore the mean value for use in possible blending
 
-!        vrbl_mn=vrbl_mn_hold
+        vrbl_mn=vrbl_mn_hold
 
 !	write(0,*) 'ibound_min: ', ibound_min
 !	write(0,*) 'ibound_max: ', ibound_max
-
 
 ! put PM mean back on 2D
         do JJ=jps,jpe
@@ -131,6 +141,11 @@
           vrbl_mn_pm_2d(Iloc,Jloc)=vrbl_mn_pm(I1D)
         enddo
         enddo
+
+	if (idiag_print .eq. 1) then
+          write(0,*) 'maxval(vrbl_mn_pm): ', maxval(vrbl_mn_pm)
+          write(0,*) 'maxval(vrbl_mn_pm_2d): ', maxval(vrbl_mn_pm_2d)
+        endif
 
 	deallocate(listorderfull)
         deallocate(listorder)

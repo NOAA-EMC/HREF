@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefv3poe_NEST___CYC_.out_lpm
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_hrefv3poe_NEST___CYC_.err_lpm
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_hrefv3poe_NEST___CYC_.out_lpm
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_hrefv3poe_NEST___CYC_.err_lpm
 #BSUB -q "devhigh"
 #BSUB -J HREF__CYC_
 #BSUB -P HRW-T2O
@@ -33,7 +33,8 @@ export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 # export COMINhiresw=${COMROOTp2}/hiresw/prod/hiresw
 export COMINhiresw=${COMROOT}/hiresw/prod/hiresw
 export COMINhireswp=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test/hiresw
-# export COMINnam=${COMROOTp2}/nam/prod/nam
+# export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod/nam
+# export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr
 
 # export PCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/awip
 # mkdir -p $PCOM
