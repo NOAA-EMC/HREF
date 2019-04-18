@@ -1000,6 +1000,12 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      &             k4(nv),k5(nv),k6(nv),vrbl_mn_pm,lv,lm,jf,iens)
 
 
+	write(0,*) 'past pmatch_mean with vname(nv): ', vname(nv)
+
+          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+     &        vname(nv).eq.'HGT') then
+
+	write(0,*) 'AP1h/AP3h branch'
                patch_nx=6
                patch_ny=6
                ovx=patch_nx*5
@@ -1044,14 +1050,19 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
                enddo
 
-!tst             call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
-!tst     +           'A','A')
+!             call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
+!     +           'L','L')
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
 
 
             write(6,*) 'min(vrbl_mn_locpm): ', minval(vrbl_mn_locpm)
             write(6,*) 'max(vrbl_mn_locpm): ', maxval(vrbl_mn_locpm)
+
+               else
+               write(0,*) 'skipping  ', vname(nv)
+
+               endif ! lpm variable selection
 
 !	       vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
 !               write(6,*) 'maxval(vrbl_mn_blend): ', 
@@ -1883,9 +1894,14 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
           write(*,*) 'packing PM mean direct var for', nv
 ! LPMM
-          call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,    
+
+          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+     &        vname(nv).eq.'HGT') then
+          call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+
+          endif
 
 ! AVRG
           call packGB2_mean(iavg,isprd,vrbl_mn_blend,vrbl_sp,    
