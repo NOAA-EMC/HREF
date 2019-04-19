@@ -1,6 +1,6 @@
-  37      row variables and mean/spread/prob info
+  38      row variables and mean/spread/prob info
 AP1h   1 8     1 P1  0  A1  0   > A4 12.7 25.4 50.8 76.2
-AP1h   1 8     1 M0     P1  0   > P2 0.25 6.35
+AP1h   1 8     1 L1  0  P1  0   > P2 0.25 6.35
 SN1h   1 13    1 M1  0  K1  0   > K2 2.54 7.62
 REFD  16 195 103 P1 1000    A1 1000 > A3 30 40 50
 MXRF  16 198 103 P1 1000    A1 1000 > A2 40 50
@@ -18,6 +18,7 @@ HLCY  7  8  103  M1  3000 P1 3000 > T3 100 200 400
 LTNG  17 192  1  M0  M1 0 > M1 0.01
 HGT   3  5  100  M5  250 500 700 850 925
 HGT   3  5    1  P1  0
+HGT   3  5    1  L1  0
 SOIM  0 192 106  M1  0 
 SOIT  0  2  106  M1  0 
 U     2  2  100  M5  250 500 700 850 925

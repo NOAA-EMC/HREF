@@ -916,7 +916,8 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
          vrbl_sp=0.
          vrbl_pr=0.
 
-        IF(trim(Msignal(nv)).eq.'M'.or.trim(Msignal(nv)).eq.'P') THEN !P is for Prob-matched mean
+        IF(trim(Msignal(nv)).eq.'M'.or.trim(Msignal(nv)).eq.'P' .or. 
+     &     trim(Msignal(nv)).eq.'L') THEN !P & L for Prob-matched mean
          
          do lv = 1, Mlvl(nv)
           do igrid=1,jf
@@ -986,7 +987,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
               write(6,*) 'igrid = jf block'
                write(6,*) 'nv,k4(nv),k5(nv): ', nv,k4(nv),k5(nv)
               
-              if (trim(Msignal(nv)).eq.'P') then
+            if (trim(Msignal(nv)).eq.'P') then
                write(*,*) 'shape(rawdata_mn): ', shape(rawdata_mn)
                write(*,*) 'shape(vrbl_mn):', shape(vrbl_mn)
                write(*,*) 'shape(vrbl_mn_pm):', shape(vrbl_mn_pm)
@@ -999,11 +1000,16 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                call pmatch_mean(vname(nv),rawdata_mn,vrbl_mn,
      &             k4(nv),k5(nv),k6(nv),vrbl_mn_pm,lv,lm,jf,iens)
 
+	       vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
+               write(6,*) 'maxval(vrbl_mn_blend): ', 
+     &          maxval(vrbl_mn_blend)
+ 
+              endif
 
 	write(0,*) 'past pmatch_mean with vname(nv): ', vname(nv)
 
-          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
-     &        vname(nv).eq.'HGT') then
+              if (trim(Msignal(nv)).eq.'L') then
+
 
 	write(0,*) 'AP1h/AP3h branch'
                patch_nx=6
@@ -1036,12 +1042,9 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
                enddo
 
-	write(0,*) 'call to lpm'
-
                call lpm(im,jm,iens,patch_nx,patch_ny,ovx,ovy,
      &            filt_min,
      &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
-	write(0,*) 'return from lpm'
 
 	       do JJ=1,jm
                do II=1,im
@@ -1050,27 +1053,23 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
                enddo
 
-!             call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
-!     +           'L','L')
+            write(0,*) 'presmooth max(vrbl_mn_locpm): ', 
+     &                  maxval(vrbl_mn_locpm)
+
+             call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
+     +           'L','L')
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
 
 
-            write(6,*) 'min(vrbl_mn_locpm): ', minval(vrbl_mn_locpm)
-            write(6,*) 'max(vrbl_mn_locpm): ', maxval(vrbl_mn_locpm)
-
-               else
-               write(0,*) 'skipping  ', vname(nv)
+            write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 
+     &                  maxval(vrbl_mn_locpm)
 
                endif ! lpm variable selection
 
-!	       vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
-!               write(6,*) 'maxval(vrbl_mn_blend): ', 
-!     &          maxval(vrbl_mn_blend)
 
-
-              endif
-             endif
+              endif ! jf block
+!             endif
 
           end do  !end of igrid loop
   
@@ -1079,7 +1078,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
          end do  !end if Mlvl
 
-        END IF     !End of Msignal(nv)='M' and 'P' 
+        END IF     !End of Msignal(nv)='M' and 'P' and 'L'
 
         IF(trim(Msignal(nv)).eq.'X') THEN   ! Max member value
 
@@ -1883,6 +1882,12 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
         endif
 
 	endif
+        if(trim(Msignal(nv)).eq.'L') then
+! LPMM
+          call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
+     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+        endif
 
         if(trim(Msignal(nv)).eq.'P') then
 !          jpd10=10                                         !specific for probablity-match meaned QPF
@@ -1893,15 +1898,6 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
           write(*,*) 'packing PM mean direct var for', nv
-! LPMM
-
-          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
-     &        vname(nv).eq.'HGT') then
-          call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
-     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
-
-          endif
 
 ! AVRG
           call packGB2_mean(iavg,isprd,vrbl_mn_blend,vrbl_sp,    
