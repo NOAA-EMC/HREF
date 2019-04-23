@@ -136,6 +136,7 @@ else
 cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
 fi
 
+
 if [ $dom = "conus" ]
 then
 bsub < run_qpfclimo_bin.lsf
@@ -147,11 +148,11 @@ fi
 
 bsub < launch_hrefrunpoe_${cyc}
 
-# sleep 300
+sleep 300
 
-# bsub < launch_nawips_${cyc}_v3
+bsub < launch_nawips_${cyc}_v3
 
-# sleep 3000
+sleep 3000
 
-# bsub < launch_awips_${cyc}_v3
-# bsub < launch_gempaksend_${cyc}_v3
+bsub < launch_awips_${cyc}_v3
+bsub < launch_gempaksend_${cyc}_v3

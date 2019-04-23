@@ -1057,7 +1057,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      &                  maxval(vrbl_mn_locpm)
 
              call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
-     +           'L','L')
+     +           'M','M')
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
 
