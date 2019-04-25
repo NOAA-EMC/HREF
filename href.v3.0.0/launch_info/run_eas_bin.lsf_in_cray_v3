@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_all_easfrac_bincray.out__CYC___DOM_
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_all_easfrac_bincray.err__CYC___DOM_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bincray.out__CYC___DOM_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_all_easfrac_bincray.err__CYC___DOM_
 #BSUB -q "devhigh"
 #BSUB -J HREF_EASBIN
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 144*{select[craylinux && vnode]span[ptile=12] cu[type=cabinet]}'
@@ -21,7 +21,7 @@ export KEEPDATA=YES
 
 
 # export HOMEhref=/meso/save/Matthew.Pyle/blake_sseox
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
 
 export RUN_ENVIR=test
 export envir=test

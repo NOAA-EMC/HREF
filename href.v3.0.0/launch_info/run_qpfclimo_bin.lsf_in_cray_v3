@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_qpfclimo_bin_v3.out__CYC_
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_qpfclimo_bin_v3.err__CYC_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin_v3.out__CYC_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin_v3.err__CYC_
 #BSUB -q "devhigh"
 #BSUB -J HREF_QPFCLIMO_BIN_V3
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}'
@@ -18,7 +18,7 @@ export SENDCOM=YES
 export MP_LABELIO=yes
 export KEEPDATA=YES
 
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
 export RUN_ENVIR=test
 export envir=test
 
