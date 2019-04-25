@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin_v3.out__CYC_
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfclimo_bin_v3.err__CYC_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_qpfclimo_bin_v3.out__CYC_
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0/logs/test_qpfclimo_bin_v3.err__CYC_
 #BSUB -q "devhigh"
 #BSUB -J HREF_QPFCLIMO_BIN_V3
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}'
@@ -18,7 +18,7 @@ export SENDCOM=YES
 export MP_LABELIO=yes
 export KEEPDATA=YES
 
-export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
+export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.v3.0.0
 export RUN_ENVIR=test
 export envir=test
 
@@ -32,8 +32,10 @@ export dom=conus
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
-export COMOUT=${MYCOMROOT}/hiresw/${RUN_ENVIR}/href.${DATE}_expv3
-export DATA=/gpfs/hps3/ptmp/Matthew.Pyle/tmpnwprd/href_qpfclimo_bin_v3_${cyc}_${envir}
+export COMOUT=${MYCOMROOT}/hiresw/${RUN_ENVIR}/href.${DATE}_lpm
+
+export pid=$$
+export DATA=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd/href_qpfclimo_bin_v3_${cyc}_${envir}.${pid}
 export COMINclimo=${MYCOMROOTPERM}/hiresw/climo_bin
 
 $HOMEhref/jobs/JHREF_QPFCLIMO_BIN_cray_v3

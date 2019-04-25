@@ -38,7 +38,7 @@ export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-/tmpnwprd2/href_qpfcalibrate_${cyc}_${envir}}
+export DATA=${DATA:-/tmpnwprd2/href_qpfcalibrate_${cyc}_${envir}.${pid}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA 
