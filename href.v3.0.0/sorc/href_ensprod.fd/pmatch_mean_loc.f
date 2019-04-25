@@ -2,29 +2,20 @@
      &         vrbl_mn_pm_2d,
      &         ips,ipe,jps,jpe,iens)
 
-!  
-! but ultimately easier to work with a 1D dataset to sort
-!
         integer, intent(in) :: ips,ipe,jps,jpe, isize,jsize, iens
 !	real :: vrbl_mn(jf,lm),vrbl_mn_pm(jf,lm)
 
 	real, allocatable :: vrbl_mn_hold(:)
         integer, allocatable :: listorderfull(:),listorder(:)
-        integer :: iplace,lm,lf,jf,JJ
-        integer :: ibound_max, ibound_min
+        integer :: iplace,lm,lf,jf,JJ,Iloc,Jloc, ind
+        integer :: ibound_max, ibound_min, idiag_print
         real:: amin,amax
         real :: rawdata_1d(isize*jsize*iens)
+        real :: rawdata_1d_hold(isize*jsize*iens)
         real :: vrbl_mn(isize*jsize)
         real :: vrbl_mn_2d(isize,jsize)
         real :: vrbl_mn_pm_2d(isize,jsize)
         real :: vrbl_mn_pm(isize*jsize)
-
-        isize_alt=ipe-ips+1
-        jsize_alt=jpe-jps+1
-
-	if (isize .ne. isize_alt) then
-	write(0,*) 'mismatch...isize, isize_alt: ', isize, isize_alt
-        endif
 
         jf_loc=isize*jsize
 
@@ -36,14 +27,14 @@
 
         vrbl_mn = RESHAPE(vrbl_mn_2d, (/isize*jsize/))
 
+        idiag_print = 0
+
+
         do I=1,iens
         do JJ=jps,jpe
         do II=ips,ipe
 !
         J=(JJ-JPS)*ISIZE+(II-IPS+1)
-
-        Jglb=(JJ-1)*IM + II
-
 
         listorder(J)=J
         listorderfull((I-1)*jf_loc+J)=(I-1)*jf_loc+J
@@ -65,16 +56,23 @@
         enddo
 
         vrbl_mn_hold=vrbl_mn
+        rawdata_1d_hold=rawdata_1d
 
 ! first sort just getting the listorder from vrbl_mn.  The sorted vrbl_mn is not reused.
         call quick_sort(vrbl_mn,listorder,jf_loc)
 ! second sort puts rawdata_1d in order.  listorderfull ignored 
         call quick_sort(rawdata_1d,listorderfull,iens*jf_loc)
 
+	if (idiag_print .eq. 1) then
+         write(0,*) ' --------  '
          write(0,*) 'minval(vrbl_mn(:)): ',minval(vrbl_mn(:))
          write(0,*) 'maxval(vrbl_mn(:)): ',maxval(vrbl_mn(:))
          write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
          write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
+         write(0,*) 'rawdata_1d(iens*jf_loc): ', rawdata_1d(iens*jf_loc)
+
+         write(0,*) 'jf_loc*iens: ', jf_loc*iens
+	endif
 
         vrbl_mn_pm(:)=-999.
 
@@ -93,17 +91,22 @@
             cycle ens_loop
          end if
 
+! either this production of amax/amin or the application of it below is wrong
+
          amin=9999. 
          amax=-9999.
          do JJ=1,iens
-          if (rawdata_1d(iplace*JJ) .gt. amax) then
-                amax=rawdata_1d(iplace*JJ)
+
+          ind=iplace+(JJ-1)*jf_loc
+
+          if (rawdata_1d_hold(ind) .gt. amax) then
+                amax=rawdata_1d_hold(ind)
           endif
-          if (rawdata_1d(iplace*JJ) .lt. amin) then
-                amin=rawdata_1d(iplace*JJ)
+          if (rawdata_1d_hold(ind) .lt. amin) then
+                amin=rawdata_1d_hold(ind)
           endif
          enddo
- 
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!
          if (rawdata_1d(J) .gt. amax) then
           vrbl_mn_pm(iplace)=amax 
@@ -119,17 +122,15 @@
 
 ! restore the mean value for use in possible blending
 
-!        vrbl_mn=vrbl_mn_hold
-
-!	write(0,*) 'ibound_min: ', ibound_min
-!	write(0,*) 'ibound_max: ', ibound_max
-
+        vrbl_mn=vrbl_mn_hold
 
 ! put PM mean back on 2D
         do JJ=jps,jpe
+          Jloc=JJ-jps+1
         do II=ips,ipe
-          I1D=(JJ-1)*isize+II
-          vrbl_mn_pm_2d(II,JJ)=vrbl_mn_pm(I1D)
+          Iloc=II-ips+1
+          I1D=(JJ-jps)*isize+Iloc
+          vrbl_mn_pm_2d(Iloc,Jloc)=vrbl_mn_pm(I1D)
         enddo
         enddo
 

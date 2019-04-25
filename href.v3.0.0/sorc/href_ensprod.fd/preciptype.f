@@ -77,11 +77,14 @@ c    for derived variables
              miss(irun)=1
              mbrs=mbrs - 1
              cycle loop101
+             write(0,*) 'set miss for irun: ', irun
            end if
           end do
          end do loop101
 
          write(0,*) 'Get ptype data done '
+
+! eliminate these prints?
 
 	do irun=1,iens
           write(0,*) 'irun, min/maxval(prcptype(:,irun,1))' , 

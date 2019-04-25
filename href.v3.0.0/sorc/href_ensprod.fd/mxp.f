@@ -705,13 +705,13 @@ C
 ! Local variable
         INTEGER :: i
 
-        write(0,*) 'in here'
-        write(0,*) 'size(list): ', size(list)
-        write(0,*) 'size(order): ', size(order)
+!        write(0,*) 'in here'
+!        write(0,*) 'size(list): ', size(list)
+!        write(0,*) 'size(order): ', size(order)
         DO i = 1, SIZE(list)
           order(i) = i
         END DO
-        write(0,*) 'order defined'
+!        write(0,*) 'order defined'
 
         CALL quick_sort_1(1, SIZE(list))
 

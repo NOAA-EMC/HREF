@@ -17,7 +17,7 @@ c 2005-08-01 Author: Binbin Zhou
 c
 c       Re-organize the code structure and re-write the program in following features:
 c
-c        (1) The generic version dosn't fix GRIB# like 212 as old version. It aan process
+c        (1) The generic version dosn't fix GRIB# like 212 as old version. It can process
 c            any GRIB#, and the domain (IM, JM) for the defined GRIB# is also flexible. 
 c            As long as GRIB# is specified in 'filename', this program can automatically 
 c            retrievs the domain (IM, JM, JF=IM*JM), then all arrays associated with this 
@@ -129,6 +129,7 @@ C  raw data
 C mean
       real,allocatable,dimension(:,:) :: vrbl_mn                    !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_pm                 !jf, maxmlvl
+      real,allocatable,dimension(:,:) :: vrbl_mn_locpm               !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_blend              !jf, maxmlvl
       real,allocatable,dimension(:,:) :: derv_mn                    !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_2d, vrbl_lpm_2d
@@ -178,7 +179,7 @@ cc%%%%%%%  8. To be added if necessary ...........................
 C original                                                                                                                                           
        dimension kgds(25)
        character*20 mnout,pmin,pmax,pmod,pp10,pp25,pp50,pp75,pp90
-       character*20 spout,pmmnout,avgout,ffriout
+       character*20 spout,pmmnout,avgout,ffriout,locpmmnout
        character*20 prout
        character*40 files(50),prcps(50)
      
@@ -458,9 +459,12 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
         ipmmn=204
         iavg=205
         iffri=206
+        ilocpmmn=207
 
       mnout=trim(eps)//'.mean.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       pmmnout=trim(eps)//'.pmmn.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
+      locpmmnout= 
+     &     trim(eps)//'.lpmm.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       spout=trim(eps)//'.sprd.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       prout=trim(eps)//'.prob.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       avgout=trim(eps)//'.avrg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
@@ -474,6 +478,8 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       if (iret.ne.0) write(*,*) 'open ', prout, 'err=', iret
       call baopen (ipmmn, pmmnout, iret)
       if (iret.ne.0) write(*,*) 'open ', pmmnout, 'err=', iret
+      call baopen (ilocpmmn, locpmmnout, iret)
+      if (iret.ne.0) write(*,*) 'open ', locpmmnout, 'err=', iret
       call baopen (iavg, avgout, iret)
       if (iret.ne.0) write(*,*) 'open ', avgout, 'err=', iret
 !        if (mod(ifhr,3) .eq. 0) then
@@ -513,6 +519,7 @@ c  Loop  1-0: Allocate nesessary arrays
            Lm=max(1,Mlvl(nv))                !Keep at least one vrbl_mn to pass it into packGB2 
            allocate (vrbl_mn(jf,Lm))         !in case Mlvl(nv)=0
            allocate (vrbl_mn_pm(jf,Lm))       
+           allocate (vrbl_mn_locpm(jf,Lm))       
            allocate (vrbl_mn_blend(jf,Lm))       
          end if
         if (.NOT.allocated(vrbl_sp)) then
@@ -909,7 +916,8 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
          vrbl_sp=0.
          vrbl_pr=0.
 
-        IF(trim(Msignal(nv)).eq.'M'.or.trim(Msignal(nv)).eq.'P') THEN !P is for Prob-matched mean
+        IF(trim(Msignal(nv)).eq.'M'.or.trim(Msignal(nv)).eq.'P' .or. 
+     &     trim(Msignal(nv)).eq.'L') THEN !P & L for Prob-matched mean
          
          do lv = 1, Mlvl(nv)
           do igrid=1,jf
@@ -979,7 +987,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
               write(6,*) 'igrid = jf block'
                write(6,*) 'nv,k4(nv),k5(nv): ', nv,k4(nv),k5(nv)
               
-              if (trim(Msignal(nv)).eq.'P') then
+            if (trim(Msignal(nv)).eq.'P') then
                write(*,*) 'shape(rawdata_mn): ', shape(rawdata_mn)
                write(*,*) 'shape(vrbl_mn):', shape(vrbl_mn)
                write(*,*) 'shape(vrbl_mn_pm):', shape(vrbl_mn_pm)
@@ -992,7 +1000,18 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                call pmatch_mean(vname(nv),rawdata_mn,vrbl_mn,
      &             k4(nv),k5(nv),k6(nv),vrbl_mn_pm,lv,lm,jf,iens)
 
+	       vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
+               write(6,*) 'maxval(vrbl_mn_blend): ', 
+     &          maxval(vrbl_mn_blend)
+ 
+              endif
 
+	write(0,*) 'past pmatch_mean with vname(nv): ', vname(nv)
+
+              if (trim(Msignal(nv)).eq.'L') then
+
+
+	write(0,*) 'AP1h/AP3h branch'
                patch_nx=6
                patch_ny=6
                ovx=patch_nx*5
@@ -1007,47 +1026,50 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                allocate(vrbl_lpm_2d(im,jm))
                allocate(rawdata_mn_2d(im,jm,iens))
 
-!	       do JJ=1,jm
-!               do II=1,im
-!                 I1D=(JJ-1)*IM+II
-!                 vrbl_mn_2d(II,JJ)=vrbl_mn(I1D,1)
-!               enddo
-!               enddo
-!
-!               do I=1,iens
-!	       do JJ=1,jm
-!              do II=1,im
-!                I1D=(JJ-1)*IM+II
-!                 rawdata_mn_2d(II,JJ,I)=rawdata_mn(I1D,I,1)
-!               enddo
-!               enddo
-!               enddo
+	       do JJ=1,jm
+               do II=1,im
+                 I1D=(JJ-1)*IM+II
+                 vrbl_mn_2d(II,JJ)=vrbl_mn(I1D,1)
+               enddo
+               enddo
 
-!	write(0,*) 'call to lpm'
-!               call lpm(im,jm,iens,patch_nx,patch_ny,filt_min,
-!     &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
-!	write(0,*) 'return from lpm'
+               do I=1,iens
+	       do JJ=1,jm
+               do II=1,im
+                 I1D=(JJ-1)*IM+II
+                 rawdata_mn_2d(II,JJ,I)=rawdata_mn(I1D,I,1)
+               enddo
+               enddo
+               enddo
 
-!	       do JJ=1,jm
-!               do II=1,im
-!                 I1D=(JJ-1)*IM+II
-!                 vrbl_mn_pm(I1D,1)=vrbl_lpm_2d(II,JJ)
-!               enddo
-!               enddo
+               call lpm(im,jm,iens,patch_nx,patch_ny,ovx,ovy,
+     &            filt_min,
+     &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
+
+	       do JJ=1,jm
+               do II=1,im
+                 I1D=(JJ-1)*IM+II
+                 vrbl_mn_locpm(I1D,1)=vrbl_lpm_2d(II,JJ)
+               enddo
+               enddo
+
+            write(0,*) 'presmooth max(vrbl_mn_locpm): ', 
+     &                  maxval(vrbl_mn_locpm)
+
+             call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
+     +           'M','M')
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
 
 
-               write(6,*) 'minval(vrbl_mn_pm): ', minval(vrbl_mn_pm)
-               write(6,*) 'maxval(vrbl_mn_pm): ', maxval(vrbl_mn_pm)
+            write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 
+     &                  maxval(vrbl_mn_locpm)
 
-	       vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
-               write(6,*) 'maxval(vrbl_mn_blend): ', 
-     &          maxval(vrbl_mn_blend)
+               endif ! lpm variable selection
 
 
-              endif
-             endif
+              endif ! jf block
+!             endif
 
           end do  !end of igrid loop
   
@@ -1056,7 +1078,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
          end do  !end if Mlvl
 
-        END IF     !End of Msignal(nv)='M' and 'P' 
+        END IF     !End of Msignal(nv)='M' and 'P' and 'L'
 
         IF(trim(Msignal(nv)).eq.'X') THEN   ! Max member value
 
@@ -1860,6 +1882,12 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
         endif
 
 	endif
+        if(trim(Msignal(nv)).eq.'L') then
+! LPMM
+          call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
+     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+        endif
 
         if(trim(Msignal(nv)).eq.'P') then
 !          jpd10=10                                         !specific for probablity-match meaned QPF
@@ -1975,6 +2003,7 @@ c Loop 1-4: Deallocation
         deallocate (rawdata_pr)
         deallocate (vrbl_mn)
         deallocate (vrbl_mn_pm)
+        deallocate (vrbl_mn_locpm)
         deallocate (vrbl_mn_blend)
         deallocate (vrbl_sp)
         deallocate (vrbl_pr)
