@@ -43,7 +43,7 @@ echo vers is $vers
 
 DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 
-cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch_info/
+cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/clone/href.${vers}/launch_info/
 
 if [ $NEST = "conus" ]
 then
@@ -63,12 +63,12 @@ ls -l $fileone $filetwo $filethree $filefour
 if [ $cyc = "00"  -o $cyc = "12" ]
 then
 
-while [ $loop -lt 90 ]
+while [ $loop -lt 45 ]
 do
 if [ ! -e $fileone -o ! -e $filetwo -o ! -e $filethree -o ! -e $filefour -o ! -e $filefive ]
 then
 echo gonna sleep as missing at least one
-sleep 6
+sleep 1
 echo loop now $loop
 fi
 let loop=loop+1
@@ -80,37 +80,37 @@ fi
 
 cat runpoe.sh_in_cray_v3 | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
 
-# elif [ $NEST = "hi" ]
-# then
-# cat runpoe.sh_in_cray_smaller | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
-# elif [ $NEST = "ak" ]
-# then
+elif [ $NEST = "hi" ]
+then
+cat runpoe.sh_in_cray_smaller | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+elif [ $NEST = "ak" ]
+then
 # 
-# MYCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test
-# loop=1
-# fileone=$COMINhiresw.${DATE}/hiresw.t${cyc}z.nmmb_5km.f36.ak.grib2
-# filetwo=$COMINhiresw.${DATE}/hiresw.t${cyc}z.arw_5km.f36.ak.grib2
-# filethree=$COMINhiresw.${DATE}/hiresw.t${cyc}z.arw_5km.f36.akmem2.grib2
+MYCOM=/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/test
+loop=1
+fileone=$COMINhiresw.${DATE}/hiresw.t${cyc}z.nmmb_5km.f36.ak.grib2
+filetwo=$COMINhiresw.${DATE}/hiresw.t${cyc}z.arw_5km.f36.ak.grib2
+filethree=$COMINhiresw.${DATE}/hiresw.t${cyc}z.arw_5km.f36.akmem2.grib2
 
-# ls -l $fileone $filetwo $filethree
+ls -l $fileone $filetwo $filethree
 
-# while [ $loop -lt 180 ]
-# do
+while [ $loop -lt 180 ]
+do
 
-# if [ ! -e $fileone -o ! -e $filetwo -o ! -e $filethree ]
-# then
-# echo gonna sleep as missing at least one
-# echo loop now $loop
-# sleep 120
-# fi
+if [ ! -e $fileone -o ! -e $filetwo -o ! -e $filethree ]
+then
+echo gonna sleep as missing at least one
+echo loop now $loop
+sleep 120
+fi
 
-# let loop=loop+1
-# done
+let loop=loop+1
+done
 
-# cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
 
-# else
-# cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
+else
+cat runpoe.sh_in_cray_small | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefrunpoe_${cyc}
 
 
 fi # conus test
@@ -136,6 +136,7 @@ else
 cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
 fi
 
+
 if [ $dom = "conus" ]
 then
 bsub < run_qpfclimo_bin.lsf
@@ -147,11 +148,11 @@ fi
 
 bsub < launch_hrefrunpoe_${cyc}
 
-# sleep 300
+sleep 300
 
-# bsub < launch_nawips_${cyc}_v3
+bsub < launch_nawips_${cyc}_v3
 
-# sleep 3000
+sleep 3000
 
-# bsub < launch_awips_${cyc}_v3
-# bsub < launch_gempaksend_${cyc}_v3
+bsub < launch_awips_${cyc}_v3
+bsub < launch_gempaksend_${cyc}_v3

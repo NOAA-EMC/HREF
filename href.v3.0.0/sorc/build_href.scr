@@ -10,6 +10,8 @@ sleep 1
 
 BASE=`pwd`
 
+mkdir -p ../exec
+
 #########################
 
 cd ${BASE}/href_get_prcip.fd

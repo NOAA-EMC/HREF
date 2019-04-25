@@ -94,12 +94,12 @@
 !and if they do not, return an error.
 !!! Kong comment: This might not be necessary - need to loosen
       IF (MOD((ny - 3), patch_ny) /= 0) THEN
-        write(0,*) 'possible trouble..exit maybe'
+        write(0,*) 'possible trouble(y)..exit maybe'
 !       CALL arpsstop('LPM MEAN ERROR: patches do not divide evenly into domain (y dir)', 1)
       END IF
 
       IF (MOD((nx - 3), patch_nx) /= 0) THEN
-        write(0,*) 'possible trouble..exit maybe'
+        write(0,*) 'possible trouble(x)..exit maybe'
 !    CALL arpsstop('LPM MEAN ERROR: patches do not divide evenly into domain (x dir)', 1)
       END IF
 
@@ -107,6 +107,7 @@
 
 	write(0,*) 'nx, ny: ', nx, ny
 	write(0,*) 'patch_nx, patch_ny: ',patch_nx, patch_ny
+
       ipatches=(nx-3)/float(patch_nx)
       jpatches=(ny-3)/float(patch_ny)
 
@@ -116,6 +117,7 @@
 !   NOTE: where calculation areas extend outside the domain boundary, they are clipped to fit
       DO ipatch=1, ipatches
          DO jpatch=1, jpatches
+
         !Calculate patch edge locations (i for pe_west, pe_east; j for pe_south, pe_north)
         !   NOTE: the "2 + " is to deal with the non-physical gridpoint on S, W arps domain edges
         !         (it excludes the westmost/southmost point (which has index "1" in FORTRAN)
@@ -133,6 +135,10 @@
         !Catch edge cases:
         offset_i = ovx     !If there is no clipping, offset_i is the same as ovx
         offset_j = ovy     !If there is no clipping, offset_j is the same as ovy
+
+
+!!! is the 2 here arbitrary, or tied to the ARPS thing noted above?
+
         IF (ce_west < 2) THEN    !West edge case
             offset_i = ovx - (2 - ce_west)
             ce_west = 2
@@ -147,15 +153,16 @@
             offset_j = ovy - (2 - ce_south)
             ce_south = 2
         END IF
-       
-        IF (ce_north > (ny - 2)) THEN    !West edge case
+      
+        IF (ce_north > (ny - 2)) THEN    ! North edge case
             ce_north = ny - 2   !No need to change offset in this case (only cares about offset
                                 !from south side of calcuation area, not north side)
         END IF
-      
+
         !Define calc_nx, calc_ny:
         calc_nx = ce_east + 1 - ce_west
         calc_ny = ce_north + 1 - ce_south
+
 
         !Allocate LPM storage for calculation area and var0 using calc_nx, calc_ny:
         ALLOCATE(lpm_calc(calc_nx, calc_ny))
@@ -171,25 +178,43 @@
 !! var0 has the individual ensemble data just for the patch being worked
        var0 = RESHAPE(var2d_ens(ce_west:ce_east,ce_south:ce_north,:),
      &                     (/calc_nx*calc_ny*n_ens/) )
-            !This call calculates PM mean over the calc area and stores it in lpm_calc:
-!            CALL pm_mean(calc_nx, calc_ny, n_ens, var0, &
-!             var2d_enmean(ce_west:ce_east, ce_south:ce_north),lpm_calc)
 
 ! var0 (as a 1D array)
 ! var2d_enmean (as patch of full 2D)
 
-	write(0,*) 'pmatch_mean_loc w calc_nx,calc_ny: ',calc_nx,calc_ny
-      
-        write(0,*) 'shape(var0): ', shape(var0)
-        write(0,*) 'shape(var2d_enmean): ', shape(var2d_enmean)
+!	write(0,*) 'pmatch_mean_loc w calc_nx,calc_ny: ',calc_nx,calc_ny
+!        write(0,*) 'shape(var0): ', shape(var0)
+!        write(0,*) 'shape(var2d_enmean): ', shape(var2d_enmean)
+!	write(0,*) 'ipatch, jpatch, ce_ W E S N: ', 
+!     &               ipatch,jpatch,ce_west, ce_east, ce_south, ce_north
+
+
+! can we avoid calling pmatch_mean_loc but still exercise all other manipulation?  
+!
+!  recast var2d_enmean as a local patch?
+! 
+
+!!! fake
+!!! fake
+!!!           lpm_calc(offset_i:offset_i + patch_nx, 
+!!!     &      offset_j:offset_j + patch_ny)=var2d_enmean(pe_west:pe_east,
+!!!     &                                               pe_south:pe_north)
+!!! fake
+!!! fake
+
+            !This call calculates PM mean over the calc area and stores it in lpm_calc:
             CALL pmatch_mean_loc(calc_nx,calc_ny,var0, 
      &                 var2d_enmean(ce_west:ce_east, ce_south:ce_north),
      &                 lpm_calc,ce_west,ce_east,ce_south,ce_north,n_ens)
 
+
+! could this be shifting things?  It was.  Added +1 to the lpm_calc indices
+
         !Take the result and store the patch into the array for var2d_lpm:
+
         var2d_lpm(pe_west:pe_east, pe_south:pe_north) =  
-     &    lpm_calc(offset_i:offset_i + patch_nx, 
-     &    offset_j:offset_j + patch_ny)  
+     &    lpm_calc(offset_i+1:offset_i + patch_nx+1, 
+     &    offset_j+1:offset_j+1 + patch_ny)  
         END IF
         
         !Deallocate values for this patch; will re-allocate again for the next one.
