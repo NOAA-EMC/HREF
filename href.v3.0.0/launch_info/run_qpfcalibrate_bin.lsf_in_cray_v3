@@ -15,7 +15,7 @@ module load prod_envir
 module load prod_util
 
 export MP_LABELIO=yes
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0
 
@@ -29,7 +29,7 @@ DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 export MYCOMROOT=/gpfs/hps2/ptmp/Matthew.Pyle/com
 export MYCOMROOTPERM=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/com
 
-export COMOUT=${MYCOMROOT}/hiresw/${RUN_ENVIR}/href.${DATE}_lpm
+export COMOUT=${MYCOMROOT}/hiresw/${RUN_ENVIR}/href.${DATE}_expv3
 export COMINcalib=${MYCOMROOTPERM}/hiresw/calib
 export COMOUTcalib=${MYCOMROOTPERM}/hiresw/calib
 export COMINcal=${MYCOMROOTPERM}/hiresw/calib

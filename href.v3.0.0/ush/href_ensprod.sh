@@ -294,9 +294,9 @@ cp $DATA/$ff/output_ensprod.$ff $COMOUT/test_output_ensprod.$ff
 
 if [ $dom = 'conus' ]
 then
-types="mean pmmn avrg prob sprd ffri eas"
+types="mean pmmn avrg prob sprd lpmm ffri eas"
 else
-types="mean pmmn avrg prob sprd"
+types="mean pmmn avrg prob lpmm sprd"
 fi
 
 if [ $SENDCOM = YES ]; then
