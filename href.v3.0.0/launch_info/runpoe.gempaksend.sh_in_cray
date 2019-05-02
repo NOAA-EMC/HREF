@@ -12,8 +12,8 @@ if [ -a .bashrc ]; then
 fi
 
 
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_gempaksend_NEST___CYC_.out
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_gempaksend_NEST___CYC_.err
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_gempaksendconus__CYC_.out_v3
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_gempaksendconus__CYC_.err_v3
 #BSUB -q "dev_transfer"
 #BSUB -J GEMPAKSEND__CYC_
 #BSUB -P HRW-T2O
@@ -27,7 +27,7 @@ export RUN_ENVIR=test
 export envir=test
 export SUB_ENVIR=dev
 export cyc=_CYC_
-export NEST=_NEST_
+export NEST=conus
 
 export OMP_NUM_THREADS=1
 export MP_TASK_AFFINITY=core:1
@@ -58,37 +58,36 @@ setpdy.sh
 echo PDY $PDY
 echo PDYm2 $PDYm2
 
-# cd ${MYCOMROOT}/nawips/test/href.${PDY}_exp/
+cd ${MYCOMROOT}/hiresw/test/href.${PDY}_expv3/
 
-cd ${MYCOMROOT}/hiresw/test/href.${PDY}_exp/nawips
+ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir -p /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_expv3"
 
-ssh mpyle@emcrzdm.ncep.noaa.gov "mkdir -p /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp"
+ssh mpyle@emcrzdm.ncep.noaa.gov "rm /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDYm2}_expv3/*"
+ssh mpyle@emcrzdm.ncep.noaa.gov "rmdir /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDYm2}_expv3"
 
-ssh mpyle@emcrzdm.ncep.noaa.gov "rm /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDYm2}_exp/*"
-ssh mpyle@emcrzdm.ncep.noaa.gov "rmdir /home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDYm2}_exp"
+# numavail=`ls *${PDY}${cyc}f036 | wc -l`
 
-numavail=`ls *${PDY}${cyc}f036 | wc -l`
+numavail=`ls href.t${cyc}z.*hmt.f36.grib2`
 
 cnt=0
 
-while [ $numavail -lt 3 -a $cnt -lt 90 ]
+while [ $numavail -lt 6 -a $cnt -lt 90 ]
 do
 sleep 60
-numavail=`ls *${PDY}${cyc}f036 | wc -l`
+numavail=`ls href.t${cyc}z.*hmt.f36.grib2`
 echo numavail now $numavail
 let cnt=cnt+1
 done
 
-if [ $numavail -lt 3 ]
+if [ $numavail -lt 6 ]
 then
 echo NEVER FOUND ALL OF THE FILES SO QUIT
 exit
 fi
 
-rsync -a *${PDY}${cyc}* mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
-
-cd ${MYCOMROOT}/hiresw/test/href.${PDY}_exp/ensprod/
-rsync -a href.t${cyc}z.*meanhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
-rsync -a href.t${cyc}z.*probhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
-rsync -a href.t${cyc}z.*eashmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_exp/
+rsync -a href.t${cyc}z.*meanhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_expv3/
+rsync -a href.t${cyc}z.*probhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_expv3/
+rsync -a href.t${cyc}z.*eashmt*.grib2  mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_expv3/
+rsync -a href.t${cyc}z.*lpmmhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_expv3/
+rsync -a href.t${cyc}z.*pmmnhmt*.grib2 mpyle@emcrzdm.ncep.noaa.gov:/home/ftp/emc/mmb/WRFtesting/mpyle/href/ffair/href.${PDY}_expv3/
 

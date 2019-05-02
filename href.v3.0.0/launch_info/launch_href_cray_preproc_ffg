@@ -1,0 +1,46 @@
+#! /bin/sh
+
+if [ "$#" -ne 2 ]
+then
+echo wrong number of arguments
+echo need cyc and NEST
+exit
+fi
+
+cyc=$1
+export NEST=${2}
+
+cd /u/$USER    # cron does this for us - this is here just to be safe
+. /etc/profile
+
+if [ -a .profile ]; then
+   . ./.profile
+fi
+
+if [ -a .bashrc ]; then
+   . ./.bashrc
+fi
+
+echo cyc $cyc
+
+module load prod_util
+module load grib_util/1.0.3
+module load prod_envir
+
+vers=`cat ~/href_exp`
+
+echo vers is $vers
+
+DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
+
+cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch_info/
+
+if [ $NEST = "conus" ]
+then
+cat run_ffg_gen.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_ffg_gen_${cyc}
+fi
+
+# bsub < launch_ffg_gen_${cyc}
+chmod u+x launch_ffg_gen_${cyc}
+
+./launch_ffg_gen_${cyc}

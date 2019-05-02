@@ -118,8 +118,8 @@ cat runawips.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch
 
 if [ $dom = "conus" ]
 then
-cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}_${dom}
-chmod 775 launch_gempaksend_${cyc}_${dom}
+# cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}_${dom}
+# chmod 775 launch_gempaksend_${cyc}_${dom}
 
 cat run_qpfclimo_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf
 cat run_qpfcalibrate_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf
@@ -151,4 +151,4 @@ bsub < launch_nawips_${cyc}_${dom}
 sleep 1200
 
 bsub < launch_awips_${cyc}_${dom}
-bsub < launch_gempaksend_${cyc}_${dom}
+# bsub < launch_gempaksend_${cyc}_${dom}

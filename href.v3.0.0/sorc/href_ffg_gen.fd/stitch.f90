@@ -1,5 +1,4 @@
-
-        program testit
+        subroutine stitch(datstr)
 
         USE GRIB_MOD
 
@@ -11,18 +10,8 @@
       TYPE(GRIBFIELD) :: gfld, gfld_full
 ! grib2
 
-
       integer jpds(200),jgds(200),kpds(200),kgds(200)
       integer :: nx, ny, nxny, FFG, KK
-
-
-      real, allocatable:: ffg1(:), ffg3(:)
-      real, allocatable:: ffg6(:), ffg12(:)
-      real, allocatable:: ffg24(:)
-
-      real, allocatable:: ffg1_full(:), ffg3_full(:)
-      real, allocatable:: ffg6_full(:), ffg12_full(:)
-      real, allocatable:: ffg24_full(:)
 
       character*80 fname,prefx,filnam,fnameg2
       character*80 fnameout,fnamein
@@ -33,13 +22,15 @@
                     '157','158','159','160','161','162'/
 !      fname='ffg.20190326.009.156'
 
-      read(5,FMT='(A)') datstr
+!      read(5,FMT='(A)') datstr
      
-      DO FFG=221,223
+      DO FFG=221,225
 
         if (FFG .eq. 221) ffgstr='ffg1h'
         if (FFG .eq. 222) ffgstr='ffg3h'
         if (FFG .eq. 223) ffgstr='ffg6h'
+        if (FFG .eq. 224) ffgstr='ffg12h'
+        if (FFG .eq. 225) ffgstr='ffg24h'
 
       DO II=1,12  ! loop over RFC regions
 
@@ -105,15 +96,10 @@
      &               K,gfld,iret)  
          if (iret .eq. 0) then
         write(0,*) '221 - maxval(ffg): ', maxval(gfld%fld)
-!        ffg1=gfld%fld
         gfld_full%ipdtmpl(27)=gfld%ipdtmpl(27)
         gfld_full%ipdtmpl(9)=gfld%ipdtmpl(9)
 
         do J=1,nxny
-        if (J .eq. 888959) then
-        write(0,*) 'J, gfld%bmap(J),  gfld_full%bmap(j): ', &
-                   J, gfld%bmap(J),  gfld_full%bmap(j)
-        endif
 
 !tst        if (gfld%bmap(J) .and. .not. gfld_full%bmap(j)) then
         if (gfld%bmap(J)) then
@@ -169,9 +155,6 @@
         if (gfld%bmap(J)) then
         gfld_full%fld(J)=gfld%fld(J)
         gfld_full%bmap(J)=.true.
-!        if (mod(J,500) .eq. 0) then
-!        write(0,*) 'FFG6 defined J ', II,J, gfld_full%fld(j)
-!        endif
         endif
         enddo
 
@@ -179,43 +162,54 @@
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         elseif (FFG .eq. 224) then
-!        jpds(5)=224
-!        call getgb(iunit,0,nxny,0,jpds,jgds,kf,kr,kpds,kgds,li, &
-!     &             ffg12,irets)
-!        write(6,*) 'getgb ', fname, ' irets=', irets
-         if (irets .eq. 0) then
+         jpdt(27)=12
+         jpdt(9)=12
+         call getgb2(iunit,0,0,-1,jids,8,jpdt,-1,jgdt,.true., &
+     &               K,gfld,iret)  
+         if (iret .eq. 0) then
         write(0,*) '224 - maxval(ffg): ', maxval(gfld%fld)
-        gfld%ipdtmpl(27)=12
-        gfld%ipdtmpl(9)=12
+        gfld_full%ipdtmpl(27)=12
+        gfld_full%ipdtmpl(9)=12
+        do J=1,nxny
+        if (gfld%bmap(J)) then
+        gfld_full%fld(J)=gfld%fld(J)
+        gfld_full%bmap(J)=.true.
+        endif
+        enddo
          endif
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         elseif (FFG .eq. 225) then
-!        jpds(5)=225
-!        call getgb(iunit,0,nxny,0,jpds,jgds,kf,kr,kpds,kgds,li,  &
-!     &             ffg24,irets)
-!        write(6,*) 'getgb ', fname, ' irets=', irets
+
+         jpdt(27)=24
+         jpdt(9)=0
+         call getgb2(iunit,0,0,-1,jids,8,jpdt,-1,jgdt,.true., &
+     &               K,gfld,iret)  
          if (irets .eq. 0) then
         write(0,*) '225 - maxval(ffg): ', maxval(gfld%fld)
-        gfld%ipdtmpl(27)=24
-        gfld%ipdtmpl(9)=0
+        gfld_full%ipdtmpl(27)=24
+        gfld_full%ipdtmpl(9)=0
+        do J=1,nxny
+        if (gfld%bmap(J)) then
+        gfld_full%fld(J)=gfld%fld(J)
+        gfld_full%bmap(J)=.true.
+        endif
+        enddo
+
          endif
 
         endif ! FFG test
 
         call baclose(iunit,ierr)
 
-!        deallocate(li)
-!        deallocate(ffg1)
-!        deallocate(ffg3)
-!        deallocate(ffg6)
-!        deallocate(ffg12)
-!        deallocate(ffg24)
-
          enddo ! for RFC regions
 
         write(0,*) 'here with maxval(gfld_full): ', &
          maxval(gfld_full%fld)
 
+
+
+!! fill in some missing values (mostly or entirely water points??)
         do KK=1,3
 
         do J=2,nxny-1
@@ -265,4 +259,4 @@
 
           END DO  ! FFG
 
-        end program testit
+        end subroutine stitch

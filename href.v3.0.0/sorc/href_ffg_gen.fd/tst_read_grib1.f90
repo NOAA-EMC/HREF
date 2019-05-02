@@ -1,5 +1,12 @@
-
         program testit
+
+!       Simple program that reads in GRIB1 individual RFC files
+!       and extracts needed FFG data, and writes out
+!       as GRIB2 encoded.  A preliminary step before each
+!       GRIB2 subpiece is interpolated (at script level) onto
+!       the HREF 5 km grid 227.  Those are ingested by a second
+!       program that stitches them together onto a single 
+!       mosaic'd product.
 
         USE GRIB_MOD
 
@@ -175,15 +182,5 @@
         deallocate(ffg24)
 
          enddo ! for RFC regions
-
-!        iunitg2=iunitg2+50
-!         call baopen(iunitg2,fnameg2out,ierr)
-!         call getgb2(iunitg2,0,0,-1,jids,-1,jpdt,-1,jgdt,.true., &
-!     &               K,gfld_full,iret)  
-
-!           write(0,*) 'iret from getgb2: ', iret
-!           write(0,*) 'K returned: ', K
-!           write(0,*) 'gfld_full%ngrdpts: ', gfld_full%ngrdpts
-!           write(0,*) 'gfld_full%igdtmpl(8:9): ', gfld_full%igdtmpl(8:9)
 
         end program testit
