@@ -44,7 +44,7 @@
 !      read(5,FMT='(A)') datstr
      
 
-      DO II=1,12  ! loop over RFC regions
+   RFC_LOOP:      DO II=1,12  ! loop over RFC regions
 
       iunit=II+11
       iunitg2=II+23
@@ -65,6 +65,10 @@
 
        call baopenr(iunit,fname,ierr)
 !       write(0,*) 'ierr from baopenr: ', ierr
+	if (ierr .ne. 0) then
+	write(0,*) 'missing file to read  in read_grib1...skip'
+        CYCLE RFC_LOOP
+        endif
        call baopenr(iunitg2,fnameg2,ierr)
 !       write(0,*) 'fnameg2 ierr from baopenr: ', ierr
        call baopenw(iunitg2out,fnameg2out,ierr)
@@ -181,6 +185,6 @@
         deallocate(ffg12)
         deallocate(ffg24)
 
-         enddo ! for RFC regions
+         enddo RFC_LOOP ! for RFC regions
 
         end subroutine read_grib1

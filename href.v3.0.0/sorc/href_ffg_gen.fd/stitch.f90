@@ -24,7 +24,7 @@
 
 !      read(5,FMT='(A)') datstr
      
-      DO FFG=221,225
+      DO FFG=221,223
 
         if (FFG .eq. 221) ffgstr='ffg1h'
         if (FFG .eq. 222) ffgstr='ffg3h'
@@ -32,9 +32,10 @@
         if (FFG .eq. 224) ffgstr='ffg12h'
         if (FFG .eq. 225) ffgstr='ffg24h'
 
-      DO II=1,12  ! loop over RFC regions
+RFC_LOOP:    DO II=1,12  ! loop over RFC regions
 
-      iunit=II+11+(FFG-221)
+	write(0,*) 'start loop with FFG, II: ', FFG, II
+      iunit=II+11+(FFG-221)*12
 
       fname='ffg.'//datstr//'.009.'//rfc_str(II)
       fnamein=trim(fname)//'.g2out.227'
@@ -52,7 +53,11 @@
         jgds=-1
 
        call baopenr(iunit,fnamein,ierr)
+	if (ierr .ne. 0) then
        write(0,*) 'ierr from baopenr: ', ierr
+	write(0,*) 'skill skip this region as have no input'
+        CYCLE RFC_LOOP
+	endif
         
         JIDS=-9999
         JPDT=-9999
@@ -120,6 +125,7 @@
 !        write(6,*) 'getgb ', fname, ' irets=', irets
          jpdt(27)=3
          jpdt(9)=21
+	write(0,*) 'call getgb2 for iunit: ', iunit
          call getgb2(iunit,0,0,-1,jids,8,jpdt,-1,jgdt,.true., &
      &               K,gfld,iret)  
 
@@ -202,7 +208,7 @@
 
         call baclose(iunit,ierr)
 
-         enddo ! for RFC regions
+         enddo RFC_LOOP ! for RFC regions
 
         write(0,*) 'here with maxval(gfld_full): ', &
          maxval(gfld_full%fld)
@@ -253,6 +259,8 @@
 
         enddo ! KK
 
+	write(0,*) 'to putgb2 call'
+	write(0,*) 'maxval: ', maxval(gfld_full%fld)
          call putgb2( iunitg2out, gfld_full, iret)
         write(0,*) 'iret from putgb2 call: ', iret
         call baclose(iunitg2out,ierr)
