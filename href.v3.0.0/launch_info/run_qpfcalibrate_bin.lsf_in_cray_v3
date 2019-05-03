@@ -45,4 +45,4 @@ $HOMEhref/jobs/JHREF_QPFCALIBRATE_BIN_cray
 
 cd $HOMEhref/launch_info
 
-bsub < run_eas_bin.lsf__DOM_
+bsub < run_eas_bin.lsf__DOM___CYC__v3
