@@ -51,8 +51,8 @@ setpdy.sh
 . PDY
 
 if [ "$RUN_ENVIR" != nco ] ; then
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/ensprod}
- export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/wmo}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}
+ export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}
 else
  export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod}
  export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/wmo}
