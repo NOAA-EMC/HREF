@@ -40,4 +40,4 @@ $HOMEhref/jobs/JHREF_QPFCLIMO_BIN_cray
 
 cd $HOMEhref/launch_info/
 
-bsub < run_qpfcalibrate_bin.lsf
+bsub < run_qpfcalibrate_bin.lsf_${cyc}

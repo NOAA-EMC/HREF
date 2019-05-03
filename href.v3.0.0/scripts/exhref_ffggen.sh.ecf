@@ -25,7 +25,6 @@ postmsg "$jlogfile" "$msg"
 
 RFC_LIST="150 152 153 154 155 156 157 158 159 160 161 162"
 
-
 echo here with PDY $PDY
 echo here with PDYm1 $PDYm1
 echo here with PDYm2 $PDYm2
@@ -35,7 +34,22 @@ do
 
 if [ -e $DCOMROOT/us007003/${PDY}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/us007003/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}
+cp $DCOMROOT/us007003/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 221 > list.221
+rec_1h=`tail -n1 list.221 | awk -F : '{print $1}'`
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 222 > list.222
+rec_3h=`tail -n1 list.222 | awk -F : '{print $1}'`
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 223 > list.223
+rec_6h=`tail -n1 list.223 | awk -F : '{print $1}'`
+
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_1h} -grib -o ${RFC}_1h
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_3h} -grib -o ${RFC}_3h
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
+
+cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
+rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
+
 $CNVGRIB -g12 ffg.${PDY}.009.${RFC} ffg.${PDY}.009.${RFC}.g2
 
 else
@@ -46,13 +60,42 @@ echo "try day old"
 
 if [ -e $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}
+cp $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 221 > list.221
+rec_1h=`tail -n1 list.221 | awk -F : '{print $1}'`
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 222 > list.222
+rec_3h=`tail -n1 list.222 | awk -F : '{print $1}'`
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 223 > list.223
+rec_6h=`tail -n1 list.223 | awk -F : '{print $1}'`
+
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_1h} -grib -o ${RFC}_1h
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_3h} -grib -o ${RFC}_3h
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
+
+cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
+rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
 else
 echo "two days old missing...try 3"
 
 if [ -e $DCOMROOT/us007003/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
 then
 cp $DCOMROOT/us007003/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}
+
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 221 > list.221
+rec_1h=`tail -n1 list.221 | awk -F : '{print $1}'`
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 222 > list.222
+rec_3h=`tail -n1 list.222 | awk -F : '{print $1}'`
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 223 > list.223
+rec_6h=`tail -n1 list.223 | awk -F : '{print $1}'`
+
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_1h} -grib -o ${RFC}_1h
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_3h} -grib -o ${RFC}_3h
+$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
+
+cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
+rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
+
 else
 msg="WARNING - NO FFG.009.${RFC} file available in last three days"
 echo $msg

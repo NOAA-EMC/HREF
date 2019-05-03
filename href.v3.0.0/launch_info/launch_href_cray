@@ -121,22 +121,22 @@ then
 # cat runpoe.gempaksend.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_gempaksend_${cyc}_${dom}
 # chmod 775 launch_gempaksend_${cyc}_${dom}
 
-cat run_qpfclimo_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf
-cat run_qpfcalibrate_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf
+cat run_qpfclimo_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfclimo_bin.lsf_${CYC}
+cat run_qpfcalibrate_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_qpfcalibrate_bin.lsf_${CYC}
 fi
 
 if [ $dom = "conus" -o  $dom = "ak" ]
 then
-cat run_eas_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+cat run_eas_bin.lsf_in_cray |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}_${CYC}
 else
-cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}
+cat run_eas_bin.lsf_in_cray_small |  sed s:_CYC_:${CYC}:g | sed s:_DOM_:${dom}:g > run_eas_bin.lsf_${dom}_${CYC}
 fi
 
 if [ $dom = "conus" ]
 then
-bsub < run_qpfclimo_bin.lsf
+bsub < run_qpfclimo_bin.lsf_${CYC}
 else
-bsub < run_eas_bin.lsf_${dom}
+bsub < run_eas_bin.lsf_${dom}_${CYC}
 fi
 
 
