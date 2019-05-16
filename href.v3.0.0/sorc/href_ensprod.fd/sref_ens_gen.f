@@ -756,10 +756,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
            endif
 
 ! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR) (and REFC from FV3 now)
+! and FV3 soil
 
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
 
-           if ( jpd2.ne.197 .and. jpd2.ne.5  ) then
+           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
+     &          jpd2.ne. 192 .and. jpd2 .ne. 2 ) then
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.
@@ -809,7 +811,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
 ! avoid accounting for echo top bitmap
-           if ( jpd2.ne.197 .and. jpd2.ne.5  ) then
+           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
+     &          jpd2.ne. 192 .and. jpd2 .ne. 2 ) then
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.
@@ -1906,7 +1909,8 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 ! MEAN (just for precip with PM type fields)
 
-          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h') then
+          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
 
          write(0,*) 'make sure it gets packed like a true mean field'
          Msignal(nv)='M'

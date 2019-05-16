@@ -51,15 +51,21 @@ setpdy.sh
 . PDY
 
 if [ "$RUN_ENVIR" != nco ] ; then
+ export DCOMROOT=${DCOMROOT:-/gpfs/gp1/nco/ops/dcom}
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}
  export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}
+ export COMOUTperm=${COMOUTperm:-${MYCOMROOT}/${NET}/${envir}/ffg_latest/}
 else
- export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod}
- export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/wmo}
+ export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/}
+ export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/}
 fi
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
+fi
+
+if [ ! -f $COMOUTperm ] ; then
+  mkdir -p -m 775 $COMOUTperm
 fi
 
 #################################################################
