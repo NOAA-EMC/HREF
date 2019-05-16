@@ -44,6 +44,7 @@ if [ $NEST = "conus" -o $NEST = "ak" ]
 then
 # cat runpoe.preprocget.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
 cat runpoe.preprocv3.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefv3preprocpoe_${cyc}
+cat run_ffg_gen.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_ffg_gen_${cyc}
 fi
 
 # bsub < launch_hrefpreprocgetpoe_${cyc}
@@ -56,6 +57,11 @@ fi
 export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/prod/fv3
 export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/para/fv3sar
 
+
+# generate FFG
+# ./launch_ffg_gen_${cyc} > ../logs/ffg_gen_${DATE}_${cyc}.log
+
+bsub < launch_ffg_gen_${cyc}
 
 looplim=200
 loop=1

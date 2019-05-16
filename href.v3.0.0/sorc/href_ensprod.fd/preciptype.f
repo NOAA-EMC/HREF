@@ -87,20 +87,28 @@ c    for derived variables
 ! eliminate these prints?
 
 	do irun=1,iens
+                  if(miss(irun).eq.0) then
           write(0,*) 'irun, min/maxval(prcptype(:,irun,1))' , 
      &   irun,minval(prcptype(:,irun,1)),maxval(prcptype(:,irun,1))
+                  endif
         enddo
 	do irun=1,iens
+                  if(miss(irun).eq.0) then
           write(0,*) 'irun, min/maxval(prcptype(:,irun,2))' , 
      &   irun,minval(prcptype(:,irun,2)),maxval(prcptype(:,irun,2))
+                  endif
         enddo
 	do irun=1,iens
+                  if(miss(irun).eq.0) then
           write(0,*) 'irun, min/maxval(prcptype(:,irun,3))' , 
      &   irun,minval(prcptype(:,irun,3)),maxval(prcptype(:,irun,3))
+                  endif
         enddo
 	do irun=1,iens
+                  if(miss(irun).eq.0) then
           write(0,*) 'irun, min/maxval(prcptype(:,irun,4))' , 
      &   irun,minval(prcptype(:,irun,4)),maxval(prcptype(:,irun,4))
+                  endif
         enddo
 
            ptype_mn = 0.
