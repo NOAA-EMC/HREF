@@ -44,10 +44,14 @@ if [ $NEST = "conus" -o $NEST = "ak" ]
 then
 # cat runpoe.preprocget.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
 cat runpoe.preproc.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocpoe_${cyc}
+cat run_ffg_gen.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_ffg_gen_${cyc}
 fi
 
 # bsub < launch_hrefpreprocgetpoe_${cyc}
 
 # sleep 600
+
+bsub < launch_ffg_gen_${cyc}
+
 
 bsub < launch_hrefpreprocpoe_${cyc}

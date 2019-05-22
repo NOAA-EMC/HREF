@@ -51,8 +51,8 @@ rlist = [10,25,40,55,70,85,100]
 # EAS settings
 alpha = 0.1	# similarity criteria parameter
 p_smooth_low = 3	# width of Gaussian filter for smoothing radius field (grid points) 
-p_smooth = 5	# width of Gaussian filter for smoothing radius field (grid points) 
-p_smooth_high = 8	# width of Gaussian filter for smoothing radius field (grid points) 
+p_smooth = 3	# width of Gaussian filter for smoothing radius field (grid points) 
+p_smooth_high = 3	# width of Gaussian filter for smoothing radius field (grid points) 
 
 # forecast hour weighting
 pqpf_1h_weight1 = 1.0  # hour before
@@ -66,12 +66,12 @@ pqpf_6h_starthours = [0,3,6,9,12,15,18,21,24,27,30]
 pqpf_24h_starthours = [0,6,12]
 
 # PQPF calibration
-pqpf_6h_calibrate_arw = 'yes'
-pqpf_6h_calibrate_nmmb = 'yes'
-pqpf_6h_calibrate_fv3 = 'yes'
-pqpf_6h_calibrate_nssl = 'yes'
-pqpf_6h_calibrate_nam = 'yes'
-pqpf_6h_calibrate_hrrr = 'yes'
+pqpf_6h_calibrate_arw = 'no'
+pqpf_6h_calibrate_nmmb = 'no'
+pqpf_6h_calibrate_fv3 = 'no'
+pqpf_6h_calibrate_nssl = 'no'
+pqpf_6h_calibrate_nam = 'no'
+pqpf_6h_calibrate_hrrr = 'no'
 pqpf_3h_calibrate_arw = 'yes'
 pqpf_3h_calibrate_nmmb = 'yes'
 pqpf_3h_calibrate_nssl = 'yes'

@@ -339,11 +339,13 @@ if os.path.exists(dir):
 # copy FV3 from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
 # print dirs
-dir = COMINfv3 + '/' + 'fv3s.'+PDY[:8]
+dir = COMINfv3 + '/' + 'fv3.'+PDY[:8]
 print 'dir is : ', dir
 if os.path.exists(dir):
   files = next(os.walk(dir))[2]
   for file in files:
+    if (len(file) == 19):
+      print file,len(file), file[6:8], file[11:13], file[14:19]
     if (len(file) == 19) and (file[6:8] == cyc[0:2]) and (1 <= int(file[11:13])) and (file[14:19] == 'grib2'): 
       fv3file = dir + '/' + file
       print 'Found',fv3file
@@ -352,11 +354,14 @@ if os.path.exists(dir):
       iday = int(PDY[6:8])
       ihour = int(cyc[0:2]) 
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
+      print 'imonth, iday: ', imonth, iday
       climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      print 'climohref is : ', climohref
       os.system('mkdir -p '+climohref)
-      fhour = int(file[10:12])
+      fhour = int(file[11:13])
       shour = fhour - 3
-      newfile = 'fv3%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
+      newfile = 'fv3s%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
+      print 'newfile defined: ', newfile
       climofile = climohref + '/' + newfile + '_copy'
       climofile2 = climohref + '/' + newfile
       climofile2_bin = climohref + '/' + newfile + '.bin'

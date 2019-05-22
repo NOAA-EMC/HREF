@@ -1,5 +1,5 @@
-#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfcalib_bin.out__CYC___DOM_
-#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfcalib_bin.err__CYC___DOM_
+#BSUB -oo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfcalib_bin.out__CYC___DOM__v3
+#BSUB -eo /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/logs/test_qpfcalib_bin.err__CYC___DOM__v3
 #BSUB -q "devhigh"
 #BSUB -J HREF_QPFCALIB
 #BSUB -extsched 'CRAYLINUX[]' -R '1*{select[craylinux && !vnode]} + 1*{select[craylinux && vnode]span[ptile=1] cu[type=cabinet]}'
@@ -41,7 +41,7 @@ export dom=conus
 export pid=$$
 export DATA=/gpfs/hps2/ptmp/Matthew.Pyle/tmpnwprd/href_qpfcalib_bin_${cyc}_${envir}.${pid}
 
-$HOMEhref/jobs/JHREF_QPFCALIBRATE_BIN_cray
+$HOMEhref/jobs/JHREF_QPFCALIBRATE_BIN_cray_v3
 
 cd $HOMEhref/launch_info
 

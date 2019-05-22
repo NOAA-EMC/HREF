@@ -30,6 +30,8 @@ cd $DATA/${ff}/
 # ln -sf $FIXhref/*href5km .
 ln -sf $FIXhref/new*g227* .
 ln -sf $COMINffg/ffg*href5km .
+ln -sf $COMINffg/href.ffg*.grib2 .
+
 
 
 ###############################
