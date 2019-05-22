@@ -9,7 +9,6 @@
 #  (4) Uses WGRIB2 to interpolate to grid 227
 #  (5) calls executable again to stitch together tiles
 #      into final output
-#  
 #
 # Author: Matthew Pyle, NCEP/EMC, 05/02/2019
 #         
@@ -35,13 +34,29 @@ do
 if [ -e $DCOMROOT/us007003/${PDY}/wgrbbul/FFG.009.${RFC} ]
 then
 cp $DCOMROOT/us007003/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+elif [ -e $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
+then
+echo COPY DAY OLD FFG.009.${RFC}
+cp $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+elif [ -e $DCOMROOT/us007003/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
+then
+echo COPY TWO DAY OLD FFG.009.${RFC}
+cp $DCOMROOT/us007003/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+fi
 
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 221 > list.221
+
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 'kpds5=221' > list.221
 rec_1h=`tail -n1 list.221 | awk -F : '{print $1}'`
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 222 > list.222
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 'kpds5=222' > list.222
 rec_3h=`tail -n1 list.222 | awk -F : '{print $1}'`
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 223 > list.223
+$WGRIB ffg.${PDY}.009.${RFC}_full | grep 'kpds5=223' > list.223
+
+if [ -e list.223 ]
+then
 rec_6h=`tail -n1 list.223 | awk -F : '{print $1}'`
+else
+rec_6h=99
+fi
 
 
 ###############
@@ -86,79 +101,6 @@ rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
 
 $CNVGRIB -g12 ffg.${PDY}.009.${RFC} ffg.${PDY}.009.${RFC}.g2
 
-else
-
-msg="NO FFG.009.${RFC} file for today"
-echo $msg
-echo "try day old"
-
-if [ -e $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
-then
-echo FOUND $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC}
-cp $DCOMROOT/us007003/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
-
-
-ls -l ffg.${PDY}.009.${RFC}_full 
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 221 > list.221
-rec_1h=`tail -n1 list.221 | awk -F : '{print $1}'`
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 222 > list.222
-rec_3h=`tail -n1 list.222 | awk -F : '{print $1}'`
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 223 > list.223
-rec_6h=`tail -n1 list.223 | awk -F : '{print $1}'`
-
-echo rec_1h $rec_1h
-echo rec_3h $rec_3h
-echo rec_6h $rec_6h
-
-$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_1h} -grib -o ${RFC}_1h
-$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_3h} -grib -o ${RFC}_3h
-$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
-
-cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
-
-$CNVGRIB -g12 ffg.${PDY}.009.${RFC} ffg.${PDY}.009.${RFC}.g2
-
-rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
-else
-echo "two days old missing...try 3"
-
-if [ -e $DCOMROOT/us007003/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
-then
-cp $DCOMROOT/us007003/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}
-
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 221 > list.221
-rec_1h=`tail -n1 list.221 | awk -F : '{print $1}'`
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 222 > list.222
-rec_3h=`tail -n1 list.222 | awk -F : '{print $1}'`
-$WGRIB ffg.${PDY}.009.${RFC}_full | grep 223 > list.223
-rec_6h=`tail -n1 list.223 | awk -F : '{print $1}'`
-
-$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_1h} -grib -o ${RFC}_1h
-$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_3h} -grib -o ${RFC}_3h
-$WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
-
-cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
-
-$CNVGRIB -g12 ffg.${PDY}.009.${RFC} ffg.${PDY}.009.${RFC}.g2
-
-rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
-
-else
-msg="WARNING - NO FFG.009.${RFC} file available in last three days"
-echo $msg
-echo "grab files from latest"
-cp $COMOUTperm/${RFC}_1h .
-cp $COMOUTperm/${RFC}_3h .
-cp $COMOUTperm/${RFC}_6h .
-cat ${RFC}_1h ${RFC}_3h ${RFC}_6h  > ffg.${PDY}.009.${RFC}
-$CNVGRIB -g12 ffg.${PDY}.009.${RFC} ffg.${PDY}.009.${RFC}.g2
-rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
-
-fi
-
-fi
-
-fi
 
 done
 

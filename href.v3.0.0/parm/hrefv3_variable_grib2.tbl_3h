@@ -31,7 +31,7 @@ LCLD  6  3  214  M1  0
 MCLD  6  4  224  M1  0
 HCLD  6  5  234  M1  0
 TCDC  6  1  200  M1  0
-LTNG  17 192  1  M0  M1 0 > M1 0.01
+LTNG  17 192  1  M0  A1 0 > A1 0.01
 AP1h   1 8     1 L1  0  P1  0   > P2 0.25 6.35 
 AP3h   1 8     1 L1  0  P1  0   > P2 0.25 6.35
 AP6h   1 8     1 L1  0  P1  0   > P2 0.25 6.35
@@ -49,7 +49,7 @@ A6RI   1 8     1 M0     A1  0   > A4 2 5 10 100
 A24R   1 8     1 M0     A1  0   > A4 2 5 10 100
 FFG1   1 8     1 M0     A1  0   > A1 1
 FFG3   1 8     1 M0     A1  0   > A1 3
-FFG6   1 8     1 M0     K1  0   > K1 6
+FFG6   1 8     1 M0     A1  0   > A1 6
 
    15       special derived variables, each  of which, needs code to process specially
 PTYP  1 19     1 M1  0  P1  0  = T1 1.0

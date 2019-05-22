@@ -182,26 +182,6 @@
 ! var0 (as a 1D array)
 ! var2d_enmean (as patch of full 2D)
 
-!	write(0,*) 'pmatch_mean_loc w calc_nx,calc_ny: ',calc_nx,calc_ny
-!        write(0,*) 'shape(var0): ', shape(var0)
-!        write(0,*) 'shape(var2d_enmean): ', shape(var2d_enmean)
-!	write(0,*) 'ipatch, jpatch, ce_ W E S N: ', 
-!     &               ipatch,jpatch,ce_west, ce_east, ce_south, ce_north
-
-
-! can we avoid calling pmatch_mean_loc but still exercise all other manipulation?  
-!
-!  recast var2d_enmean as a local patch?
-! 
-
-!!! fake
-!!! fake
-!!!           lpm_calc(offset_i:offset_i + patch_nx, 
-!!!     &      offset_j:offset_j + patch_ny)=var2d_enmean(pe_west:pe_east,
-!!!     &                                               pe_south:pe_north)
-!!! fake
-!!! fake
-
             !This call calculates PM mean over the calc area and stores it in lpm_calc:
             CALL pmatch_mean_loc(calc_nx,calc_ny,var0, 
      &                 var2d_enmean(ce_west:ce_east, ce_south:ce_north),

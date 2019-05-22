@@ -96,7 +96,7 @@ fi
 ########################################################
 # Execute the script.
 
-python ${HOMEhref}/scripts/calibrate_pqpf_6h_bin?_v3.py
+python ${HOMEhref}/scripts/calibrate_pqpf_6h_bin_v3.py
 
 ########################################################
 

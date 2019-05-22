@@ -267,8 +267,8 @@ for fstart in fstarts:
           hreffile3 = hrefdir + '/nam%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/nam%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
         elif (mem == 'fv3'):
-          hreffile3 = hrefdir + '/fv3%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
-          hreffile6 = hrefdir + '/fv3%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
+          hreffile3 = hrefdir + '/fv3s%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
+          hreffile6 = hrefdir + '/fv3s%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
         elif (mem == 'hrrr'):
           hreffile3 = hrefdir + '/hrrr%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/hrrr%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
