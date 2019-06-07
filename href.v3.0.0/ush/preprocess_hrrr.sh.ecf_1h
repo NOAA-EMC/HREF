@@ -56,7 +56,6 @@ filecheck=${COMINhrrr}.${PDY}/conus/hrrr.t${cyc}z.wrfprsf${hr}.grib2
         cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > hrrr.t${cyc}z.f${hr}.grib2
 
         rm interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb   hrrr.t${cyc}z.f${hr}
-        rm $filecheck
 
         fi
 

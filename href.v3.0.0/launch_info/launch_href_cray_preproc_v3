@@ -66,6 +66,9 @@ bsub < launch_ffg_gen_${cyc}
 looplim=200
 loop=1
 
+if [ $cyc -eq 00 ]
+then
+
 while [ $loop -le $looplim ]
 do
 
@@ -81,5 +84,7 @@ let loop=loop+1
 fi
 
 done
+
+fi
 
 bsub < launch_hrefv3preprocpoe_${cyc}
