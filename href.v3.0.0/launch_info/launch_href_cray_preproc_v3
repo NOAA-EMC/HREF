@@ -40,11 +40,12 @@ DATE=`cat $COMROOT/date/t${cyc}z | cut -c7-14`
 
 cd /gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.${vers}/launch_info/
 
-if [ $NEST = "conus" -o $NEST = "ak" ]
-then
-# cat runpoe.preprocget.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefpreprocgetpoe_${cyc}
 cat runpoe.preprocv3.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_hrefv3preprocpoe_${cyc}
+
+if [ $NEST = "conus" ]
+then
 cat run_ffg_gen.sh_in_cray | sed s:_CYC_:${cyc}:g | sed s:_NEST_:${NEST}:g > launch_ffg_gen_${cyc}
+bsub < launch_ffg_gen_${cyc}
 fi
 
 # bsub < launch_hrefpreprocgetpoe_${cyc}
@@ -53,15 +54,15 @@ fi
 
 # look for FV3 output
 
+if [ $NEST = "conus" ]
+
+then
+
 # COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3/prod/fv3
 export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/prod/fv3
 export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3sar/para/fv3sar
-
-
-# generate FFG
-# ./launch_ffg_gen_${cyc} > ../logs/ffg_gen_${DATE}_${cyc}.log
-
-bsub < launch_ffg_gen_${cyc}
+export COMINfv3=/gpfs/dell1/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar
+export COMINfv3=/gpfs/dell1/ptmp/emc.campara/com/fv3cam/para/fv3sar
 
 looplim=200
 loop=1
@@ -86,5 +87,18 @@ fi
 done
 
 fi
+
+
+else # not conus
+
+
+echo NOT CONUS BLOCK
+
+export COMINfv3=/gpfs/dell1/ptmp/Matthew.Pyle/com/fv3cam/para/fv3sar
+
+fi
+
+echo here with COMINfv3 as $COMINfv3
+
 
 bsub < launch_hrefv3preprocpoe_${cyc}

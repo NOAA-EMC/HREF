@@ -151,12 +151,12 @@ alpha = 0.5
 # read in calibration coefficients
 
 if dom == 'conus':
-#  members = ['arw','fv3s','nssl','hrrr','nam']
-  members = ['arw','nssl','hrrr','nam']
+  members = ['arw','fv3s','nssl','hrrr','nam']
+#  members = ['arw','nssl','hrrr','nam']
 elif dom == 'ak':
-  members = ['arw','nmmb','nssl','hrrrak']
+  members = ['arw','fv3nc','nssl','hrrrak']
 else:
-  members = ['arw','nmmb','nssl']
+  members = ['arw','fv3nc','nssl']
 
 pqpf_6h_calibrate = 'no'
 pqpf_3h_calibrate = 'no'
@@ -426,19 +426,25 @@ for mem in members:
       file6 = COMINhiresw + '/hiresw.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'mem2.grib2'
       file6alt = COMINhiresw + '/hiresw.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'mem2.grib2'
 
+
+# have the FV3 preprocessing generate 3 h WEASD fields....handle like Hiresw?
     elif mem == 'fv3s':
       file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file4 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
-      memfiles4[itime] = file4
       file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
 
+    elif mem == 'fv3nc':
+      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file3alt = COMINfv3 + '/fv3.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
+      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6alt = COMINfv3 + '/fv3.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+
     elif mem == 'nam':
-      file3 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file4 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
+      file3 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file4 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency)+'.grib2'
       memfiles4[itime] = file4
-      file6 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMINnam + '/nam.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
 
@@ -529,6 +535,12 @@ for mem in members:
       print 'for file3 shour fhour: ', shour,fhour
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf3,nx,ny=simplewgrib2('qpf.txt')
+
+      undefsnow,nx,ny=simplewgrib2('qpf.txt')
+      undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
+      snowmaskregion = np.ma.filled(undefsnow,-9999)
+      qpf3 = np.where(np.equal(snowmaskregion,-9999),0,qpf3)
+
     else:
 
 ### HERE 
@@ -546,8 +558,14 @@ for mem in members:
         print 'ready from file3 in 1h: ', file3
         fhour=fhours[memcount]
         shour=fhour-1
+        print 'WEASD accum from : ', shour, ' to : ', fhour
         os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
         qpf1,nx,ny=simplewgrib2('qpf.txt')
+
+        undefsnow,nx,ny=simplewgrib2('qpf.txt')
+        undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
+        snowmaskregion = np.ma.filled(undefsnow,-9999)
+        qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
 
 #        idx = pygrib.index(file3,'name','lengthOfTimeRange')
 #        grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=1)[0]
@@ -567,6 +585,10 @@ for mem in members:
       print '6h shour fhour: ', shour,fhour
       os.system(WGRIB2+' '+file6+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf6,nx,ny=simplewgrib2('qpf.txt')
+      undefsnow,nx,ny=simplewgrib2('qpf.txt')
+      undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
+      snowmaskregion = np.ma.filled(undefsnow,-9999)
+      qpf6 = np.where(np.equal(snowmaskregion,-9999),0,qpf6)
       qpf[itime] = (qpf3 + qpf6) * 0.39370079
     if qpf_interval == 3:
       qpf[itime] = qpf3*0.39370079   # Apply 10:1 SLR, convert to inches
