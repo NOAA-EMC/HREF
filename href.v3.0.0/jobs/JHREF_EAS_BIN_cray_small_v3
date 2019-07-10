@@ -101,7 +101,7 @@ fi
 export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
 export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
 export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
-export COMINfv3p=/gpfs/dell1/ptmp/Matthew.Pyle/com/fv3cam/para
+export COMINfv3p=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
 export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
 export COMINpcpanl=${COMROOTp2}/pcpanl/prod
 
