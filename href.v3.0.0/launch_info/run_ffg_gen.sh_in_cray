@@ -32,6 +32,6 @@ export HOMEhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.$
 
 export SENDCOM=YES
 export SENDDBN=NO
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 ${HOMEhref}/jobs/JHREF_FFG_GEN
