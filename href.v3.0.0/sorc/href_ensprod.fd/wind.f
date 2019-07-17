@@ -222,14 +222,12 @@ c    for derived variables
 
 !       neighborhood max
 
-            write(*,*) 'Call  neighborhood_max inside wind!!!! .......'
-
 	do irun = 1, iens
 
-	write(0,*) 'irun: ', irun
-        write(0,*) 'dPsignal(nv): ', dPsignal(nv)
-	write(0,*) 'shape(windspd): ', shape(windspd)
-	write(0,*) 'pre windspd(jf/2,irun): ', windspd(jf/2,irun)
+!	write(0,*) 'irun: ', irun
+!       write(0,*) 'dPsignal(nv): ', dPsignal(nv)
+!	write(0,*) 'shape(windspd): ', shape(windspd)
+!	write(0,*) 'pre windspd(jf/2,irun): ', windspd(jf/2,irun)
 
 
 !	write(0,*) 'maxval(windspd(:,irun)): ', maxval(windspd(:,irun))
@@ -239,12 +237,12 @@ c    for derived variables
              call neighborhood_max(windspd(:,irun),
      +                          jf,im,jm,dPsignal(nv))
 
-	write(0,*) 'post windspd(jf/2,irun): ', windspd(jf/2,irun)
+!	write(0,*) 'post windspd(jf/2,irun): ', windspd(jf/2,irun)
 !	write(0,*) 'post maxval(windspd(:,irun)): ', maxval(windspd(:,irun))
        enddo
 
 
-	write(0,*) 'got past derv_pr for wind neighb max'
+!	write(0,*) 'got past derv_pr for wind neighb max'
 
         endif
 
@@ -253,16 +251,17 @@ c    for derived variables
              miss=missing(lv,:)
 	if ( trim(dpsignal(nv)) .eq. 'K' .or. trim(dpsignal(nv)) .eq. 'L') then
              apoint=windspd(igrid,:)
-	if (igrid .eq. jf/2) then
-           write(0,*) 'defined apoint(nbrmax) as: ', apoint
-        endif
+!	if (igrid .eq. jf/2) then
+!           write(0,*) 'defined apoint(nbrmax) as: ', apoint
+!        endif
 
         else
 
              apoint=sqrt(u(igrid,:)*u(igrid,:)+v(igrid,:)*v(igrid,:))
-	if (Igrid .eq. jf/2) then
-           write(0,*) 'defined apoint(pnt) as: ', apoint
-        endif
+!	if (Igrid .eq. jf/2) then
+!           write(0,*) 'defined apoint(pnt) as: ', apoint
+!        endif
+
         endif
               if(trim(dop(nv)).ne.'-') then
                      thr1 = dThrs(nv,lh)

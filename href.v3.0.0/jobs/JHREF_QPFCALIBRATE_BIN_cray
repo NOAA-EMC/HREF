@@ -82,7 +82,7 @@ else
   export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 fi
 
-if [ ! -d $COMOUT ] ; then
+if [ ! -d $COMOUT/ensprod ] ; then
  mkdir -p $COMOUT/ensprod
  mkdir -p $COMOUT/verf_g2g
 fi
