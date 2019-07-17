@@ -1,9 +1,0 @@
-[myvars]
-comb_or_sub:1
-gb1:/gpfs/hps/ptmp/Matthew.Pyle/hiresw_python_00/ops.f48.grb2_nmmb
-gb2:/gpfs/hps/ptmp/Matthew.Pyle/hiresw_python_00/ops.f45.grb2_nmmb
-gbout:/gpfs/hps/emc/meso/noscrub/Matthew.Pyle/python_tools/nmmb_6h_48.grib2_ops
-startfhr:42
-idate:2017031700
-frange:6
-model_bucket:3

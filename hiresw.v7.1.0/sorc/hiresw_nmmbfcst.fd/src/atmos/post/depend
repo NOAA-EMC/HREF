@@ -1,3 +1,0 @@
-post_gfs.o : post_gfs.F90  
-post_nems_routines.o : post_nems_routines.F90  
-post_nmm.o : post_nmm.F90  ../../ESMFVersionDefine.h

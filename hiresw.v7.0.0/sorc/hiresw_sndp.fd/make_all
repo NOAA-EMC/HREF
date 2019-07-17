@@ -1,4 +1,0 @@
-set -x
-make -f makefile_nmm
-make -f makefile_em
-make -f makefile_em_nssl
