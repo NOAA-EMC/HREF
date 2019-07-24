@@ -71,8 +71,8 @@ setpdy.sh
 . PDY
 
 if [ "$RUN_ENVIR" != nco ] ; then
- export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_exp/nawips}
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_exp/ensprod}
+ export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_expv3/nawips}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/ensprod}
 else
  export COMOUT=${COMOUT:-${COMROOT}/hiresw/${envir}/href.${PDY}/nawips}
  export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
@@ -93,6 +93,7 @@ echo "$HOMEhref/scripts/exnawips_href.sh.ecf pmmn &> $DATA/${NEST}_pmmn.$$ " >>p
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf eas  &> $DATA/${NEST}_eas.$$  " >>poescript
 
 aprun -N $PTILE -n $PTILE cfp poescript
 export err=$?; err_chk
@@ -102,6 +103,7 @@ cat $DATA/${NEST}_pmmn.$$
 cat $DATA/${NEST}_avrg.$$
 cat $DATA/${NEST}_prob.$$
 cat $DATA/${NEST}_sprd.$$
+cat $DATA/${NEST}_eas.$$
 #################################################################
 
 cd ${DATAROOT}
