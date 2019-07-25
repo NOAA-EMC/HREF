@@ -23,10 +23,10 @@
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/dell1/ptmp/emc.campara/com/fv3cam/para">
 <!ENTITY COMINfv3sarnc "/gpfs/dell1/ptmp/Matthew.Pyle/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3saralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/tp2/nco/ops/com/nam/prod/nam">
-<!ENTITY COMINfv3saralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3">
 <!ENTITY COMINhrrralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr">
 <!ENTITY COMINnamalt "/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod/nam">
 <!ENTITY OUTDIR "/gpfs/hps3/ptmp/&USER;">
