@@ -160,7 +160,7 @@ do
 echo "cd $DATA ; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${HOMEhref}/scripts/make_easfracqpf_combo_bin_v3.py ${fhr} 12 >&  qpf_combo_${dom}_${cyc}_12h_${fhr}.log &" >> poe.qpf_12_24
 done
 
-hrs="24 30 36"
+hrs="24 27 30 33 36"
 for fhr in $hrs
 do
 echo "cd $DATA ; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${HOMEhref}/scripts/make_easfracqpf_combo_bin_v3.py ${fhr} 24 >&  qpf_combo_${dom}_${cyc}_24h_${fhr}.log &" >> poe.qpf_12_24
@@ -179,7 +179,7 @@ aprun -n 1 -N 1 -d 18 poe.qpf_1_1 &
 aprun -n 1 -N 1 -d 18 poe.snow_1_1 &
 aprun -n 1 -N 1 -d 18 poe.qpf_1_2 &
 aprun -n 1 -N 1 -d 18 poe.snow_1_2 &
-aprun -n 1 -N 1 -d 12 poe.qpf_12_24 &
+aprun -n 1 -N 1 -d 15 poe.qpf_12_24 &
 wait
 export err=$?; err_chk
 
@@ -217,7 +217,7 @@ then
 cat $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
-if [ $fhr -eq 24 -o $fhr -eq 30 -o $fhr -eq 36 ]
+if [ $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o $fhr -eq 33 -o $fhr -eq 36 ]
 then
 cat $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi

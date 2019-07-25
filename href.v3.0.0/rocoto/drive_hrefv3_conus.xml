@@ -15,7 +15,7 @@
 <!ENTITY USER "Matthew.Pyle">
 <!ENTITY ACCOUNT "FV3GFS-T2O">
 
-<!ENTITY HOMEhref "/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0">
+<!ENTITY HOMEhref "/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF/href.v3.0.0">
 <!ENTITY domain "conus">
 <!ENTITY machine "WCOSS_C">
 <!ENTITY envir "rocpara">
