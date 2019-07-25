@@ -13,11 +13,11 @@ set -x
 
 module load rocoto/1.2.4
 
-doms="hi pr"
+doms="hi pr conus"
 
 
 dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/rocoto"
-dir="/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/rocoto"
+dir="/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF/href.v3.0.0/rocoto"
 
 for dom in $doms
 do
