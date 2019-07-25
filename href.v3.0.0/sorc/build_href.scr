@@ -10,9 +10,9 @@ BASE=`pwd`
 
 mkdir -p ../exec
 
-GET_PRCIP=0
-FV3BUCKET=0
-FFG_GEN=0
+GET_PRCIP=1
+FV3BUCKET=1
+FFG_GEN=1
 ENSPROD=1
 
 #########################
