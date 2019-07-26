@@ -33,7 +33,6 @@ ln -sf $COMINffg/ffg*href5km .
 ln -sf $COMINffg/href.ffg*.grib2 .
 
 
-
 ###############################
 
 typeset -Z2 cycloc     #temp variable here
@@ -45,12 +44,12 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
         echo "in conus block"
-     files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
-      days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1"
-      cycs="9 00    18     00    18   00  00    00     12     12    12"
-      ages="9  0     6      0     6    0   0     0     12     12    12"
+      days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY  $PDYm1 $PDY  $PDY $PDYm1  $PDYm1"
+      cycs="9 00    18     00    18     00    12    00     00     12     12"
+      ages="9  0     6      0     6      0    12    0       0     12     12"
      fi
      set -A  day  $days
      set -A  cycloc $cycs
@@ -61,7 +60,7 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   elif [ $dom = 'hi' ]
     then
 
-     files="9  hiarw hinmmb himem2arw hiarw hinmmb himem2arw"
+     files="9  hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
       days="9  $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1"
@@ -73,35 +72,9 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
      set -A  age  $ages
      mbrs="1  2  3  4  5  6"
 
-
-  elif [ $dom = 'ak' ]
-    then
-     files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw hrrrak hrrrak"
-     set -A file  $files
-     if [ $cyc = '00' ] ; then
-     days="9 $PDYm1 $PDYm1 $PDYm1  $PDYm1 $PDYm1 $PDYm1  $PDY   $PDYm1"
-     cycs="9 18      18      18     06     06    06       00     18"
-     ages="9  6       6       6     18     18    18        0      6"
-     fi
-     set -A  day  $days
-     set -A  cycloc $cycs
-     set -A  age  $ages
-     mbrs="1  2  3  4  5  6  7  8"
-
-  elif [ $dom = 'pr' ]
-    then
-     files="9 prarw prnmmb prmem2arw prarw prnmmb prmem2arw"
-     set -A file  $files
-     days="9 $PDYm1 $PDYm1 $PDYm1  $PDYm1 $PDYm1 $PDYm1"
-     cycs="9 18      18      18     06     06    06"
-     ages="9  6       6       6     18     18    18"
-     set -A  day  $days
-     set -A  cycloc $cycs
-     set -A  age  $ages
-     mbrs="1  2  3  4  5  6"
-
     else
-      echo "bad domain"
+     echo "bad domain" $dom for cyc $cyc
+      exit 99
     fi
 
 
@@ -113,28 +86,30 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-  files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+#  files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+#  files="9 namnest namnest hrrr hrrr  conusarw fv3s conusmem2arw conusarw fv3s conusmem2arw"
+  files="9 namnest namnest hrrr hrrr  fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8  9  10"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1"
-    cycs="9 06 00 06 00 00 00 00 12 12 12"
-    ages="9  0  6  0  6  6  6  6 18 18 18"
+    days="9 $PDY $PDY $PDY $PDY $PDY $PDYm1 $PDY $PDY  $PDYm1 $PDYm1"
+    cycs="9  06   00   06   00   00    12    00   00    12     12"
+    ages="9  0     6    0    6    6    18     6    6    18     18"
   fi
 
   if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY"
-    cycs="9 12 06 12 06 12 12 12 00 00 00"
-    ages="9  0  6  0  6  0  0  0 12 12 12"
+    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY  $PDY $PDY"
+    cycs="9  12   06    12   06   12   00  12   12   00  00"
+    ages="9   0    6     0    6    0   12   0    0   12  12"
         echo cycs $cycs
         echo ages $ages
   fi
 
   if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY"
-    cycs="9 18 12 18 12 12 12 12 00 00 00"
-    ages="9  0  6  0  6  6  6  6 18 18 18"
+    days="9 $PDY $PDY $PDY $PDY $PDY  $PDY $PDY $PDY $PDY $PDY"
+    cycs="9   18   12   18   12   12   00  12   12   00   00"
+    ages="9    0    6    0    6    6   18   6    6   18   18"
   fi
 
   set -A  day $days
@@ -143,27 +118,24 @@ elif [ $cyc -ge 6 ] ; then
 
   elif [ $dom = 'ak' ]
   then
-  files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw hrrrak hrrrak"
+
+  files="9 hrrrak hrrrak akarw akfv3s akmem2arw akarw akfv3s akmem2arw"
+
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1 $PDY $PDY"
-    cycs="9  06   06   06     18     18    18   06    00"
-    ages="9  0     0    0     12     12    12   0      6"
-  fi
-
-  if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1 $PDY $PDY"
-    cycs="9  06   06   06     18     18    18     12  06"
-    ages="9  6     6    6     18     18    18      0   6"
+    days="9 $PDY  $PDY $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
+    cycs="9   06    00   06   06   06     18     18    18   "
+    ages="9    0     6    0    0    0     12     12    12   "
   fi
 
   if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY  $PDY    $PDY  $PDY  $PDY $PDY"
-    cycs="9  18   18   18     06     06    06    18     12"
-    ages="9  0     0    0     12     12    12     0     6"
+    days="9 $PDY  $PDY $PDY $PDY $PDY  $PDY   $PDY  $PDY   "
+    cycs="9   18    12   18   18   18    06    06    06    "
+    ages="9    0     6    0    0    0    12    12    12   "
   fi
+
 
   set -A  day $days
   set -A  cycloc $cycs
@@ -172,26 +144,14 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'hi' ]
   then
 
-  files="9 hiarw hinmmb himem2arw hiarw hinmmb himem2arw"
+  files="9 hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
   set -A file  $files
-  mbrs="1  2  3  4  5  6"
-
-  if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1"
-    cycs="9 00 00 00 12 12 12"
-    ages="9 6  6  6  18 18 18"
-  fi
+  mbrs="1  2  3  4  5  6 "
 
   if [ $cyc = '12' ] ; then
     days="9 $PDY $PDY $PDY $PDY $PDY $PDY"
-    cycs="9 12 12 12  00 00 00"
-    ages="9  0  0  0  12 12 12"
-  fi
-
-  if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY"
-    cycs="9 12 12 12 00 00 00"
-    ages="9 6  6  6  18 18 18"
+    cycs="9   12   12   12   00   00  00"
+    ages="9    0    0    0   12i  12  12"
   fi
 
   set -A  day $days
@@ -201,21 +161,15 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'pr' ]
   then
 
-	echo "defining pr for 06 12 18 cycles"
-  files="9 prarw prnmmb prmem2arw prarw prnmmb prmem2arw"
+  files="9 prarw prfv3s prmem2arw prarw prfv3s prmem2arw"
 
   set -A file  $files
+  mbrs="1  2  3  4  5  6"
 
   if [ $cyc = '06' ] ; then
     days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
     cycs="9  06   06   06     18     18    18"
     ages="9  0     0    0     12     12    12"
-  fi
-
-  if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  6     6    6     18     18    18"
   fi
 
   if [ $cyc = '18' ] ; then
@@ -224,17 +178,17 @@ elif [ $cyc -ge 6 ] ; then
     ages="9  0     0    0     12     12    12"
   fi
 
+
   set -A  day $days
   set -A  cycloc $cycs
   set -A  age $ages
-	echo defining mbrs for pr
-  mbrs="1  2  3  4  5  6"
 
 fi
 
 else
 
- echo $cyc ' is not a cycle'
+ echo ERROR $cyc ' is not a cycle'
+ exit 99
 
 fi
 
@@ -279,13 +233,13 @@ then
 
 if [ ${ff}%3 -eq 0 ]
 then
-ln -sf $PARMhref/href_variable_grib2.tbl_3h variable.tbl
+ln -sf $PARMhref/hrefv3_variable_grib2.tbl_3h variable.tbl
 else
-ln -sf $PARMhref/href_variable_grib2.tbl    variable.tbl
+ln -sf $PARMhref/hrefv3_variable_grib2.tbl    variable.tbl
 fi
 
 else
-ln -sf $PARMhref/href_variable_grib2.tbl    variable.tbl
+ln -sf $PARMhref/hrefv3_variable_grib2.tbl    variable.tbl
 fi
 
 $EXEChref/href_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1
@@ -296,9 +250,9 @@ cp $DATA/$ff/output_ensprod.$ff $COMOUT/test_output_ensprod.$ff
 
 if [ $dom = 'conus' ]
 then
-types="mean pmmn avrg prob sprd lpmm ffri eas"
+types="mean pmmn avrg prob sprd lpmm ffri"
 else
-types="mean pmmn avrg prob lpmm sprd"
+types="mean pmmn avrg prob sprd lpmm"
 fi
 
 if [ $SENDCOM = YES ]; then
@@ -310,8 +264,7 @@ if [ $SENDCOM = YES ]; then
   cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUTPERM/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
   if [ $dom = 'conus' ]
   then
-#ffair  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2 -match "(APCP|CAPE|REFC|REFD|MAXREF|DPT|RH|PWAT)" -grib $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}hmt.f$ff.grib2
-$WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2 -match "WEASD" -grib $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}hmt.f$ff.grib2
+  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2 -match "(APCP|CAPE|REFC|REFD|MAXREF|DPT|RH|PWAT)" -grib $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}ffair.f$ff.grib2
   fi
  done
 

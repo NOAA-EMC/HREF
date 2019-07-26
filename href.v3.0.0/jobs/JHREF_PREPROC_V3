@@ -182,7 +182,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.eee &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.fff &
 wait
 
-$USHhref/preprocess_fv3.sh.ecf_3hapcp ${cyc}
+$USHhref/preprocess_fv3_3hapcp.sh.ecf ${cyc}
 
 fi
 
@@ -252,7 +252,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.e &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.f &
 wait
 
-$USHhref/preprocess_hrrr.sh.ecf_3hapcp ${cyc}
+$USHhref/preprocess_hrrr_3hapcp.sh.ecf ${cyc}
 
 
 echo "#!/bin/sh  "                             >  poe.aa
@@ -418,7 +418,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.e &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.f &
 wait
 
-$USHhref/preprocess_hrrrak.sh.ecf_3hapcp ${cyc}
+$USHhref/preprocess_hrrrak_3hapcp.sh.ecf ${cyc}
 export err=$?; err_chk
 
 

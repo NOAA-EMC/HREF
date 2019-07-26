@@ -13,7 +13,7 @@ set -x
 
 module load rocoto/1.2.4
 
-doms="hi pr conus"
+doms="hi pr conus ak"
 
 
 dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/rocoto"

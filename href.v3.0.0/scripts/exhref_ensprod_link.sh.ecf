@@ -31,7 +31,7 @@ export fhr=${1}
 
 echo NEST is $NEST
 
-$USHhref/href_getmbr.sh_nointerp $fhr $NEST
+$USHhref/href_getmbr.sh $fhr $NEST
 
 
 #####################################################################

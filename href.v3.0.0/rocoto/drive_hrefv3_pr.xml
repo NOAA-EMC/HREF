@@ -146,7 +146,8 @@
     <dependency>
       <or>
         <and>
-          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/fv3sar.t@Hz.&domain;.f36.grib2</cyclestr></datadep>
+<!-- Wait on f48 as need to process that far for the TL member  -->
+          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/fv3sar.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
         </and>
         <and>
 <!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->
@@ -262,7 +263,7 @@
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>6:ppn=6</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD_V3</command>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/ensprod_&domain;_@H.log</cyclestr></join>
 
@@ -357,7 +358,7 @@
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_AWIPS_V3</command>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_AWIPS</command>
     <jobname><cyclestr>awips_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/awips_&domain;_@H.log</cyclestr></join>
 

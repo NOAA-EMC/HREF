@@ -18,7 +18,7 @@
 ###################
 
 import os, sys, time
-from netCDF4 import Dataset
+# from netCDF4 import Dataset
 import numpy as np
 from datetime import datetime, timedelta
 from cal_functions import quantile_map
@@ -32,9 +32,25 @@ from cal_functions import quantile_map
 # sys.path.append(staticdir)
 
 from eas_config import *
-WGRIB2 = '/nwprod/util/exec/wgrib2'
-COPYGB = '/nwprod/util/exec/copygb'
+# WGRIB2 = '/nwprod/util/exec/wgrib2'
+# COPYGB = '/nwprod/util/exec/copygb'
 
+
+try:
+  os.environ["WGRIB2"]
+except KeyError:
+  print "NEED TO DEFINE WGRIB2"
+  exit(1)
+WGRIB2=os.environ.get('WGRIB2','trash')
+print 'found WGRIB2 as ', WGRIB2 
+
+try:
+  os.environ["COPYGB"]
+except KeyError:
+  print "NEED TO DEFINE COPYGB"
+  exit(1)
+COPYGB=os.environ.get('COPYGB','trash')
+print 'found COPYGB as ', COPYGB 
 
 try:
   os.environ["HOMEhref"]
@@ -67,6 +83,14 @@ except KeyError:
   exit(1)
 COMINhrrr=os.environ.get('COMINhrrr','trash')
 print 'found COMINhrrr as ', COMINhrrr
+
+try:
+  os.environ["COMINfv3"]
+except KeyError:
+  print "NEED TO DEFINE COMINfv3"
+  exit(1)
+COMINfv3=os.environ.get('COMINfv3','trash')
+print 'found COMINfv3 as ', COMINfv3
 
 try:
   os.environ["COMINpcpanl"]
@@ -189,7 +213,7 @@ if os.path.exists(dir):
       iday = int(PDY[6:8])
       ihour = int(cyc[0:2]) 
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
-      climohref = COMINclimo + '/sseox/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       os.system('mkdir -p '+climohref)
       fhour = int(file[21:23])
       shour = fhour - 3
@@ -211,7 +235,7 @@ if os.path.exists(dir):
       iday = int(PDY[6:8])
       ihour = int(cyc[0:2]) 
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
-      climohref = COMINclimo + '/sseox/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       os.system('mkdir -p '+climohref)
       fhour = int(file[22:24])
       shour = fhour - 3
@@ -234,7 +258,7 @@ if os.path.exists(dir):
       iday = int(PDY[6:8])
       ihour = int(cyc[0:2]) 
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
-      climohref = COMINclimo + '/sseox/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       os.system('mkdir -p '+climohref)
       fhour = int(file[21:23])
       shour = fhour - 3
@@ -264,7 +288,7 @@ if os.path.exists(dir):
       iday = int(PDY[6:8])
       ihour = int(cyc[0:2]) 
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
-      climohref = COMINclimo + '/sseox/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       os.system('mkdir -p '+climohref)
       fhour = int(file[11:13])
       shour = fhour - 3
@@ -279,7 +303,6 @@ if os.path.exists(dir):
         print 'Creating '+climofile2
         os.system(WGRIB2+' '+hrrrfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile2)   
         os.system(WGRIB2+' '+hrrrfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile2_bin)   
-#        os.system(WGRIB2+' '+hrrrfile+' -match "APCP:surface:" -end -grib '+climofile)   
 
 # copy NAM from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
@@ -297,7 +320,7 @@ if os.path.exists(dir):
       iday = int(PDY[6:8])
       ihour = int(cyc[0:2]) 
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
-      climohref = COMINclimo + '/sseox/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       os.system('mkdir -p '+climohref)
       fhour = int(file[10:12])
       shour = fhour - 3
@@ -312,6 +335,43 @@ if os.path.exists(dir):
         print 'Creating '+climofile2
         os.system(WGRIB2+' '+namxfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile2)   
         os.system(WGRIB2+' '+namxfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+ climofile2_bin)   
+
+# copy FV3 from the realtime directory to climo
+#  strip out just the QPF using a wgrib2 command
+# print dirs
+dir = COMINfv3 + '/' + 'fv3.'+PDY[:8]
+print 'dir is : ', dir
+if os.path.exists(dir):
+  files = next(os.walk(dir))[2]
+  for file in files:
+    if (len(file) == 19):
+      print file,len(file), file[6:8], file[11:13], file[14:19]
+    if (len(file) == 19) and (file[6:8] == cyc[0:2]) and (1 <= int(file[11:13])) and (file[14:19] == 'grib2'): 
+      fv3file = dir + '/' + file
+      print 'Found',fv3file
+      iyear = int(PDY[:4])
+      imonth = int(PDY[4:6])
+      iday = int(PDY[6:8])
+      ihour = int(cyc[0:2]) 
+      ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
+      print 'imonth, iday: ', imonth, iday
+      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
+      print 'climohref is : ', climohref
+      os.system('mkdir -p '+climohref)
+      fhour = int(file[11:13])
+      shour = fhour - 3
+      newfile = 'fv3s%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
+      print 'newfile defined: ', newfile
+      climofile = climohref + '/' + newfile + '_copy'
+      climofile2 = climohref + '/' + newfile
+      climofile2_bin = climohref + '/' + newfile + '.bin'
+      print climofile2
+      if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
+        os.system('rm '+climofile2)
+      if not os.path.exists(climofile2) and (fhour%3 == 0):
+        print 'Creating '+climofile2
+        os.system(WGRIB2+' '+fv3file+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile2)   
+        os.system(WGRIB2+' '+fv3file+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+ climofile2_bin)   
 
 
 # Remove old Stage-IV and HREFv2 files
@@ -336,13 +396,13 @@ for dirpath, dirnames, files in os.walk(COMINclimo+'/qpe/conus'):
       filename = COMINclimo+'/qpe/conus/'+file
       os.system('rm -f '+filename)
       print 'Deleted',filename
-for dirpath, dirnames, files in os.walk(COMINclimo+'/sseox/qpf/conus'):
+for dirpath, dirnames, files in os.walk(COMINclimo+'/href/qpf/conus'):
   for dir in dirnames:
     year, month, day, hour = int(dir[0:4]), int(dir[4:6]), int(dir[6:8]), int(dir[8:10])
     vtime = datetime(year,month,day,hour)
     es = int(time.mktime(vtime.timetuple()))
     if es<climostart_es:
-      fulldir = COMINclimo+'/sseox/qpf/conus/'+dir
+      fulldir = COMINclimo+'/href/qpf/conus/'+dir
       os.system('rm -rf '+fulldir)
       print 'Deleted',dir
 
