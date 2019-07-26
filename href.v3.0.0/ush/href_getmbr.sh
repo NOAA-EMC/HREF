@@ -16,7 +16,6 @@ typeset -Z2 m
 fhr=$1
 dom=${2}
 
-wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
 
 echo here in ush script with dom $dom
 
@@ -33,22 +32,27 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
 	echo "in conus block"
-     files="9 namnest namnest conusarw conusnmmb conusmem2arw hrrr hrrr  conusarw conusnmmb conusmem2arw"
+#     files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+     files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
-      days="9 $PDY $PDYm1 $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1 $PDYm1" 
-      cycs="9 00    18     00    00   00  00    18    12     12    12"
-      ages="9  0     6      0     0    0   0    6     12     12    12"
+      days="9 $PDY $PDYm1 $PDY $PDYm1 $PDY $PDYm1   $PDY  $PDY $PDYm1  $PDYm1" 
+      cycs="9 00    18     00    18     00   12     00    00    12      12"
+      ages="9  0     6      0     6      0   12     0     0     12      12"
      fi
      set -A  day  $days
      set -A  cycloc $cycs
      set -A  age  $ages
-     mbrs="1  2  3  4  5  6  7  8  9  10"
+     mbrs="1  2  3  4  5  6  7  8  9  10" 
 
   elif [ $dom = 'hi' ]
     then
 
-     files="9  hiarw hinmmb himem2arw hiarw hinmmb himem2arw"
+#     files="9  hiarw hinmmb himem2arw hiarw hinmmb himem2arw"
+     files="9  hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
+
+     echo definining files for hi as $files
+
      set -A file  $files
      if [ $cyc = '00' ] ; then
       days="9  $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
@@ -61,32 +65,12 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
      mbrs="1  2  3  4  5  6"
 
 
-  elif [ $dom = 'ak' ]
-    then
-     files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw"
-     set -A file  $files
-     days="9 $PDYm1 $PDYm1 $PDYm1  $PDYm1 $PDYm1 $PDYm1"
-     cycs="9 18      18      18     06     06    06"
-     ages="9  6       6       6     18     18    18"
-     set -A  day  $days
-     set -A  cycloc $cycs
-     set -A  age  $ages
-     mbrs="1  2  3  4  5  6"
+     echo defined mbrs for hi as $mbrs
 
-  elif [ $dom = 'pr' ]
-    then
-     files="9 prarw prnmmb prmem2arw prarw prnmmb prmem2arw"
-     set -A file  $files
-     days="9 $PDYm1 $PDYm1 $PDYm1  $PDYm1 $PDYm1 $PDYm1"
-     cycs="9 18      18      18     06     06    06"
-     ages="9  6       6       6     18     18    18"
-     set -A  day  $days
-     set -A  cycloc $cycs
-     set -A  age  $ages
-     mbrs="1  2  3  4  5  6"
 
   else
-      echo "bad domain"
+      echo "bad domain" $dom for cyc $cyc
+      exit 99
     fi
 
 elif [ $cyc -ge 6 ] ; then
@@ -94,28 +78,30 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-  files="9 namnest namnest conusarw conusnmmb conusmem2arw hrrr hrrr conusarw conusnmmb conusmem2arw"
+#  files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
+#  files="9 namnest namnest hrrr hrrr  conusarw fv3s conusmem2arw conusarw fv3s conusmem2arw"
+  files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
   set -A file  $files
-  mbrs="1  2  3  4  5  6  7  8  9 10"
+  mbrs="1  2  3  4  5  6  7  8  9  10" 
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
-    cycs="9 06 00 00 00 00 06 00 12 12 12"
-    ages="9  0  6  6  6  6  0  6 18 18 18"
+    days="9 $PDY $PDY $PDY $PDY $PDY  $PDYm1 $PDY $PDY  $PDYm1 $PDYm1" 
+    cycs="9  06   00   06   00   00     12     00   00    12     12"
+    ages="9  0     6    0    6    6     18      6    6    18     18"
   fi
 
   if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY" 
-    cycs="9 12 06 12 12 12  12 06 00  00 00"
-    ages="9  0  6  0  0  0   0  6 12  12 12"
+    days="9 $PDY $PDY $PDY $PDY $PDY $PDY  $PDY $PDY  $PDY $PDY" 
+    cycs="9  12   06    12   06   12   00    12   12   00   00"
+    ages="9   0    6     0    6    0   12    0    0   12   12"
 	echo cycs $cycs
         echo ages $ages
   fi
 
   if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY" 
-    cycs="9 18 12 12 12 12 18 12 00 00 00"
-    ages="9  0  6  6  6  6  0 6  18 18 18"
+    days="9 $PDY $PDY $PDY $PDY $PDY $PDY  $PDY $PDY $PDY $PDY" 
+    cycs="9   18   12   18   12   12  00   12   12   00   00"
+    ages="9    0    6    0    6    6  18   6    6   18   18"
   fi
 
   set -A  day $days
@@ -125,27 +111,21 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'ak' ]
   then
 
-  files="9 akarw aknmmb akmem2arw akarw aknmmb akmem2arw"
+  files="9 hrrrak hrrrak akarw akfv3s akmem2arw akarw akfv3s akmem2arw"
 
   set -A file  $files
-  mbrs="1  2  3  4  5  6"
+  mbrs="1  2  3  4  5  6  7  8"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  0     0    0     12     12    12"
-  fi
-
-  if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  6     6    6     18     18    18"
+    days="9 $PDY  $PDY $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
+    cycs="9   06    00   06   06   06     18     18    18   "
+    ages="9    0     6    0    0    0     12     12    12   "
   fi
 
   if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY  $PDY    $PDY  $PDY"
-    cycs="9  18   18   18     06     06    06"
-    ages="9  0     0    0     12     12    12"
+    days="9 $PDY  $PDY $PDY $PDY $PDY  $PDY   $PDY  $PDY   "
+    cycs="9   18    12   18   18   18    06    06    06    "
+    ages="9    0     6    0    0    0    12    12    12   "
   fi
 
   set -A  day $days
@@ -155,26 +135,14 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'hi' ]
   then
 
-  files="9 hiarw hinmmb himem2arw hiarw hinmmb himem2arw"
+  files="9 hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6 "
 
-  if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1" 
-    cycs="9 00 00 00 12 12 12"
-    ages="9 6  6  6  18 18 18"
-  fi
-
   if [ $cyc = '12' ] ; then
     days="9 $PDY $PDY $PDY $PDY $PDY $PDY" 
-    cycs="9 12 12 12  00 00 00"
-    ages="9  0  0  0  12 12 12"
-  fi
-
-  if [ $cyc = '18' ] ; then
-    days="9 $PDY $PDY $PDY $PDY $PDY $PDY $PDY" 
-    cycs="9 12 12 12 00 00 00"
-    ages="9 6  6  6  18 18 18"
+    cycs="9   12   12   12   00   00  00"
+    ages="9    0    0    0   12i  12  12"
   fi
 
   set -A  day $days
@@ -186,7 +154,7 @@ elif [ $cyc -ge 6 ] ; then
 
   echo in pr block
 
-  files="9 prarw prnmmb prmem2arw prarw prnmmb prmem2arw"
+  files="9 prarw prfv3s prmem2arw prarw prfv3s prmem2arw"
 
   set -A file  $files
   mbrs="1  2  3  4  5  6"
@@ -195,12 +163,6 @@ elif [ $cyc -ge 6 ] ; then
     days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
     cycs="9  06   06   06     18     18    18"
     ages="9  0     0    0     12     12    12"
-  fi
-
-  if [ $cyc = '12' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  6     6    6     18     18    18"
   fi
 
   if [ $cyc = '18' ] ; then
@@ -217,7 +179,8 @@ elif [ $cyc -ge 6 ] ; then
 
 else
 
- echo $cyc ' is not a cycle'
+ echo ERROR $cyc ' is not a cycle'
+ exit 99
 
 fi
 
@@ -255,22 +218,14 @@ echo working things with ff as $ff and  fcheck as $fcheck
       echo href.m${m}.t${cyc}z.f${ff} 
 
 ###### namnest
-        filecheck=${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.conusnest.hiresf${fcst}.tm00.grib2
-      if [  ${file[$m]} = 'namnest'  -a $fcst -le 60  ] ; then     
-	echo WGRIB2 is $WGRIB2
+      if [  ${file[$m]} = 'namnest'  -a $fcst -le 60  ] ; then
+
+        filecheck=${COMINnam}.${day[$m]}/nam.t${cycloc[$m]}z.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then
-        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib namx.m${m}.f${ff} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|REFC|MAXREF|APCP):" -grib nn.m${m}.f${ff}.grb
-        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.m${m}.f${ff}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.m${m}.f${ff}.grb
-        cat nn.m${m}.f${ff}.grb  nn2.m${m}.f${ff}.grb ceiling.m${m}.f${ff}.grb > inputs_nn.m${m}.f${ff}.grb
 
-        $WGRIB2 namx.m${m}.f${ff} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.m${m}.f${ff}
-        $WGRIB2  inputs_nn.m${m}.f${ff}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.m${m}.f${ff}
-
-        cat interp.m${m}.f${ff}  interp_nn.m${m}.f${ff}  > $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
 
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
@@ -286,10 +241,10 @@ echo working things with ff as $ff and  fcheck as $fcheck
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 1
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -302,10 +257,10 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .true. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
         fi
-        echo href.m${m}.t${cyc}z. $ff .true. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -313,8 +268,56 @@ typeset -Z2 fcheckloc
 	fi
 
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
+
       fi
 
+###### fv3
+      if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
+
+        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.f${fcst}.grib2
+
+	if [ -e $filecheck ]
+        then
+         ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
+         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        else
+         echo ERR_EXIT $filecheck missing
+	fi
+
+	fcheckloc=$fcheck
+	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
+        do
+	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        loop=0
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+	do
+	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+          sleep 1
+          let loop=loop+1
+        done	
+        let fcheckloc=fcheckloc+1
+typeset -Z2 fcheckloc
+        echo new fcheckloc is $fcheckloc
+        done
+	
+        if [ $ff -gt 0 ]
+        then
+	echo here a $ff
+        if [ ${ff}%3 -eq 0 ]
+        then
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        fi
+        fi
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+
+        if [ ${ff}%3 -eq 0 ] 
+        then
+        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
+	fi
+
+        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
+
+      fi
  
 ###### HIRESWarw
 
@@ -322,7 +325,11 @@ typeset -Z2 fcheckloc
 
 	echo "in HIRESWarw block"
 
-	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
+	if [ -e ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
+        then
+        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+	elif [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
@@ -335,10 +342,10 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 1
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -350,9 +357,9 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
-        echo href.m${m}.t${cyc}z. $ff .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -371,7 +378,12 @@ typeset -Z2 fcheckloc
 
       if [ ${file[$m]} = ${dom}'mem2arw' -a $fcst -le 48  ] ; then
 	echo ${dom}mem2arw check
-        if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
+
+        if [ -e ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
+        then
+        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+        elif [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
         then
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
@@ -384,10 +396,10 @@ typeset -Z2 fcheckloc
         do
         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 1
           let loop=loop+1
         done
         let fcheckloc=fcheckloc+1
@@ -399,9 +411,9 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-         echo href.m${m}.t${cyc}z. $ff .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
-         echo href.m${m}.t${cyc}z. $ff .false. 1 ${dom}  |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom}  |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
         if [ ${ff}%3 -eq 0 ] 
         then
         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
@@ -415,51 +427,76 @@ typeset -Z2 fcheckloc
 
 ###### HRRR
 
-      if [ ${file[$m]} = 'hrrr' -a $fcst -le 18  ] ; then
+      if [ ${file[$m]} = 'hrrr' -a $fcst -le 36  ] ; then
 
 	echo "in HRRR block"
 
-        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.wrfprsf${fcst}.grib2
-	if [ -e ${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.wrfprsf${fcst}.grib2 ]
-        then
-
-        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib hrrr.m${m}.f${ff} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.m${m}.f${ff}.grb
-
-        $WGRIB2 $filecheck -match "RETOP" -set_byte 4 23 200 -grib retop.m${m}.f${ff}.grb
-        $WGRIB2 retop.m${m}.f${ff}.grb -set_byte 4 11 197 -grib new_retop.m${m}.f${ff}.grb
-        mv  new_retop.m${m}.f${ff}.grb retop.m${m}.f${ff}.grb
-
-        $WGRIB2 $filecheck -match "REFC" -set_byte 4 23 200 -grib refc.m${m}.f${ff}.grb
-        $WGRIB2 $filecheck -match "TCDC" -set_byte 4 23 200 -grib tcdc.m${m}.f${ff}.grb
-
-        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.m${m}.f${ff}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.m${m}.f${ff}.grb
-
-        cat nn.m${m}.f${ff}.grb  nn2.m${m}.f${ff}.grb ceiling.m${m}.f${ff}.grb retop.m${m}.f${ff}.grb  \
-        refc.m${m}.f${ff}.grb tcdc.m${m}.f${ff}.grb > inputs_nn.m${m}.f${ff}.grb
-
-        rm nn.m${m}.f${ff}.grb  nn2.m${m}.f${ff}.grb ceiling.m${m}.f${ff}.grb retop.m${m}.f${ff}.grb  \
-        refc.m${m}.f${ff}.grb
-
-        $WGRIB2 hrrr.m${m}.f${ff} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.m${m}.f${ff}
-        $WGRIB2  inputs_nn.m${m}.f${ff}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.m${m}.f${ff}
-
-
-        cat interp.m${m}.f${ff}  interp_nn.m${m}.f${ff}  > $DATA/href.m${m}.t${cyc}z.f${ff}
+        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.f${fcst}.grib2
+        ln -sf $filecheck   $DATA/href.m${m}.t${cyc}z.f${ff}
 
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
 
-	fi
-
-	echo ${dom}arw $m $ff
 
 	fcheckloc=$fcheck
 	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 10 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+	do
+	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+          sleep 1
+          let loop=loop+1
+        done	
+        let fcheckloc=fcheckloc+1
+typeset -Z2 fcheckloc
+        done
+	
+        if [ $ff -gt 0 ]
+        then
+	echo here a $ff
+
+## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
+## actually now have the summing of 3 h totals done in the HRRR preproc job
+
+#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false.  3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+         err=$?
+         echo HRRR precip return err $err
+        fi
+
+        if [ ${ff}%3 -eq 0 ] 
+        then
+        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
+	fi
+
+        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
+        fi
+
+      fi
+
+###### HRRRAK
+
+      if [ ${file[$m]} = 'hrrrak' -a $fcst -le 36  ] ; then
+
+	echo "in HRRRAK block"
+
+        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.f${fcst}.ak.grib2
+        ln -sf $filecheck   $DATA/href.m${m}.t${cyc}z.f${ff}
+
+        ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+
+	fcheckloc=$fcheck
+	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
+        do
+	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        loop=0
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
           sleep 1
@@ -475,14 +512,14 @@ typeset -Z2 fcheckloc
 
 ## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
 
-#        if [ ${ff}%3 -eq 0 ]
-#        then
-#        echo href.m${m}.t${cyc}z. $ff .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
-#        fi
+## actually now have the summing of 3 h totals done in the HRRR preproc job
+#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
 
-## the hourly will sum up three hourly at the appropriate time.
-        echo href.m${m}.t${cyc}z. $ff .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
-
+        if [ ${ff}%3 -eq 0 ] 
+        then
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        fi
+       
         if [ ${ff}%3 -eq 0 ] 
         then
         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
@@ -495,42 +532,64 @@ typeset -Z2 fcheckloc
 
 
 
-###### HIRESWnmmb
+###### FV3S - NON CONUS
+       echo down here trying to define with ${file[$m]}
 
-      if [ ${file[$m]} = ${dom}'nmmb' -a $fcst -le 48 ] ; then
-	echo "in HIRESWnmmb block"
-	if [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 ]
+      if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
+	echo "in non-CONUS FV3S block"
+
+
+	 ls -l ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2
+
+
+	if [ -e ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 ]
         then
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.nmmb_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+#	elif [ -e ${COMINfv3p}.${day[$m]}/${cycloc[$m]}/fv3sar.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 ]
+#        then
+#
+#        ln -sf  ${COMINfv3p}.${day[$m]}/${cycloc[$m]}/fv3sar.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+#        ln -sf  ${COMINfv3p}.${day[$m]}/${cycloc[$m]}/fv3sar.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+
+        else
+        echo could not find the fv3sar file desired
+
 	fi
+
 
 	echo ${dom}nmmb $m $ff
 
 	fcheckloc=$fcheck
+
 	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 30 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 10
+          sleep 1
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
 typeset -Z2 fcheckloc
         done
 
+
         if [ $ff -gt 0 ]
         then
 	echo here a $ff
+
         if [ ${ff}%3 -eq 0 ]
         then
-        echo here b $ff
-        echo href.m${m}.t${cyc}z. $ff .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
-        echo href.m${m}.t${cyc}z. $ff .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -538,7 +597,7 @@ typeset -Z2 fcheckloc
 	fi
 
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
-
+        
         fi
 
       fi

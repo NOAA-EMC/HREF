@@ -104,7 +104,7 @@ fi
 ########################################################
 # Execute the script.
 
-python ${HOMEhref}/scripts/build_qpf_climo_bin_v3.py 
+python ${HOMEhref}/scripts/build_qpf_climo.py 
 ########################################################
 
 msg="JOB $job HREF_QPFCLIMO HAS COMPLETED NORMALLY."

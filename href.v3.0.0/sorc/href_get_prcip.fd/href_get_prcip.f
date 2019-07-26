@@ -9,18 +9,18 @@ C  raw data
        character*40 filehead,filename(8), output, outdone
        
        integer ff
-       logical do_old, do_hrrr, do_hrrr_pre
-       character*3 fhr(12)
+       logical do_old, do_hrrr, do_hrrr_pre, do_fv3_pre
+       character*3 fhr(16)
        character*5 domain
        integer iunit,ounit, pdt9_orig, acclength
        type(gribfield) :: gfld,gfld_save,gfld_save_snow
 
-       data (fhr(i),i=1,12)
+       data (fhr(i),i=1,16)
      + /'f03','f06','f09','f12','f15','f18','f21',
-     +  'f24','f27','f30','f33','f36'/
+     +  'f24','f27','f30','f33','f36','f39','f42','f45','f48'/
  
        read (*,*) filehead, ff, do_old, do_hrrr, do_hrrr_pre, 
-     +            acclength, domain
+     +            do_fv3_pre,acclength, domain
 
 	if (domain(1:5) .eq. 'conus') then
          GRIBID=227            !namnest grid
@@ -39,6 +39,7 @@ C  raw data
 
 	write(0,*) 'do_hrrr: ', do_hrrr
 	write(0,*) 'do_hrrr_pre: ', do_hrrr_pre
+	write(0,*) 'do_fv3_pre: ', do_fv3_pre
 
 cc     RAP has one-hour accumu precip, so only one file is used
 cc     NAM has no one-hour accumu precip, so two files are needed
@@ -338,7 +339,7 @@ c      so use previously saved gfld_save
 
         ELSE
 
-	if (.not. do_hrrr_pre) then
+	if (.not. do_hrrr_pre .and. .not. do_fv3_pre ) then
 	write(0,*) 'call just_hrly(b) with jf: ', jf
         call just_hrly(filehead, ff, jf, do_old )
         endif
@@ -351,6 +352,11 @@ c      so use previously saved gfld_save
 	if (do_hrrr_pre) then
 	write(0,*) 'calling just_hrrr_3hrly_pre'
         call just_hrrr_3hrly_pre(filehead, ff, jf)
+        endif
+
+	if (do_fv3_pre) then
+	write(0,*) 'calling just_fv3_3hrly_pre'
+        call just_fv3_3hrly_pre(filehead, ff, jf)
         endif
 
 	ENDIF
@@ -375,16 +381,18 @@ C  raw data
        
        integer ff
        logical do_old
-       character*3 fhr(36)
+       character*3 fhr(48)
        integer iunit,ounit, pdt9_orig
        type(gribfield) :: gfld,gfld_save_1h,gfld_2h
        type(gribfield) :: gfld_snow,     gfld_save_1h_snow ! ,gfld_2h
 
-       data (fhr(i),i=1,36)
+       data (fhr(i),i=1,48)
      + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
      + 'f10','f11','f12','f13','f14','f15','f16','f17','f18',
      + 'f19','f20','f21','f22','f23','f24','f25','f26','f27',
-     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36'/
+     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36',
+     + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
+     + 'f46','f47','f48'/
  
 	write(0,*) 'know that filehead, ff, do_old, jf', 
      *    trim(filehead), ff, do_old, jf
@@ -1173,3 +1181,196 @@ c      so use previously saved gfld_save
         call baclose(ounit,ierr) 
 
       end subroutine just_hrrr_3hrly_pre
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+         
+	subroutine just_fv3_3hrly_pre(filehead, ff, jf)
+
+C  raw data
+       use grib_mod
+       real,allocatable,dimension(:,:) ::  dphold !jf,4        
+       real,allocatable,dimension(:)   ::  dp1
+       real,allocatable,dimension(:,:) ::  snhold !jf,4        
+       real,allocatable,dimension(:)   ::  sn1
+       integer iyr,imon,idy,ihr
+       character*50 gdss(400)
+       integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
+       character*40 filehead,filename(8), output, outdone
+       
+       integer ff, nfm1,nfm2
+       logical do_old
+       character*3 fhr(48)
+       character(len=6) :: term
+       integer iunit,ounit, pdt9_orig
+       type(gribfield) :: gfld,gfld_save_curr
+       type(gribfield) :: gfld_snow,gfld_save_curr_snow 
+
+       data (fhr(i),i=1,48)
+     + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
+     + 'f10','f11','f12','f13','f14','f15','f16','f17','f18',
+     + 'f19','f20','f21','f22','f23','f24','f25','f26','f27',
+     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36',
+     + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
+     + 'f46','f47','f48'/
+ 
+	write(0,*) 'fv3 3hrly_pre - know that filehead, ff, do_old, jf', 
+     *    trim(filehead), ff, do_old, jf
+
+       term=".grib2"
+
+       allocate(dphold(jf,3))
+       allocate(dp1(jf))
+       allocate(snhold(jf,3))
+       allocate(sn1(jf))
+
+!! these numbers need to change for hourly
+
+        nff=ff/1
+	nfm1=nff-1
+	nfm2=nff-2
+
+        dphold=0.
+        snhold=0.
+
+C       do 1001 nf=1,nfile
+        
+        filename(1)=filehead(1:10)//fhr(nff)//term
+        filename(2)=filehead(1:10)//fhr(nfm1)//term
+        filename(3)=filehead(1:10)//fhr(nfm2)//term
+
+	write(0,*) 'filename(1): ', filename(1)
+
+CCCCCCCCCCCCCCCCCCCCCCCCCC
+
+        iunit=21
+        call baopenr(iunit,filename(1),ierr)
+        write(0,*) 'open ', iunit, filename(1), 'ierr=',ierr
+	if (ierr /= 0) STOP
+
+        jpdtn=8    !APCP's Product Template# is  4.8 
+
+        jpd1=1
+        jpd2=8
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+
+        if (ie.eq.0) then
+         dphold(:,1)=gfld%fld(:)
+	 pdt9_orig=gfld%ipdtmpl(9)
+         write(0,*) 'gfld(9) before saved: ', gfld%ipdtmpl(9)
+         gfld%ipdtmpl(9)=-2 + pdt9_orig
+         gfld_save_curr=gfld
+
+         do i=1,gfld_save_curr%ipdtlen
+           write(0,*) 'MOD=0 ', i, gfld_save_curr%ipdtmpl(i)
+         end do
+
+        end if
+
+        jpd1=1
+        jpd2=13
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        if (ie.eq.0) then
+         snhold(:,1)=gfld%fld(:)
+         gfld%ipdtmpl(9)=-2 + pdt9_orig
+         gfld_save_curr_snow=gfld
+        endif
+
+
+CCCCCCCCCCCCCCCCCCCCCCCCC
+
+        iunit=22
+        call baopenr(iunit,filename(2),ierr)
+        write(0,*) 'open ', iunit, filename(2), 'ierr=',ierr
+	if (ierr /= 0) STOP
+
+        jpd1=1
+        jpd2=8
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        if (ie.eq.0) then
+         dphold(:,2)=gfld%fld(:)
+        end if
+
+        jpd1=1
+        jpd2=13
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        if (ie.eq.0) then
+         snhold(:,2)=gfld%fld(:)
+        endif
+
+CCCCCCCCCCCCCCCCCCCCCCCCC
+
+        iunit=23
+        call baopenr(iunit,filename(3),ierr)
+        write(0,*) 'open ', iunit, filename(3), 'ierr=',ierr
+	if (ierr /= 0) STOP
+
+        jpd1=1
+        jpd2=8
+	jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        if (ie.eq.0) then
+         dphold(:,3)=gfld%fld(:)
+        end if
+
+        jpd1=1
+        jpd2=13
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        if (ie.eq.0) then
+         snhold(:,3)=gfld%fld(:)
+        endif
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+
+
+cccccc  Then call putgb2 to store the calculated data into a grib2 file
+c
+c      data structure gfld is re-used for pack data since all are same
+c      only gfld%fld and gfld%ipdtmpl(27) are different
+
+Cmp   believe gfld%ipdtmpl(9) matters as well
+c
+
+c      If a field not in a GRIB2 file, getGB2 output gfld will be crashed. 
+c      so use previously saved gfld_save 
+
+       nff=ff/1      
+       output='prcip3h.t'//filehead(7:10)//fhr(nff)//term
+       outdone='prcipdone'//filehead(7:8)//'_'//fhr(nff)
+
+!        ounit=50+nfhr
+        ounit=50+nff
+        call baopen(ounit,output,ierr)
+
+
+
+!!        Add a 1 h total for everyone
+	   gfld=gfld_save_curr
+           gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
+           gfld%ipdtmpl(27)=3
+	write(0,*) 'to putgb2 for ounit: ', ounit
+	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+         do i=1,gfld_save_curr%ipdtlen
+         write(0,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
+         end do
+           call putgb2(ounit,gfld,ierr)
+
+	   gfld=gfld_save_curr_snow
+           gfld%fld(:)=snhold(:,1)+snhold(:,2)+snhold(:,3)
+           gfld%ipdtmpl(27)=3
+	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+             call putgb2(ounit,gfld,ierr)
+    
+!        write(0,*) 'Pack APCP done for fhr',nfhr
+        write(0,*) 'Pack APCP done for fhr',nff
+
+! write "done" file
+
+        call baclose(ounit,ierr) 
+
+      end subroutine just_fv3_3hrly_pre

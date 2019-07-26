@@ -165,8 +165,27 @@ echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 35 ${NEST} &" >> poe.fff
 echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 36 ${NEST} &" >> poe.fff
 echo "wait" >> poe.fff
 
+echo "#!/bin/sh  "                             >  poe.ggg
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 37 ${NEST} &" >> poe.ggg
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 38 ${NEST} &" >> poe.ggg
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 39 ${NEST} &" >> poe.ggg
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 40 ${NEST} &" >> poe.ggg
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 41 ${NEST} &" >> poe.ggg
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 42 ${NEST} &" >> poe.ggg
+echo "wait" >> poe.ggg
+
+echo "#!/bin/sh  "                             >  poe.hhh
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 43 ${NEST} &" >> poe.hhh
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 44 ${NEST} &" >> poe.hhh
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 45 ${NEST} &" >> poe.hhh
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 46 ${NEST} &" >> poe.hhh
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 47 ${NEST} &" >> poe.hhh
+echo "$USHhref/preprocess_fv3.sh.ecf_1h_general ${cyc} 48 ${NEST} &" >> poe.hhh
+echo "wait" >> poe.hhh
+
 chmod 775 ${DATA}/poe.aaa  ${DATA}/poe.bbb ${DATA}/poe.ccc
 chmod 775 ${DATA}/poe.ddd  ${DATA}/poe.eee ${DATA}/poe.fff
+chmod 775 ${DATA}/poe.ggg  ${DATA}/poe.hhh 
 
 aprun -n 1 -N 1 -d 7 ${DATA}/poe.aaa &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.bbb &
@@ -174,9 +193,11 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.ccc &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.ddd &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.eee &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.fff &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.ggg &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.hhh &
 wait
 
-$USHhref/preprocess_fv3.sh.ecf_3hapcp_general ${cyc} ${NEST}
+$USHhref/preprocess_fv3_3hapcp.sh.ecf_general ${cyc} ${NEST}
 
 
 if [ $NEST = "conus" ]
@@ -247,7 +268,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.e &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.f &
 wait
 
-$USHhref/preprocess_hrrr.sh.ecf_3hapcp ${cyc}
+$USHhref/preprocess_hrrr_3hapcp.sh.ecf ${cyc}
 
 
 echo "#!/bin/sh  "                             >  poe.aa
@@ -413,7 +434,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.e &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.f &
 wait
 
-$USHhref/preprocess_hrrrak.sh.ecf_3hapcp ${cyc}
+$USHhref/preprocess_hrrrak_3hapcp.sh.ecf ${cyc}
 export err=$?; err_chk
 
 

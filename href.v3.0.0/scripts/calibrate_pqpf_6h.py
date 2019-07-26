@@ -10,12 +10,13 @@
 # 2017-02-27	Ben Blake	modified for HREFv2
 # Create 4 coeffs_files: one for HiResW ARW, one for HiResW NMMB, one for HiResW NSSL, one for NAMX
 # 2018-02-02    Matthew Pyle    extended for HREFv2.1 (adding HRRR)
+# 2018-03-14    Matthew Pyle    pygrib free version
 
 ###################
 # PACKAGE IMPORTS
 ###################
 
-import os, sys, time, pygrib, gzip
+import os, sys, time, gzip
 from netCDF4 import Dataset
 import numpy as np
 from datetime import datetime, timedelta
@@ -23,6 +24,10 @@ from cal_functions import quantile_map
 
 ### parms imported from PQPF config file
 from eas_config import *
+
+WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
+CNVGRIB = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/cnvgrib'
+
 
 ####################
 # GET ENVIRO VARS
@@ -98,6 +103,8 @@ if (dom == 'conus'):
   coeffs_file_arw = COMOUTcal + '/pqpf_6h_coeffs_arw.csv'
   coeffs_temp_nmmb = COMOUTcal + '/pqpf_6h_coeffs_nmmb.wrk'
   coeffs_file_nmmb = COMOUTcal + '/pqpf_6h_coeffs_nmmb.csv'
+  coeffs_temp_fv3 = COMOUTcal + '/pqpf_6h_coeffs_fv3.wrk'
+  coeffs_file_fv3 = COMOUTcal + '/pqpf_6h_coeffs_fv3.csv'
   coeffs_temp_nssl = COMOUTcal + '/pqpf_6h_coeffs_nssl.wrk'
   coeffs_file_nssl = COMOUTcal + '/pqpf_6h_coeffs_nssl.csv'
   coeffs_temp_nam = COMOUTcal + '/pqpf_6h_coeffs_nam.wrk'
@@ -106,7 +113,7 @@ if (dom == 'conus'):
   coeffs_file_hrrr = COMOUTcal + '/pqpf_6h_coeffs_hrrr.csv'
 
 # directory for matched pairs files needed for calibration
-os.system("mkdir -p " + COMOUTcalib+"/sseox")
+os.system("mkdir -p " + COMOUTcalib+"/href")
 os.system("mkdir -p " + COMOUTcalib+"/realtimecoeffs")
 
 # where to store climo netCDF files
@@ -133,6 +140,22 @@ def mindate(l):
   else:
     return min(l)
 
+def simplewgrib2(txtfile):
+  tmps= []
+  with open(txtfile) as F1:
+    i=1
+    nx,ny=[int(x) for x in next(F1).split()]
+    ilim=nx*ny
+    while i <= ilim:
+      tmp=[float(x) for x in next(F1).split()]
+      tmps.append(tmp)
+      i=i+1
+    array2d = np.asarray(tmps,dtype=np.float32)
+    array2d.shape = (nx,ny)
+    return array2d,nx,ny
+  F1.close()
+
+
 #################
 # SCRIPT
 #################
@@ -145,22 +168,30 @@ print(fstarts)
 
 # get dimensions and lat/lons from a sample file
 # the grib-2 template file is perfect for this
-grbs = pygrib.open(template)
-grb = grbs[1]
-lat, lon = grb.latlons()
-grbs.close()
+# grbs = pygrib.open(template)
+# grb = grbs[1]
+# lat, lon = grb.latlons()
+# grbs.close()
+
+os.system(WGRIB2+' '+template+'  -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
+
+lon,nx,ny=simplewgrib2('lon.txt')
+lon = np.where(lon > 180.,lon-360.,lon)
+lon = np.where(lon < -180.,lon+360.,lon)
+
+lat,nx,ny=simplewgrib2('lat.txt')
 
 print 'Searching for new QPE-QPF matches...'
 
 # Create and dimension climo netcdf files if they do not already exist
-members = ['arw','nmmb','nssl','nam','hrrr']
+members = ['arw','fv3','nssl','nam','hrrr']
 
 for fstart in fstarts:
   fend = fstart + forecast_length
 
   for mem in members:
     print 'Working with',mem,'members...'
-    climonc = COMOUTcalib+'/sseox/'+mem+'_qpf6_%02d'%fend+'.nc'
+    climonc = COMOUTcalib+'/href/'+mem+'_qpf6_%02d'%fend+'.nc'
 
     print '6-h QPF ending FHR',fend
     if not os.path.exists(climonc):
@@ -222,7 +253,7 @@ for fstart in fstarts:
         print itime, fhr3, fend
         ijul = dt2jul(itime.year,itime.month,itime.day)
         if (dom == 'conus'):
-          hrefdir = COMOUTclimo + '/sseox/qpf/conus/%i'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'%02d'%itime.hour
+          hrefdir = COMOUTclimo + '/href/qpf/conus/%i'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'%02d'%itime.hour
         if (mem == 'arw'):
           hreffile3 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
@@ -235,6 +266,9 @@ for fstart in fstarts:
         elif (mem == 'nam'):
           hreffile3 = hrefdir + '/nam%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/nam%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
+        elif (mem == 'fv3'):
+          hreffile3 = hrefdir + '/fv3s%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
+          hreffile6 = hrefdir + '/fv3s%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
         elif (mem == 'hrrr'):
           hreffile3 = hrefdir + '/hrrr%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/hrrr%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
@@ -264,24 +298,49 @@ for fstart in fstarts:
             ind = tlist.index(min(tlist))
  
         # first add QPE from the stage-IV grib file (archive is kg/m2, the same as mm)
-          idx = pygrib.index(qpedir2+'/'+qpefile,'name')
-          grb = idx(name='Total Precipitation')[0]
-          qpein = grb.values
-          idx.close()
+#          idx = pygrib.index(qpedir2+'/'+qpefile,'name')
+#          grb = idx(name='Total Precipitation')[0]
+
+          os.system(CNVGRIB+' -g12 '+qpedir2+'/'+qpefile+' qpe.grib2')
+          os.system(WGRIB2+' qpe.grib2 -match "APCP:" -end -text tmp.txt')
+          qpein,nx,ny=simplewgrib2('tmp.txt')
+
+
+# assumption that qpein is masked??
+
+#          qpein = grb.values
+#          idx.close()
           times[ind]=es
           qpematched[ind,:,:]=qpein
  
         # now add the QPF - sum up 0-3 hr accums for 00-06z ST4
-          idx = pygrib.index(hreffile3,'endStep')
-          grb = idx(endStep=fhr3)[0]
-          qpf3 = grb.values
-          idx.close()
-          idx = pygrib.index(hreffile6,'endStep')
-          grb = idx(endStep=fend)[0]
-          qpf6 = grb.values
-          idx.close()         
+#          idx = pygrib.index(hreffile3,'endStep')
+#          grb = idx(endStep=fhr3)[0]
+#          qpf3 = grb.values
+#          idx.close()
+#          idx = pygrib.index(hreffile6,'endStep')
+#          grb = idx(endStep=fend)[0]
+#          qpf6 = grb.values
+#          idx.close()         
+
+## rework to key on proper time periods
+
+          qpfs= []
+## rework to key on proper time periods
+          os.system(WGRIB2+' '+hreffile3+' -match "APCP:surface:%i'%fstart+'-%i'%fhr3+'" -end -text tmp.txt')
+          qpf3,nx,ny=simplewgrib2('tmp.txt')
+          
+
+          qpfs= []
+## rework to key on proper time periods
+#          os.system(WGRIB2+' '+hreffile6+' -match "APCP:" -end -text tmp.txt')
+          os.system(WGRIB2+' '+hreffile6+' -match "APCP:surface:%i'%fhr3+'-%i'%fend+'" -end -text tmp.txt')
+          qpf6,nx,ny=simplewgrib2('tmp.txt')
+
           qpfin = qpf6 + qpf3
-          qpfin = np.ma.filled(qpfin.astype(float), np.nan)	# Convert all masked values to NaN         
+
+          qpfintmp = np.ma.masked_greater(qpfin,9.0e+20)
+          qpfin = np.ma.filled(qpfintmp.astype(float), np.nan)	# Convert all masked values to NaN         
           qpfmatched[ind,:,:]=qpfin
  
         # close the matched climo file
@@ -299,6 +358,9 @@ for mem in members:
   elif mem == 'nmmb':
     coeffs_temp = coeffs_temp_nmmb
     coeffs_file = coeffs_file_nmmb
+  elif mem == 'fv3':
+    coeffs_temp = coeffs_temp_fv3
+    coeffs_file = coeffs_file_fv3
   elif mem == 'nssl':
     coeffs_temp = coeffs_temp_nssl
     coeffs_file = coeffs_file_nssl
@@ -320,7 +382,7 @@ for mem in members:
   nc.close()
   for fstart in fstarts:
     fend = fstart+forecast_length
-    climonc = COMOUTcalib+'/sseox/'+mem+'_qpf6_%02d'%fend+'.nc'
+    climonc = COMOUTcalib+'/href/'+mem+'_qpf6_%02d'%fend+'.nc'
 
     print 'Reading time-matched QPF/QPE: FHRs',fstart,'-',fend
     nc = Dataset(climonc,'r')

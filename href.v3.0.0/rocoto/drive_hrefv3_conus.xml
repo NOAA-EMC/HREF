@@ -151,7 +151,7 @@
         <and>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;/nam.@Y@m@d/nam.t@Hz.conusnest.hiresf42.tm00.grib2</cyclestr></datadep>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;/hrrr.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;/fv3sar.@Y@m@d/00/fv3sar.t@Hz.conus.f36.tm00.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;/fv3sar.@Y@m@d/00/fv3sar.t@Hz.conus.f48.grib2</cyclestr></datadep>
         </and>
         <and>
 <!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->
@@ -171,7 +171,7 @@
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCLIMO_BIN_cray_v3</command>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCLIMO</command>
     <jobname><cyclestr>eas_climo_bin_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/easclimobin_&domain;_@H.log</cyclestr></join>
 
@@ -266,7 +266,7 @@
     &RESERVATION;
     &CLIMO_RESOURCES;
     <nodes>1:ppn=1</nodes>
-      <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCALIBRATE_BIN_cray_v3</command>
+      <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCALIBRATE</command>
       <jobname><cyclestr>eascalib_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eascalib_&domain;@H.log</cyclestr></join>
    
@@ -523,7 +523,7 @@
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>12:ppn=3</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD_V3</command>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/ensprod_&domain;_@H.log</cyclestr></join>
 
@@ -616,7 +616,7 @@
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_AWIPS_V3</command>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_AWIPS</command>
     <jobname><cyclestr>awips_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/awips_&domain;_@H.log</cyclestr></join>
 

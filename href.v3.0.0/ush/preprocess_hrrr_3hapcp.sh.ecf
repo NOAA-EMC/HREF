@@ -40,7 +40,7 @@ then
         echo here a $hr
 
 ## the hourly will sum up three hourly at the appropriate time.
-        echo hrrr.t${cyc}z.f $hr .false. .false. .true. 1 conus |$EXEChref/href_get_prcip > output.href_get_prcip1h.f${hr}
+        echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. 1 conus |$EXEChref/href_get_prcip > output.href_get_prcip1h.f${hr}
 
         if [ ${hr}%3 -eq 0 ]
         then
