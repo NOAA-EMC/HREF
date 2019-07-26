@@ -142,7 +142,7 @@ elif [ $cyc -ge 6 ] ; then
   if [ $cyc = '12' ] ; then
     days="9 $PDY $PDY $PDY $PDY $PDY $PDY" 
     cycs="9   12   12   12   00   00  00"
-    ages="9    0    0    0   12i  12  12"
+    ages="9    0    0    0   12   12  12"
   fi
 
   set -A  day $days
