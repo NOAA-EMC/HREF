@@ -20,7 +20,7 @@ if [ $dom == 'conus' ]
 then
 interp=1
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
-filecheck=$COMINfv3.${PDY}/${cyc}/fv3sar.t${cyc}z.f${hr}.grib2
+filecheck=$COMINfv3.${PDY}/${cyc}/fv3sar.t${cyc}z.${dom}.f${hr}.grib2
 else
 interp=0
 filecheck=$COMINfv3.${PDY}/${cyc}/fv3sar.t${cyc}z.${dom}.f${hr}.grib2
@@ -48,7 +48,7 @@ fi
           $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg \
                    -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
         ls -l interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr} 
-        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > fv3s.t${cyc}z.f${hr}.grib2
+        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > fv3s.t${cyc}z.${dom}.f${hr}.grib2
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
 

@@ -70,7 +70,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>7:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_V3_gen</command>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
     <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>
 
