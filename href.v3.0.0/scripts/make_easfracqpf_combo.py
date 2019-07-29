@@ -442,15 +442,9 @@ if qpf_interval == 24:
   thresh_use=pqpf_24h_thresh
 
 outfile = DATA + '/' + outbase
-# outfile_low = DATA + '/' + outbase_low
-# outfile_high = DATA + '/' + outbase_high
 
 if os.path.exists(outfile):
   os.system('rm -f '+outfile)
-# if os.path.exists(outfile_low):
-#   os.system('rm -f '+outfile_low)
-# if os.path.exists(outfile_high):
-#   os.system('rm -f '+outfile_high)
 
 prob = {}
 qpf = {}
@@ -962,8 +956,6 @@ for mem in range(0,len(itimes)):
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
-# probfinal_low = np.zeros((nlats,nlons))
-# probfinal_high = np.zeros((nlats,nlons))
 filter_footprint_10 = get_footprint(10)
 filter_footprint_25 = get_footprint(25)
 filter_footprint_40 = get_footprint(40)
@@ -975,8 +967,6 @@ filter_footprint_100 = get_footprint(100)
 for t in thresh_use:
   t3 = time.time()
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
-#  optrad_low = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth_low)
-#  optrad_high = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth_high)
   t4 = time.time()
   print 'Time for optrad routine:', t4-t3
 
@@ -984,8 +974,6 @@ for t in thresh_use:
   for row in range((slim/dx),nlats - (slim/dx)):
     for column in range((slim/dx),nlons - (slim/dx)):
       rad = (optrad[row,column]).astype(int)
-#      rad_low = (optrad_low[row,column]).astype(int)
-#      rad_high = (optrad_high[row,column]).astype(int)
 
       if (2.5 <= rad < 17.5):
         probfinal[row,column] = prob[t,10][row,column]
@@ -1013,68 +1001,12 @@ for t in thresh_use:
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm_use)
         optrad[row,column] = 0
 
-#      if (2.5 <= rad_low < 17.5):
-#        probfinal_low[row,column] = prob[t,10][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_10)*nm_use)
-#      elif (17.5 <= rad_low < 32.5):
-#        probfinal_low[row,column] = prob[t,25][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_25)*nm_use)
-#      elif (32.5 <= rad_low < 47.5):
-#        probfinal_low[row,column] = prob[t,40][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_40)*nm_use)
-#      elif (47.5 <= rad_low < 62.5):
-#        probfinal_low[row,column] = prob[t,55][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_55)*nm_use)
-#      elif (62.5 <= rad_low < 77.5):
-#        probfinal_low[row,column] = prob[t,70][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_70)*nm_use)
-#      elif (77.5 <= rad_low < 92.5):
-#        probfinal_low[row,column] = prob[t,85][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_85)*nm_use)
-#      elif (92.5 <= rad_low <= 100):
-#        probfinal_low[row,column] = prob[t,100][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_100)*nm_use)
-#      elif (rad_low > 100):
-#        probfinal_low[row,column] = prob[t,100][row,column]
-#        probfinal_low[row,column] = 100.0*probfinal_low[row,column] / float(np.sum(filter_footprint_100)*nm_use)
-#        optrad_low[row,column] = 0
-#
-#      if (2.5 <= rad_high < 17.5):
-#        probfinal_high[row,column] = prob[t,10][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_10)*nm_use)
-#      elif (17.5 <= rad_high < 32.5):
-#        probfinal_high[row,column] = prob[t,25][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_25)*nm_use)
-#      elif (32.5 <= rad_high < 47.5):
-#        probfinal_high[row,column] = prob[t,40][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_40)*nm_use)
-#      elif (47.5 <= rad_high < 62.5):
-#        probfinal_high[row,column] = prob[t,55][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_55)*nm_use)
-#      elif (62.5 <= rad_high < 77.5):
-#        probfinal_high[row,column] = prob[t,70][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_70)*nm_use)
-#      elif (77.5 <= rad_high < 92.5):
-#        probfinal_high[row,column] = prob[t,85][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_85)*nm_use)
-#      elif (92.5 <= rad_high <= 100):
-#        probfinal_high[row,column] = prob[t,100][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_100)*nm_use)
-#      elif (rad_high > 100):
-#        probfinal_high[row,column] = prob[t,100][row,column]
-#        probfinal_high[row,column] = 100.0*probfinal_high[row,column] / float(np.sum(filter_footprint_100)*nm_use)
-#        optrad_high[row,column] = 0
 
-
-# slight smoothing of probfinal?
+# slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
-#  probfinal_low = ndimage.filters.gaussian_filter(probfinal_low,1)
-#  probfinal_high = ndimage.filters.gaussian_filter(probfinal_high,1)
 
   if dom == 'conus' or dom == 'ak':
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
-#    probfinal_low = np.where(np.equal(maskregion,-9999),0,probfinal_low)  # set to 0 for mask
-#    probfinal_high = np.where(np.equal(maskregion,-9999),0,probfinal_high)  # set to 0 for mask
 
   t5 = time.time()
 
@@ -1082,19 +1014,6 @@ for t in thresh_use:
   print 'max of probfinal: ', np.max(probfinal)
   print 'mean of probfinal: ', np.mean(probfinal)
   print 'probfinal dims: ', np.shape(probfinal)
-
-#  print 'max of probfinal_low: ', np.max(probfinal_low)
-#  print 'mean of probfinal_low: ', np.mean(probfinal_low)
-
-#  print 'max of probfinal_high: ', np.max(probfinal_high)
-#  print 'mean of probfinal_high: ', np.mean(probfinal_high)
-
-
-#  myfort = F.FortranFile('record_out.bin',endian='>',mode='w')
-  
-#  altprobfinal=np.transpose(probfinal)
-#  print 'altprobfinal dims: ', np.shape(altprobfinal)
-
 
 
   probstr=str(t*25.4)
@@ -1116,41 +1035,3 @@ for t in thresh_use:
   print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
   os.system('rm record_out.bin')
   os.system('rm premod.grb')
-
-# low
-
-#  myfort_low = F.FortranFile('record_out.bin',mode='w')
-#  myfort_low.writeReals(probfinal_low)
-#  myfort_low.close()
-
-#  print 'byte, byte46, byte47: ', byte, byte46, byte47
-#  string="0:0:d="+wgribdate+":APCP:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
-#  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
-#  os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 17 0 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile_low)
-
-#  os.system('rm record_out.bin')
-#  os.system('rm premod.grb')
-
-# high
-
-#  myfort_high = F.FortranFile('record_out.bin',mode='w')
-#  myfort_high.writeReals(probfinal_high)
-#  myfort_high.close()
-
-#  print 'byte, byte46, byte47: ', byte, byte46, byte47
-#  string="0:0:d="+wgribdate+":APCP:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
-#  os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
-#  os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 17 0 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -append  -set_grib_type c3 -grib_out '+outfile_high)
-#  print 'Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold'
-
-#  os.system('rm record_out.bin')
-#  os.system('rm premod.grb')
-
-
-# Write variables to grib file
-#  grbout = open(outfile,'a')
-#  grbtmp['values'] = probfinal.astype(int)
-#  grbtmp['scaledValueOfUpperLimit'] = int(1000*round(t*25.4,3))
-#  grbout.write(grbtmp.tostring())
-#  grbout.close()
-# End of loop over thresholds

@@ -274,7 +274,7 @@ typeset -Z2 fcheckloc
 ###### fv3
       if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
 
-        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.f${fcst}.grib2
+        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.conus.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then
@@ -431,7 +431,7 @@ typeset -Z2 fcheckloc
 
 	echo "in HRRR block"
 
-        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.f${fcst}.grib2
+        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
         ln -sf $filecheck   $DATA/href.m${m}.t${cyc}z.f${ff}
 
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
@@ -485,7 +485,7 @@ typeset -Z2 fcheckloc
 
 	echo "in HRRRAK block"
 
-        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.f${fcst}.ak.grib2
+        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
         ln -sf $filecheck   $DATA/href.m${m}.t${cyc}z.f${ff}
 
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
