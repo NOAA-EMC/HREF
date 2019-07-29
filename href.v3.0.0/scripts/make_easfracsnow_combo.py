@@ -417,8 +417,8 @@ for mem in members:
 
 # have the FV3 preprocessing generate 3 h WEASD fields....handle like Hiresw?
     elif mem == 'fv3s':
-      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file3 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
 
