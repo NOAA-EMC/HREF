@@ -21,19 +21,19 @@
 <!ENTITY envir "rocpara">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
-<!ENTITY COMINfv3sar "/gpfs/dell1/ptmp/emc.campara/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
-<!ENTITY COMINnam "/gpfs/tp2/nco/ops/com/nam/prod">
-<!ENTITY COMINfv3saralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3">
-<!ENTITY COMINhrrralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr">
-<!ENTITY COMINnamalt "/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod/nam">
-<!ENTITY OUTDIR "/gpfs/hps3/ptmp/&USER;">
-<!ENTITY MYCOMROOT "/gpfs/hps3/ptmp/&USER;/com">
+<!ENTITY COMINnam "/gpfs/tp2/nco/ops/com/nam/prod/nam">
+<!ENTITY COMINfv3saralt "/gpfs/hps3/ptmp/Matthew.Pyle/com/fv3/prod/fv3">
+<!ENTITY COMINhrrralt "/gpfs/hps3/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr">
+<!ENTITY COMINnamalt "/gpfs/hps3/ptmp/Matthew.Pyle/com/nam/prod/nam">
+<!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
+<!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY COMOUTcalib "&MYCOMROOTPERM;/hiresw/calib">
 <!ENTITY COMOUTclimo "&MYCOMROOTPERM;/hiresw/climo_bin">
-<!ENTITY DATAROOT "/gpfs/hps3/stmp/&USER;/tmpnwprd">
+<!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "YES">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
@@ -145,13 +145,29 @@
       <value>&COMINfv3sar;</value>
     </envar>
 
+    <envar>
+      <name>COMOUTnam</name>
+      <value>&COMINnamalt;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUThrrr</name>
+      <value>&COMINhrrralt;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUTfv3</name>
+      <value>&COMINfv3saralt;</value>
+    </envar>
+
+
 
     <dependency>
       <or>
         <and>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;/nam.@Y@m@d/nam.t@Hz.conusnest.hiresf42.tm00.grib2</cyclestr></datadep>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;/hrrr.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;/fv3sar.@Y@m@d/00/fv3sar.t@Hz.conus.f48.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf42.tm00.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f48.grib2</cyclestr></datadep>
         </and>
         <and>
 <!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->
@@ -252,6 +268,24 @@
       <name>MYCOMROOTPERM</name>
       <value>&MYCOMROOTPERM;</value>
     </envar>
+
+    <envar>
+      <name>COMINnam</name>
+      <value>&COMINnamalt;</value>
+    </envar>
+    <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINhrrralt;</value>
+    </envar>
+    <envar>
+      <name>COMINhiresw</name>
+      <value>&COMINhiresw;</value>
+    </envar>
+    <envar>
+      <name>COMINfv3</name>
+      <value>&COMINfv3saralt;</value>
+    </envar>
+
 
     <dependency>
      <taskdep task="preproc"/>
@@ -432,6 +466,22 @@
     <envar>
       <name>envir</name>
       <value>&envir;</value>
+    </envar>
+    <envar>
+      <name>COMINnam</name>
+      <value>&COMINnamalt;</value>
+    </envar>
+    <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINhrrralt;</value>
+    </envar>
+    <envar>
+      <name>COMINhiresw</name>
+      <value>&COMINhiresw;</value>
+    </envar>
+    <envar>
+      <name>COMINfv3</name>
+      <value>&COMINfv3saralt;</value>
     </envar>
 
       <dependency>
@@ -677,6 +727,7 @@
     <dependency>
      <and>
      <taskdep task="ensprod"/>
+     <taskdep task="eas_gen"/>
      </and>
     </dependency>
 
@@ -755,6 +806,7 @@
     <dependency>
      <and>
      <taskdep task="ensprod"/>
+     <taskdep task="eas_gen"/>
      </and>
     </dependency>
 

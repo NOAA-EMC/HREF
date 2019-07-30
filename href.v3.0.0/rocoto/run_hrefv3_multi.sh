@@ -13,7 +13,7 @@ set -x
 
 module load rocoto/1.2.4
 
-doms="hi pr conus ak"
+doms="hi pr conus conus_alt ak"
 
 
 dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/rocoto"
@@ -22,5 +22,5 @@ dir="/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF/href.v3.0.0/rocoto"
 for dom in $doms
 do
 rocotorun -v 10 -w ${dir}/drive_hrefv3_${dom}.xml -d ${dir}/drive_hrefv3_${dom}.db
-sleep 30
+sleep 20
 done
