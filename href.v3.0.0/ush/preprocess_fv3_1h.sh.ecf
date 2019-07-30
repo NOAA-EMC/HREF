@@ -11,8 +11,14 @@ cyc=${1}
 hr=${2}
 dom=${3}
 
-mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
-cd  /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
+mkdir -p ${COMOUTfv3}.${PDY}
+
+cd ${COMOUTfv3}.${PDY}
+
+pwd
+
+# mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
+# cd  /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
 
 # PARMhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/parm
 

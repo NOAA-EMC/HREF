@@ -32,9 +32,9 @@ echo here with COMINhiresw $COMINhiresw
 export COMINhiresw=${COMINhiresw:-${COMROOThps}/${NET}/${envir}/hiresw}
 echo now here with COMINhiresw $COMINhiresw
 # export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
-export COMINnam=${COMINnam:-/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod/nam}
-export COMINhrrr=${COMINhrrr:-/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr}
-export COMINfv3=${COMINfv3:-/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3}
+export COMINnam=${COMINnam:-/gpfs/hps3/ptmp/Matthew.Pyle/com/nam/prod/nam}
+export COMINhrrr=${COMINhrrr:-/gpfs/hps3/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr}
+export COMINfv3=${COMINfv3:-/gpfs/hps3/ptmp/Matthew.Pyle/com/fv3/prod/fv3}
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}

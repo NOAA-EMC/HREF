@@ -98,10 +98,11 @@ fi
 ########################################################
 # Execute the script.
 
-export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
-export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
-export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
-export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
+# export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
+# export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
+# export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
+# export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
+
 export COMINpcpanl=${COMROOTp2}/pcpanl/prod
 
 if [ -e poe.qpf_6 ] 

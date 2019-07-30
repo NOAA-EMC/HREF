@@ -22,9 +22,11 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
-export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
-export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
-export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
+
+# export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
+# export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
+# export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
+
 export COMINpcpanl=${COMROOTp2}/pcpanl/prod
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}

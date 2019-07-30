@@ -21,27 +21,27 @@
 <!ENTITY envir "rocpara">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
-<!ENTITY COMINfv3sar "/gpfs/dell1/ptmp/emc.campara/com/fv3cam/para">
+<!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
 <!ENTITY COMINfv3sarnc "/gpfs/dell1/ptmp/Matthew.Pyle/com/fv3cam/para/fv3sar">
-<!ENTITY COMINfv3saralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3">
+<!ENTITY COMINfv3saralt "/gpfs/hps3/ptmp/Matthew.Pyle/com/fv3/prod/fv3">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/tp2/nco/ops/com/nam/prod/nam">
-<!ENTITY COMINhrrralt "/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr">
-<!ENTITY COMINnamalt "/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod/nam">
-<!ENTITY OUTDIR "/gpfs/hps3/ptmp/&USER;">
-<!ENTITY MYCOMROOT "/gpfs/hps3/ptmp/&USER;/com">
+<!ENTITY COMINhrrralt "/gpfs/hps3/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr">
+<!ENTITY COMINnamalt "/gpfs/hps3/ptmp/Matthew.Pyle/com/nam/prod/nam">
+<!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
+<!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY COMOUTcalib "&MYCOMROOTPERM;/hiresw/calib">
 <!ENTITY COMOUTclimo "&MYCOMROOTPERM;/hiresw/climo_bin">
-<!ENTITY DATAROOT "/gpfs/hps3/stmp/&USER;/tmpnwprd">
-<!ENTITY KEEPDATA "NO">
+<!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
+<!ENTITY KEEPDATA "YES">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
-<!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
+<!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><nodes>8:ppn=7</nodes><native></native>'>
 <!ENTITY CLIMO_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
 <!ENTITY EAS_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
@@ -66,7 +66,6 @@
  <task name="preproc" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>8:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
     <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>
@@ -140,6 +139,22 @@
       <name>COMINfv3</name>
       <value>&COMINfv3sarnc;</value>
     </envar>
+
+    <envar>
+      <name>COMOUTnam</name>
+      <value>&COMINnamalt;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUThrrr</name>
+      <value>&COMINhrrralt;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUTfv3</name>
+      <value>&COMINfv3saralt;</value>
+    </envar>
+
 
     <dependency>
       <or>
@@ -235,6 +250,23 @@
       <name>envir</name>
       <value>&envir;</value>
     </envar>
+    <envar>
+      <name>COMINnam</name>
+      <value>&COMINnamalt;</value>
+    </envar>
+    <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINhrrralt;</value>
+    </envar>
+    <envar>
+      <name>COMINhiresw</name>
+      <value>&COMINhiresw;</value>
+    </envar>
+    <envar>
+      <name>COMINfv3</name>
+      <value>&COMINfv3saralt;</value>
+    </envar>
+
 
     <dependency>
      <and>

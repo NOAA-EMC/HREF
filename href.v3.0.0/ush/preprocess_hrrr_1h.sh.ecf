@@ -13,9 +13,17 @@ hr=${3}
 
 echo $NEST $hr
 
-PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
-cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
+# use PDY passed in
+# PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+
+mkdir -p $COMOUThrrr.${PDY}
+
+cd $COMOUThrrr.${PDY}
+
+pwd
+
+# mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
+# cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
 
 if [ $NEST = "conus" ]
 then

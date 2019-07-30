@@ -10,9 +10,9 @@ fi
 cyc=${1}
 dom=${2}
 
-PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
-mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
-cd /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
+# PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
+mkdir -p ${COMOUTfv3}.${PDY}
+cd ${COMOUTfv3}.${PDY}
 
 if [ $dom = 'conus' ]
 then
@@ -65,13 +65,9 @@ ln -sf fv3s.t${cyc}z.${dom}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
 if [ -e $filecheck ]
 then
-
 $EXEChref/href_fv3bucket < input
-
 cat PCP1HR${hr}.tm00 >> $filecheck
-
 fi
-
 
 done
 
@@ -94,9 +90,10 @@ then
         if [ $hr -gt 0 ]
         then
         echo here a with hr $hr
+        ln -sf fv3s.t${cyc}z.${dom}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
 ## the hourly will sum up three hourly at the appropriate time.
-        echo temp.t${cyc}z.f $hr .false. .false. .false. .true. 1 ${dom} |$EXEChref/href_get_prcip > output.href_get_prcip1h.fv3.f${hr}
+        echo temp.t${cyc}z.f $hr .false. .false. .false. .true. 1 ${dom} |$EXEChref/href_get_prcip > output.href_get_prcip3h.fv3.f${hr}
 
         if [ ${hr}%3 -eq 0 ]
         then

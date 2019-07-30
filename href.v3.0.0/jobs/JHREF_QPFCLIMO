@@ -23,10 +23,10 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ###############################################################
 
 export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
-export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
+# export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
 export COMINpcpanl=${COMROOTp2}/pcpanl/prod
-export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
-export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
+# export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
+# export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
 # export COMINclimo=${COMOUT}/../climo_bin
 
 export HOMEhref=${HOMEhref:-/nw${envir}/href.${model_ver}}
