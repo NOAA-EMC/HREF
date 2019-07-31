@@ -13,6 +13,8 @@ dom=${3}
 
 mkdir -p ${COMOUTfv3}.${PDY}
 
+cd ${DATA}
+
 mkdir fv3_${dom}_${hr}
 cd fv3_${dom}_${hr}
 

@@ -18,6 +18,8 @@ echo $NEST $hr
 
 mkdir -p $COMOUThrrr.${PDY}
 
+cd ${DATA}
+
 mkdir hrrr_${NEST}_${hr}
 cd hrrr_${NEST}_${hr}
 
