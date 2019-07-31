@@ -33,7 +33,7 @@
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY COMOUTcalib "&MYCOMROOTPERM;/hiresw/calib">
 <!ENTITY COMOUTclimo "&MYCOMROOTPERM;/hiresw/climo_bin">
-<!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
+<!ENTITY DATAROOT "/gpfs/hps3/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "YES">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>

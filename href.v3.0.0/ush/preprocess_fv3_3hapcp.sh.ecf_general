@@ -12,7 +12,9 @@ dom=${2}
 
 # PDY=`cat /gpfs/hps/nco/ops/com/date/t${cyc}z | cut -c7-14`
 mkdir -p ${COMOUTfv3}.${PDY}
-cd ${COMOUTfv3}.${PDY}
+# cd ${COMOUTfv3}.${PDY}
+
+cd $DATA
 
 if [ $dom = 'conus' ]
 then
@@ -104,6 +106,7 @@ then
 fi
 done
 
+cp fv3s.t${cyc}z.${dom}.f??.grib2   ${COMOUTfv3}.${PDY}
+
 rm temp.t${cyc}z.f*
 rm PCP1HR* prcip3h.t${cyc}z.f??.grib2
-

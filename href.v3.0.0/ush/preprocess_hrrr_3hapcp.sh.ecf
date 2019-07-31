@@ -17,8 +17,10 @@ hrs="03 06 09 12 15 18 21 24 27 30 33 36"
 # mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
 # cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
 
-mkdir -p $COMOUThrrr.${PDY}
-cd $COMOUThrrr.${PDY}
+# mkdir -p $COMOUThrrr.${PDY}
+# cd $COMOUThrrr.${PDY}
+
+cd $DATA
 
 EXEChref=${HOMEhref}/exec
 
@@ -66,3 +68,5 @@ echo "ERROR - did not see filecheck $filecheck in cwd"
 pwd
 fi
 done
+
+cp hrrr.t${cyc}z.${NEST}.f??.grib2 ${COMOUThrrr}.${PDY}
