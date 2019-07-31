@@ -197,7 +197,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.ggg &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.hhh &
 wait
 
-$USHhref/preprocess_fv3_3hapcp.sh.ecf_general ${cyc} ${NEST}
+$USHhref/preprocess_fv3_3hapcp.sh.ecf ${cyc} ${NEST}
 
 
 if [ $NEST = "conus" -o $NEST = "ak" ]
