@@ -22,9 +22,14 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 # environment. This is used for operational testings
 ###############################################################
 
-export COMINhiresw=/gpfs/hps/nco/ops/com/hiresw/prod
+
+export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
+export COMINpcpanl=${COMINpcpanl:-$(compath.py pcpanl/prod)}
+
+
+# these need to be postprocessed versions...where should be?
+
 # export COMINnam=/gpfs/hps2/ptmp/Matthew.Pyle/com/nam/prod
-export COMINpcpanl=${COMROOTp2}/pcpanl/prod
 # export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
 # export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
 # export COMINclimo=${COMOUT}/../climo_bin

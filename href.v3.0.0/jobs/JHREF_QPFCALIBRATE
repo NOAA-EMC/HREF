@@ -21,13 +21,14 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ###############################################################
 
 ## PDY not included here as pull data from PDYm1 as well
-export COMINhiresw=${COMINhiresw:-${COMROOT}/${NET}/${envir}/hiresw}
+export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
 
+# these need to point at preprocessed files
 # export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
 # export COMINhrrr=/gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod
 # export COMINfv3=/gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod
 
-export COMINpcpanl=${COMROOTp2}/pcpanl/prod
+export COMINpcpanl=${COMINpcpanl:-$(compath.py pcpanl/prod)}
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export EXEChref=${EXEChref:-$HOMEhref/exec}

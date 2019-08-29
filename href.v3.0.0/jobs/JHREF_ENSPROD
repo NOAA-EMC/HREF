@@ -29,9 +29,10 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ## PDY not included here as pull data from PDYm1 as well
 
 echo here with COMINhiresw $COMINhiresw
-export COMINhiresw=${COMINhiresw:-${COMROOThps}/${NET}/${envir}/hiresw}
+export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
+
 echo now here with COMINhiresw $COMINhiresw
-# export COMINnam=${COMINnam:-${COMROOTp2}/nam/prod/nam}
+
 export COMINnam=${COMINnam:-/gpfs/hps3/ptmp/Matthew.Pyle/com/nam/prod/nam}
 export COMINhrrr=${COMINhrrr:-/gpfs/hps3/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr}
 export COMINfv3=${COMINfv3:-/gpfs/hps3/ptmp/Matthew.Pyle/com/fv3/prod/fv3}
