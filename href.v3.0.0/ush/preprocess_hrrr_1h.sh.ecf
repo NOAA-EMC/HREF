@@ -18,12 +18,11 @@ echo $NEST $hr
 
 mkdir -p $COMOUThrrr.${PDY}
 
-cd $COMOUThrrr.${PDY}
+cd ${DATA}
 
-pwd
+mkdir hrrr_${NEST}_${hr}
+cd hrrr_${NEST}_${hr}
 
-# mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
-# cd /gpfs/hps2/ptmp/Matthew.Pyle/com/hrrr/prod/hrrr.${PDY}
 
 if [ $NEST = "conus" ]
 then
@@ -64,13 +63,14 @@ filecheck=${COMINhrrr}.${PDY}/${NEST}/hrrr.t${cyc}z.wrfprsf${hr}.grib2
         $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
 
 
-        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > hrrr.t${cyc}z.${NEST}.f${hr}.grib2
-	if [ $NEST = "ak" ]
-        then
-        mkdir ak
+        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+
+#	if [ $NEST = "ak" ]
+#        then
+#        mkdir ak
 #        cp hrrr.t${cyc}z.f${hr}.ak.grib2 ./ak/hrrr.t${cyc}z.f${hr}.grib2
-        cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ./ak/
-        fi
+#        cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ./ak/
+#        fi
 
         rm interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb   hrrr.t${cyc}z.f${hr}
 

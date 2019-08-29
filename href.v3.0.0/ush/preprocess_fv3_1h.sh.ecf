@@ -13,14 +13,10 @@ dom=${3}
 
 mkdir -p ${COMOUTfv3}.${PDY}
 
-cd ${COMOUTfv3}.${PDY}
+cd ${DATA}
 
-pwd
-
-# mkdir -p /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
-# cd  /gpfs/hps2/ptmp/Matthew.Pyle/com/fv3/prod/fv3.${PDY}
-
-# PARMhref=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/href.v3.0.0/parm
+mkdir fv3_${dom}_${hr}
+cd fv3_${dom}_${hr}
 
 if [ $dom == 'conus' ]
 then
@@ -54,7 +50,7 @@ fi
           $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg \
                    -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
         ls -l interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr} 
-        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > fv3s.t${cyc}z.${dom}.f${hr}.grib2
+        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
 
@@ -62,7 +58,7 @@ fi
 
 # noninterp 
         
-       cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > fv3s.t${cyc}z.${dom}.f${hr}.grib2
+       cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
 
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
