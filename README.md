@@ -7,4 +7,5 @@ Very simple setup instructions (just for WCOSS-Cray):
 
 
 Run build_href.scr in sorc/ directory
+
 Run link_href.sh in sorc/ directory (to populate fix files)
