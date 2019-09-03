@@ -22,7 +22,7 @@
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/gp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
-<!ENTITY COMINfv3sarnc "/gpfs/dell1/ptmp/Matthew.Pyle/fv3sartest_ak/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sarnc "/gpfs/dell1/ptmp/Matthew.Pyle/oconus/com/fv3cam/para/fv3sar">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">

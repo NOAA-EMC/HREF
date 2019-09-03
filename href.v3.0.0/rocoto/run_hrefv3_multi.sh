@@ -22,5 +22,5 @@ dir="/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/rocoto"
 for dom in $doms
 do
 rocotorun -v 10 -w ${dir}/drive_hrefv3_${dom}.xml -d ${dir}/drive_hrefv3_${dom}.db
-sleep 20
+sleep 8
 done
