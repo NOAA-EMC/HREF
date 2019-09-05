@@ -305,10 +305,12 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+#tst        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
         fi
-        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+#tst        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then

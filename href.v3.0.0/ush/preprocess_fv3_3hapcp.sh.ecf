@@ -51,9 +51,11 @@ then
 hrold=0${hrold}
 fi
 
+ln -sf fv3s.t${cyc}z.${dom}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
+
 dir=`pwd`
 echo $dir > input
-echo "fv3s.t${cyc}z.${dom}.f" >> input
+echo "temp.t${cyc}z.f" >> input
 echo $hrold >> input
 echo $hr >> input
 echo 0 >> input
