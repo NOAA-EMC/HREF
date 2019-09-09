@@ -48,7 +48,7 @@ export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export GEMPAKhref=${GEMPAKhref:-$HOMEhref/gempak}
 
 export finc=1
-export fend=36
+export fend=48
 export fstart=01
 
 export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}

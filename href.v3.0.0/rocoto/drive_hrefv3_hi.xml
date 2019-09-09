@@ -64,6 +64,7 @@
  <task name="preproc" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
+  <nodes>8:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
     <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>
@@ -175,7 +176,7 @@
   <task name="eas_gen" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &CLIMO_RESOURCES;
-    <nodes>3:ppn=12</nodes>
+    <nodes>4:ppn=12</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eas_gen_&domain;@H.log</cyclestr></join>
@@ -248,6 +249,7 @@
       <name>envir</name>
       <value>&envir;</value>
     </envar>
+
     <envar>
       <name>COMINnam</name>
       <value>&COMINall;</value>
@@ -268,9 +270,9 @@
 
     <dependency>
      <and>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;.grib2</cyclestr></datadep>
-     <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f36.grib2</cyclestr></datadep>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;mem2.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
      <taskdep task="preproc"/>
      </and>
     </dependency>
@@ -285,7 +287,7 @@
   <task name="ensprod" cycledefs="regional" maxtries="1">
   &RESERVATION;
   &CLIMO_RESOURCES;
-  <nodes>3:ppn=12</nodes>
+  <nodes>4:ppn=12</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/ensprod_&domain;_@H.log</cyclestr></join>
@@ -364,9 +366,9 @@
 
     <dependency>
      <and>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;.grib2</cyclestr></datadep>
-     <datadep age="03:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f36.grib2</cyclestr></datadep>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;mem2.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="01:00"><cyclestr>&COMINfv3saralt;.@Y@m@d/fv3s.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
      <taskdep task="preproc"/>
      </and>
     </dependency>

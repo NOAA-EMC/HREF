@@ -163,7 +163,7 @@
     <dependency>
       <or>
         <and>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf42.tm00.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
         </and>
       </or>

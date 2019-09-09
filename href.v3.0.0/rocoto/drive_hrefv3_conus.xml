@@ -158,14 +158,12 @@
       <value>&COMINall;</value>
     </envar>
 
-
-
     <dependency>
       <or>
         <and>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf42.tm00.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f48.grib2</cyclestr></datadep>
+          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f60.grib2</cyclestr></datadep>
         </and>
         <and>
 <!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->
@@ -283,7 +281,6 @@
       <name>COMINfv3</name>
       <value>&COMINall;</value>
     </envar>
-
 
     <dependency>
      <taskdep task="preproc"/>

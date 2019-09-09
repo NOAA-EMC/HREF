@@ -202,7 +202,6 @@ wait
 
 $USHhref/preprocess_fv3_3hapcp.sh.ecf ${cyc} ${NEST}
 
-
 if [ $NEST = "conus" -o $NEST = "ak" ]
 then
 echo "#!/bin/sh  "                             >  poe.a
@@ -369,14 +368,13 @@ date
 
 fi
 
-## deleting preprocessing outputs from 3 cycles prior to ${PDY}${cyc}
+## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
 
 
-pdycycdel=`$NDATE -18 ${PDY}${cyc}`
+pdycycdel=`$NDATE -36 ${PDY}${cyc}`
 
 PDYdel=`echo $pdycycdel | cut -c1-8`
 cycdel=`echo $pdycycdel | cut -c9-10`
-
 
 echo will delete from $COMOUTfv3.${PDYdel}/fv3s.t${cycdel}z
 echo will delete from $COMOUTnam.${PDYdel}/nam.t${cycdel}z
@@ -385,8 +383,6 @@ echo will delete from $COMOUThrrr.${PDYdel}/hrrr.t${cycdel}z
 rm $COMOUTfv3.${PDYdel}/fv3s.t${cycdel}z.*grib2
 rm $COMOUTnam.${PDYdel}/nam.t${cycdel}z.*grib2
 rm $COMOUThrrr.${PDYdel}/hrrr.t${cycdel}z.*grib2
-
-
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

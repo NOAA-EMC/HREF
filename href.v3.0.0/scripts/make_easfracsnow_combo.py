@@ -425,8 +425,8 @@ for mem in members:
     elif mem == 'fv3nc':
       file3 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       file3alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
-      file6 = COMINfv3 + '/fv3.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      file6alt = COMINfv3 + '/fv3.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
 
     elif mem == 'nam':
       file3 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'

@@ -273,9 +273,9 @@
     <dependency>
      <and>
      <taskdep task="preproc"/>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;.grib2</cyclestr></datadep>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;mem2.grib2</cyclestr></datadep>
-     <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f36.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
+     <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
      </and>
     </dependency>
 
@@ -369,9 +369,9 @@
     <dependency>
      <and>
      <taskdep task="preproc"/>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;.grib2</cyclestr></datadep>
-     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;mem2.grib2</cyclestr></datadep>
-     <datadep age="03:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f36.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
+     <datadep age="01:00"><cyclestr>&COMINfv3saralt;.@Y@m@d/fv3s.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
      </and>
     </dependency>
 
