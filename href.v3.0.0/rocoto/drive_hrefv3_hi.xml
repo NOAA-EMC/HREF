@@ -18,7 +18,7 @@
 <!ENTITY HOMEhref "/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0">
 <!ENTITY domain "hi">
 <!ENTITY machine "WCOSS_C">
-<!ENTITY envir "rocpara">
+<!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/gp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
@@ -39,7 +39,7 @@
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
-<!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><nodes>8:ppn=7</nodes><native></native>'>
+<!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY CLIMO_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
 <!ENTITY EAS_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
@@ -52,7 +52,6 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<!-- <workflow realtime="F" scheduler="lsfcray" taskthrottle="11"> -->
 <workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -367,7 +366,7 @@
     <dependency>
      <and>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
-     <datadep age="01:00"><cyclestr>&COMINfv3saralt;.@Y@m@d/fv3s.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
+     <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f48.grib2</cyclestr></datadep>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
      <taskdep task="preproc"/>
      </and>
