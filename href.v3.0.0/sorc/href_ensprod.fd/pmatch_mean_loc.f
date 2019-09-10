@@ -61,7 +61,18 @@
 ! first sort just getting the listorder from vrbl_mn.  The sorted vrbl_mn is not reused.
         call quick_sort(vrbl_mn,listorder,jf_loc)
 ! second sort puts rawdata_1d in order.  listorderfull ignored 
+
+!	write(0,*) 'iens, jf_loc: ', iens, jf_loc
+!	write(0,*) 'shape(vrbl_mn): ', shape(vrbl_mn)
+!        write(0,*) 'shape(listorder): ', shape(listorder)
+	write(0,*) 'shape(rawdata_1d): ', shape(rawdata_1d)
+        write(0,*) 'shape(listorderfull): ', shape(listorderfull)
+	WRITE(0,*) 'min/max rawdata_1d: ', minval(rawdata_1d),
+     &                                     maxval(rawdata_1d)
+        write(0,*) 'min/max listorderfull: ',minval(listorderfull),
+     &                                    maxval(listorderfull)
         call quick_sort(rawdata_1d,listorderfull,iens*jf_loc)
+
 
 	if (idiag_print .eq. 1) then
          write(0,*) ' --------  '
