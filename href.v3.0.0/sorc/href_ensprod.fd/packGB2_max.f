@@ -35,7 +35,7 @@ C for variable table:
 
         integer ml
 
-        write(*,*) 'packing direct mean/spred for nv ', nv
+        write(*,*) 'packing direct mean/spread for nv ', nv
 
         write(*,*) nv, imean,isprd,
      +     jpd1,jpd2,jpd10,jpd27,jf,Lm,

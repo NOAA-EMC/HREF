@@ -36,7 +36,7 @@ C for variable table:
 
         integer ml
 
-        write(*,*) 'packing direct mean/spred for nv ', nv
+        write(*,*) 'packing direct mean/spread for nv ', nv
 
         write(*,*) nv, imean,isprd,
      +     jpd1,jpd2,jpd10,jpd27,jf,Lm,
@@ -44,8 +44,11 @@ C for variable table:
 
 
 
+	write(0,*) 'nv, Mlvl(nv): ', nv, Mlvl(nv)
+
         DO 1000 ml=1,Mlvl(nv)
 
+           write(0,*) 'ml is: ', ml
             !redefine some of gfld%idsect() array elements 
             gfld%idsect(1)=7
             gfld%idsect(2)=2
@@ -53,6 +56,7 @@ C for variable table:
             gfld%idsect(4)=1   !experimental, see Table 1.1
             gfld%idsect(5)=1   !experimental, see Table 1.2
             gfld%idsect(6)=iyr  !year
+       write(0,*) 'imon is : ', imon
             gfld%idsect(7)=imon !mon
             gfld%idsect(8)=idy  !day
             gfld%idsect(9)=ihr  !cycle time

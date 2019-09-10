@@ -37,7 +37,7 @@ c    for derived variables
 
         integer ml,n_dMlvl
 
-        write(*,*) 'packing derv mean/spred for nv ',nv
+        write(*,*) 'packing derv mean/spread for nv ',nv
 
         write(*,*) imean,isprd,
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,

@@ -27,9 +27,7 @@ dom=${NEST}
 
 cd $DATA/${ff}/
 
-# ln -sf $FIXhref/*href5km .
 ln -sf $FIXhref/new*g227* .
-ln -sf $COMINffg/ffg*href5km .
 ln -sf $COMINffg/href.ffg*.grib2 .
 
 
@@ -228,18 +226,37 @@ echo dom is $dom
  cat temp.f${ff} >> filename
  rm -f temp.f${ff}
 
-if [ $ff -gt 0 ]
-then
+if [ $dom = 'conus' ] ; then
 
-if [ ${ff}%3 -eq 0 ]
-then
-ln -sf $PARMhref/hrefv3_variable_grib2.tbl_3h variable.tbl
-else
-ln -sf $PARMhref/hrefv3_variable_grib2.tbl    variable.tbl
-fi
+echo $dom is conus for defining the variable parm file
+
+ if [ $ff -gt 0 ]
+ then
+  if [ ${ff}%3 -eq 0 ]
+  then
+    ln -sf $PARMhref/hrefv3_variable_grib2.tbl_3h variable.tbl
+  else
+    ln -sf $PARMhref/hrefv3_variable_grib2.tbl    variable.tbl
+  fi
+ else
+  ln -sf $PARMhref/hrefv3_variable_grib2.tbl    variable.tbl
+ fi
 
 else
-ln -sf $PARMhref/hrefv3_variable_grib2.tbl    variable.tbl
+
+echo $dom is nonconus for defining the variable parm file
+ if [ $ff -gt 0 ]
+ then
+  if [ ${ff}%3 -eq 0 ]
+  then
+    ln -sf $PARMhref/hrefv3_variable_grib2.tbl_3h_nonconus variable.tbl
+  else
+    ln -sf $PARMhref/hrefv3_variable_grib2.tbl_nonconus    variable.tbl
+  fi
+ else
+  ln -sf $PARMhref/hrefv3_variable_grib2.tbl_nonconus    variable.tbl
+ fi
+
 fi
 
 $EXEChref/href_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1

@@ -69,7 +69,7 @@
   <task name="preproc" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>7:ppn=7</nodes>
+  <nodes>10:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
     <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>

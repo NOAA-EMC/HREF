@@ -93,15 +93,15 @@
 !Determine whether specified patch_nx, patch_ny divide evenly into the domain
 !and if they do not, return an error.
 !!! Kong comment: This might not be necessary - need to loosen
-      IF (MOD((ny - 3), patch_ny) /= 0) THEN
-        write(0,*) 'possible trouble(y)..exit maybe'
+!      IF (MOD((ny - 3), patch_ny) /= 0) THEN
+!        write(0,*) 'possible trouble(y)..exit maybe'
 !       CALL arpsstop('LPM MEAN ERROR: patches do not divide evenly into domain (y dir)', 1)
-      END IF
+!      END IF
 
-      IF (MOD((nx - 3), patch_nx) /= 0) THEN
-        write(0,*) 'possible trouble(x)..exit maybe'
+!      IF (MOD((nx - 3), patch_nx) /= 0) THEN
+!        write(0,*) 'possible trouble(x)..exit maybe'
 !    CALL arpsstop('LPM MEAN ERROR: patches do not divide evenly into domain (x dir)', 1)
-      END IF
+!      END IF
 
       ALLOCATE(lpm_smoothed(nx,ny))
 
