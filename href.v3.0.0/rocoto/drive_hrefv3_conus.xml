@@ -567,7 +567,7 @@
   <task name="ensprod" cycledefs="regional" maxtries="1">
   &RESERVATION;
   &CLIMO_RESOURCES;
-  <nodes>12:ppn=3</nodes>
+  <nodes>16:ppn=3</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/ensprod_&domain;_@H.log</cyclestr></join>

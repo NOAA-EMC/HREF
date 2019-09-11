@@ -58,12 +58,12 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   elif [ $dom = 'hi' ]
     then
 
-     files="9  hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
+     files="9  hifv3s hifv3s  hiarw hiarw himem2arw himem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
-      days="9  $PDY $PDY $PDY $PDYm1 $PDYm1 $PDYm1"
-      cycs="9   00    00   00   12     12    12"
-      ages="9   0      0    0   12     12    12"
+      days="9  $PDY $PDYm1 $PDY $PDYm1 $PDY $PDYm1"
+      cycs="9   00    12   00   12     0    12"
+      ages="9   0     12    0   12     0    12"
      fi
      set -A  day  $days
      set -A  cycloc $cycs
@@ -117,21 +117,21 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'ak' ]
   then
 
-  files="9 hrrrak hrrrak akarw akfv3s akmem2arw akarw akfv3s akmem2arw"
+  files="9 hrrrak hrrrak akfv3s akfv3s akmem2arw akarw akmem2arw akarw"
 
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY  $PDY $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9   06    00   06   06   06     18     18    18   "
-    ages="9    0     6    0    0    0     12     12    12   "
+    days="9 $PDY  $PDY $PDY $PDYm1 $PDY  $PDY $PDYm1 $PDYm1"
+    cycs="9   06    00   06   18   06     06     18    18   "
+    ages="9    0     6    0   12    0      0     12    12   "
   fi
 
   if [ $cyc = '18' ] ; then
     days="9 $PDY  $PDY $PDY $PDY $PDY  $PDY   $PDY  $PDY   "
-    cycs="9   18    12   18   18   18    06    06    06    "
-    ages="9    0     6    0    0    0    12    12    12   "
+    cycs="9   18    12   18   06   18   18    06    06    "
+    ages="9    0     6    0   12    0    0    12    12   "
   fi
 
 
@@ -142,14 +142,14 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'hi' ]
   then
 
-  files="9 hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
+  files="9  hifv3s hifv3s  hiarw hiarw himem2arw himem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6 "
 
   if [ $cyc = '12' ] ; then
     days="9 $PDY $PDY $PDY $PDY $PDY $PDY"
-    cycs="9   12   12   12   00   00  00"
-    ages="9    0    0    0   12   12  12"
+    cycs="9   12   0   12   00   12  00"
+    ages="9    0   12  0    12   0  12"
   fi
 
   set -A  day $days
@@ -159,21 +159,21 @@ elif [ $cyc -ge 6 ] ; then
   elif [ $dom = 'pr' ]
   then
 
-  files="9 prarw prfv3s prmem2arw prarw prfv3s prmem2arw"
+  files="9 prfv3s prfv3s  prarw prarw prmem2arw prmem2arw"
 
   set -A file  $files
   mbrs="1  2  3  4  5  6"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
-    cycs="9  06   06   06     18     18    18"
-    ages="9  0     0    0     12     12    12"
+    days="9 $PDY $PDYm1 $PDY  $PDYm1 $PDY $PDYm1"
+    cycs="9  06   18   06     18     06    18"
+    ages="9  0    12    0     12      0    12"
   fi
 
   if [ $cyc = '18' ] ; then
     days="9 $PDY $PDY $PDY  $PDY    $PDY  $PDY"
-    cycs="9  18   18   18     06     06    06"
-    ages="9  0     0    0     12     12    12"
+    cycs="9  18   06   18     06     18    06"
+    ages="9  0    12    0     12      0    12"
   fi
 
 

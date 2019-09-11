@@ -394,13 +394,13 @@ C  raw data
      + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
      + 'f46','f47','f48'/
  
-	write(0,*) 'know that filehead, ff, do_old, jf', 
-     *    trim(filehead), ff, do_old, jf
+!	write(0,*) 'know that filehead, ff, do_old, jf', 
+!     *    trim(filehead), ff, do_old, jf
 
 
-	write(0,*) 'start prcip code(b)'
+!	write(0,*) 'start prcip code(b)'
 
-       write(0,*) 'jf=',jf
+!       write(0,*) 'jf=',jf
 
        allocate(dphold(jf,3))
        allocate(dp1(jf))
@@ -414,7 +414,7 @@ C  raw data
         else
          nfile=1
         endif
-	write(0,*) 'do_old, nfile: ', do_old, nfile
+!	write(0,*) 'do_old, nfile: ', do_old, nfile
        nff=ff/1
 
         dphold=0.
@@ -440,7 +440,7 @@ C  raw data
 	if (mod(nff,3) .eq. 0) then
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	write(0,*) 'START MOD=0 BLOCK'
+!	write(0,*) 'START MOD=0 BLOCK'
 
 !  if nfile = 2, read current and previous
 
@@ -453,13 +453,13 @@ C  raw data
 
         if (ie.eq.0) then
 
-	write(0,*) 'populate nf (mod=0) of nfile: ', nf, nfile
+!	write(0,*) 'populate nf (mod=0) of nfile: ', nf, nfile
          dp1(:)=gfld%fld(:)
          if (nf.eq.1) then 
            gfld_save_1h=gfld
-  	   write(0,*) 'gfld_save(9) when saved: ', gfld_save_1h%ipdtmpl(9)
+!  	   write(0,*) 'gfld_save(9) when saved: ', gfld_save_1h%ipdtmpl(9)
            do i=1,gfld_save_1h%ipdtlen
-            write(0,*) 'MOD=0 ', i, gfld_save_1h%ipdtmpl(i)
+!            write(0,*) 'MOD=0 ', i, gfld_save_1h%ipdtmpl(i)
            end do
          end if
 
@@ -470,11 +470,11 @@ C  raw data
         jpd1=1
         jpd2=8
         jpd27=3 !3 hr accumulation
-	write(0,*) 'seek 3 h accum'
+!	write(0,*) 'seek 3 h accum'
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
         if (ie.eq.0) then
-	write(0,*) 'populate 3 h accum  nf of nfile: ', nf, nfile
+!	write(0,*) 'populate 3 h accum  nf of nfile: ', nf, nfile
         dphold(:,3)=gfld%fld(:)
 	endif
 
@@ -490,7 +490,7 @@ C  raw data
 
         if (ie.eq.0) then
 
-  	 write(0,*) 'populate SNOW nf (mod=0) of nfile: ', nf, nfile
+!  	 write(0,*) 'populate SNOW nf (mod=0) of nfile: ', nf, nfile
          sn1(:)=gfld%fld(:)
          if (nf.eq.1) then 
            gfld_save_1h_snow=gfld
@@ -501,11 +501,11 @@ C  raw data
         jpd1=1
         jpd2=13
         jpd27=3 !3 hr accumulation
-	write(0,*) 'seek 3 h SNOW accum'
+!	write(0,*) 'seek 3 h SNOW accum'
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
         if (ie.eq.0) then
-	write(0,*) 'populate 3 h SNOW accum  nf of nfile: ', nf, nfile
+!	write(0,*) 'populate 3 h SNOW accum  nf of nfile: ', nf, nfile
         snhold(:,3)=gfld%fld(:)
 	endif
 
@@ -517,7 +517,7 @@ C  raw data
 
 ! all should have 1 h total
 
-	write(0,*) 'START MOD=1 BLOCK'
+!	write(0,*) 'START MOD=1 BLOCK'
 
 
         jpd1=1
@@ -528,17 +528,17 @@ C  raw data
         if (ie.eq.0) then
 
 	if (nf .eq. 1) then
-	write(0,*) 'mod=1, populate nf of nfile: ', nf, nfile
+!	write(0,*) 'mod=1, populate nf of nfile: ', nf, nfile
          dp1(:)=gfld%fld(:)
            gfld_save_1h=gfld
 
            do i=1,gfld_save_1h%ipdtlen
-            write(0,*) 'MOD=1 ', i, gfld_save_1h%ipdtmpl(i)
+!            write(0,*) 'MOD=1 ', i, gfld_save_1h%ipdtmpl(i)
            enddo
 
         else
 
-	write(0,*) 'in here when 1 h old from 2 h block'
+!	write(0,*) 'in here when 1 h old from 2 h block'
           dp1(:)=dphold(:,2)-gfld%fld(:)
 	   gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+1
@@ -568,7 +568,7 @@ C  raw data
         if (ie.eq.0) then
 
 	if (nf .eq. 1) then
-	write(0,*) 'mod=1, SNOW populate nf of nfile: ', nf, nfile
+!	write(0,*) 'mod=1, SNOW populate nf of nfile: ', nf, nfile
          sn1(:)=gfld%fld(:)
            gfld_save_1h_snow=gfld
 
@@ -578,7 +578,7 @@ C  raw data
 
         else
 
-	write(0,*) 'in here when 1 h old from 2 h block'
+!	write(0,*) 'in here when 1 h old from 2 h block'
           sn1(:)=snhold(:,2)-gfld%fld(:)
 	   gfld%fld(:)=sn1(:)
            gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+1
@@ -598,7 +598,7 @@ C  raw data
 	elseif (mod(nff,3) .eq. 2) then
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	write(0,*) 'START MOD=2 BLOCK'
+!	write(0,*) 'START MOD=2 BLOCK'
 
 !  if nfile = 2, read current and previous
 
@@ -609,13 +609,13 @@ C  raw data
          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
          if (ie.eq.0) then
- 	  write(0,*) 'mod=2, 1h accum  populate nf of nfile: ', nf, nfile
+! 	  write(0,*) 'mod=2, 1h accum  populate nf of nfile: ', nf, nfile
           dp1(:)=gfld%fld(:)
           dphold(:,1)=gfld%fld(:)
-          write(0,*) 'maxval(dphold(:,2)) ', maxval(dphold(:,2))
+!          write(0,*) 'maxval(dphold(:,2)) ', maxval(dphold(:,2))
 
   	  if ( maxval(dphold(:,2)) .gt. 0) then 
- 	   write(0,*) 'inside maxval(dphold(:,2) '
+! 	   write(0,*) 'inside maxval(dphold(:,2) '
            dp1(:)=dphold(:,2)-dphold(:,1)
 	   write(0,*) 'maxval dpholds, dp1: ', maxval(dphold(:,1)), 
      +                 maxval(dphold(:,2)), maxval(dp1)
@@ -623,9 +623,9 @@ C  raw data
 
           if (nf.eq.1) then 
            gfld_save_1h=gfld
-  	   write(0,*) 'gfld_save_1h(9) when saved: ', gfld_save_1h%ipdtmpl(9)
+!  	   write(0,*) 'gfld_save_1h(9) when saved: ', gfld_save_1h%ipdtmpl(9)
            do i=1,gfld_save_1h%ipdtlen
-            write(0,*) 'MOD=2 ', i, gfld_save_1h%ipdtmpl(i)
+!            write(0,*) 'MOD=2 ', i, gfld_save_1h%ipdtmpl(i)
            enddo
           end if
 
@@ -636,14 +636,14 @@ C  raw data
           jpd27=2 !2 hr accumulation
           call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
           if (ie.eq.0) then
-	    write(0,*) 'populate mod=2, 2 h accum nf of nfile: ', nf, nfile
+!	    write(0,*) 'populate mod=2, 2 h accum nf of nfile: ', nf, nfile
             dphold(:,2)=gfld%fld(:)
-	    write(0,*) 'maxval(dphold(:,2)) ', maxval(dphold(:,2))
+!	    write(0,*) 'maxval(dphold(:,2)) ', maxval(dphold(:,2))
 	
 	  if (nf .eq. 2) then
 	   dp1(:)=dphold(:,3)-dphold(:,2)
-	   write(0,*) 'definined dp1 from difference'
-	   write(0,*) 'maxval(dp1): ', maxval(dp1)
+!	   write(0,*) 'definined dp1 from difference'
+!	   write(0,*) 'maxval(dp1): ', maxval(dp1)
 	   gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
            gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
@@ -661,18 +661,18 @@ C  raw data
 
          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
          if (ie.eq.0) then
- 	  write(0,*) 'mod=2, 1h accum SN populate nf of nfile: ', nf, nfile
+! 	  write(0,*) 'mod=2, 1h accum SN populate nf of nfile: ', nf, nfile
           sn1(:)=gfld%fld(:)
           snhold(:,1)=gfld%fld(:)
-	  write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
+!	  write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
 
 !!! is this safe??
 
 	if ( maxval(snhold(:,2)) .gt. 0) then 
-	write(0,*) 'inside maxval(snhold(:,2) '
+!	write(0,*) 'inside maxval(snhold(:,2) '
             sn1(:)=snhold(:,2)-snhold(:,1)
-	write(0,*) 'maxval snholds, sn1: ', maxval(snhold(:,1)), 
-     +                       maxval(snhold(:,2)), maxval(sn1)
+!	write(0,*) 'maxval snholds, sn1: ', maxval(snhold(:,1)), 
+!     +                       maxval(snhold(:,2)), maxval(sn1)
         endif
 
          if (nf.eq.1) then 
@@ -689,14 +689,14 @@ C  raw data
           jpd27=2 !2 hr accumulation
           call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
           if (ie.eq.0) then
-	    write(0,*) 'populate SN mod=2, 2 h accum nf of nfile: ',nf,nfile
+!	    write(0,*) 'populate SN mod=2, 2 h accum nf of nfile: ',nf,nfile
             snhold(:,2)=gfld%fld(:)
-            write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
+!            write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
 	
 	if (nf .eq. 2) then
 	 sn1(:)=snhold(:,3)-snhold(:,2)
-	 write(0,*) 'definined sn1 from difference'
-	 write(0,*) 'maxval(sn1): ', maxval(sn1)
+!	 write(0,*) 'definined sn1 from difference'
+!	 write(0,*) 'maxval(sn1): ', maxval(sn1)
 	 gfld%fld(:)=sn1(:)
          gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
          gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
@@ -711,7 +711,7 @@ C  raw data
 	endif ! mod(nff,3)
         endif !  ierr=0
 
-	write(0,*) 'to bottom and baclose ' , iunit
+!	write(0,*) 'to bottom and baclose ' , iunit
 
         call baclose(iunit,ierr)
         write(*,*) 'close ', filename(nf), 'ierr=',ierr
@@ -745,17 +745,17 @@ c      so use previously saved gfld_save
 	   gfld=gfld_save_1h
            gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(27)=1
-	write(0,*) 'to putgb2 for ounit: ', ounit
-	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+!	write(0,*) 'to putgb2 for ounit: ', ounit
+!	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2(ounit,gfld,ierr)
 	   gfld=gfld_save_1h_snow
            gfld%fld(:)=sn1(:)
            gfld%ipdtmpl(27)=1
-	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+!	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
-        write(0,*) 'Pack APCP done for fhr',nff
+        write(0,*) 'Pack APCP done for fhr',nff, ' file: ', output
 
 ! write "done" file
 
@@ -1199,19 +1199,20 @@ C  raw data
        
        integer ff, nfm1,nfm2
        logical do_old
-       character*3 fhr(48)
+       character*3 fhr(60)
        character(len=6) :: term
        integer iunit,ounit, pdt9_orig
        type(gribfield) :: gfld,gfld_save_curr
        type(gribfield) :: gfld_snow,gfld_save_curr_snow 
 
-       data (fhr(i),i=1,48)
+       data (fhr(i),i=1,60)
      + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
      + 'f10','f11','f12','f13','f14','f15','f16','f17','f18',
      + 'f19','f20','f21','f22','f23','f24','f25','f26','f27',
      + 'f28','f29','f30','f31','f32','f33','f34','f35','f36',
      + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
-     + 'f46','f47','f48'/
+     + 'f46','f47','f48','f49','f50','f51','f52','f53','f54',
+     + 'f55','f56','f57','f58','f59','f60'/
  
 	write(0,*) 'fv3 3hrly_pre - know that filehead, ff, do_old, jf', 
      *    trim(filehead), ff, do_old, jf
