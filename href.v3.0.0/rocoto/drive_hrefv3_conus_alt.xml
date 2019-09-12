@@ -66,13 +66,13 @@
 
 <!-- Strips needed products from NAM, HRRR, and FV3CAM and interpolates to grid 227 -->
 
-  <task name="preproc" cycledefs="regional" maxtries="3">
+  <task name="preproc_nam" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>10:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
-    <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>
+  <nodes>8:ppn=7</nodes>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_NAM</command>
+    <jobname><cyclestr>preprocnam_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_href/preprocnam_&domain;_@H.log</cyclestr></join>
 
     <envar>
      <name>NEST</name>
@@ -85,7 +85,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value>preproc_&domain;</value>
+      <value>preprocnam_&domain;</value>
     </envar>
 
     <envar>
@@ -164,6 +164,109 @@
       <or>
         <and>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
+        </and>
+      </or>
+    </dependency>
+
+  </task>
+
+  <task name="preproc_hrrr" cycledefs="regional" maxtries="3">
+  &RESERVATION;
+  &PREPROC_RESOURCES;
+  <nodes>6:ppn=7</nodes>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_HRRR</command>
+    <jobname><cyclestr>preprochrrr_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_href/preprochrrr_&domain;_@H.log</cyclestr></join>
+
+    <envar>
+     <name>NEST</name>
+     <value>&domain;</value>
+    </envar>
+
+    <envar>
+      <name>HOMEhref</name>
+      <value>&HOMEhref;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>preprochrrr_&domain;</value>
+    </envar>
+
+    <envar>
+     <name>MYCOMROOT</name>
+     <value>&MYCOMROOT;</value>
+    </envar>
+
+    <envar>
+      <name>machine</name>
+      <value>&machine;</value>
+    </envar>
+
+    <envar>
+      <name>envir</name>
+      <value>&envir;</value>
+    </envar>
+
+    <envar>
+      <name>KEEPDATA</name>
+      <value>&KEEPDATA;</value>
+    </envar>
+    <envar>
+      <name>DATAROOT</name>
+      <value>&DATAROOT;</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CDATE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>COMINnam</name>
+      <value>&COMINnam;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINhrrr;</value>
+    </envar>
+
+    <envar>
+      <name>COMINfv3</name>
+      <value>&COMINfv3sar;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUTnam</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUThrrr</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMOUTfv3</name>
+      <value>&COMINall;</value>
+    </envar>
+
+
+
+    <dependency>
+      <or>
+        <and>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
         </and>
       </or>

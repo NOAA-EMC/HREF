@@ -60,13 +60,13 @@
     <cyclestr>&OUTDIR;/logfiles_href/workflow_regional_&domain;_@Y@m@d@H.log</cyclestr>
   </log>
 
- <task name="preproc" cycledefs="regional" maxtries="3">
+ <task name="preproc_fv3" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>10:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
-    <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_FV3</command>
+    <jobname><cyclestr>preprocfv3_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_href/preprocfv3_&domain;_@H.log</cyclestr></join>
 
     <envar>
      <name>NEST</name>
@@ -79,7 +79,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value>preproc_&domain;</value>
+      <value>preprocfv3_&domain;</value>
     </envar>
 
     <envar>
@@ -272,7 +272,7 @@
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
      <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
-     <taskdep task="preproc"/>
+     <taskdep task="preproc_fv3"/>
      </and>
     </dependency>
 
@@ -368,7 +368,7 @@
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
      <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
-     <taskdep task="preproc"/>
+     <taskdep task="preproc_fv3"/>
      </and>
     </dependency>
 

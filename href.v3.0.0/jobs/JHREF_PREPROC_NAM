@@ -1,0 +1,235 @@
+#!/bin/sh
+
+#############################################################
+# HREF RUNALL 
+# 02/02/2015 Binbin Zhou, create for run all scripts 
+#############################################################
+
+########################################
+# Preliminary data setup step
+########################################
+
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+###################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href}
+
+export IOBUF_PARAMS='*:size=8M:count=8'
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+
+## PDY not included here as pull data from PDYm1 as well
+
+export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
+export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
+export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
+# export COMINfv3=
+
+export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+export PARMhref=${PARMhref:-$HOMEhref/parm}
+export USHhref=${USHhref:-$HOMEhref/ush}
+export FIXhref=${FIXhref:-$HOMEhref/fix}
+export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/href_ensprodpreproc_${NEST}_${cyc}_${envir}.${pid}}
+mkdir -p $DATA
+rm -rf $DATA/*
+cd $DATA
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-$COMROOT/logs/jlogfile}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.$$"
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+
+###################################
+# Set up the UTILITIES
+###################################
+
+msg="JOB $job HAS BEGUN"
+postmsg "$jlogfile" "$msg"
+
+#
+# Run setpdy and initialize PDY variables
+#
+
+setpdy.sh
+. PDY
+
+##############################################
+# Define running directory and COM directories
+##############################################
+
+if [ "$RUN_ENVIR" != nco ] ; then
+  export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_expv3
+else
+  export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+fi
+
+if [ ! -d $COMOUT ] ; then 
+ mkdir -p $COMOUT/ensprod
+ mkdir -p $COMOUT/verf_g2g
+fi
+
+#######################################################
+# Pass information which is needed to run the Script
+#######################################################
+
+# export VERBOSE=YES
+
+###################################################
+# Execute the Script exhref_ensprod.sh.ecf
+
+rm -rf poe.*
+
+if [ $NEST = "conus" ]
+then
+
+echo "#!/bin/sh  "                             >  poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 00 &" >> poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 01 &" >> poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 02 &" >> poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 03 &" >> poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 04 &" >> poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 05 &" >> poe.aa
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 06 &" >> poe.aa
+echo "wait" >> poe.aa
+
+echo "#!/bin/sh  "                             >  poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 07 &" >> poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 08 &" >> poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 09 &" >> poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 10 &" >> poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 11 &" >> poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 12 &" >> poe.bb
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 13 &" >> poe.bb
+echo "wait" >> poe.bb
+
+echo "#!/bin/sh  "                             >  poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 14 &" >> poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 15 &" >> poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 16 &" >> poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 17 &" >> poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 18 &" >> poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 19 &" >> poe.cc
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 20 &" >> poe.cc
+echo "wait" >> poe.cc
+
+echo "#!/bin/sh  "                             >  poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 21 &" >> poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 22 &" >> poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 23 &" >> poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 24 &" >> poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 25 &" >> poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 26 &" >> poe.dd
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 27 &" >> poe.dd
+echo "wait" >> poe.dd
+
+echo "#!/bin/sh  "                             >  poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 28 &" >> poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 29 &" >> poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 30 &" >> poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 31 &" >> poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 32 &" >> poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 33 &" >> poe.ee
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 34 &" >> poe.ee
+echo "wait" >> poe.ee
+
+echo "#!/bin/sh  "                             >  poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 35 &" >> poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 36 &" >> poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 37 &" >> poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 38 &" >> poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 39 &" >> poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 40 &" >> poe.ff
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 41 &" >> poe.ff
+echo "wait" >> poe.ff
+
+echo "#!/bin/sh  "                             >  poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 42 &" >> poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 43 &" >> poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 44 &" >> poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 45 &" >> poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 46 &" >> poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 47 &" >> poe.gg
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 48 &" >> poe.gg
+echo "wait" >> poe.gg
+
+echo "#!/bin/sh  "                             >  poe.hh
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 49 &" >> poe.hh
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 50 &" >> poe.hh
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 51 &" >> poe.hh
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 52 &" >> poe.hh
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 53 &" >> poe.hh
+echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 54 &" >> poe.hh
+echo "wait" >> poe.hh
+
+
+chmod 775 ${DATA}/poe.aa  ${DATA}/poe.bb ${DATA}/poe.cc
+chmod 775 ${DATA}/poe.dd  ${DATA}/poe.ee ${DATA}/poe.ff ${DATA}/poe.gg
+chmod 775 ${DATA}/poe.hh 
+
+
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.aa &
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.bb &
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.cc &
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.dd &
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.ee &
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.ff &
+aprun -n 1 -N 1 -d 7 ${DATA}/poe.gg &
+aprun -n 1 -N 1 -d 6 ${DATA}/poe.hh &
+wait
+
+
+msg"JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+date
+
+fi
+
+## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
+
+
+pdycycdel=`$NDATE -36 ${PDY}${cyc}`
+
+PDYdel=`echo $pdycycdel | cut -c1-8`
+cycdel=`echo $pdycycdel | cut -c9-10`
+
+echo will delete from $COMOUTnam.${PDYdel}/nam.t${cycdel}z
+
+rm $COMOUTnam.${PDYdel}/nam.t${cycdel}z.*grib2
+
+cd $DATAROOT
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+
+date

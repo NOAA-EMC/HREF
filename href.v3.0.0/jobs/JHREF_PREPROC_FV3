@@ -31,7 +31,6 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
 export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
 export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
-# export COMINfv3=
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
@@ -222,185 +221,8 @@ wait
 
 $USHhref/preprocess_fv3_3hapcp.sh.ecf ${cyc} ${NEST}
 
-if [ $NEST = "conus" -o $NEST = "ak" ]
-then
-echo "#!/bin/sh  "                             >  poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 00 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 01 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 02 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 03 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 04 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 05 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 06 &" >> poe.a
-echo "wait" >> poe.a
-
-echo "#!/bin/sh  "                             >  poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 07 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 08 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 09 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 10 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 11 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 12 &" >> poe.b
-echo "wait" >> poe.b
-
-echo "#!/bin/sh  "                             >  poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 13 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 14 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 15 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 16 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 17 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 18 &" >> poe.c
-echo "wait" >> poe.c
-
-echo "#!/bin/sh  "                             >  poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 19 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 20 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 21 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 22 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 23 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 24 &" >> poe.d
-echo "wait" >> poe.d
-
-echo "#!/bin/sh  "                             >  poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 25 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 26 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 27 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 28 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 29 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 30 &" >> poe.e
-echo "wait" >> poe.e
-
-echo "#!/bin/sh  "                             >  poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 31 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 32 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 33 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 34 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 35 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 36 &" >> poe.f
-echo "wait" >> poe.f
-
-chmod 775 ${DATA}/poe.a  ${DATA}/poe.b ${DATA}/poe.c
-chmod 775 ${DATA}/poe.d  ${DATA}/poe.e ${DATA}/poe.f
-
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.a &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.b &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.c &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.d &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.e &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.f &
-wait
-
-$USHhref/preprocess_hrrr_3hapcp.sh.ecf ${cyc} ${NEST}
-
-fi
-
-if [ $NEST = "conus" ]
-then
-
-echo "#!/bin/sh  "                             >  poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 00 &" >> poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 01 &" >> poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 02 &" >> poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 03 &" >> poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 04 &" >> poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 05 &" >> poe.aa
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 06 &" >> poe.aa
-echo "wait" >> poe.aa
-
-echo "#!/bin/sh  "                             >  poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 07 &" >> poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 08 &" >> poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 09 &" >> poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 10 &" >> poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 11 &" >> poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 12 &" >> poe.bb
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 13 &" >> poe.bb
-echo "wait" >> poe.bb
-
-echo "#!/bin/sh  "                             >  poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 14 &" >> poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 15 &" >> poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 16 &" >> poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 17 &" >> poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 18 &" >> poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 19 &" >> poe.cc
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 20 &" >> poe.cc
-echo "wait" >> poe.cc
-
-echo "#!/bin/sh  "                             >  poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 21 &" >> poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 22 &" >> poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 23 &" >> poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 24 &" >> poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 25 &" >> poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 26 &" >> poe.dd
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 27 &" >> poe.dd
-echo "wait" >> poe.dd
-
-echo "#!/bin/sh  "                             >  poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 28 &" >> poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 29 &" >> poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 30 &" >> poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 31 &" >> poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 32 &" >> poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 33 &" >> poe.ee
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 34 &" >> poe.ee
-echo "wait" >> poe.ee
-
-echo "#!/bin/sh  "                             >  poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 35 &" >> poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 36 &" >> poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 37 &" >> poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 38 &" >> poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 39 &" >> poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 40 &" >> poe.ff
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 41 &" >> poe.ff
-echo "wait" >> poe.ff
-
-echo "#!/bin/sh  "                             >  poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 42 &" >> poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 43 &" >> poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 44 &" >> poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 45 &" >> poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 46 &" >> poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 47 &" >> poe.gg
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 48 &" >> poe.gg
-echo "wait" >> poe.gg
-
-echo "#!/bin/sh  "                             >  poe.hh
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 49 &" >> poe.hh
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 50 &" >> poe.hh
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 51 &" >> poe.hh
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 52 &" >> poe.hh
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 53 &" >> poe.hh
-echo "$USHhref/preprocess_nam_1h.sh.ecf ${cyc} 54 &" >> poe.hh
-echo "wait" >> poe.hh
-
-
-chmod 775 ${DATA}/poe.aa  ${DATA}/poe.bb ${DATA}/poe.cc
-chmod 775 ${DATA}/poe.dd  ${DATA}/poe.ee ${DATA}/poe.ff ${DATA}/poe.gg
-chmod 775 ${DATA}/poe.hh 
-
-
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.aa &
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.bb &
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.cc &
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.dd &
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.ee &
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.ff &
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.gg &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.hh &
-wait
-
-
-msg"JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-date
-
-fi
 
 ## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
-
 
 pdycycdel=`$NDATE -36 ${PDY}${cyc}`
 
@@ -408,12 +230,8 @@ PDYdel=`echo $pdycycdel | cut -c1-8`
 cycdel=`echo $pdycycdel | cut -c9-10`
 
 echo will delete from $COMOUTfv3.${PDYdel}/fv3s.t${cycdel}z
-echo will delete from $COMOUTnam.${PDYdel}/nam.t${cycdel}z
-echo will delete from $COMOUThrrr.${PDYdel}/hrrr.t${cycdel}z
 
 rm $COMOUTfv3.${PDYdel}/fv3s.t${cycdel}z.*grib2
-rm $COMOUTnam.${PDYdel}/nam.t${cycdel}z.*grib2
-rm $COMOUThrrr.${PDYdel}/hrrr.t${cycdel}z.*grib2
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

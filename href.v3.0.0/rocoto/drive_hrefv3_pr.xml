@@ -64,13 +64,13 @@
 
 <!--  ************************************************************* -->
 
- <task name="preproc" cycledefs="regional" maxtries="3">
+ <task name="preproc_fv3" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>10:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC</command>
-    <jobname><cyclestr>preproc_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_href/preproc_&domain;_@H.log</cyclestr></join>
+    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_FV3</command>
+    <jobname><cyclestr>preprocfv3_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_href/preprocfv3_&domain;_@H.log</cyclestr></join>
 
     <envar>
      <name>NEST</name>
@@ -83,7 +83,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value>preproc_&domain;</value>
+      <value>preprocfv3_&domain;</value>
     </envar>
 
     <envar>
@@ -271,7 +271,7 @@
 
 
     <dependency>
-     <taskdep task="preproc"/>
+     <taskdep task="preproc_fv3"/>
     </dependency>
 
   </task>
@@ -362,7 +362,7 @@
     </envar>
 
     <dependency>
-     <taskdep task="preproc"/>
+     <taskdep task="preproc_fv3"/>
     </dependency>
 
   </task>
