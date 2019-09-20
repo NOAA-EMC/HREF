@@ -26,16 +26,17 @@ cd hrrr_${NEST}_${hr}
 
 if [ $NEST = "conus" ]
 then
-echo set wgrib2def 1
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
+NESTLOC=conus
+filecheck=${COMINhrrr}.${PDY}/${NESTLOC}/hrrr.t${cyc}z.wrfprsf${hr}.grib2
 elif [ $NEST = "ak" ]
 then 
-echo set wgrib2def 2
+NESTLOC=alaska
 wgrib2def="nps:210:60 185.5:825:5000 44.8:603:5000"
+filecheck=${COMINhrrr}.${PDY}/${NESTLOC}/hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
 fi
 
 
-filecheck=${COMINhrrr}.${PDY}/${NEST}/hrrr.t${cyc}z.wrfprsf${hr}.grib2
         if [ -e $filecheck ]
         then
 

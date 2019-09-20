@@ -10,14 +10,15 @@ C  raw data
        
        integer ff
        logical do_old, do_hrrr, do_hrrr_pre, do_fv3_pre
-       character*3 fhr(16)
+       character*3 fhr(20)
        character*5 domain
        integer iunit,ounit, pdt9_orig, acclength
        type(gribfield) :: gfld,gfld_save,gfld_save_snow
 
-       data (fhr(i),i=1,16)
+       data (fhr(i),i=1,20)
      + /'f03','f06','f09','f12','f15','f18','f21',
-     +  'f24','f27','f30','f33','f36','f39','f42','f45','f48'/
+     +  'f24','f27','f30','f33','f36','f39','f42','f45','f48',
+     +  'f51','f54','f57','f60'/
  
        read (*,*) filehead, ff, do_old, do_hrrr, do_hrrr_pre, 
      +            do_fv3_pre,acclength, domain
@@ -381,18 +382,19 @@ C  raw data
        
        integer ff
        logical do_old
-       character*3 fhr(48)
+       character*3 fhr(60)
        integer iunit,ounit, pdt9_orig
        type(gribfield) :: gfld,gfld_save_1h,gfld_2h
        type(gribfield) :: gfld_snow,     gfld_save_1h_snow ! ,gfld_2h
 
-       data (fhr(i),i=1,48)
+       data (fhr(i),i=1,60)
      + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
      + 'f10','f11','f12','f13','f14','f15','f16','f17','f18',
      + 'f19','f20','f21','f22','f23','f24','f25','f26','f27',
      + 'f28','f29','f30','f31','f32','f33','f34','f35','f36',
      + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
-     + 'f46','f47','f48'/
+     + 'f46','f47','f48','f49','f50','f51','f52','f53','f54',
+     + 'f55','f56','f57','f58','f59','f60'/
  
 !	write(0,*) 'know that filehead, ff, do_old, jf', 
 !     *    trim(filehead), ff, do_old, jf

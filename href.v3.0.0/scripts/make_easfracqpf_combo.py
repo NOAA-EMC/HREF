@@ -391,6 +391,15 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
     optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
     return optrad
 
+def calculate_pnt_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
+    exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+    nm_use, isize, jsize = np.shape(exceed3d)
+    print 'isize, jsize within get_footprint: ', isize, jsize
+    frac = np.zeros((nm_use,isize,jsize)).astype(float)
+    for mem in range(nm_use):
+        frac[mem,:,:] = np.around(signal.fftconvolve(exceed3d[mem,:,:],footprint,mode='same'))/float(np.sum(footprint))
+    return pnt_prob
+
 
 #--------------------------------------------------------------------------------
 #### START OF SCRIPT ####
@@ -450,8 +459,10 @@ prob = {}
 qpf = {}
 memcount = 0
 
+## change 48 to 60...need to set different limits for different sources?
+
 for mem in members:
-  while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 48):
+  while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
     print len(itimes), memcount+2
     itime = starttime-timedelta((start_hour+latency)/24.0)
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)

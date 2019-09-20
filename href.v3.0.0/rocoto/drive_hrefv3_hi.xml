@@ -157,7 +157,7 @@
     <dependency>
       <or>
         <and>
-          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/fv3sar.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/fv3sar.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
         </and>
         <and>
 <!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->

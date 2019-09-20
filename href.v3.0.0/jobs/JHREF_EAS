@@ -290,44 +290,79 @@ echo "wait" >> poe.snow_1_2
 echo "wait" >> poe.snow_1_3
 
 
-echo "#!/bin/sh  "                                  >  poe.qpf_12_24
+echo "#!/bin/sh  "                                  >  poe.qpf_12
 hrs="12 15 18 21 24 27 30 33 36 39 42 45 48"
 for fhr in $hrs
 do
-echo "cd $DATA ; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${HOMEhref}/scripts/make_easfracqpf_combo.py ${fhr} 12 >&  qpf_combo_${dom}_${cyc}_12h_${fhr}.log &" >> poe.qpf_12_24
+echo "cd $DATA ; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${HOMEhref}/scripts/make_easfracqpf_combo.py ${fhr} 12 >&  qpf_combo_${dom}_${cyc}_12h_${fhr}.log &" >> poe.qpf_12
 done
 
+echo "wait" >> poe.qpf_12
+
+echo "#!/bin/sh  "                                  >  poe.qpf_24
 hrs="24 27 30 33 36 39 42 45 48"
 for fhr in $hrs
 do
-echo "cd $DATA ; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${HOMEhref}/scripts/make_easfracqpf_combo.py ${fhr} 24 >&  qpf_combo_${dom}_${cyc}_24h_${fhr}.log &" >> poe.qpf_12_24
+echo "cd $DATA ; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${HOMEhref}/scripts/make_easfracqpf_combo.py ${fhr} 24 >&  qpf_combo_${dom}_${cyc}_24h_${fhr}.log &" >> poe.qpf_24
 done
-echo "wait" >> poe.qpf_12_24
+echo "wait" >> poe.qpf_24
 
 
-chmod 775 poe.qpf_12_24 poe.qpf_1_1 poe.qpf_1_2 poe.qpf_1_3
+chmod 775 poe.qpf_12 poe.qpf_24 poe.qpf_1_1 poe.qpf_1_2 poe.qpf_1_3
 chmod 775 poe.snow_1_1 poe.snow_1_2 poe.snow_1_3
 chmod 775 poe.qpf_3
 chmod 775 poe.snow_3
 chmod 775 poe.qpf_6
 chmod 775 poe.snow_6
 
+if [ $dom = "ak" ]
+then
+
+# do in two blocks
 aprun -n 1 -N 1 -d 15 poe.qpf_6 &
 aprun -n 1 -N 1 -d 15 poe.snow_6 &
 aprun -n 1 -N 1 -d 16 poe.qpf_3 &
 aprun -n 1 -N 1 -d 16 poe.snow_3 &
 aprun -n 1 -N 1 -d 16 poe.qpf_1_1 &
 aprun -n 1 -N 1 -d 16 poe.snow_1_1 &
+wait
+export err=$?; err_chk
+
 aprun -n 1 -N 1 -d 16 poe.qpf_1_2 &
 aprun -n 1 -N 1 -d 16 poe.snow_1_2 &
 aprun -n 1 -N 1 -d 16 poe.qpf_1_3 &
 aprun -n 1 -N 1 -d 16 poe.snow_1_3 &
-aprun -n 1 -N 1 -d 19 poe.qpf_12_24 &
+aprun -n 1 -N 1 -d 13 poe.qpf_12 &
+aprun -n 1 -N 1 -d 9 poe.qpf_24 &
 wait
 
+else
+
+# do in three blocks
+aprun -n 1 -N 1 -d 15 poe.qpf_6 &
+aprun -n 1 -N 1 -d 16 poe.snow_3 &
+aprun -n 1 -N 1 -d 16 poe.qpf_1_1 &
+aprun -n 1 -N 1 -d 16 poe.snow_1_1 &
+wait
+export err=$?; err_chk
+
+aprun -n 1 -N 1 -d 16 poe.qpf_1_2 &
+aprun -n 1 -N 1 -d 16 poe.snow_1_2 &
+aprun -n 1 -N 1 -d 15 poe.snow_6 &
+aprun -n 1 -N 1 -d 16 poe.qpf_3 &
+wait
+export err=$?; err_chk
+
+aprun -n 1 -N 1 -d 16 poe.qpf_1_3 &
+aprun -n 1 -N 1 -d 16 poe.snow_1_3 &
+aprun -n 1 -N 1 -d 13 poe.qpf_12 &
+aprun -n 1 -N 1 -d 9 poe.qpf_24 &
+wait
 
 fi
 
+
+fi
 
 export err=$?; err_chk
 

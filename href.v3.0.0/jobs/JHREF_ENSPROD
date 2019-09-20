@@ -382,7 +382,8 @@ msg"JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 date
 
-elif [ $NEST = "ak" -o $NEST = "pr" ]
+# elif [ $NEST = "ak" -o $NEST = "pr" ]
+elif [ $NEST = "ak" ]
 then
 
 echo "#!/bin/sh  "                             >  poe.aa
@@ -566,7 +567,7 @@ postmsg "$jlogfile" "$msg"
 date
 
 
-elif [ $NEST = "hi" ]
+elif [ $NEST = "hi"  -o $NEST = "pr" ]
 then
 
 echo "#!/bin/sh  "                                  >  poe.aa

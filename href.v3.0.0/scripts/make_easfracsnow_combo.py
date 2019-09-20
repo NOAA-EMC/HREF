@@ -392,7 +392,7 @@ check_hrrr = 0
 print 'members: ', members
 
 for mem in members:
-  while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 48):
+  while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
     print len(itimes), memcount+2
     itime = starttime-timedelta((start_hour+latency)/24.0)
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)

@@ -49,8 +49,6 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   elif [ $dom = 'hi' ]
     then
 
-#     files="9  hiarw hinmmb himem2arw hiarw hinmmb himem2arw"
-#     files="9  hiarw hifv3s himem2arw hiarw hifv3s himem2arw"
      files="9  hifv3s hifv3s hiarw hiarw himem2arw himem2arw"
 
      echo definining files for hi as $files
@@ -162,7 +160,7 @@ elif [ $cyc -ge 6 ] ; then
   mbrs="1  2  3  4  5  6"
 
   if [ $cyc = '06' ] ; then
-    days="9 $PDY $PDY $PDY  $PDYm1 $PDYm1 $PDYm1"
+    days="9 $PDY $PDYm1 $PDY  $PDYm1 $PDYm1 $PDYm1"
     cycs="9  06   18   06     18     06    18"
     ages="9  0    12    0     12     0     12"
   fi
