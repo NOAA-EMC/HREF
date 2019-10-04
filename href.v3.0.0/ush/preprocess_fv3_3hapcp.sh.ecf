@@ -51,6 +51,13 @@ then
 hrold=0${hrold}
 fi
 
+
+if [ $hr -eq 01 ]
+then
+ln -sf fv3s.t${cyc}z.${dom}.f00.grib2 temp.t${cyc}z.f00.grib2
+fi
+
+
 ln -sf fv3s.t${cyc}z.${dom}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
 dir=`pwd`
@@ -110,5 +117,5 @@ done
 
 cp fv3s.t${cyc}z.${dom}.f??.grib2   ${COMOUTfv3}.${PDY}
 
-rm temp.t${cyc}z.f*
+## rm temp.t${cyc}z.f*
 rm PCP1HR* prcip3h.t${cyc}z.f??.grib2

@@ -361,8 +361,8 @@
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f60.grib2</cyclestr></datadep>
         </and>
         <and>
-<!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->
-          <timedep> <cyclestr offset="9:00:00"> @Y@m@d@H@M@S </cyclestr></timedep>
+<!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
+          <timedep> <cyclestr offset="11:00:00"> @Y@m@d@H@M@S </cyclestr></timedep>
         </and>
       </or>
     </dependency>
@@ -587,7 +587,7 @@
   <task name="eas_gen" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &CLIMO_RESOURCES;
-    <nodes>12:ppn=12</nodes>
+    <nodes>10:ppn=12</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eas_gen_&domain;@H.log</cyclestr></join>

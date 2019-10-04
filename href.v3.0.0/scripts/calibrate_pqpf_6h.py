@@ -25,13 +25,34 @@ from cal_functions import quantile_map
 ### parms imported from PQPF config file
 from eas_config import *
 
-WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
-CNVGRIB = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/cnvgrib'
+# WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
+# CNVGRIB = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/cnvgrib'
+
+# WGRIB2 = '/gpfs/hps/nco/ops/nwprod/grib_util.v1.1.1/exec/wgrib2'
+# CNVGRIB = '/gpfs/hps/nco/ops/nwprod/grib_util.v1.1.1/exec/cnvgrib'
 
 
 ####################
 # GET ENVIRO VARS
 ####################
+
+try:
+  os.environ["WGRIB2"]
+except KeyError:
+  print "NEED module loaded to define WGRIB2"
+  exit(1)
+
+WGRIB2=os.environ.get('WGRIB2','trash')
+print 'found WGRIB2 as ', WGRIB2
+
+try:
+  os.environ["CNVGRIB"]
+except KeyError:
+  print "NEED module loaded to define CNVGRIB"
+  exit(1)
+
+CNVGRIB=os.environ.get('CNVGRIB','trash')
+print 'found CNVGRIB as ', CNVGRIB
 
 try:
   os.environ["HOMEhref"]

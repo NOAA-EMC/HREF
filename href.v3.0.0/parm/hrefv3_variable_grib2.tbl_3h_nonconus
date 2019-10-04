@@ -1,4 +1,4 @@
-  46      row variables and mean/spread/prob info
+  47      row variables and mean/spread/prob info
 REFD  16 195 103 P1 1000    A1 1000 > A3 30 40 50
 MXRF  16 198 103 P1 1000    A1 1000 > A2 40 50
 REFL  16 196 200 P1 0    A1  0   > A5 10 20 30 40 50
@@ -21,6 +21,7 @@ V     2  3  100  M5  250 500 700 850 925
 VVEL  2  8  100  M1  700
 T     0  0  100  M5  250 500 700 850 925
 T     0  0  103  M1  2  P1  2   < T1 273.15
+T     0  0    1  M1  0
 DPT   0  6  100  M4  500 700 850 925
 DPT   0  6  103  M1  2  P1  2   > T5 283.15 285.93 288.71 291.48 294.26
 RH    1  1  100  M1  700

@@ -103,7 +103,7 @@
 
     <envar>
       <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
+      <value>YES</value>
     </envar>
     <envar>
       <name>DATAROOT</name>
@@ -162,8 +162,8 @@
           <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/fv3sar.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
         </and>
         <and>
-<!-- go at 09Z for 00Z even if something (FV3-SAR) is missing -->
-          <timedep> <cyclestr offset="9:00:00"> @Y@m@d@H@M@S </cyclestr></timedep>
+<!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
+          <timedep> <cyclestr offset="11:00:00"> @Y@m@d@H@M@S </cyclestr></timedep>
         </and>
       </or>
     </dependency>
@@ -274,7 +274,7 @@
   <task name="eas_gen" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &CLIMO_RESOURCES;
-    <nodes>7:ppn=23</nodes>
+    <nodes>6:ppn=23</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eas_gen_&domain;@H.log</cyclestr></join>
@@ -341,7 +341,7 @@
     </envar>
     <envar>
       <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
+      <value>YES</value>
     </envar>
     <envar>
       <name>envir</name>

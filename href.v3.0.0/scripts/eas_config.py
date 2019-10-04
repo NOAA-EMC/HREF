@@ -60,10 +60,10 @@ pqpf_1h_weight2 = 1.0  # valid hour
 pqpf_1h_weight3 = 1.0  # hour after
 
 # forecast periods begin at forecast hour(s):
-pqpf_1h_starthours = [0,1,2,3,4,5,6,7,8,9,10,11,14,17,20,23,26,29,32,35]
-pqpf_3h_starthours = [0,1,2,3,4,5,6,7,8,9,12,15,18,21,24,27,30,33]
-pqpf_6h_starthours = [0,3,6,9,12,15,18,21,24,27,30]
-pqpf_24h_starthours = [0,6,12]
+pqpf_1h_starthours = [0,1,2,3,4,5,6,7,8,9,10,11,14,17,20,23,26,29,32,35,38,41,44,47]
+pqpf_3h_starthours = [0,1,2,3,4,5,6,7,8,9,12,15,18,21,24,27,30,33,36,39,42]
+pqpf_6h_starthours = [0,3,6,9,12,15,18,21,24,27,30,33,36,39,42]
+pqpf_24h_starthours = [0,6,12,18,24]
 
 # PQPF calibration
 pqpf_6h_calibrate_arw = 'no'
