@@ -47,6 +47,7 @@ pqpf_1h_filter = 60
 pqpf_3h_filter = 100
 pqpf_6h_filter = 100
 rlist = [10,25,40,55,70,85,100]
+rlist_hi = [10,25,40,55,70]
 
 # EAS settings
 alpha = 0.1	# similarity criteria parameter

@@ -403,13 +403,16 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
     optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
     return optrad
 
-def calculate_pnt_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
+def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
     exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
     nm_use, isize, jsize = np.shape(exceed3d)
-    print 'isize, jsize within get_footprint: ', isize, jsize
-    frac = np.zeros((nm_use,isize,jsize)).astype(float)
+    pnt_prob = np.zeros((isize,jsize)).astype(float)
     for mem in range(nm_use):
-        frac[mem,:,:] = np.around(signal.fftconvolve(exceed3d[mem,:,:],footprint,mode='same'))/float(np.sum(footprint))
+        pnt_prob[:,:] = pnt_prob[:,:]+exceed3d[mem,:,:]/float(nm_use)
+
+    pnt_prob = 100.0 * pnt_prob
+
+    pnt_prob = ndimage.filters.gaussian_filter(pnt_prob,p_smooth)
     return pnt_prob
 
 
@@ -1007,8 +1010,11 @@ for t in thresh_use:
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
   print 'Time for optrad routine:', t4-t3
+  pnt_prob = calculate_pnt_probability (ensemble_qpf, t, p_smooth)
 
   print 'nm_use for final prob: ', nm_use
+  print 'row range: ', slim/dx, nlats - (slim/dx)
+  print 'column range: ', slim/dx, nlons - (slim/dx)
   for row in range((slim/dx),nlats - (slim/dx)):
     for column in range((slim/dx),nlons - (slim/dx)):
       rad = (optrad[row,column]).astype(int)
@@ -1039,6 +1045,29 @@ for t in thresh_use:
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm_use)
         optrad[row,column] = 0
 
+# south edge
+  for row in range((slim/dx)-1):
+    print 'using point for S row: ', row
+    for column in range(nlons):
+      probfinal[row,column] = pnt_prob[row,column]
+
+# north edge
+  for row in range(nlats - (slim/dx)+1, nlats ):
+    print 'using point for N row: ', row
+    for column in range(nlons):
+      probfinal[row,column] = pnt_prob[row,column]
+
+# west edge
+  print 'will do west edge for : ', range((slim/dx))
+  for row in range( nlats ):
+    for column in range((slim/dx)):
+      probfinal[row,column] = pnt_prob[row,column]
+
+# east edge
+  print 'will do east edge for : ', range( nlons - (slim/dx), nlons)
+  for row in range( nlats ):
+    for column in range( nlons - (slim/dx), nlons):
+      probfinal[row,column] = pnt_prob[row,column]
 
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
