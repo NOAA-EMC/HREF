@@ -406,7 +406,9 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
 def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
     exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
     nm_use, isize, jsize = np.shape(exceed3d)
+    print 'isize, nm_use: ', isize, nm_use
     pnt_prob = np.zeros((isize,jsize)).astype(float)
+
     for mem in range(nm_use):
         pnt_prob[:,:] = pnt_prob[:,:]+exceed3d[mem,:,:]/float(nm_use)
 
@@ -1046,14 +1048,14 @@ for t in thresh_use:
         optrad[row,column] = 0
 
 # south edge
-  for row in range((slim/dx)-1):
-    print 'using point for S row: ', row
+  print 'will do south edge for rows: ', range(slim/dx)
+  for row in range((slim/dx)):
     for column in range(nlons):
       probfinal[row,column] = pnt_prob[row,column]
 
 # north edge
-  for row in range(nlats - (slim/dx)+1, nlats ):
-    print 'using point for N row: ', row
+  print 'will do north edge for rows: ', range(nlats - (slim/dx), nlats )
+  for row in range(nlats - (slim/dx), nlats ):
     for column in range(nlons):
       probfinal[row,column] = pnt_prob[row,column]
 
