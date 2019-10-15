@@ -383,7 +383,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* main ensprod piece *****************************  -->
 
-  <task name="ensprod" cycledefs="regional" maxtries="1">
+  <task name="ensprod" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>6:ppn=6</nodes>
@@ -479,7 +479,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* WMO/AWIP piece *****************************  -->
 
-  <task name="href_awips" cycledefs="regional" maxtries="1">
+  <task name="href_awips" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>1:ppn=1</nodes>
@@ -554,7 +554,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* GEMPAK piece *****************************  -->
 
-  <task name="href_gempak" cycledefs="regional" maxtries="1">
+  <task name="href_gempak" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=6</nodes>

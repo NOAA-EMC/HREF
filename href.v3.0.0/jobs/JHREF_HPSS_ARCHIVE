@@ -1,0 +1,77 @@
+#!/bin/sh
+
+set -xa
+# #### 08/25/1999 ###################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + ' 
+date
+
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href} 
+  
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/href_archive_${cyc}_${envir}.${pid}}
+mkdir -p $DATA
+cd $DATA 
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${jobid}}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout=OUTPUT.$$
+
+export cycle=${cycle:-t${cyc}z}
+
+##################################################
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-YES}
+
+export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
+export USHhref=${USHhref:-$HOMEhref/ush}
+export EXEChref=${EXEChref:-$HOMEhref/exec}
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. PDY
+
+if [ "$RUN_ENVIR" != nco ] ; then
+ export DCOMROOT=${DCOMROOT:-/gpfs/gp1/nco/ops/dcom}
+ export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}
+ export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}
+else
+ export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/}
+ export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/}
+fi
+
+if [ ! -f $COMOUT ] ; then
+  mkdir -p -m 775 $COMOUT
+fi
+
+if [ ! -f $COMOUTperm ] ; then
+  mkdir -p -m 775 $COMOUTperm
+fi
+
+#################################################################
+# Execute the script
+$HOMEhref/scripts/exhref_archive.sh.ecf
+#################################################################
+
+cd ${DATAROOT}
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+date

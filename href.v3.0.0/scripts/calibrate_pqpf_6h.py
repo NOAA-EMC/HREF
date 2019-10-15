@@ -120,10 +120,10 @@ os.system("mkdir -p " + COMOUTcal)
 if (dom == 'conus'):
   template = HOMEhref + '/fix/pqpf_conustemplate.grib2'
   landmask = HOMEhref + '/fix/href_conus_slmask.nc'
+  print 'template: ', template
+  print 'landmask: ', landmask
   coeffs_temp_arw = COMOUTcal + '/pqpf_6h_coeffs_arw.wrk'
   coeffs_file_arw = COMOUTcal + '/pqpf_6h_coeffs_arw.csv'
-  coeffs_temp_nmmb = COMOUTcal + '/pqpf_6h_coeffs_nmmb.wrk'
-  coeffs_file_nmmb = COMOUTcal + '/pqpf_6h_coeffs_nmmb.csv'
   coeffs_temp_fv3 = COMOUTcal + '/pqpf_6h_coeffs_fv3.wrk'
   coeffs_file_fv3 = COMOUTcal + '/pqpf_6h_coeffs_fv3.csv'
   coeffs_temp_nssl = COMOUTcal + '/pqpf_6h_coeffs_nssl.wrk'
@@ -278,9 +278,6 @@ for fstart in fstarts:
         if (mem == 'arw'):
           hreffile3 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
-        elif (mem == 'nmmb'):
-          hreffile3 = hrefdir + '/nmmb%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
-          hreffile6 = hrefdir + '/nmmb%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
         elif (mem == 'nssl'):
           hreffile3 = hrefdir + '/nssl%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/nssl%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
@@ -376,9 +373,6 @@ for mem in members:
   if mem == 'arw':
     coeffs_temp = coeffs_temp_arw
     coeffs_file = coeffs_file_arw
-  elif mem == 'nmmb':
-    coeffs_temp = coeffs_temp_nmmb
-    coeffs_file = coeffs_file_nmmb
   elif mem == 'fv3':
     coeffs_temp = coeffs_temp_fv3
     coeffs_file = coeffs_file_fv3
@@ -395,12 +389,22 @@ for mem in members:
   os.system('rm -f '+coeffs_temp)
   f = open(coeffs_temp,'w')
 # retrieve HREF landmask and mask out QPE over water
+  print 'pulling landmask data'
   nc = Dataset(landmask,'r')
   if (dom == 'conus'):
-    l = nc.variables['LAND_GDS3_SFC'][:]	# The variable that was in the .nc file
+    land = nc.variables['LAND_GDS3_SFC'][:]	# The variable that was in the .nc file
+    print 'populated l...now try to transpose'
+    landalt= [[land[j][i] for j in range(len(land))] for i in range (len(land[0]))]
+#    land = np.transpose(l)
+#    print 'np.shape(l): ', np.shape(l)
   elif (dom == 'alaska'):
-    l = nc.variables['LAND_GDS5_SFC'][:]	# The variable that was in the .nc file
+    land = nc.variables['LAND_GDS5_SFC'][:]	# The variable that was in the .nc file
   nc.close()
+
+  print 'np.shape(land): ', np.shape(land)
+  print 'np.max(land): ', np.max(land)
+  print 'np.mean(land): ', np.mean(land)
+
   for fstart in fstarts:
     fend = fstart+forecast_length
     climonc = COMOUTcalib+'/href/'+mem+'_qpf6_%02d'%fend+'.nc'
@@ -411,7 +415,11 @@ for mem in members:
     qpf = nc.variables['qpf'][:]
     qpe = nc.variables['qpe'][:]
     nc.close()
-    qpe = np.where(np.less(l,1),-1.0,qpe)
+
+### problem line here
+    print 'shape(qpe): ', np.shape(qpe)
+    print 'np.shape(landalt): ', np.shape(landalt)
+    qpe = np.where(np.less(landalt,1),-1.0,qpe)
     if len(qpf)>0:
       print 'Calculating quantile-mapping coefficients...'
       coeffs = quantile_map(qpf,qpe,pqpf_6h_minpct,pqpf_6h_fitorder)

@@ -307,6 +307,22 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
     optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
     return optrad
 
+def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
+    exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+    p_smooth_loc=p_smooth+2
+
+    nm_use, isize, jsize = np.shape(exceed3d)
+    pnt_prob = np.zeros((isize,jsize)).astype(float)
+
+    for mem in range(nm_use):
+        pnt_prob[:,:] = pnt_prob[:,:]+(exceed3d[mem,:,:]/float(nm_use))
+
+    pnt_prob = 100.0 * pnt_prob
+    pnt_prob = ndimage.filters.gaussian_filter(pnt_prob,p_smooth_loc)
+
+    return pnt_prob
+
+
 
 #--------------------------------------------------------------------------------
 #### START OF SCRIPT ####
@@ -617,6 +633,7 @@ for mem in members:
         filter_footprint = get_footprint(size)
         prob[t,size] = prob[t,size] + signal.fftconvolve(exceed,filter_footprint,mode='same')
 
+    qpf[memcount]=qpf[itime]
     memcount = memcount + 1
   latency = min_latency
 
@@ -632,7 +649,9 @@ print 'nm members is: ', nm
 ensemble_qpf = np.zeros((nm,nlats,nlons)).astype(float)
 for mem in range(0,len(itimes)):
   print 'mem in range is: ', mem
-  ensemble_qpf[mem,:,:] = qpf[itimes[mem]]
+  print 'max(qpf(itimes), max(qpf(mem): ', np.max(qpf[itimes[mem]]), np.max(qpf[mem])
+#  ensemble_qpf[mem,:,:] = qpf[itimes[mem]]
+  ensemble_qpf[mem,:,:] = qpf[mem]
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
@@ -650,6 +669,8 @@ for t in thresh_use:
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
   print 'Time for optrad routine:', t4-t3
+  pnt_prob = calculate_pnt_probability (ensemble_qpf, t, p_smooth)
+
 
   for row in range((slim/dx),nlats - (slim/dx)):
     for column in range((slim/dx),nlons - (slim/dx)):
@@ -681,6 +702,31 @@ for t in thresh_use:
         probfinal[row,column] = prob[t,100][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm)
         optrad[row,column] = 0
+
+# south edge
+  print 'will do south edge for rows: ', range(slim/dx)
+  for row in range((slim/dx)):
+    for column in range(nlons):
+      probfinal[row,column] = pnt_prob[row,column]
+
+# north edge
+  print 'will do north edge for rows: ', range(nlats - (slim/dx), nlats )
+  for row in range(nlats - (slim/dx), nlats ):
+    for column in range(nlons):
+      probfinal[row,column] = pnt_prob[row,column]
+
+# west edge
+  print 'will do west edge for : ', range((slim/dx))
+  for row in range( slim/dx, nlats - (slim/dx) ):
+    for column in range((slim/dx)):
+      probfinal[row,column] = pnt_prob[row,column]
+
+# east edge
+  print 'will do east edge for : ', range( nlons - (slim/dx), nlons)
+  for row in range( slim/dx, nlats - (slim/dx) ):
+    for column in range( nlons - (slim/dx), nlons):
+      probfinal[row,column] = pnt_prob[row,column]
+
 
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)

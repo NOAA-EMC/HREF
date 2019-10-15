@@ -53,6 +53,15 @@ COPYGB=os.environ.get('COPYGB','trash')
 print 'found COPYGB as ', COPYGB 
 
 try:
+  os.environ["CNVGRIB"]
+except KeyError:
+  print "NEED TO DEFINE CNVGRIB"
+  exit(1)
+CNVGRIB=os.environ.get('CNVGRIB','trash')
+print 'found CNVGRIB as ', CNVGRIB
+
+
+try:
   os.environ["HOMEhref"]
 except KeyError:
   print "NEED TO DEFINE HOMEhref"
@@ -192,8 +201,15 @@ for dirpath, dirnames, files in os.walk(COMINpcpanl):
                 if (dom == 'conus'):
                   print 'Budget interpolating to the HREF CONUS grid:',rtfile
                   os.system(COPYGB+' -xg "255 3 1473 1025 12190 -133459 \
-                            8 -95000 5079 5079 0 64 25000 25000" -i "3" '+climofile2+' '+climofile2+'.grb')
-                  climofull = climofile2 + '.bin'
+                            8 -95000 5079 5079 0 64 25000 25000" -i "3" '+climofile2+' '+climofile2+'.grb1')
+                  climofullg1 = climofile2 + '.grb1'
+                  climofull = climofile2 + '.grb2'
+                  print 'have climofullg1 as: ', climofullg1
+                  print 'have climofull as: ', climofull
+
+                  os.system(CNVGRIB+' -g12 '+climofullg1+' '+climofull)
+
+                  print 'have climofull : ', climofull
                   os.system(WGRIB2+' '+climofull+' -bin '+climofile2_bin)   
                   
 

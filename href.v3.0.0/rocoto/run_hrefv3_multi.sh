@@ -3,15 +3,8 @@ set +x
 # . /usrx/local/prod/lmod/lmod/init/sh
 set -x
 
-# dell stuff?
-
-# module load impi/18.0.1
-# module load lsf/10.1
-
-# module use /gpfs/dell3/usrx/local/dev/emc_rocoto/modulefiles/
-# module load ruby/2.5.1 rocoto/1.2.4
-
 module load rocoto/1.2.4
+module load NetCDF-intel-haswell/4.2
 
 ###
 ### for using latest WGRIB2

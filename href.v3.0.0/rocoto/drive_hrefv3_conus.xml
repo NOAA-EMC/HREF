@@ -13,7 +13,7 @@
 <!ENTITY ENDHOUR "12">
 
 <!ENTITY USER "Matthew.Pyle">
-<!ENTITY ACCOUNT "FV3GFS-T2O">
+<!ENTITY ACCOUNT "HREF-T2O">
 
 <!ENTITY HOMEhref "/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0">
 <!ENTITY domain "conus">
@@ -31,14 +31,25 @@
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY COMOUTcalib "&MYCOMROOTPERM;/hiresw/calib">
 <!ENTITY COMOUTclimo "&MYCOMROOTPERM;/hiresw/climo_bin">
-<!ENTITY DATAROOT "/gpfs/hps3/stmp/&USER;/tmpnwprd">
+<!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "YES">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
+<!ENTITY RESERVATION_CALIB '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
+
+<!ENTITY QUEUE      "devhigh">
+
+<!ENTITY QUEUE_CALIB     "&QUEUE;">
+<!ENTITY WALLTIME_CALIB  "00:39:00">
+<!ENTITY RESOURCES_CALIB "<nodes>1:ppn=1</nodes>">
+<!ENTITY MEMORY_CALIB    "3000M">
+<!ENTITY NATIVE_CALIB    "">
+
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
+
 <!ENTITY CLIMO_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
 <!ENTITY EAS_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
@@ -52,7 +63,7 @@
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
 <!-- <workflow realtime="F" scheduler="lsfcray" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="01:03:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
@@ -369,6 +380,81 @@
 
   </task>
 
+<!--  ***********************************************************************  -->
+<!-- dont forget to do FFG piece                                               -->
+<!--  ***********************************************************************  -->
+
+  <task name="ffg_gen" cycledefs="regional" maxtries="2">
+    &RESERVATION;
+    &FFG_RESOURCES;
+    <nodes>1:ppn=1</nodes>
+      <command>&JOBS;/launch.ksh &JOBS;/JHREF_FFG_GEN</command>
+      <jobname><cyclestr>ffg_gen_&domain;_@Hz</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/logfiles_href/ffg_gen_&domain;@H.log</cyclestr></join>
+   
+      <envar>
+        <name>HOMEhref</name>
+        <value>&HOMEhref;</value>
+      </envar>
+      <envar>
+        <name>job</name>
+        <value>ffg_gen_&domain;</value>
+      </envar>
+      <envar>
+        <name>machine</name>
+        <value>&machine;</value>
+      </envar>
+
+      <envar>
+        <name>USER</name>
+        <value>&USER;</value>
+      </envar>
+      <envar>
+        <name>CDATE</name>
+        <value><cyclestr>@Y@m@d@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>PDY</name>
+        <value><cyclestr>@Y@m@d</cyclestr></value>
+      </envar>
+      <envar>
+        <name>cyc</name>
+        <value><cyclestr>@H</cyclestr></value>
+      </envar>
+      <envar>
+       <name>NEST</name>
+       <value>&domain;</value>
+      </envar>
+    <envar>
+      <name>DATAROOT</name>
+      <value>&DATAROOT;</value>
+    </envar>
+    <envar>
+     <name>MYCOMROOT</name>
+     <value>&MYCOMROOT; </value>
+    </envar>
+    <envar>
+      <name>MYCOMROOTPERM</name>
+      <value>&MYCOMROOTPERM;</value>
+    </envar>
+    <envar>
+      <name>KEEPDATA</name>
+      <value>&KEEPDATA;</value>
+    </envar>
+    <envar>
+      <name>envir</name>
+      <value>&envir;</value>
+    </envar>
+
+      <dependency>
+     <and>
+       <taskdep task="preproc_hrrr"/>
+       <taskdep task="preproc_nam"/>
+       <taskdep task="preproc_fv3"/>
+     </and>
+      </dependency>
+  </task>
+
 
 <!--  ***********************************************************************  -->
 <!--  ************************* EAS climo piece *****************************  -->
@@ -377,6 +463,7 @@
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>1:ppn=1</nodes>
+
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCLIMO</command>
     <jobname><cyclestr>eas_climo_bin_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/easclimobin_&domain;_@H.log</cyclestr></join>
@@ -387,7 +474,7 @@
     </envar>
     <envar>
       <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
+      <value>YES</value>
     </envar>
     <envar>
      <name>MYCOMROOT</name>
@@ -490,10 +577,14 @@
 <!--  ********************** Run the EAS calib  *************************  -->
 
   <task name="eas_calib" cycledefs="regional" maxtries="2">
-    &RESERVATION;
-    &CLIMO_RESOURCES;
-    <nodes>1:ppn=1</nodes>
+    
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCALIBRATE</command>
+      &RESERVATION;
+      &RESOURCES_CALIB;
+      <walltime>&WALLTIME_CALIB;</walltime>
+      <memory>&MEMORY_CALIB;</memory>
+      <native>&NATIVE_CALIB;</native>
+
       <jobname><cyclestr>eascalib_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eascalib_&domain;@H.log</cyclestr></join>
    
@@ -511,7 +602,7 @@
       </envar>
     <envar>
       <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
+      <value>YES</value>
     </envar>
     <envar>
       <name>DATAROOT</name>
@@ -586,7 +677,7 @@
 
   <task name="eas_gen" cycledefs="regional" maxtries="2">
     &RESERVATION;
-    &CLIMO_RESOURCES;
+    &EAS_RESOURCES;
     <nodes>10:ppn=12</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
@@ -687,86 +778,11 @@
 
 
 <!--  ***********************************************************************  -->
-<!-- dont forget to do FFG piece                                               -->
-<!--  ***********************************************************************  -->
-
-  <task name="ffg_gen" cycledefs="regional" maxtries="2">
-    &RESERVATION;
-    &FFG_RESOURCES;
-    <nodes>1:ppn=1</nodes>
-      <command>&JOBS;/launch.ksh &JOBS;/JHREF_FFG_GEN</command>
-      <jobname><cyclestr>ffg_gen_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_href/ffg_gen_&domain;@H.log</cyclestr></join>
-   
-      <envar>
-        <name>HOMEhref</name>
-        <value>&HOMEhref;</value>
-      </envar>
-      <envar>
-        <name>job</name>
-        <value>ffg_gen_&domain;</value>
-      </envar>
-      <envar>
-        <name>machine</name>
-        <value>&machine;</value>
-      </envar>
-
-      <envar>
-        <name>USER</name>
-        <value>&USER;</value>
-      </envar>
-      <envar>
-        <name>CDATE</name>
-        <value><cyclestr>@Y@m@d@H</cyclestr></value>
-      </envar>
-      <envar>
-        <name>PDY</name>
-        <value><cyclestr>@Y@m@d</cyclestr></value>
-      </envar>
-      <envar>
-        <name>cyc</name>
-        <value><cyclestr>@H</cyclestr></value>
-      </envar>
-      <envar>
-       <name>NEST</name>
-       <value>&domain;</value>
-      </envar>
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-    <envar>
-      <name>MYCOMROOTPERM</name>
-      <value>&MYCOMROOTPERM;</value>
-    </envar>
-    <envar>
-      <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-
-      <dependency>
-     <and>
-       <taskdep task="preproc_hrrr"/>
-       <taskdep task="preproc_nam"/>
-       <taskdep task="preproc_fv3"/>
-     </and>
-      </dependency>
-  </task>
-
-<!--  ***********************************************************************  -->
 <!--  ************************* main ensprod piece *****************************  -->
 
-  <task name="ensprod" cycledefs="regional" maxtries="1">
+  <task name="ensprod" cycledefs="regional" maxtries="2">
   &RESERVATION;
-  &CLIMO_RESOURCES;
+  &ENSPROD_RESOURCES;
   <nodes>16:ppn=3</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
@@ -859,7 +875,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* WMO/AWIP piece *****************************  -->
 
-  <task name="href_awips" cycledefs="regional" maxtries="1">
+  <task name="href_awips" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &CLIMO_RESOURCES;
   <nodes>1:ppn=1</nodes>

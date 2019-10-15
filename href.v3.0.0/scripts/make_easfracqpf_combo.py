@@ -155,12 +155,19 @@ record = 1		# PQPF from SREF pgrb212 file
 # get latest run times and create output directory if it doesn't already exist
 
 # calibration coefficients files
+
+
+print 'here defining the coeffs files '
+
 coeffs_file_arw = COMINcal + '/pqpf_6h_coeffs_arw.csv'
 coeffs_file_nmmb = COMINcal + '/pqpf_6h_coeffs_nmmb.csv'
 coeffs_file_fv3 = COMINcal + '/pqpf_6h_coeffs_fv3.csv'
 coeffs_file_nssl = COMINcal + '/pqpf_6h_coeffs_nssl.csv'
 coeffs_file_nam = COMINcal + '/pqpf_6h_coeffs_nam.csv' 
 coeffs_file_hrrr = COMINcal + '/pqpf_6h_coeffs_hrrr.csv' 
+
+print 'coeffs_file_arw is: ', coeffs_file_arw
+print 'coeffs_file_fv3 is: ', coeffs_file_fv3
 
 # accumulation interval (hours)
 fcst_hour = int(sys.argv[1])
@@ -257,6 +264,9 @@ for mem in members:
 
   if dom != 'conus':
     pqpf_6h_calibrate = 'no'
+
+  print 'here with coeffs_file as: ', coeffs_file
+  print 'here with pqpf_6h_calibrate as: ', pqpf_6h_calibrate
 
   if os.path.exists(coeffs_file) and (pqpf_6h_calibrate == 'yes'):
     f = open(coeffs_file,'r')
@@ -405,17 +415,19 @@ def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
 
 def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
     exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+    p_smooth_loc=p_smooth+2
+
     nm_use, isize, jsize = np.shape(exceed3d)
-    print 'isize, nm_use: ', isize, nm_use
     pnt_prob = np.zeros((isize,jsize)).astype(float)
 
     for mem in range(nm_use):
-        pnt_prob[:,:] = pnt_prob[:,:]+exceed3d[mem,:,:]/float(nm_use)
+        pnt_prob[:,:] = pnt_prob[:,:]+(exceed3d[mem,:,:]/float(nm_use))
 
     pnt_prob = 100.0 * pnt_prob
+    pnt_prob = ndimage.filters.gaussian_filter(pnt_prob,p_smooth_loc)
 
-    pnt_prob = ndimage.filters.gaussian_filter(pnt_prob,p_smooth)
     return pnt_prob
+
 
 
 #--------------------------------------------------------------------------------
@@ -472,6 +484,9 @@ outfile = DATA + '/' + outbase
 if os.path.exists(outfile):
   os.system('rm -f '+outfile)
 
+
+# qpf is a dictionary - need unique key.  itime values are repeated, so is a bad choice.
+
 prob = {}
 qpf = {}
 memcount = 0
@@ -480,8 +495,9 @@ memcount = 0
 
 for mem in members:
   while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
-    print len(itimes), memcount+2
+    print 'len(itimes), memcount+2: ', len(itimes), memcount+2
     itime = starttime-timedelta((start_hour+latency)/24.0)
+    print 'itime for this member: ', itime
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
     if mem == 'arw':
       file0 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency)+'.'+dom+'.grib2'
@@ -764,6 +780,7 @@ for mem in members:
          print 'defined qpf[itime] from qpf12'
          qpf[itime]=qpf12
          print 'itime assigned: ', itime
+         print 'used memcount instead: ', memcount
 
     if qpf_interval == 24 or qpf_interval == 12 :
 
@@ -958,6 +975,9 @@ for mem in members:
 #        idx.close()
 
       print 'max of 1 h APCP: ', np.max(qpf[itime])
+      print 'mean of 1 h APCP: ', np.mean(qpf[itime])
+      print 'median of 1 h APCP: ', np.median(qpf[itime])
+
 
 
 
@@ -968,19 +988,40 @@ for mem in members:
     if dom == 'conus' or dom == 'ak':
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
+
+
+
+
+# prob is okay as is based on local qpf[itime]
+
+# but save to qpf[memcount] for use below
+
+    qpf[memcount]=qpf[itime]
+
     # calculate threshold exceedance on QPF
     for t in thresh_use:
       for size in rlist:
         if memcount == 0:
           prob[t,size] = np.zeros((nlats,nlons))
         exceed = np.where(np.greater_equal(qpf[itime]/25.4,t),1,0)
+        dontexceed = np.where(np.less(qpf[itime]/25.4,t),1,0)
         filter_footprint = get_footprint(size)
+
+#        print 'np.shape(filter_footprint): ', np.shape(filter_footprint)
+#        print 'np.shape(exceed): ', np.shape(exceed)
 ## exceed varies by member, so the fftconvolve will be sensitive to the order in which the members are done
         prob[t,size] = prob[t,size] + signal.fftconvolve(exceed,filter_footprint,mode='same')
+        print 't, size, sum(exceed),sum(dontexceed), mean prob: ', t, size, np.sum(exceed),np.sum(dontexceed), np.mean(prob[t,size])
 
-#        print 't, size, sum(exceed), mean prob: ', t, size, np.sum(exceed), np.mean(prob[t,size])
+# possible to compute number of valid points here?
+
+    print 'working memcount: ', memcount
+#    print 'try to extract dictionary stuff from qpf'
+#    for x,y in qpf.items():
+#       print(x,y)
 
     memcount = memcount + 1
+
   latency = min_latency
 
 
@@ -995,7 +1036,9 @@ print 'settled on nm_use for final probabilities: ', nm_use
 ensemble_qpf = np.zeros((nm_use,nlats,nlons)).astype(float)
 
 for mem in range(0,len(itimes)):
-  ensemble_qpf[mem,:,:] = qpf[itimes[mem]]
+  print 'mem, itimes[mem],max(qpf): ',mem, itimes[mem], np.max(qpf[mem])
+  ensemble_qpf[mem,:,:] = qpf[mem]
+  print 'max of member: ', np.max(ensemble_qpf[mem,:,:])
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
@@ -1014,12 +1057,24 @@ for t in thresh_use:
   print 'Time for optrad routine:', t4-t3
   pnt_prob = calculate_pnt_probability (ensemble_qpf, t, p_smooth)
 
+
+# how know the filter_footprint size for near boundary points?
+
+
+## need something to account for reduced portion of filter_footprint actually within domain
+#
+# Could compute fraction in X direction
+# Could compute fraction in Y direction
+# product of two proper for corner - in theory should be 0.25 for corner, and 0.5 along non-corner edges.
+#
   print 'nm_use for final prob: ', nm_use
-  print 'row range: ', slim/dx, nlats - (slim/dx)
-  print 'column range: ', slim/dx, nlons - (slim/dx)
-  for row in range((slim/dx),nlats - (slim/dx)):
-    for column in range((slim/dx),nlons - (slim/dx)):
+#  for row in range((slim/dx),nlats - (slim/dx)):
+#    for column in range((slim/dx),nlons - (slim/dx)):
+  for row in range(nlats):
+    for column in range(nlons):
       rad = (optrad[row,column]).astype(int)
+      if row <= 8 and column <= 8 and rad <= 98:
+        print 'row,column, optrad: ', row, column,rad
 
       if (2.5 <= rad < 17.5):
         probfinal[row,column] = prob[t,10][row,column]
@@ -1047,29 +1102,8 @@ for t in thresh_use:
         probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm_use)
         optrad[row,column] = 0
 
-# south edge
-  print 'will do south edge for rows: ', range(slim/dx)
-  for row in range((slim/dx)):
-    for column in range(nlons):
-      probfinal[row,column] = pnt_prob[row,column]
-
-# north edge
-  print 'will do north edge for rows: ', range(nlats - (slim/dx), nlats )
-  for row in range(nlats - (slim/dx), nlats ):
-    for column in range(nlons):
-      probfinal[row,column] = pnt_prob[row,column]
-
-# west edge
-  print 'will do west edge for : ', range((slim/dx))
-  for row in range( nlats ):
-    for column in range((slim/dx)):
-      probfinal[row,column] = pnt_prob[row,column]
-
-# east edge
-  print 'will do east edge for : ', range( nlons - (slim/dx), nlons)
-  for row in range( nlats ):
-    for column in range( nlons - (slim/dx), nlons):
-      probfinal[row,column] = pnt_prob[row,column]
+      if row <= 8 and column <= 8 and probfinal[row,column] >= 5:
+        print 'row,column, probfinal: ', row, column,probfinal[row,column]
 
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)

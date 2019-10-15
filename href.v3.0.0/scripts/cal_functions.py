@@ -36,8 +36,8 @@ def quantile_map(qpf,qpe,minpct,fitorder):
 
     fcst_quantiles = nanpercentile(qpf,q)
     obs_quantiles = nanpercentile(qpe,q)
-    print 'Upper forecast quantiles (mm):\n',fcst_quantiles[-40:-1]
-    print 'Upper analysis quantiles (mm):\n',obs_quantiles[-40:-1]
+    print 'Upper forecast quantiles (mm):\n',fcst_quantiles[-30:-1]
+    print 'Upper analysis quantiles (mm):\n',obs_quantiles[-30:-1]
 
     x_fcst1 = q[:-1]
     y_fcst1 = fcst_quantiles[:-1]
@@ -52,8 +52,8 @@ def quantile_map(qpf,qpe,minpct,fitorder):
     y_training = polynomial(y_fcst1)
 
     if coeffs[1]>0:
-      print 'QPF_adj = %.2f'%coeffs[0]+'*QPF + %.2f'%coeffs[1]
+      print 'QPF_adj = %.4f'%coeffs[0]+'*QPF + %.4f'%coeffs[1]
     else:
-      print 'QPF_adj = %.2f'%coeffs[0]+'*QPF - %.2f'%(-1.0*coeffs[1])
+      print 'QPF_adj = %.4f'%coeffs[0]+'*QPF - %.4f'%(-1.0*coeffs[1])
 
     return flipud(coeffs)
