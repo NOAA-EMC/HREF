@@ -53,7 +53,7 @@
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
 <!-- <workflow realtime="F" scheduler="lsfcray" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 

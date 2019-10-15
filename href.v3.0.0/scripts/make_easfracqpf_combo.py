@@ -373,6 +373,31 @@ def get_footprint(r):
     footprint = np.where(np.greater(dist,r),0,1)
     return footprint
 
+def get_footprint_flexi(r,i,j,nx,ny):
+
+    footprint = (np.ones(((r/dx)*2+1,(r/dx)*2+1))).astype(int)
+    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
+    dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
+    footprint = np.where(np.greater(dist,r),0,1)
+
+    rdx2 = int(r/dx)
+    nx1=nx-1
+    ny1=ny-1
+
+# if test is on domain grid indices.  Indices for footprint_flexi are footprint relative
+
+    if i < rdx2:
+      footprint[0:rdx2-i,:]=0
+    if j < rdx2:
+      footprint[:,0:rdx2-j]=0
+    if i > nx1-rdx2:
+      footprint[nx1-rdx2-i:,:]=0
+    if j > ny1-rdx2:
+      footprint[:,ny1-rdx2-j:]=0
+
+    return footprint
+
+
 # ENSEMBLE AGREEMENT SCALES PROBABILITY FUNCTION
 #
 #   ensemble_qpf: 3-D QPF array (members x lat x lon)
@@ -1050,6 +1075,9 @@ filter_footprint_70 = get_footprint(70)
 filter_footprint_85 = get_footprint(85)
 filter_footprint_100 = get_footprint(100)
 
+print 'sums of the filters (10,25,40): ', np.sum(filter_footprint_10),np.sum(filter_footprint_25),np.sum(filter_footprint_40)
+print 'sums of the filters (55,70,85,100): ', np.sum(filter_footprint_55),np.sum(filter_footprint_70),np.sum(filter_footprint_85),np.sum(filter_footprint_100)
+
 for t in thresh_use:
   t3 = time.time()
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
@@ -1063,47 +1091,77 @@ for t in thresh_use:
 
 ## need something to account for reduced portion of filter_footprint actually within domain
 #
-# Could compute fraction in X direction
-# Could compute fraction in Y direction
-# product of two proper for corner - in theory should be 0.25 for corner, and 0.5 along non-corner edges.
 #
   print 'nm_use for final prob: ', nm_use
 #  for row in range((slim/dx),nlats - (slim/dx)):
 #    for column in range((slim/dx),nlons - (slim/dx)):
+
   for row in range(nlats):
     for column in range(nlons):
       rad = (optrad[row,column]).astype(int)
-      if row <= 8 and column <= 8 and rad <= 98:
-        print 'row,column, optrad: ', row, column,rad
+
+
+# assign the default radius footprint size to footprint_use
+
+      if (2.5 <= rad < 17.5):
+        footprint_use  =  float(np.sum(filter_footprint_10))
+      elif (17.5 <= rad < 32.5):
+        footprint_use  =  float(np.sum(filter_footprint_25))
+      elif (32.5 <= rad < 47.5):
+        footprint_use  =  float(np.sum(filter_footprint_40))
+      elif (47.5 <= rad < 62.5):
+        footprint_use  =  float(np.sum(filter_footprint_55))
+      elif (62.5 <= rad < 77.5):
+        footprint_use  =  float(np.sum(filter_footprint_70))
+      elif (77.5 <= rad < 92.5):
+        footprint_use  =  float(np.sum(filter_footprint_85))
+      elif (92.5 <= rad <= 100):
+        footprint_use  =  float(np.sum(filter_footprint_100))
+      elif (rad > 100):
+        footprint_use  =  float(np.sum(filter_footprint_100))
+
+
+      rdx=int(rad/dx)
+# now insert something to compute the smaller footprint_use if in proper row/colum using flexi?
+
+      if column < rdx:
+         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+
+      if row < rdx:
+         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+
+      if column > nlons-1-rdx:
+         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+
+      if row > nlats-1-rdx:
+         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+
 
       if (2.5 <= rad < 17.5):
         probfinal[row,column] = prob[t,10][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_10)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (17.5 <= rad < 32.5):
         probfinal[row,column] = prob[t,25][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_25)*nm_use)    
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (32.5 <= rad < 47.5):
         probfinal[row,column] = prob[t,40][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_40)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (47.5 <= rad < 62.5):
         probfinal[row,column] = prob[t,55][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_55)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (62.5 <= rad < 77.5):
         probfinal[row,column] = prob[t,70][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_70)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (77.5 <= rad < 92.5):
         probfinal[row,column] = prob[t,85][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_85)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (92.5 <= rad <= 100):
         probfinal[row,column] = prob[t,100][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
       elif (rad > 100):
         probfinal[row,column] = prob[t,100][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(np.sum(filter_footprint_100)*nm_use)
+        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
         optrad[row,column] = 0
-
-      if row <= 8 and column <= 8 and probfinal[row,column] >= 5:
-        print 'row,column, probfinal: ', row, column,probfinal[row,column]
 
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
