@@ -216,7 +216,10 @@ for dirpath, dirnames, files in os.walk(COMINpcpanl):
 # copy HiResW (ARW + NMMB) from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
 print 'Syncing any real-time HiResW files to local directory...'
-dir = COMINhiresw + '/' + 'hiresw.'+PDY[:8]
+dir = COMINhiresw + '.'+PDY[:8]
+
+print 'dir is: ', dir
+
 runs = []
 if os.path.exists(dir):
   files = next(os.walk(dir))[2]
@@ -243,28 +246,7 @@ if os.path.exists(dir):
         print 'Creating '+climofile
         os.system(WGRIB2+' '+arwfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)   
         os.system(WGRIB2+' '+arwfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)   
-    elif (len(file) == 36 and (file[8:10] == cyc[0:2]) and file[12:20] == 'nmmb_5km' and (1 <= int(file[22:24])) and file[25:30] == 'conus'):
-      nmmbfile = dir + '/' + file
-      print 'Found',nmmbfile
-      iyear = int(PDY[:4])
-      imonth = int(PDY[4:6])
-      iday = int(PDY[6:8])
-      ihour = int(cyc[0:2]) 
-      ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
-      climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
-      os.system('mkdir -p '+climohref)
-      fhour = int(file[22:24])
-      shour = fhour - 3
-      newfile = 'nmmb%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
-      climofile = climohref + '/' + newfile
-      climofile_bin = climohref + '/' + newfile + '.bin'
-      print climofile
-      if os.path.exists(climofile2) and os.stat(climofile2).st_size == 0:
-        os.system('rm '+climofile2)
-      if not os.path.exists(climofile2) and (fhour%3 == 0):
-        print 'Creating '+climofile
-        os.system(WGRIB2+' '+nmmbfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)
-        os.system(WGRIB2+' '+nmmbfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)
+
     elif (len(file) == 39 and (file[8:10] == cyc[0:2]) and file[12:19] == 'arw_5km' and (1 <= int(file[21:23])) and file[24:33] == 'conusmem2'):
 
       nsslfile = dir + '/' + file
