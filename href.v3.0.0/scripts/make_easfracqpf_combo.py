@@ -1140,24 +1140,45 @@ for t in thresh_use:
       if (2.5 <= rad < 17.5):
         probfinal[row,column] = prob[t,10][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,10][row,column], footprint_use: ', prob[t,10][row,column], footprint_use
       elif (17.5 <= rad < 32.5):
         probfinal[row,column] = prob[t,25][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,25][row,column], footprint_use: ', prob[t,25][row,column], footprint_use
       elif (32.5 <= rad < 47.5):
         probfinal[row,column] = prob[t,40][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,40][row,column], footprint_use: ', prob[t,40][row,column], footprint_use
       elif (47.5 <= rad < 62.5):
         probfinal[row,column] = prob[t,55][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,55][row,column], footprint_use: ', prob[t,55][row,column], footprint_use
       elif (62.5 <= rad < 77.5):
         probfinal[row,column] = prob[t,70][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,70][row,column], footprint_use: ', prob[t,70][row,column], footprint_use
       elif (77.5 <= rad < 92.5):
         probfinal[row,column] = prob[t,85][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,85][row,column], footprint_use: ', prob[t,85][row,column], footprint_use
       elif (92.5 <= rad <= 100):
         probfinal[row,column] = prob[t,100][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+        if (probfinal[row,column] > 100.1): 
+           print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
+           print 'prob[t,100][row,column], footprint_use: ', prob[t,100][row,column], footprint_use
       elif (rad > 100):
         probfinal[row,column] = prob[t,100][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
