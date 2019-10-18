@@ -79,7 +79,6 @@
       INTEGER :: calc_nx, calc_ny    ! The number of x, y gridpoints within the calculation area
       INTEGER :: offset_i, offset_j  ! The distance of the patch edge from the W, S edge of calc area
 
-      REAL, ALLOCATABLE :: lpm_smoothed(:,:) ! 2D (nx, ny) LPM field after gaussian smoothing
       REAL, ALLOCATABLE :: lpm_calc(:,:)  !The LPM over the calculation area.  Must be allocated since
                                           !we do not know ahead of time how big the calc area will be.
       REAL, ALLOCATABLE :: var0(:)   ! The values from ALL ensemble members at all points on the 2D
@@ -103,7 +102,8 @@
 !    CALL arpsstop('LPM MEAN ERROR: patches do not divide evenly into domain (x dir)', 1)
 !      END IF
 
-      ALLOCATE(lpm_smoothed(nx,ny))
+ 
+       var2d_lpm=0.
 
 	write(0,*) 'nx, ny: ', nx, ny
 	write(0,*) 'patch_nx, patch_ny: ',patch_nx, patch_ny
@@ -221,17 +221,9 @@
 ! do not have a var2d_enmax, so do as done in HREF
 ! var2d_lpm=min(var2d_lpm,var2d_enmax)
 
-!        if( gauss_sigma > 0 ) then
 !Apply a gaussian smoother to the filtered var2d_lpm to get rid of near-grid-scale noise
+! fix later with Gsmooth for HREF
 
-! fix later with Gsmooth
-
-!  CALL gaussian_smooth(nx,ny,var2d_lpm,gauss_sigma, &
-!                       lpm_smoothed)
-!  var2d_lpm=lpm_smoothed
-!        endif
-
-         DEALLOCATE(lpm_smoothed)
 
          END SUBROUTINE lpm
 !---------------------------------------------------------------!

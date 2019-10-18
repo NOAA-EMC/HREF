@@ -155,7 +155,7 @@ C Return Interval fixed data
 C others 
        character*19, allocatable, dimension(:) :: fhead
        character*50 :: fname
-       real,allocatable,dimension(:) :: p03mp01,slr_derv,vrbl_mn_use             !jf
+       real,allocatable,dimension(:) :: p03mp01,vrbl_mn_use             !jf
        real,allocatable,dimension(:,:)  :: ptype_mn,ptype_pr,ptype_pr2 !jf,4 
 
        real,allocatable,dimension(:,:,:) :: derv_dtra                  !jf,maxmlvl,8 for DTRA requests
@@ -573,11 +573,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
 !      here maybe for inserting?
 
-              if (.NOT.allocated(slr_derv)) then
-                allocate (slr_derv(jf))
+              if (.NOT.allocated(vrbl_mn_use)) then
                 allocate (vrbl_mn_use(jf))
-                slr_derv=0.
-	write(0,*) 'set slr_derv to zero'
               endif
               if (.NOT.allocated(ptype_mn)) then
                 allocate (ptype_mn(jf,4))
@@ -590,12 +587,11 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
               end if
              
  
-	      if (slr_derv(1)<0.01) then
-              call preciptype (nv,ifunit,jpdtn,jf,iens,
-     +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
-              endif
+!	      if (slr_derv(1)<0.01) then
+!              call preciptype (nv,ifunit,jpdtn,jf,iens,
+!     +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
+!              endif
 
-	      write(0,*) 'post def maxval(slr_derv): ', maxval(slr_derv)
 
 !  end of inserted ptype stuff
 
@@ -737,7 +733,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
             jpd27=10    !only 0-10 cm layer soil temperature is requested
           end if
 
-          write(0,*)'a1 - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(0,*)'a1 - readGB2:', 
+     &          igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld, eps, jret)
           write(0,*) 'a2 - readGB ',igrb2,' for mean kret=',kret 
@@ -1843,12 +1840,13 @@ c               end if
 c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 ! Reset gfld%bmap with the combined version bmap_f
-        if(trim(eps).eq.'href') gfld%bmap=bmap_f
-
-
+        if(trim(eps).eq.'href' .and. associated(gfld%bmap)) then
+		gfld%bmap=bmap_f
+        endif
 
 !        if (trim(Msignal(nv)).eq.'M'.or.trim(Msignal(nv)).eq.'P') then
 ! change so PM mean field doesn't write out regular mean as well.
+
 
         if (trim(Msignal(nv)).eq.'M') then
 
@@ -1869,13 +1867,11 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 	if (jpd2 .eq. 13 .and. jpd27 .eq. 1)  then
 	write(0,*) 'defining vrbl_mn_use'
 	write(0,*) 'Lm is: ', Lm
-	write(0,*) 'max of slr_derv here: ', maxval(slr_derv)
 	write(0,*) 'maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
 	
           jpd2loc=11
           do JJJ=1,jf
-	  slr_derv(JJJ)=max(slr_derv(JJJ),1.0)
-	  vrbl_mn_use(JJJ)=vrbl_mn(JJJ,Lm)*slr_derv(JJJ)
+	  vrbl_mn_use(JJJ)=vrbl_mn(JJJ,Lm)
           enddo
 	 
 	write(0,*) 'min/max of test SNOW field ', minval(vrbl_mn_use),
@@ -2090,9 +2086,6 @@ c
 cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
           if (dk4(nv).eq.1.and.dk5(nv).eq.19) then
 
-              if (.NOT.allocated(slr_derv)) then
-                allocate (slr_derv(jf))
-              endif
               if (.NOT.allocated(ptype_mn)) then
                 allocate (ptype_mn(jf,4))
               end if
@@ -2111,7 +2104,7 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
              else
  
               call preciptype (nv,ifunit,jpdtn,jf,iens,
-     +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
+     +         ptype_mn,ptype_pr,ptype_pr2)
 
              end if
 

@@ -11,7 +11,7 @@ c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c
    	subroutine  preciptype(nv,ifunit,jpdtn,jf,iens,
-     +      ptype_mn,ptype_pr,ptype_pr2,slr_derv)
+     +      ptype_mn,ptype_pr,ptype_pr2)
 
             use grib_mod
             include 'parm.inc'
@@ -39,7 +39,6 @@ c    for derived variables
 
         REAL,dimension(jf,4),intent(INOUT) :: ptype_mn
         REAL,dimension(jf,4),intent(INOUT) :: ptype_pr,ptype_pr2
-        REAL,dimension(jf), intent(INOUT):: slr_derv
 
         INTEGER miss(iens),pcount
         integer,dimension(iens),intent(IN) :: ifunit
@@ -135,26 +134,14 @@ c    for derived variables
 
 
 ! SLR test
-
-
-          frztyp=cslet+csnow
-           if (frztyp .gt. 0) then
-              fracsn=csnow/frztyp
-              fracip=cslet/frztyp
-
-              SLR_derv(igrid)=fracsn*10.+2*fracip
-
-              if (mod(igrid,5000) .eq. 0) then
-	         write(0,*) 'fracsn,fracip, slr: ', 
-     +                      fracsn,fracip,slr_derv(igrid)
-
-              endif
-
-             else
-              SLR_derv(igrid)=10.
- 
-            endif
-
+!          frztyp=cslet+csnow
+!           if (frztyp .gt. 0) then
+!              fracsn=csnow/frztyp
+!              fracip=cslet/frztyp
+!              SLR_derv(igrid)=fracsn*10.+2*fracip
+!             else
+!              SLR_derv(igrid)=10.
+!            endif
 ! end SLR test
 
 cc  following is part is the code copy from Geoff Manikin dominant precip type decision

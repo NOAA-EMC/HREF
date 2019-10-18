@@ -374,11 +374,12 @@ C
 
 CZeus modify to skip space: by Binbin Zhoucccccccccccccccccccccccccc
 ! mptest to prevent bounds exceedance
-	if (iend+1 .le. 160) then
-            do while ( strbuf (iend+1:iend+1) .eq. ' ' )
-             iend = iend + 1
-            end do
-	endif
+	if (iend+1 .le. 160)  then
+         do while (strbuf(iend+1:iend+1) .eq. ' ' )
+           iend = iend + 1
+           if (iend .eq. 160) exit
+         end do
+	end if
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
