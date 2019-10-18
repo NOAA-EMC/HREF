@@ -70,3 +70,6 @@ fi
 done
 
 cp hrrr.t${cyc}z.${NEST}.f??.grib2 ${COMOUThrrr}.${PDY}
+
+err=$?
+export err

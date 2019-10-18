@@ -117,5 +117,8 @@ done
 
 cp fv3s.t${cyc}z.${dom}.f??.grib2   ${COMOUTfv3}.${PDY}
 
+err=$?
+export err
+
 ## rm temp.t${cyc}z.f*
 rm PCP1HR* prcip3h.t${cyc}z.f??.grib2

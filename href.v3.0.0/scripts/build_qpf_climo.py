@@ -273,12 +273,12 @@ if os.path.exists(dir):
 
 # copy HRRR from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
-dir = COMINhrrr + '/' + 'hrrr.'+PDY[:8]
+dir = COMINhrrr + '.'+PDY[:8]
 print 'dir is : ', dir
 if os.path.exists(dir):
   files = next(os.walk(dir))[2]
   for file in files:
-    if (len(file) == 24) and (file[6:8] == cyc[0:2]): 
+    if (len(file) == 25) and (file[6:8] == cyc[0:2]): 
       hrrrfile = dir + '/' + file
       print 'Found',hrrrfile
       iyear = int(PDY[:4])
@@ -288,7 +288,7 @@ if os.path.exists(dir):
       ijul = (datetime(iyear,imonth,iday)-datetime(iyear,1,1)).days+1
       climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       os.system('mkdir -p '+climohref)
-      fhour = int(file[16:18])
+      fhour = int(file[17:19])
       shour = fhour - 3
       newfile = 'hrrr%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile + '_copy'
@@ -305,7 +305,7 @@ if os.path.exists(dir):
 # copy NAM from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
 # print dirs
-dir = COMINnam + '/' + 'nam.'+PDY[:8]
+dir = COMINnam + '.'+PDY[:8]
 print 'dir is : ', dir
 if os.path.exists(dir):
   files = next(os.walk(dir))[2]
@@ -337,14 +337,14 @@ if os.path.exists(dir):
 # copy FV3 from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command
 # print dirs
-dir = COMINfv3 + '/' + 'fv3.'+PDY[:8]
+dir = COMINfv3 + '.'+PDY[:8]
 print 'dir is : ', dir
 if os.path.exists(dir):
   files = next(os.walk(dir))[2]
   for file in files:
-    if (len(file) == 19):
-      print file,len(file), file[6:8], file[11:13], file[14:19]
-    if (len(file) == 19) and (file[6:8] == cyc[0:2]) and (1 <= int(file[11:13])) and (file[14:19] == 'grib2'): 
+    if (len(file) == 25):
+      print file,len(file), file[6:8], file[17:19], file[20:25]
+    if (len(file) == 25) and (file[6:8] == cyc[0:2]) and (1 <= int(file[17:19])) and (file[20:25] == 'grib2'): 
       fv3file = dir + '/' + file
       print 'Found',fv3file
       iyear = int(PDY[:4])
@@ -356,7 +356,7 @@ if os.path.exists(dir):
       climohref = COMINclimo + '/href/qpf/conus/%i'%iyear+'%02d'%imonth+'%02d'%iday+'%02d'%ihour
       print 'climohref is : ', climohref
       os.system('mkdir -p '+climohref)
-      fhour = int(file[11:13])
+      fhour = int(file[17:19])
       shour = fhour - 3
       newfile = 'fv3s%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       print 'newfile defined: ', newfile

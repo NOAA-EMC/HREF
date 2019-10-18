@@ -182,7 +182,7 @@ def simplewgrib2(txtfile):
 #################
 
 # Determine which HREF forecast hours to match with QPE
-fstarts = [0,6,12,18,24,30]
+fstarts = [0,6,12,18,24,30,36,42]
 fstarts = np.unique(fstarts)
 print 'Here is fstarts'
 print(fstarts)
@@ -257,7 +257,7 @@ for fstart in fstarts:
 
   # loop through each of those stage-iv files and see if they are in the climatology already
     for qpedate in qpedates:
-      qpefile = 'stageIV_'+str(qpedate)+'_06h.grb'
+      qpefile = 'stageIV_'+str(qpedate)+'_06h.grb1'
       year, month, day, hour = int(qpefile[8:12]), int(qpefile[12:14]), int(qpefile[14:16]), int(qpefile[16:18])
       vtime = datetime(year,month,day,hour)
       es = int(time.mktime(vtime.timetuple()))
