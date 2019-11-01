@@ -126,8 +126,8 @@ if (dom == 'conus'):
   coeffs_file_arw = COMOUTcal + '/pqpf_6h_coeffs_arw.csv'
   coeffs_temp_fv3 = COMOUTcal + '/pqpf_6h_coeffs_fv3.wrk'
   coeffs_file_fv3 = COMOUTcal + '/pqpf_6h_coeffs_fv3.csv'
-  coeffs_temp_nssl = COMOUTcal + '/pqpf_6h_coeffs_nssl.wrk'
-  coeffs_file_nssl = COMOUTcal + '/pqpf_6h_coeffs_nssl.csv'
+  coeffs_temp_arw2 = COMOUTcal + '/pqpf_6h_coeffs_arw2.wrk'
+  coeffs_file_arw2 = COMOUTcal + '/pqpf_6h_coeffs_arw2.csv'
   coeffs_temp_nam = COMOUTcal + '/pqpf_6h_coeffs_nam.wrk'
   coeffs_file_nam = COMOUTcal + '/pqpf_6h_coeffs_nam.csv'
   coeffs_temp_hrrr = COMOUTcal + '/pqpf_6h_coeffs_hrrr.wrk'
@@ -205,7 +205,7 @@ lat,nx,ny=simplewgrib2('lat.txt')
 print 'Searching for new QPE-QPF matches...'
 
 # Create and dimension climo netcdf files if they do not already exist
-members = ['arw','fv3','nssl','nam','hrrr']
+members = ['arw','fv3','arw2','nam','hrrr']
 
 for fstart in fstarts:
   fend = fstart + forecast_length
@@ -278,9 +278,12 @@ for fstart in fstarts:
         if (mem == 'arw'):
           hreffile3 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/arw%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
-        elif (mem == 'nssl'):
-          hreffile3 = hrefdir + '/nssl%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
-          hreffile6 = hrefdir + '/nssl%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
+
+	  print 'hreffile3 for arw is: ', hreffile3
+
+        elif (mem == 'arw2'):
+          hreffile3 = hrefdir + '/arw2%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
+          hreffile6 = hrefdir + '/arw2%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
         elif (mem == 'nam'):
           hreffile3 = hrefdir + '/nam%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fhr3+'00'
           hreffile6 = hrefdir + '/nam%02d'%(itime.year-2000)+'%03d'%ijul+'%02d'%itime.hour+'00%02d'%fend+'00'
@@ -376,9 +379,9 @@ for mem in members:
   elif mem == 'fv3':
     coeffs_temp = coeffs_temp_fv3
     coeffs_file = coeffs_file_fv3
-  elif mem == 'nssl':
-    coeffs_temp = coeffs_temp_nssl
-    coeffs_file = coeffs_file_nssl
+  elif mem == 'arw2':
+    coeffs_temp = coeffs_temp_arw2
+    coeffs_file = coeffs_file_arw2
   elif mem == 'nam':
     coeffs_temp = coeffs_temp_nam
     coeffs_file = coeffs_file_nam

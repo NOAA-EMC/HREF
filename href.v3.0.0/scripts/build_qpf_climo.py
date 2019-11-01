@@ -249,8 +249,8 @@ if os.path.exists(dir):
 
     elif (len(file) == 39 and (file[8:10] == cyc[0:2]) and file[12:19] == 'arw_5km' and (1 <= int(file[21:23])) and file[24:33] == 'conusmem2'):
 
-      nsslfile = dir + '/' + file
-      print 'Found',nsslfile
+      arw2file = dir + '/' + file
+      print 'Found',arw2file
       iyear = int(PDY[:4])
       imonth = int(PDY[4:6])
       iday = int(PDY[6:8])
@@ -260,7 +260,7 @@ if os.path.exists(dir):
       os.system('mkdir -p '+climohref)
       fhour = int(file[21:23])
       shour = fhour - 3
-      newfile = 'nssl%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
+      newfile = 'arw2%02d'%(iyear-2000)+'%03d'%ijul+'%02d'%ihour+'00%02d'%fhour+'00'
       climofile = climohref + '/' + newfile
       climofile_bin = climohref + '/' + newfile + '.bin'
       print climofile
@@ -268,8 +268,8 @@ if os.path.exists(dir):
         os.system('rm '+climofile2)
       if not os.path.exists(climofile2) and (fhour%3 == 0):
         print 'Creating '+climofile
-        os.system(WGRIB2+' '+nsslfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)
-        os.system(WGRIB2+' '+nsslfile+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)
+        os.system(WGRIB2+' '+arw2file+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -grib '+climofile)
+        os.system(WGRIB2+' '+arw2file+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -bin '+climofile_bin)
 
 # copy HRRR from the realtime directory to climo
 #  strip out just the QPF using a wgrib2 command

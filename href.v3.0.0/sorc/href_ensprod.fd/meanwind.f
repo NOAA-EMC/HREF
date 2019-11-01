@@ -77,6 +77,9 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
           if(mbrname(irun)(1:5).eq.'conus'.and.(p(k).eq.475
      +   .or.p(k).eq.425.or.p(k).eq.375.or.p(k).eq.325)) cycle lvl_loop
 
+          if(mbrname(irun)(1:4).eq.'fv3s'.and.(p(k).eq.475
+     +   .or.p(k).eq.425.or.p(k).eq.375.or.p(k).eq.325)) cycle lvl_loop
+
           if( (mbrname(irun)(1:2).eq.'ak'.or.mbrname(irun)(1:2).eq.'hi'
      +   .or.mbrname(irun)(1:2).eq.'pr') .and.(p(k).eq.475
      +   .or. p(k) .eq. 450 .or.p(k).eq.425.or.p(k).eq.375

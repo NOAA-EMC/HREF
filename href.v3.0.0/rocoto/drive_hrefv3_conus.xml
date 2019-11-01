@@ -21,7 +21,7 @@
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
-<!ENTITY COMINfv3sar "/gpfs/gp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sar "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/fv3cam/para/fv3sar">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
@@ -46,6 +46,8 @@
 <!ENTITY NATIVE_CALIB    "">
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
+<!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>02:59:00</walltime><shared></shared>'>
+
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
@@ -66,6 +68,7 @@
 <workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="01:03:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
+  <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
   <log>
     <cyclestr>&OUTDIR;/logfiles_href/workflow_regional_&domain;_@Y@m@d@H.log</cyclestr>
@@ -369,7 +372,7 @@
       <or>
         <and>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f60.grib2</cyclestr></datadep>
+          <datadep age="08:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f60.grib2</cyclestr></datadep>
         </and>
         <and>
 <!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
@@ -451,6 +454,9 @@
        <taskdep task="preproc_hrrr"/>
        <taskdep task="preproc_nam"/>
        <taskdep task="preproc_fv3"/>
+       <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+       <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.nmmb_5km.f48.conus.grib2</cyclestr></datadep>
+       <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
      </and>
       </dependency>
   </task>
@@ -554,10 +560,12 @@
       <name>COMINhrrr</name>
       <value>&COMINall;</value>
     </envar>
+
     <envar>
       <name>COMINhiresw</name>
       <value>&COMINhiresw;</value>
     </envar>
+
     <envar>
       <name>COMINfv3</name>
       <value>&COMINall;</value>
@@ -567,7 +575,6 @@
      <and>
        <taskdep task="preproc_hrrr"/>
        <taskdep task="preproc_nam"/>
-       <taskdep task="preproc_fv3"/>
      </and>
     </dependency>
 
@@ -772,6 +779,7 @@
         <and>
            <taskdep task="eas_climo_bin"/>
            <taskdep task="eas_calib"/>
+           <taskdep task="preproc_fv3"/>
         </and>
       </dependency>
   </task>
@@ -866,6 +874,9 @@
      <taskdep task="preproc_fv3"/>
      <taskdep task="preproc_nam"/>
      <taskdep task="ffg_gen"/>
+     <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+     <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.nmmb_5km.f48.conus.grib2</cyclestr></datadep>
+     <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
      </and>
     </dependency>
 
@@ -1024,6 +1035,80 @@
     </dependency>
 
   </task>
+
+<!--  ***********************************************************************  -->
+<!--  HPSS archive -->
+<!--  ***********************************************************************  -->
+
+  <task name="hpss_archive" cycledefs="regional" maxtries="2">
+    &RESERVATION_TRANSFER;
+    &TRANSFER_RESOURCES;
+      <command>&JOBS;/launch.ksh &JOBS;/JHREF_HPSS_ARCHIVE</command>
+      <jobname><cyclestr>hpss_archive_&domain;_@Hz</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/logfiles_href/hpss_archive_&domain;@H.log</cyclestr></join>
+   
+      <envar>
+        <name>HOMEhref</name>
+        <value>&HOMEhref;</value>
+      </envar>
+      <envar>
+        <name>job</name>
+        <value>hpss_archive_&domain;</value>
+      </envar>
+      <envar>
+        <name>machine</name>
+        <value>&machine;</value>
+      </envar>
+
+      <envar>
+        <name>USER</name>
+        <value>&USER;</value>
+      </envar>
+      <envar>
+        <name>CDATE</name>
+        <value><cyclestr>@Y@m@d@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>PDY</name>
+        <value><cyclestr>@Y@m@d</cyclestr></value>
+      </envar>
+      <envar>
+        <name>cyc</name>
+        <value><cyclestr>@H</cyclestr></value>
+      </envar>
+      <envar>
+       <name>NEST</name>
+       <value>&domain;</value>
+      </envar>
+    <envar>
+      <name>DATAROOT</name>
+      <value>&DATAROOT;</value>
+    </envar>
+    <envar>
+     <name>MYCOMROOT</name>
+     <value>&MYCOMROOT; </value>
+    </envar>
+    <envar>
+      <name>MYCOMROOTPERM</name>
+      <value>&MYCOMROOTPERM;</value>
+    </envar>
+    <envar>
+      <name>KEEPDATA</name>
+      <value>&KEEPDATA;</value>
+    </envar>
+    <envar>
+      <name>envir</name>
+      <value>&envir;</value>
+    </envar>
+
+      <dependency>
+     <and>
+       <taskdep task="href_gempak"/>
+     </and>
+      </dependency>
+  </task>
+
+
 
 
 </workflow>

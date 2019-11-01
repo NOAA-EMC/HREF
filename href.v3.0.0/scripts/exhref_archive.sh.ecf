@@ -1,9 +1,7 @@
 #!/bin/ksh
-# Name of Script:  exhref_awips.sh.ecf
-# This script runs 1 USH script:
-#  (1) href_mkawp.sh to generate output for AWIPS/SBN
+# Name of Script:  exhref_archive.sh.ecf
 #
-# Author: Matthew Pyle, NCEP/EMC, 08/16/2017
+# Author: Matthew Pyle, NCEP/EMC, 10/18/2019
 #         
 ###########################################################
 set -x
@@ -16,9 +14,30 @@ msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
 #
-#  Generate AWIPS products
+# If it is a 12Z cycle, archive the PDYm1 directory
 
-$USHhref/href_mkawp.sh ${NEST}
+if [ $cyc -eq "12" ]
+then
+
+echo in archive job with PDY $PDY
+echo in archive job with PDYm1 $PDYm1
+
+HPSS_dir=/NCEPDEV/emc-meso/2year/Matthew.Pyle/href_exps
+cd $COMOUT/../
+
+archdir=href.${PDYm1}_expv3/ensprod
+
+echo archive $archdir
+
+rm $archdir/*ffair*
+
+htar cvf ${HPSS_dir}/href.${PDYm1}_expv3.tar  ./${archdir}/
+else
+
+echo $cyc is not a cycle for which we archive directory
+
+fi
+
 
 #####################################################################
 # GOOD RUN

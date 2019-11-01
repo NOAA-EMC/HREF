@@ -279,10 +279,10 @@ if [ $SENDCOM = YES ]; then
   cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
   $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
   cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUTPERM/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  if [ $dom = 'conus' ]
-  then
-  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2 -match "(APCP|CAPE|REFC|REFD|MAXREF|DPT|RH|PWAT)" -grib $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}ffair.f$ff.grib2
-  fi
+#  if [ $dom = 'conus' ]
+#  then
+#  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2 -match "(APCP|CAPE|REFC|REFD|MAXREF|DPT|RH|PWAT)" -grib $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}ffair.f$ff.grib2
+#  fi
  done
 
   

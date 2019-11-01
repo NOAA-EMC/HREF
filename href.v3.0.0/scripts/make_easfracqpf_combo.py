@@ -162,7 +162,7 @@ print 'here defining the coeffs files '
 coeffs_file_arw = COMINcal + '/pqpf_6h_coeffs_arw.csv'
 coeffs_file_nmmb = COMINcal + '/pqpf_6h_coeffs_nmmb.csv'
 coeffs_file_fv3 = COMINcal + '/pqpf_6h_coeffs_fv3.csv'
-coeffs_file_nssl = COMINcal + '/pqpf_6h_coeffs_nssl.csv'
+coeffs_file_arw2 = COMINcal + '/pqpf_6h_coeffs_arw2.csv'
 coeffs_file_nam = COMINcal + '/pqpf_6h_coeffs_nam.csv' 
 coeffs_file_hrrr = COMINcal + '/pqpf_6h_coeffs_hrrr.csv' 
 
@@ -228,13 +228,13 @@ if not os.path.exists(COMOUT):
 
 if dom == 'conus':
   nm_use = nm_v3
-  members = ['arw','fv3s','nssl','hrrr','nam']
+  members = ['arw','fv3s','arw2','hrrr','nam']
 elif dom == 'ak':
   nm_use = nm_ak
-  members = ['arw','fv3nc','nssl','hrrrak']
+  members = ['arw','fv3nc','arw2','hrrrak']
 else:
   nm_use = nm_nonconus
-  members = ['arw','fv3nc','nssl']
+  members = ['arw','fv3nc','arw2']
 
 for mem in members:
   if mem == 'arw':
@@ -249,10 +249,10 @@ for mem in members:
     coeffs_file = coeffs_file_fv3
     pqpf_6h_calibrate = pqpf_6h_calibrate_fv3
     coeffs_fv3 = {}
-  elif mem == 'nssl':
-    coeffs_file = coeffs_file_nssl
-    pqpf_6h_calibrate = pqpf_6h_calibrate_nssl
-    coeffs_nssl = {}
+  elif mem == 'arw2':
+    coeffs_file = coeffs_file_arw2
+    pqpf_6h_calibrate = pqpf_6h_calibrate_arw2
+    coeffs_arw2 = {}
   elif mem == 'nam':
     coeffs_file = coeffs_file_nam
     pqpf_6h_calibrate = pqpf_6h_calibrate_nam
@@ -285,8 +285,8 @@ for mem in members:
         coeffs_nmmb[int(parms[1])] = np.array(coefflist).astype(float)    
       elif mem == 'fv3s':
         coeffs_fv3[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'nssl':
-        coeffs_nssl[int(parms[1])] = np.array(coefflist).astype(float)    
+      elif mem == 'arw2':
+        coeffs_arw2[int(parms[1])] = np.array(coefflist).astype(float)    
       elif mem == 'nam':
         coeffs_nam[int(parms[1])] = np.array(coefflist).astype(float)    
       elif mem == 'hrrr':
@@ -584,7 +584,7 @@ for mem in members:
       file7alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+7*incr+6)+'.grib2'
       file8alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+8*incr+6)+'.grib2'
 
-    elif mem == 'nssl':
+    elif mem == 'arw2':
       file0 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency)+'.'+dom+'mem2.grib2'
       file1 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'mem2.grib2'
       file2 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+2*incr)+'.'+dom+'mem2.grib2'
@@ -775,8 +775,8 @@ for mem in members:
           coeffs = coeffs_nmmb
         elif mem == 'fv3s':
           coeffs = coeffs_fv3
-        elif mem == 'nssl':
-          coeffs = coeffs_nssl
+        elif mem == 'arw2':
+          coeffs = coeffs_arw2
         elif mem == 'nam':
           coeffs = coeffs_nam  #hey
         elif mem == 'hrrr':
@@ -1125,16 +1125,57 @@ for t in thresh_use:
 # now insert something to compute the smaller footprint_use if in proper row/colum using flexi?
 
       if column < rdx:
+	 footprint_orig=np.sum(footprint_use)
          footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+	 if float(footprint_use)/float(footprint_orig) < 0.5:
+#            print 'W bound less than 0.5'
+            if row > rdx and row < nlats-1-rdx:
+              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              footprint_use=int(0.51*footprint_orig)
+              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+	 if float(footprint_use)/float(footprint_orig) < 0.25:
+              print 'corner boost'
+              footprint_use=int(0.26*footprint_orig)
 
       if row < rdx:
+	 footprint_orig=np.sum(footprint_use)
          footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+	 if float(footprint_use)/float(footprint_orig) < 0.5:
+#            print 'S bound less than 0.5'
+            if column > rdx and column < nlons-1-rdx:
+#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              footprint_use=int(0.51*footprint_orig)
+              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+	 if float(footprint_use)/float(footprint_orig) < 0.25:
+              print 'corner boost'
+              footprint_use=int(0.26*footprint_orig)
 
       if column > nlons-1-rdx:
+	 footprint_orig=np.sum(footprint_use)
          footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+	 if float(footprint_use)/float(footprint_orig) < 0.5:
+#            print 'E bound less than 0.5'
+            if row > rdx and row < nlats-1-rdx:
+#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              footprint_use=int(0.51*footprint_orig)
+              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+	 if float(footprint_use)/float(footprint_orig) < 0.25:
+              print 'corner boost'
+              footprint_use=int(0.26*footprint_orig)
 
       if row > nlats-1-rdx:
+	 footprint_orig=np.sum(footprint_use)
          footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+	 if float(footprint_use)/float(footprint_orig) < 0.5:
+#            print 'N bound less than 0.5'
+            if column > rdx and column < nlons-1-rdx:
+#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              footprint_use=int(0.51*footprint_orig)
+              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+	 if float(footprint_use)/float(footprint_orig) < 0.25:
+              print 'corner boost'
+              footprint_use=int(0.26*footprint_orig)
+              
 
 
       if (2.5 <= rad < 17.5):
@@ -1148,7 +1189,7 @@ for t in thresh_use:
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
         if (probfinal[row,column] > 100.1): 
            print 'row, column, probfinal[row,column]: ', row, column, probfinal[row,column]
-           print 'prob[t,25][row,column], footprint_use: ', prob[t,25][row,column], footprint_use
+           print 'prob[t,25][row,column], footprint_use: ', prob[t,25][row,column], footprint_use,np.sum(filter_footprint_25)
       elif (32.5 <= rad < 47.5):
         probfinal[row,column] = prob[t,40][row,column]
         probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
