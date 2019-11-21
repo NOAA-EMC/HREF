@@ -21,11 +21,12 @@
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
-<!ENTITY COMINfv3sar "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sarold "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sar "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/hiresw/para/hiresw">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
-<!ENTITY COMINall "/gpfs/hps3/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
+<!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
 <!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
@@ -371,8 +372,8 @@
     <dependency>
       <or>
         <and>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
-          <datadep age="08:00" minsize="300000000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/fv3sar.t@Hz.conus.f60.grib2</cyclestr></datadep>
+          <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
+
         </and>
         <and>
 <!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
@@ -455,229 +456,12 @@
        <taskdep task="preproc_nam"/>
        <taskdep task="preproc_fv3"/>
        <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.nmmb_5km.f48.conus.grib2</cyclestr></datadep>
        <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
      </and>
       </dependency>
   </task>
 
 
-<!--  ***********************************************************************  -->
-<!--  ************************* EAS climo piece *****************************  -->
-
-  <task name="eas_climo_bin" cycledefs="regional" maxtries="1">
-  &RESERVATION;
-  &CLIMO_RESOURCES;
-  <nodes>1:ppn=1</nodes>
-
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCLIMO</command>
-    <jobname><cyclestr>eas_climo_bin_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_href/easclimobin_&domain;_@H.log</cyclestr></join>
-
-    <envar>
-      <name>HOMEhref</name>
-      <value>&HOMEhref;</value>
-    </envar>
-    <envar>
-      <name>KEEPDATA</name>
-      <value>YES</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-      <name>job</name>
-      <value><cyclestr>eas_climo_bin_&domain;_@Y@m@d</cyclestr></value>
-    </envar>
-    <envar>
-      <name>machine</name>
-      <value>&machine;</value>
-    </envar>
-    <envar>
-      <name>USER</name>
-      <value>&USER;</value>
-    </envar>
-    <envar>
-      <name>CDATE</name>
-      <value><cyclestr>@Y@m@d@H</cyclestr></value>
-    </envar>
-    <envar>
-      <name>PDY</name>
-      <value><cyclestr>@Y@m@d</cyclestr></value>
-    </envar>
-    <envar>
-      <name>cyc</name>
-      <value><cyclestr>@H</cyclestr></value>
-    </envar>
-    <envar>
-     <name>NEST</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-     <name>dom</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTcalib</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-
-    <envar>
-      <name>COMINclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-
-    <envar>
-      <name>MYCOMROOTPERM</name>
-      <value>&MYCOMROOTPERM;</value>
-    </envar>
-
-    <envar>
-      <name>COMINnam</name>
-      <value>&COMINall;</value>
-    </envar>
-    <envar>
-      <name>COMINhrrr</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMINhiresw</name>
-      <value>&COMINhiresw;</value>
-    </envar>
-
-    <envar>
-      <name>COMINfv3</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <dependency>
-     <and>
-       <taskdep task="preproc_hrrr"/>
-       <taskdep task="preproc_nam"/>
-     </and>
-    </dependency>
-
-  </task>
-
-<!--  *******************************************************************  -->
-<!--  ********************** Run the EAS calib  *************************  -->
-
-  <task name="eas_calib" cycledefs="regional" maxtries="2">
-    
-      <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCALIBRATE</command>
-      &RESERVATION;
-      &RESOURCES_CALIB;
-      <walltime>&WALLTIME_CALIB;</walltime>
-      <memory>&MEMORY_CALIB;</memory>
-      <native>&NATIVE_CALIB;</native>
-
-      <jobname><cyclestr>eascalib_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_href/eascalib_&domain;@H.log</cyclestr></join>
-   
-      <envar>
-        <name>HOMEhref</name>
-        <value>&HOMEhref;</value>
-      </envar>
-      <envar>
-        <name>job</name>
-        <value>eas_calib_&domain;</value>
-      </envar>
-      <envar>
-        <name>machine</name>
-        <value>&machine;</value>
-      </envar>
-    <envar>
-      <name>KEEPDATA</name>
-      <value>YES</value>
-    </envar>
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-    <envar>
-      <name>MYCOMROOTPERM</name>
-      <value>&MYCOMROOTPERM;</value>
-    </envar>
-      <envar>
-        <name>USER</name>
-        <value>&USER;</value>
-      </envar>
-      <envar>
-        <name>CDATE</name>
-        <value><cyclestr>@Y@m@d@H</cyclestr></value>
-      </envar>
-      <envar>
-        <name>PDY</name>
-        <value><cyclestr>@Y@m@d</cyclestr></value>
-      </envar>
-      <envar>
-        <name>cyc</name>
-        <value><cyclestr>@H</cyclestr></value>
-      </envar>
-      <envar>
-       <name>NEST</name>
-       <value>&domain;</value>
-      </envar>
-    <envar>
-     <name>dom</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-    <envar>
-      <name>COMOUTcalib</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMOUTcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMINcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMOUTclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-    <envar>
-      <name>COMINclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-
-      <dependency>
-        <and>
-           <taskdep task="eas_climo_bin"/>
-        </and>
-      </dependency>
-  </task>
 
 <!--  *******************************************************************  -->
 <!--  ********************** Run the main EAS piece *************************  -->
@@ -777,9 +561,11 @@
 
       <dependency>
         <and>
-           <taskdep task="eas_climo_bin"/>
-           <taskdep task="eas_calib"/>
            <taskdep task="preproc_fv3"/>
+           <taskdep task="preproc_hrrr"/>
+           <taskdep task="preproc_nam"/>
+           <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+           <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
         </and>
       </dependency>
   </task>
@@ -875,7 +661,6 @@
      <taskdep task="preproc_nam"/>
      <taskdep task="ffg_gen"/>
      <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
-     <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.nmmb_5km.f48.conus.grib2</cyclestr></datadep>
      <datadep age="05:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
      </and>
     </dependency>

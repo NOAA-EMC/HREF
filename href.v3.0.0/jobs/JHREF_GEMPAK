@@ -48,7 +48,14 @@ export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export GEMPAKhref=${GEMPAKhref:-$HOMEhref/gempak}
 
 export finc=1
+
+if [ $NEST == "conus" -a  ${cyc} == "06"  -o ${cyc} == "18"  ]
+then
+export fend=42
+else
 export fend=48
+fi
+
 export fstart=01
 
 export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}

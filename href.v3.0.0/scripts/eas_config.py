@@ -67,20 +67,20 @@ pqpf_6h_starthours = [0,3,6,9,12,15,18,21,24,27,30,33,36,39,42]
 pqpf_24h_starthours = [0,6,12,18,24]
 
 # PQPF calibration
-pqpf_6h_calibrate_arw = 'yes'
+pqpf_6h_calibrate_arw = 'no'
 pqpf_6h_calibrate_nmmb = 'no'
-pqpf_6h_calibrate_fv3 = 'yes'
-pqpf_6h_calibrate_arw2 = 'yes'
-pqpf_6h_calibrate_nam = 'yes'
-pqpf_6h_calibrate_hrrr = 'yes'
-pqpf_3h_calibrate_arw = 'yes'
-pqpf_3h_calibrate_nmmb = 'yes'
-pqpf_3h_calibrate_arw2 = 'yes'
-pqpf_3h_calibrate_nam = 'yes'
-pqpf_1h_calibrate_arw = 'yes'
-pqpf_1h_calibrate_nmmb = 'yes'
-pqpf_1h_calibrate_arw2 = 'yes'
-pqpf_1h_calibrate_nam = 'yes'
+pqpf_6h_calibrate_fv3 = 'no'
+pqpf_6h_calibrate_arw2 = 'no'
+pqpf_6h_calibrate_nam = 'no'
+pqpf_6h_calibrate_hrrr = 'no'
+pqpf_3h_calibrate_arw = 'no'
+pqpf_3h_calibrate_nmmb = 'no'
+pqpf_3h_calibrate_arw2 = 'no'
+pqpf_3h_calibrate_nam = 'no'
+pqpf_1h_calibrate_arw = 'no'
+pqpf_1h_calibrate_nmmb = 'no'
+pqpf_1h_calibrate_arw2 = 'no'
+pqpf_1h_calibrate_nam = 'no'
 # minimum quantile for curve fitting
 pqpf_6h_minpct = 75
 pqpf_3h_minpct = 75

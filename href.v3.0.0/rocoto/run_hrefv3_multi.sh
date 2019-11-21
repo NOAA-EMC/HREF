@@ -10,7 +10,7 @@ module load NetCDF-intel-haswell/4.2
 ### for using latest WGRIB2
 ###
 module use -a /gpfs/hps/nco/ops/nwprod/modulefiles
-module switch grib_util/1.1.1
+module load grib_util/1.1.1
 
 module use -a /opt/modulefiles
 module load gcc/4.9.2
@@ -18,7 +18,6 @@ module load gcc/4.9.2
 export WGRIB2=$WGRIB2
 
 doms="hi pr conus ak conus_alt"
-
 
 echo WGRIB2 is $WGRIB2
 
@@ -28,4 +27,5 @@ for dom in $doms
 do
 rocotorun -v 10 -w ${dir}/drive_hrefv3_${dom}.xml -d ${dir}/drive_hrefv3_${dom}.db
 sleep 3
+
 done

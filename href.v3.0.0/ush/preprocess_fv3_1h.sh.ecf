@@ -18,14 +18,14 @@ cd ${DATA}
 mkdir fv3_${dom}_${hr}
 cd fv3_${dom}_${hr}
 
+filecheck=$COMINfv3.${PDY}/${cyc}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
+
 if [ $dom == 'conus' ]
 then
 interp=1
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
-filecheck=$COMINfv3.${PDY}/${cyc}/fv3sar.t${cyc}z.${dom}.f${hr}.grib2
 else
 interp=0
-filecheck=$COMINfv3.${PDY}/${cyc}/fv3sar.t${cyc}z.${dom}.f${hr}.grib2
 fi
 
 

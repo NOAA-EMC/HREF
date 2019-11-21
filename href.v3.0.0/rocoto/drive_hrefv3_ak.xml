@@ -21,12 +21,13 @@
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
-<!ENTITY COMINfv3sar "/gpfs/gp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
-<!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/oconus/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sarncold "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/fv3cam/para/fv3sar">
+<!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/hiresw/para/hiresw">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
-<!ENTITY COMINall "/gpfs/hps3/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
+<!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
 <!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
@@ -159,7 +160,8 @@
     <dependency>
       <or>
         <and>
-          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/fv3sar.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
+        <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
+
         </and>
         <and>
 <!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
