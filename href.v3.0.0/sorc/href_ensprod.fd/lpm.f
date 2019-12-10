@@ -2,7 +2,7 @@
        SUBROUTINE lpm(nx,ny,n_ens,patch_nx,patch_ny,ovx, ovy, 
      &              filt_min,gauss_sigma,        
      &              var2d_ens,var2d_enmean,     
-     &              var2d_lpm)
+     &              var2d_lpm,var2d_pmmn)
 !
 !Author: Nate Snook (28 Apr. 2017)
 !
@@ -68,6 +68,7 @@
                             !       testing
        REAL :: var2d_ens(nx, ny, n_ens)  ! 2D (nx, ny) field for each member (n_ens)
        REAL :: var2d_enmean(nx, ny)      ! 2D (nx, ny) ensemble mean field
+       REAL :: var2d_pmmn(nx, ny)         ! 2D (nx, ny) PMMN field
 !Outputs
        REAL :: var2d_lpm(nx, ny)         ! 2D (nx, ny) LPM field
 
@@ -103,7 +104,10 @@
 !      END IF
 
  
-       var2d_lpm=0.
+!       var2d_lpm=0.
+
+! pre fill with pmmn so pmmn gets used when lpm is not defined along boundaries.
+        var2d_lpm=var2d_pmmn
 
 	write(0,*) 'nx, ny: ', nx, ny
 	write(0,*) 'patch_nx, patch_ny: ',patch_nx, patch_ny

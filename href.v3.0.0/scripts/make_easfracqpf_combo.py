@@ -97,14 +97,6 @@ COMINfv3=os.environ.get('COMINfv3','trash')
 print 'found COMINfv3 as ', COMINfv3
 
 try:
-  os.environ["COMINcal"]
-except KeyError:
-  print "NEED TO DEFINE COMINcal"
-  exit(1)
-COMINcal=os.environ.get('COMINcal','trash')
-print 'found COMINcal as ', COMINcal
-
-try:
   os.environ["COMOUT"]
 except KeyError:
   print "NEED TO DEFINE COMOUT"
@@ -153,21 +145,6 @@ template = HOMEhref + '/fix/pqpf_'+dom+'template.grib2'
 record = 1		# PQPF from SREF pgrb212 file
 
 # get latest run times and create output directory if it doesn't already exist
-
-# calibration coefficients files
-
-
-print 'here defining the coeffs files '
-
-coeffs_file_arw = COMINcal + '/pqpf_6h_coeffs_arw.csv'
-coeffs_file_nmmb = COMINcal + '/pqpf_6h_coeffs_nmmb.csv'
-coeffs_file_fv3 = COMINcal + '/pqpf_6h_coeffs_fv3.csv'
-coeffs_file_arw2 = COMINcal + '/pqpf_6h_coeffs_arw2.csv'
-coeffs_file_nam = COMINcal + '/pqpf_6h_coeffs_nam.csv' 
-coeffs_file_hrrr = COMINcal + '/pqpf_6h_coeffs_hrrr.csv' 
-
-print 'coeffs_file_arw is: ', coeffs_file_arw
-print 'coeffs_file_fv3 is: ', coeffs_file_fv3
 
 # accumulation interval (hours)
 fcst_hour = int(sys.argv[1])
@@ -224,7 +201,6 @@ if not os.path.exists(COMOUT):
   os.system("mkdir -p " + COMOUT)
 
 #------------------------------------------------------------------------------------------
-# read in calibration coefficients
 
 if dom == 'conus':
   nm_use = nm_v3
@@ -236,66 +212,23 @@ else:
   nm_use = nm_nonconus
   members = ['arw','fv3nc','arw2']
 
+
 for mem in members:
   if mem == 'arw':
-    coeffs_file = coeffs_file_arw
-    pqpf_6h_calibrate = pqpf_6h_calibrate_arw
     coeffs_arw = {}
   elif mem == 'nmmb':
-    coeffs_file = coeffs_file_nmmb
-    pqpf_6h_calibrate = pqpf_6h_calibrate_nmmb
     coeffs_nmmb = {}
   elif mem == 'fv3s':
-    coeffs_file = coeffs_file_fv3
-    pqpf_6h_calibrate = pqpf_6h_calibrate_fv3
     coeffs_fv3 = {}
   elif mem == 'arw2':
-    coeffs_file = coeffs_file_arw2
-    pqpf_6h_calibrate = pqpf_6h_calibrate_arw2
     coeffs_arw2 = {}
   elif mem == 'nam':
-    coeffs_file = coeffs_file_nam
-    pqpf_6h_calibrate = pqpf_6h_calibrate_nam
     coeffs_nam = {}
   elif mem == 'hrrr':
-    coeffs_file = coeffs_file_hrrr
-    pqpf_6h_calibrate = pqpf_6h_calibrate_hrrr
     coeffs_hrrr = {}
 
-  if dom != 'conus':
-    pqpf_6h_calibrate = 'no'
-
-  print 'here with coeffs_file as: ', coeffs_file
-  print 'here with pqpf_6h_calibrate as: ', pqpf_6h_calibrate
-
-  if os.path.exists(coeffs_file) and (pqpf_6h_calibrate == 'yes'):
-    f = open(coeffs_file,'r')
-    ls = f.readlines()
-    f.close()
-    for l in range(len(ls)):
-      parms = ls[l].split(',')
-      p = 3
-      coefflist = []
-      while (p<(len(parms)-1) and parms[p] != 'cal_dates'):
-        coefflist.append(parms[p])
-        p = p + 1
-      if mem == 'arw':
-        coeffs_arw[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'nmmb':
-        coeffs_nmmb[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'fv3s':
-        coeffs_fv3[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'arw2':
-        coeffs_arw2[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'nam':
-        coeffs_nam[int(parms[1])] = np.array(coefflist).astype(float)    
-      elif mem == 'hrrr':
-        coeffs_hrrr[int(parms[1])] = np.array(coefflist).astype(float)    
-            
-    print 'Calibration coefficients for '+mem+' members were found.'
-  else:
-    pqpf_6h_calibrate = 'no'
-    print 'Calibration coefficients for '+mem+' members not found. Using raw model QPF'
+  pqpf_6h_calibrate = 'no'
+  print 'Calibration coefficients for '+mem+' members not found. Using raw model QPF'
    
 
 #--------------------------------------------------------------------------------
@@ -767,40 +700,6 @@ for mem in members:
 
       print 'max of qpf12: ', np.max(qpf12)
 
-    # adjust QPF based on calibration coefficients
-      if pqpf_6h_calibrate == 'yes':
-        if mem == 'arw':
-          coeffs = coeffs_arw
-        elif mem == 'nmmb':
-          coeffs = coeffs_nmmb
-        elif mem == 'fv3s':
-          coeffs = coeffs_fv3
-        elif mem == 'arw2':
-          coeffs = coeffs_arw2
-        elif mem == 'nam':
-          coeffs = coeffs_nam  #hey
-        elif mem == 'hrrr':
-          coeffs = coeffs_hrrr  #hey
-
-        if qpf_interval == 24:
-          fhour = fcst_hour - 18
-        if qpf_interval == 12:
-          fhour = fcst_hour - 6
-        if qpf_interval == 6:
-          fhour = fcst_hour
-
-        print 'fcst_hour, fhour: ', fcst_hour, fhour
-
-        adjqpf = np.zeros((np.shape(qpf12)[0],np.shape(qpf12)[1]))
-        chours = np.array(coeffs.keys())
-        if fhour in chours:
-          chour = fhour
-        else:
-          chour = np.amax(np.take(chours,np.where(np.less(chours,fhour))))
-        for c in range(len(coeffs[chour])):
-          adjqpf = adjqpf + coeffs[chour][c]*(qpf12**c)
-        qpf12 = (np.where(np.greater(qpf12,0),adjqpf,0.0)) 	#hayayayaya
-
       if qpf_interval == 6:
          print 'defined qpf[itime] from qpf12'
          qpf[itime]=qpf12
@@ -836,19 +735,6 @@ for mem in members:
 
       qpf34 = qpf3 + qpf4    
 
-    # adjust QPF based on calibration coefficients
-      if pqpf_6h_calibrate == 'yes':
-        fhour = fcst_hour - 12
-        adjqpf = np.zeros((np.shape(qpf34)[0],np.shape(qpf34)[1]))
-        chours = np.array(coeffs.keys())
-        if fhour in chours:
-          chour = fhour
-        else:
-          chour = np.amax(np.take(chours,np.where(np.less(chours,fhour))))
-        for c in range(len(coeffs[chour])):
-          adjqpf = adjqpf + coeffs[chour][c]*(qpf34**c)
-        qpf34 = (np.where(np.greater(qpf34,0),adjqpf,0.0)) 	#hayayayaya
-
 #### 12 h sum of the first two 6 h periods
       if qpf_interval == 12 :
         qpf[itime]= qpf12 + qpf34
@@ -881,17 +767,6 @@ for mem in members:
 
       qpf56 = qpf5 + qpf6
 
-      if pqpf_6h_calibrate == 'yes':
-        fhour = fcst_hour - 6
-        adjqpf = np.zeros((np.shape(qpf56)[0],np.shape(qpf56)[1]))
-        chours = np.array(coeffs.keys())
-        if fhour in chours:
-          chour = fhour
-        else:
-          chour = np.amax(np.take(chours,np.where(np.less(chours,fhour))))
-        for c in range(len(coeffs[chour])):
-          adjqpf = adjqpf + coeffs[chour][c]*(qpf56**c)
-        qpf56 = (np.where(np.greater(qpf56,0),adjqpf,0.0)) 	#hayayayaya
 
 # Process last 6 hours
 ## figure out fhour for two pieces here
@@ -920,19 +795,6 @@ for mem in members:
 
       qpf78 = qpf7 + qpf8
 
-    # adjust QPF based on calibration coefficients
-      if pqpf_6h_calibrate == 'yes':
-        fhour = fcst_hour
-        adjqpf = np.zeros((np.shape(qpf78)[0],np.shape(qpf78)[1]))
-        chours = np.array(coeffs.keys())
-        if fhour in chours:
-          chour = fhour
-        else:
-          chour = np.amax(np.take(chours,np.where(np.less(chours,fhour))))
-        for c in range(len(coeffs[chour])):
-          adjqpf = adjqpf + coeffs[chour][c]*(qpf78**c)
-        qpf78 = (np.where(np.greater(qpf78,0),adjqpf,0.0)) 	#hayayayaya
- 
       qpf[itime] = qpf12 + qpf34 + qpf56 + qpf78
 
 ######### 3 h APCP

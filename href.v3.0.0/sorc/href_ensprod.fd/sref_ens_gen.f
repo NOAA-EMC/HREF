@@ -133,6 +133,7 @@ C mean
       real,allocatable,dimension(:,:) :: vrbl_mn_blend              !jf, maxmlvl
       real,allocatable,dimension(:,:) :: derv_mn                    !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_2d, vrbl_lpm_2d
+      real,allocatable,dimension(:,:) :: vrbl_pmmn_2d
 
 C spread
       real,allocatable,dimension(:,:) :: vrbl_sp                    !jf, maxmlvl
@@ -754,11 +755,13 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
 ! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR) (and REFC from FV3 now)
 ! and FV3 soil
+! and FV3 WEASD
 
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
 
            if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
-     &          jpd2.ne. 192 .and. jpd2 .ne. 2 ) then
+     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
+     &          jpd2 .ne. 13 ) then
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.
@@ -1019,17 +1022,22 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                filt_min=0.01
                gauss_sig=2.0
 
+               call pmatch_mean(vname(nv),rawdata_mn,vrbl_mn,
+     &             k4(nv),k5(nv),k6(nv),vrbl_mn_pm,lv,lm,jf,iens)
+
 
 !!! recast what is being passed in here as 2D arrays
                   
                allocate(vrbl_mn_2d(im,jm))
                allocate(vrbl_lpm_2d(im,jm))
+               allocate(vrbl_pmmn_2d(im,jm))
                allocate(rawdata_mn_2d(im,jm,iens))
 
 	       do JJ=1,jm
                do II=1,im
                  I1D=(JJ-1)*IM+II
                  vrbl_mn_2d(II,JJ)=vrbl_mn(I1D,1)
+                 vrbl_pmmn_2d(II,JJ)=vrbl_mn_pm(I1D,1)
                enddo
                enddo
 
@@ -1043,8 +1051,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
 
                call lpm(im,jm,iens,patch_nx,patch_ny,ovx,ovy,
-     &            filt_min,
-     &            gauss_sig,rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d)
+     &            filt_min, gauss_sig,
+     &            rawdata_mn_2d,vrbl_mn_2d,vrbl_lpm_2d,vrbl_pmmn_2d)
 
 	       do JJ=1,jm
                do II=1,im
@@ -1060,6 +1068,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      +           'M','M')
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
+               deallocate(vrbl_pmmn_2d)
 
 
             write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 

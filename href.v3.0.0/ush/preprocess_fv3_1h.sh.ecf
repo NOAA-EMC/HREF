@@ -22,7 +22,7 @@ filecheck=$COMINfv3.${PDY}/${cyc}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
 
 if [ $dom == 'conus' ]
 then
-interp=1
+interp=0
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
 else
 interp=0
@@ -33,7 +33,7 @@ fi
         then
         $WGRIB2 $filecheck | grep -F -f $PARMhref/href_fv3_filter.txt | $WGRIB2 -i -grib fv3.t${cyc}z.f${hr} $filecheck
         $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn2.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
@@ -51,6 +51,7 @@ fi
                    -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
         ls -l interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr} 
         cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
+        cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${COMOUTfv3}.${PDY}
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
 
@@ -59,6 +60,9 @@ fi
 # noninterp 
         
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
+
+
+       cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${COMOUTfv3}.${PDY}
 
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 

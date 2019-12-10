@@ -219,8 +219,6 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.iii &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.jjj &
 wait
 
-$USHhref/preprocess_fv3_3hapcp.sh.ecf ${cyc} ${NEST}
-
 
 ## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
 
