@@ -30,8 +30,6 @@
 <!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
-<!ENTITY COMOUTcalib "&MYCOMROOTPERM;/hiresw/calib">
-<!ENTITY COMOUTclimo "&MYCOMROOTPERM;/hiresw/climo_bin">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "YES">
 
@@ -353,223 +351,6 @@
   </task>
 
 
-<!--  ***********************************************************************  -->
-<!--  ************************* EAS climo piece *****************************  -->
-
-  <task name="eas_climo_bin" cycledefs="regional" maxtries="1">
-  &RESERVATION;
-  &CLIMO_RESOURCES;
-  <nodes>1:ppn=1</nodes>
-
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCLIMO</command>
-    <jobname><cyclestr>eas_climo_bin_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_href/easclimobin_&domain;_@H.log</cyclestr></join>
-
-    <envar>
-      <name>HOMEhref</name>
-      <value>&HOMEhref;</value>
-    </envar>
-    <envar>
-      <name>KEEPDATA</name>
-      <value>YES</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-      <name>job</name>
-      <value><cyclestr>eas_climo_bin_&domain;_@Y@m@d</cyclestr></value>
-    </envar>
-    <envar>
-      <name>machine</name>
-      <value>&machine;</value>
-    </envar>
-    <envar>
-      <name>USER</name>
-      <value>&USER;</value>
-    </envar>
-    <envar>
-      <name>CDATE</name>
-      <value><cyclestr>@Y@m@d@H</cyclestr></value>
-    </envar>
-    <envar>
-      <name>PDY</name>
-      <value><cyclestr>@Y@m@d</cyclestr></value>
-    </envar>
-    <envar>
-      <name>cyc</name>
-      <value><cyclestr>@H</cyclestr></value>
-    </envar>
-    <envar>
-     <name>NEST</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-     <name>dom</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTcalib</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-
-    <envar>
-      <name>COMINclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-
-    <envar>
-      <name>MYCOMROOTPERM</name>
-      <value>&MYCOMROOTPERM;</value>
-    </envar>
-
-    <envar>
-      <name>COMINnam</name>
-      <value>&COMINall;</value>
-    </envar>
-    <envar>
-      <name>COMINhrrr</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMINhiresw</name>
-      <value>&COMINhiresw;</value>
-    </envar>
-
-    <envar>
-      <name>COMINfv3</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <dependency>
-     <and>
-       <taskdep task="preproc_hrrr"/>
-       <taskdep task="preproc_nam"/>
-     </and>
-    </dependency>
-
-  </task>
-
-<!--  *******************************************************************  -->
-<!--  ********************** Run the EAS calib  *************************  -->
-
-  <task name="eas_calib" cycledefs="regional" maxtries="2">
-    
-      <command>&JOBS;/launch.ksh &JOBS;/JHREF_QPFCALIBRATE</command>
-      &RESERVATION;
-      &RESOURCES_CALIB;
-      <walltime>&WALLTIME_CALIB;</walltime>
-      <memory>&MEMORY_CALIB;</memory>
-      <native>&NATIVE_CALIB;</native>
-
-      <jobname><cyclestr>eascalib_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_href/eascalib_&domain;@H.log</cyclestr></join>
-   
-      <envar>
-        <name>HOMEhref</name>
-        <value>&HOMEhref;</value>
-      </envar>
-      <envar>
-        <name>job</name>
-        <value>eas_calib_&domain;</value>
-      </envar>
-      <envar>
-        <name>machine</name>
-        <value>&machine;</value>
-      </envar>
-    <envar>
-      <name>KEEPDATA</name>
-      <value>YES</value>
-    </envar>
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-    <envar>
-      <name>MYCOMROOTPERM</name>
-      <value>&MYCOMROOTPERM;</value>
-    </envar>
-      <envar>
-        <name>USER</name>
-        <value>&USER;</value>
-      </envar>
-      <envar>
-        <name>CDATE</name>
-        <value><cyclestr>@Y@m@d@H</cyclestr></value>
-      </envar>
-      <envar>
-        <name>PDY</name>
-        <value><cyclestr>@Y@m@d</cyclestr></value>
-      </envar>
-      <envar>
-        <name>cyc</name>
-        <value><cyclestr>@H</cyclestr></value>
-      </envar>
-      <envar>
-       <name>NEST</name>
-       <value>&domain;</value>
-      </envar>
-    <envar>
-     <name>dom</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-    <envar>
-      <name>COMOUTcalib</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMOUTcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMINcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMOUTclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-    <envar>
-      <name>COMINclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-
-      <dependency>
-        <and>
-           <taskdep task="eas_climo_bin"/>
-        </and>
-      </dependency>
-  </task>
-
 <!--  *******************************************************************  -->
 <!--  ********************** Run the main EAS piece *************************  -->
 
@@ -614,18 +395,6 @@
        <value>&domain;</value>
       </envar>
     <envar>
-      <name>COMINcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMINcalib</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMINclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
-    <envar>
      <name>dom</name>
      <value>&domain;</value>
     </envar>
@@ -668,8 +437,8 @@
 
       <dependency>
         <and>
-           <taskdep task="eas_climo_bin"/>
-           <taskdep task="eas_calib"/>
+           <taskdep task="preproc_hrrr"/>
+           <taskdep task="preproc_nam"/>
         </and>
       </dependency>
   </task>

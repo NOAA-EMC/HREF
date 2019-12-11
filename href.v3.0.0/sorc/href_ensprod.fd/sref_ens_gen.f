@@ -762,6 +762,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
            if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
      &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
      &          jpd2 .ne. 13 ) then
+
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.
@@ -797,6 +798,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
          jpd12=100
         call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld,eps, kret)
+
          endif
 
 
@@ -811,8 +813,11 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
 ! avoid accounting for echo top bitmap
+! and FV3 soil
+! and FV3 WEASD
            if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
-     &          jpd2.ne. 192 .and. jpd2 .ne. 2 ) then
+     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and.
+     &          jpd2.ne. 13  ) then
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
               bmap_f(J)=.false.

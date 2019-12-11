@@ -22,7 +22,6 @@
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
-<!ENTITY COMINfv3sarncold "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/fv3cam/para/fv3sar">
 <!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/hiresw/para/hiresw">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
@@ -31,8 +30,6 @@
 <!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
-<!ENTITY COMOUTcalib "&MYCOMROOTPERM;/hiresw/calib">
-<!ENTITY COMOUTclimo "&MYCOMROOTPERM;/hiresw/climo_bin">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "NO">
 
@@ -41,7 +38,6 @@
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY PREPROC_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
-<!ENTITY CLIMO_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
 <!ENTITY EAS_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY ENSPROD_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
@@ -179,7 +175,7 @@
 
   <task name="eas_gen" cycledefs="regional" maxtries="2">
     &RESERVATION;
-    &CLIMO_RESOURCES;
+    &EAS_RESOURCES;
     <nodes>4:ppn=23</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
@@ -217,18 +213,6 @@
        <name>NEST</name>
        <value>&domain;</value>
       </envar>
-    <envar>
-      <name>COMINcal</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMINcalib</name>
-      <value>&COMOUTcalib;</value>
-    </envar>
-    <envar>
-      <name>COMINclimo</name>
-      <value>&COMOUTclimo;</value>
-    </envar>
     <envar>
      <name>dom</name>
      <value>&domain;</value>
@@ -289,7 +273,7 @@
 
   <task name="ensprod" cycledefs="regional" maxtries="2">
   &RESERVATION;
-  &CLIMO_RESOURCES;
+  &ENSPROD_RESOURCES;
   <nodes>4:ppn=6</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
@@ -384,7 +368,7 @@
 
   <task name="href_awips" cycledefs="regional" maxtries="2">
   &RESERVATION;
-  &CLIMO_RESOURCES;
+  &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_AWIPS</command>
     <jobname><cyclestr>awips_&domain;_@H</cyclestr></jobname>

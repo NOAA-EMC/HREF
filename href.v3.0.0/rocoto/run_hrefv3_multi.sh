@@ -17,7 +17,7 @@ module load gcc/4.9.2
 
 export WGRIB2=$WGRIB2
 
-doms="hi pr conus ak conus_alt"
+doms="hi pr conus ak ak_alt conus_alt"
 
 echo WGRIB2 is $WGRIB2
 
@@ -26,6 +26,6 @@ dir="/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/rocoto"
 for dom in $doms
 do
 rocotorun -v 10 -w ${dir}/drive_hrefv3_${dom}.xml -d ${dir}/drive_hrefv3_${dom}.db
-sleep 3
+sleep 1
 
 done
