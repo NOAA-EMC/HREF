@@ -232,8 +232,8 @@ C    &                  UNPACK,K,GFLD,IRET)
        gfld%ipdtmpl(8)=1 ! units of hours
        gfld%ipdtmpl(9)=ihrs1 ! earlier forecast time of period?
        gfld%ipdtmpl(10)=1 ! sfc
-       gfld%ipdtmpl(11)=1 ! sfc
-       gfld%ipdtmpl(12)=1 ! sfc
+       gfld%ipdtmpl(11)=0 ! sfc
+       gfld%ipdtmpl(12)=0 ! sfc
        gfld%ipdtmpl(13)=255 ! sfc
        gfld%ipdtmpl(14)=0 ! sfc
        gfld%ipdtmpl(15)=0 ! sfc
