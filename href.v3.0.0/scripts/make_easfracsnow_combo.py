@@ -23,11 +23,6 @@ from scipy import ndimage, optimize, signal
 # from netCDF4 import Dataset
 import fortranfile as F
 
-
-# WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
-# WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
-# WGRIB2 = '/gpfs/hps/nco/ops/nwprod/grib_util.v1.1.1/exec/wgrib2'
-
 starttime = time.time()
 
 print 'Processing probabilistic snow'
@@ -203,11 +198,6 @@ def process_nam_qpf(file3,file4,fhr):
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
       qpf1,nx,ny=simplewgrib2('qpf.txt')
 
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=1)[0]
-#      qpf1 = grb.values
-#      idx.close()
-
     if fhr%3 is 2:
       shour1=fhour-2
       shour2=fhour-1
@@ -222,15 +212,6 @@ def process_nam_qpf(file3,file4,fhr):
       os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
-
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=2)[0]
-#      qpfa = grb.values
-#      idx.close()
-#      idx = pygrib.index(file4,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=1)[0]
-#      qpfb = grb.values
-#      idx.close()
 
       qpf1=qpfa-qpfb
 
@@ -247,14 +228,6 @@ def process_nam_qpf(file3,file4,fhr):
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=3)[0]
-#      qpfa = grb.values
-#      idx.close()
-#      idx = pygrib.index(file4,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=2)[0]
-#      qpfb = grb.values
-#      idx.close()
       qpf1=qpfa-qpfb
 
     return qpf1
@@ -397,26 +370,12 @@ print 'dom here at decision point3: ', dom
 if dom == 'conus' or dom == 'ak':
   print 'opening the maskregion stuff'
   print 'maskfile is: ', maskfile
-#  grbs2 = pygrib.open(maskfile)
-#  undefmask = grbs2[1].values
 
   os.system(WGRIB2+' '+maskfile+'  -text mask.txt ')
   undefmask,nx,ny=simplewgrib2('mask.txt')
   undefmask=np.ma.masked_greater(undefmask,9.0e+20)
   maskregion = np.ma.filled(undefmask,-9999)
-#  grbs2.close()
 
-
-# create grib messages from template (only need to do this once)
-# grbtmp['dataDate']=int('%i'%d0.year+'%02d'%d0.month+'%02d'%d0.day)
-# grbtmp['dataTime']=int('%02d'%d0.hour+'00')
-# grbtmp['startStep']=int(start_hour)
-# grbtmp['endStep']=int(start_hour+qpf_interval)
-# grbtmp['yearOfEndOfOverallTimeInterval']=endtime.year
-# grbtmp['monthOfEndOfOverallTimeInterval']=endtime.month
-# grbtmp['dayOfEndOfOverallTimeInterval']=endtime.day
-# grbtmp['hourOfEndOfOverallTimeInterval']=endtime.hour
-# grbtmp['scaleFactorOfUpperLimit']=3
 
 if qpf_interval == 1:
   print 'defined 1 h outbase'
@@ -608,19 +567,10 @@ for mem in members:
         snowmaskregion = np.ma.filled(undefsnow,-9999)
         qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
 
-#        idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#        grb = idx(name='Water equivalent of accumulated snow depth', lengthOfTimeRange=1)[0]
-#        qpf1 = grb.values
-#        idx.close()
-      
       print 'defining qpf from qpf1'
       qpf[itime] = qpf1*0.39370079
 
     if qpf_interval == 6:
-#      idx = pygrib.index(file6,'name','lengthOfTimeRange')
-#      grb = idx(name='Water equivalent of accumulated snow depth',lengthOfTimeRange=3)[0]
-#      qpf6 = grb.values
-#      idx.close()
       fhour=fhours[memcount]
       shour=fhour-3
       print '6h shour fhour: ', shour,fhour

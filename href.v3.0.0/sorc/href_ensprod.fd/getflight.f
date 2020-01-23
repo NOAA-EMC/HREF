@@ -34,7 +34,7 @@ c    for derived variables
 
         
         real  count, aprob, flt_cnd(iens),wgt(30)
-        integer ID_FLT
+        integer ID_FLT, JJ
 
         integer miss(iens)
 
@@ -63,14 +63,25 @@ c    for derived variables
             if(iret.eq.0) then 
              totcld(:,k)=gfld%fld
             else
-             write(*,*) 'Total clodu missing in file',ifunit(k)
+             write(*,*) 'Total cloud missing in file',ifunit(k)
              miss(k)=1
              cycle loop200
             end if
  
            call readGB2(ifunit(k),jpdtn,3,5,2,0,jp27,gfld,eps,iret)   !Cloud base
             if(iret.eq.0) then
-             cldbas(:,k)=gfld%fld
+
+! account for bmap
+	    do JJ=1,jf
+
+            if (.not. gfld%bmap(JJ)) then
+             cldbas(JJ,k)=-5000.
+            else
+             cldbas(JJ,k)=gfld%fld(JJ)
+            endif
+
+            enddo
+
             else
              write(*,*) 'Cloud base missing in file',ifunit(k)
              miss(k)=1
@@ -108,6 +119,12 @@ c    for derived variables
               visb=visbil(igrid,k)
 
               call flight_cond(tcld,cldb,sfch,visb,fltc)
+
+!	if (mod(igrid,100) .eq. 0) then
+        if (igrid .eq. 237889) then
+         write(0,*) 'for k,i have tcld, cldb, sfch, visb,fltc: ', 
+     &             k,igrid,tcld, cldb, sfch, visb, fltc
+	endif
 
               !if(igrid.ge.10000.and.igrid.le.10100) then
               !  write(*,*) igrid,k,tcld,cldb,sfch,visb,fltc
@@ -169,6 +186,9 @@ C
            if(TCLD.ge.50.0 .and. CLDB.ge.0.0  ) then
               CEIL = CLDB - SFCH
               if(CEIL.lt.0.0) CEIL=0.0
+!           elseif(TCLD.ge.50.0 .and. CLDB .eq. 0.0) then
+!              write(0,*) 'have cloud but CLDB zero'
+!               CEIL=20000.0
            else
                CEIL=20000.0
            end if

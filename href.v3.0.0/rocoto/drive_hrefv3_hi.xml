@@ -13,7 +13,7 @@
 <!ENTITY ENDHOUR "12">
 
 <!ENTITY USER "Matthew.Pyle">
-<!ENTITY ACCOUNT "FV3GFS-T2O">
+<!ENTITY ACCOUNT "HREF-T2O">
 
 <!ENTITY HOMEhref "/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0">
 <!ENTITY domain "hi">
@@ -32,7 +32,7 @@
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
-<!ENTITY KEEPDATA "YES">
+<!ENTITY KEEPDATA "NO">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>

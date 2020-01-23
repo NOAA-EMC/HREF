@@ -11,7 +11,6 @@
 # 2017-06-01  B Blake   modified script containing loops over each ensemble member type
 # 2018-03-20  M Pyle    replace pygrib with wgrib2
 
-# import os, sys, time, pygrib
 import os, sys, time
 import numpy as np
 import math as m
@@ -243,10 +242,6 @@ def process_nam_qpf(file3,file4,fhr):
     if fhr%3 is 1:
       shour=fhour-1
       print 'process_nam_qpf remainder 1'
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
-#      qpf1 = grb.values
-#      idx.close()
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
       qpf1,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
@@ -259,18 +254,10 @@ def process_nam_qpf(file3,file4,fhr):
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
-#      qpfa = grb.values
-#      idx.close()
 
       os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
-#      idx = pygrib.index(file4,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation', lengthOfTimeRange=1)[0]
-#      qpfb = grb.values
-#      idx.close()
 
       qpf1=qpfa-qpfb
 
@@ -282,18 +269,10 @@ def process_nam_qpf(file3,file4,fhr):
       os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation', lengthOfTimeRange=3)[0]
-#      qpfa = grb.values
-#      idx.close()
 
       os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
-#      idx = pygrib.index(file4,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation', lengthOfTimeRange=2)[0]
-#      qpfb = grb.values
-#      idx.close()
       qpf1=qpfa-qpfb
 
     return qpf1
@@ -682,19 +661,11 @@ for mem in members:
       os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf1.txt ')
       qpf1,nx,ny=simplewgrib2('qpf1.txt')
 
-#      idx = pygrib.index(file1,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf1 = grb.values
-#      idx.close()
 ## how get the proper hours for each file??
       fhour=fhours[memcount]+incr
       shour=fhour-3
       os.system(WGRIB2+' '+file2+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf2.txt ')
       qpf2,nx,ny=simplewgrib2('qpf2.txt')
-#      idx = pygrib.index(file2,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf2 = grb.values
-#      idx.close()
 
       qpf12 = qpf1 + qpf2    
 
@@ -723,15 +694,6 @@ for mem in members:
       qpf4,nx,ny=simplewgrib2('qpf4.txt')
 
 # Process second 6 hours
-#      idx = pygrib.index(file3,'name','lengthOfTimeRange') # hayayaya
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf3 = grb.values
-#      idx.close()
-
-#      idx = pygrib.index(file4,'name','lengthOfTimeRange') # hayayaya
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf4 = grb.values
-#      idx.close()
 
       qpf34 = qpf3 + qpf4    
 
@@ -755,31 +717,11 @@ for mem in members:
       os.system(WGRIB2+' '+file6+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf6.txt ')
       qpf6,nx,ny=simplewgrib2('qpf6.txt')
 
-#      idx = pygrib.index(file5,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf5 = grb.values
-#      idx.close()
-
-#      idx = pygrib.index(file6,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf6 = grb.values
-#      idx.close()
-
       qpf56 = qpf5 + qpf6
 
 
 # Process last 6 hours
 ## figure out fhour for two pieces here
-
-#      idx = pygrib.index(file7,'name','lengthOfTimeRange') 
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf7 = grb.values
-#      idx.close()
-
-#      idx = pygrib.index(file8,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#      qpf8 = grb.values
-#      idx.close()
 
       fhour=fhr+18
       fhour=fhours[memcount]+incr*6
@@ -812,10 +754,6 @@ for mem in members:
 
       print 'shour: ', shour
       print 'fhour: ', fhour
-
-#      idx = pygrib.index(file1,'name','lengthOfTimeRange')
-#      grb = idx(name='Total Precipitation',lengthOfTimeRange=3)[0]
-#       qpf[itime] = grb.values
 
       print 'nx, ny: ', nx, ny
       print 'for file1: ', file1
@@ -857,10 +795,6 @@ for mem in members:
         qpf1,nx,ny=simplewgrib2('qpf.txt')
         qpf[itime] = qpf1
 
-#        grb = idx(name='Total Precipitation',lengthOfTimeRange=1)[0]
-#        qpf[itime] = grb.values
-#        idx.close()
-
       print 'max of 1 h APCP: ', np.max(qpf[itime])
       print 'mean of 1 h APCP: ', np.mean(qpf[itime])
       print 'median of 1 h APCP: ', np.median(qpf[itime])
@@ -874,10 +808,6 @@ for mem in members:
     print 'here with itime: ', itime
     if dom == 'conus' or dom == 'ak':
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
-
-
-
-
 
 # prob is okay as is based on local qpf[itime]
 
@@ -903,9 +833,6 @@ for mem in members:
 # possible to compute number of valid points here?
 
     print 'working memcount: ', memcount
-#    print 'try to extract dictionary stuff from qpf'
-#    for x,y in qpf.items():
-#       print(x,y)
 
     memcount = memcount + 1
 
@@ -955,9 +882,6 @@ for t in thresh_use:
 #
 #
   print 'nm_use for final prob: ', nm_use
-#  for row in range((slim/dx),nlats - (slim/dx)):
-#    for column in range((slim/dx),nlons - (slim/dx)):
-
   for row in range(nlats):
     for column in range(nlons):
       rad = (optrad[row,column]).astype(int)

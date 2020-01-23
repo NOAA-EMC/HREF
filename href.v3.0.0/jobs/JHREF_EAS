@@ -211,7 +211,7 @@ fi
 if [ $SENDCOM == 'YES' ]
 then
 cp $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
-$WGRIB2 $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 -match APCP -grib ${COMOUT}/ensprod/href.t${cyc}z.${dom}.easffair.f${fhr}.grib2
+## $WGRIB2 $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 -match APCP -grib ${COMOUT}/ensprod/href.t${cyc}z.${dom}.easffair.f${fhr}.grib2
 $WGRIB2 ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
 fi
 

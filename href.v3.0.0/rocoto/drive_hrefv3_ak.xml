@@ -13,7 +13,7 @@
 <!ENTITY ENDHOUR "18">
 
 <!ENTITY USER "Matthew.Pyle">
-<!ENTITY ACCOUNT "FV3GFS-T2O">
+<!ENTITY ACCOUNT "HREF-T2O">
 
 <!ENTITY HOMEhref "/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0">
 <!ENTITY domain "ak">
@@ -33,6 +33,7 @@
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "NO">
+
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
@@ -157,6 +158,8 @@
     <dependency>
       <or>
         <and>
+<!-- Make sure even and odd forecast hours are done -->
+        <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
         <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
 
         </and>

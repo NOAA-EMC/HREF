@@ -31,7 +31,7 @@
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
-<!ENTITY KEEPDATA "YES">
+<!ENTITY KEEPDATA "NO">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_CALIB '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
@@ -369,6 +369,7 @@
     <dependency>
       <or>
         <and>
+          <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
           <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
 
         </and>

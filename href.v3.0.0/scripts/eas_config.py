@@ -7,7 +7,7 @@
 # number of ens members
 nm = 10
 
-nm_v3 = 9
+nm_v3 = 10
 nm_ak = 8
 nm_nonconus = 6
 # model resolution (km)
@@ -24,20 +24,12 @@ max_latency_nam = 6
 
 # exceedance thresholds (in)
 
-# full set
-# pqpf_1h_thresh = [.01,0.25,0.5,1.0,2.0,3.0]
-# pqpf_3h_thresh = [.01,0.25,0.5,1.0,2.0,3.0]
-# pqpf_6h_thresh = [.01,0.25,0.5,1.0,2.0,3.0]
-# pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0]
-# pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0]
-
 # possible optimal set?
 pqpf_1h_thresh = [.01,0.25,0.5]
-pqpf_3h_thresh = [.01,0.25,0.5,1.0]
-# 2" added to below for FFAIR
+pqpf_3h_thresh = [.01,0.25,0.5]
 pqpf_6h_thresh = [.01,0.25,0.5,1.0]
 pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0]
-pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,4.0]
+pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0]
 
 # neighborhood size (km)
 pqpf_neighborhood = 40
@@ -130,9 +122,13 @@ runoff_3h_starthours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
 #################
 
 # exceedance thresholds (in)
+
+ # do 1h 3" as neighborhood max
 snow_1h_thresh = [1.0,3.0]
-snow_3h_thresh = [1.0,3.0,6.0]
-snow_6h_thresh = [1.0,3.0,6.0,12.0]
+ # do 3h 3" and 6" as neighborhood max
+snow_3h_thresh = [1.0,3.0]
+ # do 6h 6" and 12" as neighborhood max
+snow_6h_thresh = [1.0,3.0,6.0]
 
 # neighborhood size (km)
 snow_neighborhood = 40
