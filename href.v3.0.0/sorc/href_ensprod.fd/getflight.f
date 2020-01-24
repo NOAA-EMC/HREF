@@ -72,15 +72,21 @@ c    for derived variables
             if(iret.eq.0) then
 
 ! account for bmap
-	    do JJ=1,jf
 
+        if (jf .ne. 37910 .and. jf .ne. 70720) then
+
+	    do JJ=1,jf
             if (.not. gfld%bmap(JJ)) then
              cldbas(JJ,k)=-5000.
             else
              cldbas(JJ,k)=gfld%fld(JJ)
             endif
-
             enddo
+         else
+             cldbas(:,k)=gfld%fld
+         endif
+
+
 
             else
              write(*,*) 'Cloud base missing in file',ifunit(k)
