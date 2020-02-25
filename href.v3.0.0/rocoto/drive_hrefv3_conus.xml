@@ -31,7 +31,7 @@
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
-<!ENTITY KEEPDATA "NO">
+<!ENTITY KEEPDATA "YES">
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_CALIB '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
@@ -367,17 +367,10 @@
     </envar>
 
     <dependency>
-      <or>
         <and>
           <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
           <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
-
         </and>
-        <and>
-<!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
-          <timedep> <cyclestr offset="11:00:00"> @Y@m@d@H@M@S </cyclestr></timedep>
-        </and>
-      </or>
     </dependency>
 
   </task>

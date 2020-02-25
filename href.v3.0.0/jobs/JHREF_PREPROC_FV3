@@ -222,7 +222,7 @@ wait
 
 ## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
 
-pdycycdel=`$NDATE -36 ${PDY}${cyc}`
+pdycycdel=`$NDATE -144 ${PDY}${cyc}`
 
 PDYdel=`echo $pdycycdel | cut -c1-8`
 cycdel=`echo $pdycycdel | cut -c9-10`

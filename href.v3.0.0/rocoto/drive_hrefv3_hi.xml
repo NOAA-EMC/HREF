@@ -153,16 +153,10 @@
 
 
     <dependency>
-      <or>
         <and>
+          <datadep age="03:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep> 
           <datadep age="03:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep> 
-
         </and>
-        <and>
-<!-- go at 11Z for 00Z even if something (FV3-SAR) is missing -->
-          <timedep> <cyclestr offset="11:00:00"> @Y@m@d@H@M@S </cyclestr></timedep>
-        </and>
-      </or>
     </dependency>
 
   </task>
