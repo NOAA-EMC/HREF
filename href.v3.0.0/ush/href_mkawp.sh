@@ -49,6 +49,11 @@ do
   cp ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
 
   cat href.t${cyc}z.${NEST}.eas.f${fhr}.grib2 >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+  elif [ $type = "pmmn" ]
+  then
+  cp ${COMIN}/href.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 .
+  cp ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  cat href.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
 
   else
   ln -sf ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .

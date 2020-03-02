@@ -45,7 +45,7 @@
 <!ENTITY NATIVE_CALIB    "">
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
-<!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>02:59:00</walltime><shared></shared>'>
+<!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>04:59:00</walltime><shared></shared>'>
 
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>

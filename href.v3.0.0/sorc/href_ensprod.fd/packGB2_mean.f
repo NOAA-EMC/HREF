@@ -100,6 +100,7 @@ C for variable table:
              ipdtmpl(17)=iens            !number of members
          
              if (trim(Msignal(nv)).eq.'P') ipdtmpl(3)=193   !Prob-matched mean 
+             if (trim(Msignal(nv)).eq.'L') ipdtmpl(3)=200   !Loc PM mean 
 
             if (jpd1.eq.1.and.(jpd2.eq.8.or.jpd2.eq.11.or. 
      &                       jpd2.eq.13) ) then  !Template 4.12 has extra elements than Template 4.2
