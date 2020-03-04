@@ -9,7 +9,7 @@ C  raw data
        character*40 filehead,filename(8), output, outdone
        
        integer ff
-       logical do_old, do_hrrr, do_hrrr_pre, do_fv3_pre
+       logical do_old, do_hrrr, do_hrrr_pre, do_fv3_pre, skip_1h
        character*3 fhr(20)
        character*5 domain
        integer iunit,ounit, pdt9_orig, acclength
@@ -21,7 +21,7 @@ C  raw data
      +  'f51','f54','f57','f60'/
  
        read (*,*) filehead, ff, do_old, do_hrrr, do_hrrr_pre, 
-     +            do_fv3_pre,acclength, domain
+     +            do_fv3_pre,skip_1h,acclength, domain
 
 	if (domain(1:5) .eq. 'conus') then
          GRIBID=227            !namnest grid
@@ -336,13 +336,13 @@ c      so use previously saved gfld_save
 
         call baclose(ounit,ierr) 
 	write(0,*) 'call just_hrly(a) with jf: ', jf
-        call just_hrly(filehead, ff, jf, do_old)
+        call just_hrly(filehead, ff, jf, do_old, skip_1h)
 
         ELSE
 
 	if (.not. do_hrrr_pre .and. .not. do_fv3_pre ) then
 	write(0,*) 'call just_hrly(b) with jf: ', jf
-        call just_hrly(filehead, ff, jf, do_old )
+        call just_hrly(filehead, ff, jf, do_old, skip_1h )
         endif
 
 	if (do_hrrr) then
@@ -367,7 +367,7 @@ c      so use previously saved gfld_save
 
 ! -----------------------------
 
-	subroutine just_hrly(filehead, ff, jf, do_old)
+	subroutine just_hrly(filehead, ff, jf, do_old, skip_1h)
 
 C  raw data
        use grib_mod
@@ -381,7 +381,7 @@ C  raw data
        character*40 filehead,filename(8), output, outdone
        
        integer ff
-       logical do_old
+       logical do_old, skip_1h
        character*3 fhr(60)
        integer iunit,ounit, pdt9_orig
        type(gribfield) :: gfld,gfld_save_1h,gfld_2h
@@ -743,6 +743,8 @@ c      so use previously saved gfld_save
 
 
 
+	if (.not. skip_1h) then
+
 !!        Add a 1 h total for everyone
 	   gfld=gfld_save_1h
            gfld%fld(:)=dp1(:)
@@ -758,6 +760,8 @@ c      so use previously saved gfld_save
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
         write(0,*) 'Pack APCP done for fhr',nff, ' file: ', output
+
+        endif
 
 ! write "done" file
 

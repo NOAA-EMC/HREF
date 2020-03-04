@@ -268,8 +268,6 @@ REFC:entire atmosphere (considered as a single layer):
 MXUPHL:5000-2000 m above ground:
 MAXUVV:400-1000 mb
 MAXUVV:100-1000 mb
-MAXUW:10 m above ground:
-MAXVW:10 m above ground:
 HGT:planetary boundary layer:
 VRATE:planetary boundary layer:
 UGRD:planetary boundary layer:

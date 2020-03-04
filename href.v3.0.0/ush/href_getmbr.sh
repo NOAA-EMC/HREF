@@ -18,6 +18,8 @@ fhr=$1
 dom=${2}
 
 
+looplim=10
+
 echo here in ush script with dom $dom
 
 # fcheck=$fhr
@@ -196,7 +198,7 @@ ff=$fhr
         elif [  $ff = '12' -o  $ff = '15' -o $ff = '18' -o $ff = '21' ]
         then
         fcheck=` expr $ff - 09`
-        elif [  $ff = '24' -o  $ff = '27' -o $ff = '30' -o $ff = '33' -o $ff = '36' ]
+        elif [  $ff = '24' -o  $ff = '27' -o $ff = '30' -o $ff = '33' -o $ff = '36' -o  $ff = '39' -o $ff = '42' -o $ff = '45' -o $ff = '48' ]
         then
         fcheck=` expr $ff - 21`
         elif [ $ff -gt 0 ]
@@ -241,10 +243,10 @@ echo working things with ff as $ff and  fcheck as $fcheck
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -255,12 +257,15 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 	echo here a $ff
+
+# 3 hour times have 3 hours already
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .true. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
         fi
-        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+
+        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -290,10 +295,10 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -307,11 +312,11 @@ typeset -Z2 fcheckloc
         if [ ${ff}%3 -eq 0 ]
         then
 #tst        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
         fi
 #tst        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -345,10 +350,10 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -360,9 +365,9 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -399,10 +404,10 @@ typeset -Z2 fcheckloc
         do
         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done
         let fcheckloc=fcheckloc+1
@@ -414,9 +419,9 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
-         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom}  |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom}  |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
         if [ ${ff}%3 -eq 0 ] 
         then
         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
@@ -445,10 +450,10 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -462,12 +467,12 @@ typeset -Z2 fcheckloc
 ## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
 
-#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ]
         then
-         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false.  3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false.  .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
          err=$?
          echo HRRR precip return err $err
         fi
@@ -499,10 +504,10 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -516,12 +521,11 @@ typeset -Z2 fcheckloc
 ## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
 
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
-#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
-         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
         fi
        
         if [ ${ff}%3 -eq 0 ] 
@@ -566,10 +570,10 @@ typeset -Z2 fcheckloc
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt 2 ]
+        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 1
+          sleep 2
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -583,12 +587,10 @@ typeset -Z2 fcheckloc
 
         if [ ${ff}%3 -eq 0 ]
         then
-#tmp        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 3 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         fi
 
-#tmp        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. 1 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then

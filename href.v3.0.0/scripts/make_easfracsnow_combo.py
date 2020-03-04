@@ -432,19 +432,23 @@ for mem in members:
       file3 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       file3alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
       file6 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      file6alt = COMINfv3 + '/fv3.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr+6)+'.grib2'
 
     elif mem == 'fv3nc':
       file3 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       file3alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
       file6 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/fv3s.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      file6alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr+6)+'.grib2'
 
     elif mem == 'nam':
-      file3 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file4 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency)+'.grib2'
+      file3 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file4 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
       memfiles4[itime] = file4
-      file6 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      print 'nam file3: ', file3
+      print 'nam file4: ', file4
+      print 'nam file6: ', file6
+
       file3alt = 'garb'
       file6alt = 'garb'
 
@@ -498,6 +502,8 @@ for mem in members:
           print 'using file6alt which is: ', file6alt
         else:
           print 'Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+          print 'file3alt: ', file3alt
+          print 'file6alt: ', file6alt
 
     if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak' :
       latency = latency + 6
