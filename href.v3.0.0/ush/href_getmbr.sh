@@ -262,10 +262,12 @@ typeset -Z2 fcheckloc
         if [ ${ff}%3 -eq 0 ]
         then
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .true. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
         fi
         fi
 
         echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -311,12 +313,12 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-#tst        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
         fi
         fi
-#tst        echo href.m${m}.t${cyc}z. $ff .true. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -366,8 +368,10 @@ typeset -Z2 fcheckloc
         if [ ${ff}%3 -eq 0 ]
         then
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
         fi
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -420,8 +424,10 @@ typeset -Z2 fcheckloc
         if [ ${ff}%3 -eq 0 ]
         then
          echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
         fi
          echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom}  |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
         if [ ${ff}%3 -eq 0 ] 
         then
         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
@@ -468,12 +474,14 @@ typeset -Z2 fcheckloc
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
 
 #        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
+        export err=$? ; err_chk
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ]
         then
-         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false.  .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
-         err=$?
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        export err=$? ; err_chk
          echo HRRR precip return err $err
         fi
 
@@ -526,6 +534,7 @@ typeset -Z2 fcheckloc
         if [ ${ff}%3 -eq 0 ] 
         then
          echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
+        export err=$? ; err_chk
         fi
        
         if [ ${ff}%3 -eq 0 ] 
@@ -588,9 +597,11 @@ typeset -Z2 fcheckloc
         if [ ${ff}%3 -eq 0 ]
         then
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
         fi
 
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ] 
         then

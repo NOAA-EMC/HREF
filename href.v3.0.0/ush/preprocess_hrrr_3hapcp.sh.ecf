@@ -55,6 +55,7 @@ then
 
 ## the hourly will sum up three hourly at the appropriate time.
         echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. .false. 1 ${NEST} |$EXEChref/href_get_prcip > output.href_get_prcip1h.f${hr}.${NEST}
+       export err=$? ; err_chk
 
         if [ ${hr}%3 -eq 0 ]
         then

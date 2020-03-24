@@ -157,8 +157,8 @@
     <dependency>
         <and>
 <!-- Wait on f60 as need to process that far for the TL member  -->
-          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
-          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
+          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
+          <datadep age="01:00" minsize="300000"><cyclestr>&COMINfv3sarnc;.@Y@m@d/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
         </and>
     </dependency>
 

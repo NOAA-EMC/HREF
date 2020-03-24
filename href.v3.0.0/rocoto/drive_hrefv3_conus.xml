@@ -54,7 +54,7 @@
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
 <!ENTITY EAS_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY ENSPROD_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
-<!ENTITY GEMPAK_RESOURCES '<walltime>00:50:00</walltime><native></native>'>
+<!ENTITY GEMPAK_RESOURCES '<walltime>00:59:00</walltime><native></native>'>
 
 ]>
 
@@ -63,7 +63,7 @@
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
 <!-- <workflow realtime="F" scheduler="lsfcray" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="01:03:30:00">
+<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="01:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -368,8 +368,8 @@
 
     <dependency>
         <and>
-          <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
-          <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/@H/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
+          <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/hiresw.t@Hz.fv3_5km.f59.&domain;.grib2</cyclestr></datadep>
+          <datadep age="06:00" minsize="300000"><cyclestr>&COMINfv3sar;.@Y@m@d/hiresw.t@Hz.fv3_5km.f60.&domain;.grib2</cyclestr></datadep>
         </and>
     </dependency>
 

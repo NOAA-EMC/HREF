@@ -177,7 +177,13 @@ do
 
 if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 ]
 then
-print missing $DATA/href.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+if [ ! -e $DATA/href.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2"
+err_exit $msg
 fi
 
 cat $DATA/href.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
@@ -185,6 +191,19 @@ cat $DATA/href.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc
 
 if [ $((fhr%3)) -eq 0 ]
 then
+
+if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+
+if [ ! -e $DATA/href.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+
 cat $DATA/href.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/href.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
@@ -192,6 +211,19 @@ fi
 
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 6 ]
 then
+
+if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+
+if [ ! -e $DATA/href.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+
 cat $DATA/href.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/href.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
@@ -199,12 +231,26 @@ fi
 
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 12 ]
 then
+
+if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+
 cat $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $fhr -eq 24 -o $fhr -eq 27 -o $fhr -eq 30 -o $fhr -eq 33 -o $fhr -eq 36 -o $fhr -eq 39 \
                  -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48 ]
 then
+
+if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 ]
+then
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2"
+err_exit $msg
+fi
+
 cat $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 

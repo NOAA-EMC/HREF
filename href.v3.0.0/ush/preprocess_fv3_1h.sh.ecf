@@ -18,7 +18,7 @@ cd ${DATA}
 mkdir fv3_${dom}_${hr}
 cd fv3_${dom}_${hr}
 
-filecheck=$COMINfv3.${PDY}/${cyc}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
+filecheck=$COMINfv3.${PDY}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
 
 if [ $dom == 'conus' ]
 then
