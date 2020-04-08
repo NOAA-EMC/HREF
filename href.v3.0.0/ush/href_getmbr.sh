@@ -441,7 +441,7 @@ typeset -Z2 fcheckloc
 
 ###### HRRR
 
-      if [ ${file[$m]} = 'hrrr' -a $fcst -le 36  ] ; then
+      if [ ${file[$m]} = 'hrrr' -a $fcst -le 48  ] ; then
 
 	echo "in HRRR block"
 
@@ -497,7 +497,7 @@ typeset -Z2 fcheckloc
 
 ###### HRRRAK
 
-      if [ ${file[$m]} = 'hrrrak' -a $fcst -le 36  ] ; then
+      if [ ${file[$m]} = 'hrrrak' -a $fcst -le 48  ] ; then
 
 	echo "in HRRRAK block"
 

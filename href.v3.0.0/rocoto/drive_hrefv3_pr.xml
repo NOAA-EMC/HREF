@@ -22,7 +22,7 @@
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
-<!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/hiresw/para/hiresw">
+<!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/hiresw/com/hiresw/para/hiresw">
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
@@ -32,6 +32,8 @@
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
 <!ENTITY DATAROOT "/gpfs/hps2/stmp/&USER;/tmpnwprd">
 <!ENTITY KEEPDATA "NO">
+<!ENTITY TIMEOFFSET12 "-00:12:00:00">
+
 
 <!ENTITY RESERVATION '<queue>devhigh</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
@@ -256,6 +258,8 @@
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
      <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
+     <datadep age="05:00"><cyclestr offset="&TIMEOFFSET12;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="05:00"><cyclestr offset="&TIMEOFFSET12;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
@@ -352,6 +356,8 @@
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
      <datadep age="01:00"><cyclestr>&COMINall;.@Y@m@d/fv3s.t@Hz.&domain;.f60.grib2</cyclestr></datadep>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
+     <datadep age="05:00"><cyclestr offset="&TIMEOFFSET12;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="05:00"><cyclestr offset="&TIMEOFFSET12;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;mem2.grib2</cyclestr></datadep>
     </and>
     </dependency>
 

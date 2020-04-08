@@ -21,9 +21,8 @@
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
-<!ENTITY COMINfv3sarold "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/fv3cam/para/fv3sar">
-<!ENTITY COMINfv3sar "/gpfs/hps2/ptmp/Matthew.Pyle/oconus_new/com/hiresw/para/hiresw">
-<!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
+<!ENTITY COMINfv3sar "/gpfs/hps2/ptmp/Matthew.Pyle/hiresw/com/hiresw/para/hiresw">
+<!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/para/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
 <!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
@@ -43,6 +42,10 @@
 <!ENTITY RESOURCES_CALIB "<nodes>1:ppn=1</nodes>">
 <!ENTITY MEMORY_CALIB    "3000M">
 <!ENTITY NATIVE_CALIB    "">
+
+<!ENTITY TIMEOFFSET6 "-00:06:00:00">
+<!ENTITY TIMEOFFSET18 "-00:18:00:00">
+
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 <!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>02:59:00</walltime><shared></shared>'>
@@ -82,7 +85,7 @@
   <task name="preproc_hrrr" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>6:ppn=7</nodes>
+  <nodes>8:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_HRRR</command>
     <jobname><cyclestr>preprochrrr_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprochrrr_&domain;_@H.log</cyclestr></join>
@@ -172,7 +175,7 @@
     </envar>
 
     <dependency>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
+       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
     </dependency>
 
   </task>
@@ -439,6 +442,11 @@
         <and>
            <taskdep task="preproc_hrrr"/>
            <taskdep task="preproc_nam"/>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET6;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET18;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET6;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET18;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
+
         </and>
       </dependency>
   </task>
@@ -532,6 +540,10 @@
      <taskdep task="preproc_hrrr"/>
      <taskdep task="preproc_nam"/>
      <taskdep task="ffg_gen"/>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET6;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET18;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET6;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
+           <datadep age="05:00"><cyclestr offset="&TIMEOFFSET18;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
      </and>
     </dependency>
 

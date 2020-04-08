@@ -827,16 +827,18 @@ C  raw data
        
        integer ff, nfm1,nfm2
        logical do_old
-       character*3 fhr(36)
+       character*3 fhr(48)
        integer iunit,ounit, pdt9_orig
        type(gribfield) :: gfld,gfld_save_curr
        type(gribfield) :: gfld_snow,gfld_save_curr_snow 
 
-       data (fhr(i),i=1,36)
+       data (fhr(i),i=1,48)
      + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
      + 'f10','f11','f12','f13','f14','f15','f16','f17','f18',
      + 'f19','f20','f21','f22','f23','f24','f25','f26','f27',
-     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36'/
+     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36',
+     + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
+     + 'f46','f47','f48'/
  
 	write(0,*) 'hrrr - know that filehead, ff, do_old, jf', 
      *    trim(filehead), ff, do_old, jf
@@ -1014,17 +1016,19 @@ C  raw data
        
        integer ff, nfm1,nfm2
        logical do_old
-       character*3 fhr(36)
+       character*3 fhr(48)
        character(len=6) :: term
        integer iunit,ounit, pdt9_orig
        type(gribfield) :: gfld,gfld_save_curr
        type(gribfield) :: gfld_snow,gfld_save_curr_snow 
 
-       data (fhr(i),i=1,36)
+       data (fhr(i),i=1,48)
      + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
      + 'f10','f11','f12','f13','f14','f15','f16','f17','f18',
      + 'f19','f20','f21','f22','f23','f24','f25','f26','f27',
-     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36'/
+     + 'f28','f29','f30','f31','f32','f33','f34','f35','f36',
+     + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
+     + 'f46','f47','f48'/
  
 	write(0,*) 'hrrr 3hrly_pre - know that filehead, ff, do_old, jf', 
      *    trim(filehead), ff, do_old, jf
