@@ -49,12 +49,12 @@ export GEMPAKhref=${GEMPAKhref:-$HOMEhref/gempak}
 
 export finc=1
 
-if [ $NEST == "conus" -a  ${cyc} == "06"  -o ${cyc} == "18"  ]
-then
-export fend=42
-else
+# if [ $NEST == "conus" -a  ${cyc} == "06"  -o ${cyc} == "18"  ]
+# then
+# export fend=42
+# else
 export fend=48
-fi
+# fi
 
 export fstart=01
 
