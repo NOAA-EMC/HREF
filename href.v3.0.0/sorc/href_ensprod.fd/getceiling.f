@@ -42,7 +42,7 @@ c    for derived variables
      +       HSFCapoint(iens)
         real wgt(30)
 
-        integer miss(iens)
+        integer miss(iens), JJ
 
         Character*5 eps
 
@@ -69,23 +69,70 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
              cycle loop400
             end if
 
-           call readGB2(ifunit(irun),jpdtn,3,5,2,0,jp27,gfld,
-     +                 eps,iret)   !cloud base
-            if(iret.eq.0) then            
-             cldb(:,irun)=gfld%fld
-            else
-             miss(irun)=1
-             cycle loop400
-            end if
+
+! --------------------
 
            call readGB2(ifunit(irun),jpdtn,3,5,1,0,jp27,gfld,
-     +                 eps,iret)   !cloud base
+     +                 eps,iret)   ! surface hgt
             if(iret.eq.0) then
              hsfc(:,irun)=gfld%fld
             else
              miss(irun)=1
              cycle loop400
             end if
+! --------------------
+
+           call readGB2(ifunit(irun),jpdtn,3,5,2,0,jp27,gfld,
+     +                 eps,iret)   !cloud base
+            if(iret.eq.0) then            
+
+! account for bmap
+
+        if (jf .ne. 37910 .and. jf .ne. 70720) then
+
+            do JJ=1,jf
+            if (.not. gfld%bmap(JJ)) then
+             cldb(JJ,irun)=-5000.
+            else
+             cldb(JJ,irun)=gfld%fld(JJ)
+            endif
+            enddo
+         else
+             cldb(:,irun)=gfld%fld
+         endif
+
+            else
+
+           call readGB2(ifunit(irun),jpdtn,3,5,215,0,jp27,gfld,
+     +                 eps,iret)   !cloud ceiling
+
+            if(iret.eq.0) then            
+
+	write(0,*) 'believe processing HRRR cloud ceiling'
+
+! account for bmap
+
+        if (jf .ne. 37910 .and. jf .ne. 70720) then
+
+            do JJ=1,jf
+            if (.not. gfld%bmap(JJ)) then
+             cldb(JJ,irun)=-5000.
+            else
+             cldb(JJ,irun)=gfld%fld(JJ)+hsfc(JJ,irun)
+            endif
+            enddo
+         else
+             cldb(:,irun)=gfld%fld+hsfc(:,irun)
+         endif
+
+            else
+             miss(irun)=1
+             cycle loop400
+            end if
+
+
+	endif
+
 
            end do loop400
 
@@ -98,6 +145,8 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
           do i = 1, iens
             if(miss(i).eq.0) then
               if(CLDBapoint(i).lt.0.0) CEILapoint(i)=20000.0    !Dec. 30, 'le'->'lt'
+
+
               if(TCLDapoint(i).ge.50.0 .and.
      +          CLDBapoint(i).ge.0.0  ) then
                 CEILapoint(i) = CLDBapoint(i) - HSFCapoint(i)

@@ -131,6 +131,7 @@ C mean
       real,allocatable,dimension(:,:) :: vrbl_mn_pm                 !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_locpm               !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_blend              !jf, maxmlvl
+      real,allocatable,dimension(:,:) :: vrbl_mn_blendlpm           !jf, maxmlvl
       real,allocatable,dimension(:,:) :: derv_mn                    !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_2d, vrbl_lpm_2d
       real,allocatable,dimension(:,:) :: vrbl_pmmn_2d
@@ -181,7 +182,7 @@ C original
        dimension kgds(25)
        character*20 mnout,pmin,pmax,pmod,pp10,pp25,pp50,pp75,pp90
        character*20 spout,pmmnout,avgout,ffriout,locpmmnout
-       character*20 prout
+       character*20 prout,locavgout
        character*40 files(50),prcps(50)
      
 
@@ -461,6 +462,7 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
         iavg=205
         iffri=206
         ilocpmmn=207
+        ilocavg=208
 
       mnout=trim(eps)//'.mean.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       pmmnout=trim(eps)//'.pmmn.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
@@ -469,6 +471,8 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       spout=trim(eps)//'.sprd.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       prout=trim(eps)//'.prob.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       avgout=trim(eps)//'.avrg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
+      locavgout= 
+     &     trim(eps)//'.lavg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       ffriout=trim(eps)//'.ffri.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
 
       call baopen (imean, mnout, iret)
@@ -483,10 +487,11 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       if (iret.ne.0) write(*,*) 'open ', locpmmnout, 'err=', iret
       call baopen (iavg, avgout, iret)
       if (iret.ne.0) write(*,*) 'open ', avgout, 'err=', iret
-!        if (mod(ifhr,3) .eq. 0) then
+      call baopen (ilocavg, locavgout, iret)
+      if (iret.ne.0) write(*,*) 'open ', locavgout, 'err=', iret
+
+! limit to only for CONUS (based on what?)
       call baopen (iffri, ffriout, iret)
-!      if (iret.ne.0) write(*,*) 'open ', ffriout, 'err=', iret
-!        endif
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c (IV) Main tasks:
@@ -522,6 +527,7 @@ c  Loop  1-0: Allocate nesessary arrays
            allocate (vrbl_mn_pm(jf,Lm))       
            allocate (vrbl_mn_locpm(jf,Lm))       
            allocate (vrbl_mn_blend(jf,Lm))       
+           allocate (vrbl_mn_blendlpm(jf,Lm))       
          end if
         if (.NOT.allocated(vrbl_sp)) then
            Lm=max(1,Mlvl(nv))
@@ -1071,6 +1077,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
              call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
      +           'M','M')
+
+	       vrbl_mn_blendlpm(:,:)=0.5*(vrbl_mn_locpm(:,:)+vrbl_mn(:,:))
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
                deallocate(vrbl_pmmn_2d)
@@ -1903,6 +1911,16 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
           call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+
+! AVRG
+! limit avrg to precip
+
+          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
+          call packGB2_mean(ilocavg,isprd,vrbl_mn_blendlpm,vrbl_sp,    
+     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+          endif
         endif
 
         if(trim(Msignal(nv)).eq.'P') then
@@ -1916,9 +1934,14 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
           write(*,*) 'packing PM mean direct var for', nv
 
 ! AVRG
+! limit avrg to precip
+
+          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
           call packGB2_mean(iavg,isprd,vrbl_mn_blend,vrbl_sp,    
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+          endif
 
 ! MEAN (just for precip with PM type fields)
 
@@ -2022,6 +2045,7 @@ c Loop 1-4: Deallocation
         deallocate (vrbl_mn_pm)
         deallocate (vrbl_mn_locpm)
         deallocate (vrbl_mn_blend)
+        deallocate (vrbl_mn_blendlpm)
         deallocate (vrbl_sp)
         deallocate (vrbl_pr)
         deallocate (return_int)

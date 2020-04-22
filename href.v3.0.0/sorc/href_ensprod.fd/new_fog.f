@@ -39,6 +39,7 @@ c    for derived variables
         INTEGER, intent(IN) :: nv, jf, iens
         REAL,dimension(jf,Lm),intent(INOUT) :: derv_mn, derv_sp
         REAL,dimension(jf,Lp,Lt),intent(INOUT) ::  derv_pr
+        INTEGER :: JJ
         
         real apoint(iens),FOGapoint(iens)
         real u10,v10,hsfc,up(10),vp(10),hp(10),dt2,dtp(10),
@@ -128,7 +129,21 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
           call readGB2(ifunit(irun),jpdtn,3,5,2,0,jp27,gfld,eps,ie) !CLDBS
           if(ie.eq.0) then
-           CLDBS(:,irun)=gfld%fld
+! account for bmap
+
+        if (jf .ne. 37910 .and. jf .ne. 70720) then
+
+            do JJ=1,jf
+            if (.not. gfld%bmap(JJ)) then
+             CLDBS(JJ,irun)=-5000.
+            else
+             CLDBS(JJ,irun)=gfld%fld(JJ)
+            endif
+            enddo
+         else
+             CLDBS(:,irun)=gfld%fld
+         endif
+
           else
              miss(irun)=1
              cycle bigloop

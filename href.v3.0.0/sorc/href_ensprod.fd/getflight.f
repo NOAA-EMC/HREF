@@ -67,6 +67,16 @@ c    for derived variables
              miss(k)=1
              cycle loop200
             end if
+
+           call readGB2(ifunit(k),jpdtn,3,5,1,0,jp27,gfld,eps,iret)  !Sfc height
+            if(iret.eq.0) then
+             sfcght(:,k)=gfld%fld
+            else
+             miss(k)=1
+             write(*,*) 'Sfc height  missing in file',ifunit(k) 
+             cycle loop200
+            end if
+
  
            call readGB2(ifunit(k),jpdtn,3,5,2,0,jp27,gfld,eps,iret)   !Cloud base
             if(iret.eq.0) then
@@ -90,17 +100,35 @@ c    for derived variables
 
             else
              write(*,*) 'Cloud base missing in file',ifunit(k)
-             miss(k)=1
-             cycle loop200
-            end if
+             write(*,*) 'try cloud ceiling'
 
-           call readGB2(ifunit(k),jpdtn,3,5,1,0,jp27,gfld,eps,iret)  !Sfc height
+           call readGB2(ifunit(k),jpdtn,3,5,215,0,jp27,gfld,eps,iret)   !Cloud ceiling
             if(iret.eq.0) then
-             sfcght(:,k)=gfld%fld
+
+! account for bmap
+
+        if (jf .ne. 37910 .and. jf .ne. 70720) then
+
+	    do JJ=1,jf
+            if (.not. gfld%bmap(JJ)) then
+             cldbas(JJ,k)=-5000.
             else
+             cldbas(JJ,k)=gfld%fld(JJ)+sfcght(JJ,k)
+            endif
+            enddo
+         else
+             cldbas(:,k)=gfld%fld+sfcght(:,k)
+         endif
+
+            else
+
              miss(k)=1
-             write(*,*) 'Sfc height  missing in file',ifunit(k) 
              cycle loop200
+
+
+            endif
+
+
             end if
 
            call readGB2(ifunit(k),jpdtn,19,0,1,0,jp27,gfld,eps,iret) !Sfc visb
