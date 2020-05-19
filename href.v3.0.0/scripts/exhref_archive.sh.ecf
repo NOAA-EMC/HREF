@@ -32,6 +32,9 @@ echo archive $archdir
 rm $archdir/*ffair*
 
 htar cvf ${HPSS_dir}/href.${PDYm1}_expv3.tar  ./${archdir}/
+export err=$?
+err_chk
+
 else
 
 echo $cyc is not a cycle for which we archive directory

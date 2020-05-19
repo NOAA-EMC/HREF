@@ -233,7 +233,9 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
         else
 
-        echo ERR_EXIT $filecheck missing
+#        echo ERR_EXIT $filecheck missing
+        msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
 
 	fi
 
@@ -289,7 +291,8 @@ typeset -Z2 fcheckloc
          ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
          ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         else
-         echo ERR_EXIT $filecheck missing
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
 	fi
 
 	fcheckloc=$fcheck
@@ -335,14 +338,18 @@ typeset -Z2 fcheckloc
 
 	echo "in HIRESWarw block"
 
-	if [ -e ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
+        filecheck=${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2
+	if [ -e $filecheck ]
         then
-        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-	elif [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 ]
-        then
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        else
+
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+
 	fi
 
 	echo ${dom}arw $m $ff
@@ -391,15 +398,20 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = ${dom}'mem2arw' -a $fcst -le 48  ] ; then
 	echo ${dom}mem2arw check
 
-        if [ -e ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
+        filecheck=${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2
+
+	if [ -e $filecheck ]
         then
-        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhireswp}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-        elif [ -e ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 ]
-        then
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf ${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.arw_5km.f${fcst}.${dom}mem2.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-        fi
+
+        ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
+        ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        else
+
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+
+	fi
 
         echo ${dom}mem2arw $m $ff
 

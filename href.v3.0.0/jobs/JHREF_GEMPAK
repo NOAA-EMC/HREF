@@ -49,12 +49,7 @@ export GEMPAKhref=${GEMPAKhref:-$HOMEhref/gempak}
 
 export finc=1
 
-# if [ $NEST == "conus" -a  ${cyc} == "06"  -o ${cyc} == "18"  ]
-# then
-# export fend=42
-# else
 export fend=48
-# fi
 
 export fstart=01
 
@@ -78,10 +73,10 @@ setpdy.sh
 . PDY
 
 if [ "$RUN_ENVIR" != nco ] ; then
- export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_expv3/nawips}
+ export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_expv3/gempak}
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/ensprod}
 else
- export COMOUT=${COMOUT:-${COMROOT}/hiresw/${envir}/href.${PDY}/nawips}
+ export COMOUT=${COMOUT:-${COMROOT}/hiresw/${envir}/href.${PDY}/gempak}
  export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
 fi
 
@@ -101,6 +96,12 @@ echo "$HOMEhref/scripts/exnawips_href.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>p
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
 echo "$HOMEhref/scripts/exnawips_href.sh.ecf eas  &> $DATA/${NEST}_eas.$$  " >>poescript
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf lpmm  &> $DATA/${NEST}_lpmm.$$  " >>poescript
+
+if [ ${NEST} =  'conus' ]
+then
+echo "$HOMEhref/scripts/exnawips_href.sh.ecf ffri  &> $DATA/${NEST}_ffri.$$  " >>poescript
+fi
 
 aprun -N $PTILE -n $PTILE cfp poescript
 export err=$?; err_chk
@@ -111,6 +112,8 @@ cat $DATA/${NEST}_avrg.$$
 cat $DATA/${NEST}_prob.$$
 cat $DATA/${NEST}_sprd.$$
 cat $DATA/${NEST}_eas.$$
+cat $DATA/${NEST}_lpmm.$$
+cat $DATA/${NEST}_ffri.$$
 #################################################################
 
 cd ${DATAROOT}

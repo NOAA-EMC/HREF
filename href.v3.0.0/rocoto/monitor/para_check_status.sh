@@ -11,7 +11,7 @@ EXPDIR=/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/rocoto
 CHECK_ERR=${CHECK_ERR:-YES}
 CHECK_HPSS1=${CHECK_HPSS1:-NO}
 CHECK_HPSS2=${CHECK_HPSS2:-YES}
-CHECK_QUOTA=NO
+CHECK_QUOTA=YES
 
 #File checking values
 warn="" #Default empty warning message
@@ -117,6 +117,23 @@ if [ $CHECK_ERR = YES ]; then
     fi
   done
 fi
+
+echo " "
+ echo "-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-"
+ echo " Check quotas"
+ echo "--------------------------------"
+ # Check NOSCRUB, STMP, and PTMP usage
+ host=$(echo $SITE | tr '[A-Z]' '[a-z]')
+ quota_ptmp=`grep "hps3-ptmp" /gpfs/hps/ibm/monitors/fsets/${host}.filesets | cut -c112-`
+ quota_stmp=`grep "hps3-stmp" /gpfs/hps/ibm/monitors/fsets/${host}.filesets | cut -c112-`
+ echo "hps3-ptmp currently at ${quota_ptmp}%"
+ echo "hps3-stmp currently at ${quota_stmp}%"
+
+ quota_ptmp=`grep "hps2-ptmp" /gpfs/hps/ibm/monitors/fsets/${host}.filesets | cut -c112-`
+ quota_stmp=`grep "hps2-stmp" /gpfs/hps/ibm/monitors/fsets/${host}.filesets | cut -c112-`
+ echo "hps2-ptmp currently at ${quota_ptmp}%"
+ echo "hps2-stmp currently at ${quota_stmp}%"
+
 
 rm -rf $TMPDIR
 
