@@ -207,126 +207,127 @@ c      so use previously saved gfld_save
 	     gfld=gfld_save
              gfld%fld(:)=dp3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
              gfld%ipdtmpl(27)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
 	write(0,*) 'dp6 gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%ipdtmpl(27)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
              gfld%fld(:)=sn6(:)
-             call putgb2(ounit,gfld,ierr)
+
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp12(:)
              gfld%ipdtmpl(27)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
 	write(0,*) 'gfld%ipdtmpl(9) for dp12 now: ', gfld%ipdtmpl(9)
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn12(:)
              gfld%ipdtmpl(27)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp24(:)
              gfld%ipdtmpl(27)=24
              gfld%ipdtmpl(9)=-21+pdt9_orig
 	write(0,*) 'dp24 gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn24(:)
              gfld%ipdtmpl(27)=24
              gfld%ipdtmpl(9)=-21+pdt9_orig
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
           else if (ff.lt.24.and.ff.ge.12) then
 
 	     gfld=gfld_save
              gfld%fld(:)=dp3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
              gfld%ipdtmpl(27)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
 	write(0,*) 'dp6 gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn6(:)
              gfld%ipdtmpl(27)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp12(:)
              gfld%ipdtmpl(27)=12
              gfld%ipdtmpl(9)=-9+pdt9_orig
 	write(0,*) 'dp12(b) gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn12(:)
              gfld%ipdtmpl(27)=12
              gfld%ipdtmpl(9)=-9+pdt9_orig
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
           else if (ff.lt.12.and.ff.ge.6) then
 
 	     gfld=gfld_save
              gfld%fld(:)=dp3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
              gfld%ipdtmpl(27)=6       
              gfld%ipdtmpl(9)=-3+pdt9_orig
 	write(0,*) 'dp6(b) gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn6(:)
              gfld%ipdtmpl(27)=6       
              gfld%ipdtmpl(9)=-3+pdt9_orig
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
            else
 
 	     gfld=gfld_save
              gfld%fld(:)=dp3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
              gfld%ipdtmpl(27)=3
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 
           end if
     
@@ -751,12 +752,12 @@ c      so use previously saved gfld_save
            gfld%ipdtmpl(27)=1
 !	write(0,*) 'to putgb2 for ounit: ', ounit
 !	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
 	   gfld=gfld_save_1h_snow
            gfld%fld(:)=sn1(:)
            gfld%ipdtmpl(27)=1
 !	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
         write(0,*) 'Pack APCP done for fhr',nff, ' file: ', output
@@ -981,13 +982,13 @@ c      so use previously saved gfld_save
          do i=1,gfld_save_curr%ipdtlen
          write(0,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
          end do
-           call putgb2(ounit,gfld,ierr)
+           call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_curr_snow
            gfld%fld(:)=snhold(:,1)+snhold(:,2)+snhold(:,3)
            gfld%ipdtmpl(27)=3
 	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
         write(0,*) 'Pack APCP done for fhr',nff
@@ -1175,13 +1176,13 @@ c      so use previously saved gfld_save
          do i=1,gfld_save_curr%ipdtlen
          write(0,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
          end do
-           call putgb2(ounit,gfld,ierr)
+           call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_curr_snow
            gfld%fld(:)=snhold(:,1)+snhold(:,2)+snhold(:,3)
            gfld%ipdtmpl(27)=3
 	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
         write(0,*) 'Pack APCP done for fhr',nff
@@ -1369,13 +1370,13 @@ c      so use previously saved gfld_save
          do i=1,gfld_save_curr%ipdtlen
          write(0,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
          end do
-           call putgb2(ounit,gfld,ierr)
+           call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_curr_snow
            gfld%fld(:)=snhold(:,1)+snhold(:,2)+snhold(:,3)
            gfld%ipdtmpl(27)=3
 	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             call putgb2(ounit,gfld,ierr)
+             call putgb2_wrap(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
         write(0,*) 'Pack APCP done for fhr',nff
@@ -1385,3 +1386,39 @@ c      so use previously saved gfld_save
         call baclose(ounit,ierr) 
 
       end subroutine just_fv3_3hrly_pre
+
+! ------------------------------------
+
+      subroutine putgb2_wrap(ounit,gfld,ierr)
+       use grib_mod
+       type(gribfield) :: gfld
+       integer :: ounit
+	real, allocatable :: grnd(:)
+        real :: gmin, gmax
+       integer ::  nbit
+
+	write(0,*) 'into putgb2_wrap'
+	write(0,*) 'gfld%ngrdpts: ', gfld%ngrdpts
+	write(0,*) 'ounit: ', ounit
+	write(6,*) 'gfld%idrtmpl(2): ', gfld%idrtmpl(2)
+	write(6,*) 'gfld%idrtmpl(3): ', gfld%idrtmpl(3)
+
+	gfld%idrtmpl(2)=5
+	gfld%idrtmpl(3)=0
+
+	allocate(grnd(gfld%ngrdpts))
+
+!  compute nbit
+      call getbit(0,abs(gfld%idrtmpl(2)), 
+     +    gfld%idrtmpl(3),gfld%ngrdpts,0,gfld%fld,
+     +    grnd,gmin,gmax,nbit)
+
+	write(6,*) 'gmin,gmax,nbit: ', gmin,gmax,nbit
+
+         gfld%idrtmpl(4)=nbit
+
+         call putgb2(ounit,gfld,ierr)
+
+         deallocate(grnd)
+
+      end subroutine putgb2_wrap
