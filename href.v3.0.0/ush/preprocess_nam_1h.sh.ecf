@@ -53,9 +53,8 @@ filecheck=$COMINnam.${PDY}/nam.t${cyc}z.conusnest.hiresf${hr}.tm00.grib2
 
 cd $DATA
 
-cp nam.t${cyc}z.f??.grib2 $COMOUTnam.${PDY}
+cp nam.t${cyc}z.f${hr}.grib2 $COMOUTnam.${PDY}
 err=$?
-
 export err
 
 # done

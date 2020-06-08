@@ -62,7 +62,9 @@ pwd
 fi
 done
 
-cp hrrr.t${cyc}z.${NEST}.f??.grib2 ${COMOUThrrr}.${PDY}
-
+for hr in $hrsln
+do
+cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${COMOUThrrr}.${PDY}
 err=$?
-export err
+export err ; err_chk
+done
