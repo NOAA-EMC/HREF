@@ -64,9 +64,12 @@ fi
 
        cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${COMOUTfv3}.${PDY}
         err=$? ; export err
-#        msg="FATAL ERROR: $filecheck missing"
-#         err_exit $msg
 
+	if [ $err -ne 0 ]
+         then
+         msg="FATAL ERROR: fv3s.t${cyc}z.${dom}.f${hr}.grib2 not copied properly"
+        err_exit $msg
+         fi
 
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 

@@ -52,7 +52,7 @@
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
 <!-- <workflow realtime="F" scheduler="lsfcray" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="12" cyclelifespan="00:96:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
@@ -445,7 +445,7 @@
   <task name="href_gempak" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &GEMPAK_RESOURCES;
-  <nodes>1:ppn=6</nodes>
+  <nodes>1:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_GEMPAK</command>
     <jobname><cyclestr>gempak_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/gempak_&domain;_@H.log</cyclestr></join>
@@ -453,7 +453,7 @@
 
     <envar>
       <name> PTILE </name>
-      <value>6</value>
+      <value>7</value>
     </envar>
     <envar>
       <name>HOMEhref</name>
