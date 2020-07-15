@@ -23,7 +23,8 @@
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
 <!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/hiresw/com/hiresw/para/hiresw">
-<!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/para/hrrr">
+<!ENTITY COMINhrrr "/gpfs/hps3/ptmp/Ming.Hu/com/hrrr/para/hrrr">
+<!-- <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">  -->
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
 <!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
@@ -42,6 +43,9 @@
 <!ENTITY EAS_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY ENSPROD_RESOURCES '<walltime>00:25:00</walltime><native></native>'>
 <!ENTITY GEMPAK_RESOURCES '<walltime>00:50:00</walltime><native></native>'>
+<!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
+<!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
+
 
 ]>
 
@@ -50,7 +54,7 @@
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
 <!-- <workflow realtime="F" scheduler="lsfcray" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="lsfcray" taskthrottle="60" cyclethrottle="12" cyclelifespan="00:36:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
@@ -65,7 +69,7 @@
  <task name="preproc_hrrr" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>8:ppn=7</nodes>
+  <nodes>6:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_HRRR</command>
     <jobname><cyclestr>preprochrrr_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprochrrr_&domain;_@H.log</cyclestr></join>
@@ -155,7 +159,58 @@
     </envar>
 
     <dependency>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
+    <and>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf00.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf01.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf02.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf03.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf04.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf05.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf06.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf07.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf08.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf09.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf10.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf11.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf12.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf13.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf14.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf15.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf16.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf17.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf18.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf19.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf20.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf21.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf22.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf23.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf24.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf25.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf26.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf27.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf28.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf29.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf30.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf31.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf32.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf33.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf34.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf35.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf36.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf37.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf38.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf39.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf40.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf41.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf42.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf43.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf44.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf45.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf46.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf47.ak.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="150000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf48.ak.grib2</cyclestr></datadep>
+    </and>
+
     </dependency>
 
   </task>
