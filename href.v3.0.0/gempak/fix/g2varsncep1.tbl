@@ -163,6 +163,7 @@
 001 000 192 000 Baseflow-groundwater runoff      kg m**-2             BFGR             0  -9999.00
 001 000 193 000 Storm surface runoff             kg m**-2             R--M             0  -9999.00
 001 001 194 008 Prob precip exceeding FFG        %                    PEFG--           0  -9999.00
+001 001 194 009 Prob precip exceeding FFG        %                    PEFG--           0  -9999.00
 !
 ! vegetation/Biomass
 !D# CT# ID# PD# NAME                             UNITS                GNAM         SCALE   MISSING

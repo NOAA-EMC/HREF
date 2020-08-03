@@ -1432,7 +1432,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
 	write(0,*) 'jret from readGB2 for ffg1: ', jret
             jpd1=1
-            jpd2=8
+            jpd2=194
             jpd10=1
             jpd27=1
 
@@ -1452,6 +1452,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	endif
 
 	gfld=gfld_neighb_restore
+        gfld%discipline=1   ! FFG exceedance is a hydro discipline product
 
 	call baclose(igrb2,ier1)
         write(0,*) 'ier1 from baclose for ffg1: ', ier1
@@ -1487,9 +1488,10 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld_ffg, eps, jret)
 
-	write(0,*) 'jret from readGB2: ', jret
             jpd1=1
-            jpd2=8
+            jpd2=194
+
+	write(0,*) 'jret from readGB2: ', jret
             jpd10=1
             jpd27=3
 
@@ -1510,6 +1512,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
 	gfld=gfld_neighb_restore
 
+        gfld%discipline=1   ! FFG exceedance is a hydro discipline product
 	call baclose(igrb2,ier1)
 
 	write(0,*) 'min/max of FFG3: ', minval(return_int),
@@ -1544,7 +1547,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
 	write(0,*) 'jret from readGB2: ', jret
             jpd1=1
-            jpd2=8
+            jpd2=194
             jpd10=1
             jpd27=6
 
@@ -1559,6 +1562,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	endif
 
 	gfld=gfld_neighb_restore
+        gfld%discipline=1   ! FFG exceedance is a hydro discipline product
 
 	call baclose(igrb2,ier1)
 

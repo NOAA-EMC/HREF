@@ -88,7 +88,8 @@ c        write(*,*) 'Plvl Tlvl=',Plvl(nv),Tlvl(nv)
          if (pl.eq.1) then  !this is just do once 
 
             if (jpd1.eq.1.and.
-     &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13) ) then 
+     &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13 .or.
+     &          jpd2.eq.194) ) then   ! add 194 for PPFFG
              ipdtnum=9                  !ensemble APCP prob use Template 4.12
              ipdtlen=36
             else
@@ -129,7 +130,8 @@ c        write(*,*) 'Plvl Tlvl=',Plvl(nv),Tlvl(nv)
 
 
             if (jpd1.eq.1.and.
-     &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13) ) then  !Template 4.9 has extra elements than Template 4.5
+     &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13  .or.
+     &          jpd2.eq.194) ) then  !Template 4.9 has extra elements than Template 4.5
               !2015121205 correction: B. zhou ...
               !ihr_ifhr=ihr+ifhr
               !call get_ymd(iyr,imon,idy,ihr_ifhr,kyr,kmon,kdy,khr)
