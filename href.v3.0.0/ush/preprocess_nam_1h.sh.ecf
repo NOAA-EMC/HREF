@@ -31,7 +31,7 @@ filecheck=$COMINnam.${PDY}/nam.t${cyc}z.conusnest.hiresf${hr}.tm00.grib2
 
         if [ -e $filecheck ]
         then
-        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_namx_filter.txt | $WGRIB2 -i -grib nam.t${cyc}z.f${hr} $filecheck
+        $WGRIB2 $filecheck | grep -F -f $PARMhref/href_nam_filter.txt | $WGRIB2 -i -grib nam.t${cyc}z.f${hr} $filecheck
         $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|REFC|MAXREF|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
