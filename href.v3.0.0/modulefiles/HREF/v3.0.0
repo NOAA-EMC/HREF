@@ -1,7 +1,7 @@
 #%Module######################################################################
 ##                                                       Matthew.Pyle@noaa.gov
 ##                                                           NOAA/NWS/NCEP/EMC
-## HREF 2.0.0
+## HREF 3.0.0
 ##_____________________________________________________
 proc ModulesHelp { } {
 puts stderr "Set environment veriables for HREF"
@@ -10,10 +10,10 @@ puts stderr "for the Intel Compiler Suite $version\n"
 }
 module-whatis " HREF whatis description"
 
-set ver v2.0.0
+set ver v3.0.0
 
 set sys [uname sysname]
-set HREF /gpfs/hps/nco/ops/nwpara/href.v2.0.3/modulefiles/HREF
+set HREF /gpfs/hps/nco/ops/nwpara/href.v3.0.0/modulefiles/HREF
 set lname HREF
 
 setenv COMP ftn
