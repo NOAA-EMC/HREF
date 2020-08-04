@@ -107,7 +107,7 @@ fi
 # export VERBOSE=YES
 
 ###################################################
-# Execute the Script exhref_ensprod.sh.ecf
+# Execute the Script exhref_ensprod.sh
 
 rm -rf poe.*
 
@@ -115,76 +115,76 @@ rm -rf poe.*
 if [ $NEST = "conus" -o $NEST = "ak" ]
 then
 echo "#!/bin/sh  "                             >  poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 00 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 01 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 02 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 03 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 04 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 05 &" >> poe.a
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 06 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 00 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 01 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 02 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 03 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 04 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 05 &" >> poe.a
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 06 &" >> poe.a
 echo "wait" >> poe.a
 
 echo "#!/bin/sh  "                             >  poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 07 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 08 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 09 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 10 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 11 &" >> poe.b
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 12 &" >> poe.b
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 07 &" >> poe.b
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 08 &" >> poe.b
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 09 &" >> poe.b
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 10 &" >> poe.b
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 11 &" >> poe.b
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 12 &" >> poe.b
 echo "wait" >> poe.b
 
 echo "#!/bin/sh  "                             >  poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 13 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 14 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 15 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 16 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 17 &" >> poe.c
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 18 &" >> poe.c
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 13 &" >> poe.c
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 14 &" >> poe.c
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 15 &" >> poe.c
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 16 &" >> poe.c
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 17 &" >> poe.c
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 18 &" >> poe.c
 echo "wait" >> poe.c
 
 echo "#!/bin/sh  "                             >  poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 19 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 20 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 21 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 22 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 23 &" >> poe.d
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 24 &" >> poe.d
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 19 &" >> poe.d
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 20 &" >> poe.d
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 21 &" >> poe.d
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 22 &" >> poe.d
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 23 &" >> poe.d
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 24 &" >> poe.d
 echo "wait" >> poe.d
 
 echo "#!/bin/sh  "                             >  poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 25 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 26 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 27 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 28 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 29 &" >> poe.e
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 30 &" >> poe.e
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 25 &" >> poe.e
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 26 &" >> poe.e
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 27 &" >> poe.e
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 28 &" >> poe.e
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 29 &" >> poe.e
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 30 &" >> poe.e
 echo "wait" >> poe.e
 
 echo "#!/bin/sh  "                             >  poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 31 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 32 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 33 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 34 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 35 &" >> poe.f
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 36 &" >> poe.f
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 31 &" >> poe.f
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 32 &" >> poe.f
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 33 &" >> poe.f
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 34 &" >> poe.f
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 35 &" >> poe.f
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 36 &" >> poe.f
 echo "wait" >> poe.f
 
 echo "#!/bin/sh  "                             >  poe.g
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 37 &" >> poe.g
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 38 &" >> poe.g
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 39 &" >> poe.g
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 40 &" >> poe.g
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 41 &" >> poe.g
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 42 &" >> poe.g
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 37 &" >> poe.g
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 38 &" >> poe.g
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 39 &" >> poe.g
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 40 &" >> poe.g
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 41 &" >> poe.g
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 42 &" >> poe.g
 echo "wait" >> poe.g
 
 echo "#!/bin/sh  "                             >  poe.h
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 43 &" >> poe.h
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 44 &" >> poe.h
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 45 &" >> poe.h
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 46 &" >> poe.h
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 47 &" >> poe.h
-echo "$USHhref/preprocess_hrrr_1h.sh.ecf ${cyc} ${NEST} 48 &" >> poe.h
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 43 &" >> poe.h
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 44 &" >> poe.h
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 45 &" >> poe.h
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 46 &" >> poe.h
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 47 &" >> poe.h
+echo "$USHhref/preprocess_hrrr_1h.sh ${cyc} ${NEST} 48 &" >> poe.h
 echo "wait" >> poe.h
 
 chmod 775 ${DATA}/poe.a  ${DATA}/poe.b ${DATA}/poe.c
@@ -201,7 +201,7 @@ aprun -n 1 -N 1 -d 6 ${DATA}/poe.g &
 aprun -n 1 -N 1 -d 6 ${DATA}/poe.h &
 wait
 
-$USHhref/preprocess_hrrr_3hapcp.sh.ecf ${cyc} ${NEST}
+$USHhref/preprocess_hrrr_3hapcp.sh ${cyc} ${NEST}
 
 fi
 

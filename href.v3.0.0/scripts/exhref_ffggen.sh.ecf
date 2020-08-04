@@ -133,14 +133,11 @@ $EXEChref/href_ffg_gen < itag
 
 if [ $SENDCOM = "YES" ]
 then
-echo try copying
+echo try copying to COMOUT
 cp full.g227.grib2_ffg1h ${COMOUT}/href.ffg1h.5km.grib2
 cp full.g227.grib2_ffg3h ${COMOUT}/href.ffg3h.5km.grib2
 cp full.g227.grib2_ffg6h ${COMOUT}/href.ffg6h.5km.grib2
 fi
-
-#
-
 
 #####################################################################
 # GOOD RUN
