@@ -16,7 +16,7 @@
 
 set -x
 
-export XLFRTEOPTS="namelist=old"
+# export XLFRTEOPTS="namelist=old"
 
 yy=`echo ${PDY} | cut -c 1-4`
 mm=`echo ${PDY} | cut -c 5-6`
@@ -84,8 +84,6 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-#  files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
-#  files="9 namnest namnest hrrr hrrr  conusarw fv3s conusmem2arw conusarw fv3s conusmem2arw"
   files="9 namnest namnest hrrr hrrr  fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8  9  10"
@@ -279,13 +277,7 @@ if [ $SENDCOM = YES ]; then
   cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
   $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
   cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUTPERM/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
-#  if [ $dom = 'conus' ]
-#  then
-#  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2 -match "(APCP|CAPE|REFC|REFD|MAXREF|DPT|RH|PWAT)" -grib $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}ffair.f$ff.grib2
-#  fi
  done
-
-  
 
  if [ ${ff}%3 -eq 0 ]
  then

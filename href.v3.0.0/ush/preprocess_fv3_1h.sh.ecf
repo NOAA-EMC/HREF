@@ -1,4 +1,13 @@
 #! /bin/ksh
+#####################################################
+# 
+#
+#  Script: preprocess_fv3_1h.sh.ecf
+#
+# Purpose: Filters out needed inputs from FV3 for HREF
+#
+#  Author: Matthew Pyle
+#          March 2020
 
 
 if [ $# -ne 3 ]
@@ -20,14 +29,6 @@ cd fv3_${dom}_${hr}
 
 filecheck=$COMINfv3.${PDY}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
 
-if [ $dom == 'conus' ]
-then
-interp=0
-wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
-else
-interp=0
-fi
-
 
         if [ -e $filecheck ]
         then
@@ -44,23 +45,7 @@ fi
         $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
-	if [ $interp -eq 1 ]
-        then
-          $WGRIB2 fv3.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
-          $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg \
-                   -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
-        ls -l interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr} 
-        cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
-        cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${COMOUTfv3}.${PDY}
-        rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
-        rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
-
-        else
-
-# noninterp 
-        
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
-
 
        cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${COMOUTfv3}.${PDY}
         err=$? ; export err
@@ -68,13 +53,12 @@ fi
 	if [ $err -ne 0 ]
          then
          msg="FATAL ERROR: fv3s.t${cyc}z.${dom}.f${hr}.grib2 not copied properly"
-        err_exit $msg
-         fi
+         err_exit $msg
+        fi
 
         rm interp.t${cyc}z.f${hr} interp_nn.t${cyc}z.f${hr} fv3.t${cyc}z.f${hr} 
         rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
 
-        fi 
 
         else
 
@@ -82,6 +66,3 @@ fi
          err_exit $msg
 
         fi
-
-# done
-

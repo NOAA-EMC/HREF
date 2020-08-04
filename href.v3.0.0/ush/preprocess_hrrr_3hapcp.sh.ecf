@@ -1,4 +1,14 @@
 #! /bin/ksh
+#####################################################
+#
+#
+#  Script: preprocess_hrrr_3hapcp.sh.ecf
+#
+# Purpose: Generates 3 h QPF/snow buckets from the HRRR
+#
+#  Author: Matthew Pyle
+#          March 2020
+
 
 
 if [ $# -ne 2 ]
@@ -38,6 +48,7 @@ hrold=0${hrold}
 fi
 
 filecheck=hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+
 if [ -e $filecheck ]
 then
 
@@ -47,7 +58,7 @@ then
 
 ## the hourly will sum up three hourly at the appropriate time.
         echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. .false. 1 ${NEST} |$EXEChref/href_get_prcip > output.href_get_prcip1h.f${hr}.${NEST}
-       export err=$? ; err_chk
+        export err=$? ; err_chk
 
         if [ ${hr}%3 -eq 0 ]
         then
@@ -56,15 +67,15 @@ then
         fi
 
 else
-
-echo "ERROR - did not see filecheck $filecheck in cwd"
-pwd
+        msg="FATAL ERROR: $filecheck missing"
+        err_exit $msg
 fi
+
 done
 
 for hr in $hrsln
 do
-cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${COMOUThrrr}.${PDY}
-err=$?
-export err ; err_chk
+ cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${COMOUThrrr}.${PDY}
+ err=$?
+ export err ; err_chk
 done

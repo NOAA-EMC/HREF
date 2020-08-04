@@ -17,8 +17,8 @@ typeset -Z2 m
 fhr=$1
 dom=${2}
 
-
 looplim=10
+sleeptime=6
 
 echo here in ush script with dom $dom
 
@@ -35,7 +35,6 @@ if [ $cyc -ge 0 ] && [ $cyc -le 5 ] ; then
   if [ $dom = 'conus' ]
     then
 	echo "in conus block"
-#     files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
      files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
      set -A file  $files
      if [ $cyc = '00' ] ; then
@@ -80,8 +79,6 @@ elif [ $cyc -ge 6 ] ; then
   if [ $dom = 'conus' ]
   then
 
-#  files="9 namnest namnest hrrr hrrr conusarw conusnmmb conusmem2arw conusarw conusnmmb conusmem2arw"
-#  files="9 namnest namnest hrrr hrrr  conusarw fv3s conusmem2arw conusarw fv3s conusmem2arw"
   files="9 namnest namnest hrrr hrrr fv3s fv3s conusarw conusmem2arw conusarw conusmem2arw"
   set -A file  $files
   mbrs="1  2  3  4  5  6  7  8  9  10" 
@@ -240,7 +237,6 @@ echo working things with ff as $ff and  fcheck as $fcheck
 	fi
 
 	fcheckloc=$fcheck
-#	while [ $fcheckloc -le $ff ]
 	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
         do
 	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
@@ -248,7 +244,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
+          sleep ${sleeptime}
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -303,7 +299,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
+          sleep ${sleeptime}
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -362,7 +358,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
+          sleep ${sleeptime}
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -423,7 +419,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
         do
         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
+          sleep ${sleeptime}
           let loop=loop+1
         done
         let fcheckloc=fcheckloc+1
@@ -471,7 +467,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
+          sleep ${sleeptime}
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -482,19 +478,13 @@ typeset -Z2 fcheckloc
         then
 	echo here a $ff
 
-## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
-## actually now have the summing of 3 h totals done in the HRRR preproc job
-
-#        echo href.m${m}.t${cyc}z. $ff .false. .true. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff}
-        export err=$? ; err_chk
         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ]
         then
          echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
-        export err=$? ; err_chk
-         echo HRRR precip return err $err
+         export err=$? ; err_chk
         fi
 
         if [ ${ff}%3 -eq 0 ] 
@@ -527,7 +517,7 @@ typeset -Z2 fcheckloc
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
 	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
+          sleep ${sleeptime}
           let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
@@ -536,22 +526,18 @@ typeset -Z2 fcheckloc
 	
         if [ $ff -gt 0 ]
         then
-	echo here a $ff
-
-## figure out needed logic with precip here for HRRR.  Have hourly and total accumulation, but not 3-hourly within files
-
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+         echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ] 
         then
          echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff}
-        export err=$? ; err_chk
+         export err=$? ; err_chk
         fi
        
         if [ ${ff}%3 -eq 0 ] 
         then
-        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
+         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
 	fi
 
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
@@ -567,21 +553,15 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
 	echo "in non-CONUS FV3S block"
 
-
-	 ls -l ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2
-
+        ls -l ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2
 
 	if [ -e ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 ]
         then
-
-        ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-        ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
-
+         ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
+         ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         else
-        echo could not find the fv3sar file desired
-
+         echo could not find the fv3sar file desired
 	fi
-
 
 	echo ${dom}fv3s $m $ff
 
@@ -589,13 +569,13 @@ typeset -Z2 fcheckloc
 
 	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
         do
-	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
-        loop=0
+         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+         loop=0
         while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
-	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
-          sleep 2
-          let loop=loop+1
+         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+         sleep ${sleeptime}
+         let loop=loop+1
         done	
         let fcheckloc=fcheckloc+1
 typeset -Z2 fcheckloc
