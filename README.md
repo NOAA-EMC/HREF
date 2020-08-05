@@ -11,4 +11,4 @@ cd href.v3.0.0/sorc/
 
 ./install_href.sh (to copy executables to exec/)
 
-./link_href.sh  (to populate fix files)
+./link_href_fix.sh  (to populate fix files)
