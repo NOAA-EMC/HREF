@@ -412,7 +412,7 @@
   <task name="eas_gen" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
-    <nodes>10:ppn=12</nodes>
+    <nodes>12:ppn=15</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eas_gen_&domain;@H.log</cyclestr></join>

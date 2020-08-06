@@ -427,7 +427,7 @@
   <task name="ensprod" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>6:ppn=6</nodes>
+  <nodes>6:ppn=8</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/ensprod_&domain;_@H.log</cyclestr></join>
