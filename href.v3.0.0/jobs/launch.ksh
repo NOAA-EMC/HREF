@@ -31,7 +31,6 @@ if [ -a .bashrc ]; then
 fi
 
 module load prod_util
-module load grib_util/1.0.3
 module load prod_envir
 module load cfp-intel-sandybridge/2.0.1
 

@@ -262,9 +262,10 @@ fi
 $EXEChref/href_ensprod   > $DATA/$ff/output_ensprod.$ff 2>&1
 errsave=$?
 echo past href_ensprod for ff $ff
-export err=$errsave; err_chk;
+export err=$errsave; err_chk
 
 if [ ! -e $COMOUT/log ]
+then
 mkdir -p $COMOUT/log
 fi
 

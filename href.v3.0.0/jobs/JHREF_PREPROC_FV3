@@ -112,115 +112,20 @@ fi
 rm -rf poe.*
 
 
-echo "#!/bin/sh  "                             >  poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 00 ${NEST} &" >> poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 01 ${NEST} &" >> poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 02 ${NEST} &" >> poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 03 ${NEST} &" >> poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 04 ${NEST} &" >> poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 05 ${NEST} &" >> poe.aaa
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 06 ${NEST} &" >> poe.aaa
-echo "wait" >> poe.aaa
+hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 \
+34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
 
-echo "#!/bin/sh  "                             >  poe.bbb
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 07 ${NEST} &" >> poe.bbb
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 08 ${NEST} &" >> poe.bbb
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 09 ${NEST} &" >> poe.bbb
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 10 ${NEST} &" >> poe.bbb
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 11 ${NEST} &" >> poe.bbb
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 12 ${NEST} &" >> poe.bbb
-echo "wait" >> poe.bbb
+for hr in $hrlist
+do
+echo "$USHhref/preprocess_fv3_1h.sh ${cyc} $hr ${NEST}" >> poe.fv3
+done
 
-echo "#!/bin/sh  "                             >  poe.ccc
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 13 ${NEST} &" >> poe.ccc
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 14 ${NEST} &" >> poe.ccc
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 15 ${NEST} &" >> poe.ccc
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 16 ${NEST} &" >> poe.ccc
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 17 ${NEST} &" >> poe.ccc
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 18 ${NEST} &" >> poe.ccc
-echo "wait" >> poe.ccc
+chmod 775 poe.fv3  
 
-echo "#!/bin/sh  "                             >  poe.ddd
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 19 ${NEST} &" >> poe.ddd
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 20 ${NEST} &" >> poe.ddd
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 21 ${NEST} &" >> poe.ddd
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 22 ${NEST} &" >> poe.ddd
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 23 ${NEST} &" >> poe.ddd
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 24 ${NEST} &" >> poe.ddd
-echo "wait" >> poe.ddd
+export NODES=6
+aprun -j 1 -n60 -N 10 -d 1 cfp poe.fv3
 
-echo "#!/bin/sh  "                             >  poe.eee
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 25 ${NEST} &" >> poe.eee
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 26 ${NEST} &" >> poe.eee
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 27 ${NEST} &" >> poe.eee
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 28 ${NEST} &" >> poe.eee
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 29 ${NEST} &" >> poe.eee
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 30 ${NEST} &" >> poe.eee
-echo "wait" >> poe.eee
-
-echo "#!/bin/sh  "                             >  poe.fff
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 31 ${NEST} &" >> poe.fff
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 32 ${NEST} &" >> poe.fff
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 33 ${NEST} &" >> poe.fff
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 34 ${NEST} &" >> poe.fff
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 35 ${NEST} &" >> poe.fff
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 36 ${NEST} &" >> poe.fff
-echo "wait" >> poe.fff
-
-echo "#!/bin/sh  "                             >  poe.ggg
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 37 ${NEST} &" >> poe.ggg
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 38 ${NEST} &" >> poe.ggg
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 39 ${NEST} &" >> poe.ggg
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 40 ${NEST} &" >> poe.ggg
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 41 ${NEST} &" >> poe.ggg
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 42 ${NEST} &" >> poe.ggg
-echo "wait" >> poe.ggg
-
-echo "#!/bin/sh  "                             >  poe.hhh
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 43 ${NEST} &" >> poe.hhh
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 44 ${NEST} &" >> poe.hhh
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 45 ${NEST} &" >> poe.hhh
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 46 ${NEST} &" >> poe.hhh
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 47 ${NEST} &" >> poe.hhh
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 48 ${NEST} &" >> poe.hhh
-echo "wait" >> poe.hhh
-
-echo "#!/bin/sh  "                             >  poe.iii
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 49 ${NEST} &" >> poe.iii
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 50 ${NEST} &" >> poe.iii
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 51 ${NEST} &" >> poe.iii
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 52 ${NEST} &" >> poe.iii
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 53 ${NEST} &" >> poe.iii
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 54 ${NEST} &" >> poe.iii
-echo "wait" >> poe.iii
-
-echo "#!/bin/sh  "                             >  poe.jjj
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 55 ${NEST} &" >> poe.jjj
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 56 ${NEST} &" >> poe.jjj
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 57 ${NEST} &" >> poe.jjj
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 58 ${NEST} &" >> poe.jjj
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 59 ${NEST} &" >> poe.jjj
-echo "$USHhref/preprocess_fv3_1h.sh ${cyc} 60 ${NEST} &" >> poe.jjj
-echo "wait" >> poe.jjj
-
-chmod 775 ${DATA}/poe.aaa  ${DATA}/poe.bbb ${DATA}/poe.ccc
-chmod 775 ${DATA}/poe.ddd  ${DATA}/poe.eee ${DATA}/poe.fff
-chmod 775 ${DATA}/poe.ggg  ${DATA}/poe.hhh ${DATA}/poe.iii ${DATA}/poe.jjj
-
-aprun -n 1 -N 1 -d 7 ${DATA}/poe.aaa &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.bbb &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.ccc &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.ddd &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.eee &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.fff &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.ggg &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.hhh &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.iii &
-aprun -n 1 -N 1 -d 6 ${DATA}/poe.jjj &
-wait
-
-
-## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
+# #deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
 
 pdycycdel=`$NDATE -144 ${PDY}${cyc}`
 

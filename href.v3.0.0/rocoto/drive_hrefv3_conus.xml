@@ -84,7 +84,7 @@
   <task name="preproc_hrrr" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>6:ppn=7</nodes>
+  <nodes>7:ppn=7</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_HRRR</command>
     <jobname><cyclestr>preprochrrr_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprochrrr_&domain;_@H.log</cyclestr></join>
@@ -232,7 +232,7 @@
   <task name="preproc_nam" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>8:ppn=7</nodes>
+  <nodes>6:ppn=10</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_NAM</command>
     <jobname><cyclestr>preprocnam_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprocnam_&domain;_@H.log</cyclestr></join>
@@ -330,7 +330,7 @@
   <task name="preproc_fv3" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>10:ppn=7</nodes>
+  <nodes>6:ppn=10</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_FV3</command>
     <jobname><cyclestr>preprocfv3_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprocfv3_&domain;_@H.log</cyclestr></join>
@@ -603,7 +603,7 @@
            <datadep age="03:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
            <datadep age="03:00" minsize="100000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
            <datadep age="03:00" minsize="100000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
-         <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/hrrr.t@Hz.conus.f48.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/hrrr.t@Hz.conus.f48.grib2</cyclestr></datadep>
          <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINall;.@Y@m@d/fv3s.t@Hz.conus.f60.grib2</cyclestr></datadep>
          <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/nam.t@Hz.f54.grib2</cyclestr></datadep>
 
@@ -705,7 +705,7 @@
      <datadep age="03:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
            <datadep age="03:00" minsize="100000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
            <datadep age="03:00" minsize="100000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
-         <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/hrrr.t@Hz.conus.f48.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/hrrr.t@Hz.conus.f48.grib2</cyclestr></datadep>
          <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINall;.@Y@m@d/fv3s.t@Hz.conus.f60.grib2</cyclestr></datadep>
          <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/nam.t@Hz.f54.grib2</cyclestr></datadep>
      </and>
