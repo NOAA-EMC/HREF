@@ -153,8 +153,8 @@ aprun -j 1 -n 180 -N 15 -d 1 cfp poe.qpf_snow
 
 elif [ $dom = "ak" ]
 then
-export NODES=5
-aprun -j 1 -n 75 -N 15 -d 1 cfp poe.qpf_snow
+export NODES=6
+aprun -j 1 -n 90 -N 15 -d 1 cfp poe.qpf_snow
 
 elif [ $dom = "pr" -o $dom = "hi" ]
 then
