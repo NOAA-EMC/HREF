@@ -325,7 +325,6 @@ def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
 #--------------------------------------------------------------------------------
 #### START OF SCRIPT ####
 
-# for start_hour in pqpf_6h_starthours:
 cy, cm, cd, ch = int(PDY[0:4]), int(PDY[4:6]), int(PDY[6:8]), int(cyc[0:2])
 d0 = datetime(cy,cm,cd,ch,0)
 starttime = d0+timedelta(start_hour/24.0)

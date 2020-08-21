@@ -16,14 +16,7 @@ import numpy as np
 import math as m
 from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
-# from scipy.stats import threshold
-# from netCDF4 import Dataset
 import fortranfile as F
-
-# WGRIB2 = '/nwprod2/grib_util.v1.0.0/exec/wgrib2'
-# WGRIB2 = '/gpfs/hps3/emc/meso/noscrub/Matthew.Pyle/git_repo/EMC_hrw/grib_util.v1.0.6/exec/wgrib2'
-# WGRIB2 = '/gpfs/hps/nco/ops/nwprod/grib_util.v1.1.1/exec/wgrib2'
-
 
 def simplewgrib2(txtfile):
   tmps= []
