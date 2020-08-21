@@ -32,6 +32,8 @@ export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
 export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
 export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
 
+export GESIN=${GESIN:-${GESROOT}/${envir}/hiresw/href}
+
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
@@ -146,9 +148,9 @@ pdycycdel=`$NDATE -144 ${PDY}${cyc}`
 PDYdel=`echo $pdycycdel | cut -c1-8`
 cycdel=`echo $pdycycdel | cut -c9-10`
 
-echo will delete from $COMOUThrrr.${PDYdel}/hrrr.t${cycdel}z
+echo will delete from ${GESIN}.${PDYdel}/hrrr.t${cycdel}z
 
-rm $COMOUThrrr.${PDYdel}/hrrr.t${cycdel}z.*grib2
+rm ${GESIN}.${PDYdel}/hrrr.t${cycdel}z.*grib2
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

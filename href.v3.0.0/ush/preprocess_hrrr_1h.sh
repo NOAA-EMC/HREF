@@ -23,7 +23,10 @@ hr=${3}
 
 echo $NEST $hr
 
-mkdir -p $COMOUThrrr.${PDY}
+if [ ! -e $GESIN.${PDY} ]
+then
+mkdir -p $GESIN.${PDY}
+fi
 
 cd ${DATA}
 

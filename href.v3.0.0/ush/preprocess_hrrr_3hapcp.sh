@@ -22,6 +22,12 @@ NEST=${2}
 
 hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48" 
 
+if [ ! -e $GESIN.${PDY} ]
+then
+mkdir -p $GESIN.${PDY}
+fi
+
+
 cd $DATA
 
 EXEChref=${HOMEhref}/exec
@@ -75,7 +81,7 @@ done
 
 for hr in $hrsln
 do
- cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${COMOUThrrr}.${PDY}
+ cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${GESIN}.${PDY}
  err=$?
  export err ; err_chk
 done

@@ -26,7 +26,8 @@
 <!ENTITY COMINhrrr "/gpfs/hps3/ptmp/Ming.Hu/com/hrrr/para/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
-<!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/prod/hrefinput">
+<!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/nwges/&envir;/hiresw/href">
+<!ENTITY GESROOT "/gpfs/hps2/ptmp/Matthew.Pyle/nwges">
 <!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
 <!ENTITY MYCOMROOTPERM "/gpfs/hps3/emc/meso/noscrub/&USER;/com">
@@ -128,6 +129,10 @@
     <envar>
       <name>DATAROOT</name>
       <value>&DATAROOT;</value>
+    </envar>
+    <envar>
+      <name>GESROOT</name>
+      <value>&GESROOT;</value>
     </envar>
     <envar>
       <name>USER</name>
@@ -307,6 +312,11 @@
     <envar>
       <name>COMINfv3</name>
       <value>&COMINfv3sar;</value>
+    </envar>
+
+    <envar>
+      <name>GESROOT</name>
+      <value>&GESROOT;</value>
     </envar>
 
     <envar>

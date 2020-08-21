@@ -19,6 +19,12 @@ if [ "$machine" = "DELL" ] ; then
 
 elif [ "$machine" = "WCOSS_C" ] ; then
 
+
+if [ $envir != 'prod' ]
+then
+GESROOT_save=$GESROOT
+fi
+
 cd /u/$USER    # cron does this for us - this is here just to be safe
 . /etc/profile
 
@@ -33,6 +39,13 @@ fi
 module load prod_util
 module load prod_envir
 module load cfp-intel-sandybridge/2.0.1
+
+if [ $envir != 'prod' ]
+then
+GESROOT=${GESROOT_save}
+fi
+
+echo now at end of launch.ksh have GESROOT as $GESROOT
 
 else
   echo "launch.ksh: modulefile is not set up yet for this machine-->${machine}."
