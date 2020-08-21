@@ -90,17 +90,17 @@ env
 # Execute the script
 rm -f poescript
 
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf mean &> $DATA/${NEST}_mean.$$ " >>poescript
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf pmmn &> $DATA/${NEST}_pmmn.$$ " >>poescript
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>poescript
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf eas  &> $DATA/${NEST}_eas.$$  " >>poescript
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf lpmm  &> $DATA/${NEST}_lpmm.$$  " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf mean &> $DATA/${NEST}_mean.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf pmmn &> $DATA/${NEST}_pmmn.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf eas  &> $DATA/${NEST}_eas.$$  " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf lpmm  &> $DATA/${NEST}_lpmm.$$  " >>poescript
 
 if [ ${NEST} =  'conus' ]
 then
-echo "$HOMEhref/scripts/exnawips_href.sh.ecf ffri  &> $DATA/${NEST}_ffri.$$  " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf ffri  &> $DATA/${NEST}_ffri.$$  " >>poescript
 fi
 
 aprun -N $PTILE -n $PTILE cfp poescript
