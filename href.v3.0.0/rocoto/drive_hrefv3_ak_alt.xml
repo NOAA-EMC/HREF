@@ -148,21 +148,6 @@
       <value>&COMINfv3sarnc;</value>
     </envar>
 
-    <envar>
-      <name>COMOUTnam</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUThrrr</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTfv3</name>
-      <value>&COMINall;</value>
-    </envar>
-
     <dependency>
     <and>
           <datadep age="05:00" minsize="120000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf00.ak.grib2</cyclestr></datadep>

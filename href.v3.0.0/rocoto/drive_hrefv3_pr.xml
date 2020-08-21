@@ -145,21 +145,6 @@
       <value>&COMINfv3sarnc;</value>
     </envar>
 
-    <envar>
-      <name>COMOUTnam</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUThrrr</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMOUTfv3</name>
-      <value>&COMINall;</value>
-    </envar>
-
 
     <dependency>
         <and>
