@@ -462,7 +462,7 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
         iavg=205
         iffri=206
         ilocpmmn=207
-        ilocavg=208
+!        ilocavg=208
 
       mnout=trim(eps)//'.mean.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       pmmnout=trim(eps)//'.pmmn.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
@@ -471,8 +471,8 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       spout=trim(eps)//'.sprd.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       prout=trim(eps)//'.prob.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       avgout=trim(eps)//'.avrg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
-      locavgout= 
-     &     trim(eps)//'.lavg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
+!      locavgout= 
+!     &     trim(eps)//'.lavg.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
       ffriout=trim(eps)//'.ffri.t'//cycle(ihr+1)//'z'//'.f'//trim(cfhr)
 
       call baopen (imean, mnout, iret)
@@ -487,8 +487,8 @@ c (cntl, n1, p1, etc.).  That loop should be inside the date/time loop.
       if (iret.ne.0) write(*,*) 'open ', locpmmnout, 'err=', iret
       call baopen (iavg, avgout, iret)
       if (iret.ne.0) write(*,*) 'open ', avgout, 'err=', iret
-      call baopen (ilocavg, locavgout, iret)
-      if (iret.ne.0) write(*,*) 'open ', locavgout, 'err=', iret
+!      call baopen (ilocavg, locavgout, iret)
+!      if (iret.ne.0) write(*,*) 'open ', locavgout, 'err=', iret
 
 ! limit to only for CONUS (based on what?)
       call baopen (iffri, ffriout, iret)
@@ -1919,12 +1919,13 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 ! AVRG
 ! limit avrg to precip
 
-          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
-     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
-          call packGB2_mean(ilocavg,isprd,vrbl_mn_blendlpm,vrbl_sp,    
-     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
-          endif
+!          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+!     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
+!          call packGB2_mean(ilocavg,isprd,vrbl_mn_blendlpm,vrbl_sp,    
+!     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
+!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+!          endif
+
         endif
 
         if(trim(Msignal(nv)).eq.'P') then

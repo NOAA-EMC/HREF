@@ -28,10 +28,48 @@ dom=${NEST}
 cd $DATA/${ff}/
 
 ln -sf $FIXhref/new*g227* .
-cp $COMINffg/href.t${cyc}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
-cp $COMINffg/href.t${cyc}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
-cp $COMINffg/href.t${cyc}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
 
+if [ $NEST = 'conus' ]
+then
+
+cp $COMINffg/href.t${cyc}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
+err1=$?
+cp $COMINffg/href.t${cyc}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
+err2=$?
+cp $COMINffg/href.t${cyc}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
+err3=$?
+
+if [ $cyc = '00' ]; then
+ cycold='18'
+ COMINffg=${COMINffgm1}
+elif [ $cyc = '06' ]; then
+ cycold='00'
+elif [ $cyc = '12' ]; then
+ cycold='06'
+elif [ $cyc = '18' ]; then
+ cycold='12'
+fi
+
+if [ $err1 -ne 0 ]
+then
+echo "WARNING: using previous cycle FFG1H file"
+cp $COMINffg/href.${cycold}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
+fi
+
+if [ $err2 -ne 0 ]
+then
+echo "WARNING: using previous cycle FFG3H file"
+cp $COMINffg/href.${cycold}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
+fi
+
+if [ $err3 -ne 0 ]
+then
+echo "WARNING: using previous cycle FFG6H file"
+cp $COMINffg/href.${cycold}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
+fi
+
+
+fi
 
 ###############################
 
@@ -273,9 +311,9 @@ cp $DATA/$ff/output_ensprod.$ff $COMOUT/log/output_ensprod.t${cyc}z.$ff
 
 if [ $dom = 'conus' ]
 then
-types="mean pmmn avrg prob sprd lpmm lavg ffri"
+types="mean pmmn avrg prob sprd lpmm ffri"
 else
-types="mean pmmn avrg prob sprd lavg lpmm"
+types="mean pmmn avrg prob sprd lpmm"
 fi
 
 if [ $SENDCOM = YES ]; then

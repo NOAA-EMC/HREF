@@ -36,16 +36,15 @@ then
 cp $DCOMROOT/prod/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 elif [ -e $DCOMROOT/prod/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
 then
-echo COPY DAY OLD FFG.009.${RFC}
+echo WARNING: WILL USE DAY OLD FFG.009.${RFC}
 cp $DCOMROOT/prod/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 elif [ -e $DCOMROOT/prod/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
 then
-echo COPY TWO DAY OLD FFG.009.${RFC}
+echo WARNING: WILL USE TWO DAY OLD FFG.009.${RFC}
 cp $DCOMROOT/prod/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
-
 else
-echo BIG TROUBLE
-exit 99
+     msg="FATAL ERROR: Could not find FFG.009.${RFC} files from the last two days"
+     err_exit $msg
 fi
 
 
@@ -70,22 +69,28 @@ err=$?
 
 if [ $err -ne 0 ]
 then
-echo DID NOT FIND 1 h FFG in ffg.${PDY}.009.${RFC}_full so use perm
-cp $COMOUTperm/${RFC}_1h ${RFC}_1h
-else
-cp ${RFC}_1h $COMOUTperm/
+msg="FATAL ERROR: DID NOT FIND 1 h FFG in ffg.${PDY}.009.${RFC}_full" 
+err_exit
+
+# cp $COMOUTperm/${RFC}_1h ${RFC}_1h
+# else
+# cp ${RFC}_1h $COMOUTperm/
+
 fi
 
 ###############
 
 $WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_3h} -grib -o ${RFC}_3h
 err=$?
+
 if [ $err -ne 0 ]
 then
-echo DID NOT FIND 3 h FFG in ffg.${PDY}.009.${RFC}_full so use perm
-cp $COMOUTperm/${RFC}_3h ${RFC}_3h
-else
-cp ${RFC}_3h $COMOUTperm/
+msg="FATAL ERROR: DID NOT FIND 3 h FFG in ffg.${PDY}.009.${RFC}_full" 
+err_exit
+
+# cp $COMOUTperm/${RFC}_3h ${RFC}_3h
+# else
+# cp ${RFC}_3h $COMOUTperm/
 fi
 
 ###############
@@ -94,10 +99,12 @@ $WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
 err=$?
 if [ $err -ne 0 ]
 then
-echo DID NOT FIND 6 h FFG in ffg.${PDY}.009.${RFC}_full so use perm
-cp $COMOUTperm/${RFC}_6h ${RFC}_6h
-else
-cp ${RFC}_6h $COMOUTperm/
+msg="FATAL ERROR: DID NOT FIND 6 h FFG in ffg.${PDY}.009.${RFC}_full" 
+err_exit
+
+# cp $COMOUTperm/${RFC}_6h ${RFC}_6h
+# else
+# cp ${RFC}_6h $COMOUTperm/
 fi
 
 cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
