@@ -230,7 +230,6 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
         else
 
-#        echo ERR_EXIT $filecheck missing
         msg="FATAL ERROR: $filecheck missing but required"
          err_exit $msg
 
@@ -454,9 +453,19 @@ typeset -Z2 fcheckloc
 	echo "in HRRR block"
 
         filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
-        ln -sf $filecheck   $DATA/href.m${m}.t${cyc}z.f${ff}
 
+	if [ -e $filecheck ]
+        then
+
+        ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        else
+
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+
+	fi
 
 
 	fcheckloc=$fcheck
@@ -504,9 +513,19 @@ typeset -Z2 fcheckloc
 	echo "in HRRRAK block"
 
         filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
-        ln -sf $filecheck   $DATA/href.m${m}.t${cyc}z.f${ff}
 
+	if [ -e $filecheck ]
+        then
+
+        ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+
+        else
+
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+
+	fi
 
 
 	fcheckloc=$fcheck
@@ -553,14 +572,16 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
 	echo "in non-CONUS FV3S block"
 
-        ls -l ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2
+        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2
 
-	if [ -e ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 ]
+	if [ -e $filecheck ]
         then
          ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
          ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         else
-         echo could not find the fv3sar file desired
+         
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
 	fi
 
 	echo ${dom}fv3s $m $ff
