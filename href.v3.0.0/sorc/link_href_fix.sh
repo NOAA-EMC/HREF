@@ -6,8 +6,9 @@ mkdir -p ../fix
 
 cd ../fix
 
-ln -sf ${HREF_FIX}/* .
-# cp ${HREF_FIX}/* .
+# ln -sf ${HREF_FIX}/* .
+
+cp ${HREF_FIX}/* .
 
 cd ../sorc/
 

@@ -69,13 +69,8 @@ err=$?
 
 if [ $err -ne 0 ]
 then
-msg="FATAL ERROR: DID NOT FIND 1 h FFG in ffg.${PDY}.009.${RFC}_full" 
-err_exit
-
-# cp $COMOUTperm/${RFC}_1h ${RFC}_1h
-# else
-# cp ${RFC}_1h $COMOUTperm/
-
+ msg="FATAL ERROR: DID NOT FIND 1 h FFG in ffg.${PDY}.009.${RFC}_full" 
+ err_exit
 fi
 
 ###############
@@ -85,12 +80,8 @@ err=$?
 
 if [ $err -ne 0 ]
 then
-msg="FATAL ERROR: DID NOT FIND 3 h FFG in ffg.${PDY}.009.${RFC}_full" 
-err_exit
-
-# cp $COMOUTperm/${RFC}_3h ${RFC}_3h
-# else
-# cp ${RFC}_3h $COMOUTperm/
+ msg="FATAL ERROR: DID NOT FIND 3 h FFG in ffg.${PDY}.009.${RFC}_full" 
+ err_exit
 fi
 
 ###############
@@ -99,19 +90,14 @@ $WGRIB ffg.${PDY}.009.${RFC}_full -d ${rec_6h} -grib -o ${RFC}_6h
 err=$?
 if [ $err -ne 0 ]
 then
-msg="FATAL ERROR: DID NOT FIND 6 h FFG in ffg.${PDY}.009.${RFC}_full" 
-err_exit
-
-# cp $COMOUTperm/${RFC}_6h ${RFC}_6h
-# else
-# cp ${RFC}_6h $COMOUTperm/
+ msg="FATAL ERROR: DID NOT FIND 6 h FFG in ffg.${PDY}.009.${RFC}_full" 
+ err_exit
 fi
 
 cat  ${RFC}_1h ${RFC}_3h  ${RFC}_6h > ffg.${PDY}.009.${RFC}
 rm  ${RFC}_1h ${RFC}_3h  ${RFC}_6h list.???
 
 $CNVGRIB -g12 ffg.${PDY}.009.${RFC} ffg.${PDY}.009.${RFC}.g2
-
 
 done
 
