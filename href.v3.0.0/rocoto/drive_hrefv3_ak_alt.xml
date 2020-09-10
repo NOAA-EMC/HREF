@@ -20,6 +20,8 @@
 <!ENTITY machine "WCOSS_C">
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
+<!ENTITY PRE "&HOMEhref/rocoto/launch.ksh">
+
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
 <!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw">
@@ -72,7 +74,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>7:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_HRRR</command>
+    <command>&PRE; &JOBS;/JHREF_PREPROC_HRRR</command>
     <jobname><cyclestr>preprochrrr_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprochrrr_&domain;_@H.log</cyclestr></join>
 

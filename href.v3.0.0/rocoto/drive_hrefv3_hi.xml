@@ -20,6 +20,8 @@
 <!ENTITY machine "WCOSS_C">
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
+<!ENTITY PRE "&HOMEhref/rocoto/launch.ksh">
+
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/tp2/ptmp/Benjamin.Blake/com/fv3cam/para/fv3sar">
 <!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw">
@@ -65,7 +67,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>10:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_PREPROC_FV3</command>
+    <command>&PRE; &JOBS;/JHREF_PREPROC_FV3</command>
     <jobname><cyclestr>preprocfv3_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/preprocfv3_&domain;_@H.log</cyclestr></join>
 
@@ -161,7 +163,7 @@
     &RESERVATION;
     &EAS_RESOURCES;
     <nodes>4:ppn=12</nodes>
-      <command>&JOBS;/launch.ksh &JOBS;/JHREF_EAS</command>
+      <command>&PRE; &JOBS;/JHREF_EAS</command>
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eas_gen_&domain;@H.log</cyclestr></join>
    
@@ -262,7 +264,7 @@
   &RESERVATION;
   &ENSPROD_RESOURCES;
   <nodes>4:ppn=12</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_ENSPROD</command>
+    <command>&PRE; &JOBS;/JHREF_ENSPROD</command>
     <jobname><cyclestr>ensprod_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/ensprod_&domain;_@H.log</cyclestr></join>
 
@@ -359,7 +361,7 @@
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_AWIPS</command>
+    <command>&PRE; &JOBS;/JHREF_AWIPS</command>
     <jobname><cyclestr>awips_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/awips_&domain;_@H.log</cyclestr></join>
 
@@ -434,7 +436,7 @@
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=7</nodes>
-    <command>&JOBS;/launch.ksh &JOBS;/JHREF_GEMPAK</command>
+    <command>&PRE; &JOBS;/JHREF_GEMPAK</command>
     <jobname><cyclestr>gempak_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_href/gempak_&domain;_@H.log</cyclestr></join>
 
