@@ -1,0 +1,290 @@
+﻿HREF v3.0.0 - released September 12, 2020
+
+
+#####################
+Update overview 
+#####################
+
+
+* Membership changes with the HiresW-FV3 replacing the HiresW-NMMB for all domains, and the HRRR being added as a new member for the CONUS and Alaska domains.  Membership size for CONUS increases from 8 to 10, and for Alaska increases from 6 to 8.  Hawaii and Puerto Rico domains membership size remains unchanged at 6 members.  
+
+
+* Products generated out to 48 h (current HREFv2 goes to 36 h)
+
+
+* Includes new local probability-matched mean (lpmm) output file type for precipitation.
+
+
+* Adds new Ensemble Agreement Scale (EAS) probabilities for precipitation and snow probabilities.
+
+
+* Adds new precipitation products for exceedance of flash flood guidance values and of average recurrence interval values for the CONUS domain.
+
+
+#####################
+Obtaining and installing
+#####################
+
+
+git clone -b v3.0 https://github.com/MatthewPyle-NOAA/HREF.git  HREF_dir_on_disk
+
+
+cd HREF_dir_on_disk/href.v3.0.0/sorc/
+./build_href.sh
+./install_href.sh (to copy executables to exec/)
+./link_href_fix.sh (to populate fix files)
+
+
+#####################
+Product changes 
+#####################
+
+
+Where CC is cycle, and FF is forecast hour, and DOM is the domain (conus/ak/pr/hi)
+
+
+Modified - href.tCCz.DOM.mean.fFF.grib2
+
+
+* Adds TMP:surface
+
+
+New - href.tCCz.DOM.lpmm.fFF.grib2 (localized probability matched mean output)
+
+
+* APCP:surface:xx-xx hour acc fcst (1 h APCP every hour)
+* APCP:surface:xx-xx hour acc fcst (3 h APCP every 3rd hour)
+
+
+New (CONUS only)  - href.tCCz.conus.ffri.fFF.grib2 (flash flood and recurrence interval output)
+
+
+* non-3hourly times:
+                1 h PPFFG:surface:xx-xx hour acc fcst:prob >1   (1 h FFG exceedance)
+* 3 hourly time has the above plus:
+3 h PPFFG:surface:xx-xx hour acc fcst:prob >3  (3 h FFG exceedance)
+* 3 hourly times for f06 and beyond has the above plus:
+6 h PPFFG:surface:xx-xx hour acc fcst:prob >6 (6 h FFG exceedance)
+6 h APCP:surface:xx-xx  hour acc fcst:prob >2 (exceedance of 2 year recurrence interval)
+6 h APCP:surface:xx-xx  hour acc fcst:prob >5 (exceedance of 5 year r.i.)
+6 h APCP:surface:xx-xx  hour acc fcst:prob >10 (exceedance of 10 year r.i)
+6 h APCP:surface:xx-xx hour acc fcst:prob >100 (exceedance of 100 year r.i.)
+
+
+* 3 hourly times for f24 and beyond has the above plus:
+24 h APCP:surface:xx-xx  hour acc fcst:prob >2 (exceedance of 2 year recurrence interval)
+24 h APCP:surface:xx-xx  hour acc fcst:prob >5 (exceedance of 5 year r.i.)
+24 h APCP:surface:xx-xx  hour acc fcst:prob >10 (exceedance of 10 year r.i)
+24 h APCP:surface:xx-xx hour acc fcst:prob >100 (exceedance of 100 year r.i.)
+
+
+
+
+New -  href.tCCz.DOM.eas.fFF.grib2  (ensemble agreement scale probability output)
+
+
+
+
+* non 3 hourly times        
+   * 1 h APCP:surface:xx-xx hour acc fcst:prob >0.254, >6.35, >12.7
+   * 1 h WEASD:surface:xx-xx hour acc fcst:prob >2.54, >7.62
+
+
+* 3 hourly times has the above plus:
+   * 3 h APCP :surface:xx-xx hour acc fcst:prob  > 0.254, >6.35, >12.7
+   * 3 h WEASD:surface:xx-xx hour acc fcst:prob  >2.54, >7.62 
+
+
+* f06 and f09 has above plus
+   * 6 h APCP :surface:xx-xx hour acc fcst:prob  > 0.254, >6.35, >12.7, >25.4
+   * 6 h  WEASD:surface:xx-xx hour acc fcst:prob  >2.54, >7.62, >15.24 
+
+
+* 3 hourly times for f12 and beyond has the above plus:
+   * 12 h APCP  :surface:xx-xx hour acc fcst:prob >2.54, >6.35, >12.7, >25.4, 50.8
+
+
+* 3 hourly times for f24 and beyond has the above plus:
+   * 24 h APCP  :surface:xx-xx hour acc fcst:prob >2.54, >6.35, >12.7, >25.4, >50.8, >76.2 
+
+
+Modified -  href.tCCz.DOM.prob.fFF.grib2  
+
+
+ (for all hours):
+* eliminate UPHL:5000-2000 m above ground prob >25, >100
+* add MXUPHL:5000-2000 m above ground prob >75, >150
+* eliminate MXUPHL:5000-2000 m above ground prob >100
+* adds LTNG:surface: prob >0.01  (prob > 0.2 for CONUS)
+* eliminate 1 h APCP prob >0.25, >6.35
+* adds WIND:10 m above ground:10 hour fcst:prob >18.01, >25.72
+
+
+(for 3 hourly files)
+* the above changes plus:
+   * adds 3 h APCP > 127
+   * eliminates 3 h APCP prob >0.25, >6.35
+
+
+(for 3 hourly files at f06 and beyond)
+* the above changes plus
+   * adds 6 h APCP > 127
+   * eliminates 6h APCP prob >0.25, >6.35
+
+
+(for 3 hourly files at f12 and beyond)
+* the above changes plus:
+   * adds 12 h APCP > 203.2
+   * eliminates 12 h APCP prob >2.54, >6.35
+
+
+(for 3 hourly files at f24 and beyond)
+* the above changes plus:
+   * adds 24 h APCP > 203.2
+   * eliminates 24 h APCP prob >2.54, >6.35
+
+
+#############################
+Job/script changes of note:
+#############################
+
+
+New preprocessing jobs are added:
+
+
+JHREF_PREPROC_FV3 (calling USH/preprocess_fv3_1h.sh) (6  nodes)
+JHREF_PREPROC_HRRR (calling USH/preprocess_hrrr_1h.sh, USH/preprocess_hrrr_3hapcp.sh)  (7 nodes)
+JHREF_PREPROC_NAM (calling USH/preprocess_nam_1h.sh (6 nodes)
+
+
+These new jobs separate out some of the preprocessing of HREF inputs, interpolating to the HREF domain if needed, and adding 3 h precipitation and snow water accumulation buckets for the HRRR.  As the different input models are ready at different times, it allows this preprocessing to be distributed in time ahead of the primary HREF jobs running.
+
+
+JHREF_EAS is new and runs python scripts that generate the new Ensemble Agreement Scale (EAS) probabilities.  Domain-specific resource requirements are listed below
+
+
+JHREF_FFG_GEN is new and runs only for CONUS to produce unified flash flood guidance files (href.tCCz.ffg1h.5km.grib2,href.tCCz.ffg3h.5km.grib2, href.tCCz.ffg6h.5km.grib2 ) from the individual RFC tile guidance.  Runs as a serial job (single node/task).
+
+
+JHREF_ENSPROD is modified to use CFP parallelism to run the exhref_ensprod_link.sh.ecf and exhref_ensprod.sh.ecf scripts for each forecast hour.  Domain-specific resources are listed below.
+
+
+The rocoto/drive_hrefv3*.xml files show how I was launching jobs and assigning resources.  
+
+
+#############################
+Resource changes:
+#############################
+
+
+As JHREF_ENSPROD and JHREF_EAS run concurrently, an attempt was made to make their runtimes similar and fairly similar to current production.  It was hoped that they may run slightly faster on the less busy I/O of the production machine.
+
+
+CONUS
+
+
+Prod (just JHREF_ENSPROD) ~  864 seconds on 12 nodes (3 tasks/node)  
+
+
+Para (JHREF_ENSPROD) ~ 833 seconds on 16 nodes (3 tasks/node)  
+Para (JHREF_EAS) ~ 974 seconds on 12 nodes (15 tasks/node)  
+
+
+AK 
+
+
+Prod (just JHREF_ENSPROD) ~   244 seconds on 6 nodes (6 tasks/node)      
+
+
+Para (JHREF_ENSPROD) ~    323 seconds on 6 nodes (8 tasks/node) 
+Para (JHREF_EAS) ~ 471 seconds on 6 nodes (15 tasks/node)
+
+
+PR 
+
+
+Prod (just JHREF_ENSPROD) ~   88 seconds     on 6 nodes  (6 tasks/node)
+
+
+Para (JHREF_ENSPROD)~ 135 seconds on 4 nodes (12 tasks/node)  
+Para (JHREF_EAS) ~ 195 seconds on 4 nodes (16 tasks/node)  
+
+
+HI 
+
+
+Prod (just JHREF_ENSPROD) ~       74 seconds  on 3 nodes (12 tasks/ node)  
+
+
+Para (JHREF_ENSPROD) ~ 128 on 4 nodes (12 tasks/node)  
+Para (JHREF_EAS) 186 seconds on 4 nodes (16 tasks/node)  
+
+
+
+
+DISK SPACE CHANGES:
+
+
+OPS com/hiresw/prod/
+20270080        href.${PDY}/ensprod
+20103016        href.${PDY}/verf_g2g
+
+
+9270659          AWIPS
+73783408        GEMPAK
+
+
+OPS TOT:  ~123.5 GB/day
+
+
+para com/hiresw/prod/
+25750784        href.${PDY/ensprod
+1959424  href.${PDY}/verf_g2g  
+* pieces now going into $COMOUT:
+8635632         href.${PDY}/wmo
+102497024     href.${PDY}/gempak
+* preprocessing space
+131340680       ${GESROOT}${envir}/hiresw/href.${PDY}
+
+
+PARA TOT:  ~268 GB/day
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####################
+## Archiving to HPSS
+####################
+
+
+A number of changes to how HREF data is archived are being proposed.  The first is to archive by cycle time rather than have one single archive for the day.
+
+
+The extension to 48 h and addition of new products also leads to other needed changes to keep the data volume similar.
+
+
+It will need to be confirmed, but this change had a minimal impact in HPSS storage  in my testing (possibly a 0.1 GB/day increase).
+
+
+Save hours f01-f33 (every hour), f36, f39, f42, f45, f48
+
+
+Save mean, eas, prob, pmmn, lpmm, and ffri output types.
+          ./href.t%modelcyc%z.{conus,ak,pr,hi}.{mean,eas,prob,pmmn,lpmm,ffri}.f{0?,1?,2?,30,31,32,33,36,39,42,45,48}.grib2
+
+
+I have a prototype file showing the changes, but it isn’t contained within the released code.
