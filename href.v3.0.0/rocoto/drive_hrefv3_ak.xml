@@ -19,7 +19,7 @@
 <!ENTITY domain "ak">
 <!ENTITY machine "WCOSS_C">
 <!ENTITY envir "test">
-<!ENTITY PRE "&HOMEhref/rocoto/launch.ksh">
+<!ENTITY PRE "&HOMEhref;/rocoto/launch.ksh">
 
 <!ENTITY JOBS "&HOMEhref;/jobs">
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">

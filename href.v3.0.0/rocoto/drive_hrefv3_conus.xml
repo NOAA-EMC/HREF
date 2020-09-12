@@ -20,7 +20,7 @@
 <!ENTITY machine "WCOSS_C">
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMEhref;/jobs">
-<!ENTITY PRE "&HOMEhref/rocoto/launch.ksh">
+<!ENTITY PRE "&HOMEhref;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMEhref;/scripts">
 <!ENTITY COMINfv3sar "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw">
