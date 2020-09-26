@@ -111,6 +111,21 @@ c        write(*,*) 'dPlvl dTlvl=',dPlvl(nv),dTlvl(nv)
              ipdtmpl(16)=0               !???
              ipdtmpl(17)=iens            !number of members
 
+             if(trim(dPsignal(nv)).eq.'A'.or.
+     +          trim(dPsignal(nv)).eq.'B'.or.
+     +          trim(dPsignal(nv)).eq.'C'.or.
+     +          trim(dPsignal(nv)).eq.'D'.or.
+     +          trim(dPsignal(nv)).eq.'K'.or.
+     +          trim(dPsignal(nv)).eq.'L'.or.
+     +          trim(dPsignal(nv)).eq.'E'.or.
+     +          trim(dPsignal(nv)).eq.'F'.or.
+     +          trim(dPsignal(nv)).eq.'H'.or.
+     +          trim(dPsignal(nv)).eq.'I'  ) then
+           write(0,*) 'setting derv prob to nbmax type 194'
+           ipdtmpl(3)=194     !Neighborhood probability
+             endif
+
+
             if (jpd1.eq.1.and.(jpd2.eq.8.or.jpd2.eq.11) ) then  !Template 4.9 has extra elements than Template 4.5
               !2015121205 correction: B. zhou ...
               ihr_ifhr=ihr+ifhr
