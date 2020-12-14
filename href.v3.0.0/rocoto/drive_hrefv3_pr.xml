@@ -220,7 +220,7 @@
     </envar>
     <envar>
       <name>KEEPDATA</name>
-      <value>YES</value>
+      <value>&KEEPDATA;</value>
     </envar>
     <envar>
       <name>envir</name>
