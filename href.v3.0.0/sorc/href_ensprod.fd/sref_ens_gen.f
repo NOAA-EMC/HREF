@@ -1189,7 +1189,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             jpd10=-9999
             jpd12=-9999
             jpd27=-9999
-          write(*,*)'a3 - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(*,*)'a3 - readGB2:',igrb2,jpdtn,
+     +                jpd1,jpd2,jpd10,jpd12,jpd27
 
 	gfld_neighb_restore=gfld
 
@@ -1427,7 +1428,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             jpd10=-9999
             jpd12=-9999
             jpd27=-9999
-          write(*,*)'readGB2 for ffg1:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(*,*)'readGB2 for ffg1:',igrb2,jpdtn,jpd1,
+     +              jpd2,jpd10,jpd12,jpd27
 
 	gfld_neighb_restore=gfld
 
@@ -1713,10 +1715,10 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
              thr1 = Thrs(nv,lt)
              thr2 = 0.
-             if (vname(nv) .ne. 'A3RI' .and. vname(nv) .ne. 'A6RI' .and.
-     &           vname(nv) .ne. 'A24R' .and. vname(nv) .ne. 'FFG1' .and.
+             if (vname(nv) .ne. 'A3RI' .and. vname(nv) .ne. 'A6RI'.and.
+     &           vname(nv) .ne. 'A24R' .and. vname(nv) .ne. 'FFG1'.and.
      &           vname(nv) .ne. 'FFG3' .and.
-     &           vname(nv) .ne. 'FFG6' .and. vname(nv) .ne. 'FF24' .and.
+     &           vname(nv) .ne. 'FFG6' .and. vname(nv) .ne. 'FF24'.and.
      &           vname(nv) .ne. 'FF12' .and. vname(nv) .ne. 'A12R')then
              call getprob(apoint,iens,thr1,thr2,op(nv),aprob,
      +                         miss,weight)
@@ -2204,11 +2206,13 @@ cc%%%%%%% 3. To see if there is wind speed computation, if yes, do it
      &             dk5(nv),dk6(nv)
 
           if (dk4(nv).eq.2.and.dk5(nv).eq.1.and.dk6(nv).ne.108) then
+            write(*,*) 'call wind'
             call wind (nv,ifunit,jpdtn,jf,im,jm,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind done'
           else if (dk4(nv).eq.2 .and. dk5(nv).eq.192 .and.
      +             dk6(nv).eq.103) then
+            write(*,*) 'call bulkshear'
             call bulkshear(nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind(shear) done'
