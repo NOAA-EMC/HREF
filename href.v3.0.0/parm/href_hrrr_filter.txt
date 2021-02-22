@@ -268,6 +268,7 @@ MXUPHL:5000-2000 m above ground:
 MAXUVV:400-1000 mb
 MAXUVV:100-1000 mb
 HGT:planetary boundary layer:
+HPBL:
 VRATE:planetary boundary layer:
 UGRD:planetary boundary layer:
 VGRD:planetary boundary layer:
