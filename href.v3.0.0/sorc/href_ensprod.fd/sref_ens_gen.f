@@ -756,6 +756,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
              allocate(bmap_f(jf))
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
              bmap_f=gfld%bmap
+        else
+             bmap_f=.true.
         endif
            endif
 
@@ -814,6 +816,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 allocate(bmap_f(jf))
 	if (jf .ne. 37910 .and. jf .ne. 70720) then
                 bmap_f=gfld%bmap
+        else
+                bmap_f=.true.
         endif
          endif
 
@@ -1185,7 +1189,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             jpd10=-9999
             jpd12=-9999
             jpd27=-9999
-          write(*,*)'a3 - readGB2:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(*,*)'a3 - readGB2:',igrb2,jpdtn,
+     +                jpd1,jpd2,jpd10,jpd12,jpd27
 
 	gfld_neighb_restore=gfld
 
@@ -1423,7 +1428,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             jpd10=-9999
             jpd12=-9999
             jpd27=-9999
-          write(*,*)'readGB2 for ffg1:',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+          write(*,*)'readGB2 for ffg1:',igrb2,jpdtn,jpd1,
+     +              jpd2,jpd10,jpd12,jpd27
 
 	gfld_neighb_restore=gfld
 
@@ -1709,10 +1715,10 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
              thr1 = Thrs(nv,lt)
              thr2 = 0.
-             if (vname(nv) .ne. 'A3RI' .and. vname(nv) .ne. 'A6RI' .and.
-     &           vname(nv) .ne. 'A24R' .and. vname(nv) .ne. 'FFG1' .and.
+             if (vname(nv) .ne. 'A3RI' .and. vname(nv) .ne. 'A6RI'.and.
+     &           vname(nv) .ne. 'A24R' .and. vname(nv) .ne. 'FFG1'.and.
      &           vname(nv) .ne. 'FFG3' .and.
-     &           vname(nv) .ne. 'FFG6' .and. vname(nv) .ne. 'FF24' .and.
+     &           vname(nv) .ne. 'FFG6' .and. vname(nv) .ne. 'FF24'.and.
      &           vname(nv) .ne. 'FF12' .and. vname(nv) .ne. 'A12R')then
              call getprob(apoint,iens,thr1,thr2,op(nv),aprob,
      +                         miss,weight)
@@ -1868,6 +1874,8 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 ! Reset gfld%bmap with the combined version bmap_f
         if(trim(eps).eq.'href' .and. associated(gfld%bmap)) then
 		gfld%bmap=bmap_f
+        else
+        write(0,*) 'did not set gfld%bmap to bmap_f as not associated'
         endif
 
 !        if (trim(Msignal(nv)).eq.'M'.or.trim(Msignal(nv)).eq.'P') then
@@ -1887,7 +1895,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 	write(0,*) 'here with maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
           call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)    !gfld is used to send in other info 
           write(*,*) 'packing mean direct var for', nv
 
 	if (jpd2 .eq. 13 .and. jpd27 .eq. 1)  then
@@ -1905,7 +1913,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 !          call packGB2_mean(imean,isprd,vrbl_mn_use,vrbl_sp,   !jpd12 is determined inside 
 !     +          nv,jpd1,jpd2loc,jpd10,jpd27,jf,Lm,
-!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
+!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)    !gfld is used to send in other info 
 
         endif
 
@@ -1914,7 +1922,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 ! LPMM
           call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
 
 ! AVRG
 ! limit avrg to precip
@@ -1923,7 +1931,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 !     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
 !          call packGB2_mean(ilocavg,isprd,vrbl_mn_blendlpm,vrbl_sp,    
 !     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
 !          endif
 
         endif
@@ -1935,7 +1943,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 ! PMMN
           call packGB2_mean(ipmmn,isprd,vrbl_mn_pm,vrbl_sp,    
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
           write(*,*) 'packing PM mean direct var for', nv
 
 ! AVRG
@@ -1945,7 +1953,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
           call packGB2_mean(iavg,isprd,vrbl_mn_blend,vrbl_sp,    
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)         
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
           endif
 
 ! MEAN (just for precip with PM type fields)
@@ -1957,7 +1965,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
          Msignal(nv)='M'
           call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +          iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)    !gfld is used to send in other info 
+     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)    !gfld is used to send in other info 
           endif
          Msignal(nv)='P'
 
@@ -1990,7 +1998,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
          call packGB2_prob(iffri,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
-     +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
+     +     iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)
 
         else
 
@@ -2004,7 +2012,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
          call packGB2_prob(iprob,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
-     +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
+     +     iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)
 
            write(*,*) 'packed prob direct var for', nv
 
@@ -2027,7 +2035,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
           call packGB2_max(imean,isprd,vrbl_mn,              !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)           !gfld is used to send in other info
+     +     iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)           !gfld is used to send in other info
 
            write(*,*) 'packing max direct var for', nv
         end if
@@ -2035,7 +2043,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
         if (trim(Psignal(nv)).eq.'S') then
          call packGB2_spag(iprob,vrbl_pr,             !jpd12 is determined inside
      +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
-     +     iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)
+     +     iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)
 
            write(*,*) 'packing spaghetii  direct var for', nv
         end if
@@ -2167,19 +2175,21 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
 
                gfld_temp=gfld
 
-               if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
+               if(trim(eps).eq.'href' .and. 
+     +           associated(gfld_temp%bmap)) gfld_temp%bmap=bmap_f
 
                call packGB2_mean_derv(imean,isprd,derv_mn,
      +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables 
+     +              iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld_temp)  !gfld uses what was got from previous direct variables 
       
               gfld_temp=gfld                           !some of idrtmpl() fields have been changed after packGB2_prob,
 
-              if(trim(eps).eq.'href') gfld_temp%bmap=bmap_f
+              if(trim(eps).eq.'href' .and. 
+     +          associated(gfld_temp%bmap)) gfld_temp%bmap=bmap_f
 
                call packGB2_prob_derv(iprob,derv_pr,
      +              nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
-     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)  !gfld uses what was got from previous direct variables
+     +              iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld_temp)  !gfld uses what was got from previous direct variables
 
               end do
 
@@ -2196,11 +2206,13 @@ cc%%%%%%% 3. To see if there is wind speed computation, if yes, do it
      &             dk5(nv),dk6(nv)
 
           if (dk4(nv).eq.2.and.dk5(nv).eq.1.and.dk6(nv).ne.108) then
+            write(*,*) 'call wind'
             call wind (nv,ifunit,jpdtn,jf,im,jm,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind done'
           else if (dk4(nv).eq.2 .and. dk5(nv).eq.192 .and.
      +             dk6(nv).eq.103) then
+            write(*,*) 'call bulkshear'
             call bulkshear(nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind(shear) done'
@@ -2239,7 +2251,8 @@ cc%%%%%%% 7. To see if there is Hains index for fire weather computation, if yes
             gfld%discipline=2      !Fireweather discipline = 2, used for packing
             write(*,*) 'Hains Index done'
 ! Reset gfld%bmap with the combined version bmap_f
-        if(trim(eps).eq.'href') gfld%bmap=bmap_f
+        if(trim(eps).eq.'href' .and. associated(gfld%bmap)) 
+     +          gfld%bmap=bmap_f
           end if
 
 cc%%%%%%% 7-1. To see if there is Fosberg index fire weather computation, if yes, do it
@@ -2400,11 +2413,12 @@ C
            end if 
 
 ! Reset gfld%bmap with the combined version bmap_f
-        if(trim(eps).eq.'href') gfld%bmap=bmap_f
+        if(trim(eps).eq.'href' .and. 
+     +          associated(gfld%bmap)) gfld%bmap=bmap_f
 
                call packGB2_mean_derv(imean,isprd,derv_mn,
      +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)  !borrow gfld from what was got from previous direct variables
+     +              iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)  !borrow gfld from what was got from previous direct variables
                write(*,*) 'pack _mean_derv done for', nv
 
                write(0,*) 'pack _prob_derv for ', nv
@@ -2416,7 +2430,7 @@ C
 
                call packGB2_prob_derv(iprob,derv_pr,
      +              nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lth,
-     +              iens,iyr,imon,idy,ihr,ifhr,gribid,gfld)  !borrow gfld from what was got from previous direct variables
+     +              iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)  !borrow gfld from what was got from previous direct variables
                write(*,*) 'pack _prob_derv done for', nv
           end if
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -2511,7 +2525,7 @@ c Loop 3-2: Packing
          do kq=1,8
           call packGB2_mxp(iqout(kq),kq,mxp8,    
      +      nv,jpd1,jpd2,jpd10,jpd27,jf,Lq,
-     +      iens,iyr,imon,idy,ihr,ifhr,gribid,gfld_temp)           !gfld_temp  is used to send in other info 
+     +      iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld_temp)           !gfld_temp  is used to send in other info 
          end do
 
 
