@@ -16,7 +16,7 @@ date
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
-export DATA=${DATA:-${DATAROOT}/${jobid}}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
@@ -32,30 +32,6 @@ export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . PDY
 
-if [ ${cyc} = "00" ]
-then
-cycold=18
-PDYold=${PDYm1}
-fi
-
-if [ ${cyc} = "06" ]
-then
-cycold=00
-PDYold=${PDY}
-fi
-
-if [ ${cyc} = "12" ]
-then
-cycold=06
-PDYold=${PDY}
-fi
-
-if [ ${cyc} = "18" ]
-then
-cycold=12
-PDYold=${PDY}
-fi
-
 ##################################################
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
@@ -65,11 +41,6 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
-
-###############################################################
-# This block can be modified for different Production test
-# environment. This is used for operational testings
-###############################################################
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
@@ -93,22 +64,30 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ## PDY not included here as pull data from PDYm1 as well
 
 export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
-export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
-export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
-export GESOUT=${GESOUT:-${GESROOT}/${envir}/href}
+#export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
+#export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
+#export COMINfv3=${COMINfv3:-/gpfs/hps3/ptmp/Matthew.Pyle/com/fv3/prod/fv3}
+
+export GESIN=${GESIN:-${GESROOT}/${envir}}
+export COMINnam=${COMINnam:-$GESIN/href}
+export COMINhrrr=${COMINhrrr:-$GESIN/href}
+export COMINfv3=${COMINfv3:-$GESIN/href}
 
 if [ "$RUN_ENVIR" != nco ] ; then
   export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_expv3
+  export COMINffg=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_expv3
+  export COMINffgm1=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDYm1}_expv3
 else
   export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+  export COMINffg=${COMINffg:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+  export COMINffgm1=${COMINffg:-${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}}
 fi
 
-if [ ! -d $COMOUT ] ; then 
+if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod
  mkdir -p $COMOUT/verf_g2g
+ mkdir -p $COMOUT/wmo
 fi
-
-mkdir -p $GESOUT
 
 export pgmout="OUTPUT.$$"
 
@@ -119,40 +98,33 @@ export pgmout="OUTPUT.$$"
 # export VERBOSE=YES
 
 ###################################################
-# Execute the Script exhref_ensprod.sh
+# Execute the Script exhref_ensprod.sh.ecf
 
 rm -rf poe.*
 
-if [ $NEST = "conus" ]
-then
 
-hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 \
-19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 \
-37 38 39 40 41 42 43 44 45 46 47 48"
+hrlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 \
+34 35 36"
 
 for hr in $hrlist
 do
-echo "$USHhref/preprocess_nam_1h.sh ${PDY} ${cyc} ${hr}" >> poe.nam
+echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf $hr" >> poe.link.all
+echo "$SCRIPTShref/exhref_ensprod.sh.ecf $hr" >> poe.ensprod.all
 done
 
-hrlist_old="49 50 51 52 53 54"
 
-for hr in $hrlist_old
-do
-echo "$USHhref/preprocess_nam_1h.sh ${PDYold} ${cycold} ${hr} " >> poe.nam
-done
+chmod 775  poe.link.all
+chmod 775 poe.ensprod.all
 
-chmod 775 poe.nam
-
-aprun -j 1 -n 55 -N 10 -d 1 cfp poe.nam
+# NTASK 36 for both here
+aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.link.all
 export err=$?; err_chk
-
+aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.ensprod.all
+export err=$?; err_chk
 
 msg"JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 date
-
-fi
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

@@ -10,19 +10,20 @@
 #          March 2020
 
 
-if [ $# -ne 3 ]
+if [ $# -ne 4 ]
 then
-echo need 3 arguments, cycle and forecast hour and domain
+echo need 4 arguments, PDY, cycle and forecast hour and domain
 exit
 fi
 
-cyc=${1}
-hr=${2}
-dom=${3}
+PDYtmp=${1}
+cyc=${2}
+hr=${3}
+dom=${4}
 
-if [ ! -e ${GESOUT}.${PDY} ]
+if [ ! -e ${GESOUT}.${PDYtmp} ]
 then
-mkdir -p ${GESOUT}.${PDY}
+mkdir -p ${GESOUT}.${PDYtmp}
 fi
 
 cd ${DATA}
@@ -30,7 +31,7 @@ cd ${DATA}
 mkdir fv3_${dom}_${hr}
 cd fv3_${dom}_${hr}
 
-filecheck=$COMINfv3.${PDY}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
+filecheck=$COMINfv3.${PDYtmp}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
 
 
         if [ -e $filecheck ]
@@ -50,7 +51,7 @@ filecheck=$COMINfv3.${PDY}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
 
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
 
-       cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}
+       cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDYtmp}
         err=$? ; export err
 
 	if [ $err -ne 0 ]

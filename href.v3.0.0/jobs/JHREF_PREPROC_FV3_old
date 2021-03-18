@@ -16,7 +16,8 @@ date
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
-export DATA=${DATA:-${DATAROOT}/${jobid}}
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
@@ -27,34 +28,9 @@ postmsg "$jlogfile" "$msg"
 #
 # Run setpdy and initialize PDY variables
 #
-
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . PDY
-
-if [ ${cyc} = "00" ]
-then
-cycold=18
-PDYold=${PDYm1}
-fi
-
-if [ ${cyc} = "06" ]
-then
-cycold=00
-PDYold=${PDY}
-fi
-
-if [ ${cyc} = "12" ]
-then
-cycold=06
-PDYold=${PDY}
-fi
-
-if [ ${cyc} = "18" ]
-then
-cycold=12
-PDYold=${PDY}
-fi
 
 ##################################################
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
@@ -90,9 +66,8 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 # Define running directory and COM directories
 ##############################################
 
-## PDY not included here as pull data from PDYm1 as well
-
 export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
+export COMINfv3=${COMINfv3:-$(compath.py hiresw/prod/hiresw)}
 export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
 export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
 export GESOUT=${GESOUT:-${GESROOT}/${envir}/href}
@@ -112,47 +87,36 @@ mkdir -p $GESOUT
 
 export pgmout="OUTPUT.$$"
 
-#######################################################
-# Pass information which is needed to run the Script
-#######################################################
-
-# export VERBOSE=YES
-
 ###################################################
 # Execute the Script exhref_ensprod.sh
 
 rm -rf poe.*
 
-if [ $NEST = "conus" ]
-then
-
-hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 \
-19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 \
-37 38 39 40 41 42 43 44 45 46 47 48"
+hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
+21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 \
+41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
 
 for hr in $hrlist
 do
-echo "$USHhref/preprocess_nam_1h.sh ${PDY} ${cyc} ${hr}" >> poe.nam
+echo "$USHhref/preprocess_fv3_1h.sh ${cyc} $hr ${NEST}" >> poe.fv3
 done
 
-hrlist_old="49 50 51 52 53 54"
+chmod 775 poe.fv3  
 
-for hr in $hrlist_old
-do
-echo "$USHhref/preprocess_nam_1h.sh ${PDYold} ${cycold} ${hr} " >> poe.nam
-done
+export NODES=6
+aprun -j 1 -n60 -N 10 -d 1 cfp poe.fv3
 
-chmod 775 poe.nam
+# #deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
+# NCO moving this out of preproc jobs
 
-aprun -j 1 -n 55 -N 10 -d 1 cfp poe.nam
-export err=$?; err_chk
+pdycycdel=`$NDATE -144 ${PDY}${cyc}`
 
+PDYdel=`echo $pdycycdel | cut -c1-8`
+cycdel=`echo $pdycycdel | cut -c9-10`
 
-msg"JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-date
+echo will delete from $GESIN.${PDYdel}/fv3s.t${cycdel}z
 
-fi
+rm $GESIN.${PDYdel}/fv3s.t${cycdel}z.*grib2
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
