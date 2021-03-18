@@ -7,7 +7,7 @@
 <!ENTITY STARTDAY "19">
 <!ENTITY STARTHOUR "06">
 
-<!ENTITY ENDYEAR "2020">
+<!ENTITY ENDYEAR "2021">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "18">
@@ -28,9 +28,9 @@
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!-- <!ENTITY COMINhrrr "/gpfs/hps3/ptmp/Ming.Hu/com/hrrr/para/hrrr"> -->
 <!-- <!ENTITY COMINhrrr "/gpfs/hps/ptmp/Benjamin.Blake/com/hrrr/prod/hrrr"> -->
-<!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/prod/hiresw">
+<!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
-<!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/nwges/&envir;/hiresw/href">
+<!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/nwges/&envir;/href">
 <!ENTITY GESROOT "/gpfs/hps2/ptmp/Matthew.Pyle/nwges">
 <!ENTITY OUTDIR "/gpfs/hps2/ptmp/&USER;">
 <!ENTITY MYCOMROOT "/gpfs/hps2/ptmp/&USER;/com">
@@ -170,57 +170,23 @@
       <value>&COMINfv3sar;</value>
     </envar>
 
+    <envar><name>jobid</name><value>href_ensprodpreprochrrr_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+
+
     <dependency>
        <and>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf00.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf01.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf02.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf03.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf04.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf05.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf06.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf07.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf08.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf09.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf10.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf11.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf13.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf14.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf15.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf16.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf17.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf18.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf19.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf20.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf21.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf22.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf23.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf24.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf25.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf26.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf27.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf28.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf29.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf30.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf31.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf32.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf33.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf34.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf35.grib2</cyclestr></datadep>
+       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
+       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf24.grib2</cyclestr></datadep>
        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf37.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf38.grib2</cyclestr></datadep>
-       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf39.grib2</cyclestr></datadep>
        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf40.grib2</cyclestr></datadep>
        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf41.grib2</cyclestr></datadep>
        <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf42.grib2</cyclestr></datadep>
        <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf43.grib2</cyclestr></datadep>
        <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf44.grib2</cyclestr></datadep>
        <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf45.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf46.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf47.grib2</cyclestr></datadep>
-       <datadep age="10:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
+       <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf46.grib2</cyclestr></datadep>
+       <datadep age="04:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf47.grib2</cyclestr></datadep>
+       <datadep age="04:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
        </and>
     </dependency>
 
@@ -307,6 +273,7 @@
       <name>GESROOT</name>
       <value>&GESROOT;</value>
     </envar>
+    <envar><name>jobid</name><value>href_ensprodpreprocnam_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
     <dependency>
           <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
@@ -380,6 +347,7 @@
       <name>envir</name>
       <value>&envir;</value>
     </envar>
+    <envar><name>jobid</name><value>href_ffggen_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
       <dependency>
      <and>
@@ -401,6 +369,18 @@
       <jobname><cyclestr>easgen_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_href/eas_gen_&domain;@H.log</cyclestr></join>
    
+    <envar>
+      <name>NODES</name>
+      <value>12</value>
+    </envar>
+    <envar>
+      <name>NTASK</name>
+      <value>180</value>
+    </envar>
+    <envar>
+      <name>PTILE</name>
+      <value>15</value>
+    </envar>
       <envar>
         <name>HOMEhref</name>
         <value>&HOMEhref;</value>
@@ -473,6 +453,8 @@
       <name>COMINfv3</name>
       <value>&COMINall;</value>
     </envar>
+
+    <envar><name>jobid</name><value>href_qpfeasfrac_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
       <dependency>
         <and>
@@ -574,6 +556,8 @@
       <value>&COMINall;</value>
     </envar>
 
+    <envar><name>jobid</name><value>href_ensprodv3_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+
     <dependency>
      <and>
      <taskdep task="preproc_hrrr"/>
@@ -657,6 +641,9 @@
       <value>&envir;</value>
     </envar>
 
+    <envar><name>jobid</name><value>href_awips_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+
+
     <dependency>
      <and>
      <taskdep task="ensprod"/>
@@ -735,6 +722,8 @@
       <name>envir</name>
       <value>&envir;</value>
     </envar>
+
+    <envar><name>jobid</name><value>href_gempak_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
     <dependency>
      <and>

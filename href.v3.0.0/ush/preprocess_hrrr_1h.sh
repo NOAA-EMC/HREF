@@ -23,9 +23,9 @@ hr=${3}
 
 echo $NEST $hr
 
-if [ ! -e $GESIN.${PDY} ]
+if [ ! -e $GESOUT.${PDY} ]
 then
-mkdir -p $GESIN.${PDY}
+mkdir -p $GESOUT.${PDY}
 fi
 
 cd ${DATA}

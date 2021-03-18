@@ -1,4 +1,4 @@
-#!/bin/ksh -f
+#!/bin/ksh 
 
 
 # Set variables based on run time input
@@ -20,6 +20,7 @@ warn="" #Default empty warning message
 export ARCDIR=${ARCDIR:-$NOSCRUB/archive/$PSLOT}
 # export COMROT=${ROTDIR:-$PTMP/$LOGNAME/pr$PSLOT}
 export COMROT=/gpfs/hps2/ptmp/Matthew.Pyle
+export NCOCOM=/gpfs/hps/nco/ops/com/hiresw/para
 export NDATE=${NDATE:-$NWPROD/util/exec/ndate}
 export PARA_CHECK_BACKUP=${PARA_CHECK_BACKUP:-72}
 
@@ -60,6 +61,27 @@ for typ in $types
 do
 ls -l href.t${cyc}z.${PSLOT}.${typ}.f48.grib2
 done
+
+echo " "
+echo "Do a cmp check for this cycle against NCO parallel"
+echo " "
+
+
+myfiles=`ls href.t${cyc}z.${PSLOT}*.grib2`
+
+for fl in $myfiles
+do
+if [ -e $NCOCOM/href.${day}/ensprod/$fl ]
+then
+cmp $fl $NCOCOM/href.${day}/ensprod/$fl
+fi
+done
+
+cnt=`echo $myfiles | wc -w`
+echo "checked $cnt files "
+echo " "
+
+
 
 # Check job errors
 if [ $CHECK_ERR = YES ]; then

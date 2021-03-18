@@ -26,9 +26,9 @@ cd $DATA
 mkdir nam_${hr}
 cd nam_${hr}
 
-if [ ! -e $GESIN.${PDY} ]
+if [ ! -e $GESOUT.${PDY} ]
 then
-mkdir -p $GESIN.${PDY}
+mkdir -p $GESOUT.${PDY}
 fi
 
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
@@ -57,6 +57,6 @@ filecheck=$COMINnam.${PDY}/nam.t${cyc}z.conusnest.hiresf${hr}.tm00.grib2
 cd $DATA
 
 # move this piece out of the cfp parallelism?
-cp nam.t${cyc}z.f${hr}.grib2 ${GESIN}.${PDY}
+cp nam.t${cyc}z.f${hr}.grib2 ${GESOUT}.${PDY}
 err=$?
 export err

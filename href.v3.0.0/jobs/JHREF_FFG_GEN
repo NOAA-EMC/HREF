@@ -7,31 +7,17 @@ set -xa
 export PS4='$SECONDS + ' 
 date
 
-###############################
-# Specify NET and RUN name
-###############################
-export NET=${NET:-hiresw}
-export RUN=${RUN:-href} 
-  
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
-export pid=$$
-export DATA=${DATA:-${DATAROOT}/href_ffggen_${cyc}_${envir}.${pid}}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA 
 
-####################################
-# File To Log Msgs
-####################################
-export jlogfile=${jlogfile:-/com/logs/jlogfiles/jlogfile.${jobid}}
-
-####################################
-# Determine Job Output Name on System
-####################################
-export pgmout=OUTPUT.$$
-
+# Run setpdy and initialize PDY variables
 export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. PDY
 
 ##################################################
 # SENDECF  - Flag Events on ecFLOW
@@ -46,9 +32,11 @@ export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
 export USHhref=${USHhref:-$HOMEhref/ush}
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. PDY
+###############################
+# Specify NET and RUN name
+###############################
+export NET=${NET:-hiresw}
+export RUN=${RUN:-href}
 
 if [ "$RUN_ENVIR" != nco ] ; then
  export DCOMROOT=${DCOMROOT:-/gpfs/gp1/nco/ops/dcom}
@@ -63,6 +51,7 @@ if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
 fi
 
+export pgmout=OUTPUT.$$
 
 #################################################################
 # Execute the script

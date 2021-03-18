@@ -20,9 +20,9 @@ cyc=${1}
 hr=${2}
 dom=${3}
 
-if [ ! -e ${GESIN}.${PDY} ]
+if [ ! -e ${GESOUT}.${PDY} ]
 then
-mkdir -p ${GESIN}.${PDY}
+mkdir -p ${GESOUT}.${PDY}
 fi
 
 cd ${DATA}
@@ -50,7 +50,7 @@ filecheck=$COMINfv3.${PDY}/hiresw.t${cyc}z.fv3_5km.f${hr}.${dom}.grib2
 
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.f${hr}.grib2
 
-       cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${GESIN}.${PDY}
+       cp ../fv3s.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}
         err=$? ; export err
 
 	if [ $err -ne 0 ]
