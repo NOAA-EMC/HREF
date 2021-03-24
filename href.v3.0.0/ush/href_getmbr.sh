@@ -279,7 +279,7 @@ typeset -Z2 fcheckloc
 
       if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
 
-        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.conus.f${fcst}.grib2
+        filecheck=${COMINfv3}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.conus.grib2
 
 	if [ -e $filecheck ]
         then
@@ -572,12 +572,12 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
 	echo "in non-CONUS FV3S block"
 
-        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2
+        filecheck=${COMINfv3}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.${dom}.grib2
 
 	if [ -e $filecheck ]
         then
-         ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/href.m${m}.t${cyc}z.f${ff}
-         ln -sf    ${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.f${fcst}.grib2 $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         ln -sf    ${filecheck} $DATA/href.m${m}.t${cyc}z.f${ff}
+         ln -sf    $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
         else
          
          msg="FATAL ERROR: $filecheck missing but required"
