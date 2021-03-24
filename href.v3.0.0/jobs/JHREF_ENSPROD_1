@@ -116,7 +116,7 @@ done
 chmod 775  poe.link.all
 chmod 775 poe.ensprod.all
 
-# NTASK 36 for both here
+
 aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.link.all
 export err=$?; err_chk
 aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.ensprod.all

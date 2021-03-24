@@ -72,6 +72,7 @@
 !D# CT# ID# PD# NAME                             UNITS                GNAM         SCALE   MISSING
 !23|123|123|123|12345678901234567890123456789012|12345678901234567890|123456789012|12345|123456.89
 000 003 192 000 MSLP (ETA reduction)             Pa                   EMSL            -2  -9999.00
+000 003 192 002 MSLP (ETA reduction)             Pa                   EMSL            -2  -9999.00
 000 003 193 000 5-wave geopotential height       gpm                  HGHT5            0  -9999.00
 000 003 194 000 Zonal flux of gravity wav stress N/m**2               UGWD             0  -9999.00
 000 003 195 000 Meridional flux of grav wv strss N/m**2               VGWD             0  -9999.00
