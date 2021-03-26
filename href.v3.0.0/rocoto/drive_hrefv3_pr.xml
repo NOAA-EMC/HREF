@@ -27,8 +27,7 @@
 <!ENTITY COMINfv3sarnc "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw"> 
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
-<!-- <!ENTITY COMINhireswp "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw"> -->
-<!ENTITY COMINhireswp "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
+<!ENTITY COMINhireswp "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
 <!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/nwges/&envir;/href">
 <!ENTITY GESROOT "/gpfs/hps2/ptmp/Matthew.Pyle/nwges">
@@ -173,7 +172,7 @@
     <dependency>
     <and>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;.grib2</cyclestr></datadep>
-     <datadep age="01:00"><cyclestr>&COMINhireswp;.@Y@m@d/hiresw.t@Hz.fv3_5km.f48.&domain;.grib2</cyclestr></datadep>
+     <datadep age="01:00"><cyclestr>&COMINhireswp;.@Y@m@d/hiresw.t@Hz.fv3_5km.f36.&domain;.grib2</cyclestr></datadep>
      <datadep age="03:00"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.&domain;mem2.grib2</cyclestr></datadep>
      <datadep age="05:00"><cyclestr offset="&TIMEOFFSET12;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.&domain;.grib2</cyclestr></datadep>
      <datadep age="05:00"><cyclestr offset="&TIMEOFFSET12;">&COMINhireswp;.@Y@m@d/hiresw.t@Hz.fv3_5km.f48.&domain;.grib2</cyclestr></datadep>

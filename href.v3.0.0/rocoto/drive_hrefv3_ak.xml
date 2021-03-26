@@ -30,8 +30,7 @@
 <!-- <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr"> -->
 <!ENTITY COMINhrrr "/gpfs/hps/nco/ops/com/hrrr/prod/hrrr">
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
-<!-- <!ENTITY COMINhireswp "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw"> -->
-<!ENTITY COMINhireswp "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
+<!ENTITY COMINhireswp "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw">
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
 <!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/nwges/&envir;/href">
 <!ENTITY GESROOT "/gpfs/hps2/ptmp/Matthew.Pyle/nwges">

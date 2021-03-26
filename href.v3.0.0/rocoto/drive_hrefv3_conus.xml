@@ -30,8 +30,7 @@
 <!-- <!ENTITY COMINhrrr "/gpfs/hps3/ptmp/Ming.Hu/com/hrrr/para/hrrr"> -->
 <!-- <!ENTITY COMINhrrr "/gpfs/hps/ptmp/Benjamin.Blake/com/hrrr/prod/hrrr"> -->
 <!ENTITY COMINhiresw "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
-<!-- <!ENTITY COMINhireswp "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw"> -->
-<!ENTITY COMINhireswp "/gpfs/hps/nco/ops/com/hiresw/para/hiresw">
+<!ENTITY COMINhireswp "/gpfs/hps2/ptmp/Matthew.Pyle/com/hiresw/para/hiresw">
 
 <!ENTITY COMINnam "/gpfs/dell1/nco/ops/com/nam/prod/nam">
 <!ENTITY COMINall "/gpfs/hps2/ptmp/Matthew.Pyle/nwges/&envir;/href">
@@ -275,7 +274,7 @@
 
 
     <dependency>
-          <datadep age="10:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf54.tm00.grib2</cyclestr></datadep>
+          <datadep age="06:00" minsize="300000000"><cyclestr>&COMINnam;.@Y@m@d/nam.t@Hz.conusnest.hiresf48.tm00.grib2</cyclestr></datadep>
     </dependency>
 
   </task>
