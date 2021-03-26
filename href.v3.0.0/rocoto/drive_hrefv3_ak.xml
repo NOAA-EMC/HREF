@@ -727,8 +727,6 @@
      <and>
      <taskdep task="ensprod_1"/>
      <taskdep task="eas_gen_1"/>
-     <taskdep task="ensprod_2"/>
-     <taskdep task="eas_gen_2"/>
      </and>
     </dependency>
 
@@ -811,8 +809,6 @@
      <and>
      <taskdep task="ensprod_1"/>
      <taskdep task="eas_gen_1"/>
-     <taskdep task="ensprod_2"/>
-     <taskdep task="eas_gen_2"/>
      </and>
     </dependency>
 

@@ -28,6 +28,9 @@ runhrs="03 06 09 12 15 18 21 24 27 30 33 36"
 fi
 fi
 
+looplim=60
+sleeptime=20
+
 types="mean pmmn prob"
 
 for type in $types
@@ -35,6 +38,23 @@ do
 
 for fhr in $runhrs
 do
+
+
+loop=0
+
+while [ ! -e ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 -a $loop -lt $looplim ]
+do
+         echo waiting on ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+         sleep ${sleeptime}
+         let loop=loop+1
+done
+
+if [ ! -e ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 ]
+then
+         msg="FATAL ERROR: ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 missing but required"
+         err_exit $msg
+fi
+
   # Processing AWIPS grid 227 
 
   if [ $type = "prob" ]

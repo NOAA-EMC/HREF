@@ -352,8 +352,14 @@
      <and>
        <taskdep task="preproc_hrrr"/>
        <taskdep task="preproc_nam"/>
-       <datadep age="03:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.conus.grib2</cyclestr></datadep>
-       <datadep age="03:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.conusmem2.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.conus.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="50000000"><cyclestr>&COMINhireswp;.@Y@m@d/hiresw.t@Hz.fv3_5km.f36.conus.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="100000000"><cyclestr>&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f36.conusmem2.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="100000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conus.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="100000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhiresw;.@Y@m@d/hiresw.t@Hz.arw_5km.f48.conusmem2.grib2</cyclestr></datadep>
+           <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/hrrr.t@Hz.conus.f48.grib2</cyclestr></datadep>
+         <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_TWELVE;">&COMINhireswp;.@Y@m@d/hiresw.t@Hz.fv3_5km.f48.conus.grib2</cyclestr></datadep>
+         <datadep age="03:00" minsize="50000000"><cyclestr offset="&TIMEOFFSET_SIX;">&COMINall;.@Y@m@d/nam.t@Hz.f54.grib2</cyclestr></datadep>
      </and>
       </dependency>
   </task>
@@ -924,8 +930,6 @@
      <and>
      <taskdep task="ensprod_1"/>
      <taskdep task="eas_gen_1"/>
-     <taskdep task="ensprod_2"/>
-     <taskdep task="eas_gen_2"/>
      </and>
     </dependency>
 
@@ -1082,8 +1086,8 @@
 
     <dependency>
      <and>
-     <taskdep task="ensprod_2"/>
-     <taskdep task="eas_gen_2"/>
+     <taskdep task="ensprod_1"/>
+     <taskdep task="eas_gen_1"/>
      </and>
     </dependency>
 
