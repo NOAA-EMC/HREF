@@ -279,7 +279,7 @@ typeset -Z2 fcheckloc
 
       if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
 
-        filecheck=${COMINfv3}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.conus.grib2
+        filecheck=${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.conus.grib2
 
 	if [ -e $filecheck ]
         then
@@ -572,7 +572,7 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
 	echo "in non-CONUS FV3S block"
 
-        filecheck=${COMINfv3}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.${dom}.grib2
+        filecheck=${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.${dom}.grib2
 
 	if [ -e $filecheck ]
         then

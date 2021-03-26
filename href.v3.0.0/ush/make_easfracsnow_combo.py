@@ -70,13 +70,6 @@ except KeyError:
 COMINhrrr=os.environ.get('COMINhrrr','trash')
 print 'found COMINhrrr as ', COMINhrrr
 
-try:
-  os.environ["COMINfv3"]
-except KeyError:
-  print "NEED TO DEFINE COMINfv3"
-  exit(1)
-COMINfv3=os.environ.get('COMINfv3','trash')
-print 'found COMINfv3 as ', COMINfv3
 
 try:
   os.environ["COMOUT"]
@@ -428,10 +421,10 @@ for mem in members:
 
 # have the FV3 preprocessing generate 3 h WEASD fields....handle like Hiresw?
     elif mem == 'fv3s' or mem == 'fv3nc':
-      file3 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hiresw.t%02d'%itime.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'.grib2'
-      file3alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/hiresw.t%02d'%itime_alt.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+6)+'.'+dom+'.grib2'
-      file6 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hiresw.t%02d'%itime.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'.grib2'
-      file6alt = COMINfv3 + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/hiresw.t%02d'%itime_alt.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'.grib2'
+      file3 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hiresw.t%02d'%itime.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'.grib2'
+      file3alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/hiresw.t%02d'%itime_alt.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+6)+'.'+dom+'.grib2'
+      file6 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hiresw.t%02d'%itime.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'.grib2'
+      file6alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/hiresw.t%02d'%itime_alt.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'.grib2'
 
     elif mem == 'nam':
       file3 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
