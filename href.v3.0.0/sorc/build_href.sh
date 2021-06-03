@@ -1,7 +1,9 @@
 #! /bin/sh
 
 module purge
-module load ../modulefiles/HREF/v3.0.0
+source /apps/prod/lmodules/startLmod
+module use -a  ../modulefiles/HREF
+module load v3.0.0
 module list
 
 sleep 1
