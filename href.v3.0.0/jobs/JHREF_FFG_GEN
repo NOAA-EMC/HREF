@@ -16,7 +16,7 @@ cd $DATA
 
 # Run setpdy and initialize PDY variables
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh
+setpdy.sh 10
 . PDY
 
 ##################################################
@@ -36,8 +36,8 @@ export EXEChref=${EXEChref:-$HOMEhref/exec}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-href}
-
+export RUN=${RUN:-href} 
+  
 if [ "$RUN_ENVIR" != nco ] ; then
  export DCOMROOT=${DCOMROOT:-/gpfs/gp1/nco/ops/dcom}
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3}

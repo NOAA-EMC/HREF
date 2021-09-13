@@ -36,8 +36,8 @@ export PARMwmo=${PARMwmo:-$HOMEhref/parm/wmo}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-href}
-
+export RUN=${RUN:-href} 
+  
 if [ "$RUN_ENVIR" != nco ] ; then
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/ensprod}
  export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/wmo}

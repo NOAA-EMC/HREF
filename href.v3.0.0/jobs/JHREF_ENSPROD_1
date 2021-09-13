@@ -64,14 +64,9 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ## PDY not included here as pull data from PDYm1 as well
 
 export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
-#export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
-#export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
-#export COMINfv3=${COMINfv3:-/gpfs/hps3/ptmp/Matthew.Pyle/com/fv3/prod/fv3}
-
 export GESIN=${GESIN:-${GESROOT}/${envir}}
 export COMINnam=${COMINnam:-$GESIN/href}
 export COMINhrrr=${COMINhrrr:-$GESIN/href}
-export COMINfv3=${COMINfv3:-$GESIN/href}
 
 if [ "$RUN_ENVIR" != nco ] ; then
   export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_expv3

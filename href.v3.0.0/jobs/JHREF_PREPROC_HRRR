@@ -84,11 +84,7 @@ if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT/verf_g2g
 fi
 
-#######################################################
-# Pass information which is needed to run the Script
-#######################################################
-
-# export VERBOSE=YES
+export pgmout="OUTPUT.$$"
 
 ###################################################
 # Execute the Script exhref_ensprod.sh
@@ -109,8 +105,7 @@ done
 
 chmod 775 poe.hrrr
 
-export NODES=7
-aprun -j 1 -n 49 -N 7 -d 1 cfp poe.hrrr
+aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.hrrr
 
 $USHhref/preprocess_hrrr_3hapcp.sh ${cyc} ${NEST}
 
@@ -120,19 +115,6 @@ echo "Bad NEST value $NEST"
 echo "HRRR only available for CONUS and AK domains"
 
 fi
-
-
-## deleting preprocessing outputs from 6 cycles prior to ${PDY}${cyc}
-
-
-pdycycdel=`$NDATE -144 ${PDY}${cyc}`
-
-PDYdel=`echo $pdycycdel | cut -c1-8`
-cycdel=`echo $pdycycdel | cut -c9-10`
-
-echo will delete from ${GESIN}.${PDYdel}/hrrr.t${cycdel}z
-
-rm ${GESIN}.${PDYdel}/hrrr.t${cycdel}z.*grib2
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

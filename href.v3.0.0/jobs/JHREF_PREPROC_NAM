@@ -108,8 +108,6 @@ if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT/verf_g2g
 fi
 
-mkdir -p $GESOUT
-
 export pgmout="OUTPUT.$$"
 
 #######################################################

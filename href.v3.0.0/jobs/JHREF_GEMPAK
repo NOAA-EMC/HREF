@@ -41,9 +41,8 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 # Specify NET and RUN name
 ###############################
 export NET=${NET:-hiresw}
-export RUN=${RUN:-href}
-
-
+export RUN=${RUN:-href} 
+  
 if [ "$RUN_ENVIR" != nco ] ; then
  export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_expv3/gempak}
  export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/ensprod}
@@ -55,9 +54,9 @@ fi
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
 fi
-
-export pgmout="OUTPUT.$$"
  
+export pgmout="OUTPUT.$$"
+
 env
 
 #################################################################

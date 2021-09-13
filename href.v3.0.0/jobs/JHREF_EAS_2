@@ -43,7 +43,6 @@ export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
 export GESIN=${GESIN:-${GESROOT}/${envir}}
 export COMINnam=${COMINnam:-$GESIN/href}
 export COMINhrrr=${COMINhrrr:-$GESIN/href}
-export COMINfv3=${COMINfv3:-$GESIN/href}
 
 # needed?
 export COMINpcpanl=${COMINpcpanl:-$(compath.py pcpanl/prod)}
