@@ -322,7 +322,6 @@ if [ $SENDCOM = YES ]; then
  do
   cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
   $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
-  cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUTPERM/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
  done
 
  if [ ${ff}%3 -eq 0 ]
@@ -346,7 +345,7 @@ if [ $SENDDBN = YES ]; then
  for typ in $types
  do
   $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_IDX $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
  done
 fi
 

@@ -23,8 +23,8 @@
 # directory are included, so if no exclude patterns match that file, it will be
 # transferred.
 
-com/hiresw/_ENVIR_/href._PDY_/
+_GESROOT_/_ENVIR_/href._PDY_/
 B 25000
 
-com/hiresw/_ENVIR_/href._PDYm1_/
+_GESROOT_/_ENVIR_/href._PDYm1_/
 B 25000

@@ -153,6 +153,11 @@ cp $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
 $WGRIB2 ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
 fi
 
+if [ $SENDDBN = YES ]; then
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job ${COMOUT}/ensprod/href.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
+fi
+
 let fhr=fhr+1
 
 if [ $fhr -lt 10 ]
