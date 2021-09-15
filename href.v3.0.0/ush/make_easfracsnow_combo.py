@@ -12,117 +12,124 @@
 # 2018-01-05  M Pyle    3-hr only version, no bias correction
 # 2018-01-18  M Pyle    Make a version for weasd
 # 2018-02-08  M Pyle    Attempt to unify all EAS snow scripts into one
-# 2018-03-21  M Pyle    pygrib free version
+# 2018-03-21  M Pyle    replace pygrib with wgrib2
+# 2021-06     M Pyle    python3 changes
 
 import os, sys, time
 import numpy as np
 import math as m
 from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
-# from scipy.stats import threshold
-# from netCDF4 import Dataset
-import fortranfile as F
+from scipy.io import FortranFile 
+# import fortranfile as F
 
 starttime = time.time()
 
-print 'Processing probabilistic snow'
+print ("Processing probabilistic snow")
 
 try:
   os.environ["WGRIB2"]
 except KeyError:
-  print "NEED module loaded to define WGRIB2"
+  print("NEED module loaded to define WGRIB2")
   exit(1)
 
 WGRIB2=os.environ.get('WGRIB2','trash')
-print 'found WGRIB2 as ', WGRIB2
+print('found WGRIB2 as ', WGRIB2)
 
 
 
 try:
   os.environ["HOMEhref"]
 except KeyError:
-  print "NEED TO DEFINE HOMEhref"
+  print("NEED TO DEFINE HOMEhref")
   exit(1)
 HOMEhref=os.environ.get('HOMEhref','trash')
-print 'found HOMEhref as ', HOMEhref
+print('found HOMEhref as ', HOMEhref)
 
 try:
   os.environ["COMINnam"]
 except KeyError:
-  print "NEED TO DEFINE COMINnam"
+  print("NEED TO DEFINE COMINnam")
   exit(1)
 COMINnam=os.environ.get('COMINnam','trash')
-print 'found COMINnam as ', COMINnam
+print('found COMINnam as ', COMINnam)
 
 try:
   os.environ["COMINhiresw"]
 except KeyError:
-  print "NEED TO DEFINE COMINhiresw"
+  print("NEED TO DEFINE COMINhiresw")
   exit(1)
 COMINhiresw=os.environ.get('COMINhiresw','trash')
-print 'found COMINhiresw as ', COMINhiresw
+print('found COMINhiresw as ', COMINhiresw)
 
 try:
   os.environ["COMINhrrr"]
 except KeyError:
-  print "NEED TO DEFINE COMINhrrr"
+  print("NEED TO DEFINE COMINhrrr")
   exit(1)
 COMINhrrr=os.environ.get('COMINhrrr','trash')
-print 'found COMINhrrr as ', COMINhrrr
+print ('found COMINhrrr as ', COMINhrrr)
 
+
+try:
+  os.environ["COMINfv3"]
+except KeyError:
+  print("NEED TO DEFINE COMINfv3")
+  exit(1)
+COMINfv3=os.environ.get('COMINfv3','trash')
+print('found COMINfv3 as ', COMINfv3)
 
 try:
   os.environ["COMOUT"]
 except KeyError:
-  print "NEED TO DEFINE COMOUT"
+  print("NEED TO DEFINE COMOUT")
   exit(1)
 COMOUT=os.environ.get('COMOUT','trash')
-print 'found COMOUT as ', COMOUT
+print('found COMOUT as ', COMOUT)
 
 try:
   os.environ["PDY"]
 except KeyError:
-  print "NEED TO DEFINE PDY"
+  print("NEED TO DEFINE PDY")
   exit(1)
 PDY=os.environ.get('PDY','trash')
-print 'found PDY as ', PDY
+print('found PDY as ', PDY)
 
 try:
   os.environ["cyc"]
 except KeyError:
-  print "NEED TO DEFINE cyc"
+  print("NEED TO DEFINE cyc")
   exit(1)
 cyc=os.environ.get('cyc','trash')
-print 'found cyc as ', cyc
+print('found cyc as ', cyc)
 
 try:
   os.environ["dom"]
 except KeyError:
-  print "NEED TO DEFINE dom"
+  print("NEED TO DEFINE dom")
   exit(1)
 dom=os.environ.get('dom','trash')
-print 'found dom as: ', dom
-
+print('found dom as ', dom)
 
 try:
   os.environ["DATA"]
 except KeyError:
-  print "NEED TO DEFINE DATA"
+  print("NEED TO DEFINE DATA")
   exit(1)
 DATA=os.environ.get('DATA','trash')
-print 'found DATA as ', DATA
+print('found DATA as ', DATA)
 
-# input directory and config file
 sys.path.append(HOMEhref)
 from eas_config import *
-# grib-2 template 
-template = HOMEhref + '/fix/weasd_' + dom + 'template.grib2'
 
+# output directory
+# grib-2 template 
+template = HOMEhref + '/fix/weasd_'+dom+'template.grib2'
 record = 1		# SNOW from SREF pgrb212 file
 
-# get latest run times and create output directory for plots if it doesn't already exist
-if not os.path.exists(COMOUT):
-  os.system("mkdir -p " + COMOUT)
+print('template file is: ', template)
+
+# get latest run times and create output directory if it doesn't already exist
 
 # accumulation interval (hours)
 fcst_hour = int(sys.argv[1])
@@ -130,38 +137,39 @@ qpf_interval = int(sys.argv[2])
 
 DATArun=DATA+'/snow_'+str(fcst_hour)
 if not os.path.exists(DATArun):
-  os.system("mkdir -p "+DATArun)
+  os.system("mkdir -p " + DATArun)
 os.system("cd "+DATArun)
 
 start_hour = int(fcst_hour - qpf_interval)
-
+fhr=fcst_hour
 fhr_range=str(start_hour)+'-'+str(fcst_hour)
 
-
-print 'fcst_hour, qpf_interval, start_hour: ', fcst_hour, qpf_interval, start_hour
+print('fcst_hour, qpf_interval, start_hour: ', fcst_hour, qpf_interval, start_hour)
 
 # maximum radius (km)
 slim = max(rlist)
 alpha = 0.5
 
 
-
+if not os.path.exists(COMOUT):
+  os.system("mkdir -p " + COMOUT)
 
 #------------------------------------------------------------------------------------------
-# read in calibration coefficients
 
 if dom == 'conus':
+  nm_use = nm
   members = ['arw','fv3s','arw2','hrrr','nam']
-#  members = ['arw','arw2','hrrr','nam']
 elif dom == 'ak':
+  nm_use = nm_ak
   members = ['arw','fv3nc','arw2','hrrrak']
 else:
+  nm_use = nm_nonconus
   members = ['arw','fv3nc','arw2']
 
 pqpf_6h_calibrate = 'no'
 pqpf_3h_calibrate = 'no'
 # print 'Calibration coefficients for '+mem+' members not found. Using raw model QPF'
-   
+
 #--------------------------------------------------------------------------------
 #### FUNCTIONS AND ROUTINES ####
 
@@ -185,34 +193,33 @@ def process_nam_qpf(file3,file4,fhr):
 
 
     fhour=fhr
-    if fhr%3 is 1:
+    if fhr%3 == 1:
       shour=fhour-1
-      print 'process_nam_qpf remainder 1'
+      print('process_nam_qpf remainder 1')
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
       qpf1,nx,ny=simplewgrib2('qpf.txt')
+      os.system('rm -f qpf.txt')
 
-    if fhr%3 is 2:
+
+    if fhr%3 == 2:
       shour1=fhour-2
       shour2=fhour-1
-      print 'process_nam_qpf remainder 2 - f02 minus f01'
+      print('process_nam_qpf remainder 2 - f02 minus f01')
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
-      print 'shour1: ', shour1
-      print 'shour2: ', shour2
-      print 'file4: ', file4
       os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
       qpf1=qpfa-qpfb
 
-    if fhr%3 is 0:
+    if fhr%3 == 0:
       shour1=fhour-3
       shour2=fhour-2
       fhourm1=fhour-1
-      print 'process_nam_qpf remainder 3 - f03 minus f02'
+      print('process_nam_qpf remainder 3 - f03 minus f02')
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
@@ -220,15 +227,14 @@ def process_nam_qpf(file3,file4,fhr):
       os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
-
       qpf1=qpfa-qpfb
 
     return qpf1
 
-
 # calculate footprint routine
 def get_footprint(r):
-    footprint = (np.ones(((r/dx)*2+1,(r/dx)*2+1))).astype(int)
+#    footprint = np.ones(((r/dx)*2+1,(r/dx)*2+1),dtype=int)
+    footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
     footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
     dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
     footprint = np.where(np.greater(dist,r),0,1)
@@ -236,7 +242,7 @@ def get_footprint(r):
 
 def get_footprint_flexi(r,i,j,nx,ny):
 
-    footprint = (np.ones(((r/dx)*2+1,(r/dx)*2+1))).astype(int)
+    footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
     footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
     dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
     footprint = np.where(np.greater(dist,r),0,1)
@@ -270,40 +276,42 @@ def get_footprint_flexi(r,i,j,nx,ny):
 #
 def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
     exceed3d = np.where(np.greater_equal(ensemble_qpf/1.0,t),1,0)
-    nm, isize, jsize = np.shape(exceed3d)
-    print 'np.shape: ', nm, isize, jsize
+    nm_use, isize, jsize = np.shape(exceed3d)
+    print('nm_use within get_footprint: ', nm_use)
+    print('isize, jsize within get_footprint: ', isize, jsize)
     pr1, pr2 = [], []  # create lists of ens member pairs
-    for m1 in range(nm-1):
-      for m2 in range(m1+1,nm):
+    for m1 in range(nm_use-1):
+      for m2 in range(m1+1,nm_use):
         pr1.append(m1)
         pr2.append(m2)
-    optrad = np.zeros((isize,jsize)).astype(float) + float(max(rlist)) # set initial radius to max for better smoothing
+    optrad = np.zeros((isize,jsize),dtype=float) + float(max(rlist)) # set initial radius to max for better smoothing
     rlist = sorted(rlist,reverse=True)
     for i in range(len(rlist)):  # loop through rlist to find smallest radius over which member pairs meet similarity criteria
       dcrit = alpha
 #      dcrit = alpha + ((1 - alpha) * (rlist[i] / float(max(rlist))))
       footprint = get_footprint(rlist[i])
-      dijmean = np.zeros((isize,jsize)).astype(float)
-      frac = np.zeros((nm,isize,jsize)).astype(float)
-      for mem in range(nm):
+      dijmean = np.zeros((isize,jsize),dtype=float)
+      frac = np.zeros((nm_use,isize,jsize),dtype=float)
+      for mem in range(nm_use):
         frac[mem,:,:] = np.around(signal.fftconvolve(exceed3d[mem,:,:],footprint,mode='same'))/float(np.sum(footprint))
       if i == 0:  # identify points where QPF threshold is not met within the maximum radius in any ens member
         fracsum = np.sum(frac,axis=0)
       for pair in range(len(pr1)):
         dijmean = dijmean + np.where(np.logical_and(np.greater(frac[pr1[pair]],0),np.greater(frac[pr2[pair]],0)),(frac[pr1[pair]]-frac[pr2[pair]])**2/(frac[pr1[pair]]**2+frac[pr2[pair]]**2),1)/float(len(pr1))
       optrad=np.where(np.less_equal(dijmean,dcrit),rlist[i],optrad)
-#      p = np.where(np.less_equal(dijmean,dcrit),100.0*np.sum(frac,axis=0)/float(nm),p)
+#      p = np.where(np.less_equal(dijmean,dcrit),100.0*np.sum(frac,axis=0)/float(nm_use),p)
 # smooth radius grid and zero out any dry areas
 #    p = np.where(np.equal(fracsum,0),0,ndimage.filters.gaussian_filter(p,p_smooth))
     optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
     return optrad
 
 def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
-    exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+#?    exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+    exceed3d = np.where(np.greater_equal(ensemble_qpf,t),1,0)
     p_smooth_loc=p_smooth+2
 
     nm_use, isize, jsize = np.shape(exceed3d)
-    pnt_prob = np.zeros((isize,jsize)).astype(float)
+    pnt_prob = np.zeros((isize,jsize),dtype=float)
 
     for mem in range(nm_use):
         pnt_prob[:,:] = pnt_prob[:,:]+(exceed3d[mem,:,:]/float(nm_use))
@@ -324,7 +332,6 @@ starttime = d0+timedelta(start_hour/24.0)
 endtime = d0+timedelta((start_hour+qpf_interval)/24.0)
 memfiles = {}
 memfiles4 = {}
-latency4 = {}
 itimes = []
 fhours = []
 
@@ -334,11 +341,7 @@ stopnam = max_latency_nam
 
 wgribdate=PDY+cyc
 
-# get dimensions and message from template file
-# grbs = pygrib.open(template)
-# grbtmp = grbs[record]
-# lats, lons = grbtmp.latlons()
-# grbs.close()
+# create grib messages from template (only need to do this once)
 
 os.system(WGRIB2+' '+template+' -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text lon.txt')
 
@@ -348,20 +351,20 @@ lats,nx,ny=simplewgrib2('lat.txt')
 nlats, nlons = np.shape(lats)
 
 # define mask - NAM nest grid interpolated to grid 227 has undefined values
-print 'dom here at decision point: ', dom
+print('dom here at decision point: ', dom)
 if dom == 'conus':
-  print 'defining conus maskfile'
+  print('defining conus maskfile')
   maskfile = HOMEhref + '/fix/nam_mask.grib2'
 
-print 'dom here at decision point2: ', dom
+print('dom here at decision point2: ', dom)
 if dom == 'ak':
-  print 'defining ak maskfile'
+  print('defining ak maskfile')
   maskfile = HOMEhref + '/fix/akhref_mask.grib2'
 
-print 'dom here at decision point3: ', dom
+print('dom here at decision point3: ', dom)
 if dom == 'conus' or dom == 'ak':
-  print 'opening the maskregion stuff'
-  print 'maskfile is: ', maskfile
+  print('opening the maskregion stuff')
+  print('maskfile is: ', maskfile)
 
   os.system(WGRIB2+' '+maskfile+'  -text mask.txt ')
   undefmask,nx,ny=simplewgrib2('mask.txt')
@@ -370,34 +373,37 @@ if dom == 'conus' or dom == 'ak':
 
 
 if qpf_interval == 1:
-  print 'defined 1 h outbase'
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
-  incr =  1
+  incr = 1
+  thresh_use=snow_1h_thresh
 if qpf_interval == 3:
-  print 'defined 3 h outbase'
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow03_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
-  incr =  3
+  incr = 3
+  thresh_use=snow_3h_thresh
 if qpf_interval == 6:
-  print 'defined 6 h outbase'
   outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow06_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
-  incr =  3
+  incr = 3
+  thresh_use=snow_6h_thresh
+  print('thresh_use: ', thresh_use)
 
-outfile = DATA  + '/' + outbase
+outfile = DATA + '/' + outbase
 
 if os.path.exists(outfile):
   os.system('rm -f '+outfile)
 
+
+# qpf is a dictionary - need unique key.  itime values are repeated, so is a bad choice.
+
 prob = {}
 qpf = {}
 memcount = 0
-check = 0
-check_hrrr = 0
 
-print 'members: ', members
+print('members: ', members)
 
 for mem in members:
+
   while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
-    print len(itimes), memcount+2
+    print('len(itimes), memcount+2: ', len(itimes), memcount+2)
     itime = starttime-timedelta((start_hour+latency)/24.0)
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
     if mem == 'arw':
@@ -431,9 +437,9 @@ for mem in members:
       file4 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
       memfiles4[itime] = file4
       file6 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      print 'nam file3: ', file3
-      print 'nam file4: ', file4
-      print 'nam file6: ', file6
+      print('nam file3: ', file3)
+      print('nam file4: ', file4)
+      print('nam file6: ', file6)
 
       file3alt = 'garb'
       file6alt = 'garb'
@@ -450,72 +456,72 @@ for mem in members:
       file3alt = 'garb'
       file6alt = 'garb'
 
+
     if qpf_interval != 6:
       if os.path.exists(file3):
-        print 'Found:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+        print ('Found:',itime,'forecast hour',(start_hour+qpf_interval+latency))
         fhours.append(start_hour+qpf_interval+latency)
         itimes.append(itime)
         memfiles[itime] = file3
-        print 'utilizing file3 in memfiles: ', file3
+        print('utilizing file3 in memfiles: ', file3)
       else:
-        print 'Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+        print('Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
         if os.path.exists(file3alt):
-          print 'alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency)
+          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
           fhours.append(start_hour+qpf_interval+latency+6)
-          print 'defined file3 fhours: ', start_hour+qpf_interval+latency+6
+          print('defined file3 fhours: ', start_hour+qpf_interval+latency+6)
           itimes.append(itime_alt)
           memfiles[itime_alt] = file3alt
-          print 'using file3alt which is: ', file3alt
+          print('using file3alt which is: ', file3alt)
         else:
-          print 'Completely missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+          print('Completely missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
     else:
-      print 'using 6 h block portion'
+      print('using 6 h block portion')
       if os.path.exists(file3) and os.path.exists(file6):
-        print 'Found:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+        print('Found:',itime,'forecast hour',(start_hour+qpf_interval+latency))
         itimes.append(itime)
         fhours.append(start_hour+qpf_interval+latency)
-        print 'defined file3 for 6h fhours: ', start_hour+qpf_interval+latency
+        print('defined file3 for 6h fhours: ', start_hour+qpf_interval+latency)
         memfiles[itime] = [file3,file6]
       else:
-        print 'Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
+        print('Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
         if os.path.exists(file3alt) and os.path.exists(file6alt):
-          print 'alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency)
+          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
           itimes.append(itime_alt)
           fhours.append(start_hour+qpf_interval+latency+6)
-          print 'defined fhours in alt 6h block: ', start_hour+qpf_interval+latency+6
+          print('defined fhours in alt 6h block: ', start_hour+qpf_interval+latency+6)
           memfiles[itime_alt] = [file3alt,file6alt]
-          print 'using file3alt which is: ', file3alt
-          print 'using file6alt which is: ', file6alt
+          print('using file3alt which is: ', file3alt)
+          print('using file6alt which is: ', file6alt)
         else:
-          print 'Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency)
-          print 'file3alt: ', file3alt
-          print 'file6alt: ', file6alt
+          print('Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
+          print('file3alt: ', file3alt)
+          print('file6alt: ', file6alt)
 
-    if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak' :
+    if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak':
       latency = latency + 6
     else:
-      print '12 hour latency member'
       latency = latency + 12
 
   if len(itimes) == (memcount+2):
-    print 'Found 2 '+mem+' members valid:',starttime,'-',endtime
+    print('Found 2 '+mem+' members valid:',starttime,'-',endtime)
   else:
-    print 'Could not find 2 '+mem+' members valid for start hour',start_hour
+    print('Could not find 2 '+mem+' members valid for start hour',start_hour)
 #    sys.exit(1)
 
 #### READ IN QPF ####
-  print 'here a memcount: ', memcount
-  for itime in itimes[memcount:memcount+2]:	# Hi Res Window ARW members
+  print('here a memcount: ', memcount)
+  for itime in itimes[memcount:memcount+2]:
     if qpf_interval == 6:
       file3,file6 = memfiles[itime]
     else:
       file3 = memfiles[itime]
 
     if dom == 'conus':
-      print 'Processing member',(1+memcount),'of',nm
+      print('Processing member',(1+memcount),'of',nm)
     if dom != 'conus':
-      print 'Processing member',(1+memcount),'of',nm_nonconus
-    print 'file3 near read is ', file3
+      print('Processing member',(1+memcount),'of',nm_nonconus)
+    print('file3 near read is ', file3)
 
     if qpf_interval != 1:
       if qpf_interval == 3:
@@ -524,7 +530,7 @@ for mem in members:
       if qpf_interval == 6:
         fhour=fhours[memcount]-3
         shour=fhour-3
-      print 'for file3 shour fhour: ', shour,fhour
+      print('for file3 shour fhour: ', shour,fhour)
       os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf3,nx,ny=simplewgrib2('qpf.txt')
 
@@ -535,22 +541,22 @@ for mem in members:
 
     else:
 
-### HERE 
+### HERE
 
       if mem == 'nam':
         fcst_hour=fhours[memcount]
         file4 = memfiles4[itime]
 
-        print 'call process_nam_qpf with file3: ', file3
-        print 'call process_nam_qpf with file4: ', file4
-        print 'call process_nam_qpf with fcst_hour: ', fcst_hour
+        print('call process_nam_qpf with file3: ', file3)
+        print('call process_nam_qpf with file4: ', file4)
+        print('call process_nam_qpf with fcst_hour: ', fcst_hour)
         qpf1=process_nam_qpf(file3,file4,fcst_hour)
 
       else:
-        print 'ready from file3 in 1h: ', file3
+        print('ready from file3 in 1h: ', file3)
         fhour=fhours[memcount]
         shour=fhour-1
-        print 'WEASD accum from : ', shour, ' to : ', fhour
+        print('WEASD accum from : ', shour, ' to : ', fhour)
         os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
         qpf1,nx,ny=simplewgrib2('qpf.txt')
 
@@ -559,13 +565,13 @@ for mem in members:
         snowmaskregion = np.ma.filled(undefsnow,-9999)
         qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
 
-      print 'defining qpf from qpf1'
+      print('defining qpf from qpf1')
       qpf[itime] = qpf1*0.39370079
 
     if qpf_interval == 6:
       fhour=fhours[memcount]
       shour=fhour-3
-      print '6h shour fhour: ', shour,fhour
+      print('6h shour fhour: ', shour,fhour)
       os.system(WGRIB2+' '+file6+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf6,nx,ny=simplewgrib2('qpf.txt')
       undefsnow,nx,ny=simplewgrib2('qpf.txt')
@@ -576,12 +582,12 @@ for mem in members:
     if qpf_interval == 3:
       qpf[itime] = qpf3*0.39370079   # Apply 10:1 SLR, convert to inches
 
-    
-    print 'max of qpf as snow: ', np.max(qpf[itime])
-    print 'dom is: ', dom
+
+    print('max of qpf as snow: ', np.max(qpf[itime]))
+    print('dom is: ', dom)
     if dom == 'conus' or dom == 'ak':
-      print 'qpf shape: ', np.shape(qpf)
-      print 'maskregion shape: ', np.shape(maskregion)
+      print('qpf shape: ', np.shape(qpf))
+      print('maskregion shape: ', np.shape(maskregion))
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
     # calculate threshold exceedance
@@ -592,33 +598,45 @@ for mem in members:
     if qpf_interval == 6:
       thresh_use=snow_6h_thresh
 
+
+
+# prob is okay as is based on local qpf[itime]
+# but save to qpf[memcount] for use below
+
+    # calculate threshold exceedance on QPF
     for t in thresh_use:
       for size in rlist:
         if memcount == 0:
           prob[t,size] = np.zeros((nlats,nlons))
         exceed = np.where(np.greater_equal(qpf[itime],t),1,0)
         filter_footprint = get_footprint(size)
+#        print 'np.shape(filter_footprint): ', np.shape(filter_footprint)
+#        print 'np.shape(exceed): ', np.shape(exceed)
+## exceed varies by member, so the fftconvolve will be sensitive to the order in which the members are done
         prob[t,size] = prob[t,size] + signal.fftconvolve(exceed,filter_footprint,mode='same')
+
+# possible to compute number of valid points here?
+
+    print('working memcount: ', memcount)
 
     qpf[memcount]=qpf[itime]
     memcount = memcount + 1
+
   latency = min_latency
 
 
 #-------------------------------------------------------------------#
 
 # Get final probabilities
-
 # redefine number of members (in case a TL member is missing)
 nm = len(itimes)
 nm_use=nm
-print 'nm members is: ', nm
-ensemble_qpf = np.zeros((nm,nlats,nlons)).astype(float)
+print('settled on nm_use for final probabilities: ', nm_use)
+ensemble_qpf = np.zeros((nm_use,nlats,nlons),dtype=float)
 for mem in range(0,len(itimes)):
-  print 'mem in range is: ', mem
-  print 'max(qpf(itimes), max(qpf(mem): ', np.max(qpf[itimes[mem]]), np.max(qpf[mem])
-#  ensemble_qpf[mem,:,:] = qpf[itimes[mem]]
+  print('mem, itimes[mem],max(qpf): ',mem, itimes[mem], np.max(qpf[mem]))
   ensemble_qpf[mem,:,:] = qpf[mem]
+  print('max of member: ', np.max(ensemble_qpf[mem,:,:]))
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
@@ -633,15 +651,25 @@ filter_footprint_100 = get_footprint(100)
 
 for t in thresh_use:
   t3 = time.time()
+  print('t, dx, max(ensemble_qpf): ', t, dx, np.max(ensemble_qpf))
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
-  print 'Time for optrad routine:', t4-t3
+  print('Time for optrad routine:', t4-t3)
   pnt_prob = calculate_pnt_probability (ensemble_qpf, t, p_smooth)
 
+# how know the filter_footprint size for near boundary points?
 
-  for row in range((slim/dx),nlats - (slim/dx)):
-    for column in range((slim/dx),nlons - (slim/dx)):
+
+## need something to account for reduced portion of filter_footprint actually within domain
+#
+#
+  print('nm_use for final prob: ', nm_use)
+  for row in range(nlats):
+    for column in range(nlons):
       rad = (optrad[row,column]).astype(int)
+
+
+# assign the default radius footprint size to footprint_use
 
       if (2.5 <= rad < 17.5):
         footprint_use  =  float(np.sum(filter_footprint_10))
@@ -670,11 +698,11 @@ for t in thresh_use:
          if float(footprint_use)/float(footprint_orig) < 0.5:
 #            print 'W bound less than 0.5'
             if row > rdx and row < nlats-1-rdx:
-#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+#              print('column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
               footprint_use=int(0.51*footprint_orig)
-              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-         if float(footprint_use)/float(footprint_orig) < 0.25:
-              print 'corner boost'
+              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
+            if float(footprint_use)/float(footprint_orig) < 0.25:
+              print('corner boost')
               footprint_use=int(0.26*footprint_orig)
 
       if row < rdx:
@@ -685,9 +713,9 @@ for t in thresh_use:
             if column > rdx and column < nlons-1-rdx:
 #              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
               footprint_use=int(0.51*footprint_orig)
-              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
          if float(footprint_use)/float(footprint_orig) < 0.25:
-              print 'corner boost'
+              print('corner boost')
               footprint_use=int(0.26*footprint_orig)
 
       if column > nlons-1-rdx:
@@ -698,9 +726,9 @@ for t in thresh_use:
             if row > rdx and row < nlats-1-rdx:
 #              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
               footprint_use=int(0.51*footprint_orig)
-              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
          if float(footprint_use)/float(footprint_orig) < 0.25:
-              print 'corner boost'
+              print('corner boost')
               footprint_use=int(0.26*footprint_orig)
 
       if row > nlats-1-rdx:
@@ -711,13 +739,11 @@ for t in thresh_use:
             if column > rdx and column < nlons-1-rdx:
 #              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
               footprint_use=int(0.51*footprint_orig)
-              print 'revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
+              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
          if float(footprint_use)/float(footprint_orig) < 0.25:
-              print 'corner boost'
+              print('corner boost')
               footprint_use=int(0.26*footprint_orig)
-
-
-
+              
 
 
       if (2.5 <= rad < 17.5):
@@ -750,38 +776,42 @@ for t in thresh_use:
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
 
   if dom == 'conus' or dom == 'ak':
-    print 'working final probability with mask'
+    print('working final probability with mask')
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
+
   t5 = time.time()
-  print 'Time for get final probability routine for ',t, 'inch threshold: ',t5-t4
-  print 'max of probfinal: ', np.max(probfinal)
+
+  print('Time for get final probability routine for ',t, 'inch threshold: ',t5-t4)
+#  print('max of probfinal pre cap: ', np.max(probfinal))
+#  probfinal = np.where(probfinal > 100.0,100.0,probfinal)
+  print('max of probfinal post cap: ', np.max(probfinal))
+  print('mean of probfinal: ', np.mean(probfinal))
+  print('probfinal dims: ', np.shape(probfinal))
 
 
-  
-  probstr=str(t*2.54)
-  print 'probstr is: ', probstr
-
-  byte=int(t*2.54*1000)
+  probstr=str(t*25.4)
+  byte=int(m.ceil(t*2.54*1000))
   byte44=0
   byte45=int(byte/65536)
   byte45rem=byte%65536
   byte46=int(byte45rem/256)
   byte47=byte45rem%256
 
-# write binary file out of probfinal array, then import it into grib file using WGRIB2
+  myfort = FortranFile('record_out.bin',mode='w')
 
-  myfort = F.FortranFile('record_out.bin',mode='w')
-  myfort.writeReals(probfinal)
+  probwrite=np.float32(probfinal)
+  myfort.write_record(probwrite)
+  print('max of probwrite: ', np.max(probwrite))
+#  myfort.write_record(probfinal)
+
+#  myfort = F.FortranFile('record_out.bin',mode='w')
+#  myfort.writeReals(probfinal)
   myfort.close()
 
-  string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob > "+probstr
-  print 'string used: ', string
+  string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
+
   os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
   os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 17 0 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -set_byte 4 67 1 -append  -set_grib_type c3 -grib_out '+outfile)
-
-  print 'byte, byte45, byte46, byte47: ', byte, byte45, byte46, byte47
-
+  print('Wrote ', qpf_interval, ' PSNOW to:',outfile, 'for ',t, 'inch threshold')
   os.system('rm record_out.bin')
   os.system('rm premod.grb')
-
-  print 'Wrote PSNOW for ', qpf_interval, ' to:',outfile, 'for ',t, 'inch threshold'

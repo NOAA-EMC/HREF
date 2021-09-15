@@ -29,8 +29,9 @@ postmsg "$jlogfile" "$msg"
 #
 
 export cycle=${cycle:-t${cyc}z}
+
 setpdy.sh
-. PDY
+. ./PDY
 
 if [ ${cyc} = "00" ]
 then
@@ -141,8 +142,7 @@ echo "$USHhref/preprocess_nam_1h.sh ${PDYold} ${cycold} ${hr} " >> poe.nam
 done
 
 chmod 775 poe.nam
-
-aprun -j 1 -n 55 -N 10 -d 1 cfp poe.nam
+mpiexec -cpu-bind core -n $NTASK -ppn $PTILE --configfile ./poe.nam
 export err=$?; err_chk
 
 

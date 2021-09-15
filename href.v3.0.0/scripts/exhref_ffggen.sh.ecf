@@ -42,58 +42,58 @@ for RFC in $RFC_LIST
 do
 PDY_CHECK=$PDY
 
-if [ -e $DCOMROOT/prod/${PDY}/wgrbbul/FFG.009.${RFC} ]
+if [ -e $DCOMROOT/${PDY}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 
-elif [ -e $DCOMROOT/prod/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm1
 
-elif [ -e $DCOMROOT/prod/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm2
 
-elif [ -e $DCOMROOT/prod/${PDYm3}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm3}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm3}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm3}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm3
 
-elif [ -e $DCOMROOT/prod/${PDYm4}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm4}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm4}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm4}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm4
 
-elif [ -e $DCOMROOT/prod/${PDYm5}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm5}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm5}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm5}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm5
 
-elif [ -e $DCOMROOT/prod/${PDYm6}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm6}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm6}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm6}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm6
 
-elif [ -e $DCOMROOT/prod/${PDYm7}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm7}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm7}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm7}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm7
 
-elif [ -e $DCOMROOT/prod/${PDYm8}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm8}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm8}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm8}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm8
 
-elif [ -e $DCOMROOT/prod/${PDYm9}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm9}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm9}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm9}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm9
 
-elif [ -e $DCOMROOT/prod/${PDYm10}/wgrbbul/FFG.009.${RFC} ]
+elif [ -e $DCOMROOT/${PDYm10}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/prod/${PDYm10}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cp $DCOMROOT/${PDYm10}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm10
 
 else
@@ -103,7 +103,7 @@ fi
 
 if (( $PDY != $PDY_CHECK && $PDYm1 != $PDY_CHECK ))
 then
-   msg="WARNING: WILL USE ${DCOMROOT}/prod/${PDY_CHECK}/wgrbbul/FFG.009.${RFC} data; Contact RFC Office ${RFC} for data inquiry"
+   msg="WARNING: WILL USE ${DCOMROOT}/${PDY_CHECK}/wgrbbul/FFG.009.${RFC} data; Contact RFC Office ${RFC} for data inquiry"
    echo "$msg" | mail.py -s "WARNING: WILL USE ${PDY_CHECK} FFG.009.${RFC} data" $MAILTO
 fi
 

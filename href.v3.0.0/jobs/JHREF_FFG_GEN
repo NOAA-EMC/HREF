@@ -16,8 +16,9 @@ cd $DATA
 
 # Run setpdy and initialize PDY variables
 export cycle=${cycle:-t${cyc}z}
+
 setpdy.sh 10
-. PDY
+. ./PDY
 
 ##################################################
 # SENDECF  - Flag Events on ecFLOW

@@ -22,41 +22,45 @@ fi
 hrs="39 42 45 48"
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 24 >&  qpf_combo_${dom}_${cyc}_24h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_24_low; cd qpf_${fhr}_24_low ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 240 >  qpf_combo_${dom}_${cyc}_24h_low_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_24_med; cd qpf_${fhr}_24_med ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 241 >  qpf_combo_${dom}_${cyc}_24h_med_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_24_high; cd qpf_${fhr}_24_high ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 242 >  qpf_combo_${dom}_${cyc}_24h_high_${fhr}.log" >> poe.qpf_snow
 done
 
 hrs="39 42 45 48"
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 6 >& qpf_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
-echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 6 >& snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 6 > qpf_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
 done
 
 hrs="39 42 45 48"
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 12 >&  qpf_combo_${dom}_${cyc}_12h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_12_low; cd qpf_${fhr}_12_low ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 120 >  qpf_combo_${dom}_${cyc}_12h_low_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_12_med; cd qpf_${fhr}_12_med ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 121 >  qpf_combo_${dom}_${cyc}_12h_med_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_12_high; cd qpf_${fhr}_12_high ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 122 >  qpf_combo_${dom}_${cyc}_12h_high_${fhr}.log" >> poe.qpf_snow
 done
 
 
 hrs="39 42 45 48"
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 3  >& qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
-echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 3 >& snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 3  > qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 3 > snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
 done
 
 hrs="37 38 39 40 41 42 43 44 45 46 47 48"
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_1; cd qpf_${fhr}_1 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 1 >& qpf_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
-echo "cd ${DATA}; mkdir snow_${fhr}_1; cd snow_${fhr}_1; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 1 >&  snow_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_1; cd qpf_${fhr}_1 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 1 > qpf_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir snow_${fhr}_1; cd snow_${fhr}_1; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 1 >  snow_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
 done
 
 
 chmod 775 poe.qpf_snow
 
-aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.qpf_snow
+mpiexec -n $NTASK -ppn $PTILE  --cpu-bind verbose,core cfp poe.qpf_snow
 export err=$?; err_chk
 
 
@@ -125,25 +129,33 @@ fi
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 12 ]
 then
 
-if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/href.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/href.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf12(low|med|high)_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/href.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $fhr -eq 39  -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48 ]
 then
 
-if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/href.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/href.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/href.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/href.t${cyc}z.${dom}.pqpf24(low|med|high)_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/href.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/href.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 >> $DATA/href.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $SENDCOM == 'YES' ]

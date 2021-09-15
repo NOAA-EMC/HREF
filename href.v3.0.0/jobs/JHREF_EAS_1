@@ -20,7 +20,7 @@ postmsg "$jlogfile" "$msg"
 
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
-. PDY
+. ./PDY
 
 ##################################################
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT

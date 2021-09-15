@@ -30,7 +30,7 @@ postmsg "$jlogfile" "$msg"
 
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
-. PDY
+. ./PDY
 
 ##################################################
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
@@ -105,7 +105,7 @@ done
 
 chmod 775 poe.hrrr
 
-aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.hrrr
+mpiexec -cpu-bind core -n $NTASK -ppn $PTILE --configfile poe.hrrr
 
 $USHhref/preprocess_hrrr_3hapcp.sh ${cyc} ${NEST}
 

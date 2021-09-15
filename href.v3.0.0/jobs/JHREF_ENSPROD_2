@@ -30,7 +30,7 @@ postmsg "$jlogfile" "$msg"
 
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
-. PDY
+. ./PDY
 
 ##################################################
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
@@ -117,11 +117,11 @@ done
 chmod 775  poe.link.all
 chmod 775 poe.ensprod.all
 
-aprun -j 1 -n $NTASK_LINK -N $PTILE_LINK -d 1 cfp poe.link.all
+mpiexec  -n $NTASK_LINK -ppn $PTILE_LINK --cpu-bind verbose,core cfp ./poe.link.all
+export err=$?; err_chk
+mpiexec  -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.ensprod.all
 export err=$?; err_chk
 
-aprun -j 1 -n $NTASK -N $PTILE -d 1 cfp poe.ensprod.all
-export err=$?; err_chk
 
 msg"JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"

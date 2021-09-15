@@ -31,6 +31,13 @@ pqpf_6h_thresh = [.01,0.25,0.5,1.0]
 pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0]
 pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0]
 
+pqpf_12h_thresh_low = [0.1]
+pqpf_12h_thresh_med = [0.25,0.5]
+pqpf_12h_thresh_high = [1.0,2.0]
+pqpf_24h_thresh_low = [0.1,0.25]
+pqpf_24h_thresh_med = [0.5,1.0]
+pqpf_24h_thresh_high = [2.0,3.0]
+
 # neighborhood size (km)
 pqpf_neighborhood = 40
 
