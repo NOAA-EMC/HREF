@@ -18,6 +18,10 @@ then
 	NODES=2
 	PTILE=80
 	NTASK=160
+else
+	NODES=1
+	PTILE=128
+	NTASK=128
 fi
 
 cat href_eas_1.sh_in | sed s:_DOM_:${DOM}:g |  sed s:_CYC_:${CYC}:g | \
