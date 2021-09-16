@@ -3,7 +3,7 @@
 #PBS -j oe
 #PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/preproc_hrrr.out__DOM__CYC_
 #PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/preproc_hrrr.err__DOM__CYC_
-#PBS -l select=1:ncpus=49:mem=128GB
+#PBS -l select=_NODES_:ncpus=_PTILE_:mem=128GB
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:27:05
@@ -27,12 +27,13 @@ module load g2tmpl/1.9.1
 module load jasper/2.0.25
 module load libpng/1.6.37
 module load zlib/1.2.11
+module load cfp/2.0.4
 
 
-export numprocs=49
-export spanprocs=49
-export NTASK=49
-export PTILE=49
+export numprocs=_NTASKS_
+export spanprocs=_PTILE_
+export NTASK=_NTASKS_
+export PTILE=_PTILE_
 
 export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0
 
@@ -59,6 +60,6 @@ export COMINhrrr=${COMINbase}/hrrr/v4.1/hrrr
 export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/nwges
 mkdir -p $GESROOT
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 $HOMEhref/jobs/JHREF_PREPROC_HRRR

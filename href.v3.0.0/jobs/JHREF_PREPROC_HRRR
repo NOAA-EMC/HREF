@@ -105,7 +105,7 @@ done
 
 chmod 775 poe.hrrr
 
-mpiexec -cpu-bind core -n $NTASK -ppn $PTILE --configfile poe.hrrr
+mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.hrrr
 
 $USHhref/preprocess_hrrr_3hapcp.sh ${cyc} ${NEST}
 
