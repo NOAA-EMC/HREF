@@ -1,0 +1,11 @@
+#! /bin/sh
+
+ip_ver=3.3.3
+bacio_ver=2.4.1
+w3nco_ver=2.4.1
+g2_ver=3.4.4
+g2tmpl_ver=1.9.1
+jasper_ver=2.0.25
+libpng_ver=1.6.37
+zlib_ver=1.2.1
+python_ver=3.8.6
