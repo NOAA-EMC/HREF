@@ -2,6 +2,11 @@
 
 module purge
 # source /apps/prod/lmodules/startLmod
+
+source ../versions/build.ver
+
+env | grep ver
+
 module use -a  ../modulefiles/HREF
 module load v3.0.0
 module list
