@@ -3,7 +3,7 @@
 #PBS -j oe
 #PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/preproc_nam.out__DOM__CYC_
 #PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/preproc_nam.err__DOM__CYC_
-#PBS -l select=_NODES_:ncpus=_PTILE_:mem=256GB
+#PBS -l select=_NODES_:ncpus=_PTILE_:mem=256GB -l place=excl
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:27:05
@@ -44,19 +44,18 @@ export cyc=_CYC_
 export DATE=_DATE_
 
 export PDY=${DATE}
-
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
 echo PDY $PDY PDYm1 $PDYm1
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/com
+export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_preprocnam_${NEST}_${cyc}_${envir}_retro
-COMINbase=/lfs/h1/ops/canned/com
-export COMINnam=${COMINbase}/nam/v4.2/nam
 
-export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/nwges
+export COMINnam=`compath.py -e canned nam/${nam_ver}/nam`
+
+export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com/${RUN}/${href_ver}/nwges
 mkdir -p $GESROOT
 
 export KEEPDATA=NO

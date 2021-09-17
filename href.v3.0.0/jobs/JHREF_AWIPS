@@ -37,14 +37,9 @@ export PARMwmo=${PARMwmo:-$HOMEhref/parm/wmo}
 ###############################
 export NET=${NET:-hiresw}
 export RUN=${RUN:-href} 
-  
-if [ "$RUN_ENVIR" != nco ] ; then
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/ensprod}
- export COMOUT=${COMOUT:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/wmo}
-else
- export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/ensprod}
- export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/wmo}
-fi
+
+export COMIN=${COMIN:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}/ensprod}
+export COMOUT=${COMOUT:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}/wmo}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT

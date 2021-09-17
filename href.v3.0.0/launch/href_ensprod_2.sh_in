@@ -48,18 +48,20 @@ export DATE=_DATE_
 export PDY=${DATE}
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/com
+export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_ensprod_2_${NEST}_${cyc}_${envir}_retro
-COMINbase=/lfs/h1/ops/canned/com
-export COMINhiresw=/lfs/h1/ops/canned/com/hiresw/v8.1/hiresw
+export COMINhiresw=`compath.py -e canned hiresw/${hiresw_ver}/hiresw`
 
-export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/nwges
-export COMINall=${GESROOT}/${envir}/href
+export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com/${RUN}/${href_ver}/nwges
+export COMINall=${GESROOT}/href
 
 export COMINnam=${COMINall}
 export COMINhrrr=${COMINall}
-export COMINffg=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_expv3
-export COMINffgm1=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDYm1}_expv3
+export COMINffg=${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}
+export COMINffgm1=${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDYm1}
 
 $HOMEhref/jobs/JHREF_ENSPROD_2
+
+$HOMEhref/launch/run_gempak.sh $NEST $cyc ${PDY}
+$HOMEhref/launch/run_awips.sh $NEST $cyc ${PDY}

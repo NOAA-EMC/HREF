@@ -1,5 +1,10 @@
 #! /bin/sh
 
+export href_ver=v3.1
+export nam_ver=v4.2
+export hrrr_ver=v4.1
+export hiresw_ver=v8.1
+
 ip_ver=3.3.3
 bacio_ver=2.4.1
 w3nco_ver=2.4.1
@@ -7,7 +12,7 @@ g2_ver=3.4.4
 g2tmpl_ver=1.9.1
 jasper_ver=2.0.25
 libpng_ver=1.6.37
-zlib_ver=1.2.1
+zlib_ver=1.2.11
 python_ver=3.8.6
 
 gempak_ver=7.14.0

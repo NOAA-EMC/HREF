@@ -68,16 +68,9 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/prod/hiresw)}
-export COMINnam=${COMINnam:-$(compath.py nam/prod/nam)}
-export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/prod/hrrr)}
-export GESOUT=${GESOUT:-${GESROOT}/${envir}/href}
-
-if [ "$RUN_ENVIR" != nco ] ; then
-  export COMOUT=${MYCOMROOT}/${NET}/${envir}/${RUN}.${PDY}_expv3
-else
-  export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-fi
+export COMINhrrr=${COMINhrrr:-$(compath.py hrrr/${hrrr_ver}/hrrr)}
+export GESOUT=${GESOUT:-${GESROOT}/${RUN}}
+export COMOUT=${COMOUT:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}}
 
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT/ensprod

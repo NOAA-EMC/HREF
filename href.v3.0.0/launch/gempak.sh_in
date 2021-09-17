@@ -48,12 +48,12 @@ export DATE=_DATE_
 export PDY=${DATE}
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/com
+export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_gempak_${NEST}_${cyc}_${envir}_retro
 COMINbase=/lfs/h1/ops/canned/com
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export NTASK=7
 export PTILE=7

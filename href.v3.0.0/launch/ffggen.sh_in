@@ -54,12 +54,12 @@ export PDYm3=`$NDATE -72 ${PDY}00 | cut -c1-8`
 export PDYm4=`$NDATE -96 ${PDY}00 | cut -c1-8`
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/com
+export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_ffg_gen_${NEST}_${cyc}_${envir}_retro
 COMINbase=/lfs/h1/ops/canned/com
 export DCOMROOT=/lfs/h1/ops/canned/dcom
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 $HOMEhref/jobs/JHREF_FFG_GEN

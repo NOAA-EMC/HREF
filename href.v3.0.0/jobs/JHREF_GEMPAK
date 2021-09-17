@@ -43,13 +43,8 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 export NET=${NET:-hiresw}
 export RUN=${RUN:-href} 
   
-if [ "$RUN_ENVIR" != nco ] ; then
- export COMOUT=${COMOUT:-${MYCOMROOT}/hiresw/${envir}/${RUN}.${PDY}_expv3/gempak}
- export COMIN=${COMIN:-${MYCOMROOT}/${NET}/${envir}/href.${PDY}_expv3/ensprod}
-else
- export COMOUT=${COMOUT:-${COMROOT}/hiresw/${envir}/href.${PDY}/gempak}
- export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/href.${PDY}/ensprod}
-fi
+export COMOUT=${COMOUT:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}/gempak}
+export COMIN=${COMIN:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}/ensprod}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT

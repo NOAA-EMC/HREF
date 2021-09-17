@@ -49,15 +49,15 @@ export PDY=${DATE}
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
-export MYCOMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/com
+export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_preprochrrr${NEST}_${cyc}_${envir}_retro
-COMINbase=/lfs/h1/ops/canned/com
-export COMINhrrr=${COMINbase}/hrrr/v4.1/hrrr
 
-export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/nwges
+export COMINhrrr=`compath.py -e canned hrrr/${hrrr_ver}/hrrr`
+export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com/${RUN}/${href_ver}/nwges
+
 mkdir -p $GESROOT
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 $HOMEhref/jobs/JHREF_PREPROC_HRRR
