@@ -11,4 +11,6 @@ BASE=`pwd`
 
 cd ${BASE}/href_ffg_gen.fd
 make clean
+# make all
 make href_ffg_gen
+# make debug

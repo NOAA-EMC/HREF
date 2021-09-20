@@ -99,8 +99,10 @@ done
 chmod 775 poe.hrrr
 
 mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.hrrr
+export err=$?; err_chk
 
 $USHhref/preprocess_hrrr_3hapcp.sh ${cyc} ${NEST}
+export err=$? ; err_chk
 
 else
 

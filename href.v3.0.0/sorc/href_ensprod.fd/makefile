@@ -10,7 +10,8 @@
 INC=  ${G2_INC4} 
 LIBS=   ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \
         ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
-FFLAGS = -O3 -fp-model precise  -g -traceback -convert big_endian -assume noold_ldout_format -I $(INC)  #  -ftrapuv  -check all  -fp-stack-check -check bounds
+FFLAGS = -O3 -fp-model precise  -g -traceback -convert big_endian -assume noold_ldout_format -I $(INC)
+FFLAGS_DEBUG = -O3 -fp-model precise  -g -traceback -convert big_endian -assume noold_ldout_format -I $(INC) -ftrapuv  -check all  -fp-stack-check -check bounds
 
 SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
 	packGB2_mean.f packGB2_prob.f packGB2_mean_derv.f packGB2_prob_derv.f \
@@ -24,11 +25,14 @@ SRCS=	char_process.f util.f readGB2.f print_gfld.f Zputgb2.f \
 
 OBJ=${SRCS:.f=.o}
 
+all:	clean href_ensprod install
 href_ensprod: $(OBJ)
 	$(FC) $(FFLAGS) -o href_ensprod sref_ens_gen.f $(OBJ)  $(LIBS)
+debug: $(OBJ)
+	$(FC) $(FFLAGS_DEBUG) -o href_ensprod sref_ens_gen.f $(OBJ)  $(LIBS)
 clean:
 	/bin/rm  *.o href_ensprod
-copy:
+install:
 	/bin/cp href_ensprod ../../exec/
 #
 

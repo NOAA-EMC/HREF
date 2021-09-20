@@ -841,8 +841,8 @@ C  raw data
      + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
      + 'f46','f47','f48'/
  
-	write(0,*) 'hrrr - know that filehead, ff, do_old, jf', 
-     *    trim(filehead), ff, do_old, jf
+	write(0,*) 'hrrr - know that filehead, ff,  jf', 
+     *    trim(filehead), ff,  jf
 
        allocate(dphold(jf,3))
        allocate(dp1(jf))
@@ -1031,8 +1031,8 @@ C  raw data
      + 'f37','f38','f39','f40','f41','f42','f43','f44','f45',
      + 'f46','f47','f48'/
  
-	write(0,*) 'hrrr 3hrly_pre - know that filehead, ff, do_old, jf', 
-     *    trim(filehead), ff, do_old, jf
+	write(0,*) 'hrrr 3hrly_pre - know that filehead, ff,  jf', 
+     *    trim(filehead), ff,  jf
 
        term=".grib2"
 
@@ -1225,8 +1225,8 @@ C  raw data
      + 'f46','f47','f48','f49','f50','f51','f52','f53','f54',
      + 'f55','f56','f57','f58','f59','f60'/
  
-	write(0,*) 'fv3 3hrly_pre - know that filehead, ff, do_old, jf', 
-     *    trim(filehead), ff, do_old, jf
+	write(0,*) 'fv3 3hrly_pre - know that filehead, ff, jf', 
+     *    trim(filehead), ff,  jf
 
        term=".grib2"
 

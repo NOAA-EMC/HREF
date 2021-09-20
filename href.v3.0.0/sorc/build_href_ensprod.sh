@@ -11,4 +11,6 @@ BASE=`pwd`
 
 cd ${BASE}/href_ensprod.fd
 make clean
-make
+make href_ensprod
+# make all
+# make debug

@@ -305,7 +305,6 @@ def process_nam_qpf(file3,file4,fhr):
 # calculate footprint routine
 def get_footprint(r):
 #    footprint = np.ones(((r/dx)*2+1,(r/dx)*2+1),dtype=int)
-    print('dx in get_footprint: ', dx)
     footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
     footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
     dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
@@ -621,6 +620,7 @@ for mem in members:
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file2 for qpf_6: ', file2)
+        print('trying to work file2alt: ', file2alt)
         if (os.path.exists(file2alt)):
           fhours.append(start_hour+1*incr+latency+alt_fhrinc)
           itimes.append(itime_alt)
@@ -637,6 +637,7 @@ for mem in members:
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file4 for qpf_12: ', file4)
+        print('trying to work file4alt: ', file4alt)
         if (os.path.exists(file4alt)):
           itimes.append(itime_alt)
           fhours.append(start_hour+1*incr+latency+alt_fhrinc)
@@ -654,6 +655,7 @@ for mem in members:
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file8 for qpf_24: ', file8)
+        print('trying to work file8alt: ', file8alt)
         if (os.path.exists(file8alt)):
           itimes.append(itime_alt)
           fhours.append(start_hour+1*incr+latency+alt_fhrinc)

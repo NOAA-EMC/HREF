@@ -15,3 +15,5 @@ BASE=`pwd`
 cd ${BASE}/href_get_prcip.fd
 make clean
 make href_get_prcip
+# make all
+# make debug
