@@ -64,14 +64,14 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMINhiresw=${COMINhiresw:-$(compath.py hiresw/${hiresw_ver}/hiresw)}
+export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver}/hiresw)}
 export GESIN=${GESIN:-${GESROOT}/${envir}}
 export COMINnam=${COMINnam:-$GESIN/${RUN}}
 export COMINhrrr=${COMINhrrr:-$GESIN/${RUN}}
 
-export COMOUT=${COMOUT:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}}
-export COMINffg=${COMINffg:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}}
-export COMINffgm1=${COMINffg:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/$NET/${href_ver})/$RUN.${PDY}}
+export COMINffg=${COMINffg:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}}
+export COMINffgm1=${COMINffg:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDYm1}}
 
 if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod
@@ -103,7 +103,7 @@ echo "$SCRIPTShref/exhref_ensprod.sh.ecf $hr" >> poe.ensprod.all
 done
 
 
-chmod 775  poe.link.all
+chmod 775 poe.link.all
 chmod 775 poe.ensprod.all
 
 mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.link.all

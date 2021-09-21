@@ -38,7 +38,7 @@ export PTILE=7
 
 export RUN_ENVIR=test
 export envir=test
-export NET=hiresw
+export NET=href
 export RUN=href
 
 export NEST=_DOM_
@@ -47,13 +47,16 @@ export DATE=_DATE_
 
 export PDY=${DATE}
 
-export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_gempak_${NEST}_${cyc}_${envir}_retro
 COMINbase=/lfs/h1/ops/canned/com
 
 export KEEPDATA=NO
+export SENDCOM=YES
+export SENDECF=NO
+export SENDDBN=NO
 
 export NTASK=7
 export PTILE=7

@@ -36,7 +36,7 @@ export PTILE=_PTILE_
 
 export RUN_ENVIR=test
 export envir=test
-export NET=hiresw
+export NET=href
 export RUN=href
 
 export NEST=_DOM_
@@ -48,7 +48,7 @@ export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
 echo PDY $PDY PDYm1 $PDYm1
 
-export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_preprocnam_${NEST}_${cyc}_${envir}_retro
@@ -59,5 +59,9 @@ export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com/${RUN}/${href_ver}/nwg
 mkdir -p $GESROOT
 
 export KEEPDATA=NO
+
+export SENDCOM=YES
+export SENDECF=NO
+export SENDDBN=NO
 
 $HOMEhref/jobs/JHREF_PREPROC_NAM

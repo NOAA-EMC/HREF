@@ -43,8 +43,8 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 export NET=${NET:-hiresw}
 export RUN=${RUN:-href} 
   
-export COMOUT=${COMOUT:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}/gempak}
-export COMIN=${COMIN:-${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}/gempak}
+export COMIN=${COMIN:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}/ensprod}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -81,7 +81,10 @@ cat $DATA/${NEST}_prob.$$
 cat $DATA/${NEST}_sprd.$$
 cat $DATA/${NEST}_eas.$$
 cat $DATA/${NEST}_lpmm.$$
+if [ ${NEST} =  'conus' ]
+then
 cat $DATA/${NEST}_ffri.$$
+fi
 #################################################################
 
 cd ${DATAROOT}

@@ -38,7 +38,7 @@ export PTILE_LINK=_PTILE_LINK_
 
 export RUN_ENVIR=test
 export envir=test
-export NET=hiresw
+export NET=href
 export RUN=href
 
 export NEST=_DOM_
@@ -47,7 +47,7 @@ export DATE=_DATE_
 
 export PDY=${DATE}
 
-export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_ensprod_2_${NEST}_${cyc}_${envir}_retro
@@ -60,6 +60,11 @@ export COMINnam=${COMINall}
 export COMINhrrr=${COMINall}
 export COMINffg=${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDY}
 export COMINffgm1=${COMROOT}/${RUN}/${href_ver}/${RUN}.${PDYm1}
+
+export KEEPDATA=NO
+export SENDCOM=YES
+export SENDECF=NO
+export SENDDBN=NO
 
 $HOMEhref/jobs/JHREF_ENSPROD_2
 

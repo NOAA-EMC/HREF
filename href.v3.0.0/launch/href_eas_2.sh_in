@@ -32,7 +32,7 @@ module load python/${python_ver}
 
 export RUN_ENVIR=test
 export envir=test
-export NET=hiresw
+export NET=href
 export RUN=href
 
 export NEST=_DOM_
@@ -47,7 +47,7 @@ export PTILE=_PTILE_
 export PDY=${DATE}
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
-export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 
 export DATA=${DATAROOT}/href_eas_2_${NEST}_${cyc}_${envir}_retro
@@ -59,6 +59,12 @@ export COMINall=${GESROOT}/href
 
 export COMINnam=${COMINall}
 export COMINhrrr=${COMINall}
+
+export KEEPDATA=NO
+export SENDCOM=YES
+export SENDECF=NO
+export SENDDBN=NO
+
 
 
 $HOMEhref/jobs/JHREF_EAS_2
