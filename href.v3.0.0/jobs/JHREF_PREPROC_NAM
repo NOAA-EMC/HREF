@@ -82,7 +82,7 @@ export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 ###################################
 # Specify NET and RUN Name and model
 ####################################
-export NET=${NET:-hiresw}
+export NET=${NET:-href}
 export RUN=${RUN:-href}
 
 export IOBUF_PARAMS='*:size=8M:count=8'
@@ -95,7 +95,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver}/nam)}
 export GESOUT=${GESOUT:-${GESROOT}/${RUN}}
-export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}}
 
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT/ensprod

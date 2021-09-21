@@ -40,11 +40,11 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-HREF_GEMPAK}
 ###############################
 # Specify NET and RUN name
 ###############################
-export NET=${NET:-hiresw}
+export NET=${NET:-href}
 export RUN=${RUN:-href} 
   
-export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}/gempak}
-export COMIN=${COMIN:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}/gempak}
+export COMIN=${COMIN:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}/ensprod}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -58,20 +58,22 @@ env
 # Execute the script
 rm -f poescript
 
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf mean &> $DATA/${NEST}_mean.$$ " >>poescript
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf pmmn &> $DATA/${NEST}_pmmn.$$ " >>poescript
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf avrg &> $DATA/${NEST}_avrg.$$ " >>poescript
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf prob &> $DATA/${NEST}_prob.$$ " >>poescript
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf sprd &> $DATA/${NEST}_sprd.$$ " >>poescript
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf eas  &> $DATA/${NEST}_eas.$$  " >>poescript
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf lpmm  &> $DATA/${NEST}_lpmm.$$  " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf mean > $DATA/${NEST}_mean.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf pmmn > $DATA/${NEST}_pmmn.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf avrg > $DATA/${NEST}_avrg.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf prob > $DATA/${NEST}_prob.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf sprd > $DATA/${NEST}_sprd.$$ " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf eas  > $DATA/${NEST}_eas.$$  " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf lpmm  > $DATA/${NEST}_lpmm.$$  " >>poescript
 
 if [ ${NEST} =  'conus' ]
 then
-echo "$HOMEhref/scripts/exhref_nawips.sh.ecf ffri  &> $DATA/${NEST}_ffri.$$  " >>poescript
+echo "$HOMEhref/scripts/exhref_nawips.sh.ecf ffri  > $DATA/${NEST}_ffri.$$  " >>poescript
 fi
 
-mpiexec -n $NTASK -ppn $PTILE --configfile ./poescript
+chmod 775 ./poescript
+
+mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poescript
 export err=$?; err_chk
 
 cat $DATA/${NEST}_mean.$$

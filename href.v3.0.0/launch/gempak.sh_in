@@ -3,7 +3,7 @@
 #PBS -j oe
 #PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/gempak.out__DOM__CYC_
 #PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/gempak.err__DOM__CYC_
-#PBS -l select=1:ncpus=7:mem=128GB
+#PBS -l select=1:ncpus=_PTILE_:mpiprocs=_PTILE_:mem=128GB
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:57:05
@@ -30,11 +30,10 @@ module load jasper/${jasper_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
 module load gempak/${gempak_ver}
+module load cfp/${cfp_ver}
 
-export numprocs=7
-export spanprocs=7
-export NTASK=7
-export PTILE=7
+export NTASK=_NTASK_
+export PTILE=_PTILE_
 
 export RUN_ENVIR=test
 export envir=test
@@ -49,16 +48,14 @@ export PDY=${DATE}
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
+export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
+
 
 export DATA=${DATAROOT}/href_gempak_${NEST}_${cyc}_${envir}_retro
-COMINbase=/lfs/h1/ops/canned/com
 
 export KEEPDATA=NO
 export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
-
-export NTASK=7
-export PTILE=7
 
 $HOMEhref/jobs/JHREF_GEMPAK

@@ -3,7 +3,7 @@
 #PBS -j oe
 #PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/href_eas_1.out__DOM__CYC_
 #PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/launch/logs/href_eas_1.err__DOM__CYC_
-#PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB
+#PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB -l place=excl
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:29:05
@@ -50,12 +50,14 @@ export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
+export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
+
 export DATA=${DATAROOT}/href_eas_1_${NEST}_${cyc}_${envir}_retro
 
 export COMINhiresw=`compath.py -e canned hiresw/${hiresw_ver}/hiresw`
 export COMINfv3=$COMINhiresw
-export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com/${RUN}/${href_ver}/nwges
-export COMINall=${GESROOT}/href
+export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
+export COMINall=`compath.py -o ${NET}/${href_ver}/nwges/href`
 
 export COMINnam=${COMINall}
 export COMINhrrr=${COMINall}

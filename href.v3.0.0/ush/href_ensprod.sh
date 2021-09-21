@@ -52,20 +52,23 @@ fi
 
 if [ $err1 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG1H file"
+echo "WARNING: using previous cycle FFG1H file" $COMINffg/href.${cycold}z.ffg1h.5km.grib2
 cp $COMINffg/href.${cycold}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
+err=$? ; err_chk
 fi
 
 if [ $err2 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG3H file"
+echo "WARNING: using previous cycle FFG3H file" $COMINffg/href.${cycold}z.ffg3h.5km.grib2
 cp $COMINffg/href.${cycold}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
+err=$? ; err_chk
 fi
 
 if [ $err3 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG6H file"
+echo "WARNING: using previous cycle FFG6H file" $COMINffg/href.${cycold}z.ffg6h.5km.grib2
 cp $COMINffg/href.${cycold}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
+err=$? ; err_chk
 fi
 
 

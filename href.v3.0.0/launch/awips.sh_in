@@ -49,9 +49,9 @@ export PDY=${DATE}
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
+export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
 
 export DATA=${DATAROOT}/href_awips_${NEST}_${cyc}_${envir}_retro
-COMINbase=/lfs/h1/ops/canned/com
 
 export KEEPDATA=NO
 export SENDCOM=YES

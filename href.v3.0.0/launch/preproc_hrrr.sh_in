@@ -30,9 +30,9 @@ module load netcdf/${netcdf_ver}
 module load cfp/${cfp_ver}
 
 
-export numprocs=_NTASKS_
+export numprocs=_NTASK_
 export spanprocs=_PTILE_
-export NTASK=_NTASKS_
+export NTASK=_NTASK_
 export PTILE=_PTILE_
 
 export RUN_ENVIR=test
@@ -50,18 +50,21 @@ export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
+export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
+
 
 export DATA=${DATAROOT}/href_preprochrrr${NEST}_${cyc}_${envir}_retro
 
 export COMINhrrr=`compath.py -e canned hrrr/${hrrr_ver}/hrrr`
-export GESROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com/${RUN}/${href_ver}/nwges
+export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
 
-mkdir -p $GESROOT
+if [ ! -e $GESROOT ] ; then
+	mkdir -p $GESROOT
+fi
 
 export KEEPDATA=NO
 export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
-
 
 $HOMEhref/jobs/JHREF_PREPROC_HRRR

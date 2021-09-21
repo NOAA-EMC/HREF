@@ -15,7 +15,7 @@ if [ $GET_PRCIP = "1" ]
 then
 cd ${BASE}/href_get_prcip.fd
 make install
-# make clean
+make clean
 fi
 
 ############################
@@ -24,7 +24,7 @@ if [ $FFG_GEN = "1" ]
 then
 cd ${BASE}/href_ffg_gen.fd
 make install
-# make clean
+make clean
 fi
 
 ############################
@@ -34,5 +34,5 @@ if [ $ENSPROD = "1" ]
 then
 cd ${BASE}/href_ensprod.fd
 make install
-# make clean
+make clean
 fi

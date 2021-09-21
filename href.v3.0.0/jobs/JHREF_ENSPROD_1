@@ -53,7 +53,7 @@ export SCRIPTShref=${SCRIPTShref:-$HOMEhref/scripts}
 ###################################
 # Specify NET and RUN Name and model
 ####################################
-export NET=${NET:-hiresw}
+export NET=${NET:-href}
 export RUN=${RUN:-href}
 
 export IOBUF_PARAMS='*:size=8M:count=8'
@@ -65,13 +65,12 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ## PDY not included here as pull data from PDYm1 as well
 
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver}/hiresw)}
-export GESIN=${GESIN:-${GESROOT}/${envir}}
-export COMINnam=${COMINnam:-$GESIN/${RUN}}
-export COMINhrrr=${COMINhrrr:-$GESIN/${RUN}}
+export COMINnam=${COMINnam:-$GESROOT/${RUN}}
+export COMINhrrr=${COMINhrrr:-$GESROOT/${RUN}}
 
-export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/$NET/${href_ver})/$RUN.${PDY}}
-export COMINffg=${COMINffg:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}}
-export COMINffgm1=${COMINffg:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${href_ver})/$RUN.${PDY}}
+export COMINffg=${COMINffg:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}}
+export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDYm1}}
 
 if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod

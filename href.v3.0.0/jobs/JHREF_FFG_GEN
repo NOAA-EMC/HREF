@@ -36,14 +36,14 @@ export EXEChref=${EXEChref:-$HOMEhref/exec}
 ###############################
 # Specify NET and RUN name
 ###############################
-export NET=${NET:-hiresw}
+export NET=${NET:-href}
 export RUN=${RUN:-href} 
   
 # how handle DCOMROOT - hardcode backup definition, or use $envir?
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
-export COMIN=${COMIN:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}/}
-export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/$NET/${href_ver})/${RUN}.${PDY}/}
+export COMIN=${COMIN:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}/}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}/}
 
 
 if [ ! -f $COMOUT ] ; then
