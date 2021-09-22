@@ -2,7 +2,7 @@
 
 module purge
 module use -a ../modulefiles/HREF
-module load v3.0.0
+module load v3.1.0
 module list
 
 sleep 1

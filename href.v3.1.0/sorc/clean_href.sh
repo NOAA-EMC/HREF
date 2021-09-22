@@ -1,7 +1,11 @@
 #! /bin/sh
 
+source ../versions/build.ver
+
 module purge
-module load ../modulefiles/HREF/v3.0.0
+module use -a  ../modulefiles/HREF
+module load v3.1.0
+
 
 sleep 1
 
