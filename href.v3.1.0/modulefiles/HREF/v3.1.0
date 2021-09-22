@@ -1,7 +1,7 @@
 #%Module######################################################################
 ##                                                       Matthew.Pyle@noaa.gov
 ##                                                           NOAA/NWS/NCEP/EMC
-## HREF 3.0.0
+## HREF 3.1.0
 ##_____________________________________________________
 proc ModulesHelp { } {
 puts stderr "Set environment veriables for HREF"
@@ -10,7 +10,7 @@ puts stderr "for the Intel Compiler Suite $version\n"
 }
 module-whatis " HREF whatis description"
 
-set ver v3.0.0
+set ver v3.1.0
 
 set sys [uname sysname]
 set HREF /gpfs/hps/nco/ops/nwpara/href.v3.0.0/modulefiles/HREF
@@ -24,8 +24,6 @@ setenv COMP_MPI ftn
 
 setenv C_COMP cc
 setenv C_COMP_MP cc
-
-# source /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.0.0/versions/build.ver
 
 module purge
 module load envvar/1.0
@@ -43,5 +41,3 @@ module load g2tmpl/$::env(g2tmpl_ver)
 module load jasper/$::env(jasper_ver)
 module load libpng/$::env(libpng_ver)
 module load zlib/$::env(zlib_ver)
-
-#needed? module load python/$::env(python_ver)
