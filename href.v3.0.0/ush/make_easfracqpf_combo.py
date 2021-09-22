@@ -84,14 +84,6 @@ print('found COMINhrrr as ', COMINhrrr)
 
 
 try:
-  os.environ["COMINfv3"]
-except KeyError:
-  print("NEED TO DEFINE COMINfv3")
-  exit(1)
-COMINfv3=os.environ.get('COMINfv3','trash')
-print('found COMINfv3 as ', COMINfv3)
-
-try:
   os.environ["COMOUT"]
 except KeyError:
   print("NEED TO DEFINE COMOUT")
