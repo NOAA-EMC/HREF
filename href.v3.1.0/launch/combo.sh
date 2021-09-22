@@ -1,7 +1,7 @@
 #! /bin/sh
 
-dom=hi
-cyc=12
+dom=ak
+cyc=18
 date=20210824
 
 
