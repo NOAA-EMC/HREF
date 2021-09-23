@@ -1,6 +1,9 @@
 Release Notes:  HREF v3.1.0 - released to NCO on September 22, 2021.
 Transition from WCOSS Cray to WCOSS2.
 
+Re-released September 23, 2021 with updated resources for certain jobs.  Also adds
+OMP_NUM_THREADS=1 to certain submission scripts. 
+
 A better formatted version of this document is on google docs at:
 https://docs.google.com/document/d/1WRUhYiDUsdCQ4Jt-JzIImuBqLRBZy7wRN3zUta2Ltts/edit?usp=sharing
 
