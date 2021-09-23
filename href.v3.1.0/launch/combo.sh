@@ -1,7 +1,7 @@
 #! /bin/sh
 
-dom=ak
-cyc=18
+dom=hi
+cyc=12
 date=20210824
 
 
@@ -10,11 +10,11 @@ then
 	./run_preproc_nam.sh ${dom} ${cyc} ${date}
 	./run_preproc_hrrr.sh ${dom} ${cyc} ${date}
 	./run_ffg_gen.sh ${dom} ${cyc} ${date}
-	sleep 360
+	sleep 240
 elif [ ${dom} == 'ak' ]
 then
 	        ./run_preproc_hrrr.sh ${dom} ${cyc} ${date}
-	sleep 360
+	sleep 240
 fi
 
 ./run_eas_1.sh      ${dom} ${cyc} ${date}

@@ -68,5 +68,7 @@ export KEEPDATA=NO
 export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
+export job=href_preproc_hrrr_${NEST}_${cyc}
+
 
 $HOMEhref/jobs/JHREF_PREPROC_HRRR

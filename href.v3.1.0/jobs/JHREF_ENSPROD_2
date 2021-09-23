@@ -22,7 +22,7 @@ rm -rf $DATA/*
 cd $DATA
 
 msg="JOB $job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 #
 # Run setpdy and initialize PDY variables
@@ -42,7 +42,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 
-export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
+export HOMEhref=${HOMEhref:-$PACKAGEROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
 export USHhref=${USHhref:-$HOMEhref/ush}
@@ -116,8 +116,8 @@ mpiexec  -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.ensprod.all
 export err=$?; err_chk
 
 
-msg"JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
 date
 
 

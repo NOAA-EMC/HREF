@@ -69,6 +69,9 @@ export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
 
+export job=href_ensprod_2_${NEST}_${cyc}
+
+
 $HOMEhref/jobs/JHREF_ENSPROD_2
 
 $HOMEhref/launch/run_gempak.sh $NEST $cyc ${PDY}

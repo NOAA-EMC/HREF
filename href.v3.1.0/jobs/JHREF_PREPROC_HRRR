@@ -22,7 +22,7 @@ rm -rf $DATA/*
 cd $DATA
 
 msg="JOB $job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 #
 # Run setpdy and initialize PDY variables
@@ -47,7 +47,7 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 # environment. This is used for operational testings
 ###############################################################
 
-export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
+export HOMEhref=${HOMEhref:-$PACKAGEROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
 export USHhref=${USHhref:-$HOMEhref/ush}

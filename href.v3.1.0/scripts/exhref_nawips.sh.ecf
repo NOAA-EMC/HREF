@@ -16,7 +16,7 @@ mkdir -p $DATA/$TYPE
 cd $DATA/$TYPE
 
 msg="Begin job for $job"
-postmsg "$jlogfile" "$msg"
+postmsg  "$msg"
 
 cp $GEMPAKhref/fix/*.tbl .
 
@@ -144,6 +144,6 @@ set -x
 
 msg='Job completed normally.'
 echo $msg
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 ############################### END OF SCRIPT #######################

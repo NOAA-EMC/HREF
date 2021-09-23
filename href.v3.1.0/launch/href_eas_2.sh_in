@@ -67,4 +67,6 @@ export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
 
+export job=href_eas_2_${NEST}_${cyc}
+
 $HOMEhref/jobs/JHREF_EAS_2

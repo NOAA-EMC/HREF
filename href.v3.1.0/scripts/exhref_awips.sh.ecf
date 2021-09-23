@@ -13,7 +13,7 @@ cd $DATA
 echo "$0 STRDATE "`date`
 
 msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg  "$msg"
 
 #
 #  Generate AWIPS products
@@ -29,6 +29,6 @@ set -x
 
 msg="HAS COMPLETED NORMALLY!"
 echo $msg
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 echo $msg
 ############## END OF SCRIPT #######################

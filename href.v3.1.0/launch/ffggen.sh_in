@@ -66,4 +66,7 @@ export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
 
+export job=href_ffg_gen_${NEST}_${cyc}
+
+
 $HOMEhref/jobs/JHREF_FFG_GEN

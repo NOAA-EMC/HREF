@@ -20,7 +20,7 @@ cd $DATA
 echo "$0 STRDATE "`date`
 
 msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 RFC_LIST="150 152 153 154 155 156 157 158 159 160 161 162"
 MAILTO=${MAILTO:-"matthew.pyle@noaa.gov,nco.spa@noaa.gov"}
@@ -200,6 +200,6 @@ set -x
 
 msg="HAS COMPLETED NORMALLY!"
 echo $msg
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 echo $msg
 ############## END OF SCRIPT #######################

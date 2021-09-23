@@ -28,7 +28,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
-export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
+export HOMEhref=${HOMEhref:-$PACKAGEROOT/href.${href_ver}}
 export USHhref=${USHhref:-$HOMEhref/ush}
 export PARMwmo=${PARMwmo:-$HOMEhref/parm/wmo}
 

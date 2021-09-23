@@ -16,7 +16,7 @@ rm -rf $DATA/*
 cd $DATA
 
 msg="JOB $job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg  "$msg"
 
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
@@ -43,7 +43,7 @@ export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver}
 export COMINnam=${COMINnam:-$GESROOT/href}
 export COMINhrrr=${COMINhrrr:-$GESROOT/href}
 
-export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}}
+export HOMEhref=${HOMEhref:-$PACKAGEROOT/href.${href_ver}}
 export EXEChref=${EXEChref:-$HOMEhref/exec}
 export PARMhref=${PARMhref:-$HOMEhref/parm}
 export USHhref=${USHhref:-$HOMEhref/ush}
@@ -76,8 +76,8 @@ export pgmout="OUTPUT.$$"
 $HOMEhref/scripts/exhref_eas_1.sh.ecf
 ########################################################
 
-msg "JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
