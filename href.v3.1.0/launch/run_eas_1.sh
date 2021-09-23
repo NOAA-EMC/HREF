@@ -15,13 +15,13 @@ then
 
 elif [ $DOM = "ak" ]
 then
-	NODES=2
-	PTILE=80
-	NTASK=160
+	NODES=1
+	PTILE=106
+	NTASK=106
 else
 	NODES=1
-	PTILE=128
-	NTASK=128
+	PTILE=64
+	NTASK=64
 fi
 
 cat href_eas_1.sh_in | sed s:_DOM_:${DOM}:g |  sed s:_CYC_:${CYC}:g | \

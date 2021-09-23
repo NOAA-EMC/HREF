@@ -8,6 +8,8 @@
 #PBS -A HREF-DEV
 #PBS -l walltime=000:29:05
 
+export OMP_NUM_THREADS=1
+
 export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0
 source ${HOMEhref}/versions/run.ver
 

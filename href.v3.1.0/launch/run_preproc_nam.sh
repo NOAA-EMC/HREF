@@ -8,8 +8,8 @@ CYC=${2}
 DATE=${3}
 
 NTASK=55
-NODES=4
-PTILE=14
+NODES=1
+PTILE=55
 
 cat preproc_nam.sh_in | sed s:_DOM_:${DOM}:g |  sed s:_CYC_:${CYC}:g | \
 sed s:_DATE_:${DATE}:g | sed s:_NTASK_:${NTASK}:g | sed s:_NODES_:${NODES}:g | \
