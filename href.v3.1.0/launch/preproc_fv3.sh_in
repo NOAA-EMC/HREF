@@ -1,9 +1,9 @@
 #! /bin/sh
 
 #PBS -j oe
-#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/logs/preproc_hrrr.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/logs/preproc_hrrr.err__DOM__CYC_
-#PBS -l select=_NODES_:ncpus=_PTILE_:mem=128GB
+#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/logs/preproc_fv3.out__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/logs/preproc_fv3/.err__DOM__CYC_
+#PBS -l select=_NODES_:ncpus=_PTILE_:mem=256GB -l place=excl
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:27:05
@@ -23,14 +23,13 @@ module load cray-pals/1.0.12
 
 module load prod_util/${prod_util_ver}
 module load wgrib2/${wgrib2_ver}
+module load netcdf/${netcdf_ver}
 module load g2/${g2_ver}
 module load g2tmpl/${g2tmpl_ver}
 module load jasper/${jasper_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
-module load netcdf/${netcdf_ver}
 module load cfp/${cfp_ver}
-
 
 export numprocs=_NTASK_
 export spanprocs=_PTILE_
@@ -47,7 +46,6 @@ export cyc=_CYC_
 export DATE=_DATE_
 
 export PDY=${DATE}
-
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
@@ -55,20 +53,21 @@ export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
 
 
-export DATA=${DATAROOT}/href_preprochrrr${NEST}_${cyc}_${envir}_retro
-
-export COMINhrrr=`compath.py -e canned hrrr/${hrrr_ver}/hrrr`
+export DATA=${DATAROOT}/href_preprocfv3_${NEST}_${cyc}_${envir}
+# export COMINnam=`compath.py -e canned nam/${nam_ver}/nam`
+export COMINrrfs=`compath.py -e canned rrfs/${rrfs_ver}/rrfs`
 export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
 
-if [ ! -e $GESROOT ] ; then
-	mkdir -p $GESROOT
+if [ ! -e $GESROOT] ; then
+ mkdir -p $GESROOT
 fi
 
 export KEEPDATA=NO
+
 export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
-export job=href_preproc_hrrr_${NEST}_${cyc}
+export job=href_preproc_fv3_${NEST}_${cyc}
 
 
-$HOMEhref/jobs/JHREF_PREPROC_HRRR
+$HOMEhref/jobs/JHREF_PREPROC_FV3
