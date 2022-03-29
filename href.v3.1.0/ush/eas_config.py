@@ -5,18 +5,15 @@
 ###########################
 
 # number of ens members
-nm = 10
+nm = 9
 
-nm_v3 = 10
-nm_ak = 8
-nm_nonconus = 6
+nm_v3 = 9
 # model resolution (km)
-dx = 5
+dx = 3.0
 # min latency (hours)
 min_latency = 0
 # max latency (hours)
 max_latency = 12
-max_latency_nam = 6
 
 #################
 # PQPF SETTINGS #

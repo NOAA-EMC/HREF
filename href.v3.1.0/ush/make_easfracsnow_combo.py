@@ -47,28 +47,12 @@ HOMEhref=os.environ.get('HOMEhref','trash')
 print('found HOMEhref as ', HOMEhref)
 
 try:
-  os.environ["COMINnam"]
+  os.environ["COMINrrfs"]
 except KeyError:
-  print("NEED TO DEFINE COMINnam")
+  print("NEED TO DEFINE COMINrrfs")
   exit(1)
-COMINnam=os.environ.get('COMINnam','trash')
-print('found COMINnam as ', COMINnam)
-
-try:
-  os.environ["COMINhiresw"]
-except KeyError:
-  print("NEED TO DEFINE COMINhiresw")
-  exit(1)
-COMINhiresw=os.environ.get('COMINhiresw','trash')
-print('found COMINhiresw as ', COMINhiresw)
-
-try:
-  os.environ["COMINhrrr"]
-except KeyError:
-  print("NEED TO DEFINE COMINhrrr")
-  exit(1)
-COMINhrrr=os.environ.get('COMINhrrr','trash')
-print ('found COMINhrrr as ', COMINhrrr)
+COMINrrfs=os.environ.get('COMINrrfs','trash')
+print ('found COMINrrfs as ', COMINrrfs)
 
 try:
   os.environ["COMOUT"]
@@ -147,15 +131,8 @@ if not os.path.exists(COMOUT):
 
 #------------------------------------------------------------------------------------------
 
-if dom == 'conus':
-  nm_use = nm
-  members = ['arw','fv3s','arw2','hrrr','nam']
-elif dom == 'ak':
-  nm_use = nm_ak
-  members = ['arw','fv3nc','arw2','hrrrak']
-else:
-  nm_use = nm_nonconus
-  members = ['arw','fv3nc','arw2']
+nm_use = nm
+members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06','rrfs07','rrfs08','rrfs09']
 
 pqpf_6h_calibrate = 'no'
 pqpf_3h_calibrate = 'no'
@@ -393,59 +370,26 @@ print('members: ', members)
 
 for mem in members:
 
+   memname=mem[0:4]
+   memnum=mem[4:6]
+   print('memname, memnum: ', memname, memnum)
+
+
   while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
     print('len(itimes), memcount+2: ', len(itimes), memcount+2)
     itime = starttime-timedelta((start_hour+latency)/24.0)
-    itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
-    if mem == 'arw':
-      file3 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'.grib2'
-      file3alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+6)+'.'+dom+'.grib2'
-      file6 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'.grib2'
-      file6alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'.grib2'
-
-    elif mem == 'nmmb':
-      file3 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'.grib2'
-      file3alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+incr+6)+'.'+dom+'.grib2'
-      file6 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'.grib2'
-      file6alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.nmmb_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'.grib2'
-
-    elif mem == 'arw2':
-      file3 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'mem2.grib2'
-      file3alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+6)+'.'+dom+'mem2.grib2'
-      file6 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hiresw.t%02d'%itime.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'mem2.grib2'
-      file6alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/hiresw.t%02d'%itime_alt.hour+'z.arw_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'mem2.grib2'
-
-
-# have the FV3 preprocessing generate 3 h WEASD fields....handle like Hiresw?
-    elif mem == 'fv3s' or mem == 'fv3nc':
-      file3 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hiresw.t%02d'%itime.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr)+'.'+dom+'.grib2'
-      file3alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/hiresw.t%02d'%itime_alt.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+6)+'.'+dom+'.grib2'
-      file6 = COMINhiresw + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hiresw.t%02d'%itime.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+incr)+'.'+dom+'.grib2'
-      file6alt = COMINhiresw + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day+'/hiresw.t%02d'%itime_alt.hour+'z.fv3_5km.f%02d'%(start_hour+latency+incr+incr+6)+'.'+dom+'.grib2'
-
-    elif mem == 'nam':
-      file3 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file4 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency)+'.grib2'
-      memfiles4[itime] = file4
-      file6 = COMINnam + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/nam.t%02d'%itime.hour+'z.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      print('nam file3: ', file3)
-      print('nam file4: ', file4)
-      print('nam file6: ', file6)
-
-      file3alt = 'garb'
-      file6alt = 'garb'
-
-    elif mem == 'hrrr':
-      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      file3alt = 'garb'
-      file6alt = 'garb'
-
-    elif mem == 'hrrrak':
-      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
-      file3alt = 'garb'
-      file6alt = 'garb'
+    print('itime for this member: ', itime)
+    if memname == 'rrfs':
+      file0 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
+      print('file0 is: ', file0)
+      file1 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file2 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
+      file3 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
+      file4 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
+      file5 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
+      file6 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
+      file7 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'
+      file8 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
 
 
     if qpf_interval != 6:
@@ -494,10 +438,10 @@ for mem in members:
     else:
       latency = latency + 12
 
-  if len(itimes) == (memcount+2):
-    print('Found 2 '+mem+' members valid:',starttime,'-',endtime)
+  if len(itimes) == (memcount+1):
+    print('Found 1 '+mem+' members valid:',starttime,'-',endtime)
   else:
-    print('Could not find 2 '+mem+' members valid for start hour',start_hour)
+    print('Could not find 1 '+mem+' members valid for start hour',start_hour)
 #    sys.exit(1)
 
 #### READ IN QPF ####
