@@ -31,7 +31,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver}/rrfs)}
 
-export GESIN=${GESIN:-${GESROOT}/${envir}/hiresw/href}
+# export GESIN=${GESIN:-${GESROOT}/${envir}/hiresw/href}
 
 export HOMEhref=${HOMEhref:-$NWROOT/href.${href_ver}} 
 export EXEChref=${EXEChref:-$HOMEhref/exec}
@@ -99,9 +99,11 @@ if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT/verf_g2g
 fi
 
-if [ ! -e ${GESIN}.${PDY} ] ; then
-  mkdir -p ${GESIN}.${PDY}
-fi
+export GESOUT=${GESOUT:-${GESROOT}/${RUN}}
+
+# if [ ! -e ${GESIN}.${PDY} ] ; then
+#   mkdir -p ${GESIN}.${PDY}
+# fi
 
 #######################################################
 # Pass information which is needed to run the Script

@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cd /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/
+cd /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/
 
 
 DOM=${1}

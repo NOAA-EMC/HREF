@@ -23,12 +23,17 @@ hr=${3}
 dim1=1799
 dim2=1059
 
+if [ ! -e $GESOUT.${PDY} ]
+then
+mkdir -p $GESOUT.${PDY}
+fi
+
 cd ${DATA}
 
 mkdir fv3_${mem}_${hr}
 cd fv3_${mem}_${hr}
 
-filecheck=$COMINfv3.${PDY}/${cyc}/rrfs.t${cyc}z.mem${mem}.testbed.conusf0${hr}.grib2
+filecheck=$COMINrrfs.${PDY}/${cyc}/rrfs.t${cyc}z.mem${mem}.testbed.conusf0${hr}.grib2
 # filecheck=$COMINfv3/${mem}/PRSLEV.GrbF${hr}
 
 echo filecheck is $filecheck
@@ -187,7 +192,7 @@ fi
 
 
 
-       cp ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 ${GESIN}.${PDY}
+       cp ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 ${GESOUT}.${PDY}
         err=$? ; export err
 
 	if [ $err -ne 0 ]

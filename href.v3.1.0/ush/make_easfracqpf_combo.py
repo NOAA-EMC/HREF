@@ -447,16 +447,16 @@ memcount = 0
     itime = starttime-timedelta((start_hour+latency)/24.0)
     print('itime for this member: ', itime)
     if memname == 'rrfs':
-      file0 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
+      file0 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
       print('file0 is: ', file0)
-      file1 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file2 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
-      file3 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
-      file4 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
-      file5 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
-      file6 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
-      file7 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'      
-      file8 = COMINfv3 + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
+      file1 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file2 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
+      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
+      file4 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
+      file5 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
+      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
+      file7 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'      
+      file8 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
 
     elif memname == 'fv3n':
       print('no fv3nc here')  

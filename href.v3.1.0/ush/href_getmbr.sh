@@ -96,7 +96,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
       if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
 
-        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f${fcst}.grib2
+        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then
@@ -153,7 +153,7 @@ typeset -Z2 fcheckloc
 # hifv3s prfv3s akfv3s
 
 #        filecheck=${COMINhiresw}.${day[$m]}/hiresw.t${cycloc[$m]}z.fv3_5km.f${fcst}.${dom}.grib2
-        filecheck=${COMINfv3}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f${fcst}.grib2
+        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then

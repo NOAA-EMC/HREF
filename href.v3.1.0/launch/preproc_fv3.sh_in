@@ -1,14 +1,14 @@
 #! /bin/sh
 
 #PBS -j oe
-#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/logs/preproc_fv3.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0/launch/logs/preproc_fv3/.err__DOM__CYC_
+#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/logs/preproc_fv3.out__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/logs/preproc_fv3.err__DOM__CYC_
 #PBS -l select=_NODES_:ncpus=_PTILE_:mem=256GB -l place=excl
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:27:05
 
-export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_fork/href.v3.1.0
+export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0
 source ${HOMEhref}/versions/run.ver
 
 export OMP_NUM_THREADS=1
@@ -48,17 +48,23 @@ export DATE=_DATE_
 export PDY=${DATE}
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
+echo PDY is $PDY
+export PDYm1 is $PDYm1
+
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
 export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
 
-
 export DATA=${DATAROOT}/href_preprocfv3_${NEST}_${cyc}_${envir}
+
+echo DATA is $DATA
+
 # export COMINnam=`compath.py -e canned nam/${nam_ver}/nam`
-export COMINrrfs=`compath.py -e canned rrfs/${rrfs_ver}/rrfs`
+# export COMINrrfs=`compath.py -e canned rrfs/${rrfs_ver}/rrfs`
+export COMINrrfs="/lfs/h2/emc/lam/noscrub/Matthew.Pyle/com/rrfs/rrfs"
 export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
 
-if [ ! -e $GESROOT] ; then
+if [ ! -e $GESROOT ] ; then
  mkdir -p $GESROOT
 fi
 
@@ -68,6 +74,5 @@ export SENDCOM=YES
 export SENDECF=NO
 export SENDDBN=NO
 export job=href_preproc_fv3_${NEST}_${cyc}
-
 
 $HOMEhref/jobs/JHREF_PREPROC_FV3
