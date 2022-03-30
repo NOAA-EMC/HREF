@@ -83,7 +83,8 @@ c    for derived variables
 
 ! account for bmap
 
-        if (jf .ne. 37910 .and. jf .ne. 70720) then
+        if (jf .ne. 37910 .and. jf .ne. 70720 .and. 
+     +      jf .ne. 1905141) then
 
 	    do JJ=1,jf
             if (.not. gfld%bmap(JJ)) then
@@ -107,7 +108,8 @@ c    for derived variables
 
 ! account for bmap
 
-        if (jf .ne. 37910 .and. jf .ne. 70720) then
+        if (jf .ne. 37910 .and. jf .ne. 70720 .and. 
+     +      jf .ne. 1905141) then
 
 	    do JJ=1,jf
             if (.not. gfld%bmap(JJ)) then

@@ -56,13 +56,9 @@ export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
 
 export DATA=${DATAROOT}/href_eas_1_${NEST}_${cyc}_${envir}_retro
 
-export COMINhiresw=`compath.py -e canned hiresw/${hiresw_ver}/hiresw`
-export COMINfv3=$COMINhiresw
 export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
 export COMINall=`compath.py -o ${NET}/${href_ver}/nwges/href`
-
-export COMINnam=${COMINall}
-export COMINhrrr=${COMINall}
+export COMINrrfs=${COMINall}
 export KEEPDATA=NO
 export SENDCOM=YES
 export SENDECF=NO

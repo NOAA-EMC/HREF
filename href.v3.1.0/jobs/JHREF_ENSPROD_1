@@ -64,10 +64,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver}/hiresw)}
-export COMINnam=${COMINnam:-$GESROOT/${RUN}}
-export COMINhrrr=${COMINhrrr:-$GESROOT/${RUN}}
-
+export COMINrrfs=${COMINrrfs:-$GESROOT/${RUN}}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${href_ver})/$RUN.${PDY}}
 export COMINffg=${COMINffg:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDY}}
 export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${href_ver})/${RUN}.${PDYm1}}
@@ -101,12 +98,14 @@ echo "$SCRIPTShref/exhref_ensprod_link.sh.ecf $hr" >> poe.link.all
 echo "$SCRIPTShref/exhref_ensprod.sh.ecf $hr" >> poe.ensprod.all
 done
 
-
 chmod 775 poe.link.all
 chmod 775 poe.ensprod.all
 
 mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.link.all
 export err=$?; err_chk
+
+echo to try running ensprod.all
+
 mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.ensprod.all
 export err=$?; err_chk
 

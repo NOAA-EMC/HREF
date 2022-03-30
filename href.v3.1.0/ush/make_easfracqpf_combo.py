@@ -114,7 +114,7 @@ from eas_config import *
 
 # output directory
 # grib-2 template 
-template = HOMEhref + '/fix/pqpf_'+dom+'template.grib2'
+template = HOMEhref + '/fix/pqpf_rrfs'+dom+'template.grib2'
 record = 1		# PQPF from SREF pgrb212 file
 
 print('template file is: ', template)
@@ -376,21 +376,11 @@ itimes = []
 fhours = []
 latency = min_latency
 stop = max_latency
-stopnam = max_latency_nam
+# stopnam = max_latency_nam
 
 # create grib messages from template (only need to do this once)
 
 wgribdate=PDY+cyc
-
-# grbtmp['dataDate']=int('%i'%d0.year+'%02d'%d0.month+'%02d'%d0.day)
-# grbtmp['dataTime']=int('%02d'%d0.hour+'00')
-# grbtmp['startStep']=int(start_hour)
-# grbtmp['endStep']=int(start_hour+qpf_interval)
-# grbtmp['yearOfEndOfOverallTimeInterval']=endtime.year
-# grbtmp['monthOfEndOfOverallTimeInterval']=endtime.month
-# grbtmp['dayOfEndOfOverallTimeInterval']=endtime.day
-# grbtmp['hourOfEndOfOverallTimeInterval']=endtime.hour
-# grbtmp['scaleFactorOfUpperLimit']=3
 
 if qpf_interval == 1:
   outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
@@ -440,8 +430,10 @@ prob = {}
 qpf = {}
 memcount = 0
 
-## change 48 to 60...need to set different limits for different sources?
-
+for mem in members:
+  memname=mem[0:4]
+  memnum=mem[4:6]
+  print('memname, memnum: ', memname, memnum)
   while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
     print('len(itimes), memcount+2: ', len(itimes), memcount+2)
     itime = starttime-timedelta((start_hour+latency)/24.0)
@@ -476,13 +468,13 @@ memcount = 0
         memfiles[itime] = [file0,file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file1: ', file1)
-        print('trying to work file1alt: ', file1alt)
-        if (os.path.exists(file1alt)):
-          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
-          itimes.append(itime_alt)
-          memfiles[itime_alt] = [file0alt,file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
-        else:
-          print('Alt cycle is missing as well')
+#        print('trying to work file1alt: ', file1alt)
+#        if (os.path.exists(file1alt)):
+#          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
+#          itimes.append(itime_alt)
+#          memfiles[itime_alt] = [file0alt,file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
+#        else:
+#          print('Alt cycle is missing as well')
 
     if qpf_interval == 3:
       if os.path.exists(file1):
@@ -493,13 +485,13 @@ memcount = 0
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file1: ', file1)
-        print('trying to work file1alt: ', file1alt)
-        if (os.path.exists(file1alt)):
-          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
-          itimes.append(itime_alt)
-          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
-        else:
-          print('Alt cycle is missing as well')
+#        print('trying to work file1alt: ', file1alt)
+#        if (os.path.exists(file1alt)):
+#          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
+#          itimes.append(itime_alt)
+#          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
+#        else:
+#          print('Alt cycle is missing as well')
 
     if qpf_interval == 6:
       if os.path.exists(file2):
@@ -510,13 +502,13 @@ memcount = 0
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file2 for qpf_6: ', file2)
-        print('trying to work file2alt: ', file2alt)
-        if (os.path.exists(file2alt)):
-          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
-          itimes.append(itime_alt)
-          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
-        else:
-          print('Alt cycle is missing as well')
+#        print('trying to work file2alt: ', file2alt)
+#        if (os.path.exists(file2alt)):
+#          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
+#          itimes.append(itime_alt)
+#          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
+#        else:
+#          print('Alt cycle is missing as well')
 
     if qpf_interval == 12:
       if os.path.exists(file4):
@@ -527,13 +519,13 @@ memcount = 0
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file4 for qpf_12: ', file4)
-        print('trying to work file4alt: ', file4alt)
-        if (os.path.exists(file4alt)):
-          itimes.append(itime_alt)
-          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
-          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
-        else:
-          print('Alt cycle is missing as well')
+#        print('trying to work file4alt: ', file4alt)
+#        if (os.path.exists(file4alt)):
+#          itimes.append(itime_alt)
+#          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
+#          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
+#        else:
+#          print('Alt cycle is missing as well')
 
 
 
@@ -545,13 +537,13 @@ memcount = 0
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
       else:
         print('did not find file8 for qpf_24: ', file8)
-        print('trying to work file8alt: ', file8alt)
-        if (os.path.exists(file8alt)):
-          itimes.append(itime_alt)
-          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
-          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
-        else:
-          print('Alt cycle is missing as well')
+#        print('trying to work file8alt: ', file8alt)
+#        if (os.path.exists(file8alt)):
+#          itimes.append(itime_alt)
+#          fhours.append(start_hour+1*incr+latency+alt_fhrinc)
+#          memfiles[itime_alt] = [file1alt,file2alt,file3alt,file4alt,file5alt,file6alt,file7alt,file8alt]
+#        else:
+#          print('Alt cycle is missing as well')
 
 
 
@@ -560,8 +552,8 @@ memcount = 0
     else:
       latency = latency + 12
 
-  if len(itimes) == (memcount+2):
-    print('Found 2 '+mem+' members valid:',starttime,'-',endtime)
+  if len(itimes) == (memcount+1):
+    print('Found 1 '+mem+' members valid:',starttime,'-',endtime)
   else:
     print('Could not find 2 '+mem+' members valid for start hour',start_hour)
 #    sys.exit(1)
@@ -725,7 +717,7 @@ memcount = 0
 
     print('here past qpf_interval tests')
     print('here with itime: ', itime)
-    if dom == 'conus' or dom == 'ak':
+    if dom == 'conusavoid' or dom == 'ak':
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
 # prob is okay as is based on local qpf[itime]
@@ -933,14 +925,14 @@ for t in thresh_use:
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
 
-  if dom == 'conus' or dom == 'ak':
+  if dom == 'conusavoid' or dom == 'ak':
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
 
   t5 = time.time()
 
 # cap at 100
-#  print('max of probfinal pre cap: ', np.max(probfinal))
-#  probfinal = np.where(probfinal > 100.0,100.0,probfinal)
+  print('max of probfinal pre cap: ', np.max(probfinal))
+  probfinal = np.where(probfinal > 100.0,100.0,probfinal)
   print('Time for get final probability routine for ',t, 'inch threshold: ',t5-t4)
   print('max of probfinal post cap: ', np.max(probfinal))
   print('mean of probfinal: ', np.mean(probfinal))

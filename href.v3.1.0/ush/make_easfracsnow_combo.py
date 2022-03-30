@@ -305,7 +305,6 @@ fhours = []
 
 latency = min_latency
 stop = max_latency
-stopnam = max_latency_nam
 
 wgribdate=PDY+cyc
 
@@ -370,10 +369,9 @@ print('members: ', members)
 
 for mem in members:
 
-   memname=mem[0:4]
-   memnum=mem[4:6]
-   print('memname, memnum: ', memname, memnum)
-
+  memname=mem[0:4]
+  memnum=mem[4:6]
+  print('memname, memnum: ', memname, memnum)
 
   while (len(itimes) < memcount+2) and (latency <= stop) and (start_hour+qpf_interval+latency <= 60):
     print('len(itimes), memcount+2: ', len(itimes), memcount+2)
@@ -401,14 +399,14 @@ for mem in members:
         print('utilizing file3 in memfiles: ', file3)
       else:
         print('Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
-        if os.path.exists(file3alt):
-          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
-          fhours.append(start_hour+qpf_interval+latency+6)
-          print('defined file3 fhours: ', start_hour+qpf_interval+latency+6)
-          itimes.append(itime_alt)
-          memfiles[itime_alt] = file3alt
-          print('using file3alt which is: ', file3alt)
-        else:
+#        if os.path.exists(file3alt):
+#          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
+#          fhours.append(start_hour+qpf_interval+latency+6)
+#          print('defined file3 fhours: ', start_hour+qpf_interval+latency+6)
+#          itimes.append(itime_alt)
+#          memfiles[itime_alt] = file3alt
+#          print('using file3alt which is: ', file3alt)
+#        else:
           print('Completely missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
     else:
       print('using 6 h block portion')
@@ -420,18 +418,18 @@ for mem in members:
         memfiles[itime] = [file3,file6]
       else:
         print('Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
-        if os.path.exists(file3alt) and os.path.exists(file6alt):
-          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
-          itimes.append(itime_alt)
-          fhours.append(start_hour+qpf_interval+latency+6)
-          print('defined fhours in alt 6h block: ', start_hour+qpf_interval+latency+6)
-          memfiles[itime_alt] = [file3alt,file6alt]
-          print('using file3alt which is: ', file3alt)
-          print('using file6alt which is: ', file6alt)
-        else:
-          print('Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
-          print('file3alt: ', file3alt)
-          print('file6alt: ', file6alt)
+#        if os.path.exists(file3alt) and os.path.exists(file6alt):
+#          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
+#          itimes.append(itime_alt)
+#          fhours.append(start_hour+qpf_interval+latency+6)
+#          print('defined fhours in alt 6h block: ', start_hour+qpf_interval+latency+6)
+#          memfiles[itime_alt] = [file3alt,file6alt]
+#          print('using file3alt which is: ', file3alt)
+#          print('using file6alt which is: ', file6alt)
+#        else:
+#          print('Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
+#          print('file3alt: ', file3alt)
+#          print('file6alt: ', file6alt)
 
     if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak':
       latency = latency + 6

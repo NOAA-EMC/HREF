@@ -24,7 +24,7 @@ C  raw data
      +            do_fv3_pre,skip_1h,acclength, domain
 
 	if (domain(1:5) .eq. 'conus') then
-         GRIBID=227            !namnest grid
+         GRIBID=255            !namnest grid
         else if (domain(1:2) .eq. 'ak') then
          GRIBID=999            !AK hiresw grid
         else if (domain(1:2) .eq. 'hi') then

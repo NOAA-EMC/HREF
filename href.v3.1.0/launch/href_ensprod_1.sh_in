@@ -54,8 +54,8 @@ export COMINhiresw=`compath.py -e canned hiresw/${hiresw_ver}/hiresw`
 export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
 export COMINall=`compath.py -o ${NET}/${href_ver}/nwges/href`
 
-export COMINnam=${COMINall}
-export COMINhrrr=${COMINall}
+export COMINrrfs=${COMINall}
+
 export COMINffg=`compath.py -o ${NET}/${href_ver}/${RUN}.${PDY}`
 export COMINffgm1=`compath.py -o ${NET}/${href_ver}/${RUN}.${PDYm1}`
 
