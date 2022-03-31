@@ -99,7 +99,7 @@ from eas_config import *
 
 # output directory
 # grib-2 template 
-template = HOMEhref + '/fix/weasd_'+dom+'template.grib2'
+template = HOMEhref + '/fix/weasd_rrfs'+dom+'template.grib2'
 record = 1		# SNOW from SREF pgrb212 file
 
 print('template file is: ', template)
@@ -119,6 +119,8 @@ start_hour = int(fcst_hour - qpf_interval)
 fhr=fcst_hour
 fhr_range=str(start_hour)+'-'+str(fcst_hour)
 
+print('fhr_range: ', fhr_range)
+
 print('fcst_hour, qpf_interval, start_hour: ', fcst_hour, qpf_interval, start_hour)
 
 # maximum radius (km)
@@ -131,7 +133,7 @@ if not os.path.exists(COMOUT):
 
 #------------------------------------------------------------------------------------------
 
-nm_use = nm
+nm_use = 9
 members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06','rrfs07','rrfs08','rrfs09']
 
 pqpf_6h_calibrate = 'no'
@@ -318,18 +320,15 @@ lats,nx,ny=simplewgrib2('lat.txt')
 nlats, nlons = np.shape(lats)
 
 # define mask - NAM nest grid interpolated to grid 227 has undefined values
-print('dom here at decision point: ', dom)
-if dom == 'conus':
+if dom == 'conusavoid':
   print('defining conus maskfile')
   maskfile = HOMEhref + '/fix/nam_mask.grib2'
 
-print('dom here at decision point2: ', dom)
-if dom == 'ak':
+if dom == 'akavoid':
   print('defining ak maskfile')
   maskfile = HOMEhref + '/fix/akhref_mask.grib2'
 
-print('dom here at decision point3: ', dom)
-if dom == 'conus' or dom == 'ak':
+if dom == 'conusavoid' or dom == 'akavoid':
   print('opening the maskregion stuff')
   print('maskfile is: ', maskfile)
 
@@ -340,15 +339,16 @@ if dom == 'conus' or dom == 'ak':
 
 
 if qpf_interval == 1:
-  outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.snow01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  print('defined outbase: ', outbase)
   incr = 1
   thresh_use=snow_1h_thresh
 if qpf_interval == 3:
-  outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow03_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.snow03_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 3
   thresh_use=snow_3h_thresh
 if qpf_interval == 6:
-  outbase = 'href.t'+cyc[0:2]+'z.'+dom+'.snow06_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.snow06_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 3
   thresh_use=snow_6h_thresh
   print('thresh_use: ', thresh_use)
@@ -368,7 +368,6 @@ memcount = 0
 print('members: ', members)
 
 for mem in members:
-
   memname=mem[0:4]
   memnum=mem[4:6]
   print('memname, memnum: ', memname, memnum)
@@ -378,16 +377,10 @@ for mem in members:
     itime = starttime-timedelta((start_hour+latency)/24.0)
     print('itime for this member: ', itime)
     if memname == 'rrfs':
-      file0 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
-      print('file0 is: ', file0)
-      file1 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file2 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
-      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
-      file4 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
-      file5 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
-      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
-      file7 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'
-      file8 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
+      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      print('file3 is: ', file3)
+      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      print('file6 is: ', file6)
 
 
     if qpf_interval != 6:
@@ -399,15 +392,6 @@ for mem in members:
         print('utilizing file3 in memfiles: ', file3)
       else:
         print('Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
-#        if os.path.exists(file3alt):
-#          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
-#          fhours.append(start_hour+qpf_interval+latency+6)
-#          print('defined file3 fhours: ', start_hour+qpf_interval+latency+6)
-#          itimes.append(itime_alt)
-#          memfiles[itime_alt] = file3alt
-#          print('using file3alt which is: ', file3alt)
-#        else:
-          print('Completely missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
     else:
       print('using 6 h block portion')
       if os.path.exists(file3) and os.path.exists(file6):
@@ -418,18 +402,6 @@ for mem in members:
         memfiles[itime] = [file3,file6]
       else:
         print('Missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
-#        if os.path.exists(file3alt) and os.path.exists(file6alt):
-#          print('alt Found:',itime_alt,'forecast hour',(start_hour+qpf_interval+latency))
-#          itimes.append(itime_alt)
-#          fhours.append(start_hour+qpf_interval+latency+6)
-#          print('defined fhours in alt 6h block: ', start_hour+qpf_interval+latency+6)
-#          memfiles[itime_alt] = [file3alt,file6alt]
-#          print('using file3alt which is: ', file3alt)
-#          print('using file6alt which is: ', file6alt)
-#        else:
-#          print('Even alt is missing:',itime,'forecast hour',(start_hour+qpf_interval+latency))
-#          print('file3alt: ', file3alt)
-#          print('file6alt: ', file6alt)
 
     if mem == 'nam' or mem == 'hrrr' or mem == 'hrrrak':
       latency = latency + 6
@@ -518,7 +490,7 @@ for mem in members:
 
     print('max of qpf as snow: ', np.max(qpf[itime]))
     print('dom is: ', dom)
-    if dom == 'conus' or dom == 'ak':
+    if dom == 'conusavoid' or dom == 'akavoid':
       print('qpf shape: ', np.shape(qpf))
       print('maskregion shape: ', np.shape(maskregion))
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
@@ -708,7 +680,7 @@ for t in thresh_use:
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
 
-  if dom == 'conus' or dom == 'ak':
+  if dom == 'conusvoid' or dom == 'akavoid':
     print('working final probability with mask')
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
 
