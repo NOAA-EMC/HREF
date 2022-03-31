@@ -32,11 +32,11 @@ ln -sf $FIXhref/new*rrfs* .
 if [ $NEST = 'conusavoidnow' ]
 then
 
-cp $COMINffg/href.t${cyc}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
+cp $COMINffg/rrfs.t${cyc}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
 err1=$?
-cp $COMINffg/href.t${cyc}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
+cp $COMINffg/rrfs.t${cyc}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
 err2=$?
-cp $COMINffg/href.t${cyc}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
+cp $COMINffg/rrfs.t${cyc}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
 err3=$?
 
 if [ $cyc = '00' ]; then
@@ -199,8 +199,8 @@ if [ $SENDCOM = YES ]; then
 
  for typ in $types
  do
-  cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  $WGRIB2 $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+  cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $WGRIB2 $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
  done
 
  if [ ${ff}%3 -eq 0 ]
@@ -223,8 +223,8 @@ fi
 if [ $SENDDBN = YES ]; then
  for typ in $types
  do
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job $COMOUT/ensprod/href.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
  done
 fi
 
