@@ -88,7 +88,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
       echo ff $ff m $m
       echo fcst $fcst
 
-      echo href.m${m}.t${cyc}z.f${ff} 
+#      echo href.m${m}.t${cyc}z.f${ff} 
 
 ###### FV3
 
@@ -100,8 +100,8 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
 	if [ -e $filecheck ]
         then
-         ln -sf $filecheck  $DATA/href.m${m}.t${cyc}z.f${ff}
-         ln -sf $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
+         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
         else
          msg="FATAL ERROR: $filecheck missing but required"
          err_exit $msg
@@ -110,11 +110,11 @@ echo working things with ff as $ff and  fcheck as $fcheck
 	fcheckloc=$fcheck
 	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
         do
-	echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+	echo check on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} working $ff
         loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
-	echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+	echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc}
           sleep ${sleeptime}
           let loop=loop+1
         done	
@@ -128,11 +128,11 @@ typeset -Z2 fcheckloc
 	echo here a $ff
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
         fi
         fi
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 conus |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ] 
@@ -157,8 +157,8 @@ typeset -Z2 fcheckloc
 
 	if [ -e $filecheck ]
         then
-         ln -sf    ${filecheck} $DATA/href.m${m}.t${cyc}z.f${ff}
-         ln -sf    $DATA/href.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/href.m${m}.t${cyc}z.f${ff}
+         ln -sf    ${filecheck} $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
+         ln -sf    $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
         else
          
          msg="FATAL ERROR: $filecheck missing but required"
@@ -171,11 +171,11 @@ typeset -Z2 fcheckloc
 
 	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
         do
-         echo check on $DATA/href.m${m}.t${cyc}z.f${fcheckloc} working $ff
+         echo check on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} working $ff
          loop=0
-        while [ ! -e $DATA/href.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
 	do
-         echo waiting on $DATA/href.m${m}.t${cyc}z.f${fcheckloc}
+         echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc}
          sleep ${sleeptime}
          let loop=loop+1
         done	
@@ -190,11 +190,11 @@ typeset -Z2 fcheckloc
 
         if [ ${ff}%3 -eq 0 ]
         then
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
         fi
 
-        echo href.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom |$EXEChref/href_get_prcip > $DATA/output.href_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ] 

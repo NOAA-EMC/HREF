@@ -39,7 +39,7 @@ export PTILE=_PTILE_
 export RUN_ENVIR=test
 export envir=test
 export NET=href
-export RUN=href
+export RUN=rrfs
 
 export NEST=_DOM_
 export cyc=_CYC_

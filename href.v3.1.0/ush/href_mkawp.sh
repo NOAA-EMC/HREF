@@ -62,24 +62,24 @@ fi
 
 
 loop=0
-while [ ! -e ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 -a $loop -lt $looplim ]
+while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 -a $loop -lt $looplim ]
 do
-         echo waiting on ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
          sleep ${sleeptime}
          let loop=loop+1
 done
 
 loop=0
-while [ ! -e ${COMIN}/href.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 -a $loop -lt $looplim ]
+while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 -a $loop -lt $looplim ]
 do
-         echo waiting on ${COMIN}/href.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2
+         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2
          sleep ${sleeptime}
          let loop=loop+1
 done
 
-if [ ! -e ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2  -o ! -e ${COMIN}/href.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 ]
+if [ ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2  -o ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 ]
 then
-         msg="FATAL ERROR: ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 or ${COMIN}/href.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 missing but required"
+         msg="FATAL ERROR: ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 or ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 missing but required"
          err_exit $msg
 fi
 
@@ -87,38 +87,38 @@ fi
 
   if [ $type = "prob" ]
   then
-  cp ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
 # also want EAS prob
-  cp ${COMIN}/href.t${cyc}z.${NEST}.eas.f${fhr}.grib2 .
+  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2 .
 # want FFRI prob for conus
   if [ $NEST = "conus" ]
   then
-    cp ${COMIN}/href.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 .
-    cat href.t${cyc}z.${NEST}.eas.f${fhr}.grib2 href.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+    cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 .
+    cat ${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
   else
-    cat href.t${cyc}z.${NEST}.eas.f${fhr}.grib2  >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+    cat ${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2  >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
   fi
 
-  cat href.t${cyc}z.${NEST}.eas.f${fhr}.grib2 href.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+  cat ${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
 
   elif [ $type = "pmmn" ]
   then
-  cp ${COMIN}/href.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 .
-  cp ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
-  cat href.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 >> href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 .
+  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  cat ${RUN}.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
 
   else
-  ln -sf ${COMIN}/href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  ln -sf ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
   fi
 
-  $GRBINDEX href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i 
+  $GRBINDEX ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i 
   export pgm=tocgrib2
   . prep_step
   startmsg
 
   export FORTREPORTS=unit_vars=yes 
-  export FORT11=href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
-  export FORT12=href.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i
+  export FORT11=${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+  export FORT12=${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i
   export FORT51=xtrn.${cycle}.href.${NEST}_${type}_${fhr}
   $TOCGRIB2 <$PARMwmo/grib2_awips_href_${NEST}_${type}f${fhr} parm='KWBH'
   err=$?;export err ;err_chk

@@ -32,11 +32,11 @@ ln -sf $FIXhref/new*rrfs* .
 if [ $NEST = 'conusavoidnow' ]
 then
 
-cp $COMINffg/rrfs.t${cyc}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
+cp $COMINffg/${RUN}.t${cyc}z.ffg1h.5km.grib2 ./${RUN}.ffg1h.5km.grib2
 err1=$?
-cp $COMINffg/rrfs.t${cyc}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
+cp $COMINffg/${RUN}.t${cyc}z.ffg3h.5km.grib2 ./${RUN}.ffg3h.5km.grib2
 err2=$?
-cp $COMINffg/rrfs.t${cyc}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
+cp $COMINffg/${RUN}.t${cyc}z.ffg6h.5km.grib2 ./${RUN}.ffg6h.5km.grib2
 err3=$?
 
 if [ $cyc = '00' ]; then
@@ -52,22 +52,22 @@ fi
 
 if [ $err1 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG1H file" $COMINffg/href.${cycold}z.ffg1h.5km.grib2
-cp $COMINffg/href.${cycold}z.ffg1h.5km.grib2 ./href.ffg1h.5km.grib2
+echo "WARNING: using previous cycle FFG1H file" $COMINffg/${RUN}.${cycold}z.ffg1h.5km.grib2
+cp $COMINffg/${RUN}.${cycold}z.ffg1h.5km.grib2 ./${RUN}.ffg1h.5km.grib2
 err=$? ; err_chk
 fi
 
 if [ $err2 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG3H file" $COMINffg/href.${cycold}z.ffg3h.5km.grib2
-cp $COMINffg/href.${cycold}z.ffg3h.5km.grib2 ./href.ffg3h.5km.grib2
+echo "WARNING: using previous cycle FFG3H file" $COMINffg/${RUN}.${cycold}z.ffg3h.5km.grib2
+cp $COMINffg/${RUN}.${cycold}z.ffg3h.5km.grib2 ./${RUN}.ffg3h.5km.grib2
 err=$? ; err_chk
 fi
 
 if [ $err3 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG6H file" $COMINffg/href.${cycold}z.ffg6h.5km.grib2
-cp $COMINffg/href.${cycold}z.ffg6h.5km.grib2 ./href.ffg6h.5km.grib2
+echo "WARNING: using previous cycle FFG6H file" $COMINffg/${RUN}.${cycold}z.ffg6h.5km.grib2
+cp $COMINffg/${RUN}.${cycold}z.ffg6h.5km.grib2 ./${RUN}.ffg6h.5km.grib2
 err=$? ; err_chk
 fi
 
@@ -118,10 +118,10 @@ echo mbrs is $mbrs
         weight='0'$weight
       fi
 
-   if [ -s $DATA/href.m${m}.t${cyc}z.f$ff ] ; then
+   if [ -s $DATA/${RUN}.m${m}.t${cyc}z.f$ff ] ; then
        nmbr=` expr $nmbr + 1`
-       echo "   "$weight href.m${m}.t${cyc}z.f$ff "->" ${file[$m]}.t${cycloc[$m]}z.f${fcst} >> temp.f${ff}
-       ln -sf $DATA/href.m${m}.t${cyc}z.f$ff .
+       echo "   "$weight ${RUN}.m${m}.t${cyc}z.f$ff "->" ${file[$m]}.t${cycloc[$m]}z.f${fcst} >> temp.f${ff}
+       ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f$ff .
    fi
  done
 
@@ -199,8 +199,8 @@ if [ $SENDCOM = YES ]; then
 
  for typ in $types
  do
-  cp $DATA/$ff/href.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  $WGRIB2 $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+  cp $DATA/$ff/${RUN}.${typ}.t${cyc}z.f$ff $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
  done
 
  if [ ${ff}%3 -eq 0 ]
@@ -223,8 +223,8 @@ fi
 if [ $SENDDBN = YES ]; then
  for typ in $types
  do
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job $COMOUT/ensprod/rrfs.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
  done
 fi
 

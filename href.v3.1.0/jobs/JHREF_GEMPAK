@@ -68,6 +68,9 @@ echo "$HOMEhref/scripts/exhref_nawips.sh.ecf lpmm  > $DATA/${NEST}_lpmm.$$  " >>
 
 if [ ${NEST} =  'conus' ]
 then
+export finc=3
+export fend=48
+export fstart=06
 echo "$HOMEhref/scripts/exhref_nawips.sh.ecf ffri  > $DATA/${NEST}_ffri.$$  " >>poescript
 fi
 

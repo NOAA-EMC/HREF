@@ -72,102 +72,102 @@ fhr=37
 while [ $fhr -le 48 ]
 do
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 if [ $((fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 fi
 
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 6 ]
 then
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 fi
 
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 12 ]
 then
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 -o \
-     ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 -o \
-     ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.pqpf12(low|med|high)_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf12(low|med|high)_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $fhr -eq 39  -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48 ]
 then
 
-if [ ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 -o \
-     ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 -o \
-     ! -e $DATA/rrfs.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/rrfs.t${cyc}z.${dom}.pqpf24(low|med|high)_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf24(low|med|high)_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/rrfs.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 >> $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $SENDCOM == 'YES' ]
 then
-cp $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
-## $WGRIB2 $DATA/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2 -match APCP -grib ${COMOUT}/ensprod/rrfs.t${cyc}z.${dom}.easffair.f${fhr}.grib2
-$WGRIB2 ${COMOUT}/ensprod/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT}/ensprod/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
+cp $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
+## $WGRIB2 $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 -match APCP -grib ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.easffair.f${fhr}.grib2
+$WGRIB2 ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
 fi
 
 if [ $SENDDBN = YES ]; then
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job ${COMOUT}/ensprod/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2
-  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job ${COMOUT}/ensprod/rrfs.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2 $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+  $DBNROOT/bin/dbn_alert MODEL HREF_GB2_WIDX $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
 fi
 
 let fhr=fhr+1
