@@ -56,7 +56,7 @@ export DATA=${DATAROOT}/href_ensprod_2_${NEST}_${cyc}_${envir}_retro
 export COMINhiresw=`compath.py -e canned hiresw/${hiresw_ver}/hiresw`
 
 export GESROOT=`compath.py -o ${NET}/${href_ver}/nwges`
-export COMINall=`compath.py -o ${NET}/${href_ver}/nwges/href`
+export COMINall=`compath.py -o ${NET}/${href_ver}/nwges/${RUN}`
 
 export COMINrrfs=${COMINall}
 export COMINffg=`compath.py -o ${NET}/${href_ver}/${RUN}.${PDY}`

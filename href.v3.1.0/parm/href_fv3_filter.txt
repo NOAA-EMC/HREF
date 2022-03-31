@@ -1,6 +1,7 @@
 MSLET:mean sea level:
 PRMSL:mean sea level:
 VIS:surface:
+VIS:cloud top:
 PRES:surface:
 HGT:surface:
 TMP:2 m above ground:
