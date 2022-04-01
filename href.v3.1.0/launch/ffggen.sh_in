@@ -39,7 +39,7 @@ export PTILE=1
 
 export RUN_ENVIR=test
 export envir=test
-export NET=href
+export NET=rrfs
 export RUN=rrfs
 
 export NEST=_DOM_
