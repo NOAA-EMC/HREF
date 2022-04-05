@@ -1,4 +1,4 @@
-#! /bin/csh
+#! /bin/sh
 
 module purge
 module use -a ../modulefiles/HREF
@@ -7,7 +7,7 @@ module list
 
 sleep 1
 
-set BASE=`pwd`
+BASE=`pwd`
 
 
 #########################

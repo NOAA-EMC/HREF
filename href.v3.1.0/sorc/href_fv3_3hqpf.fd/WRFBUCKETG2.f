@@ -7,7 +7,6 @@
 
         USE GRIB_MOD
 
-
 !	real pdiff(im,jm)
         real, allocatable :: pdiff(:,:)
 
@@ -153,9 +152,10 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 !        write(0,*) 'pulled gfld%idsect(1:10): ', gfld%idsect(1:10)
         write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
-        do J=1,29
-        write(0,*) 'J,gfld%ipdtmpl(J): ', J,gfld%ipdtmpl(J)
-        enddo
+        write(0,*) 'earlier ipdtmpl(27): ', gfld%ipdtmpl(27)
+!        do J=1,29
+!        write(0,*) 'J,gfld%ipdtmpl(J): ', J,gfld%ipdtmpl(J)
+!        enddo
 
 !        write(0,*) 'pulled gfld%igdtnum : ', gfld%igdtnum 
 
@@ -240,7 +240,10 @@ C    &                  UNPACK,K,GFLD,IRET)
         
 
 
-        gfld%ipdtmpl=PDS_RAIN_HOLD_EARLY
+        do K=1,gfld%ipdtlen
+        gfld%ipdtmpl(K)=PDS_RAIN_HOLD_EARLY(K)
+        enddo
+
         gfld%ipdtmpl(9)=ihrs1
         do J=16,21
         gfld%ipdtmpl(J)=PDS_RAIN_HOLD(J)
@@ -252,12 +255,11 @@ C    &                  UNPACK,K,GFLD,IRET)
         write(0,*) 'interval specified in 27: ', interv
 
 !        gfld%ipdtmpl(28)=1
-
         gfld%fld=dprecip
 
-        do J=1,29
-        write(0,*) 'at write J,gfld%ipdtmpl(J): ', J,gfld%ipdtmpl(J)
-        enddo
+!        do J=1,29
+!        write(0,*) 'at write J,gfld%ipdtmpl(J): ', J,gfld%ipdtmpl(J)
+!        enddo
 
 	call putgb2(13,GFLD,IRET)
         write(0,*) 'IRET from putgb2 for dprecip', IRET

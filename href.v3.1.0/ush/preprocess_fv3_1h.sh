@@ -33,7 +33,8 @@ cd ${DATA}
 mkdir fv3_${mem}_${hr}
 cd fv3_${mem}_${hr}
 
-filecheck=$COMINrrfs.${PDY}/${cyc}/rrfs.t${cyc}z.mem${mem}.testbed.conusf0${hr}.grib2
+# filecheck=$COMINrrfs.${PDY}/${cyc}/rrfs.t${cyc}z.mem${mem}.testbed.conusf0${hr}.grib2
+filecheck=$COMINrrfs.${PDY}/${cyc}/rrfs.t${cyc}z.mem${mem}.f${hr}.grib2
 # filecheck=$COMINfv3/${mem}/PRSLEV.GrbF${hr}
 
 echo filecheck is $filecheck
