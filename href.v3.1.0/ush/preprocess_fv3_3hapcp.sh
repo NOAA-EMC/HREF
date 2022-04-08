@@ -10,6 +10,7 @@
 #          April 2021
 
 
+set -x 
 
 dim1=1799
 dim2=1059
