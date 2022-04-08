@@ -11,6 +11,7 @@
 #          March 2020
 
 
+set -x
 
 if [ $# -ne 3 ]
 then

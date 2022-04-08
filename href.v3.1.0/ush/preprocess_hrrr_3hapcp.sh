@@ -9,7 +9,7 @@
 #  Author: Matthew Pyle
 #          March 2020
 
-
+set -x
 
 if [ $# -ne 2 ]
 then

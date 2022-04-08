@@ -11,6 +11,8 @@
 #          March 2020
 
 
+set -x 
+
 if [ $# -ne 3 ]
 then
 echo "ERROR: need cycle and forecast hour and nest"
