@@ -8,7 +8,7 @@
 #           2019-09-10: Matthew Pyle added HRRR and FV3, eliminated NMMB
 #    Usage: href_getmbr.sh fhr cycle Day 
 ######################################################################################
-##tst set -x         
+set -x         
 
 typeset -Z2 cycloc
 typeset -Z2 fcst
