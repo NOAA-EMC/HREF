@@ -9,7 +9,7 @@
 #           2022-03-29: Matthew Pyle - stripped to just FV3
 #    Usage: href_getmbr.sh fhr cycle Day 
 ######################################################################################
-##tst set -x         
+set -x         
 
 typeset -Z2 cycloc
 typeset -Z2 fcst
