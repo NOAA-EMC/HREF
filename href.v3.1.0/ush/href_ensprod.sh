@@ -29,14 +29,15 @@ cd $DATA/${ff}/
 
 ln -sf $FIXhref/new*rrfs* .
 
-if [ $NEST = 'conusavoidnow' ]
+# if [ $NEST = 'conusavoidnow' ]
+if [ $NEST = 'conus' ]
 then
 
-cp $COMINffg/${RUN}.t${cyc}z.ffg1h.5km.grib2 ./${RUN}.ffg1h.5km.grib2
+cp $COMINffg/${RUN}.t${cyc}z.ffg1h.3km.grib2 ./${RUN}.ffg1h.3km.grib2
 err1=$?
-cp $COMINffg/${RUN}.t${cyc}z.ffg3h.5km.grib2 ./${RUN}.ffg3h.5km.grib2
+cp $COMINffg/${RUN}.t${cyc}z.ffg3h.3km.grib2 ./${RUN}.ffg3h.3km.grib2
 err2=$?
-cp $COMINffg/${RUN}.t${cyc}z.ffg6h.5km.grib2 ./${RUN}.ffg6h.5km.grib2
+cp $COMINffg/${RUN}.t${cyc}z.ffg6h.3km.grib2 ./${RUN}.ffg6h.3km.grib2
 err3=$?
 
 if [ $cyc = '00' ]; then
@@ -52,22 +53,22 @@ fi
 
 if [ $err1 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG1H file" $COMINffg/${RUN}.${cycold}z.ffg1h.5km.grib2
-cp $COMINffg/${RUN}.${cycold}z.ffg1h.5km.grib2 ./${RUN}.ffg1h.5km.grib2
+echo "WARNING: using previous cycle FFG1H file" $COMINffg/${RUN}.${cycold}z.ffg1h.3km.grib2
+cp $COMINffg/${RUN}.${cycold}z.ffg1h.3km.grib2 ./${RUN}.ffg1h.3km.grib2
 err=$? ; err_chk
 fi
 
 if [ $err2 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG3H file" $COMINffg/${RUN}.${cycold}z.ffg3h.5km.grib2
-cp $COMINffg/${RUN}.${cycold}z.ffg3h.5km.grib2 ./${RUN}.ffg3h.5km.grib2
+echo "WARNING: using previous cycle FFG3H file" $COMINffg/${RUN}.${cycold}z.ffg3h.3km.grib2
+cp $COMINffg/${RUN}.${cycold}z.ffg3h.3km.grib2 ./${RUN}.ffg3h.3km.grib2
 err=$? ; err_chk
 fi
 
 if [ $err3 -ne 0 ]
 then
-echo "WARNING: using previous cycle FFG6H file" $COMINffg/${RUN}.${cycold}z.ffg6h.5km.grib2
-cp $COMINffg/${RUN}.${cycold}z.ffg6h.5km.grib2 ./${RUN}.ffg6h.5km.grib2
+echo "WARNING: using previous cycle FFG6H file" $COMINffg/${RUN}.${cycold}z.ffg6h.3km.grib2
+cp $COMINffg/${RUN}.${cycold}z.ffg6h.3km.grib2 ./${RUN}.ffg6h.3km.grib2
 err=$? ; err_chk
 fi
 

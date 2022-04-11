@@ -23,7 +23,7 @@ msg="$job HAS BEGUN"
 postmsg "$msg"
 
 RFC_LIST="150 152 153 154 155 156 157 158 159 160 161 162"
-MAILTO=${MAILTO:-"matthew.pyle@noaa.gov,nco.spa@noaa.gov"}
+MAILTO=${MAILTO:-"matthew.pyle@noaa.gov"}
 echo $MAILTO
 
 echo here with PDY $PDY
@@ -166,6 +166,8 @@ echo $PDY >> itag
 $EXEChref/href_ffg_gen < itag
 
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
+wgrib2def="lambert:262.5:38.5:38.5 237.280:1799:3000 21.138:1059:3000"
+
 
 for RFC in $RFC_LIST
 do
@@ -186,9 +188,9 @@ $EXEChref/href_ffg_gen < itag
 if [ $SENDCOM = "YES" ]
 then
 echo try copying to COMOUT
-cp full.g227.grib2_ffg1h ${COMOUT}/href.t${cyc}z.ffg1h.5km.grib2
-cp full.g227.grib2_ffg3h ${COMOUT}/href.t${cyc}z.ffg3h.5km.grib2
-cp full.g227.grib2_ffg6h ${COMOUT}/href.t${cyc}z.ffg6h.5km.grib2
+cp full.g227.grib2_ffg1h ${COMOUT}/${RUN}.t${cyc}z.ffg1h.3km.grib2
+cp full.g227.grib2_ffg3h ${COMOUT}/${RUN}.t${cyc}z.ffg3h.3km.grib2
+cp full.g227.grib2_ffg6h ${COMOUT}/${RUN}.t${cyc}z.ffg6h.3km.grib2
 fi
 
 #####################################################################
