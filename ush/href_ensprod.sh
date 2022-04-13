@@ -29,8 +29,8 @@ cd $DATA/${ff}/
 
 ln -sf $FIXhref/new*rrfs* .
 
-# if [ $NEST = 'conusavoidnow' ]
-if [ $NEST = 'conus' ]
+if [ $NEST = 'conusavoidnow' ]
+# if [ $NEST = 'conus' ]
 then
 
 cp $COMINffg/${RUN}.t${cyc}z.ffg1h.3km.grib2 ./${RUN}.ffg1h.3km.grib2

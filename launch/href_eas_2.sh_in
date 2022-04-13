@@ -1,8 +1,8 @@
 #! /bin/sh
 
 #PBS -j oe
-#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/logs/href_eas_2.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/logs/href_eas_2.err__DOM__CYC_
+#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/rrfs.v3.1.0/launch/logs/href_eas_2.out__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/rrfs.v3.1.0/launch/logs/href_eas_2.err__DOM__CYC_
 #PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB -l place=excl
 #PBS -q dev
 #PBS -A HREF-DEV
@@ -10,7 +10,7 @@
 
 export OMP_NUM_THREADS=1
 
-export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0
+export HOMEhref=/lfs/h2/emc/lam/noscrub/${USER}/rrfs.v3.1.0
 source ${HOMEhref}/versions/run.ver
 
 module purge
@@ -49,9 +49,9 @@ export PTILE=_PTILE_
 export PDY=${DATE}
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`
 
-export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
-export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
-export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/tmp
+export COMROOT=/lfs/h2/emc/ptmp/${USER}/${envir}/com
+export COMPATH=/lfs/h2/emc/ptmp/${USER}
 
 export DATA=${DATAROOT}/href_eas_2_${NEST}_${cyc}_${envir}_retro
 
