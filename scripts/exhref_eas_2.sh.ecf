@@ -19,7 +19,7 @@ then
 rm poe.*
 fi
 
-hrs="39 42 45 48"
+hrs="39 42 45 48 51 54 57 60"
 for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_24_low; cd qpf_${fhr}_24_low ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 240 >  qpf_combo_${dom}_${cyc}_24h_low_${fhr}.log" >> poe.qpf_snow
@@ -27,14 +27,14 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_24_med; cd qpf_${fhr}_24_med ; python ${USHhr
 echo "cd ${DATA}; mkdir qpf_${fhr}_24_high; cd qpf_${fhr}_24_high ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 242 >  qpf_combo_${dom}_${cyc}_24h_high_${fhr}.log" >> poe.qpf_snow
 done
 
-hrs="39 42 45 48"
+hrs="39 42 45 48 51 54 57 60"
 for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 6 > qpf_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
 done
 
-hrs="39 42 45 48"
+hrs="39 42 45 48 51 54 57 60"
 for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_12_low; cd qpf_${fhr}_12_low ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 120 >  qpf_combo_${dom}_${cyc}_12h_low_${fhr}.log" >> poe.qpf_snow
@@ -43,14 +43,14 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_12_high; cd qpf_${fhr}_12_high ; python ${USH
 done
 
 
-hrs="39 42 45 48"
+hrs="39 42 45 48 51 54 57 60"
 for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 3  > qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHhref}/make_easfracsnow_combo.py ${fhr} 3 > snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
 done
 
-hrs="37 38 39 40 41 42 43 44 45 46 47 48"
+hrs="37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
 for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_1; cd qpf_${fhr}_1 ; python ${USHhref}/make_easfracqpf_combo.py ${fhr} 1 > qpf_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
@@ -69,7 +69,7 @@ then
 
 fhr=37
 
-while [ $fhr -le 48 ]
+while [ $fhr -le 60 ]
 do
 
 if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 ]
@@ -142,7 +142,8 @@ cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 >> $DATA/${RUN}
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
-if [ $fhr -eq 39  -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48 ]
+if [ $fhr -eq 39 -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48 -o $fhr -eq 51 \
+ -o  $fhr -eq 54 -o $fhr -eq 57 -o $fhr -eq 60]
 then
 
 if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 -o \

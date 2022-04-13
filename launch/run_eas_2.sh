@@ -10,9 +10,9 @@ DATE=${3}
 if [ $DOM = "conus" -o $DOM = "ak" ]
 then
 
-NODES=1
+NODES=2
 PTILE=64
-NTASK=64
+NTASK=128
 
 else
 
