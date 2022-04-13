@@ -22,7 +22,7 @@ FFLAGS =        -fp-model strict -g -traceback -O3 -assume noold_ldout_format -g
 # Lines from here on down should not need to be changed.  They are the
 # actual rules which make uses to build a.out.
 #
-all:	 $(CMD) delete
+all:	 clean $(CMD)
 
 $(CMD):		$(OBJS)
 	$(FC) -I${INC} -o $(@) $(OBJS) $(LIBS)
@@ -30,8 +30,8 @@ $(CMD):		$(OBJS)
 $(OBJS):       
 	$(FC) -I${INC} -c $(FFLAGS) $(@:.o=.f)
 clean:
-	@rm  *.o
+	@rm *.o ${CMD}
 delete:
-	@rm  *.o
+	@rm *.o ${CMD} 
 copy:
 	/bin/cp ${CMD}  ../../exec/
