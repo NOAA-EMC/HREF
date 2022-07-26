@@ -1,14 +1,14 @@
 #! /bin/sh
 
 #PBS -j oe
-#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/logs/href_ensprod_2.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0/launch/logs/href_ensprod_2.err__DOM__CYC_
+#PBS -o /lfs/h2/emc/lam/noscrub/Matthew.Pyle/href.v3.1.3/launch/logs/href_ensprod_2.out__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/Matthew.Pyle/href.v3.1.3/launch/logs/href_ensprod_2.err__DOM__CYC_
 #PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB  -l place=excl
 #PBS -q dev
 #PBS -A HREF-DEV
 #PBS -l walltime=000:27:05
 
-export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/HREF_wcoss2/href.v3.1.0
+export HOMEhref=/lfs/h2/emc/lam/noscrub/Matthew.Pyle/href.v3.1.3
 source ${HOMEhref}/versions/run.ver
 
 module purge
