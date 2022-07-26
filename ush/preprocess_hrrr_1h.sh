@@ -10,8 +10,7 @@
 #  Author: Matthew Pyle
 #          March 2020
 
-
-set -x 
+set -x
 
 if [ $# -ne 3 ]
 then
@@ -55,6 +54,11 @@ fi
          $WGRIB2 $filecheck | grep -F -f $PARMhref/href_hrrr_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
          $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "MSLMA" -set_byte 4 11 192 -grib mslet.t${cyc}z.f${hr}.grb
+
+	 $WGRIB2 $filecheck -match "HPBL" -set_byte 4 10 3 -grib pblh_start.t${cyc}z.f${hr}.grb
+	 $WGRIB2 pblh_start.t${cyc}z.f${hr}.grb -set_byte 4 11 5 -grib pblh_mid.t${cyc}z.f${hr}.grb
+	 $WGRIB2 pblh_mid.t${cyc}z.f${hr}.grb -set_byte 4 23 220 -grib pblh.t${cyc}z.f${hr}.grb
 
          $WGRIB2 $filecheck -match "RETOP" -set_byte 4 23 200 -grib retop.t${cyc}z.f${hr}.grb
          $WGRIB2 retop.t${cyc}z.f${hr}.grb -set_byte 4 11 197 -grib new_retop.t${cyc}z.f${hr}.grb
@@ -70,8 +74,10 @@ fi
          refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
          rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
-         refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb
+         refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb 
 
+	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
+         rm mslet.t${cyc}z.f${hr}.grb pblh*.t${cyc}z.f${hr}.grb
          $WGRIB2 hrrr.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
          $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
 
