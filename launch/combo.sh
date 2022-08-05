@@ -1,15 +1,15 @@
 #! /bin/sh
 
 dom=conus
-cyc=00
-date=20220726
+cyc=12
+date=20220805
 
 
 if [ ${dom} == 'conus' ]
 then
 	./run_preproc_nam.sh ${dom} ${cyc} ${date}
 	./run_preproc_hrrr.sh ${dom} ${cyc} ${date}
-#tmp	./run_ffg_gen.sh ${dom} ${cyc} ${date}
+	./run_ffg_gen.sh ${dom} ${cyc} ${date}
 	sleep 240
 elif [ ${dom} == 'ak' ]
 then

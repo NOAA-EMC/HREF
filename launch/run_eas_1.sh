@@ -11,7 +11,7 @@ if [ $DOM = "conus" ]
 then
 	NODES=2
 	PTILE=80
-	NTASK=160
+	NTASK=80
 
 elif [ $DOM = "ak" ]
 then
