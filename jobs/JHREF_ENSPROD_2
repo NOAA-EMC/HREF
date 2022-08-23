@@ -87,7 +87,7 @@ export pgmout="OUTPUT.$$"
 # export VERBOSE=YES
 
 ###################################################
-# Execute the Script exhref_ensprod.sh
+# Execute the Script exhref_ensprod.sh.ecf
 
 rm -rf poe.*
 

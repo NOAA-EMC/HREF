@@ -46,6 +46,7 @@ export dom=$NEST
 
 export NTASK=_NTASK_
 export PTILE=_PTILE_
+export NODES=_NODES_
 
 export PDY=${DATE}
 export PDYm1=`$NDATE -24 ${PDY}${cyc} | cut -c1-8`

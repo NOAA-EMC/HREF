@@ -65,9 +65,9 @@ fi
 
 export GESOUT=${GESROOT}/${NET}
 
-if [ ! -e $GESOUT] ; then
- mkdir -p $GESOUT
-fi
+# if [ ! -e $GESOUT] ; then
+# mkdir -p $GESOUT
+# fi
 
 export KEEPDATA=NO
 

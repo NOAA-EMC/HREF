@@ -49,7 +49,7 @@ export PDY=${DATE}
 
 export DATAROOT=/lfs/h2/emc/stmp/Matthew.Pyle/tmp
 export COMROOT=/lfs/h2/emc/ptmp/Matthew.Pyle/${envir}/com
-export COMPATH=/lfs/h2/emc/ptmp/Matthew.Pyle
+export COMPATH=${COMROOT}/${NET}
 
 export DATA=${DATAROOT}/href_awips_${NEST}_${cyc}_${envir}_retro
 

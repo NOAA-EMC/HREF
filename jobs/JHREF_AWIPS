@@ -38,7 +38,7 @@ export PARMwmo=${PARMwmo:-$HOMEhref/parm/wmo}
 export NET=${NET:-href}
 export RUN=${RUN:-href} 
 
-export COMIN=${COMIN:-$(compath.py -o $NET/${href_ver})/$RUN.${PDY}/ensprod}
+export COMIN=${COMIN:-$(compath.py $envir/$NET/${href_ver})/$RUN.${PDY}/ensprod}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${href_ver})/$RUN.${PDY}/wmo}
 
 if [ ! -f $COMOUT ] ; then

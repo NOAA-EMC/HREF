@@ -3,7 +3,7 @@ set -x
 
 cd $DATA
 
-export fhr=$1
+# export fhr=$1
 
 echo "$0 STRDATE "`date`
 
