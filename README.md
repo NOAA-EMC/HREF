@@ -1,13 +1,13 @@
-# HREF
+# RRFS_ENSPOST
 
-Contains the workflow and codes and other files needed to run the High Resolution Ensemble Forecast (HREF) system.  
+Contains the workflow and codes and other files needed to run the Rapid Refresh Forecast System (RRFS) enspost.  
 
 Very simple setup instructions (just for WCOSS2):
 
-cd href.v3.1.0/sorc/
+cd rrfs.v1.0.0/sorc/
 
-./build_href.sh 
+./build_enspost.sh 
 
-./install_href.sh (to copy executables to exec/)
+./install_enspost.sh (to copy executables to exec/)
 
-./link_href_fix.sh  (to populate fix files)
+./link_enspost_fix.sh  (to populate fix files)

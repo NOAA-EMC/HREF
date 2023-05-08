@@ -4,16 +4,17 @@
 # SETTINGS FOR ALL FIELDS #
 ###########################
 
+# nm is redefined in the main program
 # number of ens members
-nm = 9
+nm = 12
 
-nm_v3 = 9
+nm_v3 = 12
 # model resolution (km)
 dx = 3.0
 # min latency (hours)
 min_latency = 0
 # max latency (hours)
-max_latency = 12
+max_latency = 6
 
 #################
 # PQPF SETTINGS #
@@ -22,18 +23,18 @@ max_latency = 12
 # exceedance thresholds (in)
 
 # possible optimal set?
-pqpf_1h_thresh = [.01,0.25,0.5]
-pqpf_3h_thresh = [.01,0.25,0.5]
-pqpf_6h_thresh = [.01,0.25,0.5,1.0]
-pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0]
-pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0]
+pqpf_1h_thresh = [.01,0.25,0.5,1.0,2.0]
+pqpf_3h_thresh = [.01,0.25,0.5,1.0,2.0,3.0]
+pqpf_6h_thresh = [.01,0.25,0.5,1.0,2.0,3.0,5.0]
+pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0,8.0]
+pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0,8.0]
 
-pqpf_12h_thresh_low = [0.1]
-pqpf_12h_thresh_med = [0.25,0.5]
-pqpf_12h_thresh_high = [1.0,2.0]
-pqpf_24h_thresh_low = [0.1,0.25]
-pqpf_24h_thresh_med = [0.5,1.0]
-pqpf_24h_thresh_high = [2.0,3.0]
+pqpf_12h_thresh_low = [0.1,0.25,0.5]
+pqpf_12h_thresh_med = [1.0,2.0,3.0]
+pqpf_12h_thresh_high = [5.0,8.0]
+pqpf_24h_thresh_low = [0.1,0.25,0.5]
+pqpf_24h_thresh_med = [1.0,2.0,3.0]
+pqpf_24h_thresh_high = [5.0,8.0]
 
 # neighborhood size (km)
 pqpf_neighborhood = 40

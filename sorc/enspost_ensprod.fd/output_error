@@ -1,0 +1,89 @@
+
+ nv Mlvl(nv),Plvl(nv),Tlvl(nv)= 2 0 1 3
+ For ensmeble member# 1
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  11  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ getgb2 error: 99  in read  11  for var  2 220 100 100
+
+ For ensmeble member# 2
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  12  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ getgb2 error: 99  in read  12  for var  2 220 100 100
+
+ For ensmeble member# 3
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  13  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ getgb2 error: 99  in read  13  for var  2 220 100 100
+
+ For ensmeble member# 4
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  14  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ getgb2 error: 99  in read  14  for var  2 220 100 100
+
+ For ensmeble member# 5
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  15  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ getgb2 error: 99  in read  15  for var  2 220 100 100
+
+ For ensmeble member# 6
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  16  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ getgb2 error: 99  in read  16  for var  2 220 100 100
+
+
+ Tsignal(nv) at gsmoothing vrbl_pr:  2 A
+ In Gsmoothing,nbr,s= 1 5
+ Tsignal(nv) at gsmoothing vrbl_pr:  2 A
+ In Gsmoothing,nbr,s= 1 5
+ Tsignal(nv) at gsmoothing vrbl_pr:  2 A
+ In Gsmoothing,nbr,s= 1 5
+ Ensemble computation done for direct var  2
+ did not set gfld%bmap to bmap_f as not associated
+ calling packGB2_mean for M 1,2,27  2 220 -9999
+ here with maxval(vrbl_mn(:,Lm)):  0.000000
+ packing direct mean/spread for nv  2
+ 2 201 202 2 220 100 -9999 1905141 1 9 2022 5 5 0 3 255
+ nv, Mlvl(nv):  2 0
+ packing mean direct var for 2
+ calling packGB2_prob for normal
+ writing out: MXUV
+ max of vrbl_pr:  0.000000
+ packing direct prob for nv  2
+ HERE WITH IYR:  2022
+ here with idy:  5
+ here with ihr:  0
+ 203 2 2 220 100 -9999 1905141 1 3 9 2022 5 5 0 3 255
+ nv,Plvl,Tlvl= 2 1 3
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source             
+href_ensprod       000000000055E9BA  Unknown               Unknown  Unknown
+libpthread-2.31.s  000014D91D1038C0  Unknown               Unknown  Unknown
+href_ensprod       000000000042BC37  packgb2_prob_              66  packGB2_prob.f
+href_ensprod       000000000041E72D  MAIN__                   2011  sref_ens_gen.f
+href_ensprod       0000000000404A92  Unknown               Unknown  Unknown
+libc-2.31.so       000014D91C7DE2BD  __libc_start_main     Unknown  Unknown
+href_ensprod       00000000004049AA  Unknown               Unknown  Unknown

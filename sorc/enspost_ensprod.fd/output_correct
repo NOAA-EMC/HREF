@@ -1,0 +1,44 @@
+
+ nv Mlvl(nv),Plvl(nv),Tlvl(nv)= 2 0 1 3
+ For ensmeble member# 1
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  11  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ For ensmeble member# 2
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  12  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ For ensmeble member# 3
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  13  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ For ensmeble member# 4
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  14  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ For ensmeble member# 5
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  15  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
+ For ensmeble member# 6
+ jpd1 defined(b):  2
+ jpdtn= 8
+ getgb2 error: 99  in read  16  for var  2 220 100 400
+ look for 100-1000 hPa UVV
+ jpdtn= 8
+
