@@ -1,15 +1,15 @@
 #! /bin/sh
 
 #PBS -j oe
-#PBS -o /lfs/h2/emc/lam/noscrub/Jun.Du/rrfs.v1.0.0/launch/logs/rrfs_enspost_eas_1.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/Jun.Du/rrfs.v3.1.0/launch/logs/rrfs_enspost_eas_1.err__DOM__CYC_
+#PBS -o /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_eas_1.out__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_eas_1.err__DOM__CYC_
 #PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB -l place=excl
 #PBS -q dev
 #PBS -A RRFS-DEV
 #PBS -l walltime=001:29:05
 
-export USER=Jun.Du
-export HOMErrfs=/lfs/h2/emc/lam/noscrub/${USER}/rrfs.v1.0.0
+export USER=emc.lam
+export HOMErrfs=/lfs/h2/emc/lam/noscrub/${USER}/enspost/rrfs.v1.0.0
 source ${HOMErrfs}/versions/run_enspost.ver
 
 export OMP_NUM_THREADS=1

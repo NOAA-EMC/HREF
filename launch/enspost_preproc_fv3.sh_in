@@ -1,16 +1,16 @@
 #! /bin/sh
 
 #PBS -j oe
-#PBS -o /lfs/h2/emc/lam/noscrub/Jun.Du/rrfs.v1.0.0/launch/logs/rrfs_enspost_preproc_fv3.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/Jun.Du/rrfs.v1.0.0/launch/logs/rrfs_enspost_preproc_fv3.err__DOM__CYC_
+#PBS -o /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_preproc_fv3.out__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_preproc_fv3.err__DOM__CYC_
 ##PBS -l select=_NODES_:ncpus=_PTILE_:mem=256GB -l place=excl
 #PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB -l place=excl
 #PBS -q dev
 #PBS -A RRFS-DEV
 #PBS -l walltime=001:27:05
 
-export USER=Jun.Du
-export HOMErrfs=/lfs/h2/emc/lam/noscrub/${USER}/rrfs.v1.0.0
+export USER=emc.lam
+export HOMErrfs=/lfs/h2/emc/lam/noscrub/${USER}/enspost/rrfs.v1.0.0
 source ${HOMErrfs}/versions/run_enspost.ver
 
 export OMP_NUM_THREADS=1
@@ -68,7 +68,7 @@ echo DATA is $DATA
 # export COMINrrfs=`compath.py -e canned rrfs/${rrfs_ver}/rrfs`
 #export COMINrrfs="/lfs/h2/emc/lam/noscrub/${USER}/com/rrfs/rrfs"
 #export COMINrrfs="/lfs/h2/emc/ptmp/emc.lam/rrfs/${rrfs_ver}/prod"
- export COMINrrfs="/lfs/h2/emc/ptmp/emc.lam/rrfs/v0.4.0/prod"
+ export COMINrrfs="/lfs/h2/emc/ptmp/emc.lam/rrfs/v0.5.0/prod"
 export GESROOT=`compath.py -o ${NET}/${rrfs_ver}/nwges/$type`
 
 if [ ! -e $GESROOT ] ; then

@@ -1,7 +1,7 @@
 #! /bin/sh
 
-export USER=Jun.Du
-cd /lfs/h2/emc/lam/noscrub/${USER}/rrfs.v1.0.0/launch/
+export USER=emc.lam
+cd /lfs/h2/emc/lam/noscrub/${USER}/enspost/rrfs.v1.0.0/launch/
 
 DOM=${1}
 CYC=${2}

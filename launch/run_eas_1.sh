@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cd /lfs/h2/emc/lam/noscrub/${USER}/rrfs.v3.1.0/launch/
+cd /lfs/h2/emc/lam/noscrub/${USER}/enspost/rrfs.v1.0.0/launch/
 
 
 DOM=${1}
