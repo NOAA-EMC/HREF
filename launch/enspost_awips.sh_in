@@ -2,9 +2,9 @@
 
 #PBS -j oe
 #PBS -o /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_awips.out__DOM__CYC_
-#PBS -e /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v3.1.0/launch/logs/rrfs_enspost_awips.err__DOM__CYC_
+#PBS -e /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_awips.err__DOM__CYC_
 #PBS -l select=1:ncpus=1:mem=128GB
-#PBS -q dev
+#PBS -q pridev
 #PBS -A RRFS-DEV
 #PBS -l walltime=000:37:05
 

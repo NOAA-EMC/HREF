@@ -51,7 +51,7 @@ export ndate=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate
 ###########################################################
 
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/rrfs_enspost_ensprodpreproc_${NEST}_${cyc}_${envir}.${pid}}
+export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
@@ -202,6 +202,16 @@ done
 
 # need to generate 3 h QPF
 
+if [ -e poe.3hqpf ]
+then
+rm poe.3hqpf
+fi
+
+if [ -e poe.3hqpf.tlb ]
+then
+rm poe.3hqpf.tlb
+fi
+
 for mem in $mems
 do
 echo " calling preprocess_fv3_3hapcp.sh for mem " $mem
@@ -231,6 +241,8 @@ if [ $mem = 11 ]; then name=04; fi
 if [ $mem = 12 ]; then name=05; fi
 fi
 
+#
+
  if [ $type = timelag ]; then
   if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
    backdate=`$ndate -06 $PDY$cyc`
@@ -240,15 +252,32 @@ fi
 #  let "newhr = $hr + 06"
 #  echo $newhr
 #  if [ $newhr -lt 10 ]; then newhr=0$newhr;fi
-   $USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${backday} ${backcyc} ${mem} ${name}
+  echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
   else
-   $USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${PDY} ${cyc} ${mem} ${name}
+   echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
   fi 
  else
-  $USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${PDY} ${cyc} ${mem} ${name}
+  echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
  fi
 
 done
+
+nproc=`cat poe.3hqpf | wc -l`
+
+chmod 775 poe.3hqpf
+
+mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf
+export err=$?; err_chk
+
+if [ -e poe.3hqpf.tlb ]
+then
+
+nproc=`cat poe.3hqpf.tlb | wc -l`
+chmod 775 poe.3hqpf.tlb
+mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf.tlb
+export err=$?; err_chk
+
+fi
 
 # end QPF
 

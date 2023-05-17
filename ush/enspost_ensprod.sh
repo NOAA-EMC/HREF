@@ -115,9 +115,9 @@ if [ $type = single ];then
  mbrs="1  2  3  4  5  6  7  8  9 10"
 else
  backdate=`$ndate -06 $PDY$cyc`
- echo $backdate > backdate
- backday=`cut -c 1-8 backdate`
- backcyc=`cut -c 9-10 backdate`
+ backday=`echo $backdate | cut -c1-8`
+ backcyc=`echo $backdate | cut -c9-10`
+
  days="12 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday"
  cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
  ages="12  0    0    0    0    0    0    6    6    6    6    6    6"

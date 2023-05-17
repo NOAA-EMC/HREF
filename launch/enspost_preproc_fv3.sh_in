@@ -5,7 +5,7 @@
 #PBS -e /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/launch/logs/rrfs_enspost_preproc_fv3.err__DOM__CYC_
 ##PBS -l select=_NODES_:ncpus=_PTILE_:mem=256GB -l place=excl
 #PBS -l select=_NODES_:ncpus=_PTILE_:mem=500GB -l place=excl
-#PBS -q dev
+#PBS -q pridev
 #PBS -A RRFS-DEV
 #PBS -l walltime=001:27:05
 

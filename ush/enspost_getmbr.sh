@@ -62,13 +62,13 @@ if [ $type = single ];then
  mbrs="1  2  3  4  5  6  7  8  9 10" 
 else
  backdate=`$ndate -06 $PDY$cyc`
- echo $backdate > backdate
- backday=`cut -c 1-8 backdate`
- backcyc=`cut -c 9-10 backdate`
+#  echo $backdate > backdate
+ backday=`echo $backdate | cut -c1-8`
+ backcyc=`echo $backdate | cut -c9-10`
  days="12 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday"
  cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
  ages="12  0    0    0    0    0    0    6    6    6    6    6    6"
- nams="12 m01 m02 m03 m04 m05 m06 m01 m02 m03 m04 m05 m06" 
+ nams="12 m01 m02  m03  m04  m05  m06  m01   m02 m03   m04  m05 m06" 
  if [ $fhr -le 54 ];then
   mbrs="1  2  3  4  5  6  7  8  9  10  11  12" 
  else
@@ -116,6 +116,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
       echo ${RUN}.m${m}.t${cyc}z.f${ff1}
       echo ${RUN}.m${m}.t${cyc}z.f${ff}
+      ls -l ${RUN}.m${m}.t${cyc}z.f${ff} ${RUN}.m${m}.t${cyc}z.f${ff1}
 
 ###### FV3
 
@@ -149,6 +150,10 @@ echo working things with ff as $ff and  fcheck as $fcheck
          ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
         else
+         echo m $m
+         echo day[m] ${day[$m]}
+         echo cycloc[m] ${cycloc[$m]}
+         echo nam[m] ${nam[$m]}
          msg="FATAL ERROR: $filecheck missing but required"
          err_exit $msg
 	fi
@@ -178,6 +183,18 @@ typeset -Z2 fcheckloc
         export err=$? ; err_chk
         fi
         fi
+
+
+
+        loop=0
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${ff1} -a $loop -lt $looplim ]
+	do
+	echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${ff1}
+          sleep ${sleeptime}
+          let loop=loop+1
+        done	
+        
+
 
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 conus yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
 #       echo ${RUN}.m${m}.t${cyc}z.f$ff1 ${RUN}.m${m}.t${cyc}z.f$ff $cyc $ff1 $ff conus yes $ff |$EXECrrfs/enspost_get_temp > $DATA/output.enspost_get_temp.m${m}.f${ff} 2>&1
@@ -244,6 +261,14 @@ typeset -Z2 fcheckloc
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
         fi
+
+        loop=0
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${ff1} -a $loop -lt $looplim ]
+	do
+	echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${ff1}
+          sleep ${sleeptime}
+          let loop=loop+1
+        done	
 
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk

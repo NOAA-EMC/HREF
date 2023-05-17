@@ -41,6 +41,10 @@ hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60"
 
 cd $DATA
 
+mkdir -p $DATA/pcp_${name1}
+
+cd $DATA/pcp_${name1}
+
 EXECrrfs=${HOMErrfs}/exec
 
 hrsln="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 \
@@ -49,10 +53,11 @@ hrsln="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 2
 
 for hr in $hrsln
 do
-filecheck=fv3s.t${cyc}z.m${mem}.f${hr}.grib2
+filecheck=../fv3s.t${cyc}z.m${mem}.f${hr}.grib2
 
 if [ -s $filecheck ]
 then
+sleep 1
 ln -sf $filecheck rrfs.t${cyc}z.f${hr}.grib2
 fi
 done
@@ -67,7 +72,7 @@ then
 hrold=0${hrold}
 fi
 
-filecheck=fv3s.t${cyc}z.m${mem}.f${hr}.grib2
+filecheck=../fv3s.t${cyc}z.m${mem}.f${hr}.grib2
 
 if [ -e $filecheck ]
 then
@@ -83,22 +88,22 @@ then
 
   curpath=`pwd`
 	
-  echo "${curpath}" > input.card.${hr}
-  echo "rrfs.t${cyc}z.f" >> input.card.${hr}
-  echo $hrold >> input.card.${hr}
-  echo $hr >> input.card.${hr}
+  echo "${curpath}" > input.card.${mem}.${hr}
+  echo "rrfs.t${cyc}z.f" >> input.card.${mem}.${hr}
+  echo $hrold >> input.card.${mem}.${hr}
+  echo $hr >> input.card.${mem}.${hr}
 
 if [ $hr = '03' ]
 then
 # just take later period if f03
-  echo 1 >> input.card.${hr}
+  echo 1 >> input.card.${mem}.${hr}
 else
-  echo 0 >> input.card.${hr}
+  echo 0 >> input.card.${mem}.${hr}
 fi
 
-  echo "$dim1 $dim2" >> input.card.${hr}
+  echo "$dim1 $dim2" >> input.card.${mem}.${hr}
 
- $EXECrrfs/enspost_fv3_3hqpf < input.card.${hr}
+ $EXECrrfs/enspost_fv3_3hqpf < input.card.${mem}.${hr}
  export err=$? # ; err_chk
  cat ./PCP3HR${hr}.tm00 >> $filecheck
  cp PCP3HR${hr}.tm00 PCP3HR${hr}.tm00_qpf
@@ -115,6 +120,8 @@ else
 fi
 
 done
+
+cd ../
 
 for hr in $hrs
 do

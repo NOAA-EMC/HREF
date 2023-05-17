@@ -60,6 +60,14 @@ cd fv3_${mem}_${hr}
 if [ $name = 00 ];then
 #filecheck=$COMINrrfs/rrfs.${PDY}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+# need logic for mphys to find ctrl member
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+
+if [ ! -e $filecheck -a -e $altfilecheck ]
+then
+filecheck=$altfilecheck
+fi
+
 else
 #filecheck=$COMINrrfs/refs.${PDY}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
  filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
@@ -140,6 +148,8 @@ do
   fi
 
 done
+# test to ensure that this hrold file is completely read?
+sleep 2
 cp ../temp.t${cyc}z.m${mem}.f${hrold}.grib2 temp.t${cyc}z.f${hrold}.grib2
 
 
@@ -191,6 +201,7 @@ do
   fi
 
 done
+sleep 2
 cp ../temp.t${cyc}z.m${mem}.f${hrold3}.grib2 temp.t${cyc}z.f${hrold3}.grib2
 
 

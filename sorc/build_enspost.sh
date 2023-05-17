@@ -25,12 +25,12 @@ mkdir -p ./log/
 #QPF3H=1
 #FV3SNOW=1
 
-GET_PRCIP=0
+GET_PRCIP=1
 GET_TEMP=0
-FFG_GEN=0
+FFG_GEN=1
 ENSPROD=1
-QPF3H=0
-FV3SNOW=0
+QPF3H=1
+FV3SNOW=1
 
 #########################
 

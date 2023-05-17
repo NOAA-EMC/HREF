@@ -1,18 +1,20 @@
 #! /bin/sh
 
 dom=conus
-cyc=12
-date=20230501
+cyc=00
+date=20230516
+
+type=timelag
 
 
 if [ ${dom} == 'conus' ]
 then
 	./run_enspost_preproc_fv3.sh ${dom} ${cyc} ${date} ${type}
-	./run_ffg_gen.sh ${dom} ${cyc} ${date} ${type}
-	sleep 240
+	./run_enspost_ffg_gen.sh ${dom} ${cyc} ${date} ${type}
+	sleep 960
 elif [ ${dom} == 'ak' ]
 then
-	        ./run_preproc_hrrr.sh ${dom} ${cyc} ${date}
+	./run_enspost_preproc_fv3.sh ${dom} ${cyc} ${date} ${type}
 	sleep 240
 fi
 
