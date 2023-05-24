@@ -175,9 +175,10 @@ do
  if [ $type = timelag ]; then
   if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
    backdate=`$ndate -06 $PDY$cyc`
-   echo $backdate > backdate
-   backday=`cut -c 1-8 backdate`
-   backcyc=`cut -c 9-10 backdate`
+#    echo $backdate > backdate
+   backday=`echo $backdate | cut -c1-8`
+   backcyc=`echo $backdate | cut -c9-10`
+
 #  let "newhr = $hr + 06"
 #  echo $newhr
 #  if [ $newhr -lt 10 ]; then newhr=0$newhr;fi
@@ -246,9 +247,11 @@ fi
  if [ $type = timelag ]; then
   if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
    backdate=`$ndate -06 $PDY$cyc`
-   echo $backdate > backdate
-   backday=`cut -c 1-8 backdate`
-   backcyc=`cut -c 9-10 backdate`
+#   echo $backdate > backdate
+#   backday=`cut -c 1-8 backdate`
+#   backcyc=`cut -c 9-10 backdate`
+   backday=`echo $backdate | cut -c1-8`
+   backcyc=`echo $backdate | cut -c9-10`
 #  let "newhr = $hr + 06"
 #  echo $newhr
 #  if [ $newhr -lt 10 ]; then newhr=0$newhr;fi
