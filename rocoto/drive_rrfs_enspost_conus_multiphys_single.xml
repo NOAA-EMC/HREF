@@ -15,6 +15,7 @@
 <!ENTITY USER "emc.lam">
 <!ENTITY ACCOUNT "RRFS-DEV">
 <!ENTITY TYPE "single">
+<!ENTITY PHYS "multiphys">
 <!ENTITY RUN "rrfs">
 
 <!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.0.0">
@@ -74,7 +75,7 @@
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
   <log>
-    <cyclestr>&OUTDIR;/logfiles_enspost/workflow_regional_multiphys_&TYPE;_&domain;_@Y@m@d@H.log</cyclestr>
+    <cyclestr>&OUTDIR;/logfiles_enspost/workflow_regional_multiphys_&TYPE;_&PHYS;_&domain;_@Y@m@d@H.log</cyclestr>
   </log>
 
 
@@ -88,7 +89,7 @@
   <nodes>1:ppn=61</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_PREPROC_FV3</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/preprocfv3_&TYPE;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_enspost/preprocfv3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -175,7 +176,7 @@
       <value><cyclestr>@H</cyclestr></value>
     </envar>
 
-    <envar><name>jobid</name><value>rrfs_ensprodpreprocfv3_&TYPE;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>rrfs_ensprodpreprocfv3_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>
@@ -205,7 +206,7 @@
     <nodes>1:ppn=1</nodes>
       <command>&PRE; &JOBS;/JRRFS_ENSPOST_FFG_GEN</command>
       <jobname><cyclestr>ffg_gen_&TYPE;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_enspost/ffg_gen_&TYPE;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_enspost/ffg_gen_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
       <envar>
         <name>HOMErrfs</name>
@@ -289,7 +290,7 @@
     <nodes>2:ppn=80</nodes>
       <command>&PRE; &JOBS;/JRRFS_ENSPOST_EAS_1</command>
       <jobname><cyclestr>easgen_1_&TYPE;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_1_&TYPE;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -389,7 +390,7 @@
     <nodes>2:ppn=64</nodes>
       <command>&PRE; &JOBS;/JRRFS_ENSPOST_EAS_2</command>
       <jobname><cyclestr>easgen_2_&TYPE;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_2_&TYPE;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -495,7 +496,7 @@
   <nodes>3:ppn=12</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_1</command>
     <jobname><cyclestr>ensprod_1_&TYPE;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_1_&TYPE;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -599,7 +600,7 @@
   <nodes>2:ppn=12</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_2</command>
     <jobname><cyclestr>ensprod_2_&TYPE;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_2_&TYPE;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -707,7 +708,7 @@
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_AWIPS</command>
     <jobname><cyclestr>rrfsawips_&TYPE;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/rrfsawips_&TYPE;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_enspost/rrfsawips_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
 
     <envar>
@@ -792,7 +793,7 @@
   <nodes>1:ppn=8</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_GEMPAK</command>
     <jobname><cyclestr>rrfsgempak_&TYPE;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/rrfsgempak_&TYPE;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_enspost/rrfsgempak_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name> PTILE </name>

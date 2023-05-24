@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 
 COMMAND=$1
 
@@ -7,51 +7,59 @@ COMMAND=$1
 ############################################################
 
 
-if [ "$machine" = "DELL" ] ; then
-  . /usrx/local/prod/lmod/lmod/init/sh
-  MODULEFILES=${MODULEFILES:-/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/modulefiles}
-  module use ${MODULEFILES}/wcoss_dell_p3
-  module load fv3
-  module load prod_util/1.1.0
-  module load grib_util/1.0.6
-  module load CFP/2.0.1
-  module load HPSS/5.0.2.5
 
-elif [ "$machine" = "WCOSS_C" ] ; then
+# if [ $envir != 'prod' ]
+# then
+# GESROOT_save=$GESROOT
+# fi
+
+# cd /u/$USER    # cron does this for us - this is here just to be safe
+# . /etc/profile
+
+# if [ -a .profile ]; then
+#    . ./.profile
+# fi
+
+# if [ -a .bashrc ]; then
+#   . ./.bashrc
+# fi
+
+module list
+
+source /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/versions/run_enspost.ver
+
+module load prod_envir/2.0.6
+module load cfp/2.0.4
+module load PrgEnv-intel/8.1.0
+module load craype/2.7.13
+module load intel/19.1.3.304
+module load cray-mpich/8.1.12
+module load cray-pals/1.0.12
+
+module load prod_util/${prod_util_ver}
+module load wgrib2/${wgrib2_ver}
+module load netcdf/${netcdf_ver}
+module load g2/${g2_ver}
+module load g2tmpl/${g2tmpl_ver}
+module load jasper/${jasper_ver}
+module load libpng/${libpng_ver}
+module load zlib/${zlib_ver}
+module load cfp/${cfp_ver}
+module load python/${python_ver}
+module load libjpeg/${libjpeg_ver}
+module load grib_util/${grib_util_ver}
+module load gempak/${gempak_ver}
+
+echo now have 
+module list
 
 
-if [ $envir != 'prod' ]
-then
-GESROOT_save=$GESROOT
-fi
-
-cd /u/$USER    # cron does this for us - this is here just to be safe
-. /etc/profile
-
-if [ -a .profile ]; then
-   . ./.profile
-fi
-
-if [ -a .bashrc ]; then
-   . ./.bashrc
-fi
-
-module load prod_util
-module load prod_envir
-module load cfp-intel-sandybridge/2.0.1
-
-if [ $envir != 'prod' ]
-then
-GESROOT=${GESROOT_save}
-fi
+# if [ $envir != 'prod' ]
+# then
+# GESROOT=${GESROOT_save}
+# fi
 
 echo now at end of launch.ksh have GESROOT as $GESROOT
-
-else
-  echo "launch.ksh: modulefile is not set up yet for this machine-->${machine}."
-  echo "Job abort!"
-  exit 1
-fi
 
 # print out loaded modules
 module list

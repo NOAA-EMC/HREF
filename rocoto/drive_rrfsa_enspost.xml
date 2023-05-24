@@ -158,4 +158,37 @@
 
   </task>
 
+  <task name="mirror_enspost" cycledefs="regional" maxtries="1">
+    &RESERVATION_TRANSFER;
+    &SEND_RESOURCES;
+
+    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST</command>
+    <nodes>&SEND_NODES;</nodes>
+    <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_@H.log</cyclestr></join>  
+
+    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
+    <envar><name>job</name><value>mirror_enspost</value></envar>
+    <envar><name>machine</name><value>&machine;</value></envar>
+    <envar><name>USER</name><value>&USER;</value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>tmmark</name><value>tm00</value></envar>
+
+    <dependency>
+        <and>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+        </and>
+    </dependency>
+
+  </task>
+
 </workflow>
