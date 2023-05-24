@@ -15,7 +15,6 @@ MAXVW:10 m above ground:
 CAPE:surface:
 CIN:surface:
 PWAT:entire atmosphere (considered as a single layer):
-TCDC:entire atmosphere (considered as a single layer):
 HLCY:3000-0 m above ground:
 USTM:6000-0 m above ground:
 VSTM:6000-0 m above ground:

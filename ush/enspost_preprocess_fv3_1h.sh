@@ -93,10 +93,11 @@ echo filecheck is $filecheck
          cat nn2b.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
         fi
 
+        $WGRIB2 $filecheck -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
-        cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb top.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
+        cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb top.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2
 
