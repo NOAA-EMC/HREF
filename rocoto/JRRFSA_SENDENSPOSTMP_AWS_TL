@@ -23,22 +23,24 @@ export pgmout="OUTPUT.${pid}"
 
 types="prob avrg eas ffri lpmm mean pmmn sprd"
 
-for typ in $types
-do
+# for typ in $types
+# do
 
-posthr=01
-while [ $posthr -le 60 ] ; do
+# posthr=01
+# while [ $posthr -le 60 ] ; do
 
-  aws s3 cp rrfs.t${cyc}z.conus.${typ}.f${posthr}.grib2  s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/multi_physics/enspost_timelag/
-  aws s3 cp rrfs.t${cyc}z.conus.${typ}.f${posthr}.grib2.idx  s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/multi_physics/enspost_timelag/
+#   aws s3 cp rrfs.t${cyc}z.conus.${typ}.f${posthr}.grib2  s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/multi_physics/enspost_timelag/
+#   aws s3 cp rrfs.t${cyc}z.conus.${typ}.f${posthr}.grib2.idx  s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/multi_physics/enspost_timelag/
 
-  let "posthr=$(( ${posthr#0} + 1 ))"
-  if [ $posthr -le 10 ] ; then
-    posthr=$(printf "%02d" $posthr)
-  fi
-done
+aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/multi_physics/enspost_timelag/ --recursive --exclude "*" --include "rrfs.t${cyc}z*.grib2*"
 
-done
+#  let "posthr=$(( ${posthr#0} + 1 ))"
+#  if [ $posthr -le 10 ] ; then
+#    posthr=$(printf "%02d" $posthr)
+#   fi
+# done
+
+# done
 
 
 if [ $cyc -eq 00 -o $cyc -eq 06 -o $cyc -eq 12 -o $cyc -eq 18 ]; then

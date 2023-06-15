@@ -138,7 +138,9 @@ echo mbrs is $mbrs
 
  for m in $mbrs ; do              
    fcst=` expr ${age[$m]} + $ff`
-     weight=`echo "scale=2; 1-${age[$m]}/60" | bc`
+   weight="1.00"
+#     weight=`echo "scale=2; 1-${age[$m]}/60" | bc`
+   
 
       if [ $weight -lt 1.0 ] ; then
         weight='0'$weight
