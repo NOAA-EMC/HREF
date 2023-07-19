@@ -83,19 +83,19 @@ c    for derived variables
 
 ! account for bmap
 
-        if (jf .ne. 37910 .and. jf .ne. 70720 .and. 
-     +      jf .ne. 1905141) then
-
-	    do JJ=1,jf
-            if (.not. gfld%bmap(JJ)) then
-             cldbas(JJ,k)=-5000.
-            else
-             cldbas(JJ,k)=gfld%fld(JJ)
-            endif
-            enddo
-         else
+!        if (jf .ne. 37910 .and. jf .ne. 70720 .and. 
+!     +      jf .ne. 1905141) then
+!
+!	    do JJ=1,jf
+!            if (.not. gfld%bmap(JJ)) then
+!             cldbas(JJ,k)=-5000.
+!            else
+!             cldbas(JJ,k)=gfld%fld(JJ)
+!            endif
+!            enddo
+!         else
              cldbas(:,k)=gfld%fld
-         endif
+!         endif
 
 
 
@@ -108,19 +108,19 @@ c    for derived variables
 
 ! account for bmap
 
-        if (jf .ne. 37910 .and. jf .ne. 70720 .and. 
-     +      jf .ne. 1905141) then
-
-	    do JJ=1,jf
-            if (.not. gfld%bmap(JJ)) then
-             cldbas(JJ,k)=-5000.
-            else
-             cldbas(JJ,k)=gfld%fld(JJ)+sfcght(JJ,k)
-            endif
-            enddo
-         else
+!        if (jf .ne. 37910 .and. jf .ne. 70720 .and. 
+!     +      jf .ne. 1905141) then
+!
+!	    do JJ=1,jf
+!            if (.not. gfld%bmap(JJ)) then
+!             cldbas(JJ,k)=-5000.
+!            else
+!             cldbas(JJ,k)=gfld%fld(JJ)+sfcght(JJ,k)
+!            endif
+!            enddo
+!         else
              cldbas(:,k)=gfld%fld+sfcght(:,k)
-         endif
+!         endif
 
             else
 

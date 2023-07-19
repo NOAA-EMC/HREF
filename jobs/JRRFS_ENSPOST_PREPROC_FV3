@@ -133,8 +133,9 @@ else
 fi
 
 
-#region=CONUS
-region=conus
+region=${NEST}
+
+echo defined region $region
 
 for mem in $mems
 do
@@ -255,12 +256,12 @@ fi
 #  let "newhr = $hr + 06"
 #  echo $newhr
 #  if [ $newhr -lt 10 ]; then newhr=0$newhr;fi
-  echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
+  echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
   else
-   echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
+   echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
   fi 
  else
-  echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
+  echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
  fi
 
 done

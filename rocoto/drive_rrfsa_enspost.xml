@@ -36,7 +36,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="5" cyclethrottle="10" cyclelifespan="00:15:00:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="5" cyclethrottle="10" cyclelifespan="00:22:00:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
 
@@ -70,10 +70,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -99,10 +99,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -128,10 +128,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -157,10 +157,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -186,10 +186,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -215,10 +215,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -244,10 +244,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -273,10 +273,10 @@
 
     <dependency>
         <and>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="10:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/timelag/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
         </and>
     </dependency>
 

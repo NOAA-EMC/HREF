@@ -3,14 +3,14 @@
 [
 
 <!ENTITY STARTYEAR "2023">
-<!ENTITY STARTMONTH "05">
+<!ENTITY STARTMONTH "07">
 <!ENTITY STARTDAY "10">
-<!ENTITY STARTHOUR "00">
+<!ENTITY STARTHOUR "06">
 
 <!ENTITY ENDYEAR "2023">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
-<!ENTITY ENDHOUR "12">
+<!ENTITY ENDHOUR "18">
 
 <!ENTITY USER "emc.lam">
 <!ENTITY ACCOUNT "RRFS-DEV">
@@ -19,7 +19,7 @@
 <!ENTITY RUN "rrfs">
 
 <!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.0.0">
-<!ENTITY domain "conus">
+<!ENTITY domain "pr">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "test">
 <!ENTITY JOBS "&HOMErrfs;/jobs">
@@ -72,7 +72,7 @@
 <workflow realtime="T" scheduler="pbspro" taskthrottle="10" cyclethrottle="3" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
-  <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
+  <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
 
   <log>
     <cyclestr>&OUTDIR;/logfiles_enspost/workflow_regional_single_&TYPE;_&domain;_@Y@m@d@H.log</cyclestr>
@@ -83,7 +83,7 @@
 <!--  **************************** Run preproc ******************************  -->
 
 
-  <task name="preproc_fv3" cycledefs="regional" maxtries="3">
+  <task name="preproc_fv3" cycledefs="regional_justontime" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>1:ppn=61</nodes>
@@ -181,97 +181,14 @@
 
     <dependency>
     <and>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
-  </task>
-
-
-<!--  ***********************************************************************  -->
-<!-- dont forget to do FFG piece                                               -->
-<!--  ***********************************************************************  -->
-
-  <task name="ffg_gen" cycledefs="regional" maxtries="2">
-    &RESERVATION;
-    &FFG_RESOURCES;
-    <nodes>1:ppn=1</nodes>
-      <command>&PRE; &JOBS;/JRRFS_ENSPOST_FFG_GEN</command>
-      <jobname><cyclestr>ffg_gen_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_enspost/ffg_gen_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
-   
-      <envar>
-        <name>HOMErrfs</name>
-        <value>&HOMErrfs;</value>
-      </envar>
-      <envar>
-        <name>job</name>
-        <value>ffg_gen_&TYPE;_&PHYS;_&domain;</value>
-      </envar>
-      <envar>
-        <name>machine</name>
-        <value>&machine;</value>
-      </envar>
-
-      <envar>
-        <name>USER</name>
-        <value>&USER;</value>
-      </envar>
-      <envar>
-        <name>CDATE</name>
-        <value><cyclestr>@Y@m@d@H</cyclestr></value>
-      </envar>
-      <envar>
-        <name>PDY</name>
-        <value><cyclestr>@Y@m@d</cyclestr></value>
-      </envar>
-      <envar>
-        <name>cyc</name>
-        <value><cyclestr>@H</cyclestr></value>
-      </envar>
-      <envar>
-       <name>NEST</name>
-       <value>&domain;</value>
-      </envar>
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-
-    <envar>
-     <name>type</name>
-     <value>&TYPE;</value>
-    </envar>
-
-    <envar>
-     <name>COMROOT</name>
-     <value>&COMROOT;</value>
-    </envar>
-
-    <envar>
-      <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-    <envar><name>jobid</name><value>rrfs_ffggen_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
-
-      <dependency>
-       <and>
-        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-       </and>
-      </dependency>
   </task>
 
 
@@ -280,7 +197,7 @@
 <!--  ********************** Run the main EAS piece *************************  -->
 
 
-  <task name="eas_gen_1" cycledefs="regional" maxtries="2">
+  <task name="eas_gen_1" cycledefs="regional_justontime" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
     <nodes>2:ppn=80</nodes>
@@ -373,14 +290,11 @@
 
 
       <dependency>
-        <and>
        <taskdep task="preproc_fv3"/>
-       <taskdep task="ffg_gen"/>
-       </and>
       </dependency>
   </task>
 
-  <task name="eas_gen_2" cycledefs="regional" maxtries="2">
+  <task name="eas_gen_2" cycledefs="regional_justontime" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
     <nodes>2:ppn=64</nodes>
@@ -474,11 +388,7 @@
 
 
       <dependency>
-        <and>
        <taskdep task="preproc_fv3"/>
-       <taskdep task="ffg_gen"/>
-
-        </and>
       </dependency>
   </task>
 
@@ -486,10 +396,10 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* main ensprod piece *****************************  -->
 
-  <task name="ensprod_1" cycledefs="regional" maxtries="2">
+  <task name="ensprod_1" cycledefs="regional_justontime" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>3:ppn=12</nodes>
+  <nodes>1:ppn=36</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_1</command>
     <jobname><cyclestr>ensprod_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
@@ -500,7 +410,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>12</value>
+      <value>36</value>
     </envar>
 
     <envar>
@@ -509,7 +419,7 @@
     </envar>
     <envar>
       <name>PTILE_LINK</name>
-      <value>12</value>
+      <value>36</value>
     </envar>
 
     <envar>
@@ -582,18 +492,15 @@
 
 
     <dependency>
-     <and>
        <taskdep task="preproc_fv3"/>
-       <taskdep task="ffg_gen"/>
-     </and>
     </dependency>
 
   </task>
 
-  <task name="ensprod_2" cycledefs="regional" maxtries="2">
+  <task name="ensprod_2" cycledefs="regional_justontime" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>2:ppn=12</nodes>
+  <nodes>1:ppn=24</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_2</command>
     <jobname><cyclestr>ensprod_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
@@ -604,7 +511,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>12</value>
+      <value>24</value>
     </envar>
     <envar>
       <name>NTASK_LINK</name>
@@ -686,10 +593,7 @@
 
 
     <dependency>
-     <and>
      <taskdep task="preproc_fv3"/>
-     <taskdep task="ffg_gen"/>
-     </and>
     </dependency>
 
   </task>
@@ -698,7 +602,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* WMO/AWIP piece *****************************  -->
 
-  <task name="rrfs_awips" cycledefs="regional" maxtries="2">
+  <task name="rrfs_awips" cycledefs="regional_justontime" maxtries="2">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
@@ -783,7 +687,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* GEMPAK piece *****************************  -->
 
-  <task name="rrfs_gempak" cycledefs="regional" maxtries="1">
+  <task name="rrfs_gempak" cycledefs="regional_justontime" maxtries="1">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=8</nodes>

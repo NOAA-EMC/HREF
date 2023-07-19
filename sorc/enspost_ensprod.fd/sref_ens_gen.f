@@ -381,23 +381,23 @@ CCCC Binbin Zhou Note:
          dx=3000.0
          dy=3000.0
        elseif (gribid .eq. 999) then ! AK grid
-         im=825
-         jm=603
+         im=1649
+         jm=1105
          jf=im*jm
-         dx=5000.0
-         dy=5000.0
-       elseif (GRIBID.eq.998) then ! HI 5 km grid
-         im=223
-         jm=170
+         dx=3000.0
+         dy=3000.0
+       elseif (GRIBID.eq.998) then ! HI grid
+         im=321
+         jm=225
          jf=im*jm
-         dx=4500.0
-         dy=4500.0
-       elseif (GRIBID.eq.997) then ! PR 5 km grid
-         im=340
-         jm=208
+         dx=2500.0
+         dy=2500.0
+       elseif (GRIBID.eq.997) then ! PR grid
+         im=544
+         jm=310
          jf=im*jm
-         dx=4500.0
-         dy=4500.0
+         dx=2500.0
+         dy=2500.0
        else
          call makgds(gribid, kgdss, gdss, lengds, ier)
          im=kgdss(2)
@@ -754,31 +754,31 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
            if ( .not. allocated(bmap_f)) then
              allocate(bmap_f(jf))
-	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
-             bmap_f=gfld%bmap
-        else
+!	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
+!             bmap_f=gfld%bmap
+!        else
              bmap_f=.true.
-        endif
+!        endif
            endif
 
 ! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR) (and REFC from FV3 now)
 ! and FV3 soil
 ! and FV3 WEASD
 
-	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
-
-           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
-     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
-     &          jpd2 .ne. 13 ) then
-
-            do J=1,jf
-             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-              bmap_f(J)=.false.
-             endif
-            enddo
-           endif
-
-        endif
+!	if (jf .ne. 72225 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
+!
+!           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
+!     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
+!     &          jpd2 .ne. 13 ) then
+!
+!            do J=1,jf
+!             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
+!              bmap_f(J)=.false.
+!             endif
+!            enddo
+!           endif
+!
+!        endif
 
          endif
 
@@ -814,28 +814,29 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
          if ( .not. allocated(bmap_f)) then
                 allocate(bmap_f(jf))
-	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
-                bmap_f=gfld%bmap
-        else
+!	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
+!                bmap_f=gfld%bmap
+!        else
                 bmap_f=.true.
-        endif
+!        endif
          endif
 
-	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
+!	if (jf .ne. 37910 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
 ! avoid accounting for echo top bitmap
 ! and FV3 soil
 ! and FV3 WEASD
-           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
-     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and.
-     &          jpd2.ne. 13  ) then
-            do J=1,jf
-             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-              bmap_f(J)=.false.
-            endif
-           enddo
-          endif
+!           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
+!     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and.
+!     &          jpd2.ne. 13  ) then
+!            do J=1,jf
+!             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
+!              bmap_f(J)=.false.
+!            endif
+!           enddo
+!          endif
+!
+!        endif !37910
 
-        endif !37910
         endif
 
          if (kret.ne.0) cycle loop502

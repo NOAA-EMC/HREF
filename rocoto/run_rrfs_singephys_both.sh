@@ -4,7 +4,7 @@ module load core/rocoto/1.3.5
 
 module list
 
-doms="conus"
+doms="conus hi pr ak"
 
 echo WGRIB2 is $WGRIB2
 
@@ -15,8 +15,10 @@ do
 
 rocotorun -v 10 -w ${dir}/drive_rrfs_enspost_${dom}_singlephys_timelag.xml -d ${dir}/drive_rrfs_enspost_${dom}_singlephys_timelag.db
 
-sleep 120
+sleep 60
 
-rocotorun -v 10 -w ${dir}/drive_rrfs_enspost_${dom}_singlephys_single.xml -d ${dir}/drive_rrfs_enspost_${dom}_singlephys_single.db
+# sleep 120
+
+# rocotorun -v 10 -w ${dir}/drive_rrfs_enspost_${dom}_singlephys_single.xml -d ${dir}/drive_rrfs_enspost_${dom}_singlephys_single.db
 
 done

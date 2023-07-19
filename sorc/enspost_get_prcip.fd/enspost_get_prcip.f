@@ -54,17 +54,17 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          im=1799
          jm=1059
          jf=im*jm
-       elseif (GRIBID.eq.999) then ! AK 5 km grid
-         im=825
-         jm=603
+       elseif (GRIBID.eq.999) then ! AK  grid
+         im=1649
+         jm=1105
          jf=im*jm
-       elseif (GRIBID.eq.998) then ! HI 5 km grid
-         im=223
-         jm=170
+       elseif (GRIBID.eq.998) then ! HI grid
+         im=321
+         jm=225
          jf=im*jm
-       elseif (GRIBID.eq.997) then ! PR 5 km grid
-         im=340
-         jm=208
+       elseif (GRIBID.eq.997) then ! PR grid
+         im=544
+         jm=310
          jf=im*jm
        else
          call makgds(GRIBID, kgdss, gdss, lengds, ier)
@@ -428,7 +428,7 @@ C  raw data
         else
          nfile=1
         endif
-!	write(0,*) 'do_old, nfile: ', do_old, nfile
+	write(0,*) 'do_old, nfile: ', do_old, nfile
        nff=ff/1
 
         dphold=0.

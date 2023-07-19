@@ -88,19 +88,19 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
 
 ! account for bmap
 
-        if (jf .ne. 37910 .and. jf .ne. 70720 .and.  
-     +      jf .ne. 1905141) then
-
-            do JJ=1,jf
-            if (.not. gfld%bmap(JJ)) then
-             cldb(JJ,irun)=-5000.
-            else
-             cldb(JJ,irun)=gfld%fld(JJ)
-            endif
-            enddo
-         else
+!        if (jf .ne. 37910 .and. jf .ne. 70720 .and.  
+!     +      jf .ne. 1905141) then
+!
+!            do JJ=1,jf
+!            if (.not. gfld%bmap(JJ)) then
+!             cldb(JJ,irun)=-5000.
+!            else
+!             cldb(JJ,irun)=gfld%fld(JJ)
+!            endif
+!            enddo
+!         else
              cldb(:,irun)=gfld%fld
-         endif
+!         endif
 
             else
 
@@ -113,20 +113,20 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
 
 ! account for bmap
 
-        if (jf .ne. 37910 .and. jf .ne. 70720 .and.  
-     +      jf .ne. 1905141) then
+!        if (jf .ne. 37910 .and. jf .ne. 70720 .and.  
+!     +      jf .ne. 1905141) then
 
-            do JJ=1,jf
-            if (.not. gfld%bmap(JJ)) then
-             cldb(JJ,irun)=-5000.
-            else
+!            do JJ=1,jf
+!!            if (.not. gfld%bmap(JJ)) then
+!             cldb(JJ,irun)=-5000.
+!            else
 !was             cldb(JJ,irun)=gfld%fld(JJ)+hsfc(JJ,irun)
-             cldb(JJ,irun)=gfld%fld(JJ)
-            endif
-            enddo
-         else
+!             cldb(JJ,irun)=gfld%fld(JJ)
+!            endif
+!            enddo
+!         else
              cldb(:,irun)=gfld%fld+hsfc(:,irun)
-         endif
+!         endif
 
             else
              miss(irun)=1
