@@ -378,13 +378,13 @@ for mem in members:
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
     print('itime for this member: ', itime)
     if memname == 'rrfs':
-      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       print('file3 is: ', file3)
-      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       print('file6 is: ', file6)
-      file3alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
+      file3alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
       print('file3alt is: ', file3alt)
-      file6alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
+      file6alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
       print('file6alt is: ', file6alt)
 
 
@@ -442,10 +442,7 @@ for mem in members:
     else:
       file3 = memfiles[itime]
 
-    if dom == 'conus':
-      print('Processing member',(1+memcount),'of',nm)
-    if dom != 'conus':
-      print('Processing member',(1+memcount),'of',nm_nonconus)
+    print('Processing member',(1+memcount),'of',nm)
     print('file3 near read is ', file3)
 
     if qpf_interval != 1:

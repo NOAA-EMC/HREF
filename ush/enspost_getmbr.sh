@@ -125,26 +125,24 @@ echo working things with ff as $ff and  fcheck as $fcheck
       if [  ${file[$m]} = 'fv3s'  -a $fcst -le 60  ] ; then
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = timelag ];then
+       if [ $type = 'timelag' ];then
         if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
-         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${nam[$m]}.f06.grib2
+         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${nam[$m]}.f00.grib2
+         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
        else
-#       filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f00.grib2
-        filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${nam[$m]}.f00.grib2
+        filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
        fi
       fi
 
-#       filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f${fcst}.grib2
-        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 	if [ -e $filecheck ]
         then
          ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
@@ -219,9 +217,26 @@ typeset -Z2 fcheckloc
       if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
 	echo "in non-CONUS FV3S block"
 # hifv3s prfv3s akfv3s
+
+      if [  $ff -eq 01  ] ; then
+       if [ $type = 'timelag' ];then
+        if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
+         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
+         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
+        else
+         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
+         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
+	fi
+       else
+        filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
+        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
+       fi
+      fi
  
-#       filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.m${m}.f${fcst}.grib2
-        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then

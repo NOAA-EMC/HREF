@@ -205,8 +205,6 @@ if not os.path.exists(COMOUT):
 #------------------------------------------------------------------------------------------
 
 # if dom == 'conus':
-#nm_use = 9
-#members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06','rrfs07','rrfs08','rrfs09']
 nm_use = 12
 members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06']
 
@@ -448,27 +446,25 @@ for mem in members:
     print('itime for this member: ', itime)
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
     if memname == 'rrfs':
-      file0 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
-      print('file0 is: ', file0)
-      file1 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file2 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
-      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
-      file4 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
-      file5 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
-      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
-      file7 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'      
-      file8 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
+      file0 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
+      file1 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file2 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
+      file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
+      file4 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
+      file5 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
+      file6 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
+      file7 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'      
+      file8 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
 
-      file0alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6)+'.grib2'
-      print('file0alt is: ', file0alt)
-      file1alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
-      file2alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
-      file3alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+3*incr+6)+'.grib2'
-      file4alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+4*incr+6)+'.grib2'
-      file5alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+5*incr+6)+'.grib2'
-      file6alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+6*incr+6)+'.grib2'
-      file7alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+7*incr+6)+'.grib2'
-      file8alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.m'+memnum+'.f%02d'%(start_hour+latency+8*incr+6)+'.grib2'
+      file0alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6)+'.grib2'
+      file1alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
+      file2alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
+      file3alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+3*incr+6)+'.grib2'
+      file4alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+4*incr+6)+'.grib2'
+      file5alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+5*incr+6)+'.grib2'
+      file6alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6*incr+6)+'.grib2'
+      file7alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+7*incr+6)+'.grib2'
+      file8alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+8*incr+6)+'.grib2'
 
     elif memname == 'fv3n':
       print('no fv3nc here')  
@@ -537,6 +533,7 @@ for mem in members:
         fhours.append(start_hour+1*incr+latency)
 # define fully just in case
         memfiles[itime] = [file1,file2,file3,file4,file5,file6,file7,file8]
+        print('defined memfiles for qpf_interval12')
       else:
 #        print('did not find file4 for qpf_12: ', file4)
         print('trying to work file4alt: ', file4alt)
@@ -589,7 +586,10 @@ for mem in members:
       print('Processing member',(1+memcount),'of',nm_use)
 
       fhour=fhours[memcount]
+      print('fhour is: ', fhour)
       shour=fhour-3
+ 
+      print('dealing with file1: ', file1)
       os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf1.txt ')
       qpf1,nx,ny=simplewgrib2('qpf1.txt')
 
@@ -739,7 +739,7 @@ for mem in members:
 
     print('here past qpf_interval tests')
     print('here with itime: ', itime)
-    if dom == 'conusavoid' or dom == 'ak':
+    if dom == 'conusavoid' or dom == 'akavoid':
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
 # prob is okay as is based on local qpf[itime]
@@ -947,7 +947,7 @@ for t in thresh_use:
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
 
-  if dom == 'conusavoid' or dom == 'ak':
+  if dom == 'conusavoid' or dom == 'akavoid':
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
 
   t5 = time.time()

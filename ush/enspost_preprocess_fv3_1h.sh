@@ -28,8 +28,25 @@ name=${4}
 hr=${5}
 region=${6}
 
+
+
+if [ $region = 'conus' ]
+then
 dim1=1799
 dim2=1059
+elif [ $region = 'ak' ]
+then
+dim1=1649
+dim2=1105
+elif [ $region = 'hi' ]
+then
+dim1=321
+dim2=225
+elif [ $region = 'pr' ]
+then
+dim1=544
+dim2=310
+fi
 
 let "name1 = $name + 01"
 echo $name1
@@ -54,14 +71,19 @@ mkdir fv3_${mem}_${hr}
 cd fv3_${mem}_${hr}
 
 # Need to modify input file name here
-#filecheck=$COMINrrfs.${PDY}/${cyc}/rrfs.t${cyc}z.mem${name}.f${hr}.grib2
-#filecheck=$COMINrrfs.${PDY}/${cyc}/rrfs_${region}.t${cyc}z.mem00${name}.f0${hr}.grib2
-#filecheck=$COMINfv3/${mem}/PRSLEV.GrbF${hr}
+
 if [ $name = 00 ];then
-#filecheck=$COMINrrfs/rrfs.${PDY}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+
+if [ $region = "conus" ]
+then
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
 # need logic for mphys to find ctrl member
  altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+else
+ filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+# need logic for mphys to find ctrl member
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+fi
 
 if [ ! -e $filecheck -a -e $altfilecheck ]
 then
@@ -69,8 +91,14 @@ filecheck=$altfilecheck
 fi
 
 else
-#filecheck=$COMINrrfs/refs.${PDY}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+if [ $region = "conus" ]
+then
  filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+else
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+
+fi
+
 fi
 
 echo filecheck is $filecheck
@@ -99,7 +127,7 @@ echo filecheck is $filecheck
         $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb top.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
-       cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2
+       cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 
 ## snow proc
 
@@ -108,7 +136,7 @@ echo filecheck is $filecheck
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 
-$WGRIB2 ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 hrold=$((hr-1)) 
 hrold3=$((hr-3)) 
 
@@ -167,11 +195,11 @@ export err=$? # ; err_chk
 # 1 h added to f01
 
 
-if [ -s ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrrfs/enspost_fv3snowbucket < input.${hr}
 export err=$? # ; err_chk
-cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2
+cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
 
 
@@ -216,11 +244,11 @@ echo "$dim1 $dim2" >> input.${hr}
 $EXECrrfs/enspost_fv3snowbucket < input.${hr}
 export err=$? # ; err_chk
 
-if [ -s ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrrfs/enspost_fv3snowbucket < input.${hr}
 export err=$? # ; err_chk
-cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2
+cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
 
 
@@ -231,16 +259,15 @@ fi # 3 hour time
 else
 # just extract for f00
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
-$WGRIB2 ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
-#       cp ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 ${GESOUT}.${PDY}/fv3s.t${cyc}z.m${mem}.f${hr}.grib2
-        cp ../fv3s.t${cyc}z.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.m${name1}.f${hr}.grib2
+        cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${region}.m${name1}.f${hr}.grib2
         err=$? ; export err
 
 	if [ $err -ne 0 ]
          then
-         msg="FATAL ERROR: fv3s.t${cyc}z.m${mem}.f${hr}.grib2 not copied properly"
+         msg="FATAL ERROR: fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 not copied properly"
          err_exit $msg
         fi
 
