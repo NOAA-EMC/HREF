@@ -34,7 +34,7 @@
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
-<!ENTITY KEEPDATA "YES">
+<!ENTITY KEEPDATA "NO">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
 <!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
 
@@ -69,7 +69,7 @@
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
 <!-- <workflow realtime="F" scheduler="pbspro" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="pbspro" taskthrottle="10" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="12" cyclethrottle="5" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
