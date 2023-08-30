@@ -96,9 +96,7 @@ echo have PDY as $PDY
 # Define running directory and COM directories
 ##############################################
 
-
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type}
-
 
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT/ensprod
@@ -119,17 +117,17 @@ export GESOUT=${GESOUT:-${GESROOT}/${RUN}}
 
 ###################################################
 # Execute the Script exrrfs_enspost_ensprod.sh
-#type=single
-#type=timelag
-#type=$type
 
 hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 \
 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
+
 if [ $type = single ]; then
  mems="01 02 03 04 05 06 07 08 09 10"
 else
- mems="01 02 03 04 05 06 07 08 09 10 11 12"
+# mems="01 02 03 04 05 06 07 08 09 10 11 12"
+# shift to just doing members from this cycle (more efficient if running routinely)
+ mems="01 02 03 04 05 06"
 fi
 
 
@@ -176,13 +174,9 @@ do
  if [ $type = timelag ]; then
   if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
    backdate=`$ndate -06 $PDY$cyc`
-#    echo $backdate > backdate
    backday=`echo $backdate | cut -c1-8`
    backcyc=`echo $backdate | cut -c9-10`
 
-#  let "newhr = $hr + 06"
-#  echo $newhr
-#  if [ $newhr -lt 10 ]; then newhr=0$newhr;fi
    echo "$USHrrfs/enspost_preprocess_fv3_1h.sh ${backday} ${backcyc} ${mem} ${name} $hr ${region}" >> poe.fv3
   else
    echo "$USHrrfs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3
@@ -248,14 +242,8 @@ fi
  if [ $type = timelag ]; then
   if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
    backdate=`$ndate -06 $PDY$cyc`
-#   echo $backdate > backdate
-#   backday=`cut -c 1-8 backdate`
-#   backcyc=`cut -c 9-10 backdate`
    backday=`echo $backdate | cut -c1-8`
    backcyc=`echo $backdate | cut -c9-10`
-#  let "newhr = $hr + 06"
-#  echo $newhr
-#  if [ $newhr -lt 10 ]; then newhr=0$newhr;fi
   echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
   else
    echo "$USHrrfs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
