@@ -26,7 +26,7 @@
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USER;/rrfs/v0.6.5/prod"> 
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USER;/rrfs/v0.6.7/prod"> 
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.0/nwges/&TYPE;/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.0/nwges/&TYPE;">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.0/">
