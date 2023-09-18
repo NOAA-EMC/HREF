@@ -124,12 +124,39 @@ print('template file is: ', template)
 # accumulation interval (hours)
 fcst_hour = int(sys.argv[1])
 
+# pass in as 100/102 1 h low/high
+# pass in as 300/302 3 h low/high
+# pass in as 600/601/602 6 h low/med/high
 # pass in as 120/121/122,  240/241/242 to distinguish 12 low/med/hi and 24 low/med/hi ??
 qpf_interval = int(sys.argv[2])
 
 low=0
 med=0
 high=0
+
+if qpf_interval == 100:
+    qpf_interval=1
+    low=1
+if qpf_interval == 102:
+    qpf_interval=1
+    high=1
+
+if qpf_interval == 300:
+    qpf_interval=3
+    low=1
+if qpf_interval == 302:
+    qpf_interval=3
+    high=1
+
+if qpf_interval == 600:
+    qpf_interval=6
+    low=1
+if qpf_interval == 601:
+    qpf_interval=6
+    med=1
+if qpf_interval == 602:
+    qpf_interval=6
+    high=1
 
 if qpf_interval == 120:
     qpf_interval=12
@@ -385,17 +412,35 @@ stop = max_latency
 wgribdate=PDY+cyc
 
 if qpf_interval == 1:
-  outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 1
-  thresh_use=pqpf_1h_thresh
+  if low == 1:
+    thresh_use=pqpf_1h_thresh_low
+    outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf01low_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  if high == 1:
+    thresh_use=pqpf_1h_thresh_high
+    outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf01high_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+
 if qpf_interval == 3:
-  outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf03_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 3
-  thresh_use=pqpf_3h_thresh
+  if low == 1:
+    thresh_use=pqpf_3h_thresh_low
+    outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf03low_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  if high == 1:
+    thresh_use=pqpf_3h_thresh_high
+    outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf03high_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+
 if qpf_interval == 6:
-  outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf06_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 3
-  thresh_use=pqpf_6h_thresh
+  if low == 1:
+      thresh_use=pqpf_6h_thresh_low
+      outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf06low_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  if med == 1:
+      thresh_use=pqpf_6h_thresh_med
+      outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf06med_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  if high == 1:
+      thresh_use=pqpf_6h_thresh_high
+      outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf06high_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+
 if qpf_interval == 12:
   incr = 3
   if low == 1:

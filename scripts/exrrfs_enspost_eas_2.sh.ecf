@@ -41,7 +41,9 @@ hrs="39 42 45 48 51 54 57 60"
 fi
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 6 > qpf_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_6_low; cd qpf_${fhr}_6_low ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 600 > qpf_combo_${dom}_${cyc}_6h_low_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_6_med; cd qpf_${fhr}_6_med ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 601 > qpf_combo_${dom}_${cyc}_6h_med_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_6_high; cd qpf_${fhr}_6_high ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 602 > qpf_combo_${dom}_${cyc}_6h_high_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHrrfs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
 done
 
@@ -67,7 +69,8 @@ hrs="39 42 45 48 51 54 57 60"
 fi
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 3  > qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_3_low; cd qpf_${fhr}_3_low ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 300  > qpf_combo_${dom}_${cyc}_3h_low_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_3_high; cd qpf_${fhr}_3_high ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 302  > qpf_combo_${dom}_${cyc}_3h_high_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHrrfs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 3 > snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
 done
 
@@ -79,7 +82,8 @@ hrs="37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
 fi
 for fhr in $hrs
 do
-echo "cd ${DATA}; mkdir qpf_${fhr}_1; cd qpf_${fhr}_1 ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 1 > qpf_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_1_low; cd qpf_${fhr}_1_low ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 100 > qpf_combo_${dom}_${cyc}_1h_low_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_1_high; cd qpf_${fhr}_1_high ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 102 > qpf_combo_${dom}_${cyc}_1h_high_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir snow_${fhr}_1; cd snow_${fhr}_1; python ${USHrrfs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 1 >  snow_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow
 done
 
@@ -107,9 +111,10 @@ fi
 while [ $fhr -le $endfhr ]
 do
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf01low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf01high_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf01(low|high)_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 ]
@@ -118,15 +123,17 @@ msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.gr
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01low_easfrac.f${fhr}.grib2 > $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01high_easfrac.f${fhr}.grib2 > $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 if [ $((fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf03low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf03high_easfrac.f${fhr}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf03(low|high)_easfrac.f${fhr}.grib2"
 err_exit $msg
 fi
 
@@ -136,7 +143,8 @@ msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.gr
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf03low_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf03high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 fi
@@ -144,7 +152,9 @@ fi
 if [ $((fhr%3)) -eq 0 -a $fhr -ge 6 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06low_easfrac.f${fhr}.grib2 -o \
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06med_easfrac.f${fhr}.grib2
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06high_easfrac.f${fhr}.grib2 ]
 then
 msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2"
 err_exit $msg
@@ -156,7 +166,9 @@ msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.gr
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf06low_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf06med_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf06high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 fi
