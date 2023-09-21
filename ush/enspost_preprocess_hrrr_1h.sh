@@ -4,23 +4,42 @@
 #
 #  Script: preprocess_hrrr_1h.sh.ecf
 #
-# Purpose: Filters out needed inputs from HRRR for HREF,
-#          and interpolates onto the HREF domain.
+# Purpose: Filters out needed inputs from HRRR for RRFSens,
 #
 #  Author: Matthew Pyle
 #          March 2020
+#
+#  09/2023 - M. Pyle - updates for inclusion in RRFS ensemble
 
 set -x
 
-if [ $# -ne 3 ]
+if [ $# -ne 6 ]
 then
-echo "ERROR: need cycle and forecast hour and nest"
+echo "FATAL ERROR: need 6 arguments, day,cycle,member,member file name,forecast hour,and domain"
 exit
 fi
 
-cyc=${1}
-NEST=${2}
-hr=${3}
+PDY=${1}
+cyc=${2}
+mem=${3}
+name=${4}
+hr=${5}
+NEST=${6}
+
+
+if [ $NEST = 'conus' ]
+then
+dim1=1799
+dim2=1059
+elif [ $NEST = 'ak' ]
+then
+dim1=1649
+dim2=1105
+else
+echo "FATAL ERROR: improper region for HRRR preprocessing job" $NEST
+exit 99
+fi
+
 
 echo $NEST $hr
 
@@ -43,7 +62,7 @@ then
 elif [ $NEST = "ak" ]
 then 
  NESTLOC=alaska
- wgrib2def="nps:210:60 185.5:825:5000 44.8:603:5000"
+ wgrib2def='nps:210.0:60.0 181.429:1649:2976.0 40.530:1105:2976.0'
  filecheck=${COMINhrrr}.${PDY}/${NESTLOC}/hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
 fi
 
@@ -51,7 +70,7 @@ fi
         if [ -e $filecheck ]
         then
 
-         $WGRIB2 $filecheck | grep -F -f $PARMhref/href_hrrr_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
+         $WGRIB2 $filecheck | grep -F -f $PARMrrfs/enspost_hrrr_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
          $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "MSLMA" -set_byte 4 11 192 -grib mslet.t${cyc}z.f${hr}.grb
@@ -78,11 +97,18 @@ fi
 
 	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
          rm mslet.t${cyc}z.f${hr}.grb pblh*.t${cyc}z.f${hr}.grb
+
+	if [ $NEST = "ak" ]
+then
          $WGRIB2 hrrr.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
          $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
 
          cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
          rm interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb   hrrr.t${cyc}z.f${hr}
+
+else # conus, so no interp
+	cat hrrr.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb  > ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+fi
 
         else
          msg="FATAL ERROR: $filecheck missing"
