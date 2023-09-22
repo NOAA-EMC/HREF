@@ -11,6 +11,8 @@
 #           2023-03-15: Jun Du - all names have been changed from href to rrfs_enspost or enspost
 #           2023-04-13: Jun Du - added ctl as mem01 and rearranged the order of pert members
 #           2023-04-26: Jun Du - added  timelag version (type=timelag)
+#           2023-09   : M. Pyle - added back HRRR for CONUS and AK
+#
 #    Usage: rrfs_getmbr.sh fhr cycle Day 
 ######################################################################################
 set -x         
@@ -38,7 +40,7 @@ cd $DATA
 
 if [ $dom = 'conus' ]
   then
-     files="12 fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s"
+     files="14 fv3s fv3s fv3s fv3s fv3s fv3s hrrr fv3s fv3s fv3s fv3s fv3s fv3s hrrr"
 elif [ $dom = 'hi' ]
   then
      files="12 hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s"
@@ -62,15 +64,18 @@ if [ $type = single ];then
  mbrs="1  2  3  4  5  6  7  8  9 10" 
 else
  backdate=`$ndate -06 $PDY$cyc`
-#  echo $backdate > backdate
  backday=`echo $backdate | cut -c1-8`
  backcyc=`echo $backdate | cut -c9-10`
- days="12 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday"
- cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
- ages="12  0    0    0    0    0    0    6    6    6    6    6    6"
- nams="12 m01 m02  m03  m04  m05  m06  m01   m02 m03   m04  m05 m06" 
- if [ $fhr -le 54 ];then
-  mbrs="1  2  3  4  5  6  7  8  9  10  11  12" 
+ days="14 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $backday"
+ cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $PDY $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
+ ages="14  0    0    0    0    0    0    0    6    6    6    6    6    6    6"
+ nams="14 m01 m02  m03  m04  m05  m06  hrrr  m01   m02 m03   m04  m05 m06  hrrr" 
+ if [ $fhr -lt 42 ];then
+  mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13 14" 
+ elif [ $fhr -ge 43 -a $fhr -le 48 ];then
+  mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13" 
+ elif [ $fhr -ge 49 -a $fhr -le 53 ];then
+  mbrs="1  2  3  4  5  6   8  9  10  11  12 13" 
  else
   mbrs="1  2  3  4  5  6" 
  fi
@@ -209,6 +214,129 @@ typeset -Z2 fcheckloc
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
 
       fi
+
+
+###### HRRR
+
+      if [ ${file[$m]} = 'hrrr' -a $fcst -le 48  ] ; then
+    
+        echo "in HRRR block" 
+    
+        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
+
+        if [ -e $filecheck ]
+        then
+  
+        ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
+        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
+  
+        else
+  
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+
+        fi
+
+        fcheckloc=$fcheck
+        while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
+        do
+        echo check on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        loop=0
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
+        do
+        echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc}
+          sleep ${sleeptime}
+          let loop=loop+1
+        done
+        let fcheckloc=fcheckloc+1
+typeset -Z2 fcheckloc
+        done
+
+        if [ $ff -gt 0 ]
+        then
+        echo here a $ff
+
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
+         export err=$? ; err_chk
+        fi
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
+        fi
+
+        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
+        fi
+
+      fi
+
+
+
+
+###### HRRRAK
+
+      if [ ${file[$m]} = 'hrrrak' -a $fcst -le 48  ] ; then
+
+        echo "in HRRRAK block"
+
+        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
+
+        if [ -e $filecheck ]
+        then
+
+        ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
+        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
+
+        else
+
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+
+        fi
+
+
+        fcheckloc=$fcheck
+        while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
+        do
+        echo check on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} working $ff
+        loop=0
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
+        do
+        echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc}
+          sleep ${sleeptime}
+          let loop=loop+1
+        done
+        let fcheckloc=fcheckloc+1
+typeset -Z2 fcheckloc
+        done
+
+        if [ $ff -gt 0 ]
+        then
+## actually now have the summing of 3 h totals done in the HRRR preproc job
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
+         export err=$? ; err_chk
+        fi
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
+        fi
+
+        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
+        fi
+
+      fi
+
+
  
 
 ###### FV3S - NON CONUS
