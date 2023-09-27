@@ -67,10 +67,10 @@ else
  backday=`echo $backdate | cut -c1-8`
  backcyc=`echo $backdate | cut -c9-10`
  days="14 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $backday"
- cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $PDY $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
+ cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
  ages="14  0    0    0    0    0    0    0    6    6    6    6    6    6    6"
  nams="14 m01 m02  m03  m04  m05  m06  hrrr  m01   m02 m03   m04  m05 m06  hrrr" 
- if [ $fhr -lt 42 ];then
+ if [ $fhr -le 42 ];then
   mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13 14" 
  elif [ $fhr -ge 43 -a $fhr -le 48 ];then
   mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13" 
@@ -256,12 +256,12 @@ typeset -Z2 fcheckloc
         then
         echo here a $ff
 
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ]
         then
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
          export err=$? ; err_chk
         fi
 
@@ -318,11 +318,11 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ]
         then
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
          export err=$? ; err_chk
         fi
 
