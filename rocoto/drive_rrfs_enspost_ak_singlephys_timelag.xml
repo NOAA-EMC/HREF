@@ -35,7 +35,7 @@
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
-<!ENTITY KEEPDATA "NO">
+<!ENTITY KEEPDATA "YES">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
 <!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
 
