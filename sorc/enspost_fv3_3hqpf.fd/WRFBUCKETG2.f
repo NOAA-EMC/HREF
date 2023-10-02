@@ -95,11 +95,14 @@ C grib2
       INTEGER,DIMENSION(:) :: JIDS(200),JPDT(200),JGDT(200)
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD(200)
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD_EARLY(200)
+      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD(200)
+      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD_EARLY(200)
       LOGICAL :: UNPACK
       INTEGER :: K,IRET
       TYPE(GRIBFIELD) :: GFLD
 C grib2
 	real:: p_later(IM*JM),p_earlier(IM*JM),dprecip(im*jm)
+	real:: frzr_later(IM*JM),frzr_earlier(IM*JM),dfrzr(im*jm)
 	
 
 	call baopenr(11,fname1,ierr1)
@@ -150,14 +153,8 @@ C    &                  UNPACK,K,GFLD,IRET)
         call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
-!        write(0,*) 'pulled gfld%idsect(1:10): ', gfld%idsect(1:10)
         write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
         write(0,*) 'earlier ipdtmpl(27): ', gfld%ipdtmpl(27)
-!        do J=1,29
-!        write(0,*) 'J,gfld%ipdtmpl(J): ', J,gfld%ipdtmpl(J)
-!        enddo
-
-!        write(0,*) 'pulled gfld%igdtnum : ', gfld%igdtnum 
 
 	if (IRET .ne. 0) then
 	write(0,*) 'bad getgb1 earlier ', IRET
@@ -172,6 +169,29 @@ C    &                  UNPACK,K,GFLD,IRET)
         write(0,*) 'maxval(p_earlier): ', maxval(p_earlier)
 
 
+        J=0
+        JIDS=-9999
+        JPDTN=8
+        JPDT=-9999
+        JPDT(2)=225
+! try force getting the 0-hr total
+        JPDT(9)=0
+        JGDTN=-1
+        JGDT=-9999
+        UNPACK=.true.
+
+        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+     &     UNPACK,K,GFLD,IRET)
+
+        frzr_earlier=gfld%fld
+        do K=1,gfld%ipdtlen
+        PDS_FRZR_HOLD_EARLY(K)=gfld%ipdtmpl(K)
+        enddo
+        write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
+
+
+! later apcp
+        J=0
         JIDS=-9999
         JPDTN=8
         JPDT=-9999
@@ -218,27 +238,55 @@ C    &                  UNPACK,K,GFLD,IRET)
 	endif
 
 
+! later frzr
+        J=0
+        JIDS=-9999
+        JPDTN=8
+        JPDT=-9999
+        JPDT(2)=225
+! try force getting the 0-hr total
+        JPDT(9)=0
+        JGDTN=-1
+        JGDT=-9999
 
-!! 	force decimal scaling
-!	KPDS2(22)=4
-!! 	force decimal scaling
+
+        call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+     &     UNPACK,K,GFLD,IRET1)
+
+        write(0,*) 'K: ', K
+
+	if (IRET1 .ne. 0) then
+	 write(0,*) 'bad getgb later ', IRET1
+	STOP 999
+	endif
+
+        write(0,*) 'set frzr_later to gfld%fld'
+        frzr_later=gfld%fld
+        write(0,*) 'maxval(frzr_later): ', maxval(frzr_later)
+
+        do K=1,gfld%ipdtlen
+        PDS_FRZR_HOLD(K)=gfld%ipdtmpl(K)
+        enddo
+
+	if (reset_flag .eq. 1) then
+	write(0,*) 'just later value'
+
+	do NPT=1,IM*JM
+	dfrzr(NPT)=frzr_later(NPT)
+	enddo
+
+	else
+
+	write(0,*) 'take normal difference for frzr ', IM*JM
+
+	do NPT=1,IM*JM
+	dfrzr(NPT)=frzr_later(NPT)-frzr_earlier(NPT)
+	enddo
+
+	endif
 
 
         write(0,*) 'define gfld%fld with dprecip'
-
-!        do J=1,gfld%ipdtlen
-
-!        if (PDS_RAIN_HOLD(J) .ne. PDS_RAIN_HOLD_EARLY(J)) then
-!        write(0,*) 'rain diff, J, early, later: ', 
-!     &   J, PDS_RAIN_HOLD_EARLY(J), PDS_RAIN_HOLD(J)
-!        endif
-
-!        write(0,*) 'J, PDS_RAIN_HOLD_EARLY, PDS_RAIN_HOLD: ', 
-!     &       J, PDS_RAIN_HOLD_EARLY(J), PDS_RAIN_HOLD(J)
-
-!        enddo
-        
-
 
         do K=1,gfld%ipdtlen
         gfld%ipdtmpl(K)=PDS_RAIN_HOLD_EARLY(K)
@@ -257,11 +305,31 @@ C    &                  UNPACK,K,GFLD,IRET)
 !        gfld%ipdtmpl(28)=1
         gfld%fld=dprecip
 
-!        do J=1,29
-!        write(0,*) 'at write J,gfld%ipdtmpl(J): ', J,gfld%ipdtmpl(J)
-!        enddo
+	call putgb2(13,GFLD,IRET)
+
+        write(0,*) 'define gfld%fld with dfrzr'
+
+        do K=1,gfld%ipdtlen
+        gfld%ipdtmpl(K)=PDS_FRZR_HOLD_EARLY(K)
+        enddo
+
+        gfld%ipdtmpl(9)=ihrs1
+        do J=16,21
+        gfld%ipdtmpl(J)=PDS_FRZR_HOLD(J)
+        enddo
+
+        gfld%ipdtmpl(22)=1
+        gfld%ipdtmpl(27)=interv
+
+        write(0,*) 'interval specified in 27: ', interv
+
+!        gfld%ipdtmpl(28)=1
+        gfld%fld=dfrzr
 
 	call putgb2(13,GFLD,IRET)
+
+
+
         write(0,*) 'IRET from putgb2 for dprecip', IRET
 
 ! -------------------------------------------
@@ -270,6 +338,8 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	write(0,*) 'extremes of precip: ', 
      +		maxval(dprecip)
+	write(0,*) 'extremes of frzr: ', 
+     +		maxval(dfrzr)
 
   633	format(25(f4.1,1x))
 
