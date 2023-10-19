@@ -111,14 +111,15 @@ echo filecheck is $filecheck
         $WGRIB2 $filecheck -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
 #       $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "ASNOW"  -grib nn4.t${cyc}z.f${hr}.grb
 
-        cat nn3.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
+        cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
 #        $WGRIB2 $filecheck -match "WEASD" -match "anl" -grib nn2b.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "WEASD" -grib nn2b.t${cyc}z.f${hr}.grb
-         cat nn2b.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
+         cat nn2b.t${cyc}z.f${hr}.grb  >> nn2.t${cyc}z.f${hr}.grb
         fi
 
         $WGRIB2 $filecheck -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
@@ -136,7 +137,7 @@ echo filecheck is $filecheck
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 
-$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 hrold=$((hr-1)) 
 hrold3=$((hr-3)) 
 
@@ -182,14 +183,14 @@ sleep 2
 cp ../temp.t${cyc}z.m${mem}.f${hrold}.grib2 temp.t${cyc}z.f${hrold}.grib2
 
 
-echo $curpath > input.${hr}
-echo "temp.t${cyc}z.f" >> input.${hr}
-echo $hrold >> input.${hr}
-echo $hr >> input.${hr}
-echo 0 >> input.${hr}
-echo "$dim1 $dim2" >> input.${hr}
+echo $curpath > input.${hr}.mem${mem}.snow
+echo "temp.t${cyc}z.f" >> input.${hr}.mem${mem}.snow
+echo $hrold >> input.${hr}.mem${mem}.snow
+echo $hr >> input.${hr}.mem${mem}.snow
+echo 0 >> input.${hr}.mem${mem}.snow
+echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 
-$EXECrrfs/enspost_fv3snowbucket < input.${hr}
+$EXECrrfs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? # ; err_chk
 
 # 1 h added to f01
@@ -197,7 +198,7 @@ export err=$? # ; err_chk
 
 if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
-$EXECrrfs/enspost_fv3snowbucket < input.${hr}
+$EXECrrfs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? # ; err_chk
 cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
@@ -234,19 +235,19 @@ sleep 2
 cp ../temp.t${cyc}z.m${mem}.f${hrold3}.grib2 temp.t${cyc}z.f${hrold3}.grib2
 
 
-echo $curpath > input.${hr}
-echo "temp.t${cyc}z.f" >> input.${hr}
-echo $hrold3 >> input.${hr}
-echo $hr >> input.${hr}
-echo 0 >> input.${hr}
-echo "$dim1 $dim2" >> input.${hr}
+echo $curpath > input.${hr}.mem${mem}.snow
+echo "temp.t${cyc}z.f" >> input.${hr}.mem${mem}.snow
+echo $hrold3 >> input.${hr}.mem${mem}.snow
+echo $hr >> input.${hr}.mem${mem}.snow
+echo 0 >> input.${hr}.mem${mem}.snow
+echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 
-$EXECrrfs/enspost_fv3snowbucket < input.${hr}
+$EXECrrfs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? # ; err_chk
 
 if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
-$EXECrrfs/enspost_fv3snowbucket < input.${hr}
+$EXECrrfs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? # ; err_chk
 cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
@@ -259,7 +260,7 @@ fi # 3 hour time
 else
 # just extract for f00
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
-$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
         cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${region}.m${name1}.f${hr}.grib2

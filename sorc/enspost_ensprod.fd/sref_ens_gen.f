@@ -575,6 +575,8 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
           !First re-set  Product template# and ID for some products 
           IF ((k4(nv).eq.1.and.k5(nv).eq.8).or.          ! APCP/SNOW
      +       (k4(nv).eq.1.and.k5(nv).eq.15).or.
+     +       (k4(nv).eq.1.and.k5(nv).eq.225).or.
+     +       (k4(nv).eq.1.and.k5(nv).eq.29).or.
      +       (k4(nv).eq.1.and.k5(nv).eq.13).or.
      +       (k4(nv).eq.1.and.k5(nv).eq.11) ) then
 
@@ -618,11 +620,14 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
              !jpd12 is determined by a specific level MeanLevel(nv,lv) to !ProbLevel(nv,lv) later on
 
              if (vname(nv).eq.'AP1h'.or.vname(nv).eq.'SN1h'.or. 
-     &           vname(nv).eq.'FFG1') then        !AP1h,Ap3h,Ap6h, AP12,Ap24 should be hardcopy in the variable tbl
-	     write(0,*) 'jpd27=1 for AP1h or SN1h'
+     &           vname(nv).eq.'ASN1' .or. 
+     &           vname(nv).eq.'FFG1'.or.vname(nv).eq.'FZ1h') then        !AP1h,Ap3h,Ap6h, AP12,Ap24 should be hardcopy in the variable tbl
+	     write(0,*) 'jpd27=1 for AP1h SN1h FZ1h'
              jpd27=1
              else if (vname(nv).eq.'AP3h'.or.vname(nv).eq.'SN3h' .or. 
-     &                vname(nv).eq.'A3RI' .or. vname(nv).eq.'FFG3') then
+     &                vname(nv).eq.'A3RI' .or. vname(nv).eq.'FFG3' .or.
+     &                vname(nv).eq.'ASN3' .or. 
+     &                vname(nv).eq.'FZ3h') then
                 if(ifhr.lt.3 .or. mod(ifhr,3) .ne. 0) exit loop222
                 jpd27=3
              else if (vname(nv).eq.'AP6h'.or.vname(nv).eq.'SN6h' .or.
@@ -1958,6 +1963,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 ! MEAN (just for precip with PM type fields)
 
           if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
+     &        vname(nv).eq.'FZ1h' .or. vname(nv).eq.'FZ3h' .or.
      &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
 
          write(0,*) 'make sure it gets packed like a true mean field'
@@ -2024,10 +2030,12 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
           !    and put in same mean file, no spread file 
               if (vname(nv).eq.'UH3h'.or.
      +            vname(nv).eq.'RF3h'.or.
+     +            vname(nv).eq.'AP3h'.or.
      +            vname(nv).eq.'WS3h'.or.
      +            vname(nv).eq.'US3h') jpd27=3
               if (vname(nv).eq.'UH24'.or.
      +            vname(nv).eq.'RF24'.or.
+     +            vname(nv).eq.'AP24'.or.
      +            vname(nv).eq.'WS24'.or.
      +            vname(nv).eq.'US24') jpd27=24
 
