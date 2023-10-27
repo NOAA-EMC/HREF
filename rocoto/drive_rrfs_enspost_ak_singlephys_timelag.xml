@@ -7,48 +7,42 @@
 <!ENTITY STARTDAY "10">
 <!ENTITY STARTHOUR "06">
 
-<!ENTITY ENDYEAR "2023">
+<!ENTITY ENDYEAR "2024">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "18">
 
-<!ENTITY USER "emc.lam">
+<!ENTITY USER "Matthew.Pyle">
+<!ENTITY USERLAM "emc.lam">
 <!ENTITY ACCOUNT "RRFS-DEV">
 <!ENTITY TYPE "timelag">
 <!ENTITY PHYS "singlephys">
 <!ENTITY RUN "rrfs">
 
-<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.0.0">
+<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.2.0_winter">
 <!ENTITY domain "ak">
 <!ENTITY machine "WCOSS2">
-<!ENTITY envir "test">
+<!ENTITY envir "para">
 <!ENTITY JOBS "&HOMErrfs;/jobs">
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USER;/rrfs/v0.6.7/prod"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.0/nwges/&TYPE;/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.0/nwges/&TYPE;">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.0/">
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/nwges/&TYPE;/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/nwges/&TYPE;">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
-<!ENTITY KEEPDATA "NO">
+<!ENTITY KEEPDATA "YES">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
 <!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
 
 
-<!ENTITY RESERVATION '<queue>pridev</queue><account>&ACCOUNT;</account>'>
-<!ENTITY RESERVATION_CALIB '<queue>pridev</queue><account>&ACCOUNT;</account>'>
+<!ENTITY RESERVATION '<queue>dev</queue><account>&ACCOUNT;</account>'>
 
-<!ENTITY QUEUE      "pridev">
-
-<!ENTITY QUEUE_CALIB     "&QUEUE;">
-<!ENTITY WALLTIME_CALIB  "00:39:00">
-<!ENTITY RESOURCES_CALIB "<nodes>1:ppn=1</nodes>">
-<!ENTITY MEMORY_CALIB    "3000M">
-<!ENTITY NATIVE_CALIB    "">
+<!ENTITY QUEUE      "dev">
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 <!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>04:59:00</walltime>'>
@@ -181,6 +175,7 @@
 
     <dependency>
     <and>
+          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>

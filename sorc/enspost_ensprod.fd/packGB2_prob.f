@@ -91,7 +91,8 @@ C for variable table:
 
             if (jpd1.eq.1.and.
      &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13 .or.
-     &          jpd2.eq.194) ) then   ! add 194 for PPFFG
+     &          jpd2.eq.29 .or.
+     &          jpd2.eq.225 .or. jpd2.eq.194) ) then   ! add 194 for PPFFG
              ipdtnum=9                  !ensemble APCP prob use Template 4.12
              ipdtlen=36
             else
@@ -134,7 +135,8 @@ c            ipdtmpl(5)=132              !assigned 20161214
 
             if (jpd1.eq.1.and.
      &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13  .or.
-     &          jpd2.eq.194) ) then  !Template 4.9 has extra elements than Template 4.5
+     &          jpd2 .eq. 29 .or.
+     &          jpd2 .eq. 225 .or. jpd2.eq.194) ) then  !Template 4.9 has extra elements than Template 4.5
               !2015121205 correction: B. zhou ...
               !ihr_ifhr=ihr+ifhr
               !call get_ymd(iyr,imon,idy,ihr_ifhr,kyr,kmon,kdy,khr)

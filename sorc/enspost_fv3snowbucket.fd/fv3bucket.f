@@ -85,6 +85,7 @@
 	logical:: FIRST
 
         real:: rinc(5),sprecip(IM*JM)
+        real:: asnowprecip(IM*JM)
         integer:: idat(8),jdat(8)
 
         INTEGER :: IBM,LEN,ISCALE,NBIT,IBITM
@@ -100,8 +101,8 @@ C grib2
       INTEGER :: K,IRET
       TYPE(GRIBFIELD) :: GFLD, GFLD_QPF
 C grib2
-!	real:: s_later(IM*JM),s_earlier(IM*JM),sprecip(im*jm)
         real, allocatable :: s_later(:),s_earlier(:)
+        real, allocatable :: asnow_later(:),asnow_earlier(:)
 	
 
 	call baopenr(11,fname1,ierr1)
@@ -119,6 +120,8 @@ C grib2
 
         allocate(s_earlier(IM*JM))
         allocate(s_later(IM*JM))
+        allocate(asnow_earlier(IM*JM))
+        allocate(asnow_later(IM*JM))
         allocate(GROUND(IM*JM))
         allocate(ibmap(IM*JM))
 	
@@ -150,12 +153,34 @@ C grib2
      &     UNPACK,K,GFLD,IRET)
 
 	if (IRET .ne. 0) then
-	write(0,*) 'bad getgb1 earlier ', IRET
+	write(0,*) 'bad getgb1 (13)  earlier ', IRET
 	STOP 999
 	endif
 
         s_earlier=gfld%fld
         write(0,*) 'maxval(s_earlier): ', maxval(s_earlier)
+
+! -------------------------------
+
+        J=0
+        JIDS=-9999
+        JPDTN=8
+        JPDT=-9999
+        JPDT(2)=29
+        JGDTN=-1
+        JGDT=-9999
+        UNPACK=.true.
+
+        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+     &     UNPACK,K,GFLD,IRET)
+
+	if (IRET .ne. 0) then
+	write(0,*) 'bad getgb1 (29) earlier ', IRET
+	STOP 999
+	endif
+
+        asnow_earlier=gfld%fld
+        write(0,*) 'maxval(asnow_earlier): ', maxval(asnow_earlier)
 
 ! -------------------------------
 
@@ -190,6 +215,34 @@ C grib2
 
 ! -------------------------------
 
+        J=0
+        JIDS=-9999
+        JPDTN=8
+        JPDT=-9999
+        JPDT(2)=29
+        JGDTN=-1
+        JGDT=-9999
+
+        call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+     &     UNPACK,K,GFLD,IRET1)
+
+        write(0,*) 'K: ', K
+
+	if (IRET1 .ne. 0) then
+	 write(0,*) 'bad getgb later ', IRET1
+	STOP 9999
+	endif
+
+        write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
+
+        bmap_f=gfld%bmap
+
+        write(0,*) 'set asnow_later to gfld%fld'
+        asnow_later=gfld%fld
+        write(0,*) 'maxval(asnow_later): ', maxval(asnow_later)
+
+! -------------------------------
+
 ! Pull in QPF to get more proper PDS for WEASD bucket
 
         JIDS=-9999
@@ -218,6 +271,7 @@ C grib2
 
 	do NPT=1,IM*JM
 	sprecip(NPT)=s_later(NPT)
+	asnowprecip(NPT)=asnow_later(NPT)
 	enddo
 
 	else
@@ -227,19 +281,46 @@ C grib2
 
 	do NPT=1,IM*JM
 
-        if (  gfld%bmap(NPT) ) then ! make sure is a valid point
+!tmp        if (  gfld_qpf%bmap(NPT) ) then ! make sure is a valid point
+!tried        if (  .not. bmap_f(NPT) ) then ! make sure is a valid point
+!  probably will need for HRRR eventually
+
 	sprecip(NPT)=max(s_later(NPT)-s_earlier(NPT),0.0)
-        endif
+	asnowprecip(NPT)=asnow_later(NPT)-asnow_earlier(NPT)
+
+!        if (asnowprecip(NPT) .ne. 0.) then
+!         write(0,*) 'NPT,asnow_later(NPT),asnow_earlier(NPT),diff: ',
+!     &           NPT,asnow_later(NPT),asnow_earlier(NPT),
+!     &           asnow_later(NPT)-asnow_earlier(NPT)
+!         endif
+
+!        else
+!         write(0,*) 'skipping due to bmap_f at NPT: ', NPT
+         
+!tmp        endif
 
 	enddo
 
+
+         if (interv .eq. 1) then
+                 write(0,*) '1 h values'
         write(0,*) 'min,max of sprecip: ', minval(sprecip), 
      &         maxval(sprecip)
+        write(0,*) 'min,max of asnowprecip: ', minval(asnowprecip), 
+     &         maxval(asnowprecip)
+        write(0,*) 'min,max of asnow_later: ', minval(asnow_later), 
+     &         maxval(asnow_later)
+        write(0,*) 'min,max of asnow_earlier: ', minval(asnow_earlier), 
+     &         maxval(asnow_earlier)
+        endif
+
 
 	endif
 
 	deallocate(s_later)
 	deallocate(s_earlier)
+	deallocate(asnow_later)
+	deallocate(asnow_earlier)
 
 	write(0,*) 'shape(gfld_qpf%ipdtmpl): ', shape(gfld_qpf%ipdtmpl)
 
@@ -302,29 +383,24 @@ C grib2
 
         gfld_qpf%fld=sprecip
 
-
 	write(0,*) 'use gfld_qpf%idrtmpl(1:10): ', gfld_qpf%idrtmpl(1:10)
-
 
 !! use GET_BITS to compute nbits?
 
       IBM=0
       IBITM = 0
-      gfld_qpf%idrtmpl(2)=-2.0
+      gfld_qpf%idrtmpl(2)=-5.0
       SGDS  = gfld%idrtmpl(2)
-
-      write(0,*) 'here a'
 
 !     set bitmap
       DO N=1,IM*JM
-        IF( gfld%bmap(N) ) THEN
+        IF( gfld_qpf%bmap(N) ) THEN
              ibmap(N) = 1
              ibitm = ibitm+1
         ELSE
              ibmap(N) = 0
         ENDIF
       ENDDO
-      write(0,*) 'here b'
 
 !     set bitmap
       IF (IBITM.EQ.IM*JM) THEN
@@ -335,10 +411,9 @@ C grib2
       call GET_BITS(IBM,SGDS,IM*JM,ibmap,gfld_qpf%fld,
      &                ISCALE,GROUND,GMIN,GMAX,NBIT)
 
-      write(0,*) 'returned NBIT as: ', NBIT
-      write(0,*) 'returned ISCALE as: ', ISCALE
-
-      write(0,*) 'GMAX: ', GMAX
+      write(0,*) 'returned NBIT for WEASD as: ', NBIT
+!      write(0,*) 'returned ISCALE as: ', ISCALE
+!      write(0,*) 'GMAX: ', GMAX
 
 
         gfld_qpf%idrtmpl(4)=NBIT
@@ -348,9 +423,52 @@ C grib2
 	call putgb2(13,GFLD_QPF,IRET)
         write(0,*) 'IRET from putgb2 for sprecip ', IRET
 
+! add asnow piece
+
+       gfld_qpf%ipdtmpl(2)=29
+       gfld_qpf%fld=asnowprecip
+
+!! use GET_BITS to compute nbits?
+
+      IBM=0
+      IBITM = 0
+      gfld_qpf%idrtmpl(2)=-5.0
+      SGDS  = gfld%idrtmpl(2)
+
+!     set bitmap
+      DO N=1,IM*JM
+        IF( gfld_qpf%bmap(N) ) THEN
+             ibmap(N) = 1
+             ibitm = ibitm+1
+        ELSE
+             ibmap(N) = 0
+        ENDIF
+      ENDDO
+
+!     set bitmap
+      IF (IBITM.EQ.IM*JM) THEN
+        IBM = 0
+      ELSE
+        IBM = 1
+      ENDIF
+      call GET_BITS(IBM,SGDS,IM*JM,ibmap,gfld_qpf%fld,
+     &                ISCALE,GROUND,GMIN,GMAX,NBIT)
+
+      write(0,*) 'returned NBIT for ASNOW as: ', NBIT
+!      write(0,*) 'returned ISCALE as: ', ISCALE
+!      write(0,*) 'GMAX: ', GMAX
+
+
+        gfld_qpf%idrtmpl(4)=NBIT
+
+	write(0,*) 'use gfld%idrtmpl(1:10): ', gfld%idrtmpl(1:10)
+
+	call putgb2(13,GFLD_QPF,IRET)
+        write(0,*) 'IRET from putgb2 for asnowprecip ', IRET
+
         call baclose(13,IRET)
 
-	write(0,*) 'extremes of snow: ', 
-     +		maxval(sprecip)
+	write(0,*) 'extremes of snow,asnow: ', 
+     +		maxval(sprecip),maxval(asnowprecip)
 
 	end subroutine calc_pdiff
