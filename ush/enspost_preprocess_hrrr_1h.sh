@@ -74,6 +74,7 @@ fi
          $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "MSLMA" -set_byte 4 11 192 -grib mslet.t${cyc}z.f${hr}.grb
+	 $WGRIB2 $filecheck -match MAXUVV -set_byte 4 23 100 -set_byte 4 29 100 -grib maxuvv.t${cyc}z.f${hr}.grb
 
 	 $WGRIB2 $filecheck -match "HPBL" -set_byte 4 10 3 -grib pblh_start.t${cyc}z.f${hr}.grb
 	 $WGRIB2 pblh_start.t${cyc}z.f${hr}.grb -set_byte 4 11 5 -grib pblh_mid.t${cyc}z.f${hr}.grb
@@ -87,15 +88,25 @@ fi
          $WGRIB2 $filecheck -match "TCDC" -set_byte 4 23 200 -grib tcdc.t${cyc}z.f${hr}.grb
 
          $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
 
-         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+         $WGRIB2 $filecheck -match "HGT:cloud base:" -grib base.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
+
+
+         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb  nn3.t${cyc}z.f${hr}.grb \
+	 ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+         top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb \
          refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
-         rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
-         refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb 
+         rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb \
+	 ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+         refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb  \
+	 top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb
 
-	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
+	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb maxuvv.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
          rm mslet.t${cyc}z.f${hr}.grb pblh*.t${cyc}z.f${hr}.grb
 
 	if [ $NEST = "ak" ]

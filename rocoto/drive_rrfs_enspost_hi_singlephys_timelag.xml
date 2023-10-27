@@ -27,7 +27,7 @@
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.6.7/prod"> 
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
@@ -41,19 +41,11 @@
 
 
 <!ENTITY RESERVATION '<queue>dev</queue><account>&ACCOUNT;</account>'>
-<!ENTITY RESERVATION_CALIB '<queue>dev</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY QUEUE      "dev">
 
-<!ENTITY QUEUE_CALIB     "&QUEUE;">
-<!ENTITY WALLTIME_CALIB  "00:39:00">
-<!ENTITY RESOURCES_CALIB "<nodes>1:ppn=1</nodes>">
-<!ENTITY MEMORY_CALIB    "3000M">
-<!ENTITY NATIVE_CALIB    "">
-
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 <!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>04:59:00</walltime>'>
-
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY PREPROC_RESOURCES '<walltime>00:39:00</walltime><native></native>'>

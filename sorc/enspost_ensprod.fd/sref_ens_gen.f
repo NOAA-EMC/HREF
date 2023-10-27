@@ -85,7 +85,7 @@ c 2012-02-21: Binbin Z. Modify accumulated precip computation method: read them 
 c                       so they become direct vriables in the table 
 c 
 c 2013-03-28: Binbin Z. Modify to work on grib2 and structure change to reduce memory by read one variable
-c                       then process it and pack its ensmeble products into output files
+c                       then process it and pack its ensemble products into output files
 c
 c 2013-12-21: Binbin Z. Modify  missing array from missing(jf,iens) to missing(maxvar,iens) after 
 c                       hiresWRFs are all in same CONUS grid, and deal with field missing in GRIB2 file 
@@ -377,24 +377,28 @@ CCCC Binbin Zhou Note:
        if(gribid.eq.255) then   !For HRRR grid
          im=1799
          jm=1059
+! 1905141
          jf=im*jm
          dx=3000.0
          dy=3000.0
        elseif (gribid .eq. 999) then ! AK grid
          im=1649
          jm=1105
+! 1822145
          jf=im*jm
          dx=3000.0
          dy=3000.0
        elseif (GRIBID.eq.998) then ! HI grid
          im=321
          jm=225
+! 72225
          jf=im*jm
          dx=2500.0
          dy=2500.0
        elseif (GRIBID.eq.997) then ! PR grid
          im=544
          jm=310
+! 168640
          jf=im*jm
          dx=2500.0
          dy=2500.0
@@ -552,7 +556,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
          jret=0
          kret=0
 
-         write(*,*) 'For ensmeble member#', irun
+         write(*,*) 'For ensemble member#', irun
 
          !apcp1h,apcp3hr,apcp6hr,apcp12,apcp24 have been put into 
          !every members as direct variable
@@ -761,24 +765,35 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 !        endif
            endif
 
+
+             write(0,*) 'past bmap_f definition'
+
 ! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR) (and REFC from FV3 now)
 ! and FV3 soil
 ! and FV3 WEASD
 
-!	if (jf .ne. 72225 .and. jf .ne. 70720 .and.  jf .ne. 1905141) then
-!
-!           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
-!     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
-!     &          jpd2 .ne. 13 ) then
-!
-!            do J=1,jf
-!             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
-!              bmap_f(J)=.false.
-!             endif
-!            enddo
-!           endif
-!
-!        endif
+        if (jf .ne. 72225 .and. jf .ne. 168640) then ! if AK/CONUS 
+                write(0,*) 'into this if block'
+
+           if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
+     &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
+     &          jpd2 .ne. 13 ) then
+
+           if (size(gfld%bmap) .gt. 0) then
+
+                write(0,*) 'in here looking at bmap_f and gfld%bmap'
+
+            do J=1,jf
+             if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
+              bmap_f(J)=.false.
+             endif
+            enddo
+
+            endif
+
+           endif
+
+        endif
 
          endif
 

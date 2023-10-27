@@ -111,14 +111,16 @@ echo filecheck is $filecheck
         $WGRIB2 $filecheck -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
 #       $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
 
-        cat nn3.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
+        cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
 #        $WGRIB2 $filecheck -match "WEASD" -match "anl" -grib nn2b.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "WEASD" -grib nn2b.t${cyc}z.f${hr}.grb
-         cat nn2b.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
+         cat nn2b.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
         fi
 
         $WGRIB2 $filecheck -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
@@ -136,7 +138,7 @@ echo filecheck is $filecheck
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 
-$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 hrold=$((hr-1)) 
 hrold3=$((hr-3)) 
 

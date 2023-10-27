@@ -28,7 +28,7 @@
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.6.7/prod"> 
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
@@ -606,7 +606,7 @@
   <task name="ensprod_1" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>3:ppn=12</nodes>
+  <nodes>6:ppn=6</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_1</command>
     <jobname><cyclestr>ensprod_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
@@ -617,7 +617,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>12</value>
+      <value>6</value>
     </envar>
 
     <envar>
@@ -716,7 +716,7 @@
   <task name="ensprod_2" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>2:ppn=12</nodes>
+  <nodes>4:ppn=6</nodes>
     <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_2</command>
     <jobname><cyclestr>ensprod_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
@@ -727,7 +727,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>12</value>
+      <value>6</value>
     </envar>
     <envar>
       <name>NTASK_LINK</name>
