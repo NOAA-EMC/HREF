@@ -19,7 +19,7 @@
 <!ENTITY PHYS "singlephys">
 <!ENTITY RUN "rrfs">
 
-<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.2.0_winter">
+<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.1.0">
 <!ENTITY domain "ak">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">
@@ -27,10 +27,11 @@
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
+<!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
 <!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/nwges/&TYPE;/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/nwges/&TYPE;">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/">
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
@@ -75,6 +76,127 @@
 
 <!--  **********************************************************************  -->
 <!--  **************************** Run preproc ******************************  -->
+
+
+    <task name="preproc_hrrr" cycledefs="regional" maxtries="3">
+      &RESERVATION;
+      &PREPROC_RESOURCES;
+      <nodes>1:ppn=49</nodes>
+       <command>&PRE; &JOBS;/JRRFS_ENSPOST_PREPROC_HRRR</command>
+      <jobname><cyclestr>preprochrrr_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/logfiles_enspost/preprochrrr_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+     <envar>
+       <name>NTASK</name>
+        <value>49</value>
+     </envar>
+         <envar>
+       <name>PTILE</name>
+      <value>49</value>
+         </envar>
+
+      <envar>
+      <name>NEST</name>
+      <value>&domain;</value>
+     </envar>
+
+     <envar>
+     <name>type</name>
+     <value>&TYPE;</value>
+     </envar>
+
+      <envar>
+     <name>GESROOT</name>
+     <value>&GESROOT;</value>
+     </envar>
+
+     <envar>
+     <name>COMINrrfs</name>
+      <value>&COMINrrfsdet;</value>
+     </envar>
+
+     <envar>
+    <name>COMINhrrr</name>
+    <value>&COMINhrrr;</value>
+    </envar>
+
+    <envar>
+    <name>HOMErrfs</name>
+    <value>&HOMErrfs;</value>
+    </envar>
+
+    <envar>
+    <name>job</name>
+    <value>preprochrrr_&TYPE;_&PHYS;_&domain;</value>
+    </envar>
+
+    <envar>
+   <name>MYCOMROOT</name>
+    <value>&MYCOMROOT;</value>
+    </envar>
+
+     <envar>
+     <name>COMROOT</name>
+      <value>&COMROOT;</value>
+     </envar>
+
+     <envar>
+     <name>machine</name>
+      <value>&machine;</value>
+      </envar>
+
+      <envar>
+      <name>envir</name>
+    <value>&envir;</value>
+     </envar>
+
+     <envar>
+     <name>KEEPDATA</name>
+     <value>&KEEPDATA;</value>
+     </envar>
+
+     <envar>
+     <name>DATAROOT</name>
+     <value>&DATAROOT;</value>
+     </envar>
+
+     <envar>
+    <name>USER</name>
+     <value>&USER;</value>
+     </envar>
+
+     <envar>
+    <name>CDATE</name>
+    <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+
+    <envar>
+    <name>PDY</name>
+    <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+
+     <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+     </envar>
+
+
+    <envar><name>jobid</name><value>rrfs_ensprodpreprochrrr_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+
+
+   <dependency>
+   <and>
+   <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
+   <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
+   <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
+   </and>
+    </dependency>
+
+    </task>
+
+
+<!--  ***********************************************************************  -->
+
+
 
 
   <task name="preproc_fv3" cycledefs="regional_justontime" maxtries="3">
@@ -270,6 +392,11 @@
     </envar>
 
     <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
       <name>DATAROOT</name>
       <value>&DATAROOT;</value>
     </envar>
@@ -353,6 +480,11 @@
 
     <envar>
       <name>COMINrrfs</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -469,6 +601,11 @@
     </envar>
 
     <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
      <name>COMROOT</name>
      <value>&COMROOT;</value>
     </envar>
@@ -565,6 +702,11 @@
 
     <envar>
       <name>COMINrrfs</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
       <value>&COMINall;</value>
     </envar>
 

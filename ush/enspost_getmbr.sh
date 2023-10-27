@@ -50,7 +50,7 @@ elif [ $dom = 'pr' ]
      files="12 prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s"
 elif [ $dom = 'ak' ]
   then
-     files="12 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s"
+     files="14 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak"
 else
    echo "bad domain $dom"
    msg="FATAL ERROR: dom was not conus, hi, pr, or ak"
@@ -72,7 +72,11 @@ then
  days="14 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $backday"
  cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
  ages="14  0    0    0    0    0    0    0    6    6    6    6    6    6    6"
+ if [ $dom = 'conus' ]; then
  nams="14 m01 m02  m03  m04  m05  m06  hrrr  m01   m02 m03   m04  m05 m06  hrrr" 
+else
+ nams="14 m01 m02  m03  m04  m05  m06  hrrrak  m01   m02 m03   m04  m05 m06  hrrrak" 
+ fi
  if [ $fhr -le 42 ];then
   mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13 14" 
  elif [ $fhr -ge 43 -a $fhr -le 48 ];then
@@ -248,121 +252,8 @@ typeset -Z2 fcheckloc
       fi
       #
       
-# hifv3s prfv3s akfv3s
  
 	echo here with file ${file}
-
-      if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
-	      echo "working in non-CONUS FV3S block"
-
-      if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
-
-        if [ $dom = 'ak' ]; then
-
-        if [  $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
-	 echo filecheck00 is $filecheck00
-
-         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-        else
-         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-	fi
-
-	else
-
-        if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
-         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
-	 echo filecheck00 is $filecheck00
-
-         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-        else
-         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-	fi
-
-	fi
-
-
-       else
-        filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
-      fi
-
-        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
-	if [ -e $filecheck ]
-        then
-         ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
-         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
-        else
-         echo m $m
-         echo day[m] ${day[$m]}
-         echo cycloc[m] ${cycloc[$m]}
-         echo nam[m] ${nam[$m]}
-         msg="FATAL ERROR: $filecheck missing but required"
-         err_exit $msg
-	fi
-
-	fcheckloc=$fcheck
-	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
-        do
-	echo check on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} working $ff
-        loop=0
-        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
-	do
-	echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc}
-          sleep ${sleeptime}
-          let loop=loop+1
-        done	
-        let fcheckloc=fcheckloc+1
-typeset -Z2 fcheckloc
-        echo new fcheckloc is $fcheckloc
-        done
-	
-        if [ $ff -gt 0 ]
-        then
-	echo here a $ff
-        if [ ${ff}%3 -eq 0 ]
-        then
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
-        export err=$? ; err_chk
-        fi
-        fi
-
-
-
-        loop=0
-        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${ff1} -a $loop -lt $looplim ]
-	do
-	echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${ff1}
-          sleep ${sleeptime}
-          let loop=loop+1
-        done	
-        
-
-
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
-#       echo ${RUN}.m${m}.t${cyc}z.f$ff1 ${RUN}.m${m}.t${cyc}z.f$ff $cyc $ff1 $ff $dom yes $ff |$EXECrrfs/enspost_get_temp > $DATA/output.enspost_get_temp.m${m}.f${ff} 2>&1
-
-        export err=$? ; err_chk
-
-        if [ ${ff}%3 -eq 0 ] 
-        then
-        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
-	fi
-
-        cat $DATA/${RUN}.m${m}.t${cyc}z.f$ff.temp >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
-
-        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
-
-      fi
 
 
 ###### HRRR
@@ -527,16 +418,108 @@ typeset -Z2 fcheckloc
 
  
 
-###### FV3S - NON CONUS
+###### FV3S - HI/PR
        echo down here trying to define with ${file[$m]}
 
-      if [ ${file[$m]} = ${dom}'fv3s' -a $fcst -le 60 ] ; then
-	echo "in non-CONUS FV3S block"
+       if  [ ${file[$m]} = 'hifv3s' -o ${file[$m]} = 'prfv3s' ] ; then
+       if [ $fcst -le 60 ] ; then
+
+      if [  $ff -eq 01  ] ; then
+       if [ $type = 'timelag' ];then
+
+        if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
+         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+	 echo here TL with filecheck00 $filecheck00
+         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
+         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
+        else
+         filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+	 echo here ontime with filecheck00 $filecheck00
+         ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
+         ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
+	fi
+       else
+        filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
+        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
+       fi
+      fi
+ 
+        filecheck=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+
+	if [ -e $filecheck ]
+        then
+         ln -sf    ${filecheck} $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
+         ln -sf    $DATA/${RUN}.m${m}.t${cyc}z.f${ff}  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f${ff}
+        else
+         
+         msg="FATAL ERROR: $filecheck missing but required"
+         err_exit $msg
+	fi
+
+	echo ${dom}fv3s $m $ff
+
+	fcheckloc=$fcheck
+
+	while [ $fcheckloc -le $ff -a $fcheckloc -ne 0 ]
+        do
+         echo check on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} working $ff
+         loop=0
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc} -a $loop -lt $looplim ]
+	do
+         echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${fcheckloc}
+         sleep ${sleeptime}
+         let loop=loop+1
+        done	
+        let fcheckloc=fcheckloc+1
+typeset -Z2 fcheckloc
+        done
+
+
+        if [ $ff -gt 0 ]
+        then
+	echo here a $ff
+
+        if [ ${ff}%3 -eq 0 ]
+        then
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
+        fi
+
+        loop=0
+        while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${ff1} -a $loop -lt $looplim ]
+	do
+	echo waiting on $DATA/${RUN}.m${m}.t${cyc}z.f${ff1}
+          sleep ${sleeptime}
+          let loop=loop+1
+        done	
+
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+        export err=$? ; err_chk
+
+        if [ ${ff}%3 -eq 0 ] 
+        then
+        cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
+	fi
+
+        ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
+        
+        fi
+
+      fi
+       fi
+      #
+###### FV3S - AK
+       echo down here trying to define with ${file[$m]}
+
+      if [ ${file[$m]} = 'akfv3s' -a $fcst -le 60 ] ; then
+	echo "in AK FV3S block"
 # hifv3s prfv3s akfv3s
 
       if [  $ff -eq 01  ] ; then
        if [ $type = 'timelag' ];then
-        if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
+
+        if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
          filecheck00=${COMINrrfs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
