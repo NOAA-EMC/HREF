@@ -605,7 +605,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 !  end of inserted ptype stuff
 
 
-         write(0,*) 'get APCP GRIB2 data for member ', irun
+!         write(0,*) 'get APCP GRIB2 data for member ', irun
 
              if(mbrname(irun)(1:4).eq.'sref') then
               jpdtn=11
@@ -614,7 +614,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
              end if
 
              jpd1=k4(nv)
-	write(0,*) 'jpd1 defined(a): ', jpd1
+!	write(0,*) 'jpd1 defined(a): ', jpd1
              jpd2=k5(nv)
              jpd10=k6(nv)
              !jpd12 is determined by a specific level MeanLevel(nv,lv) to !ProbLevel(nv,lv) later on
@@ -622,7 +622,6 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
              if (vname(nv).eq.'AP1h'.or.vname(nv).eq.'SN1h'.or. 
      &           vname(nv).eq.'ASN1' .or. 
      &           vname(nv).eq.'FFG1'.or.vname(nv).eq.'FZ1h') then        !AP1h,Ap3h,Ap6h, AP12,Ap24 should be hardcopy in the variable tbl
-	     write(0,*) 'jpd27=1 for AP1h SN1h FZ1h'
              jpd27=1
              else if (vname(nv).eq.'AP3h'.or.vname(nv).eq.'SN3h' .or. 
      &                vname(nv).eq.'A3RI' .or. vname(nv).eq.'FFG3' .or.
@@ -653,7 +652,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
           ELSE                   !Non-APCP/Snow
 
             jpd1=k4(nv)
-	write(0,*) 'jpd1 defined(b): ', jpd1
+!	write(0,*) 'jpd1 defined(b): ', jpd1
             jpd2=k5(nv)
             !jpd12 is determined by a specific level MeanLevel(nv,lv) to
             !!ProbLevel(nv,lv) later on
@@ -725,13 +724,13 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
           if(jpd1.eq.7.and.jpd2.eq.6.and.jpd10.eq.108 .and. 
      +               (jpd12 .eq. 9000 .or. jpd12 .eq. 18000)) then
-	write(0,*) 'attempting to deal with CAPE'
+!	write(0,*) 'attempting to deal with CAPE'
             jpd27=0    ! CAPE
           end if
 
           if(jpd1.eq.7.and.jpd2.eq.7.and.jpd10.eq.108 .and. 
      +               (jpd12 .eq. 9000 .or. jpd12 .eq. 18000)) then
-	write(0,*) 'attempting to deal with CIN'
+!	write(0,*) 'attempting to deal with CIN'
             jpd27=0    ! CIN
           end if
 
@@ -749,12 +748,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      &          igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld, eps, jret)
-          write(0,*) 'a2 - readGB ',igrb2,' for mean kret=',kret 
+!          write(0,*) 'a2 - readGB ',igrb2,' for mean kret=',kret 
 
 
          if (jret .eq. 0.and.trim(eps).eq.'rrfs') then
 
-	write(0,*) 'in here with jf: ', jf
+!	write(0,*) 'in here with jf: ', jf
 
 
            if ( .not. allocated(bmap_f)) then
@@ -807,7 +806,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
          if (kret .ne. 0 .and. k5(nv) .eq. 220 ) then
 ! check for 100 hPa
-	 write(0,*) 'look for 100-1000 hPa UVV'
+!	 write(0,*) 'look for 100-1000 hPa UVV'
          jpd12=100
         call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld,eps, kret)
@@ -881,6 +880,10 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
             end if
 
            end do
+            if(k4(nv).eq.1.and.k5(nv).eq.29) then
+                   write(0,*) 'max rawdata_mn for asnow: ',
+     +      maxval(rawdata_mn(:,irun,lv))
+            endif
           end do
  
           do lv = 1, Plvl(nv)
@@ -891,6 +894,13 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +                                                       - 273.15  !Jun Du: change unit from K to C for lifted index
              end if
 
+            if(k4(nv).eq.1.and.k5(nv).eq.29) then
+                        if (igrid .eq. 1) then
+                               write(0,*) 'converting asnow prob to mm'
+                          endif
+            rawdata_pr(igrid,irun,lv) = rawdata_pr(igrid,irun,lv)*1000.
+            endif
+
              if(k4(nv).eq.3.and.k5(nv).eq.5.and.(k6(nv).eq.2.or.
      +          k6(nv).eq.3))                 then                     !RUC cloud base/top with negative values
 
@@ -899,6 +909,10 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 end if
              end if
             end do
+            if(k4(nv).eq.1.and.k5(nv).eq.29) then
+                   write(0,*) 'max converted rawdata_pr for asnow: ',
+     +      maxval(rawdata_pr(:,irun,lv))
+            endif
 
            !Get neighborhood max value, where A,B,C,D: for different !neighborhood radius
            if (trim(Psignal(nv)).eq.'A'.or.trim(Psignal(nv)).eq.'K' .or.
@@ -906,7 +920,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +        trim(Psignal(nv)).eq.'M'.or. trim(Psignal(nv)).eq.'C' .or.
      +        trim(Psignal(nv)).eq.'D' ) then
              
-            write(*,*) 'Call  neighborhood_max .......'
+!            write(*,*) 'Call  neighborhood_max .......'
 
 !! this modifies rawdata_pr
              call neighborhood_max(rawdata_pr(:,irun,lv),
@@ -1145,6 +1159,9 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
           do lt = 1, Tlvl(nv)
 
              thr1 = Thrs(nv,lt)
+	if (vname(nv) .eq. 'ASN1') then
+             write(0,*) 'ASN1: lt, Thrs(nv,lt): ', lt, Thrs(nv,lt)
+        endif
 
 	if (vname(nv) .eq. 'A6RI') then
 	write(0,*) 'defining fname for A6RI ' , thr1
@@ -1675,7 +1692,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
            do igrid=1,jf
 
-	if (vname(nv) .eq. 'SN1h' .or. vname(nv) .eq. 'SN3h' .or. 
+       if (vname(nv) .eq. 'SN1h' .or. vname(nv) .eq. 'SN3h' .or. 
      &      vname(nv) .eq. 'SN6h') then
             apoint = rawdata_pr(igrid,:,lv)*1. ! SLR val
        else
@@ -2097,7 +2114,7 @@ c   Loop 2-0: allocation
          gfld%discipline=0   !reset discipline# in case it was changed (i.e. fire weather)
 
          jpd1=dk4(nv)
-	write(0,*) 'jpd1 defined(c): ', jpd1
+!	write(0,*) 'jpd1 defined(c): ', jpd1
          jpd2=dk5(nv)
          jpd10=dk6(nv)
          jpd27=-9999
@@ -2392,7 +2409,7 @@ C
 !
           else                                       !Non-precip type
                jpd1=dk4(nv)
-	write(0,*) 'jpd1 defined(d): ', jpd1
+!	write(0,*) 'jpd1 defined(d): ', jpd1
                jpd2=dk5(nv)
                jpd10=dk6(nv)
                jpd27=-9999
@@ -2524,7 +2541,7 @@ c Loop 3-2: Packing
          gfld_temp=gfld
 
          jpd1=qk4(nv)
-	write(0,*) 'jpd1 defined(e): ', jpd1
+!	write(0,*) 'jpd1 defined(e): ', jpd1
          jpd2=qk5(nv)
          jpd10=qk6(nv)
          jpd27=-9999

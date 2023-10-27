@@ -91,8 +91,8 @@ C for variable table:
 
             if (jpd1.eq.1.and.
      &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13 .or.
-     &          jpd2 .eq. 29 .or.
-     &          jpd2 .eq. 225 .or. jpd2.eq.194) ) then   ! add 194 for PPFFG
+     &          jpd2.eq.29 .or.
+     &          jpd2.eq.225 .or. jpd2.eq.194) ) then   ! add 194 for PPFFG
              ipdtnum=9                  !ensemble APCP prob use Template 4.12
              ipdtlen=36
             else

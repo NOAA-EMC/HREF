@@ -7,7 +7,7 @@
 <!ENTITY STARTDAY "10">
 <!ENTITY STARTHOUR "06">
 
-<!ENTITY ENDYEAR "2023">
+<!ENTITY ENDYEAR "2024">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "18">
@@ -27,7 +27,7 @@
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.6.7/prod"> 
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/nwges/&TYPE;/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/nwges/&TYPE;">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.2/">
@@ -175,6 +175,7 @@
 
     <dependency>
     <and>
+          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.ak.grib2</cyclestr></datadep>

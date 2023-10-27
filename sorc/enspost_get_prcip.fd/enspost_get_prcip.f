@@ -3,6 +3,7 @@ C  raw data
        real,allocatable,dimension(:,:) :: dp3,sn3 !jf,4        
        real,allocatable,dimension(:) :: dp6,dp12,dp24 !jf         
        real,allocatable,dimension(:) :: fz1,fz3       !jf         
+       real,allocatable,dimension(:) :: asn1,asn3       !jf         
        real,allocatable,dimension(:) :: sn6,sn12,sn24 !jf         
  
        integer iyr,imon,idy,ihr
@@ -16,7 +17,7 @@ C  raw data
        character*5 domain
        integer iunit,ounit, pdt9_orig, acclength
        type(gribfield) :: gfld,gfld_save,gfld_save_snow,
-     +                    gfld_save_frzr
+     +                    gfld_save_frzr,gfld_save_asn
 
        data (fhr(i),i=1,20)
      + /'f03','f06','f09','f12','f15','f18','f21',
@@ -96,6 +97,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
        allocate(dp24(jf))
        allocate(sn3(jf,8))
        allocate(fz3(jf))
+       allocate(asn3(jf))
        allocate(sn6(jf))
        allocate(sn12(jf))
        allocate(sn24(jf))
@@ -159,6 +161,22 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          end if
         else
          write(*,*) '3h readGB2 frzr error=',ie
+        end if
+
+!       ASNOW
+
+        jpd1=1
+        jpd2=29
+        jpd27=3 !3 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW
+
+        if (ie.eq.0) then
+         asn3(:)=gfld%fld(:)
+         if (nf.eq.1) then 
+           gfld_save_asn=gfld
+         end if
+        else
+         write(*,*) '3h readGB2 asnow error=',ie
         end if
 
 !       SNOW
@@ -256,6 +274,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn3(:)
+             gfld%ipdtmpl(27)=3
+             call putgb2_wrap(ounit,gfld,ierr)
+
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
              gfld%ipdtmpl(27)=6
@@ -313,6 +336,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn3(:)
+             gfld%ipdtmpl(27)=3
+             call putgb2_wrap(ounit,gfld,ierr)
+
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
              gfld%ipdtmpl(27)=6
@@ -356,6 +384,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn3(:)
+             gfld%ipdtmpl(27)=3
+             call putgb2_wrap(ounit,gfld,ierr)
+
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
              gfld%ipdtmpl(27)=6       
@@ -383,6 +416,11 @@ c      so use previously saved gfld_save
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz3(:)
+             gfld%ipdtmpl(27)=3
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn3(:)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
@@ -442,6 +480,8 @@ C  raw data
        real,allocatable,dimension(:)   ::  sn1
        real,allocatable,dimension(:,:) ::  fzhold !jf,4        
        real,allocatable,dimension(:)   ::  fz1
+       real,allocatable,dimension(:,:) ::  asnhold !jf,4        
+       real,allocatable,dimension(:)   ::  asn1
 
        integer iyr,imon,idy,ihr
        character*50 gdss(400)
@@ -455,6 +495,7 @@ C  raw data
        type(gribfield) :: gfld,gfld_save_1h,gfld_2h
        type(gribfield) :: gfld_snow,     gfld_save_1h_snow ! ,gfld_2h
        type(gribfield) :: gfld_frzr,     gfld_save_1h_frzr ! ,gfld_2h
+       type(gribfield) :: gfld_asn,     gfld_save_1h_asn ! ,gfld_2h
 
        data (fhr(i),i=1,60)
      + /'f01','f02','f03','f04','f05','f06','f07','f08','f09',
@@ -479,6 +520,8 @@ C  raw data
        allocate(sn1(jf))
        allocate(fzhold(jf,3))
        allocate(fz1(jf))
+       allocate(asnhold(jf,3))
+       allocate(asn1(jf))
 
 !! these numbers need to change for hourly
 
@@ -615,6 +658,36 @@ c default is set to APCP
 
         endif ! ie=0 for 1 h accum
 
+!       ASNOW
+
+        jpd1=1
+        jpd2=29
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW
+
+        if (ie.eq.0) then
+
+!  	 write(0,*) 'populate ASNOW nf (mod=0) of nfile: ', nf, nfile
+         asn1(:)=gfld%fld(:)
+         if (nf.eq.1) then 
+           gfld_save_1h_asn=gfld
+         end if
+
+        else
+
+        jpd1=1
+        jpd2=29
+        jpd27=3 !3 hr accumulation
+!	write(0,*) 'seek 3 h ASNOW accum'
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW 
+
+        if (ie.eq.0) then
+!	write(0,*) 'populate 3 h ASNOW accum  nf of nfile: ', nf, nfile
+        asnhold(:,3)=gfld%fld(:)
+	endif
+
+        endif ! ie=0 for 1 h accum
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         elseif (mod(nff,3) .eq. 1) then
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -729,6 +802,37 @@ c default is set to APCP
 
          if (nf.eq.1) then 
            gfld_save_1h_frzr=gfld
+         end if
+
+
+        endif ! ie=0
+
+! ASNOW
+
+        jpd1=1
+        jpd2=29
+        jpd27=1 !1 hr accumulation
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !
+
+        if (ie.eq.0) then
+
+	if (nf .eq. 1) then
+!	write(0,*) 'mod=1, ASNOW populate nf of nfile: ', nf, nfile
+         asn1(:)=gfld%fld(:)
+           gfld_save_1h_asn=gfld
+        else
+
+!	write(0,*) 'in here when 1 h old from 2 h block'
+          asn1(:)=asnhold(:,2)-gfld%fld(:)
+	   gfld%fld(:)=asn1(:)
+           gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+1
+           gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
+           gfld_save_1h_asn=gfld
+
+        endif ! nf=1
+
+         if (nf.eq.1) then 
+           gfld_save_1h_asn=gfld
          end if
 
 
@@ -899,6 +1003,58 @@ c default is set to APCP
 
          endif ! ie=0
          endif ! ie=0
+
+! ASNOW
+
+         jpd1=1
+         jpd2=29
+         jpd27=1 !1 hr accumulation
+
+         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW
+         if (ie.eq.0) then
+! 	  write(0,*) 'mod=2, 1h accum ASN populate nf of nfile: ', nf, nfile
+          asn1(:)=gfld%fld(:)
+          asnhold(:,1)=gfld%fld(:)
+
+!!! is this safe??
+
+	if ( maxval(asnhold(:,2)) .gt. 0) then 
+!	write(0,*) 'inside maxval(snhold(:,2) '
+            asn1(:)=asnhold(:,2)-asnhold(:,1)
+!	write(0,*) 'maxval asnholds, asn1: ', maxval(asnhold(:,1)), 
+!     +                       maxval(asnhold(:,2)), maxval(asn1)
+        endif
+
+         if (nf.eq.1) then 
+           gfld_save_1h_asn=gfld
+!           do i=1,gfld_save_1h%ipdtlen
+!            write(0,*) 'MOD=2 ', i, gfld_save_1h%ipdtmpl(i)
+!          enddo
+         end if
+
+         else ! ie not = 0
+
+          jpd1=1
+          jpd2=29
+          jpd27=2 !2 hr accumulation
+          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW
+          if (ie.eq.0) then
+!	    write(0,*) 'populate ASNOW mod=2, 2 h accum nf of nfile: ',nf,nfile
+            asnhold(:,2)=gfld%fld(:)
+!            write(0,*) 'maxval(fzhold(:,2)) ', maxval(fzhold(:,2))
+	
+	if (nf .eq. 2) then
+	 asn1(:)=asnhold(:,3)-asnhold(:,2)
+!	 write(0,*) 'definined asn1 from difference'
+!	 write(0,*) 'maxval(asn1): ', maxval(asn1)
+	 gfld%fld(:)=asn1(:)
+         gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
+         gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
+         gfld_save_1h_asn=gfld
+	endif
+
+         endif ! ie=0
+         endif ! ie=0
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    
 
@@ -955,6 +1111,12 @@ c      so use previously saved gfld_save
            gfld%fld(:)=fz1(:)
            gfld%ipdtmpl(27)=1
 !	write(0,*) 'FRZR maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	   gfld=gfld_save_1h_asn
+           gfld%fld(:)=asn1(:)
+           gfld%ipdtmpl(27)=1
+	write(0,*) 'ASN maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
