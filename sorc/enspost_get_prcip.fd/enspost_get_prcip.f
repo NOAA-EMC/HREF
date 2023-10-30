@@ -1097,20 +1097,20 @@ c      so use previously saved gfld_save
 	   gfld=gfld_save_1h
            gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(27)=1
-!	write(0,*) 'to putgb2 for ounit: ', ounit
-!	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'to putgb2 for ounit: ', ounit
+	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_snow
            gfld%fld(:)=sn1(:)
            gfld%ipdtmpl(27)=1
-!	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_frzr
            gfld%fld(:)=fz1(:)
            gfld%ipdtmpl(27)=1
-!	write(0,*) 'FRZR maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'FRZR maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_asn

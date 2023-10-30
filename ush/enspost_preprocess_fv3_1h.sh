@@ -190,6 +190,7 @@ echo $hrold >> input.${hr}.mem${mem}.snow
 echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
+echo 0 >> input.${hr}.mem${mem}.snow
 
 $EXECrrfs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? # ; err_chk
@@ -242,6 +243,7 @@ echo $hrold3 >> input.${hr}.mem${mem}.snow
 echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
+echo 0 >> input.${hr}.mem${mem}.snow
 
 $EXECrrfs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? # ; err_chk
