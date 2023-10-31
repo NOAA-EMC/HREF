@@ -906,18 +906,19 @@ c default is set to APCP
 
          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
          if (ie.eq.0) then
-! 	  write(0,*) 'mod=2, 1h accum SN populate nf of nfile: ', nf, nfile
+ 	  write(0,*) 'mod=2, 1h accum SN populate nf of nfile: ', nf, nfile
           sn1(:)=gfld%fld(:)
           snhold(:,1)=gfld%fld(:)
-!	  write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
+	  write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
 
 !!! is this safe??
 
-	if ( maxval(snhold(:,2)) .gt. 0) then 
-!	write(0,*) 'inside maxval(snhold(:,2) '
+	if ( maxval(snhold(:,2)) .gt. 0 .and. 
+     +                 maxval(snhold(:,2)) .lt. 1.e4) then 
+	write(0,*) 'inside maxval(snhold(:,2) '
             sn1(:)=snhold(:,2)-snhold(:,1)
-!	write(0,*) 'maxval snholds, sn1: ', maxval(snhold(:,1)), 
-!     +                       maxval(snhold(:,2)), maxval(sn1)
+	write(0,*) 'maxval snholds, sn1: ', maxval(snhold(:,1)), 
+     +                       maxval(snhold(:,2)), maxval(sn1)
         endif
 
          if (nf.eq.1) then 
@@ -934,14 +935,14 @@ c default is set to APCP
           jpd27=2 !2 hr accumulation
           call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
           if (ie.eq.0) then
-!	    write(0,*) 'populate SN mod=2, 2 h accum nf of nfile: ',nf,nfile
+	    write(0,*) 'populate SN mod=2, 2 h accum nf of nfile: ',nf,nfile
             snhold(:,2)=gfld%fld(:)
-!            write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
+            write(0,*) 'maxval(snhold(:,2)) ', maxval(snhold(:,2))
 	
 	if (nf .eq. 2) then
 	 sn1(:)=snhold(:,3)-snhold(:,2)
-!	 write(0,*) 'definined sn1 from difference'
-!	 write(0,*) 'maxval(sn1): ', maxval(sn1)
+	 write(0,*) 'definined sn1 from difference'
+	 write(0,*) 'maxval(sn1): ', maxval(sn1)
 	 gfld%fld(:)=sn1(:)
          gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
          gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
