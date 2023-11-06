@@ -1,10 +1,10 @@
 C  raw data
        use grib_mod
-       real,allocatable,dimension(:,:) :: dp3,sn3 !jf,4        
+       real,allocatable,dimension(:,:) :: dp3,sn3,asn3,fz3 !jf,4        
        real,allocatable,dimension(:) :: dp6,dp12,dp24 !jf         
-       real,allocatable,dimension(:) :: fz1,fz3       !jf         
-       real,allocatable,dimension(:) :: asn1,asn3       !jf         
        real,allocatable,dimension(:) :: sn6,sn12,sn24 !jf         
+       real,allocatable,dimension(:) :: fz6,fz12,fz24 !jf         
+       real,allocatable,dimension(:) :: asn6,asn12,asn24 !jf         
  
        integer iyr,imon,idy,ihr
        character*50 gdss(400)
@@ -95,12 +95,21 @@ cc     NAM has no one-hour accumu precip, so two files are needed
        allocate(dp6(jf))
        allocate(dp12(jf))
        allocate(dp24(jf))
+
        allocate(sn3(jf,8))
-       allocate(fz3(jf))
-       allocate(asn3(jf))
        allocate(sn6(jf))
        allocate(sn12(jf))
        allocate(sn24(jf))
+
+       allocate(asn3(jf,8))
+       allocate(asn6(jf))
+       allocate(asn12(jf))
+       allocate(asn24(jf))
+
+       allocate(fz3(jf,8))
+       allocate(fz6(jf))
+       allocate(fz12(jf))
+       allocate(fz24(jf))
 
        if (ff.ge.24) then
          nfile=8
@@ -155,7 +164,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
 
         if (ie.eq.0) then
-         fz3(:)=gfld%fld(:)
+         fz3(:,nf)=gfld%fld(:)
          if (nf.eq.1) then 
            gfld_save_frzr=gfld
          end if
@@ -171,7 +180,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW
 
         if (ie.eq.0) then
-         asn3(:)=gfld%fld(:)
+         asn3(:,nf)=gfld%fld(:)
          if (nf.eq.1) then 
            gfld_save_asn=gfld
          end if
@@ -209,6 +218,12 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         sn6=0.0
         sn24=0.0
         sn12=0.0
+        asn6=0.0
+        asn24=0.0
+        asn12=0.0
+        fz6=0.0
+        fz24=0.0
+        fz12=0.0
 
 
        if (ff.ge.24) then
@@ -218,17 +233,29 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          sn6(:)=sn3(:,1)+sn3(:,2)
          sn12(:)=sn6(:)+sn3(:,3)+sn3(:,4)
          sn24(:)=sn12(:)+sn3(:,5)+sn3(:,6)+sn3(:,7)+sn3(:,8)
+         asn6(:)=asn3(:,1)+asn3(:,2)
+         asn12(:)=asn6(:)+asn3(:,3)+asn3(:,4)
+         asn24(:)=asn12(:)+asn3(:,5)+asn3(:,6)+asn3(:,7)+asn3(:,8)
+         fz6(:)=fz3(:,1)+fz3(:,2)
+         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
+         fz24(:)=fz12(:)+fz3(:,5)+fz3(:,6)+fz3(:,7)+fz3(:,8)
        else if (ff.lt.24.and.ff.ge.12) then
          dp6(:)=dp3(:,1)+dp3(:,2)
          dp12(:)=dp6(:)+dp3(:,3)+dp3(:,4)
          sn6(:)=sn3(:,1)+sn3(:,2)
          sn12(:)=sn6(:)+sn3(:,3)+sn3(:,4)
+         asn6(:)=asn3(:,1)+asn3(:,2)
+         asn12(:)=asn6(:)+asn3(:,3)+asn3(:,4)
+         fz6(:)=fz3(:,1)+fz3(:,2)
+         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
        else if (ff.lt.12.and.ff.ge.6) then
 	write(0,*) 'adding to create dp6'
 	write(0,*) 'maxvals of dp3 inputs: ', 
      &          maxval(dp3(:,1)),maxval(dp3(:,2))
          dp6(:)=dp3(:,1)+dp3(:,2)
          sn6(:)=sn3(:,1)+sn3(:,2)
+         asn6(:)=asn3(:,1)+asn3(:,2)
+         fz6(:)=fz3(:,1)+fz3(:,2)
        end if
             
 !       do i=382461,382470
@@ -270,12 +297,12 @@ c      so use previously saved gfld_save
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:)
+             gfld%fld(:)=fz3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
-             gfld%fld(:)=asn3(:)
+             gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
@@ -290,7 +317,18 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(27)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
              gfld%fld(:)=sn6(:)
+             call putgb2_wrap(ounit,gfld,ierr)
 
+	     gfld=gfld_save_asn
+             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(9)=-3 + pdt9_orig
+             gfld%fld(:)=asn6(:)
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_frzr
+             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(9)=-3 + pdt9_orig
+             gfld%fld(:)=fz6(:)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
@@ -302,6 +340,18 @@ c      so use previously saved gfld_save
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn12(:)
+             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(9)=-9 + pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn12(:)
+             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(9)=-9 + pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_frzr
+             gfld%fld(:)=fz12(:)
              gfld%ipdtmpl(27)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
@@ -319,6 +369,18 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(9)=-21+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn24(:)
+             gfld%ipdtmpl(27)=24
+             gfld%ipdtmpl(9)=-21+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_frzr
+             gfld%fld(:)=fz24(:)
+             gfld%ipdtmpl(27)=24
+             gfld%ipdtmpl(9)=-21+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
           else if (ff.lt.24.and.ff.ge.12) then
 
 	     gfld=gfld_save
@@ -332,12 +394,12 @@ c      so use previously saved gfld_save
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:)
+             gfld%fld(:)=fz3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
-             gfld%fld(:)=asn3(:)
+             gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
@@ -350,6 +412,18 @@ c      so use previously saved gfld_save
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn6(:)
+             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(9)=-3+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn6(:)
+             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(9)=-3+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_frzr
+             gfld%fld(:)=fz6(:)
              gfld%ipdtmpl(27)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
@@ -367,6 +441,18 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(9)=-9+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn12(:)
+             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(9)=-9+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_frzr
+             gfld%fld(:)=fz12(:)
+             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(9)=-9+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
           else if (ff.lt.12.and.ff.ge.6) then
 
 	     gfld=gfld_save
@@ -380,12 +466,12 @@ c      so use previously saved gfld_save
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:)
+             gfld%fld(:)=fz3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
-             gfld%fld(:)=asn3(:)
+             gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
@@ -398,6 +484,18 @@ c      so use previously saved gfld_save
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn6(:)
+             gfld%ipdtmpl(27)=6       
+             gfld%ipdtmpl(9)=-3+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_asn
+             gfld%fld(:)=asn6(:)
+             gfld%ipdtmpl(27)=6       
+             gfld%ipdtmpl(9)=-3+pdt9_orig
+             call putgb2_wrap(ounit,gfld,ierr)
+
+	     gfld=gfld_save_frzr
+             gfld%fld(:)=fz6(:)
              gfld%ipdtmpl(27)=6       
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
@@ -415,12 +513,12 @@ c      so use previously saved gfld_save
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:)
+             gfld%fld(:)=fz3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
-             gfld%fld(:)=asn3(:)
+             gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
