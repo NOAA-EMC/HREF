@@ -49,8 +49,8 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-RRFS_GEMPAK}
 export NET=${NET:-rrfs}
 export RUN=${RUN:-rrfs} 
   
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type/gempak}
-export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/gempak}
+export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/ensprod}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT

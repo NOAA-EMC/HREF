@@ -2,51 +2,50 @@
 <!DOCTYPE workflow
 [
 
-<!ENTITY STARTYEAR "2023">
-<!ENTITY STARTMONTH "07">
-<!ENTITY STARTDAY "10">
-<!ENTITY STARTHOUR "06">
+	<!ENTITY STARTYEAR "2023">
+	<!ENTITY STARTMONTH "07">
+	<!ENTITY STARTDAY "10">
+	<!ENTITY STARTHOUR "06">
 
-<!ENTITY ENDYEAR "2024">
-<!ENTITY ENDMONTH "12">
-<!ENTITY ENDDAY "31">
-<!ENTITY ENDHOUR "18">
+	<!ENTITY ENDYEAR "2024">
+	<!ENTITY ENDMONTH "12">
+	<!ENTITY ENDDAY "31">
+	<!ENTITY ENDHOUR "18">
 
-<!ENTITY USER "Matthew.Pyle">
-<!ENTITY USERLAM "emc.lam">
-<!ENTITY ACCOUNT "RRFS-DEV">
-<!ENTITY TYPE "timelag">
-<!ENTITY PHYS "singlephys">
-<!ENTITY RUN "rrfs">
+	<!ENTITY USER "emc.lam">
+	<!ENTITY USERLAM "emc.lam">
+	<!ENTITY ACCOUNT "RRFS-DEV">
+	<!ENTITY TYPE "timelag">
+	<!ENTITY PHYS "singlephys">
+	<!ENTITY RUN "rrfs">
 
-<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.1.0">
-<!ENTITY domain "ak">
-<!ENTITY machine "WCOSS2">
-<!ENTITY envir "para">
-<!ENTITY JOBS "&HOMErrfs;/jobs">
-<!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
+	<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.1.0">
+	<!ENTITY domain "ak">
+	<!ENTITY machine "WCOSS2">
+	<!ENTITY envir "para">
+	<!ENTITY JOBS "&HOMErrfs;/jobs">
+	<!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
-<!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&TYPE;">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
-<!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
-<!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
-<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
-<!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
-<!ENTITY KEEPDATA "YES">
-<!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
-<!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
+	<!ENTITY SCRIPTS "&HOMErrfs;/scripts">
+	<!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
+	<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
+	<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&RUN;">
+	<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges">
+	<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
+	<!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
+	<!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
+	<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
+	<!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
+	<!ENTITY KEEPDATA "YES">
+	<!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
+	<!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
 
 
-<!ENTITY RESERVATION '<queue>dev</queue><account>&ACCOUNT;</account>'>
+	<!ENTITY RESERVATION '<queue>pridev</queue><account>&ACCOUNT;</account>'>
 
-<!ENTITY QUEUE      "dev">
 
-<!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
-<!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>04:59:00</walltime>'>
+	<!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
+	<!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>04:59:00</walltime>'>
 
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
