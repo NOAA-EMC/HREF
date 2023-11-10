@@ -2316,9 +2316,10 @@ cc%%%%%%% 8. To see if there is ceiling computation, if yes, do it
 
 cc%%%%%%% 9. To see if there is fog  computation, if yes, do it
 
-          if(dk4(nv).eq.6.and.dk5(nv).eq.193.and.dk6(nv).eq.103.
-     +                             and.itime.ge.2) then
+          if(dk4(nv).eq.6.and.dk5(nv).eq.193.and.dk6(nv).eq.103) then
+!tst     +                             .and.itime.ge.2) then
 
+           write(*,*) 'calling new_fog'
           call new_fog(nv,ifunit,ipunit,jpdtn,jf,im,jm,dx,dy,interval,
      +      iens,Lm,Lp,Lth,derv_mn,derv_sp,derv_pr,weight)
 
