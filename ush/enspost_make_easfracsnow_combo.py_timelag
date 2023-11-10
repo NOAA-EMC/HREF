@@ -55,6 +55,14 @@ COMINrrfs=os.environ.get('COMINrrfs','trash')
 print ('found COMINrrfs as ', COMINrrfs)
 
 try:
+  os.environ["COMINhrrr"]
+except KeyError:
+  print("NEED TO DEFINE COMINhrrr")
+  exit(1)
+COMINhrrr=os.environ.get('COMINhrrr','trash')
+print ('found COMINhrrr as ', COMINhrrr)
+
+try:
   os.environ["COMOUT"]
 except KeyError:
   print("NEED TO DEFINE COMOUT")
@@ -133,8 +141,15 @@ if not os.path.exists(COMOUT):
 
 #------------------------------------------------------------------------------------------
 
-nm_use = 12
-members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06']
+if dom == 'conus':
+ nm_use = 14
+ members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06','hrrr']
+elif dom == 'ak':
+ nm_use = 14
+ members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06','hrrrak']
+else:
+ nm_use = 12
+ members = ['rrfs01','rrfs02','rrfs03','rrfs04','rrfs05','rrfs06']
 
 pqpf_6h_calibrate = 'no'
 pqpf_3h_calibrate = 'no'
@@ -377,6 +392,7 @@ for mem in members:
     itime = starttime-timedelta((start_hour+latency)/24.0)
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
     print('itime for this member: ', itime)
+
     if memname == 'rrfs':
       file3 = COMINrrfs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       print('file3 is: ', file3)
@@ -386,6 +402,20 @@ for mem in members:
       print('file3alt is: ', file3alt)
       file6alt = COMINrrfs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
       print('file6alt is: ', file6alt)
+    elif memname == 'hrrr':
+      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file3alt = 'garb'
+      file6alt = 'garb'
+    elif memname == 'hrrrak':
+      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file3alt = 'garb'
+      file6alt = 'garb'
+
+
+
+
 
 
     if qpf_interval != 6:
