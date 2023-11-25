@@ -20,7 +20,7 @@
 #######################################################################
 
 
-set -x
+set -ex
 
 # export XLFRTEOPTS="namelist=old"
 
@@ -91,7 +91,7 @@ typeset -Z2 m
 
 if [ $dom = 'conus' ]
   then
-    files="12 fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s"
+    files="14 fv3s fv3s fv3s fv3s fv3s fv3s hrrr fv3s fv3s fv3s fv3s fv3s fv3s hrrr"
 elif [ $dom = 'hi' ]
   then
     files="12 hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s"
@@ -100,7 +100,7 @@ elif [ $dom = 'pr' ]
     files="12 prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s"
 elif [ $dom = 'ak' ]
    then
-    files="12 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s"
+    files="14 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak"
 else
     echo "bad domain $dom"
     msg="FATAL ERROR: dom was not conus, hi, pr, or ak"
@@ -118,16 +118,43 @@ else
  backday=`echo $backdate | cut -c1-8`
  backcyc=`echo $backdate | cut -c9-10`
 
- days="12 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday"
- cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
- ages="12  0    0    0    0    0    0    6    6    6    6    6    6"
- if [ $ff -le 54 ];then
-  mbrs="1  2  3  4  5  6  7  8  9 10 11 12"
+ if [ $dom = 'conus' -o $dom = 'ak' ]
+ then
+   days="14 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $backday"
+   cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
+   ages="14  0    0    0    0    0    0    0    6    6    6    6    6    6    6"
  else
-  mbrs="1  2  3  4  5  6"
+   days="12 $PDY $PDY $PDY $PDY $PDY $PDY  $backday $backday $backday $backday $backday $backday"
+   cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc  $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
+   ages="12  0    0    0    0    0    0     6    6    6    6    6    6"
  fi
+
 fi
 
+ if [ $dom = 'conus' -o $dom = 'ak' ]
+ then
+
+if [ $fhr -le 42 ];then
+ mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13 14"
+elif [ $fhr -ge 43 -a $fhr -le 48 ];then
+ mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13"
+elif [ $fhr -ge 49 -a $fhr -le 53 ];then
+ mbrs="1  2  3  4  5  6   8  9  10  11  12 13"
+else
+ mbrs="1  2  3  4  5  6"
+fi
+
+else
+
+if [ $ff -le 54 ];then
+ mbrs="1  2  3  4  5  6  7  8  9 10 11 12"
+else
+ mbrs="1  2  3  4  5  6"
+fi
+
+#try fi
+
+fi
 set -A  day  $days
 set -A  cycloc $cycs
 set -A  age  $ages

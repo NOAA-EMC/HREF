@@ -64,7 +64,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 # Define running directory and COM directories
 ##############################################
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/$type}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}}
 
 if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT/ensprod

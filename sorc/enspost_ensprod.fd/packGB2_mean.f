@@ -72,6 +72,7 @@ C for variable table:
          if (ml.eq.1) then              !this is just do once
 
             if (jpd1.eq.1.and.(jpd2.eq.8.or.jpd2.eq.11.or. 
+     &                     jpd2.eq.29 .or. jpd2.eq.225 .or.
      &                                      jpd2.eq.13))then  
              ipdtnum=12                  !ensemble APCP mean use Template 4.12
              ipdtlen=31
@@ -105,6 +106,7 @@ c            ipdtmpl(5)=132              !assigned 20161214
              if (trim(Msignal(nv)).eq.'L') ipdtmpl(3)=200   !Loc PM mean 
 
             if (jpd1.eq.1.and.(jpd2.eq.8.or.jpd2.eq.11.or. 
+     &                     jpd2.eq.29 .or. jpd2.eq.225 .or.
      &                       jpd2.eq.13) ) then  !Template 4.12 has extra elements than Template 4.2
               !2015121205 correction: B. zhou ...
               !ihr_ifhr=ihr+ifhr

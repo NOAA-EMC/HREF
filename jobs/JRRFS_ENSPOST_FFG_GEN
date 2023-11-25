@@ -44,8 +44,8 @@ export RUN=${RUN:-rrfs}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
 #export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
 #export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
-export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type}
+export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
 
 
 if [ ! -f $COMOUT ] ; then

@@ -74,6 +74,7 @@ fi
          $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "MSLMA" -set_byte 4 11 192 -grib mslet.t${cyc}z.f${hr}.grb
+	 $WGRIB2 $filecheck -match MAXUVV -set_byte 4 23 100 -set_byte 4 29 100 -grib maxuvv.t${cyc}z.f${hr}.grb
 
 	 $WGRIB2 $filecheck -match "HPBL" -set_byte 4 10 3 -grib pblh_start.t${cyc}z.f${hr}.grb
 	 $WGRIB2 pblh_start.t${cyc}z.f${hr}.grb -set_byte 4 11 5 -grib pblh_mid.t${cyc}z.f${hr}.grb
@@ -87,15 +88,26 @@ fi
          $WGRIB2 $filecheck -match "TCDC" -set_byte 4 23 200 -grib tcdc.t${cyc}z.f${hr}.grb
 
          $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "FRZR" -grib nn3b.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
 
-         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+         $WGRIB2 $filecheck -match "HGT:cloud base:" -grib base.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
+
+
+         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb  nn3.t${cyc}z.f${hr}.grb \
+	 nn3b.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+         top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb \
          refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
-         rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
-         refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb 
+         rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb \
+	 nn3b.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+         refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb  \
+	 top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb
 
-	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
+	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb maxuvv.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
          rm mslet.t${cyc}z.f${hr}.grb pblh*.t${cyc}z.f${hr}.grb
 
 	if [ $NEST = "ak" ]
@@ -110,8 +122,151 @@ else # conus, so no interp
 	cat hrrr.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb  > ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
 fi
 
+
+# add snow stuff for HRRR
+
+         if [ $hr -ge 01 ]
+         then
+          echo working to generate ../temp.t${cyc}z.f${hr}.grib2
+
+	  $WGRIB2 ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
+	  hrold=$((hr-1))
+	  hrold3=$((hr-3))
+
+	  if [ $hrold -lt 10 ]
+	  then
+		   hrold=0$hrold
+	  fi
+
+	  if [ $hrold3 -lt 10 ]
+	  then
+		   hrold3=0$hrold3
+	  fi
+
+	  curpath=`pwd`
+
+	  cp ../temp.t${cyc}z.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
+
+  # need to wait for it to be available??
+	  
+	   looplim=30
+	   loop=1
+	   while [ $loop -le $looplim ]
+	   do
+	    if [ -s ../temp.t${cyc}z.f${hrold}.grib2 ]
+	     then
+	        break
+           else
+	   loop=$((loop+1))
+	     sleep 5
+	      fi
+
+	     
+  if [ $loop -ge $looplim ]
+     then
+      msg="FATAL ERROR: ABORTING after 150 seconds of waiting for temp.t${cyc}z.f${hrold}.grib2"
+     err_exit $msg
+    fi
+
+    done
+
+    sleep 2
+    cp ../temp.t${cyc}z.f${hrold}.grib2 temp.t${cyc}z.f${hrold}.grib2
+
+    echo $curpath > input.${hr}.hrrr.snow
+    echo "temp.t${cyc}z.f" >> input.${hr}.hrrr.snow
+    echo $hrold >> input.${hr}.hrrr.snow
+    echo $hr >> input.${hr}.hrrr.snow
+    echo 0 >> input.${hr}.hrrr.snow
+    echo "$dim1 $dim2" >> input.${hr}.hrrr.snow
+    echo 1 >> input.${hr}.hrrr.snow
+
+    $EXECrrfs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
+    export err=$? # ; err_chk
+
+ # 1 h added to f01
+ 
+ if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+ then
+	 $EXECrrfs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
+	 export err=$? # ; err_chk
+	 cat ./PCP1HR${hr}.tm00 >> ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+ fi
+
+ # 3 h SNOW if 3 hour time
+ #
+ if [ $hr%3 -eq 0 ]
+ then
+ #
+ # # need to wait for it to be available??
+ #
+ looplim=30
+ loop=1
+
+ while [ $loop -le $looplim ]
+ do
+  if [ -s ../temp.t${cyc}z.f${hrold3}.grib2 ]
+   then
+    break
+    else
+       loop=$((loop+1))
+         sleep 5
+    fi
+
+             if [ $loop -ge $looplim ]
+                 then
+                   msg="FATAL ERROR: ABORTING after 150 seconds of waiting for temp.t${cyc}z.f${hrold3}.grib2"
+                     err_exit $msg
+                        fi
+done
+sleep 2
+cp ../temp.t${cyc}z.f${hrold3}.grib2 temp.t${cyc}z.f${hrold3}.grib2
+
+echo $curpath > input.${hr}.hrrr.snow
+echo "temp.t${cyc}z.f" >> input.${hr}.hrrr.snow
+echo $hrold3 >> input.${hr}.hrrr.snow
+echo $hr >> input.${hr}.hrrr.snow
+echo 0 >> input.${hr}.hrrr.snow
+echo "$dim1 $dim2" >> input.${hr}.hrrr.snow
+echo 1 >> input.${hr}.hrrr.snow
+
+if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+then
+	$EXECrrfs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
+	export err=$? # ; err_chk
+	cat ./PCP3HR${hr}.tm00 >> ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+fi
+
+ fi # 3 hour time
+
+ # end 3 h SNOW
+
+
+else
+
+	# just extract for f00
+ echo working to generate ../temp.t${cyc}z.f${hr}.grib2
+$WGRIB2 ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
+ fi
+
+
+         cp ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${GESOUT}.${PDY}/hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+        err=$? ; export err
+
+        if [ $err -ne 0 ]
+         then
+         msg="FATAL ERROR: hrrr.t${cyc}z.${NEST}.f${hr}.grib2 not copied properly"
+           err_exit $msg
+	fi
+
+      rm hrrr.t${cyc}z.f${hr}
+      rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb
+
+
         else
+
          msg="FATAL ERROR: $filecheck missing"
          err_exit $msg
+
         fi
 

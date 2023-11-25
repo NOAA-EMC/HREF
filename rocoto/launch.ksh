@@ -8,10 +8,12 @@ COMMAND=$1
 
 
 
-# if [ $envir != 'prod' ]
-# then
-# GESROOT_save=$GESROOT
-# fi
+if [ $envir != 'prod' ]
+then
+GESROOT_save=$GESROOT
+DATAROOT_save=$DATAROOT
+COMROOT_save=$COMROOT
+fi
 
 # cd /u/$USER    # cron does this for us - this is here just to be safe
 # . /etc/profile
@@ -26,7 +28,7 @@ COMMAND=$1
 
 module list
 
-source /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/versions/run_enspost.ver
+source /lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.1.0/versions/run_enspost.ver
 
 module load prod_envir/2.0.6
 module load cfp/2.0.4
@@ -54,10 +56,12 @@ echo now have
 module list
 
 
-# if [ $envir != 'prod' ]
-# then
-# GESROOT=${GESROOT_save}
-# fi
+if [ $envir != 'prod' ]
+then
+GESROOT=${GESROOT_save}
+DATAROOT=${DATAROOT_save}
+COMROOT=${COMROOT_save}
+fi
 
 echo now at end of launch.ksh have GESROOT as $GESROOT
 

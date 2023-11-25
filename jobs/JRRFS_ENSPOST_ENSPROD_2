@@ -68,9 +68,9 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 export COMINrrfs=${COMINrrfs:-$GESROOT/${RUN}}
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type}
-export COMINffg=${COMINffg:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type}
-export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDYm1}/$type}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
+export COMINffg=${COMINffg:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
+export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDYm1}}
 
 if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod

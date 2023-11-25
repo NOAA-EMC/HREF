@@ -50,8 +50,13 @@ export ndate=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 
+echo here with DATA $DATA
+echo here with DATAROOT $DATAROOT
+
 export pid=$$
 export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
+echo now have DATA $DATA
+
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
@@ -96,7 +101,7 @@ echo have PDY as $PDY
 # Define running directory and COM directories
 ##############################################
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/$type}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
 
 if [ ! -d $COMOUT ] ; then 
  mkdir -p $COMOUT/ensprod

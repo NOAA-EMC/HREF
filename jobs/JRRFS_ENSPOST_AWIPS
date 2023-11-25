@@ -38,8 +38,8 @@ export PARMwmo=${PARMwmo:-$HOMErrfs/parm/wmo}
 export NET=${NET:-rrfs}
 export RUN=${RUN:-rrfs} 
 
-export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/$type/ensprod}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/$type/wmo}
+export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/wmo}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
