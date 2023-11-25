@@ -1,4 +1,4 @@
-  58      row variables and mean/spread/prob info
+  60      row variables and mean/spread/prob info
 REFD  16 195 103 P1 1000    A1 1000 > A3 30 40 50
 MXRF  16 198 103 P1 1000    A1 1000 > A2 40 50
 REFL  16 196 200 P1 0    A1  0   > A5 10 20 30 40 50
@@ -52,6 +52,8 @@ ASN3   1 29    1 M1  0  K1  0   > K3 2.54 7.62 15.24
 ASN6   1 29    1 M1  0  K1  0   > K4 2.54 7.62 15.24 30.48
 FZ1h   1 225   1 M0     K1  0   > K3 0.254 2.54 6.35
 FZ3h   1 225   1 M0     K1  0   > K3 0.254 2.54 6.35
+FZ6h   1 225   1 M0     K1  0   > K4 0.254 2.54 6.35 12.7
+FZ12   1 225   1 M0     K1  0   > K4 0.254 2.54 6.35 12.7
 A6RI   1 8     1 M0     A1  0   > A7 1 2 5 10 25 50 100
 A24R   1 8     1 M0     A1  0   > A7 1 2 5 10 25 50 100
 FFG1   1 8     1 M0     A1  0   > A1 1

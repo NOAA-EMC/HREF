@@ -6,7 +6,7 @@ module list
 
 echo WGRIB2 is $WGRIB2
 
-dir="/lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.0.0/rocoto"
+dir="/lfs/h2/emc/lam/noscrub/emc.lam/enspost/rrfs.v1.1.0/rocoto"
 
 # make sure we are on prod machine
 

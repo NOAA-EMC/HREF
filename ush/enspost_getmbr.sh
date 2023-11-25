@@ -40,7 +40,7 @@ cd $DATA
 
 if [ $dom = 'conus' ]
   then
-     files="14 fv3s fv3s fv3s fv3s fv3s fv3s hrrr fv3s fv3s fv3s fv3s fv3s fv3s hrrr"
+     files="14 fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s hrrr hrrr"
 elif [ $dom = 'hi' ]
   then
 	  echo setting hi files
@@ -50,7 +50,7 @@ elif [ $dom = 'pr' ]
      files="12 prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s"
 elif [ $dom = 'ak' ]
   then
-     files="14 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak"
+     files="14 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak hrrrak"
 else
    echo "bad domain $dom"
    msg="FATAL ERROR: dom was not conus, hi, pr, or ak"
@@ -69,20 +69,20 @@ else
  backcyc=`echo $backdate | cut -c9-10`
 if [ $dom = 'conus' -o $dom = 'ak' ]
 then
- days="14 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $backday"
- cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
- ages="14  0    0    0    0    0    0    0    6    6    6    6    6    6    6"
+ days="14 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $PDY $backday"
+ cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $cyc $backcyc"
+ ages="14  0    0    0    0    0    0    6    6    6    6    6    6   0     6"
  if [ $dom = 'conus' ]; then
- nams="14 m01 m02  m03  m04  m05  m06  hrrr  m01   m02 m03   m04  m05 m06  hrrr" 
+ nams="14 m01 m02  m03  m04  m05  m06  m01  m02   m03  m04  m05  m06 hrrr hrrr" 
 else
- nams="14 m01 m02  m03  m04  m05  m06  hrrrak  m01   m02 m03   m04  m05 m06  hrrrak" 
+ nams="14 m01 m02  m03  m04  m05  m06  m01   m02 m03   m04  m05 m06 hrrrak  hrrrak" 
  fi
  if [ $fhr -le 42 ];then
   mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13 14" 
  elif [ $fhr -ge 43 -a $fhr -le 48 ];then
   mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13" 
  elif [ $fhr -ge 49 -a $fhr -le 53 ];then
-  mbrs="1  2  3  4  5  6   8  9  10  11  12 13" 
+  mbrs="1  2  3  4  5  6  7  8  9  10  11  12" 
  else
   mbrs="1  2  3  4  5  6" 
  fi

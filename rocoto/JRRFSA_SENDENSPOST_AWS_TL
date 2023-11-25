@@ -4,7 +4,7 @@ set -x
 export RUN=rrfs_a
 
 # If the data directory does not exist, then stop the job
-export DATA=/lfs/h2/emc/ptmp/emc.lam/test/com/rrfs/v1.0/rrfs.${PDY}/timelag/ensprod/
+export DATA=/lfs/h2/emc/ptmp/emc.lam/para/com/rrfs/v1.1/rrfs.${PDY}/ensprod/
 
 if [ -d $DATA ]; then
   echo "Run directory exists, transferring data inside of it"

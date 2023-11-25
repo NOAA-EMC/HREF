@@ -634,10 +634,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 if(ifhr.lt.3 .or. mod(ifhr,3) .ne. 0) exit loop222
                 jpd27=3
              else if (vname(nv).eq.'AP6h'.or.vname(nv).eq.'SN6h' .or.
+     &                vname(nv).eq.'FZ6h'.or.vname(nv).eq.'ASN6' .or.
      &                vname(nv).eq.'A6RI'.or.vname(nv).eq.'FFG6') then
                 if(ifhr.lt.6) exit loop222
                 jpd27=6
              else if (vname(nv).eq.'AP12'.or.vname(nv).eq.'SN12' .or. 
+     &                vname(nv).eq.'FZ12'.or.
      &                vname(nv).eq.'A12R'.or.vname(nv).eq.'FF12') then
                 if(ifhr.lt.12) exit loop222
                 jpd27=12
@@ -1996,6 +1998,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
           if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
      &        vname(nv).eq.'FZ1h' .or. vname(nv).eq.'FZ3h' .or.
+     &        vname(nv).eq.'FZ6h' .or. vname(nv).eq.'FZ12' .or.
      &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
 
          write(0,*) 'make sure it gets packed like a true mean field'
@@ -2317,9 +2320,9 @@ cc%%%%%%% 8. To see if there is ceiling computation, if yes, do it
 cc%%%%%%% 9. To see if there is fog  computation, if yes, do it
 
           if(dk4(nv).eq.6.and.dk5(nv).eq.193.and.dk6(nv).eq.103) then
-!tst     +                             .and.itime.ge.2) then
+!tst     +                             and.itime.ge.2) then
+	write(*,*) 'call new_fog'
 
-           write(*,*) 'calling new_fog'
           call new_fog(nv,ifunit,ipunit,jpdtn,jf,im,jm,dx,dy,interval,
      +      iens,Lm,Lp,Lth,derv_mn,derv_sp,derv_pr,weight)
 
