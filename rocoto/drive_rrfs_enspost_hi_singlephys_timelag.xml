@@ -27,7 +27,9 @@
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
+<!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
+
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.5/prod"> 
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
@@ -111,6 +113,13 @@
       <value>&COMINrrfsdet;</value>
     </envar>
 
+     <envar>
+    <name>COMINhrrr</name>
+    <value>&COMINhrrr;</value>
+    </envar>
+    
+
+
     <envar>
       <name>HOMErrfs</name>
       <value>&HOMErrfs;</value>
@@ -177,6 +186,7 @@
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
@@ -213,6 +223,13 @@
      <name>type</name>
      <value>&TYPE;</value>
     </envar>
+
+     <envar>
+    <name>COMINhrrr</name>
+    <value>&COMINhrrr;</value>
+    </envar>
+    
+
 
       <envar>
         <name>HOMErrfs</name>
@@ -281,7 +298,10 @@
 
 
       <dependency>
+       <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
       </dependency>
   </task>
 
@@ -351,6 +371,12 @@
       <name>COMINrrfs</name>
       <value>&COMINall;</value>
     </envar>
+     <envar>
+    <name>COMINhrrr</name>
+    <value>&COMINhrrr;</value>
+    </envar>
+    
+
 
     <envar>
      <name>type</name>
@@ -379,7 +405,10 @@
 
 
       <dependency>
+       <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
       </dependency>
   </task>
 
@@ -483,7 +512,10 @@
 
 
     <dependency>
+       <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
     </dependency>
 
   </task>
@@ -584,7 +616,10 @@
 
 
     <dependency>
-     <taskdep task="preproc_fv3"/>
+     <and>
+       <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+     </and>
     </dependency>
 
   </task>

@@ -28,7 +28,7 @@
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.5/prod"> 
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
@@ -179,7 +179,7 @@
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
-          <taskdep task="preproc_hrrr"/>
+          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.conus_3km.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
@@ -485,7 +485,9 @@
       <dependency>
         <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
        <taskdep task="preproc_hrrr"/>
+       <taskdep task="preproc_hrrr" cycle_offset="-6:00:00"/>
        <taskdep task="ffg_gen"/>
        </and>
       </dependency>
@@ -592,9 +594,10 @@
       <dependency>
         <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
        <taskdep task="ffg_gen"/>
        <taskdep task="preproc_hrrr"/>
-
+       <taskdep task="preproc_hrrr"  cycle_offset="-6:00:00"/>
         </and>
       </dependency>
   </task>
@@ -706,7 +709,9 @@
     <dependency>
      <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
        <taskdep task="preproc_hrrr"/>
+       <taskdep task="preproc_hrrr"  cycle_offset="-6:00:00"/>
        <taskdep task="ffg_gen"/>
      </and>
     </dependency>
@@ -814,7 +819,9 @@
     <dependency>
      <and>
      <taskdep task="preproc_fv3"/>
+     <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
      <taskdep task="preproc_hrrr"/>
+     <taskdep task="preproc_hrrr"  cycle_offset="-6:00:00"/>
      <taskdep task="ffg_gen"/>
      </and>
     </dependency>

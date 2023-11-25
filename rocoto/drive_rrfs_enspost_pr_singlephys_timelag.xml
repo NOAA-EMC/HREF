@@ -28,7 +28,8 @@
 <!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErrfs;/scripts">
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.1/prod"> 
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.5/prod"> 
+<!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
@@ -221,6 +222,10 @@
         <name>HOMErrfs</name>
         <value>&HOMErrfs;</value>
       </envar>
+     <envar>
+    <name>COMINhrrr</name>
+    <value>&COMINhrrr;</value>
+    </envar>
       <envar>
         <name>job</name>
         <value>eas_gen_1_&TYPE;_&PHYS;_&domain;</value>
@@ -284,7 +289,10 @@
 
 
       <dependency>
+       <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
       </dependency>
   </task>
 
@@ -313,6 +321,10 @@
         <name>HOMErrfs</name>
         <value>&HOMErrfs;</value>
       </envar>
+     <envar>
+    <name>COMINhrrr</name>
+    <value>&COMINhrrr;</value>
+    </envar>
       <envar>
         <name>job</name>
         <value>eas_gen_2_&TYPE;_&PHYS;_&domain;</value>
@@ -382,7 +394,10 @@
 
 
       <dependency>
+       <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
       </dependency>
   </task>
 
@@ -486,7 +501,10 @@
 
 
     <dependency>
+       <and>
        <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
     </dependency>
 
   </task>
@@ -587,7 +605,10 @@
 
 
     <dependency>
-     <taskdep task="preproc_fv3"/>
+       <and>
+       <taskdep task="preproc_fv3"/>
+       <taskdep task="preproc_fv3" cycle_offset="-6:00:00"/>
+       </and>
     </dependency>
 
   </task>
