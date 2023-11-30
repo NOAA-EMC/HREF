@@ -12,6 +12,7 @@
 # 2018-03-20  M Pyle    replace pygrib with wgrib2
 # 2021-06     M Pyle    Modifications to use python3
 # 2022-03     M Pyle    Modifications to limit to just FV3/RRFS members
+# 2023-10     M PYle    Adds back HRRR members for CONUS/AK
 
 import os, sys, time
 import numpy as np
@@ -135,12 +136,13 @@ fcst_hour = int(sys.argv[1])
 # pass in as 100/102 1 h low/high
 # pass in as 300/302 3 h low/high
 # pass in as 600/601/602 6 h low/med/high
-# pass in as 120/121/122,  240/241/242 to distinguish 12 low/med/hi and 24 low/med/hi ??
+# pass in as 120/121/122,123,  240/241/242/243 to distinguish 12 low/med/hi/higher and 24 low/med/hi/higher ??
 qpf_interval = int(sys.argv[2])
 
 low=0
 med=0
 high=0
+higher=0
 
 if qpf_interval == 100:
     qpf_interval=1
@@ -175,6 +177,9 @@ if qpf_interval == 121:
 if qpf_interval == 122:
     qpf_interval=12
     high=1
+if qpf_interval == 123:
+    qpf_interval=12
+    higher=1
 
 if qpf_interval == 240:
     qpf_interval=24
@@ -185,6 +190,9 @@ if qpf_interval == 241:
 if qpf_interval == 242:
     qpf_interval=24
     high=1
+if qpf_interval == 243:
+    qpf_interval=24
+    higher=1
 
 start_hour = int(fcst_hour - qpf_interval)
 
@@ -217,22 +225,18 @@ nlats, nlons = np.shape(lats)
 
 print('nlons, nlats: ', nlons, nlats)
 
-# believe could eiminate this mask stuff for RRFS
-# define mask - NAM nest grid interpolated to grid 227 has undefined values
 
-# if dom == 'conus':
-#   maskfile = HOMEhref + '/fix/nam_mask.grib2'
-# if dom == 'ak':
-#   maskfile = HOMEhref + '/fix/akhref_mask.grib2'
+if dom == 'ak':
+  maskfile = HOMErrfs + '/fix/akrrfs_mask.grib2'
 
-# if dom == 'conus' or dom == 'ak':
-#   os.system(WGRIB2+' '+maskfile+' -text mask.txt ')
-#  undefmask,nx,ny=simplewgrib2('mask.txt')
+if dom == 'ak':
+  os.system(WGRIB2+' '+maskfile+' -text mask.txt ')
+  undefmask,nx,ny=simplewgrib2('mask.txt')
 
-#  undefmask=np.ma.masked_greater(undefmask,9.0e+20)
-#  maskregion = np.ma.filled(undefmask,-9999)
-#  print('maskregion defined')
-#  grbs2.close()
+  undefmask=np.ma.masked_greater(undefmask,9.0e+20)
+  maskregion = np.ma.filled(undefmask,-9999)
+  print('maskregion defined')
+
 
 if not os.path.exists(COMOUT):
   os.system("mkdir -p " + COMOUT)
@@ -362,6 +366,7 @@ def get_footprint_flexi(r,i,j,nx,ny):
 #
 def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
     exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+    print('sum of exceed3d for t: ', t, ' is : ', np.sum(exceed3d))
     nm_use, isize, jsize = np.shape(exceed3d)
     print('nm_use within get_footprint: ', nm_use)
     print('isize, jsize within get_footprint: ', isize, jsize)
@@ -467,6 +472,9 @@ if qpf_interval == 12:
   if high == 1:
       thresh_use=pqpf_12h_thresh_high
       outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf12high_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  if higher == 1:
+      thresh_use=pqpf_12h_thresh_higher
+      outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf12higher_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
 if qpf_interval == 24:
   outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf24_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
   incr = 3
@@ -479,6 +487,9 @@ if qpf_interval == 24:
   if high == 1:
       thresh_use=pqpf_24h_thresh_high
       outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf24high_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  if higher == 1:
+      thresh_use=pqpf_24h_thresh_higher
+      outbase = 'rrfs.t'+cyc[0:2]+'z.'+dom+'.pqpf24higher_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
 
 outfile = DATA + '/' + outbase
 
@@ -822,7 +833,7 @@ for mem in members:
 
     print('here past qpf_interval tests')
     print('here with itime: ', itime)
-    if dom == 'conusavoid' or dom == 'akavoid':
+    if dom == 'ak':
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
 # prob is okay as is based on local qpf[itime]
@@ -880,11 +891,13 @@ filter_footprint_70 = get_footprint(70)
 filter_footprint_85 = get_footprint(85)
 filter_footprint_100 = get_footprint(100)
 
-print('sums of the filters (10,25,40): ', np.sum(filter_footprint_10),np.sum(filter_footprint_25),np.sum(filter_footprint_40))
-print('sums of the filters (55,70,85,100): ', np.sum(filter_footprint_55),np.sum(filter_footprint_70),np.sum(filter_footprint_85),np.sum(filter_footprint_100))
+# print('sums of the filters (10,25,40): ', np.sum(filter_footprint_10),np.sum(filter_footprint_25),np.sum(filter_footprint_40))
+# print('sums of the filters (55,70,85,100): ', np.sum(filter_footprint_55),np.sum(filter_footprint_70),np.sum(filter_footprint_85),np.sum(filter_footprint_100))
 
 for t in thresh_use:
   t3 = time.time()
+  exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+  exceed_sum=np.sum(exceed3d)
   optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
   print('Time for optrad routine:', t4-t3)
@@ -898,139 +911,146 @@ for t in thresh_use:
 #
 #
   print('nm_use for final prob: ', nm_use)
-  for row in range(nlats):
-    for column in range(nlons):
-      rad = (optrad[row,column]).astype(int)
+  t8a = time.time()
 
+  if exceed_sum > 0:
+
+    for row in range(nlats):
+      for column in range(nlons):
+        rad = (optrad[row,column]).astype(int)
 
 # assign the default radius footprint size to footprint_use
 
-      if (2.5 <= rad < 17.5):
-        footprint_use  =  float(np.sum(filter_footprint_10))
-      elif (17.5 <= rad < 32.5):
-        footprint_use  =  float(np.sum(filter_footprint_25))
-      elif (32.5 <= rad < 47.5):
-        footprint_use  =  float(np.sum(filter_footprint_40))
-      elif (47.5 <= rad < 62.5):
-        footprint_use  =  float(np.sum(filter_footprint_55))
-      elif (62.5 <= rad < 77.5):
-        footprint_use  =  float(np.sum(filter_footprint_70))
-      elif (77.5 <= rad < 92.5):
-        footprint_use  =  float(np.sum(filter_footprint_85))
-      elif (92.5 <= rad <= 100):
-        footprint_use  =  float(np.sum(filter_footprint_100))
-      elif (rad > 100):
-        footprint_use  =  float(np.sum(filter_footprint_100))
+        if (2.5 <= rad < 17.5):
+          footprint_use  =  float(np.sum(filter_footprint_10))
+        elif (17.5 <= rad < 32.5):
+          footprint_use  =  float(np.sum(filter_footprint_25))
+        elif (32.5 <= rad < 47.5):
+          footprint_use  =  float(np.sum(filter_footprint_40))
+        elif (47.5 <= rad < 62.5):
+          footprint_use  =  float(np.sum(filter_footprint_55))
+        elif (62.5 <= rad < 77.5):
+          footprint_use  =  float(np.sum(filter_footprint_70))
+        elif (77.5 <= rad < 92.5):
+          footprint_use  =  float(np.sum(filter_footprint_85))
+        elif (92.5 <= rad <= 100):
+          footprint_use  =  float(np.sum(filter_footprint_100))
+        elif (rad > 100):
+          footprint_use  =  float(np.sum(filter_footprint_100))
 
-
-      rdx=int(rad/dx)
+        rdx=int(rad/dx)
 # now insert something to compute the smaller footprint_use if in proper row/colum using flexi?
 
-      if column < rdx:
-         footprint_orig=np.sum(footprint_use)
-         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-         if float(footprint_use)/float(footprint_orig) < 0.5:
+        if column < rdx:
+           footprint_orig=np.sum(footprint_use)
+           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+           if float(footprint_use)/float(footprint_orig) < 0.5:
 #            print('W bound less than 0.5')
-            if row > rdx and row < nlats-1-rdx:
-#              print('column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-              footprint_use=int(0.51*footprint_orig)
-#              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-            if float(footprint_use)/float(footprint_orig) < 0.25:
+              if row > rdx and row < nlats-1-rdx:
+#                print('column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
+                footprint_use=int(0.51*footprint_orig)
+#                print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
+              if float(footprint_use)/float(footprint_orig) < 0.25:
 #              print('corner boost')
-              footprint_use=int(0.26*footprint_orig)
+                footprint_use=int(0.26*footprint_orig)
 
-      if row < rdx:
-         footprint_orig=np.sum(footprint_use)
-         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-         if float(footprint_use)/float(footprint_orig) < 0.5:
+        if row < rdx:
+           footprint_orig=np.sum(footprint_use)
+           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+           if float(footprint_use)/float(footprint_orig) < 0.5:
 #            print 'S bound less than 0.5'
-            if column > rdx and column < nlons-1-rdx:
+              if column > rdx and column < nlons-1-rdx:
 #              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-              footprint_use=int(0.51*footprint_orig)
+                footprint_use=int(0.51*footprint_orig)
 #              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-         if float(footprint_use)/float(footprint_orig) < 0.25:
+           if float(footprint_use)/float(footprint_orig) < 0.25:
 #              print('corner boost')
-              footprint_use=int(0.26*footprint_orig)
+                footprint_use=int(0.26*footprint_orig)
 
-      if column > nlons-1-rdx:
-         footprint_orig=np.sum(footprint_use)
-         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-         if float(footprint_use)/float(footprint_orig) < 0.5:
+        if column > nlons-1-rdx:
+           footprint_orig=np.sum(footprint_use)
+           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+           if float(footprint_use)/float(footprint_orig) < 0.5:
 #            print 'E bound less than 0.5'
-            if row > rdx and row < nlats-1-rdx:
+              if row > rdx and row < nlats-1-rdx:
 #              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-              footprint_use=int(0.51*footprint_orig)
+                footprint_use=int(0.51*footprint_orig)
 #              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-         if float(footprint_use)/float(footprint_orig) < 0.25:
+           if float(footprint_use)/float(footprint_orig) < 0.25:
 #              print('corner boost')
-              footprint_use=int(0.26*footprint_orig)
+                footprint_use=int(0.26*footprint_orig)
 
-      if row > nlats-1-rdx:
-         footprint_orig=np.sum(footprint_use)
-         footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-         if float(footprint_use)/float(footprint_orig) < 0.5:
+        if row > nlats-1-rdx:
+           footprint_orig=np.sum(footprint_use)
+           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
+           if float(footprint_use)/float(footprint_orig) < 0.5:
 #            print 'N bound less than 0.5'
-            if column > rdx and column < nlons-1-rdx:
+              if column > rdx and column < nlons-1-rdx:
 #              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-              footprint_use=int(0.51*footprint_orig)
-#              print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-         if float(footprint_use)/float(footprint_orig) < 0.25:
+                footprint_use=int(0.51*footprint_orig)
+#                print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
+           if float(footprint_use)/float(footprint_orig) < 0.25:
 #              print('corner boost')
-              footprint_use=int(0.26*footprint_orig)
+                footprint_use=int(0.26*footprint_orig)
               
 
 
-      if (2.5 <= rad < 17.5):
-        probfinal[row,column] = prob[t,10][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,10][row,column], footprint_use: ', prob[t,10][row,column], footprint_use)
-      elif (17.5 <= rad < 32.5):
-        probfinal[row,column] = prob[t,25][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,25][row,column], footprint_use: ', prob[t,25][row,column], footprint_use,np.sum(filter_footprint_25))
-      elif (32.5 <= rad < 47.5):
-        probfinal[row,column] = prob[t,40][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,40][row,column], footprint_use: ', prob[t,40][row,column], footprint_use)
-      elif (47.5 <= rad < 62.5):
-        probfinal[row,column] = prob[t,55][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,55][row,column], footprint_use: ', prob[t,55][row,column], footprint_use)
-      elif (62.5 <= rad < 77.5):
-        probfinal[row,column] = prob[t,70][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,70][row,column], footprint_use: ', prob[t,70][row,column], footprint_use)
-      elif (77.5 <= rad < 92.5):
-        probfinal[row,column] = prob[t,85][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,85][row,column], footprint_use: ', prob[t,85][row,column], footprint_use)
-      elif (92.5 <= rad <= 100):
-        probfinal[row,column] = prob[t,100][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        if (probfinal[row,column] > 100.1): 
-           print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
-           print('prob[t,100][row,column], footprint_use: ', prob[t,100][row,column], footprint_use)
-      elif (rad > 100):
-        probfinal[row,column] = prob[t,100][row,column]
-        probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        optrad[row,column] = 0
+        if (2.5 <= rad < 17.5):
+          probfinal[row,column] = prob[t,10][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,10][row,column], footprint_use: ', prob[t,10][row,column], footprint_use)
+        elif (17.5 <= rad < 32.5):
+          probfinal[row,column] = prob[t,25][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,25][row,column], footprint_use: ', prob[t,25][row,column], footprint_use,np.sum(filter_footprint_25))
+        elif (32.5 <= rad < 47.5):
+          probfinal[row,column] = prob[t,40][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,40][row,column], footprint_use: ', prob[t,40][row,column], footprint_use)
+        elif (47.5 <= rad < 62.5):
+          probfinal[row,column] = prob[t,55][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,55][row,column], footprint_use: ', prob[t,55][row,column], footprint_use)
+        elif (62.5 <= rad < 77.5):
+          probfinal[row,column] = prob[t,70][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,70][row,column], footprint_use: ', prob[t,70][row,column], footprint_use)
+        elif (77.5 <= rad < 92.5):
+          probfinal[row,column] = prob[t,85][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,85][row,column], footprint_use: ', prob[t,85][row,column], footprint_use)
+        elif (92.5 <= rad <= 100):
+          probfinal[row,column] = prob[t,100][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          if (probfinal[row,column] > 100.1): 
+             print('row, column, probfinal[row,column]: ', row, column, probfinal[row,column])
+             print('prob[t,100][row,column], footprint_use: ', prob[t,100][row,column], footprint_use)
+        elif (rad > 100):
+          probfinal[row,column] = prob[t,100][row,column]
+          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
+          optrad[row,column] = 0
+  else:
+     print('sum of exceed3d was zero, so setting zero probfinal')
+     probfinal[:,:] = 0.0
 
+  t8 = time.time()
 # slight smoothing of probfinal
+  print('Time just over loops for ',t,' threshold: ', t8-t8a)
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)
 
-  if dom == 'conusavoid' or dom == 'akavoid':
+  if dom == 'ak':
     probfinal = np.where(np.equal(maskregion,-9999),0,probfinal)  # set to 0 for mask 
 
   t5 = time.time()
