@@ -201,22 +201,22 @@
   <task name="eas_gen_1" cycledefs="regional_justontime" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
-    <nodes>2:ppn=115</nodes>
+    <nodes>3:ppn=82</nodes>
       <command>&PRE; &JOBS;/JRRFS_ENSPOST_EAS_1</command>
       <jobname><cyclestr>easgen_1_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
-      <value>2</value>
+      <value>3</value>
     </envar>
     <envar>
       <name>NTASK</name>
-      <value>230</value>
+      <value>244</value>
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>115</value>
+      <value>82</value>
     </envar>
 
     <envar>
@@ -308,22 +308,22 @@
   <task name="eas_gen_2" cycledefs="regional_justontime" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
-    <nodes>2:ppn=88</nodes>
+    <nodes>3:ppn=64</nodes>
       <command>&PRE; &JOBS;/JRRFS_ENSPOST_EAS_2</command>
       <jobname><cyclestr>easgen_2_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
-      <value>2</value>
+      <value>3</value>
     </envar>
     <envar>
       <name>NTASK</name>
-      <value>176</value>
+      <value>192</value>
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>88</value>
+      <value>64</value>
     </envar>
 
       <envar>

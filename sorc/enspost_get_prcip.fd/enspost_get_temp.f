@@ -2,7 +2,7 @@
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C  2022: Jun Du -- added this program to read tempreture and calculate its 
+C  2022: Jun Du -- added this program to read temperature and calculate its 
 C          time tendency for fog product
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC

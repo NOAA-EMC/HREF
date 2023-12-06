@@ -31,6 +31,7 @@ do
 echo "cd ${DATA}; mkdir qpf_${fhr}_24_low; cd qpf_${fhr}_24_low ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 240 >  qpf_combo_${dom}_${cyc}_24h_low_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir qpf_${fhr}_24_med; cd qpf_${fhr}_24_med ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 241 >  qpf_combo_${dom}_${cyc}_24h_med_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir qpf_${fhr}_24_high; cd qpf_${fhr}_24_high ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 242 >  qpf_combo_${dom}_${cyc}_24h_high_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_24_higher; cd qpf_${fhr}_24_higher ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 243 >  qpf_combo_${dom}_${cyc}_24h_higher_${fhr}.log" >> poe.qpf_snow
 done
 
 if [ $type = single ];then
@@ -58,6 +59,7 @@ do
 echo "cd ${DATA}; mkdir qpf_${fhr}_12_low; cd qpf_${fhr}_12_low ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 120 >  qpf_combo_${dom}_${cyc}_12h_low_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir qpf_${fhr}_12_med; cd qpf_${fhr}_12_med ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 121 >  qpf_combo_${dom}_${cyc}_12h_med_${fhr}.log" >> poe.qpf_snow
 echo "cd ${DATA}; mkdir qpf_${fhr}_12_high; cd qpf_${fhr}_12_high ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 122 >  qpf_combo_${dom}_${cyc}_12h_high_${fhr}.log" >> poe.qpf_snow
+echo "cd ${DATA}; mkdir qpf_${fhr}_12_higher; cd qpf_${fhr}_12_higher ; python ${USHrrfs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 123 >  qpf_combo_${dom}_${cyc}_12h_higher_${fhr}.log" >> poe.qpf_snow
 done
 
 
@@ -153,7 +155,7 @@ if [ $((fhr%3)) -eq 0 -a $fhr -ge 6 ]
 then
 
 if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06low_easfrac.f${fhr}.grib2 -o \
-     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06med_easfrac.f${fhr}.grib2
+     ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06med_easfrac.f${fhr}.grib2 -o \
      ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06high_easfrac.f${fhr}.grib2 ]
 then
 msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2"
@@ -187,6 +189,7 @@ fi
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12low_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12med_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12higher_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $fhr -eq 39 -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48 -o $fhr -eq 51 \
@@ -204,6 +207,7 @@ fi
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24med_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24high_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24higher_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
 if [ $SENDCOM == 'YES' ]

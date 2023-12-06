@@ -317,7 +317,7 @@ typeset -Z2 fcheckloc
         then
         echo here a $ff
 
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ]
@@ -397,7 +397,7 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} yes |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non |$EXECrrfs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ]
         then

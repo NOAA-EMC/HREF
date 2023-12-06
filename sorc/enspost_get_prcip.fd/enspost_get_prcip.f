@@ -304,6 +304,7 @@ c      so use previously saved gfld_save
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
+	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
@@ -401,6 +402,7 @@ c      so use previously saved gfld_save
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
+	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
@@ -473,6 +475,7 @@ c      so use previously saved gfld_save
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
              gfld%ipdtmpl(27)=3
+	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
@@ -519,6 +522,7 @@ c      so use previously saved gfld_save
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
+	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              gfld%ipdtmpl(27)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
@@ -1144,7 +1148,7 @@ c default is set to APCP
 	
 	if (nf .eq. 2) then
 	 asn1(:)=asnhold(:,3)-asnhold(:,2)
-!	 write(0,*) 'definined asn1 from difference'
+	 write(0,*) 'definined asn1 from difference'
 !	 write(0,*) 'maxval(asn1): ', maxval(asn1)
 	 gfld%fld(:)=asn1(:)
          gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
@@ -1197,25 +1201,26 @@ c      so use previously saved gfld_save
            gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(27)=1
 	write(0,*) 'to putgb2 for ounit: ', ounit
-	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'minval/maxval APCP 1h (gfld%fld(:)): ', 
+     &    minval(gfld%fld(:)),maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_snow
            gfld%fld(:)=sn1(:)
            gfld%ipdtmpl(27)=1
-	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'SNOW 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_frzr
            gfld%fld(:)=fz1(:)
            gfld%ipdtmpl(27)=1
-	write(0,*) 'FRZR maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'FRZR 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_asn
            gfld%fld(:)=asn1(:)
            gfld%ipdtmpl(27)=1
-	write(0,*) 'ASN maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'ASN 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
     
 !        write(0,*) 'Pack APCP done for fhr',nfhr
@@ -1436,7 +1441,8 @@ c      so use previously saved gfld_save
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
            gfld%ipdtmpl(27)=3
 	write(0,*) 'to putgb2 for ounit: ', ounit
-	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+	write(0,*) 'minval/maxval APCP 3h (gfld%fld(:)): ', 
+     &    minval(gfld%fld(:)),maxval(gfld%fld(:))
          do i=1,gfld_save_curr%ipdtlen
          write(0,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
          end do
@@ -1889,12 +1895,11 @@ c=============================================
 
 	write(0,*) 'into putgb2_wrap'
 	write(0,*) 'gfld%ngrdpts: ', gfld%ngrdpts
-	write(0,*) 'ounit: ', ounit
-	write(6,*) 'gfld%idrtmpl(2): ', gfld%idrtmpl(2)
-	write(6,*) 'gfld%idrtmpl(3): ', gfld%idrtmpl(3)
+	write(6,*) 'was: gfld%idrtmpl(2:3): ', gfld%idrtmpl(2:3)
 
-	gfld%idrtmpl(2)=-5
-	gfld%idrtmpl(3)=0
+	gfld%idrtmpl(2)=0
+	gfld%idrtmpl(3)=6
+	write(6,*) 'now: gfld%idrtmpl(2:3): ', gfld%idrtmpl(2:3)
 
 	allocate(grnd(gfld%ngrdpts))
 

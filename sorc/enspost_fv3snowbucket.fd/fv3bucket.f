@@ -483,8 +483,8 @@ C grib2
 
       IBM=0
       IBITM = 0
-      gfld_qpf%idrtmpl(2)=-5.0
-      SGDS  = gfld%idrtmpl(2)
+      gfld_qpf%idrtmpl(3)=5.0
+      SGDS  = gfld%idrtmpl(3)
 
 !     set bitmap
       DO N=1,IM*JM
@@ -528,8 +528,8 @@ C grib2
 
       IBM=0
       IBITM = 0
-      gfld_qpf%idrtmpl(2)=-5.0
-      SGDS  = gfld%idrtmpl(2)
+      gfld_qpf%idrtmpl(3)=5.0
+      SGDS  = gfld%idrtmpl(3)
 
 !     set bitmap
       DO N=1,IM*JM
@@ -575,8 +575,9 @@ C grib2
 
       IBM=0
       IBITM = 0
-      gfld_qpf%idrtmpl(2)=-5.0
-      SGDS  = gfld%idrtmpl(2)
+      gfld_qpf%idrtmpl(2)=0.0
+      gfld_qpf%idrtmpl(3)=5.0
+      SGDS  = gfld%idrtmpl(3)
 
 !     set bitmap
       DO N=1,IM*JM
