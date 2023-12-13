@@ -29,10 +29,8 @@ types="prob avrg eas ffri lpmm mean pmmn sprd"
 # posthr=01
 # while [ $posthr -le 60 ] ; do
 
-#   aws s3 cp rrfs.t${cyc}z.conus.${typ}.f${posthr}.grib2  s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/single_physics/enspost_timelag/
-#   aws s3 cp rrfs.t${cyc}z.conus.${typ}.f${posthr}.grib2.idx  s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/single_physics/enspost_timelag/
 
-aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/single_physics/enspost_timelag/ --recursive --exclude "*" --include "rrfs.t${cyc}z.*.grib2*"
+aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "rrfs.t${cyc}z.*.grib2*"
 
 
 #  let "posthr=$(( ${posthr#0} + 1 ))"
@@ -47,7 +45,7 @@ aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/single_physics/enspo
 if [ $cyc -eq 00 -o $cyc -eq 06 -o $cyc -eq 12 -o $cyc -eq 18 ]; then
   cd /lfs/h2/emc/ptmp/Benjamin.Blake/logfiles
   echo "I am done" > donefile.enspostaws.${CDATE}
-  aws s3 cp donefile.enspostaws.${CDATE} s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/single_physics/enspost_timelag/
+  aws s3 cp donefile.enspostaws.${CDATE} s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/enspost_timelag/
 fi
 
 date

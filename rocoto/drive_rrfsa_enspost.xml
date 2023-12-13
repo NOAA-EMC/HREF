@@ -28,7 +28,7 @@
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY SEND_NODES '1:ppn=1'>
-<!ENTITY SEND_RESOURCES '<walltime>03:00:00</walltime>'>
+<!ENTITY SEND_RESOURCES '<walltime>04:40:00</walltime>'>
 
 ]>
 
@@ -50,36 +50,8 @@
 
 
 <!-- ****** AWS transfer - enspost                   ****** -->
-  <task name="send_enspost_singlephys" cycledefs="regional" maxtries="1">
-    &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
 
-    <command>&JOBS;/launch.sh &JOBS;/JRRFSA_SENDENSPOST_AWS</command>
-    <nodes>&SEND_NODES;</nodes>
-    <jobname><cyclestr>send_enspostaws_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/send_enspostaws_@H.log</cyclestr></join>  
-
-    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
-    <envar><name>job</name><value>sendpostaws</value></envar>
-    <envar><name>machine</name><value>&machine;</value></envar>
-    <envar><name>USER</name><value>&USER;</value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>tmmark</name><value>tm00</value></envar>
-
-    <dependency>
-        <and>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-        </and>
-    </dependency>
-
-  </task>
-
-  <task name="send_enspost_singlephys_tl" cycledefs="regional" maxtries="1">
+  <task name="send_enspost_tl" cycledefs="regional" maxtries="1">
     &RESERVATION_TRANSFER;
     &SEND_RESOURCES;
 
@@ -110,94 +82,9 @@
 
   </task>
 
-  <task name="send_enspost_multiphys" cycledefs="regional" maxtries="1">
-    &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
 
-    <command>&JOBS;/launch.sh &JOBS;/JRRFSA_SENDENSPOSTMP_AWS</command>
-    <nodes>&SEND_NODES;</nodes>
-    <jobname><cyclestr>send_enspostmpaws_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/send_enspostmpaws_@H.log</cyclestr></join>  
 
-    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
-    <envar><name>job</name><value>sendpostmpaws</value></envar>
-    <envar><name>machine</name><value>&machine;</value></envar>
-    <envar><name>USER</name><value>&USER;</value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>tmmark</name><value>tm00</value></envar>
-
-    <dependency>
-        <and>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-        </and>
-    </dependency>
-
-  </task>
-
-  <task name="send_enspost_multiphys_tl" cycledefs="regional" maxtries="1">
-    &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
-
-    <command>&JOBS;/launch.sh &JOBS;/JRRFSA_SENDENSPOSTMP_AWS_TL</command>
-    <nodes>&SEND_NODES;</nodes>
-    <jobname><cyclestr>send_enspostmpaws_tl_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/send_enspostmpaws_tl_@H.log</cyclestr></join>  
-
-    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
-    <envar><name>job</name><value>sendpostmpaws_tl</value></envar>
-    <envar><name>machine</name><value>&machine;</value></envar>
-    <envar><name>USER</name><value>&USER;</value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>tmmark</name><value>tm00</value></envar>
-
-    <dependency>
-        <and>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-        </and>
-    </dependency>
-
-  </task>
-
-  <task name="mirror_enspost_singlephys" cycledefs="regional" maxtries="1">
-    &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
-
-    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_singlephys_single</command>
-    <nodes>&SEND_NODES;</nodes>
-    <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_@H.log</cyclestr></join>  
-
-    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
-    <envar><name>job</name><value>mirror_enspost</value></envar>
-    <envar><name>machine</name><value>&machine;</value></envar>
-    <envar><name>USER</name><value>&USER;</value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>tmmark</name><value>tm00</value></envar>
-
-    <dependency>
-        <and>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-        </and>
-    </dependency>
-
-  </task>
-
-  <task name="mirror_enspost_singlephys_tl" cycledefs="regional" maxtries="1">
+  <task name="mirror_enspost_tl" cycledefs="regional" maxtries="1">
     &RESERVATION_TRANSFER;
     &SEND_RESOURCES;
 
@@ -226,62 +113,5 @@
 
   </task>
 
-  <task name="mirror_enspost_multiphys" cycledefs="regional" maxtries="1">
-    &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
-
-    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_multiphys_single</command>
-    <nodes>&SEND_NODES;</nodes>
-    <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_@H.log</cyclestr></join>  
-
-    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
-    <envar><name>job</name><value>mirror_enspost</value></envar>
-    <envar><name>machine</name><value>&machine;</value></envar>
-    <envar><name>USER</name><value>&USER;</value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>tmmark</name><value>tm00</value></envar>
-
-    <dependency>
-        <and>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/single/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-        </and>
-    </dependency>
-
-  </task>
-
-  <task name="mirror_enspost_multiphys_tl" cycledefs="regional" maxtries="1">
-    &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
-
-    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_multiphys_timelag</command>
-    <nodes>&SEND_NODES;</nodes>
-    <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_@H.log</cyclestr></join>  
-
-    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
-    <envar><name>job</name><value>mirror_enspost</value></envar>
-    <envar><name>machine</name><value>&machine;</value></envar>
-    <envar><name>USER</name><value>&USER;</value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>tmmark</name><value>tm00</value></envar>
-
-    <dependency>
-        <and>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOSTMP;/rrfs.@Y@m@d/ensprod/rrfs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
-        </and>
-    </dependency>
-
-  </task>
 
 </workflow>

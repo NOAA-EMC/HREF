@@ -1898,7 +1898,7 @@ c=============================================
 	write(6,*) 'was: gfld%idrtmpl(2:3): ', gfld%idrtmpl(2:3)
 
 	gfld%idrtmpl(2)=0
-	gfld%idrtmpl(3)=6
+	gfld%idrtmpl(3)=5
 	write(6,*) 'now: gfld%idrtmpl(2:3): ', gfld%idrtmpl(2:3)
 
 	allocate(grnd(gfld%ngrdpts))
