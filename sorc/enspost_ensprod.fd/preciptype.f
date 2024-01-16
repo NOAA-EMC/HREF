@@ -49,7 +49,7 @@ c    for derived variables
         data (jpd1(i),i=1,4)
      +  /1,1,1,1/
         data (jpd2(i),i=1,4)
-     +  /192,193,194,195/                     !rain, frzr, icep, snow
+     +  /33,34,35,36/                     !rain, frzr, icep, snow
         data (jpd10(i),i=1,4)
      +  /1,1,1,1/
         data (jpd12(i),i=1,4)
