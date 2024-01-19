@@ -1,8 +1,8 @@
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
-# Script name:         href_mkawp.sh
-# Script description:  To generate the AWIPS products for the HREF
+# Script name:         enspost_mkawp.sh
+# Script description:  To generate the AWIPS products for the RRFS ensemble prods
 #
 # Author:      G Manikin /  EMC         Date: 2014-06-30
 #
@@ -88,8 +88,6 @@ then
          msg="FATAL ERROR: ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 or ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 missing but required"
          err_exit $msg
 fi
-
-  # Processing AWIPS grid 227 
 
   if [ $type = "prob" ]
   then
