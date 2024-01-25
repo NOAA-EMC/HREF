@@ -44,8 +44,28 @@ hrold=10
 TCODE=L
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_rrfs_conus_meanf${hr}
 
+hr=13
+hrold=12
+TCODE=N
+cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_rrfs_conus_meanf${hr}
+
+hr=14
+hrold=13
+TCODE=O
+cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_rrfs_conus_meanf${hr}
+
+hr=16
+hrold=15
+TCODE=Q
+cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_rrfs_conus_meanf${hr}
+
+hr=17
+hrold=16
+TCODE=R
+cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_rrfs_conus_meanf${hr}
+
 # hrs="13 14 16 17 19 20 22 23 25 26 28 29 31 32 34 35"
-hrs="13 14 16 17 19 20 22 23 25 26 28 29"
+hrs="19 20 22 23 25 26 28 29"
 
 for hr in $hrs
 do
@@ -93,14 +113,14 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=15
 hrold=14
 hr3old=12
-TCODE=Z
+TCODE=P
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g > grib2_awips_rrfs_conus_meanf${hr}
 
 hr=18
 hrold=17
 hr3old=15
-TCODE=N
+TCODE=S
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g > grib2_awips_rrfs_conus_meanf${hr}
 
@@ -114,7 +134,7 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=24
 hrold=23
 hr3old=21
-TCODE=O
+TCODE=T
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g > grib2_awips_rrfs_conus_meanf${hr}
 
@@ -128,7 +148,7 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=30
 hrold=29
 hr3old=27
-TCODE=P
+TCODE=Z
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g  > grib2_awips_rrfs_conus_meanf${hr}
 
@@ -142,7 +162,7 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=36
 hrold=35
 hr3old=33
-TCODE=Q
+TCODE=U
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g  > grib2_awips_rrfs_conus_meanf${hr}
 
@@ -156,7 +176,7 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=42
 hrold=41
 hr3old=39
-TCODE=R
+TCODE=Z
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g  > grib2_awips_rrfs_conus_meanf${hr}
 
@@ -170,7 +190,7 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=48
 hrold=47
 hr3old=45
-TCODE=S
+TCODE=V
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g  > grib2_awips_rrfs_conus_meanf${hr}
 
@@ -199,6 +219,6 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 hr=60
 hrold=59
 hr3old=57
-TCODE=Z
+TCODE=W
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g > grib2_awips_rrfs_conus_meanf${hr}
