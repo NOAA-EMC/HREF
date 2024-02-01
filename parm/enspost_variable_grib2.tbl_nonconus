@@ -38,7 +38,7 @@ CLDB  3  5    2  M1  0
 LCLD  6  3  214  M1  0
 MCLD  6  4  224  M1  0
 HCLD  6  5  234  M1  0
-TCDC  6  1   10  M1  0
+TCDC  6  1  200  M1  0
 FZ1h  1 225   1  M0     K1  0   > K3 0.254 2.54 6.35
 
 
