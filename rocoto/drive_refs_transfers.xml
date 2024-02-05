@@ -88,7 +88,7 @@
     &RESERVATION_TRANSFER;
     &SEND_RESOURCES;
 
-    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_singlephys_timelag</command>
+    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST</command>
     <nodes>&SEND_NODES;</nodes>
     <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_@H.log</cyclestr></join>  

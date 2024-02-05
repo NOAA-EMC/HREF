@@ -26,7 +26,7 @@ COMMAND=$1
 
 module list
 
-source /lfs/h2/emc/lam/noscrub/Matthew.Pyle/enspost/rrfs.v1.1.0/versions/run_enspost.ver
+source /lfs/h2/emc/lam/noscrub/Matthew.Pyle/enspost/refs.v1.0.0/versions/run.ver
 
 module load prod_envir/2.0.6
 module load cfp/2.0.4
