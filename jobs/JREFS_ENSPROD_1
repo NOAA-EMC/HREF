@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #############################################################
-# RRFS RUNALL 
 # 02/02/2015 Binbin Zhou, create for run all scripts 
 # 04/26/2023 Jun Du, added a timelag version (type=timelag)
+# 02/06/2024 M. Pyle - switches things to REFS
 #############################################################
 
 ########################################

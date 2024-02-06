@@ -1,7 +1,6 @@
 #!/bin/sh
 
 #############################################################
-# RRFS RUNALL 
 # 02/02/2015 Binbin Zhou, create for run all scripts 
 # 08/11/2022 Jun Du, added a variable "region"
 # 03/20/2023 Jun Du, the package name changed to rrfs_enspost
@@ -9,7 +8,7 @@
 #                    by naming ctl run as mem01 rather than mem00
 # 04/25/2023 Jun Du, added a version of time-lag ensemble (type=single or timelag)
 # 09/21/2023 M. Pyle, adding a HRRR preprocessing job
-# 02/06/2024 M. Pyle, rrfs --> refs
+# 02/06/2024 M. Pyle, Switch from rrfs --> refs
 #############################################################
 
 ########################################
