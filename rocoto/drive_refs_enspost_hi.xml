@@ -2,9 +2,9 @@
 <!DOCTYPE workflow
 [
 
-<!ENTITY STARTYEAR "2023">
-<!ENTITY STARTMONTH "07">
-<!ENTITY STARTDAY "10">
+<!ENTITY STARTYEAR "2024">
+<!ENTITY STARTMONTH "02">
+<!ENTITY STARTDAY "01">
 <!ENTITY STARTHOUR "06">
 
 <!ENTITY ENDYEAR "2024">
@@ -17,22 +17,22 @@
 <!ENTITY ACCOUNT "RRFS-DEV">
 <!ENTITY TYPE "timelag">
 <!ENTITY PHYS "singlephys">
-<!ENTITY RUN "rrfs">
+<!ENTITY RUN "refs">
 
-<!ENTITY HOMErrfs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/rrfs.v1.1.0">
+<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.0.0">
 <!ENTITY domain "hi">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">
-<!ENTITY JOBS "&HOMErrfs;/jobs">
-<!ENTITY PRE "&HOMErrfs;/rocoto/launch.ksh">
+<!ENTITY JOBS "&HOMErefs;/jobs">
+<!ENTITY PRE "&HOMErefs;/rocoto/launch.ksh">
 
-<!ENTITY SCRIPTS "&HOMErrfs;/scripts">
+<!ENTITY SCRIPTS "&HOMErefs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
 
-<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.7.7/prod"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/nwges">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/rrfs/v1.1/">
+<!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/na/prod"> 
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
@@ -68,7 +68,7 @@
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
 
   <log>
-    <cyclestr>&OUTDIR;/logfiles_enspost/workflow_regional_single_&TYPE;_&domain;_@Y@m@d@H.log</cyclestr>
+    <cyclestr>&OUTDIR;/logfiles_refs/workflow_regional_single_&TYPE;_&domain;_@Y@m@d@H.log</cyclestr>
   </log>
 
 
@@ -80,9 +80,9 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>1:ppn=61</nodes>
-    <command>&PRE; &JOBS;/JRRFS_ENSPOST_PREPROC_FV3</command>
+    <command>&PRE; &JOBS;/JREFS_PREPROC_FV3</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/preprocfv3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -121,12 +121,12 @@
 
 
     <envar>
-      <name>HOMErrfs</name>
-      <value>&HOMErrfs;</value>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
     </envar>
     <envar>
       <name>job</name>
-      <value>preprocrrfs_&TYPE;_&PHYS;_&domain;</value>
+      <value>preprocrefs_&TYPE;_&PHYS;_&domain;</value>
     </envar>
 
     <envar>
@@ -176,7 +176,7 @@
       <value><cyclestr>@H</cyclestr></value>
     </envar>
 
-    <envar><name>jobid</name><value>rrfs_ensprodpreprocfv3_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_ensprodpreprocfv3_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>
@@ -202,9 +202,9 @@
     &RESERVATION;
     &EAS_RESOURCES;
     <nodes>3:ppn=82</nodes>
-      <command>&PRE; &JOBS;/JRRFS_ENSPOST_EAS_1</command>
+      <command>&PRE; &JOBS;/JREFS_EAS_1</command>
       <jobname><cyclestr>easgen_1_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -232,8 +232,8 @@
 
 
       <envar>
-        <name>HOMErrfs</name>
-        <value>&HOMErrfs;</value>
+        <name>HOMErefs</name>
+        <value>&HOMErefs;</value>
       </envar>
       <envar>
         <name>job</name>
@@ -278,7 +278,7 @@
     </envar>
 
     <envar>
-      <name>COMINrrfs</name>
+      <name>COMINrefs</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -294,7 +294,7 @@
       <name>envir</name>
       <value>&envir;</value>
     </envar>
-    <envar><name>jobid</name><value>rrfs_qpfeasfrac_1_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_qpfeasfrac_1_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
       <dependency>
@@ -309,9 +309,9 @@
     &RESERVATION;
     &EAS_RESOURCES;
     <nodes>3:ppn=64</nodes>
-      <command>&PRE; &JOBS;/JRRFS_ENSPOST_EAS_2</command>
+      <command>&PRE; &JOBS;/JREFS_EAS_2</command>
       <jobname><cyclestr>easgen_2_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_enspost/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -327,8 +327,8 @@
     </envar>
 
       <envar>
-        <name>HOMErrfs</name>
-        <value>&HOMErrfs;</value>
+        <name>HOMErefs</name>
+        <value>&HOMErefs;</value>
       </envar>
       <envar>
         <name>job</name>
@@ -368,7 +368,7 @@
     </envar>
 
     <envar>
-      <name>COMINrrfs</name>
+      <name>COMINrefs</name>
       <value>&COMINall;</value>
     </envar>
      <envar>
@@ -401,7 +401,7 @@
       <value>&envir;</value>
     </envar>
 
-    <envar><name>jobid</name><value>rrfs_qpfeasfrac_2_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_qpfeasfrac_2_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
       <dependency>
@@ -420,9 +420,9 @@
   &RESERVATION;
   &ENSPROD_RESOURCES;
   <nodes>1:ppn=36</nodes>
-    <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_1</command>
+    <command>&PRE; &JOBS;/JREFS_ENSPROD_1</command>
     <jobname><cyclestr>ensprod_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -448,8 +448,8 @@
     </envar>
 
     <envar>
-      <name>HOMErrfs</name>
-      <value>&HOMErrfs;</value>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
     </envar>
     <envar>
       <name>job</name>
@@ -489,7 +489,7 @@
     </envar>
 
     <envar>
-      <name>COMINrrfs</name>
+      <name>COMINrefs</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -508,7 +508,7 @@
     </envar>
 
 
-    <envar><name>jobid</name><value>rrfs_ensprodv3_1_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_ensprodv3_1_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>
@@ -524,9 +524,9 @@
   &RESERVATION;
   &ENSPROD_RESOURCES;
   <nodes>1:ppn=24</nodes>
-    <command>&PRE; &JOBS;/JRRFS_ENSPOST_ENSPROD_2</command>
+    <command>&PRE; &JOBS;/JREFS_ENSPROD_2</command>
     <jobname><cyclestr>ensprod_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -551,8 +551,8 @@
     </envar>
 
     <envar>
-      <name>HOMErrfs</name>
-      <value>&HOMErrfs;</value>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
     </envar>
     <envar>
       <name>job</name>
@@ -592,7 +592,7 @@
     </envar>
 
     <envar>
-      <name>COMINrrfs</name>
+      <name>COMINrefs</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -612,7 +612,7 @@
 
 
 
-    <envar><name>jobid</name><value>rrfs_ensprodv3_2_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_ensprodv3_2_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>
@@ -628,18 +628,18 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* WMO/AWIP piece *****************************  -->
 
-  <task name="rrfs_awips" cycledefs="regional_justontime" maxtries="2">
+  <task name="refs_awips" cycledefs="regional_justontime" maxtries="2">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&PRE; &JOBS;/JRRFS_ENSPOST_AWIPS</command>
-    <jobname><cyclestr>rrfsawips_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/rrfsawips_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <command>&PRE; &JOBS;/JREFS_AWIPS</command>
+    <jobname><cyclestr>refsawips_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsawips_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
 
     <envar>
-      <name>HOMErrfs</name>
-      <value>&HOMErrfs;</value>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
     </envar>
     <envar>
       <name>job</name>
@@ -697,7 +697,7 @@
       <value>&envir;</value>
     </envar>
 
-    <envar><name>jobid</name><value>rrfs_awips_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_awips_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
     <dependency>
      <and>
@@ -713,13 +713,13 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* GEMPAK piece *****************************  -->
 
-  <task name="rrfs_gempak" cycledefs="regional_justontime" maxtries="1">
+  <task name="refs_gempak" cycledefs="regional_justontime" maxtries="1">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=8</nodes>
-    <command>&PRE; &JOBS;/JRRFS_ENSPOST_GEMPAK</command>
-    <jobname><cyclestr>rrfsgempak_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_enspost/rrfsgempak_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <command>&PRE; &JOBS;/JREFS_GEMPAK</command>
+    <jobname><cyclestr>refsgempak_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsgempak_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name> PTILE </name>
@@ -731,8 +731,8 @@
       <value>8</value>
     </envar>
     <envar>
-      <name>HOMErrfs</name>
-      <value>&HOMErrfs;</value>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
     </envar>
     <envar>
       <name>job</name>
@@ -790,7 +790,7 @@
       <value>&envir;</value>
     </envar>
 
-    <envar><name>jobid</name><value>rrfs_gempak_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_gempak_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
     <dependency>
      <and>
