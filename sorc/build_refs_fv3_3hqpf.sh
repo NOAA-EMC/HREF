@@ -12,6 +12,6 @@ BASE=`pwd`
 
 #########################
 
-cd ${BASE}/enspost_fv3snowbucket.fd
+cd ${BASE}/refs_fv3_3hqpf.fd
 make clean
-make enspost_fv3snowbucket
+make enspost_fv3_3hqpf

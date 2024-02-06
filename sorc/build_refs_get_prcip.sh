@@ -12,6 +12,8 @@ BASE=`pwd`
 
 #########################
 
-cd ${BASE}/enspost_fv3_3hqpf.fd
+cd ${BASE}/refs_get_prcip.fd
 make clean
-make enspost_fv3_3hqpf
+make enspost_get_prcip
+# make all
+# make debug

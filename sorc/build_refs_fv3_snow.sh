@@ -12,8 +12,6 @@ BASE=`pwd`
 
 #########################
 
-cd ${BASE}/enspost_get_prcip.fd
+cd ${BASE}/refs_fv3snowbucket.fd
 make clean
-make enspost_get_prcip
-# make all
-# make debug
+make enspost_fv3snowbucket

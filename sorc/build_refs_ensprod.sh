@@ -10,7 +10,7 @@ sleep 1
 
 BASE=`pwd`
 
-cd ${BASE}/enspost_ensprod.fd
+cd ${BASE}/refs_ensprod.fd
 make clean
 make enspost_ensprod
 # make all

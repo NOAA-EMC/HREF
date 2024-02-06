@@ -15,7 +15,7 @@ SNOW=1
 
 if [ $GET_PRCIP = "1" ]
 then
-cd ${BASE}/enspost_get_prcip.fd
+cd ${BASE}/refs_get_prcip.fd
 make install
 make clean
 fi
@@ -24,7 +24,7 @@ fi
 
 if [ $FFG_GEN = "1" ]
 then
-cd ${BASE}/enspost_ffg_gen.fd
+cd ${BASE}/refs_ffg_gen.fd
 make install
 make clean
 fi
@@ -34,7 +34,7 @@ fi
 
 if [ $ENSPROD = "1" ]
 then
-cd ${BASE}/enspost_ensprod.fd
+cd ${BASE}/refs_ensprod.fd
 make install
 make clean
 fi
@@ -43,7 +43,7 @@ fi
 
 if [ $BUCKET = "1" ]
 then
-cd ${BASE}/enspost_fv3_3hqpf.fd
+cd ${BASE}/refs_fv3_3hqpf.fd
 make copy
 make clean
 fi
@@ -52,7 +52,7 @@ fi
 
 if [ $SNOW = "1" ]
 then
-cd ${BASE}/enspost_fv3snowbucket.fd
+cd ${BASE}/refs_fv3snowbucket.fd
 make copy
 make clean
 fi

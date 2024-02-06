@@ -9,7 +9,7 @@ sleep 1
 
 BASE=`pwd`
 
-cd ${BASE}/enspost_ffg_gen.fd
+cd ${BASE}/refs_ffg_gen.fd
 make clean
 # make all
 make enspost_ffg_gen

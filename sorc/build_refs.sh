@@ -3,7 +3,7 @@
 
 module purge
 
-source ../versions/build_enspost.ver
+source ../versions/build.ver
 
 env | grep ver
 
@@ -36,21 +36,21 @@ FV3SNOW=1
 
 if [ $GET_PRCIP = "1" ]
 then
-./build_enspost_get_prcip.sh > ./log/build_enspost_get_prcip.log 2>&1
+./build_refs_get_prcip.sh > ./log/build_refs_get_prcip.log 2>&1
 fi
 
 #########################
 
 if [ $GET_TEMP = "1" ]
 then
-./build_enspost_get_temp.sh > ./log/build_enspost_get_temp.log 2>&1
+./build_refs_get_temp.sh > ./log/build_refs_get_temp.log 2>&1
 fi
 
 ############################
 
 if [ $FFG_GEN = "1" ]
 then
-./build_enspost_ffg_gen.sh > ./log/build_enspost_ffg_gen.log 2>&1
+./build_refs_ffg_gen.sh > ./log/build_refs_ffg_gen.log 2>&1
 fi
 
 ############################
@@ -58,20 +58,20 @@ fi
 
 if [ $ENSPROD = "1" ]
 then
-./build_enspost_ensprod.sh > ./log/build_enspost_ensprod.log 2>&1
+./build_refs_ensprod.sh > ./log/build_refs_ensprod.log 2>&1
 fi
 
 ############################
 
 if [ $QPF3H = "1" ]
 then
-./build_enspost_fv3_3hqpf.sh >& ./log/build_enspost_fv3_3hqpf.log
+./build_refs_fv3_3hqpf.sh >& ./log/build_refs_fv3_3hqpf.log
 fi
 
 ############################
 
 if [ $FV3SNOW = "1" ]
 then
-./build_enspost_fv3_snow.sh >& ./log/build_enspost_fv3_snow.log
+./build_refs_fv3_snow.sh >& ./log/build_refs_fv3_snow.log
 fi
 

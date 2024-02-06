@@ -1,6 +1,6 @@
 #! /bin/sh
 
-source ../versions/build_enspost.ver
+source ../versions/build.ver
 
 module purge
 module use -a  ../modulefiles/RRFS_ENSPOST
@@ -19,7 +19,7 @@ ENSPROD=1
 
 if [ $GET_PRCIP = "1" ]
 then
-cd enspost_get_prcip.fd
+cd refs_get_prcip.fd
 make clean
 cd ../
 fi
@@ -28,7 +28,7 @@ fi
 
 if [ $FFG_GEN = "1" ]
 then
-cd enspost_ffg_gen.fd
+cd refs_ffg_gen.fd
 make clean
 cd ../
 fi
@@ -38,7 +38,7 @@ fi
 
 if [ $ENSPROD = "1" ]
 then
-cd enspost_ensprod.fd
+cd refs_ensprod.fd
 make clean
 cd ../
 fi
