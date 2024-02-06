@@ -100,8 +100,8 @@ hrlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 
 
 for hr in $hrlist
 do
-echo "$SCRIPTSrefs/exrefs_link.sh.ecf $hr $type" >> poe.link.all
-echo "$SCRIPTSrefs/exrefsensprod.sh.ecf $hr $type" >> poe.ensprod.all
+echo "$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $hr $type" >> poe.link.all
+echo "$SCRIPTSrefs/exrefs_ensprod.sh.ecf $hr $type" >> poe.ensprod.all
 done
 
 chmod 775 poe.link.all
