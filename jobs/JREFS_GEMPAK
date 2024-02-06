@@ -28,8 +28,8 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
-export HOMErrfs=${HOMErrfs:-$PACKAGEROOT/rrfs.${rrfs_ver}}
-export GEMPAKrrfs=${GEMPAKrrfs:-$HOMErrfs/gempak}
+export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}}
+export GEMPAKrefs=${GEMPAKrefs:-$HOMErefs/gempak}
 
 if [ $type = single ];then
  export finc=1
@@ -46,11 +46,11 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-RRFS_GEMPAK}
 ###############################
 # Specify NET and RUN name
 ###############################
-export NET=${NET:-rrfs}
-export RUN=${RUN:-rrfs} 
+export NET=${NET:-refs}
+export RUN=${RUN:-refs} 
   
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/gempak}
-export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/gempak}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/ensprod}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -64,13 +64,13 @@ env
 # Execute the script
 rm -f poescript
 
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf mean > $DATA/${NEST}_mean.$$ " >>poescript
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf pmmn > $DATA/${NEST}_pmmn.$$ " >>poescript
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf avrg > $DATA/${NEST}_avrg.$$ " >>poescript
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf prob > $DATA/${NEST}_prob.$$ " >>poescript
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf sprd > $DATA/${NEST}_sprd.$$ " >>poescript
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf eas  > $DATA/${NEST}_eas.$$  " >>poescript
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf lpmm  > $DATA/${NEST}_lpmm.$$  " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf mean > $DATA/${NEST}_mean.$$ " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf pmmn > $DATA/${NEST}_pmmn.$$ " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf avrg > $DATA/${NEST}_avrg.$$ " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf prob > $DATA/${NEST}_prob.$$ " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf sprd > $DATA/${NEST}_sprd.$$ " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf eas  > $DATA/${NEST}_eas.$$  " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf lpmm  > $DATA/${NEST}_lpmm.$$  " >>poescript
 
 if [ ${NEST} =  'conus' ]
 then
@@ -86,7 +86,7 @@ export finc=1
 export fend=54
 export fstart=01
 fi
-echo "$HOMErrfs/scripts/exrrfs_enspost_gempak.sh.ecf ffri  > $DATA/${NEST}_ffri.$$  " >>poescript
+echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf ffri  > $DATA/${NEST}_ffri.$$  " >>poescript
 fi
 
 chmod 775 ./poescript

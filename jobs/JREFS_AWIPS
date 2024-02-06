@@ -28,18 +28,18 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
-export HOMErrfs=${HOMErrfs:-$PACKAGEROOT/rrfs.${rrfs_ver}}
-export USHrrfs=${USHrrfs:-$HOMErrfs/ush}
-export PARMwmo=${PARMwmo:-$HOMErrfs/parm/wmo}
+export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}}
+export USHrefs=${USHrefs:-$HOMErefs/ush}
+export PARMwmo=${PARMwmo:-$HOMErefs/parm/wmo}
 
 ###############################
 # Specify NET and RUN name
 ###############################
-export NET=${NET:-rrfs}
-export RUN=${RUN:-rrfs} 
+export NET=${NET:-refs}
+export RUN=${RUN:-refs} 
 
-export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/ensprod}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/$RUN.${PDY}/wmo}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}/wmo}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -49,7 +49,7 @@ export pgmout=OUTPUT.$$
 
 #################################################################
 # Execute the script
-$HOMErrfs/scripts/exrrfs_enspost_awips.sh.ecf $type
+$HOMErefs/scripts/exrefs_awips.sh.ecf $type
 #################################################################
 
 cd ${DATAROOT}

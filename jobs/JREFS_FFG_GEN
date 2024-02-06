@@ -29,23 +29,23 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
-export HOMErrfs=${HOMErrfs:-$PACKAGEROOT/rrfs.${rrfs_ver}}
-export USHrrfs=${USHrrfs:-$HOMErrfs/ush}
-export EXECrrfs=${EXECrrfs:-$HOMErrfs/exec}
+export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}}
+export USHrefs=${USHrefs:-$HOMErefs/ush}
+export EXECrefs=${EXECrefs:-$HOMErefs/exec}
 
 ###############################
 # Specify NET and RUN name
 ###############################
-export NET=${NET:-rrfs}
-export RUN=${RUN:-rrfs} 
+export NET=${NET:-refs}
+export RUN=${RUN:-refs} 
   
 # how handle DCOMROOT - hardcode backup definition, or use $envir?
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
-#export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
-#export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
-export COMIN=${COMIN:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
+#export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
+#export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
 
 
 if [ ! -f $COMOUT ] ; then
@@ -56,7 +56,7 @@ export pgmout=OUTPUT.$$
 
 #################################################################
 # Execute the script
-$HOMErrfs/scripts/exrrfs_enspost_ffggen.sh.ecf
+$HOMErefs/scripts/exrefs_ffggen.sh.ecf
 #################################################################
 
 cd ${DATAROOT}

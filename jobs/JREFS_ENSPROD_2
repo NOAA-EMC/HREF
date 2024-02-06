@@ -45,18 +45,18 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 
-export HOMErrfs=${HOMErrfs:-$PACKAGEROOT/rrfs.${rrfs_ver}} 
-export EXECrrfs=${EXECrrfs:-$HOMErrfs/exec}
-export PARMrrfs=${PARMrrfs:-$HOMErrfs/parm}
-export USHrrfs=${USHrrfs:-$HOMErrfs/ush}
-export FIXrrfs=${FIXrrfs:-$HOMErrfs/fix}
-export SCRIPTSrrfs=${SCRIPTSrrfs:-$HOMErrfs/scripts}
+export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}} 
+export EXECrefs=${EXECrefs:-$HOMErefs/exec}
+export PARMrefs=${PARMrefs:-$HOMErefs/parm}
+export USHrefs=${USHrefs:-$HOMErefs/ush}
+export FIXrefs=${FIXrefs:-$HOMErefs/fix}
+export SCRIPTSrefs=${SCRIPTSrefs:-$HOMErefs/scripts}
 
 ###################################
 # Specify NET and RUN Name and model
 ####################################
-export NET=${NET:-rrfs}
-export RUN=${RUN:-rrfs}
+export NET=${NET:-refs}
+export RUN=${RUN:-refs}
 
 export IOBUF_PARAMS='*:size=8M:count=8'
 
@@ -66,11 +66,12 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMINrrfs=${COMINrrfs:-$GESROOT/${RUN}}
+# should this be COMINrefs?
+export COMINrefs=${COMINrefs:-$GESROOT/${RUN}}
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
-export COMINffg=${COMINffg:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDY}}
-export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${rrfs_ver})/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
+export COMINffg=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
+export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDYm1}}
 
 if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod
@@ -87,7 +88,7 @@ export pgmout="OUTPUT.$$"
 # export VERBOSE=YES
 
 ###################################################
-# Execute the Script exrrfs_enspost_ensprod.sh.ecf
+# Execute the Script exrefs_ensprod.sh.ecf
 #export type=single
 #export type=timelag
 
@@ -108,12 +109,12 @@ fi
 
 for hr in $hrlist_link
 do
-echo "$SCRIPTSrrfs/exrrfs_enspost_ensprod_link.sh.ecf $hr $type" >> poe.link.all
+echo "$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $hr $type" >> poe.link.all
 done
 
 for hr in $hrlist
 do
-echo "$SCRIPTSrrfs/exrrfs_enspost_ensprod.sh.ecf $hr $type" >> poe.ensprod.all
+echo "$SCRIPTSrefs/exrefs_ensprod.sh.ecf $hr $type" >> poe.ensprod.all
 done
 
 
