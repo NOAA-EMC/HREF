@@ -18,10 +18,10 @@ cd $DATA/$TYPE
 msg="Begin job for $job"
 postmsg  "$msg"
 
-cp $GEMPAKrrfs/fix/*.tbl .
+cp $GEMPAKrefs/fix/*.tbl .
 
 #
-NAGRIB_TABLE=$GEMPAKrrfs/fix/nagrib.tbl
+NAGRIB_TABLE=$GEMPAKrefs/fix/nagrib.tbl
 NAGRIB=nagrib2
 #
 

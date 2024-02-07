@@ -33,7 +33,7 @@ export type=${2}
 
 echo NEST is $NEST
 
-$USHrrfs/enspost_getmbr.sh $fhr $NEST $type
+$USHrefs/enspost_getmbr.sh $fhr $NEST $type
 
 
 #####################################################################

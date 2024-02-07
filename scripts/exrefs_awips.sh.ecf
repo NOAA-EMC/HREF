@@ -22,7 +22,7 @@ export type=${1}
 #
 #  Generate AWIPS products
 
-$USHrrfs/enspost_mkawp.sh ${NEST} $type
+$USHrefs/enspost_mkawp.sh ${NEST} $type
 
 #####################################################################
 # GOOD RUN

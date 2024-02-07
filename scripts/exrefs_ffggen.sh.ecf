@@ -164,7 +164,7 @@ done
 echo "1" > itag
 echo $PDY >> itag
 
-$EXECrrfs/enspost_ffg_gen < itag
+$EXECrefs/enspost_ffg_gen < itag
 
 wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
 wgrib2def="lambert:262.5:38.5:38.5 237.280:1799:3000 21.138:1059:3000"
@@ -184,7 +184,7 @@ done
 echo "2" > itag
 echo $PDY >> itag
 
-$EXECrrfs/enspost_ffg_gen < itag
+$EXECrefs/enspost_ffg_gen < itag
 
 if [ $SENDCOM = "YES" ]
 then

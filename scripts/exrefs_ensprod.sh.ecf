@@ -31,7 +31,7 @@ echo running on $location
 # Prepare to run ensemble product generator
 #
 
-$USHrrfs/enspost_ensprod.sh ${NEST} $type
+$USHrefs/enspost_ensprod.sh ${NEST} $type
 
 #####################################################################
 # GOOD RUN
