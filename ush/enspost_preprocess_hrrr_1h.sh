@@ -70,7 +70,7 @@ fi
         if [ -e $filecheck ]
         then
 
-         $WGRIB2 $filecheck | grep -F -f $PARMrrfs/enspost_hrrr_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
+         $WGRIB2 $filecheck | grep -F -f $PARMrefs/enspost_hrrr_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
          $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 1 -grib ltng.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "MSLMA" -set_byte 4 11 192 -grib mslet.t${cyc}z.f${hr}.grb
@@ -181,14 +181,14 @@ fi
     echo "$dim1 $dim2" >> input.${hr}.hrrr.snow
     echo 1 >> input.${hr}.hrrr.snow
 
-    $EXECrrfs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
+    $EXECrefs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
     export err=$? # ; err_chk
 
  # 1 h added to f01
  
  if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
  then
-	 $EXECrrfs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
+	 $EXECrefs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
 	 export err=$? # ; err_chk
 	 cat ./PCP1HR${hr}.tm00 >> ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
  fi
@@ -232,7 +232,7 @@ echo 1 >> input.${hr}.hrrr.snow
 
 if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
-	$EXECrrfs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
+	$EXECrefs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
 	export err=$? # ; err_chk
 	cat ./PCP3HR${hr}.tm00 >> ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
 fi
