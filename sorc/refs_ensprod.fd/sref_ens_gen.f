@@ -260,7 +260,7 @@ c   for max,min,10,25,50,90% mean products
      +   '18','19','20','21','22','23'/
 
         data (jptyp2(i),i=1,4)
-     +  /192,193,194,195/                     !rain, frzr, icep, snow
+     +  /33,34,35,36/                     !rain, frzr, icep, snow
 
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c (I)   Read table file to get wanted ensemble variable information
