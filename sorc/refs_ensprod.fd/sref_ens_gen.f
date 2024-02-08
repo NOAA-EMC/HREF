@@ -757,7 +757,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 !          write(0,*) 'a2 - readGB ',igrb2,' for mean kret=',kret 
 
 
-         if (jret .eq. 0.and.trim(eps).eq.'rrfs') then
+         if (jret .eq. 0.and.trim(eps).eq.'refs') then
 
 !	write(0,*) 'in here with jf: ', jf
 
@@ -831,7 +831,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
          endif
 
 
-        if (kret .eq. 0. and. trim(eps).eq.'rrfs') then
+        if (kret .eq. 0. and. trim(eps).eq.'refs') then
 
          if ( .not. allocated(bmap_f)) then
                 allocate(bmap_f(jf))
@@ -1910,7 +1910,7 @@ c               end if
 c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 ! Reset gfld%bmap with the combined version bmap_f
-        if(trim(eps).eq.'rrfs' .and. associated(gfld%bmap)) then
+        if(trim(eps).eq.'refs' .and. associated(gfld%bmap)) then
 		gfld%bmap=bmap_f
         else
         write(0,*) 'did not set gfld%bmap to bmap_f as not associated'
@@ -2217,7 +2217,7 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
 
                gfld_temp=gfld
 
-               if(trim(eps).eq.'rrfs' .and. 
+               if(trim(eps).eq.'refs' .and. 
      +           associated(gfld_temp%bmap)) gfld_temp%bmap=bmap_f
 
                call packGB2_mean_derv(imean,isprd,derv_mn,
@@ -2226,7 +2226,7 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
       
               gfld_temp=gfld                           !some of idrtmpl() fields have been changed after packGB2_prob,
 
-              if(trim(eps).eq.'rrfs' .and. 
+              if(trim(eps).eq.'refs' .and. 
      +          associated(gfld_temp%bmap)) gfld_temp%bmap=bmap_f
 
                call packGB2_prob_derv(iprob,derv_pr,
@@ -2293,7 +2293,7 @@ cc%%%%%%% 7. To see if there is Hains index for fire weather computation, if yes
             gfld%discipline=2      !Fireweather discipline = 2, used for packing
             write(*,*) 'Hains Index done'
 ! Reset gfld%bmap with the combined version bmap_f
-        if(trim(eps).eq.'rrfs' .and. associated(gfld%bmap)) 
+        if(trim(eps).eq.'refs' .and. associated(gfld%bmap)) 
      +          gfld%bmap=bmap_f
           end if
 
@@ -2401,7 +2401,7 @@ cc%%%%%%% 14. To see if there is 10m wind and 2m RH joint prob, if yes, do it
 
 cc%%%%%%% 15. To see if there is snowfall for HREF
             if(dk4(nv).eq.1.and.dk5(nv).eq.13.and.
-     +       trim(eps).eq.'rrfs') then
+     +       trim(eps).eq.'refs') then
 	write(0,*) 'call snow4href'
              call snow4href(nv,ifunit,ipunit,jf,iens,Lm,Lp,Lt,
      +         derv_mn,derv_sp,derv_pr,eps)
@@ -2457,7 +2457,7 @@ C
            end if 
 
 ! Reset gfld%bmap with the combined version bmap_f
-        if(trim(eps).eq.'rrfs' .and. 
+        if(trim(eps).eq.'refs' .and. 
      +          associated(gfld%bmap)) gfld%bmap=bmap_f
 
                call packGB2_mean_derv(imean,isprd,derv_mn,
