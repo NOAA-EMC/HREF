@@ -59,7 +59,7 @@ c    for derived variables
         do 400 irun=1,iens
 
           !write(*,*) 'ifunit, ipunit=',ifunit(irun),ipunit(irun)
-          call readGB2(ifunit(irun),0,1,195,1,0,-9999,gfld,eps,ie) !CSNOW
+          call readGB2(ifunit(irun),0,1,36,1,0,-9999,gfld,eps,ie) !CSNOW
            if(ie.eq.0) then
             snw_type(:)=gfld%fld(:)
             !write(*,*) 'read CSNOW done for :',irun
@@ -68,7 +68,7 @@ c    for derived variables
             stop 44
            end if
 
-          call readGB2(ifunit(irun),0,1,194,1,0,-9999,gfld,eps,ie) !CICEP
+          call readGB2(ifunit(irun),0,1,35,1,0,-9999,gfld,eps,ie) !CICEP
             if(ie.eq.0) then
             ice_type(:)=gfld%fld(:)
             !write(*,*) 'read CICEP done for :',irun
