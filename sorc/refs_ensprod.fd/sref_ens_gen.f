@@ -342,7 +342,7 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 	write(0,*) 'files(irun)(1:4): ', files(irun)(1:4)
 
-         if( files(irun)(1:4).ne.'rrfs' ) then       
+         if( files(irun)(1:4).ne.'refs' ) then       
           mbrname(irun)=files(irun)
          end if
          write(*,301) weight(irun), files(irun),mbrname(irun)
