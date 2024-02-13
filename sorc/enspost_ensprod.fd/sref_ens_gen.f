@@ -639,11 +639,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 if(ifhr.lt.6) exit loop222
                 jpd27=6
              else if (vname(nv).eq.'AP12'.or.vname(nv).eq.'SN12' .or. 
-     &                vname(nv).eq.'FZ12'.or.
+     &                vname(nv).eq.'FZ12'.or.vname(nv).eq.'ASN12' .or.
      &                vname(nv).eq.'A12R'.or.vname(nv).eq.'FF12') then
                 if(ifhr.lt.12) exit loop222
                 jpd27=12
              else if (vname(nv).eq.'AP24'.or.vname(nv).eq.'SN24' .or.
+     &                vname(nv).eq.'FZ24'.or.vname(nv).eq.'ASN24' .or.
      &                vname(nv).eq.'A24R'.or.vname(nv).eq.'FF24') then
                 if(ifhr.lt.24) exit loop222
                 jpd27=24
