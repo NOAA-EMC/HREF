@@ -115,6 +115,11 @@
     </envar>
 
     <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINhrrr;</value>
+    </envar>
+
+    <envar>
       <name>HOMErefs</name>
       <value>&HOMErefs;</value>
     </envar>
@@ -175,12 +180,12 @@
 
     <dependency>
     <and>
-          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
@@ -222,6 +227,7 @@
         <name>HOMErefs</name>
         <value>&HOMErefs;</value>
       </envar>
+
       <envar>
         <name>job</name>
         <value>eas_gen_1_&TYPE;_&PHYS;_&domain;</value>
@@ -266,6 +272,11 @@
 
     <envar>
       <name>COMINrefs</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -356,6 +367,11 @@
 
     <envar>
       <name>COMINrefs</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -475,6 +491,11 @@
     </envar>
 
     <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
      <name>COMROOT</name>
      <value>&COMROOT;</value>
     </envar>
@@ -574,6 +595,11 @@
 
     <envar>
       <name>COMINrefs</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
       <value>&COMINall;</value>
     </envar>
 
