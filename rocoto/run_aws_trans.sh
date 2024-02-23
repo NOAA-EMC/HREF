@@ -21,6 +21,6 @@ then
                         echo "looks like prod, so proceed"
 fi
 
-thing=drive_refs_transfer
+thing=drive_refs_transfers
 rocotorun -v 10 -w ${dir}/${thing}.xml -d ${dir}/${thing}.db
 
