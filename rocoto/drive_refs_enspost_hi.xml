@@ -508,7 +508,7 @@
     </envar>
 
 
-    <envar><name>jobid</name><value>refs_ensprodv3_1_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_ensprod_1_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>
@@ -612,7 +612,7 @@
 
 
 
-    <envar><name>jobid</name><value>refs_ensprodv3_2_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_ensprod_2_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>

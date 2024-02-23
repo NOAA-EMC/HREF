@@ -25,8 +25,8 @@ fhr=$1
 dom=${2}
 type=${3}
 
-looplim=10
-sleeptime=6
+looplim=20
+sleeptime=9
 
 echo here in ush script with dom $dom
 
@@ -123,7 +123,7 @@ if [ $ff = '06' -o $ff = '09' ]
 elif [  $ff = '12' -o  $ff = '15' -o $ff = '18' -o $ff = '21' ]
  then
  fcheck=` expr $ff - 09`
-elif [  $ff = '24' -o  $ff = '27' -o $ff = '30' -o $ff = '33' -o $ff = '36' -o  $ff = '39' -o $ff = '42' -o $ff = '45' -o $ff = '48'  -o $ff = '51'  -o $ff = '54'  -o $ff = '60' ]
+elif [  $ff = '24' -o  $ff = '27' -o $ff = '30' -o $ff = '33' -o $ff = '36' -o  $ff = '39' -o $ff = '42' -o $ff = '45' -o $ff = '48'  -o $ff = '51'  -o $ff = '54' -o $ff = '57'  -o $ff = '60' ]
  then
  fcheck=` expr $ff - 21`
 elif [ $ff -gt 0 ]
@@ -155,7 +155,7 @@ echo working things with ff as $ff and  fcheck as $fcheck
 
 ###### FV3
 
-# fv3s (conus)
+# fv3s
 
 echo made it to conus fv3 check
 
