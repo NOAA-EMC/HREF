@@ -34,9 +34,9 @@ do
   for i in $indx
   do
    if [ "$cyc" == $i ]; then
-   proddir_enspost_sinphys_tl=/lfs/h2/emc/ptmp/emc.lam/para/com/rrfs/v1.0/refs.${PDY}
-   proddir_enspost_mphys_tl=/lfs/h2/emc/ptmp/emc.lam/testmp/com/rrfs/v1.0/refs.${PDY}
-   proddir_enspost_sinphys_tl_nwges=/lfs/h2/emc/ptmp/emc.lam/para/com/rrfs/v1.0/nwges/refs.${PDY}
+   proddir_enspost_sinphys_tl=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refs.${PDY}
+   proddir_enspost_mphys_tl=/lfs/h2/emc/ptmp/emc.lam/testmp/com/refs/v1.0/refs.${PDY}
+   proddir_enspost_sinphys_tl_nwges=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/nwges/refs.${PDY}
 
 
 nwges_hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60"
