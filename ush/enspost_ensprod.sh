@@ -268,7 +268,7 @@ if [ $SENDCOM = YES ]; then
   fi
 
   for m in $mbrs ; do
-   cp -d $DATA/rrfs.m${m}.t${cyc}z.f${ff}  $COMOUT/verf_g2g/rrfs.m${m}.t${cyc}z.${NEST}.f${ff}
+   cp -d $DATA/refs.m${m}.t${cyc}z.f${ff}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${NEST}.f${ff}
    cp -d $DATA/prcip.m${m}.t${cyc}z.f${ff} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${NEST}.f${ff}
    cp -d $DATA/${ff}/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${NEST}.f${ff}
   done

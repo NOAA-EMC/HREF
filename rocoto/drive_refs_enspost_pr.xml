@@ -180,12 +180,12 @@
 
     <dependency>
     <and>
-          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
-          <datadep age="75:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0001/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0002/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0003/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
+          <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.prslev.f060.&domain;.grib2</cyclestr></datadep>
     </and>
     </dependency>
 

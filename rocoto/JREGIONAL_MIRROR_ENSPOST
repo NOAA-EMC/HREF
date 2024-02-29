@@ -54,9 +54,10 @@ nwges_hrs="00 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60"
      rsync -aq $proddir_refs/dummy $desmachine:$destination_refs_cyc/
      rsync -aq $proddir_refs/dummy $desmachine:$destination_refs_cyc_g2g/
      rsync -aq $proddir_refs/dummy $desmachine:$destination_nwges/
-     rsync -arv $destination_refs_cyc/rrfs.t${cyc}z.*   $desmachine:$destination_refs_cyc/
-     rsync -av $proddir_refs/rrfs.t${cyc}z.*   $desmachine:$destination_refs/
-     rsync -arv $destination_refs_cyc_g2g/*   $desmachine:$destination_refs_cyc_g2g
+     rsync -arv $destination_refs_cyc/refs.t${cyc}z.*   $desmachine:$destination_refs_cyc/
+     rsync -av $proddir_refs/refs.t${cyc}z.*   $desmachine:$destination_refs/
+     rsync -arv $destination_refs_cyc_g2g/*   $desmachine:$destination_refs_cyc_g2g/
+
      for hr in $nwges_hrs
 do
      rsync -arv $destination_nwges/fv3s.t${cyc}z.*.m??.f${hr}.grib2  $desmachine:$destination_nwges
