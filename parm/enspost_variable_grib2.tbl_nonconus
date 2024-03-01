@@ -1,7 +1,6 @@
-  41      row variables and mean/spread/prob info
+  40      row variables and mean/spread/prob info
 AP1h   1 8     1 P1  0  A1  0   > A4 12.7 25.4 50.8 76.2
 AP1h   1 8     1 L1  0 
-SN1h   1 13    1 M1  0  K1  0   > K2 2.54 7.62
 ASN1   1 29    1 M1  0  K1  0   > K2 25.4 76.2
 REFD  16  4  103 P1 1000    A1 1000 > A3 30 40 50
 MXRF  16 198 103 P1 1000    A1 1000 > A2 40 50
