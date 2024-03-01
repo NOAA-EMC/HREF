@@ -11,6 +11,7 @@
 # 2016-12-13  M Pyle - adapted for HREF
 # 2023-04-01  J Du - adopted for RRFS Ensemble
 # 2023-05-04   J Du - added an option for time-lag ensemble
+# 2024-0301   M Pyle - shifted from rrfs to $RUN (now REFS)
 #################################################################################
 
 set -xa
@@ -118,20 +119,20 @@ fi
   export FORTREPORTS=unit_vars=yes 
   export FORT11=${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
   export FORT12=${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i
-  export FORT51=xtrn.${cycle}.rrfs.${NEST}_${type}_${fhr}
-  $TOCGRIB2 <$PARMwmo/grib2_awips_rrfs_${NEST}_${type}f${fhr} parm='KWBB'
+  export FORT51=xtrn.${cycle}.${RUN}.${NEST}_${type}_${fhr}
+  $TOCGRIB2 <$PARMwmo/grib2_awips_${RUN}_${NEST}_${type}f${fhr} parm='KWBB'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
   then
 # J.Du: Change processing id to rrfs (134) if it is different in the original input data
-#   $WGRIB2 xtrn.${cycle}.rrfs.${NEST}_${type}_${fhr} -set analysis_or_forecast_process_id 134 -grib $COMOUT/grib2.t${cyc}z.awprrfs_${NEST}_${type}_f${fhr}_${cyc}
-    cp xtrn.${cycle}.rrfs.${NEST}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awprrfs_${NEST}_${type}_f${fhr}_${cyc}
+#   $WGRIB2 xtrn.${cycle}.${RUN}.${NEST}_${type}_${fhr} -set analysis_or_forecast_process_id 134 -grib $COMOUT/grib2.t${cyc}z.awp${RUN}_${NEST}_${type}_f${fhr}_${cyc}
+    cp xtrn.${cycle}.${RUN}.${NEST}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awp${RUN}_${NEST}_${type}_f${fhr}_${cyc}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.t${cyc}z.awprrfs_${NEST}_${type}_f${fhr}_${cyc}
+    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.t${cyc}z.awp${RUN}_${NEST}_${type}_f${fhr}_${cyc}
   fi
 
 done
