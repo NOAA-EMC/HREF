@@ -58,6 +58,8 @@ FZ6h   1 225   1 M0     K1  0   > K4 0.254 2.54 6.35 12.7
 FZ12   1 225   1 M0     K1  0   > K4 0.254 2.54 6.35 12.7
 FZ24   1 225   1 M0     K1  0   > K5 0.254 2.54 6.35 12.7 25.4
 
+
+
    19       special derived variables, each  of which, needs code to process specially
 ICIN  19 7   100 M0     P8 1000 900 800 725 650 575 500 400 = T1 1.0
 CAT   19 22  100 M0     P10 525 450 425 350 300 275 225 200 175 150 = T3 1.0 2.0 3.0
