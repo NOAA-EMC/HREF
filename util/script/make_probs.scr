@@ -1,4 +1,5 @@
 
+RUN=refs
 
 ##############################
 base=grib2_awips_${RUN}_conus_prob_non3h
