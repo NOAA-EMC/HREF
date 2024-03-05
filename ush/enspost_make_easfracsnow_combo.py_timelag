@@ -14,6 +14,7 @@
 # 2018-02-08  M Pyle    Attempt to unify all EAS snow scripts into one
 # 2018-03-21  M Pyle    replace pygrib with wgrib2
 # 2021-06     M Pyle    python3 changes
+# 2024-03     M Pyle    WEASD --> ASNOW
 
 import os, sys, time
 import numpy as np
@@ -107,7 +108,7 @@ from eas_config import *
 
 # output directory
 # grib-2 template 
-template = HOMErefs + '/fix/weasd_rrfs'+dom+'template.grib2'
+template = HOMErefs + '/fix/asnow_rrfs'+dom+'template.grib2'
 record = 1		# SNOW from SREF pgrb212 file
 
 print('template file is: ', template)
@@ -510,7 +511,7 @@ for mem in members:
         qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
 
       print('defining qpf from qpf1')
-      qpf[itime] = qpf1*0.39370079
+      qpf[itime] = qpf1*39.370079 # meters to inches
 
     if qpf_interval == 6:
       fhour=fhours[memcount]
@@ -522,9 +523,9 @@ for mem in members:
       undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
       snowmaskregion = np.ma.filled(undefsnow,-9999)
       qpf6 = np.where(np.equal(snowmaskregion,-9999),0,qpf6)
-      qpf[itime] = (qpf3 + qpf6) * 0.39370079
+      qpf[itime] = (qpf3 + qpf6) * 39.370079
     if qpf_interval == 3:
-      qpf[itime] = qpf3*0.39370079   # Apply 10:1 SLR, convert to inches
+      qpf[itime] = qpf3*39.370079   # convert meters to inches
 
 
     print('max of qpf as snow: ', np.max(qpf[itime]))
@@ -742,8 +743,12 @@ for t in thresh_use:
   print('probfinal dims: ', np.shape(probfinal))
 
 
-  probstr=str(t*25.4)
-  byte=int(m.ceil(t*2.54*1000))
+# can we keep as doing in mm - might be confusing if kept in meters?
+# probably should stick to GRIB2 standard and provide in meters
+
+  probstr=str(t*.0254)
+  print('probstr defined: ', probstr)
+  byte=int(m.floor(0.5+t*25.4))
   byte44=0
   byte45=int(byte/65536)
   byte45rem=byte%65536
