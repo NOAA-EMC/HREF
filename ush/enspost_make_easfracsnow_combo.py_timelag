@@ -14,6 +14,7 @@
 # 2018-02-08  M Pyle    Attempt to unify all EAS snow scripts into one
 # 2018-03-21  M Pyle    replace pygrib with wgrib2
 # 2021-06     M Pyle    python3 changes
+# 2024-03     M Pyle    WEASD --> ASNOW
 
 import os, sys, time
 import numpy as np
@@ -107,7 +108,7 @@ from eas_config import *
 
 # output directory
 # grib-2 template 
-template = HOMErefs + '/fix/weasd_rrfs'+dom+'template.grib2'
+template = HOMErefs + '/fix/asnow_rrfs'+dom+'template.grib2'
 record = 1		# SNOW from SREF pgrb212 file
 
 print('template file is: ', template)
@@ -181,7 +182,7 @@ def process_nam_qpf(file3,file4,fhr):
     if fhr%3 == 1:
       shour=fhour-1
       print('process_nam_qpf remainder 1')
-      os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
+      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
       qpf1,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
@@ -190,11 +191,11 @@ def process_nam_qpf(file3,file4,fhr):
       shour1=fhour-2
       shour2=fhour-1
       print('process_nam_qpf remainder 2 - f02 minus f01')
-      os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
-      os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file4+' -match "ASNOW:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
@@ -205,11 +206,11 @@ def process_nam_qpf(file3,file4,fhr):
       shour2=fhour-2
       fhourm1=fhour-1
       print('process_nam_qpf remainder 3 - f03 minus f02')
-      os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
       qpfa,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
 
-      os.system(WGRIB2+' '+file4+' -match "WEASD:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file4+' -match "ASNOW:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
       qpfb,nx,ny=simplewgrib2('qpf.txt')
       os.system('rm -f qpf.txt')
       qpf1=qpfa-qpfb
@@ -475,7 +476,7 @@ for mem in members:
         fhour=fhours[memcount]-3
         shour=fhour-3
       print('for file3 shour fhour: ', shour,fhour)
-      os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf3,nx,ny=simplewgrib2('qpf.txt')
 
       undefsnow,nx,ny=simplewgrib2('qpf.txt')
@@ -500,8 +501,8 @@ for mem in members:
         print('ready from file3 in 1h: ', file3)
         fhour=fhours[memcount]
         shour=fhour-1
-        print('WEASD accum from : ', shour, ' to : ', fhour)
-        os.system(WGRIB2+' '+file3+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
+        print('ASNOW accum from : ', shour, ' to : ', fhour)
+        os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
         qpf1,nx,ny=simplewgrib2('qpf.txt')
 
         undefsnow,nx,ny=simplewgrib2('qpf.txt')
@@ -510,21 +511,21 @@ for mem in members:
         qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
 
       print('defining qpf from qpf1')
-      qpf[itime] = qpf1*0.39370079
+      qpf[itime] = qpf1*39.370079 # meters to inches
 
     if qpf_interval == 6:
       fhour=fhours[memcount]
       shour=fhour-3
       print('6h shour fhour: ', shour,fhour)
-      os.system(WGRIB2+' '+file6+' -match "WEASD:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
+      os.system(WGRIB2+' '+file6+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
       qpf6,nx,ny=simplewgrib2('qpf.txt')
       undefsnow,nx,ny=simplewgrib2('qpf.txt')
       undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
       snowmaskregion = np.ma.filled(undefsnow,-9999)
       qpf6 = np.where(np.equal(snowmaskregion,-9999),0,qpf6)
-      qpf[itime] = (qpf3 + qpf6) * 0.39370079
+      qpf[itime] = (qpf3 + qpf6) * 39.370079
     if qpf_interval == 3:
-      qpf[itime] = qpf3*0.39370079   # Apply 10:1 SLR, convert to inches
+      qpf[itime] = qpf3*39.370079   # convert meters to inches
 
 
     print('max of qpf as snow: ', np.max(qpf[itime]))
@@ -742,8 +743,12 @@ for t in thresh_use:
   print('probfinal dims: ', np.shape(probfinal))
 
 
-  probstr=str(t*25.4)
-  byte=int(m.ceil(t*2.54*1000))
+# can we keep as doing in mm - might be confusing if kept in meters?
+# probably should stick to GRIB2 standard and provide in meters
+
+  probstr=str(t*.0254)
+  print('probstr defined: ', probstr)
+  byte=int(m.floor(0.5+t*25.4))
   byte44=0
   byte45=int(byte/65536)
   byte45rem=byte%65536
@@ -761,7 +766,7 @@ for t in thresh_use:
 #  myfort.writeReals(probfinal)
   myfort.close()
 
-  string="0:0:d="+wgribdate+":WEASD:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
+  string="0:0:d="+wgribdate+":ASNOW:surface:"+fhr_range+" hour acc fcst:prob >"+probstr+":"
 
   os.system(WGRIB2+' '+template+' -import_bin record_out.bin -set_metadata_str "'+string+'" -set_grib_type c3 -grib_out premod.grb')
   os.system(WGRIB2+' premod.grb -set_byte 4 12 197 -set_byte 4 17 0 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 '+str(nm_use)+' -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 '+str(byte45)+' -set_byte 4 46 '+str(byte46)+' -set_byte 4 47 '+str(byte47)+' -set_byte 4 67 1 -append  -set_grib_type c3 -grib_out '+outfile)
