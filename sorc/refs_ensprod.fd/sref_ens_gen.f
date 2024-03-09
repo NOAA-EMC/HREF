@@ -912,13 +912,6 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +                                                       - 273.15  !Jun Du: change unit from K to C for lifted index
              end if
 
-            if(k4(nv).eq.1.and.k5(nv).eq.29) then
-                        if (igrid .eq. 1) then
-                               write(0,*) 'converting asnow prob to mm'
-                          endif
-            rawdata_pr(igrid,irun,lv) = rawdata_pr(igrid,irun,lv)*1000.
-            endif
-
              if(k4(nv).eq.3.and.k5(nv).eq.5.and.(k6(nv).eq.2.or.
      +          k6(nv).eq.3))                 then                     !RUC cloud base/top with negative values
 
@@ -1454,7 +1447,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 	write(0,*) 'defining fname for FFG1 ' , thr1
 	if (thr1 .eq. 1) then
 !          fname="ffg1h.grib2.href5km"
-          fname="rrfs.ffg1h.3km.grib2"
+          fname="refs.ffg1h.3km.grib2"
         else
           write(0,*) 'ffg1h with wrong thr1 ', thr1
         endif
@@ -1514,7 +1507,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	elseif (vname(nv) .eq. 'FFG3') then
 	write(0,*) 'defining fname for FFG3 ' , thr1
-	if (thr1 .eq. 3) fname="rrfs.ffg3h.3km.grib2"
+	if (thr1 .eq. 3) fname="refs.ffg3h.3km.grib2"
 
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=92
@@ -1567,7 +1560,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	elseif (vname(nv) .eq. 'FFG6') then
 	write(0,*) 'defining fname for FFG6 ' , thr1
-	if (thr1 .eq. 6) fname="rrfs.ffg6h.3km.grib2"
+	if (thr1 .eq. 6) fname="refs.ffg6h.3km.grib2"
 
 	write(0,*) 'trim(fname): ', trim(fname)
                igrb2=93
