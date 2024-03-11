@@ -198,7 +198,7 @@ cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold
 # are all beyond f48 Z time code?
 hr=51
 hrold=50
-hr3old=49
+hr3old=48
 TCODE=Z
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g > grib2_awips_${RUN}_conus_meanf${hr}
