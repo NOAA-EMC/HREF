@@ -79,14 +79,14 @@
   <task name="preproc_fv3" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>1:ppn=61</nodes>
+  <nodes>3:ppn=122</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_FV3</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
-      <value>61</value>
+      <value>366</value>
     </envar>
     <envar>
       <name>PTILE</name>
@@ -388,14 +388,14 @@
   <task name="eas_gen_1" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
-    <nodes>6:ppn=41</nodes>
+    <nodes>2:ppn=122</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS_1</command>
       <jobname><cyclestr>easgen_1_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
-      <value>6</value>
+      <value>2</value>
     </envar>
     <envar>
       <name>NTASK</name>
@@ -403,7 +403,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>41</value>
+      <value>122</value>
     </envar>
 
     <envar>
@@ -496,14 +496,14 @@
   <task name="eas_gen_2" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
-    <nodes>6:ppn=32</nodes>
+    <nodes>2:ppn=96</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS_2</command>
       <jobname><cyclestr>easgen_2_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
-      <value>6</value>
+      <value>2</value>
     </envar>
     <envar>
       <name>NTASK</name>
@@ -511,7 +511,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>32</value>
+      <value>96</value>
     </envar>
 
       <envar>
@@ -609,7 +609,7 @@
   <task name="ensprod_1" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>6:ppn=6</nodes>
+  <nodes>3:ppn=12</nodes>
     <command>&PRE; &JOBS;/JREFS_ENSPROD_1</command>
     <jobname><cyclestr>ensprod_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
@@ -620,7 +620,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>6</value>
+      <value>12</value>
     </envar>
 
     <envar>
@@ -721,7 +721,7 @@
   <task name="ensprod_2" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &ENSPROD_RESOURCES;
-  <nodes>4:ppn=6</nodes>
+  <nodes>2:ppn=12</nodes>
     <command>&PRE; &JOBS;/JREFS_ENSPROD_2</command>
     <jobname><cyclestr>ensprod_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
@@ -732,7 +732,7 @@
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>6</value>
+      <value>12</value>
     </envar>
     <envar>
       <name>NTASK_LINK</name>

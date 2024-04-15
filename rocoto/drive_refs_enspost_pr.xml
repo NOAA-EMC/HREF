@@ -80,18 +80,18 @@
   <task name="preproc_fv3" cycledefs="regional_justontime" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>1:ppn=61</nodes>
+  <nodes>3:ppn=122</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_FV3</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
-      <value>61</value>
+      <value>366</value>
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>61</value>
+      <value>122</value>
     </envar>
 
     <envar>

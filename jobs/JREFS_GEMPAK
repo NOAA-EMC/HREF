@@ -31,15 +31,9 @@ export SENDDBN=${SENDDBN:-YES}
 export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}}
 export GEMPAKrefs=${GEMPAKrefs:-$HOMErefs/gempak}
 
-if [ $type = single ];then
- export finc=1
- export fend=60
- export fstart=01
-else
- export finc=1
- export fend=54
- export fstart=01
-fi
+export finc=1
+export fend=60
+export fstart=01
 
 export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-RRFS_GEMPAK}
 
@@ -74,18 +68,9 @@ echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf lpmm  > $DATA/${NEST}_lpmm.$$  " >>
 
 if [ ${NEST} =  'conus' ]
 then
-if [ $type = single ];then
-#export finc=3
-#export fend=60
-#export fstart=06
 export finc=1
 export fend=60
 export fstart=01
-else
-export finc=1
-export fend=54
-export fstart=01
-fi
 echo "$HOMErefs/scripts/exrefs_gempak.sh.ecf ffri  > $DATA/${NEST}_ffri.$$  " >>poescript
 fi
 
