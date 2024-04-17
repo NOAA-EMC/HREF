@@ -2,8 +2,10 @@
 
 #############################################################
 # 02/02/2015 Binbin Zhou, create for run all scripts 
-# 04/26/2023 Jun Du, added a timelag version (type=timelag)
+# 2nd part to process 37-60h -- Jun
+# 04/26/2023, Jun Du: added a timelag version (type=timelag or single)
 # 02/06/2024 M. Pyle - switches things to REFS
+#
 #############################################################
 
 ########################################
@@ -30,7 +32,6 @@ postmsg "$msg"
 #
 
 export cycle=${cycle:-t${cyc}z}
-
 setpdy.sh
 . ./PDY
 
@@ -66,10 +67,10 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 
-# think about this one.  is it COMINrefs?  Or just COMIN, as is internal to system?
+# should this be COMINrefs?
 export COMINrefs=${COMINrefs:-$GESROOT/${RUN}}
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
 export COMINffg=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
 export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDYm1}}
 
@@ -90,34 +91,36 @@ export pgmout="OUTPUT.$$"
 ###################################################
 # Execute the Script exrefs_ensprod.sh.ecf
 
-if [ -e ./poe.* ]
-then
-rm -rf ./poe.*
-fi
+rm -rf poe.*
 
-hrlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
+hrlist_link="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
+
+hrlist="49 50 51 52 53 54 55 56 57 58 59 60"
+
+for hr in $hrlist_link
+do
+echo "$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $hr $type" >> poe.link.all
+done
 
 for hr in $hrlist
 do
-echo "$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $hr $type" >> poe.link.all
 echo "$SCRIPTSrefs/exrefs_ensprod.sh.ecf $hr $type" >> poe.ensprod.all
 done
 
-chmod 775 poe.link.all
+
+chmod 775  poe.link.all
 chmod 775 poe.ensprod.all
 
-mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.link.all
+mpiexec  -n $NTASK_LINK -ppn $PTILE_LINK --cpu-bind verbose,core cfp ./poe.link.all
 export err=$?; err_chk
-
-echo to try running ensprod.all
-
-mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.ensprod.all
+mpiexec  -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.ensprod.all
 export err=$?; err_chk
 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
 date
+
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
