@@ -50,9 +50,12 @@ fi
 
 let "name1 = $name + 01"
 echo $name1
+
 if [ $name1 -lt 10 ]; then
+ names=$namel
  name1=0$name1
 else
+ names=$namel
  name1=$name1
 fi
 
@@ -93,9 +96,9 @@ fi
 else
 if [ $region = "conus" ]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${names}.prslev.f0${hr}.${region}_3km.grib2
 else
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${names}.prslev.f0${hr}.${region}.grib2
 
 fi
 
