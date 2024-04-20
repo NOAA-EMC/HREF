@@ -50,6 +50,7 @@ fi
 
 let "name1 = $name + 01"
 echo $name1
+
 if [ $name1 -lt 10 ]; then
  name1=0$name1
 else
@@ -76,9 +77,9 @@ if [ $name = 00 ];then
 
 if [ $region = "conus" ]
 then
- filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+ filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
 else
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
 # need logic for mphys to find ctrl member
@@ -93,9 +94,9 @@ fi
 else
 if [ $region = "conus" ]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}_3km.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.f0${hr}.${region}.grib2
 else
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.f0${hr}.${region}.grib2
 
 fi
 
