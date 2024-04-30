@@ -119,10 +119,7 @@ print('template file is: ', template)
 fcst_hour = int(sys.argv[1])
 qpf_interval = int(sys.argv[2])
 
-DATArun=DATA+'/snow_'+str(fcst_hour)
-if not os.path.exists(DATArun):
-  os.system("mkdir -p " + DATArun)
-os.system("cd "+DATArun)
+os.system("cd "+DATA)
 
 start_hour = int(fcst_hour - qpf_interval)
 fhr=fcst_hour

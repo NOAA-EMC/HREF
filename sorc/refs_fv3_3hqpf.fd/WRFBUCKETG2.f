@@ -63,11 +63,11 @@ c       read(5,FMT='(A)') cycname
 	write(0,*) 'file2: ', file2(1:nn)
 	write(0,*) 'testout: ', testout(1:mmm)
 
-	if (mod(ihrs1,3) .eq. 0 .and. reset_flag .eq. 1) then
-	reset_flag=1
-	else
-	reset_flag=0
-	endif
+!	if (mod(ihrs2,3) .eq. 0 .and. reset_flag .eq. 1) then
+!	reset_flag=1
+!	else
+!	reset_flag=0
+!	endif
 
         write(0,*) 'call calc_pdiff with reset_flag: ', reset_flag
 
@@ -140,6 +140,8 @@ C    &                  UNPACK,K,GFLD,IRET)
 
         J=0
 
+
+        if ( reset_flag .eq. 0) then
         JIDS=-9999
         JPDTN=8
         JPDT=-9999
@@ -189,6 +191,8 @@ C    &                  UNPACK,K,GFLD,IRET)
         enddo
         write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
 
+
+        endif  ! make sure reset_flag = 0 
 
 ! later apcp
         J=0
