@@ -197,11 +197,7 @@ if qpf_interval == 243:
 
 start_hour = int(fcst_hour - qpf_interval)
 
-DATArun=DATA+'/qpf_'+str(fcst_hour)
-if not os.path.exists(DATArun):
-  print('building run directory in python script')
-  os.system("mkdir -p " + DATArun)
-os.system("cd "+DATArun)
+os.system("cd "+DATA)
 
 fhr=fcst_hour
 fhr_range=str(start_hour)+'-'+str(fcst_hour)
