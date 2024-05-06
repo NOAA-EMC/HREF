@@ -157,6 +157,41 @@ curpath=`pwd`
 
 cp ../temp.t${cyc}z.m${mem}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
+if [ $hr -eq 49 -o  $hr -eq 25  ] ; then
+# believe these two times being processed will be the same.  Need f24 and f48
+
+echo looking for hrold $hrold
+
+looplim=30
+loop=1
+
+while [ $loop -le $looplim ]
+do
+
+if [ -s ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2 ]
+then
+  break
+else
+  loop=$((loop+1))
+  sleep 3
+fi
+
+ls -l ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2
+
+  if [ $loop -ge $looplim ]
+   then
+   msg="FATAL ERROR: ABORTING after 90 seconds of waiting for ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2"
+   err_exit $msg
+  fi
+
+done
+
+$WGRIB2 ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hrold}.grib2
+fi
+
+# if [ $hr -eq 51 -o $hr -eq 27 ] ; then
+# $WGRIB2 ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold3}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hrold3}.grib2
+# fi
 
 # need to wait for it to be available??
 
@@ -194,7 +229,7 @@ echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
-export err=$? # ; err_chk
+export err=$? ; err_chk
 
 # 1 h added to f01
 
@@ -202,7 +237,7 @@ export err=$? # ; err_chk
 if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
-export err=$? # ; err_chk
+export err=$? ; err_chk
 cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
 
@@ -247,12 +282,12 @@ echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
-export err=$? # ; err_chk
+export err=$? ; err_chk
 
 if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
-export err=$? # ; err_chk
+export err=$? ; err_chk
 cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
 
@@ -268,8 +303,24 @@ $WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZ
 fi
 
         cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${region}.m${name1}.f${hr}.grib2
-        err=$? ; export err
 
+        err=$? ; export err
+	if [ $err -ne 0 ]
+         then
+         msg="FATAL ERROR: fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 not copied properly"
+         err_exit $msg
+        fi
+
+        if [ ! -e $PREPROC_HOLD ] ; then
+            mkdir -p ${PREPROC_HOLD}
+        fi
+
+	if [ $hr -eq  24 -o $hr -eq 48 ]; then
+         cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${PREPROC_HOLD}
+        fi
+
+
+        err=$? ; export err
 	if [ $err -ne 0 ]
          then
          msg="FATAL ERROR: fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 not copied properly"
@@ -282,7 +333,7 @@ fi
 
         else
 
-        msg="FATAL ERROR: $filecheck missing"
+        msg="FATAL ERROR: 1hr $filecheck missing"
          err_exit $msg
 
         fi

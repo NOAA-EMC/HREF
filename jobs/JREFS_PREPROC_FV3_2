@@ -58,9 +58,12 @@ export pid=$$
 export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
 echo now have DATA $DATA
 
+export PREPROC_HOLD=${DATAROOT}/refs_preprocfv3_${NEST}_${cyc}
+
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
+
 
 ####################################
 # Determine Job Output Name on System
@@ -238,12 +241,12 @@ fi
    backdate=`$ndate -06 $PDY$cyc`
    backday=`echo $backdate | cut -c1-8`
    backcyc=`echo $backdate | cut -c9-10`
-  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
+  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name} 2" >> poe.3hqpf.tlb
   else
-   echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
+   echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} 2" >> poe.3hqpf
   fi 
  else
-  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
+  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} 2" >> poe.3hqpf
  fi
 
 done
