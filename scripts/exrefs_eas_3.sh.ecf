@@ -53,7 +53,6 @@ done
 
 hrs="51 54 57 60"
 
-fi
 for fhr in $hrs
 do
 echo "cd ${DATA}; mkdir qpf_${fhr}_3_low; cd qpf_${fhr}_3_low ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 300  > qpf_combo_${dom}_${cyc}_3h_low_${fhr}.log" >> poe.qpf_snow

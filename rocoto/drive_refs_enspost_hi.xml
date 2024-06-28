@@ -78,18 +78,18 @@
   <task name="preproc_fv3_1" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>3:ppn=25</nodes>
+  <nodes>3:ppn=24</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_1</command>
     <jobname><cyclestr>preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refsv11/preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
-      <value>75</value>
+      <value>72</value>
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>25</value>
+      <value>24</value>
     </envar>
 
     <envar>
@@ -288,6 +288,7 @@
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.m04.prslev.f048.hi.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.m05.prslev.f048.hi.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f048.hi.grib2</cyclestr></datadep>
+          <taskdep task="preproc_fv3_1"/>
     </and>
     </dependency>
 
@@ -397,6 +398,7 @@
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0004/rrfs.t@Hz.m04.prslev.f060.hi.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/mem0005/rrfs.t@Hz.m05.prslev.f060.hi.grib2</cyclestr></datadep>
           <datadep age="05:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.f060.hi.grib2</cyclestr></datadep>
+          <taskdep task="preproc_fv3_2"/>
     </and>
     </dependency>
 
@@ -627,18 +629,18 @@
   <task name="eas_gen_3" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &EAS_RESOURCES;
-    <nodes>2:ppn=96</nodes>
+    <nodes>1:ppn=48</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS_3</command>
       <jobname><cyclestr>easgen_3_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_refsv11/eas_gen_3_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
-      <value>2</value>
+      <value>1</value>
     </envar>
     <envar>
       <name>NTASK</name>
-      <value>96</value>
+      <value>48</value>
     </envar>
     <envar>
       <name>PTILE</name>
@@ -726,6 +728,7 @@
         <and>
        <taskdep task="preproc_fv3_1"/>
        <taskdep task="preproc_fv3_2"/>
+       <taskdep task="preproc_fv3_3"/>
        <taskdep task="preproc_fv3_1" cycle_offset="-6:00:00"/>
        <taskdep task="preproc_fv3_2" cycle_offset="-6:00:00"/>
        <taskdep task="preproc_fv3_3" cycle_offset="-6:00:00"/>
@@ -1059,6 +1062,7 @@
      <and>
      <taskdep task="preproc_fv3_1"/>
      <taskdep task="preproc_fv3_2"/>
+     <taskdep task="preproc_fv3_3"/>
      <taskdep task="preproc_fv3_1" cycle_offset="-6:00:00"/>
      <taskdep task="preproc_fv3_2" cycle_offset="-6:00:00"/>
      <taskdep task="preproc_fv3_3" cycle_offset="-6:00:00"/>
