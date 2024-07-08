@@ -29,12 +29,12 @@
 <!ENTITY SCRIPTS "&HOMErefs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
 <!ENTITY COMINrrfsdet "/lfs/h2/emc/ptmp/&USERLAM;/rrfs/v0.9.1/prod"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/nwges/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/nwges/">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/">
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
-<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpnew">
+<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
 <!ENTITY KEEPDATA "YES">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">

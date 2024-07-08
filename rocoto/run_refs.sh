@@ -6,7 +6,7 @@ module list
 
 doms="hi conus pr ak"
 
-dir="/lfs/h2/emc/lam/noscrub/emc.lam/enspost/refs.v1.1.0/rocoto"
+dir="/lfs/h2/emc/lam/noscrub/emc.lam/enspost/refs.v1.0.0/rocoto"
 
 for dom in $doms
 do
