@@ -20,7 +20,7 @@ then
 rm poe.*
 fi
 
-hrs="27 30 33 36 39 42 45 48"
+hrs="51 54 57 60"
 
 for fhr in $hrs
 do
@@ -30,7 +30,7 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_24_high; cd qpf_${fhr}_24_high ; python ${USH
 echo "cd ${DATA}; mkdir qpf_${fhr}_24_higher; cd qpf_${fhr}_24_higher ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 243 >  qpf_combo_${dom}_${cyc}_24h_higher_${fhr}.log" >> poe.qpf_snow
 done
 
-hrs="27 30 33 36 39 42 45 48"
+hrs="51 54 57 60"
 
 for fhr in $hrs
 do
@@ -40,7 +40,7 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_6_high; cd qpf_${fhr}_6_high ; python ${USHre
 echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHrefs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow
 done
 
-hrs="27 30 33 36 39 42 45 48"
+hrs="51 54 57 60"
 
 for fhr in $hrs
 do
@@ -51,7 +51,7 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_12_higher; cd qpf_${fhr}_12_higher ; python $
 done
 
 
-hrs="27 30 33 36 39 42 45 48"
+hrs="51 54 57 60"
 
 for fhr in $hrs
 do
@@ -60,7 +60,7 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_3_high; cd qpf_${fhr}_3_high ; python ${USHre
 echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHrefs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 3 > snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow
 done
 
-hrs="25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+hrs="49 50 51 52 53 54 55 56 57 58 59 60"
 
 for fhr in $hrs
 do
@@ -81,9 +81,14 @@ export err=$?; err_chk
 if [ $err -eq 0 ]
 then
 
-fhr=25
+fhr=49
 
-endfhr=48
+if [ $type = single ];then
+ endfhr=60
+else
+ endfhr=60
+#endfhr=54
+fi
 
 while [ $fhr -le $endfhr ]
 do
@@ -167,8 +172,8 @@ cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12high_easfrac.f${fhr}.grib2 >> $DATA/${RUN
 cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12higher_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 fi
 
-if [ $fhr -eq 27 -o $fhr -eq 30 -o $fhr -eq 33 -o $fhr -eq 36 \
--o $fhr -eq 39 -o $fhr -eq 42 -o $fhr -eq 45 -o $fhr -eq 48  ]
+if [ $fhr -eq 51 \
+ -o  $fhr -eq 54 -o $fhr -eq 57 -o $fhr -eq 60 ]
 then
 
 if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24low_easfrac.f${fhr}.grib2 -o \

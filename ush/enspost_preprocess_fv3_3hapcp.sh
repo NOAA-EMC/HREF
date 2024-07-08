@@ -15,9 +15,9 @@
 
 set -x 
 
-if [ $# -ne 5 ]
+if [ $# -ne 6 ]
 then
-echo need 4 inputs: dom, day, cyc, mem, and file name
+echo need 6 inputs: dom, day, cyc, mem, and file name, stream
 exit
 fi
 
@@ -26,6 +26,7 @@ day=${2}
 cyc=${3}
 mem=${4}
 name=${5}
+stream=${6}
 
 if [ $dom = 'conus' ]
 then
@@ -53,7 +54,10 @@ else
  name1=$name1
 fi
 
-hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60" 
+hrs_1="03 06 09 12 15 18 21 24" 
+hrs_2="27 30 33 36 39 42 45 48" 
+hrs_3="51 54 57 60" 
+
 
 cd $DATA
 
@@ -63,18 +67,32 @@ cd $DATA/pcp_${name1}
 
 EXECrefs=${HOMErefs}/exec
 
-hrsln="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 \
-        25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 \
-        49 50 51 52 53 54 55 56 57 58 59 60"
+hrsln_1="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
+hrsln_2="24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
+hrsln_3="48 49 50 51 52 53 54 55 56 57 58 59 60"
+
+if [ $stream = '1' ]; then
+hrsln=$hrsln_1
+hrs=$hrs_1
+elif [ $stream = '2' ]; then
+hrsln=$hrsln_2
+hrs=$hrs_2
+elif [ $stream = '3' ]; then
+hrsln=$hrsln_3
+hrs=$hrs_3
+else
+err_exit "Bad time stream value provided"
+fi
 
 for hr in $hrsln
 do
-filecheck=../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
+filein=../temp.t${cyc}z.m${mem}.f${hr}.grib2
+fileout=../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
 
-if [ -s $filecheck ]
+if [ -s $filein ]
 then
 sleep 1
-ln -sf $filecheck rrfs.t${cyc}z.f${hr}.grib2
+ln -sf $filein rrfs.t${cyc}z.f${hr}.grib2
 fi
 done
 
@@ -88,9 +106,7 @@ then
 hrold=0${hrold}
 fi
 
-filecheck=../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
-
-if [ -e $filecheck ]
+if [ -e $filein ]
 then
 
         if [ $hr -gt 0 ]
@@ -120,8 +136,9 @@ fi
   echo "$dim1 $dim2" >> input.card.${mem}.${hr}
 
  $EXECrefs/enspost_fv3_3hqpf < input.card.${mem}.${hr}
- export err=$? # ; err_chk
- cat ./PCP3HR${hr}.tm00 >> $filecheck
+ export err=$? ; err_chk
+
+ cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
  cp PCP3HR${hr}.tm00 PCP3HR${hr}.tm00_qpf
 
   fi
@@ -131,13 +148,18 @@ else
 
 
 else
-        msg="FATAL ERROR: $filecheck missing"
+        msg="FATAL ERROR: 3hr $filein missing"
         err_exit $msg
 fi
 
 done
 
 cd ../
+
+
+pwd
+
+echo hrs down here is $hrs
 
 for hr in $hrs
 do
