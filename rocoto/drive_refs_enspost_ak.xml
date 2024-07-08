@@ -19,7 +19,7 @@
 <!ENTITY RUN "refs">
 
 <!ENTITY USERLAM "emc.lam">
-<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.1.0">
+<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.0.0">
 <!ENTITY domain "ak">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">

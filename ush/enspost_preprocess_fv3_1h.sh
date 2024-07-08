@@ -134,7 +134,7 @@ echo filecheck is $filecheck
 
 ## snow proc
 
-       if [ $hr -ge 01 ] 
+       if [ $hr -ge 02 ] 
          then
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
@@ -216,7 +216,7 @@ do
 
 done
 # test to ensure that this hrold file is completely read?
-sleep 2
+sleep 4
 cp ../temp.t${cyc}z.m${mem}.f${hrold}.grib2 temp.t${cyc}z.f${hrold}.grib2
 
 
@@ -237,7 +237,8 @@ export err=$? ; err_chk
 if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
-export err=$? ; err_chk
+export err=$?  ; err_chk
+
 cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
 fi
 
