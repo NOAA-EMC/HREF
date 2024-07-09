@@ -32,8 +32,8 @@
 <!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/&RUN;">
 <!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
-0!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
-0!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
+<!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
+<!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmp">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
 <!ENTITY KEEPDATA "YES">
