@@ -68,7 +68,7 @@
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
   <log>
-    <cyclestr>&OUTDIR;/logfiles_refsv11/workflow_regional_single_&TYPE;_&domain;_@Y@m@d@H.log</cyclestr>
+    <cyclestr>&OUTDIR;/logfiles_refs/workflow_regional_single_&TYPE;_&domain;_@Y@m@d@H.log</cyclestr>
   </log>
 
 
@@ -82,7 +82,7 @@
   <nodes>3:ppn=24</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_1</command>
     <jobname><cyclestr>preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -191,7 +191,7 @@
   <nodes>3:ppn=24</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_2</command>
     <jobname><cyclestr>preprocfv3_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/preprocfv3_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -301,7 +301,7 @@
   <nodes>1:ppn=36</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_3</command>
     <jobname><cyclestr>preprocfv3_3_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/preprocfv3_3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -411,7 +411,7 @@
   <nodes>1:ppn=49</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_HRRR</command>
     <jobname><cyclestr>preprochrrr_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/preprochrrr_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprochrrr_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -529,7 +529,7 @@
     <nodes>4:ppn=37</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS_1</command>
       <jobname><cyclestr>easgen_1_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_refsv11/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_1_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -638,7 +638,7 @@
     <nodes>6:ppn=32</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS_2</command>
       <jobname><cyclestr>easgen_2_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_refsv11/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_2_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -749,7 +749,7 @@
     <nodes>4:ppn=12</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS_3</command>
       <jobname><cyclestr>easgen_3_&TYPE;_&PHYS;_&domain;_@Hz</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_refsv11/eas_gen_3_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_3_&TYPE;_&PHYS;_&domain;@H.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -865,7 +865,7 @@
   <nodes>3:ppn=8</nodes>
     <command>&PRE; &JOBS;/JREFS_ENSPROD_1</command>
     <jobname><cyclestr>ensprod_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -977,7 +977,7 @@
   <nodes>4:ppn=6</nodes>
     <command>&PRE; &JOBS;/JREFS_ENSPROD_2</command>
     <jobname><cyclestr>ensprod_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -1089,7 +1089,7 @@
   <nodes>3:ppn=4</nodes>
     <command>&PRE; &JOBS;/JREFS_ENSPROD_3</command>
     <jobname><cyclestr>ensprod_3_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/ensprod_3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -1208,7 +1208,7 @@
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JREFS_AWIPS</command>
     <jobname><cyclestr>refsawips_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/refsawips_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsawips_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
 
     <envar>
@@ -1295,7 +1295,7 @@
   <nodes>1:ppn=8</nodes>
     <command>&PRE; &JOBS;/JREFS_GEMPAK</command>
     <jobname><cyclestr>refsgempak_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refsv11/refsgempak_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsgempak_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name> PTILE </name>
