@@ -77,9 +77,27 @@
 000 001 027 000 Maximum Relative Humidity        %                    RHMX--            0  -9999.00
 !000 001 028 000 Maximum Absolute Humidity        kg m**-3             ????             ?  -9999.00
 000 001 029 008 Total Snowfall                   m                    SNOW             0  -9999.00
+000 001 029 009 Total Snowfall                   m                    SNOW             0  -9999.00
+000 001 029 005 Total Snowfall                   m                    SNOW             0  -9999.00
+000 001 029 002 Total Snowfall                   m                    SNOW             0  -9999.00
 !000 001 030 000 Precipitable water Category      code table           ????             ?  -9999.00
 !000 001 031 000 Hail                             m                    ????             ?  -9999.00
 !000 001 032 000 Graupel (snow pellets)           kg kg**-1            ????             ?  -9999.00
+000 001 033 008 Categorical rain                 0,1                  WXTR             0  -9999.00
+000 001 033 005 Categorical rain                 0,1                  WXTR             0  -9999.00
+000 001 033 002 Categorical rain                 0,1                  WXTR             0  -9999.00
+000 001 034 008 Categorical freezing rain        0,1                  WXTZ             0  -9999.00
+000 001 034 005 Categorical freezing rain        0,1                  WXTZ             0  -9999.00
+000 001 034 002 Categorical freezing rain        0,1                  WXTZ             0  -9999.00
+000 001 035 008 Categorical ice pellets          0,1                  WXTP             0  -9999.00
+000 001 035 005 Categorical ice pellets          0,1                  WXTP             0  -9999.00
+000 001 035 002 Categorical ice pellets          0,1                  WXTP             0  -9999.00
+000 001 036 008 Categorical snow                 0,1                  WXTS             0  -9999.00
+000 001 036 005 Categorical snow                 0,1                  WXTS             0  -9999.00
+000 001 036 002 Categorical snow                 0,1                  WXTS             0  -9999.00
+
+000 001 045 000 Total Col-Integ Rain              kg m**-2            TCOLR            0  -9999.00
+
 000 001 045 000 Total Col-Integ Rain              kg m**-2            TCOLR            0  -9999.00
 000 001 046 000 Total Col-Integ Snow              kg m**-2            TCOLS            0  -9999.00
 000 001 192 000 Weather                          NA                   WX               0  -9999.00
@@ -130,6 +148,9 @@
 000 016 197 000 Echo Top Height                   m                   ECHTOP           0  -9999.00
 000 016 197 002 Echo Top Height                   m                   ECHTOP           0  -9999.00
 000 016 197 005 Echo Top Height                   m                   ECHTOP           0  -9999.00
+000 016 003 000 Echo Top Height                   m                   ECHTOP           0  -9999.00
+000 016 003 002 Echo Top Height                   m                   ECHTOP           0  -9999.00
+000 016 003 005 Echo Top Height                   m                   ECHTOP           0  -9999.00
 !000 002 021 000 Maximum Wind Speed               m s**-1              ????             ?  -9999.00
 000 002 022 000 Wind Speed (gust)                m s**-1              GUST             ?  -9999.00
 !000 002 023 000 u-component of wind (gust)       m s**-1              ????             ?  -9999.00

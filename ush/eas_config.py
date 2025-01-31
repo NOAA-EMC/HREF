@@ -22,32 +22,31 @@ max_latency = 6
 
 # exceedance thresholds (in)
 
-# possible optimal set?
-pqpf_1h_thresh = [.01,0.25,0.5,1.0,2.0]
-pqpf_3h_thresh = [.01,0.25,0.5,1.0,2.0,3.0]
-pqpf_6h_thresh = [.01,0.25,0.5,1.0,2.0,3.0,5.0]
-pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0,8.0]
-pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0,8.0]
+pqpf_1h_thresh = [.01,0.25,0.5,1.0]
+pqpf_3h_thresh = [.01,0.25,0.5,1.0,2.0]
+pqpf_6h_thresh = [.01,0.25,0.5,1.0,2.0,3.0]
+pqpf_12h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0]
+pqpf_24h_thresh = [0.1,0.25,0.5,1.0,2.0,3.0,5.0]
 
-pqpf_1h_thresh_low = [.01,0.25,0.5]
-pqpf_1h_thresh_high = [1.0,2.0]
+pqpf_1h_thresh_low = [.01,0.25]
+pqpf_1h_thresh_high = [0.5,1.0]
 
 pqpf_3h_thresh_low = [.01,0.25,0.5]
-pqpf_3h_thresh_high = [1.0,2.0,3.0]
+pqpf_3h_thresh_high = [1.0,2.0]
 
 pqpf_6h_thresh_low = [.01,0.25]
-pqpf_6h_thresh_med = [0.5,1.0,2.0]
-pqpf_6h_thresh_high = [3.0,5.0]
+pqpf_6h_thresh_med = [0.5,1.0]
+pqpf_6h_thresh_high = [2.0,3.0]
 
 pqpf_12h_thresh_low = [0.1,0.25]
 pqpf_12h_thresh_med = [0.5,1.0]
 pqpf_12h_thresh_high = [2.0,3.0]
-pqpf_12h_thresh_higher = [5.0,8.0]
+pqpf_12h_thresh_higher = [5.0]
 
 pqpf_24h_thresh_low = [0.1,0.25]
 pqpf_24h_thresh_med = [0.5,1.0]
 pqpf_24h_thresh_high = [2.0,3.0]
-pqpf_24h_thresh_higher = [5.0,8.0]
+pqpf_24h_thresh_higher = [5.0]
 
 # neighborhood size (km)
 pqpf_neighborhood = 40
