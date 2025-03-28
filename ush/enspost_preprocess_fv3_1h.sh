@@ -75,15 +75,15 @@ cd fv3_${mem}_${hr}
 
 if [ $name = 00 ];then
 
-if [ $region = "conus" ]
+if [[ $region == "conus" || $region == "ak" ]]
 then
- filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${region}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
-else
- filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${region}.grib2
+else # HI/PR
+ filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${region}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.f0${hr}.${region}.grib2
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${region}.grib2
 fi
 
 if [ ! -e $filecheck -a -e $altfilecheck ]
@@ -92,11 +92,11 @@ filecheck=$altfilecheck
 fi
 
 else
-if [ $region = "conus" ]
+if [[ $region == "conus" || $region == "ak" ]]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.f0${hr}.${region}.grib2
-else
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.3km.f0${hr}.${region}.grib2
+else # HI/PR
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.3p5km.f0${hr}.${region}.grib2
 
 fi
 
