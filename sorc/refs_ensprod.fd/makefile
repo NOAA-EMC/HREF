@@ -33,7 +33,7 @@ debug: $(OBJ)
 clean:
 	/bin/rm  *.o enspost_ensprod
 install:
-	cp enspost_ensprod ../../exec/.
+	cp enspost_ensprod ../../exec/
 #	/bin/cp enspost_ensprod ../../exec/.
 #
 
