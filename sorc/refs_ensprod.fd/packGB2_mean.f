@@ -37,19 +37,19 @@ C for variable table:
 
         integer ml
 
-        write(*,*) 'packing direct mean/spread for nv ', nv
+!        write(*,*) 'packing direct mean/spread for nv ', nv
 
-        write(*,*) nv, imean,isprd,
-     +     jpd1,jpd2,jpd10,jpd27,jf,Lm,
-     +     iens,iyr,imon,idy,ihr,ifhr,gribid
+!        write(*,*) nv, imean,isprd,
+!     +     jpd1,jpd2,jpd10,jpd27,jf,Lm,
+!     +     iens,iyr,imon,idy,ihr,ifhr,gribid
 
 
 
-	write(0,*) 'nv, Mlvl(nv): ', nv, Mlvl(nv)
+!	write(0,*) 'nv, Mlvl(nv): ', nv, Mlvl(nv)
 
         DO 1000 ml=1,Mlvl(nv)
 
-           write(0,*) 'ml is: ', ml
+!           write(0,*) 'ml is: ', ml
             !redefine some of gfld%idsect() array elements 
             gfld%idsect(1)=7
             gfld%idsect(2)=2
@@ -57,7 +57,7 @@ C for variable table:
             gfld%idsect(4)=1   !experimental, see Table 1.1
             gfld%idsect(5)=1   !experimental, see Table 1.2
             gfld%idsect(6)=iyr  !year
-       write(0,*) 'imon is : ', imon
+!       write(0,*) 'imon is : ', imon
             gfld%idsect(7)=imon !mon
             gfld%idsect(8)=idy  !day
             gfld%idsect(9)=ihr  !cycle time
@@ -163,12 +163,15 @@ c            ipdtmpl(5)=132              !assigned 20161214
 
           iret=0
 
-	write(0,*) 'call Zputgb2 for imean, lev, tmpl(16): ' , imean, 
-     &         ipdtmpl(12),
-     &         ipdtmpl(16)
+!	write(0,*) 'call Zputgb2 for imean, lev, tmpl(16): ' , imean, 
+!     &         ipdtmpl(12),
+!     &         ipdtmpl(16)
+
           call Zputgb2(imean,gfld,ipdtmpl,ipdtnum,ipdtlen,bmap,iret)
+
           if(iret.ne.0) then
-           write(*,*) 'Zputgb2 mean error:',iret
+           write(*,*) 'Zputgb2 mean error:',iret, imean,
+     &               ipdtmpl(12),ipdtmpl(16)
           end if
 
   
@@ -189,9 +192,9 @@ c            ipdtmpl(5)=132              !assigned 20161214
           ipdtmpl(16)=4                !Spread 
 
           iret=0
-	write(0,*) 'call Zputgb2 for isprd, lev, tmpl(16): ' , isprd,
-     &         ipdtmpl(12),
-     &         ipdtmpl(16)
+!	write(0,*) 'call Zputgb2 for isprd, lev, tmpl(16): ' , isprd,
+!     &         ipdtmpl(12),
+!     &         ipdtmpl(16)
           call Zputgb2(isprd,gfld,ipdtmpl,ipdtnum,ipdtlen,bmap,iret)
           
           if(iret.ne.0) then

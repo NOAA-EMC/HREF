@@ -51,9 +51,9 @@ c    for derived variables
         jp27=-9999
 
         write(*,*) 'In Hains Index  .....'
-        write(*,*) 'nv,ifunit,jf,iens,Lp,Lt',
-     +              nv,ifunit,jf,iens,Lp,Lt
-        write(*,*) 'dTlvl=',dTlvl
+!        write(*,*) 'nv,ifunit,jf,iens,Lp,Lt',
+!     +              nv,ifunit,jf,iens,Lp,Lt
+!        write(*,*) 'dTlvl=',dTlvl
     
         miss=0
 

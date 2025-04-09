@@ -400,7 +400,7 @@ c            write(*,*)'MPairLevel=',MPairLevel(n,i,1),MPairLevel(n,i,2)
            lng=len_trim(substr(np+2))
            dTn(n)=substr(np+2)(1:lng)
            dTsignal(n)=dTn(n)(1:1)
-           write(0,*) 'pulled dTsignal(n): ',n, dTsignal(n)
+!           write(0,*) 'pulled dTsignal(n): ',n, dTsignal(n)
 
            dTlvl(n) = getlvl(dTn(n))
                                                                                                                                                                                                              
@@ -979,7 +979,7 @@ c          nbr=5
            s=1
          end if
 
-         write(*,*) 'In Gsmoothing,nbr,s=',nbr,s 
+!         write(*,*) 'In Gsmoothing,nbr,s=',nbr,s 
 
          f1=1./(3.14*s*s)
          f2=-0.5/(s*s)
@@ -1098,10 +1098,10 @@ c
          real nbr,dist 
          character s 
 
-	 write(0,*) 'in neighborhood_max with sign s: ', s
 
-	write(0,*) 'shape(A): ', shape(A)
-        write(0,*) 'jf, im, jm: ', jf, im,jm
+!	 write(0,*) 'in neighborhood_max with sign s: ', s
+!	 write(0,*) 'shape(A): ', shape(A)
+!         write(0,*) 'jf, im, jm: ', jf, im,jm
 
          if(s.eq.'A') then
 !           nbr=8.  ! to mimic the 40 km radius
@@ -1123,7 +1123,7 @@ c
            nbr=1.
          end if
 
-        write(*,*) 'In neighborhood: nbr=', nbr
+!        write(*,*) 'In neighborhood: nbr=', nbr
 
          do jp = 1,jm
           do ip = 1,im

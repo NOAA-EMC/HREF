@@ -283,7 +283,7 @@ C  ADD DATA FIELD TO GRIB2 MESSAGE
          !write(*,*) gfld%ngrdpts
          !Ceiling mean (derived) still stuck here
 
-	write(0,*) 'calling addfield with gfld%ibmap: ', gfld%ibmap
+!	write(0,*) 'calling addfield with gfld%ibmap: ', gfld%ibmap
          call addfield(cgrib,lcgrib,ipdtnum,ipdtmpl,           !Modified by Binbin Zhou
      &                 ipdtlen,coordlist,gfld%num_coord,
      &                 gfld%idrtnum,gfld%idrtmpl,gfld%idrtlen,

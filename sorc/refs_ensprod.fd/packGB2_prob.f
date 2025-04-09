@@ -40,15 +40,15 @@ C for variable table:
         integer pl
 
         write(*,*) 'packing direct prob for nv ',nv
-	write(0,*) 'HERE WITH IYR: ', iyr
-	write(0,*) 'here with idy: ', idy
-	write(0,*) 'here with ihr: ', ihr
+!	write(0,*) 'HERE WITH IYR: ', iyr
+!	write(0,*) 'here with idy: ', idy
+!	write(0,*) 'here with ihr: ', ihr
 
-        write(*,*) iprob, 
-     +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lt,
-     +     iens,iyr,imon,idy,ihr,ifhr,gribid
+!        write(*,*) iprob, 
+!     +     nv,jpd1,jpd2,jpd10,jpd27,jf,Lp,Lt,
+!     +     iens,iyr,imon,idy,ihr,ifhr,gribid
 
-         write(*,*) 'nv,Plvl,Tlvl=',nv,Plvl(nv),Tlvl(nv)
+!         write(*,*) 'nv,Plvl,Tlvl=',nv,Plvl(nv),Tlvl(nv)
 
 
         DO 2000 pl=1,Plvl(nv)
@@ -84,10 +84,10 @@ C for variable table:
 !        endif
 
 
-         write(*,*) 'Pack direct variable prob'
+!         write(*,*) 'Pack direct variable prob'
 
          if (pl.eq.1) then  !this is just do once 
-         write(*,*) 'I am here1'
+!         write(*,*) 'I am here1'
 
             if (jpd1.eq.1.and.
      &         (jpd2.eq.8.or.jpd2.eq.11 .or. jpd2.eq.13 .or.
@@ -146,7 +146,7 @@ c            ipdtmpl(5)=132              !assigned 20161214
               !ipdtmpl(9)= ihr+ifhr-jpd27   !overwite for APCP, begin time of accumulation
               !ipdtmpl(26)=khr              !end time of accumulation
 
-        write(*,*) 'Before call get_time' 
+!        write(*,*) 'Before call get_time' 
               call get_time_GB2(iyr,imon,idy,ihr,ifhr,
      +            iyr1,imon1,idy1,ihr1)
 
@@ -171,7 +171,7 @@ c            ipdtmpl(5)=132              !assigned 20161214
           end if  ! p1=1?
 
 
-         write(*,*) 'I am here2'
+!         write(*,*) 'I am here2'
           if(jpd10.eq.100) then
             ipdtmpl(12)=ProbLevel(nv,pl)*100
           else

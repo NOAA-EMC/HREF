@@ -64,11 +64,11 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
         write(*,*) 'In LLWS .....'
-        write(*,*) 'ifunit=', ifunit, eps
+!        write(*,*) 'ifunit=', ifunit, eps
 
         lvls=10
 
-        write(*,*)  nv,jf,iens,Lm,Lp,Lt,lvls,jpdtn
+!        write(*,*)  nv,jf,iens,Lm,Lp,Lt,lvls,jpdtn
 
         !jpdtn=0
         jp27=-9999
@@ -79,13 +79,13 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
           call readGB2(ifunit(irun),jpdtn,2,2,103,10,jp27,gfld,eps,ie) !U10m 
            U10m(:,irun)=gfld%fld
-           write(*,*) 'read U10m data done'
+!           write(*,*) 'read U10m data done'
           call readGB2(ifunit(irun),jpdtn,2,3,103,10,jp27,gfld,eps,ie) !V10m 
            V10m(:,irun)=gfld%fld
-           write(*,*) 'read V10m data done'
+!           write(*,*) 'read V10m data done'
           call readGB2(ifunit(irun),jpdtn,3,5,1,0,jp27,gfld,eps,ie) !Hsfc
            HS(:,irun)=gfld%fld
-           write(*,*) 'read surface height data done'
+!           write(*,*) 'read surface height data done'
 
            do k=1,lvls
               !write(*,*) 'Level=',p(k)
@@ -100,7 +100,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
                 Hpr(:,irun,k)=gfld%fld
             end do
 
-           write(*,*) 'read pressure level data done'
+!           write(*,*) 'read pressure level data done'
  
          end do
 

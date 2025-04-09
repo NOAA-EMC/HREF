@@ -55,8 +55,8 @@ c    for derived variables
         jpd27=-9999
         !jpdtn=0
 
-        write(*,*) 'In get_wind_rh_joint', ifunit
-        write(*,*) 'jf,iens,Lp,Lt=',jf,iens,Lp,Lt
+!        write(*,*) 'In get_wind_rh_joint', ifunit
+!        write(*,*) 'jf,iens,Lp,Lt=',jf,iens,Lp,Lt
 
         DO 101 irun=1,iens
 
@@ -122,7 +122,7 @@ c    for derived variables
 
 101     CONTINUE
 
-        write(*,*) 'Get wind10 and RH2 data done '
+!        write(*,*) 'Get wind10 and RH2 data done '
 
         derv_pr = 0.
         do 600 igrid = 1, jf

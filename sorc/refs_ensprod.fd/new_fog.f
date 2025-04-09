@@ -74,10 +74,10 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
         eps='any  '
         write(*,*) 'In new_fog .....' 
-        write(*,*) 'ifunit=', ifunit
-        write(*,*) 'ipunit=', ipunit
-        write(*,*) 'nv,jf,im,jm,dx,dy,iens,Lm,Lp,Lt='
-        write(*,*)  nv,jf,im,jm,dx,dy,iens,Lm,Lp,Lt
+!        write(*,*) 'ifunit=', ifunit
+!        write(*,*) 'ipunit=', ipunit
+!        write(*,*) 'nv,jf,im,jm,dx,dy,iens,Lm,Lp,Lt='
+!        write(*,*)  nv,jf,im,jm,dx,dy,iens,Lm,Lp,Lt
         !jpdtn=0
           if (jpdtn.eq.0) then
 c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
@@ -92,14 +92,14 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
 
         miss=0
 
-        write(*,*) 'jpdtn=',jpdtn
-        write(*,*) 'jpdtnp=',jpdtnp
-        write(*,*) 'jp27=',jp27
-        write(*,*) 'miss=',miss
+!        write(*,*) 'jpdtn=',jpdtn
+!        write(*,*) 'jpdtnp=',jpdtnp
+!        write(*,*) 'jp27=',jp27
+!        write(*,*) 'miss=',miss
 
       bigloop:  do irun=1,iens
           !jpdtn=0
-        write(*,*) 'before read U10m'
+!        write(*,*) 'before read U10m'
           call readGB2(ifunit(irun),jpdtn,2,2,103,10,jp27,gfld,eps,ie) !U10m 
           if(ie.eq.0) then
            U10m(:,irun)=gfld%fld
@@ -107,7 +107,7 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read U10m'
+!        write(*,*) 'after read U10m'
 
           call readGB2(ifunit(irun),jpdtn,2,3,103,10,jp27,gfld,eps,ie) !V10m 
           if(ie.eq.0) then
@@ -116,7 +116,7 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read V10m'
+!        write(*,*) 'after read V10m'
 
           call readGB2(ifunit(irun),jpdtn,1,1,103,2,jp27,gfld,eps,ie) !RH2m
           if(ie.eq.0) then
@@ -125,7 +125,7 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read RH2m'
+!        write(*,*) 'after read RH2m'
 
           call readGB2(ifunit(irun),jpdtn,0,0,103,2,jp27,gfld,eps,ie) !T2m(current)
           if(ie.eq.0) then
@@ -134,10 +134,10 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read T2m (current)'
+!        write(*,*) 'after read T2m (current)'
 
           call readGB2(ifunit(irun),jpdtn,3,5,2,0,jp27,gfld,eps,ie) !CLDBS
-        write(*,*) 'after read cloud base'
+!        write(*,*) 'after read cloud base'
           if(ie.eq.0) then
 ! account for bmap
 
@@ -167,7 +167,7 @@ c        endif
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read cloud top'
+!        write(*,*) 'after read cloud top'
 
           call readGB2(ifunit(irun),jpdtn,3,5,1,0,jp27,gfld,eps,ie) !Hsfc
           if(ie.eq.0) then
@@ -176,12 +176,12 @@ c        endif
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read surface height'
+!        write(*,*) 'after read surface height'
 
 c Temperature variation in prcip file is in Template 8
-        write(*,*) 'before read dT2m'
-        write(*,*) 'ipunit=',ipunit
-        write(*,*) 'jpdtnp=',jpdtnp
+!        write(*,*) 'before read dT2m'
+!        write(*,*) 'ipunit=',ipunit
+!        write(*,*) 'jpdtnp=',jpdtnp
 c use Td2m as a placeholder for testing
 c         call readGB2(ifunit(irun),jpdtn,0,6,103,2,jp27,gfld,eps,ie)        !dTd2m
           call readGB2(ipunit(irun),jpdtnp,0,0,103,2,jp27,gfld,eps,ie)       !dT2m
@@ -192,7 +192,7 @@ c         call readGB2(ifunit(irun),jpdtn,0,6,103,2,jp27,gfld,eps,ie)        !dT
              miss(irun)=1
              cycle bigloop
           end if
-        write(*,*) 'after read dT2m'
+!        write(*,*) 'after read dT2m'
  
            do k=1,10
             lvl=p(k)
@@ -200,23 +200,23 @@ c         call readGB2(ifunit(irun),jpdtn,0,6,103,2,jp27,gfld,eps,ie)        !dT
               call readGB2(ifunit(irun),jpdtn,2,2,100,lvl,jp27,gfld,
      +           eps,ie) 
                 Upr(:,irun,k)=gfld%fld
-        write(*,*) 'after read Upr'
+!        write(*,*) 'after read Upr'
               call readGB2(ifunit(irun),jpdtn,2,3,100,lvl,jp27,gfld,
      +           eps,ie) 
                 Vpr(:,irun,k)=gfld%fld
-        write(*,*) 'after read Vpr'
+!        write(*,*) 'after read Vpr'
               call readGB2(ifunit(irun),jpdtn,1,1,100,lvl,jp27,gfld,
      +            eps,ie)  
                 RHpr(:,irun,k)=gfld%fld
-        write(*,*) 'after read RHpr'
+!        write(*,*) 'after read RHpr'
               call readGB2(ifunit(irun),jpdtn,3,5,100,lvl,jp27,gfld,
      +            eps,ie)      
                 Hpr(:,irun,k)=gfld%fld
-        write(*,*) 'after read Hpr'
+!        write(*,*) 'after read Hpr'
               call readGB2(ifunit(irun),jpdtn,0,0,100,lvl,jp27,gfld,
      +            eps,ie)      
                 Tpr(:,irun,k)=gfld%fld-273.15
-        write(*,*) 'after read Tpr'
+!        write(*,*) 'after read Tpr'
                
 c use Td as a placeholder for testing
 c             call readGB2(ifunit(irun),jpdtn,0,6,100,lvl,jp27,gfld,
@@ -224,7 +224,7 @@ c             call readGB2(ifunit(irun),jpdtn,0,6,100,lvl,jp27,gfld,
      +            eps,ie)      
                 dTpr(:,irun,k)=gfld%fld
             end do
-        write(*,*) 'after read dTpr (past)'
+!        write(*,*) 'after read dTpr (past)'
 
            end do bigloop
 

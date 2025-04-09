@@ -61,9 +61,9 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
         write(*,*) 'In meanwind (850-300mb wind average).....'
-        write(*,*) 'ifunit=', ifunit, eps
+!        write(*,*) 'ifunit=', ifunit, eps
 
-        write(*,*)  nv,jf,iens,Lm,Lp,Lt,jpdtn
+!        write(*,*)  nv,jf,iens,Lm,Lp,Lt,jpdtn
 
         !jpdtn=0
         jp27=-9999
@@ -93,11 +93,11 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             call readGB2(ifunit(irun),jpdtn,2,2,100,p(k),jp27,gfld,
      +              eps,ie)
                 Upr(:,irun)=gfld%fld
-                write(*,*) 'read U at lev',p(k),' is done, ens=',irun
+!                write(*,*) 'read U at lev',p(k),' is done, ens=',irun
             call readGB2(ifunit(irun),jpdtn,2,3,100,p(k),jp27,gfld,
      +              eps,ie)
                 Vpr(:,irun)=gfld%fld
-                write(*,*) 'read V at lev',p(k),' is done, ens=',irun
+!                write(*,*) 'read V at lev',p(k),' is done, ens=',irun
             Wpr(:,irun,k)=sqrt(Upr(:,irun)*Upr(:,irun)+
      +                         Vpr(:,irun)*Vpr(:,irun))   
             end do lvl_loop
@@ -114,7 +114,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
                meanWpr(:,irun)= meanWpr(:,irun)/lvl
             end if
 
-            write(*,*) 'read/compute meanWpr for irun', irun, ' done'
+!            write(*,*) 'read/compute meanWpr for irun', irun, ' done'
 
 600      continue 
 

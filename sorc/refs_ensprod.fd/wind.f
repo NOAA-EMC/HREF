@@ -85,17 +85,17 @@ c    for derived variables
 	if (jpd12 .eq. 10) then
 
 
-	write(0,*) 'jpdtn, jpd1: ', jpdtn, jpd1
+!	write(0,*) 'jpdtn, jpd1: ', jpdtn, jpd1
            call readGB2(ifunit(irun),8,2,222,103,10,jp27,
      +       gfld,eps,iret)   !UMAX mean -component
 
            if (iret .eq. 0) then
-             write(0,*) 'found UMAX'
+!             write(0,*) 'found UMAX'
              u(:,irun)=gfld%fld
            else
 
           
-	write(0,*) 'no UMAX'
+!	write(0,*) 'no UMAX'
            call readGB2(ifunit(irun),jpdtn,jpd1,2,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !U mean -component
             if (iret.eq.0) then
@@ -125,10 +125,10 @@ c    for derived variables
      +       gfld,eps,iret)   !VMAX mean -component
 
            if (iret .eq. 0) then
-	     write(0,*) 'found VMAX'
+!	     write(0,*) 'found VMAX'
              v(:,irun)=gfld%fld
            else
-	     write(0,*) 'no VMAX'
+!	     write(0,*) 'no VMAX'
            call readGB2(ifunit(irun),jpdtn,jpd1,3,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !V mean -component
             if (iret.eq.0) then
@@ -154,17 +154,17 @@ c    for derived variables
 
          endif
 
-	write(0,*) 'define windspd for irun: ', irun
+!	write(0,*) 'define windspd for irun: ', irun
            do igrid = 1,jf
              windspd(igrid,irun)=sqrt(u(igrid,irun)*u(igrid,irun)+
      +                             v(igrid,irun)*v(igrid,irun))
            enddo
 
-	write(0,*) 'windspd(igrid/2,:) ', windspd(igrid/2,:)
+!	write(0,*) 'windspd(igrid/2,:) ', windspd(igrid/2,:)
 
            end do loop400
      
-           write(*,*) 'get wind speed mean for level ',jpd12
+!           write(*,*) 'get wind speed mean for level ',jpd12
 
            do igrid = 1,jf
              Uapoint=u(igrid,:)

@@ -60,9 +60,9 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
         write(*,*) 'In meanomeg (700-500mb omeg average).....'
-        write(*,*) 'ifunit=', ifunit, eps
+!        write(*,*) 'ifunit=', ifunit, eps
 
-        write(*,*)  nv,jf,iens,Lm,Lp,Lt
+!        write(*,*)  nv,jf,iens,Lm,Lp,Lt
 
         !jpdtn=0
         jp27=-9999
@@ -84,28 +84,28 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             end do
               meanOMEGpr(:,irun)= meanOMEGpr(:,irun)/lvl
 
-            write(*,*) 'read/compute meanOMEGpr for irun', irun, ' done'
+!            write(*,*) 'read/compute meanOMEGpr for irun', irun, ' done'
 
 600      continue 
 
 
-	write(0,*) 'dMlvl(nv) for meanomeg: ', dMlvl(nv)
+!	write(0,*) 'dMlvl(nv) for meanomeg: ', dMlvl(nv)
 
            DO lv=1,dMlvl(nv)-1    !one layer between 2 levels 
               do igrid = 1,jf
                  apoint(:)=meanOMEGpr(igrid,:)
 
-	if (igrid .eq. 1) write(0,*) 'wgt(1:5): ', wgt(1:5)
+!	if (igrid .eq. 1) write(0,*) 'wgt(1:5): ', wgt(1:5)
 
-	if (mod(igrid,100000) .eq. 0) then
-	write(0,*) 'apoint: ', igrid, apoint
-	endif
+!	if (mod(igrid,100000) .eq. 0) then
+!	write(0,*) 'apoint: ', igrid, apoint
+!	endif
                  call getmean(apoint,iens,amean,aspread,miss,wgt)
                  derv_mn(igrid,lv)=amean
 
-	if (mod(igrid,100000) .eq. 0) then
-	write(0,*) 'derv_mn: ', igrid,lv,derv_mn(igrid,lv)
-	endif
+!	if (mod(igrid,100000) .eq. 0) then
+!	write(0,*) 'derv_mn: ', igrid,lv,derv_mn(igrid,lv)
+!	endif
 
                  derv_sp(igrid,lv)=aspread
               end do

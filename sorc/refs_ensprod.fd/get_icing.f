@@ -81,10 +81,10 @@ c          write(*,*) 'jpd10 jpd12=',jpd10, jpd12
              cycle loop601
             end if
 
-           call readGB2(ifunit(irun),jpdtn,2,8,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn,2,9,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !W
             if(iret.eq.0) then
-             W(:,irun)=gfld%fld
+             W(:,irun)=-gfld%fld  ! flip sign
             else
              missing(lv,irun)=1
              cycle loop601

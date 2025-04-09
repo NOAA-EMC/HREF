@@ -133,9 +133,9 @@ c            ipdtmpl(5)=132              !assigned 20161214
  
           end if  
 
-	write(0,*) 'here jpd10: ', jpd10
-	write(0,*) 'here jpd1: ', jpd1
-	write(0,*) 'here jpd2: ', jpd2
+!	write(0,*) 'here jpd10: ', jpd10
+!	write(0,*) 'here jpd1: ', jpd1
+!	write(0,*) 'here jpd2: ', jpd2
 
           if(jpd10.eq.100) then
              ipdtmpl(12)=dMeanLevel(nv,ml)*100
@@ -178,16 +178,16 @@ c            ipdtmpl(5)=132              !assigned 20161214
             ipdtmpl(13)=103
             ipdtmpl(14)=0
             ipdtmpl(15)=6000
-           write(0,*) 'defined 12 and 15: ', 
-     &           ipdtmpl(12),ipdtmpl(15)
+!           write(0,*) 'defined 12 and 15: ', 
+!     &           ipdtmpl(12),ipdtmpl(15)
 
 
           else
              ipdtmpl(12)=dMeanLevel(nv,ml)
           end if
 
-	write(0,*) 'putting ml into gfld%fld: ', ml
-          gfld%fld=derv_mn(:,ml) 
+!	write(0,*) 'putting ml into gfld%fld: ', ml
+!          gfld%fld=derv_mn(:,ml) 
           
           if(gfld%ibmap .ne. 255 ) then
             gfld%ibmap=0     !important reseting

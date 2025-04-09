@@ -17,9 +17,8 @@
         allocate(vrbl_mn_hold(jf,lm))
         allocate(rawdata_mn_loc(jf,iens,lm))
 
-	write(0,*) 'pmatch_mean iens, jf, lm: ', iens, jf, lm
-
-	write(0,*) 'jpd1, jpd2: ', jpd1, jpd2
+!	write(0,*) 'pmatch_mean iens, jf, lm: ', iens, jf, lm
+!	write(0,*) 'jpd1, jpd2: ', jpd1, jpd2
 
 ! set local copy to rawdata_mn
 	rawdata_mn_loc=rawdata_mn
@@ -49,16 +48,16 @@
         call quick_sort(vrbl_mn,listorder,jf)
         call quick_sort(rawdata_1d,listorderfull,iens*jf)
 
-        write(0,*) 'min,maxval(rawdata_mn): ',minval(rawdata_mn(:,:,lv))
-     &                                       ,maxval(rawdata_mn(:,:,lv))
-        write(0,*) 'min,maxval(rawdata_mn_loc): ', 
-     &  minval(rawdata_mn_loc(:,:,lv)),maxval(rawdata_mn_loc(:,:,lv))
+!        write(0,*) 'min,maxval(rawdata_mn): ',minval(rawdata_mn(:,:,lv))
+!     &                                       ,maxval(rawdata_mn(:,:,lv))
+!        write(0,*) 'min,maxval(rawdata_mn_loc): ', 
+!     &  minval(rawdata_mn_loc(:,:,lv)),maxval(rawdata_mn_loc(:,:,lv))
 
-        write(0,*) 'minval(vrbl_mn(:,lv)): ',minval(vrbl_mn(:,lv))
-        write(0,*) 'maxval(vrbl_mn(:,lv)): ',maxval(vrbl_mn(:,lv))
+!        write(0,*) 'minval(vrbl_mn(:,lv)): ',minval(vrbl_mn(:,lv))
+!        write(0,*) 'maxval(vrbl_mn(:,lv)): ',maxval(vrbl_mn(:,lv))
 
-        write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
-        write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
+!        write(0,*) 'minval(rawdata_1d(:)): ', minval(rawdata_1d(:))
+!        write(0,*) 'maxval(rawdata_1d(:)): ', maxval(rawdata_1d(:))
 
         vrbl_mn_pm(:,lv)=-999.
 
@@ -112,8 +111,8 @@
 
         vrbl_mn=vrbl_mn_hold
 
-	write(0,*) 'ibound_min: ', ibound_min
-	write(0,*) 'ibound_max: ', ibound_max
+!	write(0,*) 'ibound_min: ', ibound_min
+!	write(0,*) 'ibound_max: ', ibound_max
 
 	deallocate(listorderfull)
         deallocate(listorder)

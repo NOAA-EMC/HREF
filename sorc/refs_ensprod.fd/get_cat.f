@@ -51,13 +51,13 @@ c    for derived variables
         jp27=-9999
  
         write(*,*) 'In get_cat .....'
-        write(*,*) 'nv,ifunit,jf,iens,Lp,Lt,jpd10,nx,ny,dx,dy',
-     +              nv,ifunit,jf,iens,Lp,Lt,jpd10,nx,ny,dx,dy
+!        write(*,*) 'nv,ifunit,jf,iens,Lp,Lt,jpd10,nx,ny,dx,dy',
+!     +              nv,ifunit,jf,iens,Lp,Lt,jpd10,nx,ny,dx,dy
 
         do k=1,dPlvl(nv)
           p(k)=dProbLevel(nv,k)
         end do
-        write(*,*) 'p(k)',p
+!        write(*,*) 'p(k)',p
         
         do i=1,iens
            do k=1,dPlvl(nv)

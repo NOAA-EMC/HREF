@@ -515,8 +515,8 @@ c      write(*,*) 'numvar before DO 2001 ', numvar
        DO 2001 nv = 1, numvar
        loop222: do III=1,1
 
-       write(*,*) 'nv Mlvl(nv),Plvl(nv),Tlvl(nv)=',
-     +    nv, Mlvl(nv),Plvl(nv),Tlvl(nv)
+!       write(*,*) 'nv Mlvl(nv),Plvl(nv),Tlvl(nv)=',
+!     +    nv, Mlvl(nv),Plvl(nv),Tlvl(nv)
 
 c  Loop  1-0: Allocate nesessary arrays
          if (.NOT.allocated(rawdata_mn)) then
@@ -556,7 +556,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
          jret=0
          kret=0
 
-         write(*,*) 'For ensemble member#', irun
+!         write(*,*) 'For ensemble member#', irun
 
          !apcp1h,apcp3hr,apcp6hr,apcp12,apcp24 have been put into 
          !every members as direct variable
@@ -654,7 +654,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
 
            igrb2=ipunit(irun)
 	
-	write(0,*) 'vname(nv), igrb2: ',vname(nv), igrb2
+!	write(0,*) 'vname(nv), igrb2: ',vname(nv), igrb2
 
           ELSE                   !Non-APCP/Snow
 
@@ -751,10 +751,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
             jpd27=10    !only 0-10 cm layer soil temperature is requested
           end if
 
-          write(0,*)'a1 - readGB2:', 
-     &          igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+!          write(0,*)'a1 - readGB2:', 
+!     &          igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27
+
           call readGB2(igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,jpd27,
      +          gfld, eps, jret)
+
 !          write(0,*) 'a2 - readGB ',igrb2,' for mean kret=',kret 
 
 
@@ -773,22 +775,19 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
            endif
 
 
-             write(0,*) 'past bmap_f definition'
+!             write(0,*) 'past bmap_f definition'
 
 ! avoid accounting for echo top bitmap (and cloud base/ceiling from HRRR) (and REFC from FV3 now)
 ! and FV3 soil
 ! and FV3 WEASD
 
         if (jf .ne. 72225 .and. jf .ne. 168640) then ! if AK/CONUS 
-                write(0,*) 'into this if block'
 
            if ( jpd2.ne.197 .and. jpd2.ne.5 .and. 
      &          jpd2.ne. 192 .and. jpd2 .ne. 2 .and. 
      &          jpd2 .ne. 13 ) then
 
            if (size(gfld%bmap) .gt. 0) then
-
-                write(0,*) 'in here looking at bmap_f and gfld%bmap'
 
             do J=1,jf
              if ( (bmap_f(J)) .and. (.not. gfld%bmap(J))) then
@@ -898,10 +897,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
             end if
 
            end do
-            if(k4(nv).eq.1.and.k5(nv).eq.29) then
-                   write(0,*) 'max rawdata_mn for asnow: ',
-     +      maxval(rawdata_mn(:,irun,lv))
-            endif
+
+!            if(k4(nv).eq.1.and.k5(nv).eq.29) then
+!                   write(0,*) 'max rawdata_mn for asnow: ',
+!     +      maxval(rawdata_mn(:,irun,lv))
+!            endif
+
           end do
  
           do lv = 1, Plvl(nv)
@@ -920,10 +921,10 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 end if
              end if
             end do
-            if(k4(nv).eq.1.and.k5(nv).eq.29) then
-                   write(0,*) 'max converted rawdata_pr for asnow: ',
-     +      maxval(rawdata_pr(:,irun,lv))
-            endif
+!            if(k4(nv).eq.1.and.k5(nv).eq.29) then
+!                   write(0,*) 'max converted rawdata_pr for asnow: ',
+!     +      maxval(rawdata_pr(:,irun,lv))
+!            endif
 
            !Get neighborhood max value, where A,B,C,D: for different !neighborhood radius
            if (trim(Psignal(nv)).eq.'A'.or.trim(Psignal(nv)).eq.'K' .or.
@@ -973,9 +974,9 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
 
            apoint = rawdata_mn(igrid,:,lv)
 
-	if (igrid .eq. 937093) then
-	write(0,*) 'lv, apoint(937093): ',lv, apoint
-	endif
+!	if (igrid .eq. 937093) then
+!	write(0,*) 'lv, apoint(937093): ',lv, apoint
+!	endif
 
            miss = missing(nv,:)
 
@@ -1033,13 +1034,13 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
             vrbl_sp(igrid,lv)=aspread
 
             if (igrid .eq. jf) then
-              write(6,*) 'igrid = jf block'
-               write(6,*) 'nv,k4(nv),k5(nv): ', nv,k4(nv),k5(nv)
+!              write(6,*) 'igrid = jf block'
+!               write(6,*) 'nv,k4(nv),k5(nv): ', nv,k4(nv),k5(nv)
               
             if (trim(Msignal(nv)).eq.'P') then
-               write(*,*) 'shape(rawdata_mn): ', shape(rawdata_mn)
-               write(*,*) 'shape(vrbl_mn):', shape(vrbl_mn)
-               write(*,*) 'shape(vrbl_mn_pm):', shape(vrbl_mn_pm)
+!               write(*,*) 'shape(rawdata_mn): ', shape(rawdata_mn)
+!               write(*,*) 'shape(vrbl_mn):', shape(vrbl_mn)
+!               write(*,*) 'shape(vrbl_mn_pm):', shape(vrbl_mn_pm)
 
                Lm=max(1,Mlvl(nv))                !Keep at least one vrbl_mn to pass it into packGB2 
 !              allocate (vrbl_mn(jf,Lm))         !in case Mlvl(nv)=0
@@ -1050,17 +1051,17 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
      &             k4(nv),k5(nv),k6(nv),vrbl_mn_pm,lv,lm,jf,iens)
 
 	       vrbl_mn_blend(:,:)=0.5*(vrbl_mn_pm(:,:)+vrbl_mn(:,:))
-               write(6,*) 'maxval(vrbl_mn_blend): ', 
-     &          maxval(vrbl_mn_blend)
+!               write(6,*) 'maxval(vrbl_mn_blend): ', 
+!     &          maxval(vrbl_mn_blend)
  
               endif
 
-	write(0,*) 'past pmatch_mean with vname(nv): ', vname(nv)
+!	write(0,*) 'past pmatch_mean with vname(nv): ', vname(nv)
 
               if (trim(Msignal(nv)).eq.'L') then
 
 
-	write(0,*) 'AP1h/AP3h branch'
+!	write(0,*) 'AP1h/AP3h branch'
                patch_nx=6
                patch_ny=6
                ovx=patch_nx*5
@@ -1107,8 +1108,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
                enddo
 
-            write(0,*) 'presmooth max(vrbl_mn_locpm): ', 
-     &                  maxval(vrbl_mn_locpm)
+!            write(0,*) 'presmooth max(vrbl_mn_locpm): ', 
+!     &                  maxval(vrbl_mn_locpm)
 
              call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
      +           'M','M')
@@ -1119,8 +1120,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                deallocate(vrbl_pmmn_2d)
 
 
-            write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 
-     &                  maxval(vrbl_mn_locpm)
+!            write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 
+!     &                  maxval(vrbl_mn_locpm)
 
                endif ! lpm variable selection
 
@@ -1130,8 +1131,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
           end do  !end of igrid loop
   
-         write(*,'(a4,10f9.2)')'MEAN',(vrbl_mn(i,lv),i=jf/2,jf/2+9)
-         write(*,'(a4,10f9.2)')'SPRD',(vrbl_sp(i,lv),i=jf/2,jf/2+9)
+!         write(*,'(a4,10f9.2)')'MEAN',(vrbl_mn(i,lv),i=jf/2,jf/2+9)
+!         write(*,'(a4,10f9.2)')'SPRD',(vrbl_sp(i,lv),i=jf/2,jf/2+9)
 
          end do  !end if Mlvl
 
@@ -1758,9 +1759,9 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
              else
 
-             if (igrid .eq. jf/2) then
-             write(0,*) 'working on : ', vname(nv)
-             endif
+!             if (igrid .eq. jf/2) then
+!             write(0,*) 'working on : ', vname(nv)
+!             endif
 
 
 ! thr1 needs to come from the grid point of the RI data (and FFG data...using same return_int array)
@@ -1769,13 +1770,12 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 ! over which the RI is computed
 
 	     thr1=return_int(igrid)
-             if (mod(igrid,100000) .eq. 0) then
-               write(0,*) 'for igrid: ', igrid
-               write(0,*) 'working using thr1: ', thr1
-               write(0,*) 'maxval(apoint): ', maxval(apoint)
-               write(0,*) 'op(nv): ', op(nv)
-
-              endif
+!             if (mod(igrid,100000) .eq. 0) then
+!               write(0,*) 'for igrid: ', igrid
+!               write(0,*) 'working using thr1: ', thr1
+!               write(0,*) 'maxval(apoint): ', maxval(apoint)
+!               write(0,*) 'op(nv): ', op(nv)
+!              endif
              thr2=0.
 	if (thr1 .gt. 0 .and. thr1 .le. 99999.) then
              call getprob(apoint,iens,thr1,thr2,op(nv),aprob,
@@ -1806,8 +1806,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
              !write(*,*) 'before smoothing',vrbl_pr(797267,lv,lt)
 
-	write(0,*) 'Tsignal(nv) at gsmoothing vrbl_pr: ',
-     &         nv,Tsignal(nv)
+!	write(0,*) 'Tsignal(nv) at gsmoothing vrbl_pr: ',
+!     &         nv,Tsignal(nv)
           
              call Gsmoothing(vrbl_pr(:,lv,lt),jf,im,jm,
      +           Psignal(nv),Tsignal(nv))
@@ -1832,7 +1832,7 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
          do lv = 1, Plvl(nv)
           do lt = 1, Tlvl(nv)
-            write(*,*) 'Call  neighborhood fraction .......'
+!            write(*,*) 'Call  neighborhood fraction .......'
  
              if(trim(op(nv)).ne.'-') then
                thr1 = Thrs(nv,lt)
@@ -1900,7 +1900,7 @@ c               end if
        END IF  !! End of Psignal(nv) = 'S' 
 
 
-        write(*,*) 'Ensemble computation done for direct var ', nv
+!        write(*,*) 'Ensemble computation done for direct var ', nv
 c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 ! Reset gfld%bmap with the combined version bmap_f
@@ -1916,7 +1916,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
         if (trim(Msignal(nv)).eq.'M') then
 
-	write(0,*) 'calling packGB2_mean for M 1,2,27 ', jpd1,jpd2, jpd27
+!	write(0,*) 'calling packGB2_mean for M 1,2,27 ', jpd1,jpd2, jpd27
 
 
 ! reset EMSL to write out as PMSL?
@@ -1924,11 +1924,11 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 !        jpd2=1
 !        endif
 
-	write(0,*) 'here with maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
+!	write(0,*) 'here with maxval(vrbl_mn(:,Lm)): ', maxval(vrbl_mn(:,Lm))
           call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)    !gfld is used to send in other info 
-          write(*,*) 'packing mean direct var for', nv
+!          write(*,*) 'packing mean direct var for', nv
 
 	if (jpd2 .eq. 13 .and. jpd27 .eq. 1)  then
 	write(0,*) 'defining vrbl_mn_use'
@@ -1940,8 +1940,8 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 	  vrbl_mn_use(JJJ)=vrbl_mn(JJJ,Lm)
           enddo
 	 
-	write(0,*) 'min/max of test SNOW field ', minval(vrbl_mn_use),
-     +                                       maxval(vrbl_mn_use)
+!	write(0,*) 'min/max of test SNOW field ', minval(vrbl_mn_use),
+!     +                                       maxval(vrbl_mn_use)
 
 !          call packGB2_mean(imean,isprd,vrbl_mn_use,vrbl_sp,   !jpd12 is determined inside 
 !     +          nv,jpd1,jpd2loc,jpd10,jpd27,jf,Lm,
@@ -1976,7 +1976,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
           call packGB2_mean(ipmmn,isprd,vrbl_mn_pm,vrbl_sp,    
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
-          write(*,*) 'packing PM mean direct var for', nv
+!          write(*,*) 'packing PM mean direct var for', nv
 
 ! AVRG
 ! limit avrg to precip
@@ -1995,7 +1995,7 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      &        vname(nv).eq.'FZ6h' .or. vname(nv).eq.'FZ12' .or.
      &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
 
-         write(0,*) 'make sure it gets packed like a true mean field'
+!         write(0,*) 'make sure it gets packed like a true mean field'
          Msignal(nv)='M'
           call packGB2_mean(imean,isprd,vrbl_mn,vrbl_sp,   !jpd12 is determined inside 
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
@@ -2025,9 +2025,9 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      &     vname(nv) .eq. 'FFG3' .or. vname(nv) .eq. 'FFG6' .or.
      &     vname(nv) .eq. 'FF12' .or. vname(nv) .eq. 'FF24')  then
 
-	write(0,*) 'calling packGB2_prob for FFG/ARI'
-        write(0,*) 'writing out: ', vname(nv)
-        write(0,*) 'max of vrbl_pr: ', maxval(vrbl_pr)
+!	write(0,*) 'calling packGB2_prob for FFG/ARI'
+        write(0,*) 'writing out FFG/ARI: ', vname(nv)
+!        write(0,*) 'max of vrbl_pr: ', maxval(vrbl_pr)
 
 
          call packGB2_prob(iffri,vrbl_pr,             !jpd12 is determined inside
@@ -2036,9 +2036,9 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
         else
 
-	write(0,*) 'calling packGB2_prob for normal'
-        write(0,*) 'writing out: ', vname(nv)
-        write(0,*) 'max of vrbl_pr: ', maxval(vrbl_pr)
+!	write(0,*) 'calling packGB2_prob for normal'
+        write(0,*) 'writing out normal: ', vname(nv)
+!        write(0,*) 'max of vrbl_pr: ', maxval(vrbl_pr)
 
 	if (vname(nv) .eq. 'LTNG') then
             gfld=gfld_lightning

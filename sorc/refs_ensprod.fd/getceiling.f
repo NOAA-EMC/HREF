@@ -145,12 +145,12 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
           CLDBapoint=cldb(igrid,:)
           HSFCapoint=hsfc(igrid,:)
 
-	if (igrid .eq. 842084) then
-	write(0,*) 'miss: ', miss
-	write(0,*) 'TCLDapoint: ', TCLDapoint
-	write(0,*) 'CLDBapoint: ', CLDBapoint
-	write(0,*) 'HSFCapoint: ', HSFCapoint
-        endif
+!	if (igrid .eq. 842084) then
+!	write(0,*) 'miss: ', miss
+!	write(0,*) 'TCLDapoint: ', TCLDapoint
+!	write(0,*) 'CLDBapoint: ', CLDBapoint
+!	write(0,*) 'HSFCapoint: ', HSFCapoint
+!        endif
 
           do i = 1, iens
             if(miss(i).eq.0) then
@@ -161,14 +161,14 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
      +          CLDBapoint(i).ge.0.0  ) then
                 CEILapoint(i) = CLDBapoint(i) - HSFCapoint(i)
                 if(CEILapoint(i).lt.0.0) CEILapoint(i)=0.0
-	if (igrid .eq. 842084) then
-          write(0,*) 'defined CEILapoint(i) ', i, CEILapoint(i)
-	endif
+!	if (igrid .eq. 842084) then
+!          write(0,*) 'defined CEILapoint(i) ', i, CEILapoint(i)
+!	endif
               else
                 CEILapoint(i)=20000.0
-	if (igrid .eq. 842084) then
-          write(0,*) 'defaulted CEILapoint(i) ', i, CEILapoint(i)
-	endif
+!	if (igrid .eq. 842084) then
+!          write(0,*) 'defaulted CEILapoint(i) ', i, CEILapoint(i)
+!	endif
               end if
             end if
           end do               
