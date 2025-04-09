@@ -94,9 +94,9 @@ fi
 else
 if [[ $region == "conus" || $region == "ak" ]]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.3km.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${region}.grib2
 else # HI/PR
- filecheck=$COMINrrfs/refs.${day}/${cyc}/mem00$name/rrfs.t${cyc}z.m${name}.prslev.3p5km.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${region}.grib2
 
 fi
 

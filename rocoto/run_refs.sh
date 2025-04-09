@@ -4,7 +4,7 @@ module load core/rocoto/1.3.5
 
 module list
 
-doms="hi conus pr ak"
+doms="conus ak hi pr"
 
 dir="/lfs/h2/emc/lam/noscrub/emc.lam/enspost/refs.v1.0.0/rocoto"
 

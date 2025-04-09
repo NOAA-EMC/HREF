@@ -23,14 +23,14 @@ export pgmout="OUTPUT.${pid}"
 
 types="prob avrg eas ffri lpmm mean pmmn sprd"
 
-aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.*.grib2*"
+aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.*.grib2*"
 
 
 if [ -d $DATASNOW ]; then
 cd $DATASNOW
 
 
-aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.*snow*.grib2*"
+aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.*snow*.grib2*"
 
 else
 echo "WARNING: no snow data"
@@ -40,7 +40,7 @@ fi
 
 if [ $cyc -eq 00 -o $cyc -eq 06 -o $cyc -eq 12 -o $cyc -eq 18 ]; then
   echo "I am done" > donefile.enspostaws.${CDATE}
-  aws s3 cp donefile.enspostaws.${CDATE} s3://noaa-rrfs-pds/rrfs_a/rrfs_a.${PDY}/enspost_timelag/
+  aws s3 cp donefile.enspostaws.${CDATE} s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/enspost_timelag/
 fi
 
 date
