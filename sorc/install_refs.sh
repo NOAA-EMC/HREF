@@ -36,7 +36,7 @@ if [ $ENSPROD = "1" ]
 then
 cd ${BASE}/refs_ensprod.fd
 make install
-make clean
+# make clean
 fi
 
 ############################

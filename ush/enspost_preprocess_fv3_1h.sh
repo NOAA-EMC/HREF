@@ -114,7 +114,7 @@ echo filecheck is $filecheck
         $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
 
-        cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
+        cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb  >> nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
