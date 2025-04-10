@@ -706,6 +706,7 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +         (k4(nv).eq.2.and.k5(nv).eq.223).or.
      +         (k4(nv).eq.16.and.k5(nv).eq.198).or.
      +         (k4(nv).eq.7.and.k5(nv).eq.199).or.
+     +         (k4(nv).eq.17.and.k5(nv).eq.192).or.
      +         (k4(nv).eq.2.and.k5(nv).eq.220).or.
      +         (k4(nv).eq.2.and.k5(nv).eq.221) ) then
                 if(mbrname(irun)(1:4).eq.'sref') then
