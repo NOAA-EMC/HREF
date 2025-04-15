@@ -88,7 +88,7 @@ C for variable table:
              ipdtmpl(3)=4
              ipdtmpl(4)=0
 c            ipdtmpl(5)=132              !assigned 20161214
-             ipdtmpl(5)=134              !for rrfs - J. Du
+             ipdtmpl(5)=136              !for refs 
              ipdtmpl(6)=0
              ipdtmpl(7)=0
              ipdtmpl(8)=1
