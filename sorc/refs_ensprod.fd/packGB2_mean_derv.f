@@ -187,7 +187,7 @@ c            ipdtmpl(5)=132              !assigned 20161214
           end if
 
 !	write(0,*) 'putting ml into gfld%fld: ', ml
-!          gfld%fld=derv_mn(:,ml) 
+          gfld%fld=derv_mn(:,ml) 
           
           if(gfld%ibmap .ne. 255 ) then
             gfld%ibmap=0     !important reseting
