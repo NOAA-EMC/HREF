@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #############################################################
 # 02/02/2015 Binbin Zhou, create for run all scripts 
@@ -8,6 +8,7 @@
 #                    by naming ctl run as mem01 rather than mem00
 # 04/25/2023 Jun Du, added a version of time-lag ensemble (type=single or timelag)
 # 02/06/2024 M. Pyle Switch to REFS
+# 04/11/2025 M. Pyle Making a "by the hour" version
 #############################################################
 
 ########################################
@@ -55,11 +56,26 @@ echo here with DATA $DATA
 echo here with DATAROOT $DATAROOT
 
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
+# export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
+export DATA=${DATA:-${DATAROOT}/${jobid}}
 echo now have DATA $DATA
 
 mkdir -p $DATA
+
+# temp solution?
+if [ $fhr -eq '00' ]
+then
 rm -rf $DATA/*
+fi
+
+if [ $fhr -lt 10 ]
+then
+FHR1=$(printf %1.1i $((10#$fhr)) )
+echo FHR1 is $FHR1
+else
+FHR1=$fhr
+fi
+
 cd $DATA
 
 ####################################
@@ -123,9 +139,25 @@ export GESOUT=${GESOUT:-${GESROOT}/${RUN}}
 
 ###################################################
 
-hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
-21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 \
-41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
+# hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
+# 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 \
+# 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60"
+
+
+# hrlist=$(printf %2.2i $fhr)
+
+hr=$fhr
+
+# let old3=hr-3
+# let old2=hr-2
+# let old1=hr-1
+
+# hrold3=$(printf %2.2i $old3)
+# hrold2=$(printf %2.2i $old2)
+# hrold1=$(printf %2.2i $old1)
+
+# hrlist="$hrold3 $hrold2 $hrold1 $fhr"
+# hrlist="$fhr"
 
 mems="01 02 03 04 05 06"
 
@@ -133,144 +165,68 @@ region=${NEST}
 
 echo defined region $region
 
-if [ -e poe.fv3 ]
+if [ -e ./poe.fv3.${hr} ]
 then
-rm poe.fv3
+rm ./poe.fv3.${hr}
 fi
 
 for mem in $mems
 do
-if [ $type = single ]; then
 if [ $mem = 01 ]; then name=00; fi
 if [ $mem = 02 ]; then name=01; fi
 if [ $mem = 03 ]; then name=02; fi
 if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
-if [ $mem = 07 ]; then name=06; fi
-if [ $mem = 08 ]; then name=07; fi
-if [ $mem = 09 ]; then name=08; fi
-if [ $mem = 10 ]; then name=09; fi
-else
-if [ $mem = 01 ]; then name=00; fi
-if [ $mem = 02 ]; then name=01; fi
-if [ $mem = 03 ]; then name=02; fi
-if [ $mem = 04 ]; then name=03; fi
-if [ $mem = 05 ]; then name=04; fi
-if [ $mem = 06 ]; then name=05; fi
-if [ $mem = 07 ]; then name=00; fi
-if [ $mem = 08 ]; then name=01; fi
-if [ $mem = 09 ]; then name=02; fi
-if [ $mem = 10 ]; then name=03; fi
-if [ $mem = 11 ]; then name=04; fi
-if [ $mem = 12 ]; then name=05; fi
-fi
 
-for hr in $hrlist
-do
-
- if [ $type = timelag ]; then
-  if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
-   backdate=`$ndate -06 $PDY$cyc`
-   backday=`echo $backdate | cut -c1-8`
-   backcyc=`echo $backdate | cut -c9-10`
-
-   echo "$USHrefs/enspost_preprocess_fv3_1h.sh ${backday} ${backcyc} ${mem} ${name} $hr ${region}" >> poe.fv3
-  else
-   echo "$USHrefs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3
-  fi
- else
-  echo "$USHrefs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3
- fi
+ echo "$USHrefs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3.${hr}
 
 done
-done
 
-chmod 775 poe.fv3  
+chmod 775 poe.fv3.${hr}
 
-mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.fv3
+mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.fv3.${hr}
 export err=$?; err_chk
 
 
 # need to generate 3 h QPF
 
-if [ -e poe.3hqpf ]
+if [ -e poe.3hqpf.${hr} ]
 then
-rm poe.3hqpf
+rm poe.3hqpf.${hr}
 fi
 
-if [ -e poe.3hqpf.tlb ]
-then
-rm poe.3hqpf.tlb
-fi
+	if [ $FHR1 -gt 0 ]; then 
+	if (( 10#$hr%3 == 0 )); then
 
 for mem in $mems
 do
+
 echo " calling preprocess_fv3_3hapcp.sh for mem " $mem
-if [ $type = single ]; then
 if [ $mem = 01 ]; then name=00; fi
 if [ $mem = 02 ]; then name=01; fi
 if [ $mem = 03 ]; then name=02; fi
 if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
-if [ $mem = 07 ]; then name=06; fi
-if [ $mem = 08 ]; then name=07; fi
-if [ $mem = 09 ]; then name=08; fi
-if [ $mem = 10 ]; then name=09; fi
-else
-if [ $mem = 01 ]; then name=00; fi
-if [ $mem = 02 ]; then name=01; fi
-if [ $mem = 03 ]; then name=02; fi
-if [ $mem = 04 ]; then name=03; fi
-if [ $mem = 05 ]; then name=04; fi
-if [ $mem = 06 ]; then name=05; fi
-if [ $mem = 07 ]; then name=00; fi
-if [ $mem = 08 ]; then name=01; fi
-if [ $mem = 09 ]; then name=02; fi
-if [ $mem = 10 ]; then name=03; fi
-if [ $mem = 11 ]; then name=04; fi
-if [ $mem = 12 ]; then name=05; fi
-fi
 
-#
-
- if [ $type = timelag ]; then
-  if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
-   backdate=`$ndate -06 $PDY$cyc`
-   backday=`echo $backdate | cut -c1-8`
-   backcyc=`echo $backdate | cut -c9-10`
-  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
-  else
-   echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
-  fi 
- else
-  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
- fi
+echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> poe.3hqpf.${hr}
 
 done
 
-nproc=`cat poe.3hqpf | wc -l`
+nproc=`cat poe.3hqpf.${hr} | wc -l`
 
-chmod 775 poe.3hqpf
+chmod 775 poe.3hqpf.${hr}
 
-# mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf
-mpiexec -n $nproc -ppn 2 --cpu-bind verbose,core cfp ./poe.3hqpf
-export err=$?; err_chk
-
-if [ -e poe.3hqpf.tlb ]
-then
-
-nproc=`cat poe.3hqpf.tlb | wc -l`
-chmod 775 poe.3hqpf.tlb
-mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf.tlb
+mpiexec -n $nproc -ppn 2 --cpu-bind verbose,core cfp ./poe.3hqpf.${hr}
 export err=$?; err_chk
 
 fi
+fi # check on FHR1 gt 0
 
 # end QPF
 
 cd $DATAROOT
-if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+if [ $KEEPDATA = NO -a $hr -eq '60' ]; then rm -rf $DATA; fi
 
 date

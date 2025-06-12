@@ -27,6 +27,40 @@ export fhr=${1}
 export type=${2}
 
 
+
+# clean up old if needed
+
+if [ -e ./${fhr}/ ]
+then
+rm -rf *${fhr}
+fi
+
+
+typeset -Z2 fhrm1
+
+if [ $fhr -gt 1 ]
+then
+let fhrm1=fhr-1
+echo have fhrm1 as $fhrm1
+
+looplim=30
+loop=1
+
+while [ $loop -lt $looplim -a ! -e $DATA/ensprepdone.${fhrm1} ]
+do
+echo missing previous hour
+sleep 20
+let loop=loop+1
+done
+
+if [ ! -e $DATA/ensprepdone.${fhrm1} ]
+then
+echo "NEVER FOUND PREVIOUS HOUR ENSPROD PREP, so quitting"
+exit 99
+fi
+
+fi
+
 #
 # Get members or their softlinks
 #
@@ -34,9 +68,14 @@ export type=${2}
 echo NEST is $NEST
 
 $USHrefs/enspost_getmbr.sh $fhr $NEST $type
+err=$?
 
+if [ $err -eq 0 ]
+then
+echo "DONE" > $DATA/ensprepdone.${fhr}
+fi
 
-#####################################################################
+####################################################################r
 # GOOD RUN
 set +x
 echo "**************$job COMPLETED NORMALLY on `date`"

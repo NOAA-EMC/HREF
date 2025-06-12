@@ -9,6 +9,7 @@
 #          April 2021
 #
 #  05/01/2023, Jun Du -- added a timelag option ($type)
+#  06/12/2025, M Pyle -- updated to hour by hour option (stream --> fhr)
 #
 ####################################################
 
@@ -17,7 +18,7 @@ set -x
 
 if [ $# -ne 6 ]
 then
-echo need 6 inputs: dom, day, cyc, mem, and file name, stream
+echo need 6 inputs: dom, day, cyc, mem, and file name, fhr
 exit
 fi
 
@@ -26,7 +27,7 @@ day=${2}
 cyc=${3}
 mem=${4}
 name=${5}
-stream=${6}
+fhr=${6}
 
 if [ $dom = 'conus' ]
 then
@@ -54,11 +55,6 @@ else
  name1=$name1
 fi
 
-hrs_1="03 06 09 12 15 18 21 24" 
-hrs_2="27 30 33 36 39 42 45 48" 
-hrs_3="51 54 57 60" 
-
-
 cd $DATA
 
 mkdir -p $DATA/pcp_${name1}
@@ -67,24 +63,9 @@ cd $DATA/pcp_${name1}
 
 EXECrefs=${HOMErefs}/exec
 
-hrsln_1="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
-hrsln_2="24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48"
-hrsln_3="48 49 50 51 52 53 54 55 56 57 58 59 60"
+hrs=$fhr
 
-if [ $stream = '1' ]; then
-hrsln=$hrsln_1
-hrs=$hrs_1
-elif [ $stream = '2' ]; then
-hrsln=$hrsln_2
-hrs=$hrs_2
-elif [ $stream = '3' ]; then
-hrsln=$hrsln_3
-hrs=$hrs_3
-else
-err_exit "Bad time stream value provided"
-fi
-
-for hr in $hrsln
+for hr in $hrs
 do
 filein=../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fileout=../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
@@ -99,12 +80,13 @@ done
 for hr in $hrs
 do
 
-let hrold=hr-3
+let old3=hr-3
+let old2=hr-2
+let old1=hr-1
 
-if [ $hrold -lt 10 ] 
-then
-hrold=0${hrold}
-fi
+hrold3=$(printf %2.2i $old3)
+hrold2=$(printf %2.2i $old2)
+hrold1=$(printf %2.2i $old1)
 
 if [ -e $filein ]
 then
@@ -116,13 +98,17 @@ then
         if [ $hr%3 -eq 0 ]
         then
 
+        ln -sf ../temp.t${cyc}z.m${mem}.f${hrold3}.grib2 rrfs.t${cyc}z.f${hrold3}.grib2
+        ln -sf ../temp.t${cyc}z.m${mem}.f${hrold2}.grib2 rrfs.t${cyc}z.f${hrold2}.grib2
+	ln -sf ../temp.t${cyc}z.m${mem}.f${hrold1}.grib2 rrfs.t${cyc}z.f${hrold1}.grib2
+
 ## do 3 h QPF from hireswfv3_bucket
 
   curpath=`pwd`
 	
   echo "${curpath}" > input.card.${mem}.${hr}
   echo "rrfs.t${cyc}z.f" >> input.card.${mem}.${hr}
-  echo $hrold >> input.card.${mem}.${hr}
+  echo $hrold3 >> input.card.${mem}.${hr}
   echo $hr >> input.card.${mem}.${hr}
 
 if [ $hr = '03' ]
