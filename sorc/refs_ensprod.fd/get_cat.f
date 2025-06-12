@@ -19,7 +19,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -47,7 +47,6 @@ c    for derived variables
 
        
         jpd10=dk6(nv)
-        !jpdtn=0
         jp27=-9999
  
         write(*,*) 'In get_cat .....'
@@ -63,7 +62,7 @@ c    for derived variables
            do k=1,dPlvl(nv)
               jpd12=dProbLevel(nv,k)
               
-             call readGB2(ifunit(i),jpdtn,2,2,jpd10,jpd12,jp27,gfld,
+             call readGB2(ifunit(i),jpdtn(i),2,2,jpd10,jpd12,jp27,gfld,
      +            eps,iret)   !u
               if(iret.eq.0) then 
                 u(:,k)=gfld%fld
@@ -71,7 +70,7 @@ c    for derived variables
                 write(*,*)'U missing at level',jpd12,'in file',ifunit(i)
                 stop 222
               end if
-             call readGB2(ifunit(i),jpdtn,2,3,jpd10,jpd12,jp27,gfld,
+             call readGB2(ifunit(i),jpdtn(i),2,3,jpd10,jpd12,jp27,gfld,
      +            eps,iret)   !v
               if(iret.eq.0) then
                 v(:,k)=gfld%fld
@@ -80,7 +79,7 @@ c    for derived variables
                 stop 223
               end if
 
-             call readGB2(ifunit(i),jpdtn,3,5,jpd10,jpd12,jp27,gfld,
+             call readGB2(ifunit(i),jpdtn(i),3,5,jpd10,jpd12,jp27,gfld,
      +            eps,iret)   !h
                if(iret.eq.0) then
                  h(:,k)=gfld%fld

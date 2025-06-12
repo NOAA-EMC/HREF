@@ -97,6 +97,7 @@ C grib2
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD_EARLY(200)
       INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD(200)
       INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD_EARLY(200)
+      INTEGER :: intv_rec,time_s_rec,time_e_rec,num_time_rec
       LOGICAL :: UNPACK
       INTEGER :: K,IRET
       TYPE(GRIBFIELD) :: GFLD
@@ -104,7 +105,6 @@ C grib2
 	real:: p_later(IM*JM),p_earlier(IM*JM),dprecip(im*jm)
 	real:: frzr_later(IM*JM),frzr_earlier(IM*JM),dfrzr(im*jm)
 	
-
 	call baopenr(11,fname1,ierr1)
 	call baopenr(12,fname2,ierr2)
 	call baopenw(13,testout,ierr3)
@@ -127,7 +127,6 @@ C grib2
         JGDT=-9999
         UNPACK=.true.
 
-
         allocate(gfld%fld(im*jm))
         allocate(gfld%idsect(200))
         allocate(gfld%igdtmpl(200))
@@ -138,42 +137,68 @@ C grib2
 C USAGE:    CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
 C    &                  UNPACK,K,GFLD,IRET)
 
-        J=0
-
+        J=3
 
         if ( reset_flag .eq. 0) then
         JIDS=-9999
-        JPDTN=8
+        JPDTN=-1
         JPDT=-9999
         JPDT(2)=8
-! try force getting the 0-hr total
+! try force getting the total from 0-h?
         JPDT(9)=0
         JGDTN=-1
         JGDT=-9999
         UNPACK=.true.
 
+	write(0,*) 'JPDT(1:10): ', JPDT(1:10)
+
         call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
-        write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
-        write(0,*) 'earlier ipdtmpl(27): ', gfld%ipdtmpl(27)
+        write(0,*) 'IRET, pulled gfld%ipdtnum: ', IRET, gfld%ipdtnum
+        write(0,*) 'early apcp K: ', K
+        write(0,*) 'gfld%ipdtmpl(1:10): ', gfld%ipdtmpl(1:10)
+
+	if (gfld%ipdtnum .eq. 11) then
+
+	intv_rec=30
+        time_s_rec=19
+        time_e_rec=24
+        num_time_rec=25
+
+	elseif (gfld%ipdtnum .eq. 8) then
+
+	intv_rec=27
+        time_s_rec=16 
+        time_e_rec=21
+        num_time_rec=22
+
+        else
+
+	write(0,*) 'unexpected ipdtnum: ', gfld%ipdtnum
+
+        endif
 
 	if (IRET .ne. 0) then
-	write(0,*) 'bad getgb1 earlier ', IRET
+	write(0,*) 'bad getgb2 earlier ', IRET
 	STOP 99
 	endif
-
 
         p_earlier=gfld%fld
         do K=1,gfld%ipdtlen
         PDS_RAIN_HOLD_EARLY(K)=gfld%ipdtmpl(K)
+
+	if (K .le. 10) then
+	write(0,*) 'K, PDS_RAIN_HOLD_EARLY(K): ', K, PDS_RAIN_HOLD_EARLY(K)
+	endif
+
         enddo
         write(0,*) 'maxval(p_earlier): ', maxval(p_earlier)
 
 
         J=0
         JIDS=-9999
-        JPDTN=8
+        JPDTN=-1
         JPDT=-9999
         JPDT(2)=225
 ! try force getting the 0-hr total
@@ -185,31 +210,36 @@ C    &                  UNPACK,K,GFLD,IRET)
         call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
+	if (IRET .ne. 0) then
+	write(0,*) 'bad getgb2 earlier for FRZR ', IRET
+	STOP 99
+	endif
+
         frzr_earlier=gfld%fld
         do K=1,gfld%ipdtlen
         PDS_FRZR_HOLD_EARLY(K)=gfld%ipdtmpl(K)
+!	write(0,*) 'K, PDS_FRZR_HOLD_EARLY(K): ', K, PDS_RAIN_HOLD_EARLY(K)
         enddo
         write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
-
 
         endif  ! make sure reset_flag = 0 
 
 ! later apcp
-        J=0
+        J=3
         JIDS=-9999
-        JPDTN=8
+        JPDTN=-1
         JPDT=-9999
+        JPDT(1)=0
         JPDT(2)=8
 ! try force getting the 0-hr total
         JPDT(9)=0
         JGDTN=-1
         JGDT=-9999
 
-
-        call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET1)
 
-        write(0,*) 'K: ', K
+        write(0,*) 'p_later K: ', K
 
 	if (IRET1 .ne. 0) then
 	 write(0,*) 'bad getgb later ', IRET1
@@ -245,7 +275,7 @@ C    &                  UNPACK,K,GFLD,IRET)
 ! later frzr
         J=0
         JIDS=-9999
-        JPDTN=8
+        JPDTN=-1
         JPDT=-9999
         JPDT(2)=225
 ! try force getting the 0-hr total
@@ -253,8 +283,7 @@ C    &                  UNPACK,K,GFLD,IRET)
         JGDTN=-1
         JGDT=-9999
 
-
-        call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET1)
 
         write(0,*) 'K: ', K
@@ -294,19 +323,21 @@ C    &                  UNPACK,K,GFLD,IRET)
 
         do K=1,gfld%ipdtlen
         gfld%ipdtmpl(K)=PDS_RAIN_HOLD_EARLY(K)
+        if (K .le. 10) then
+	write(0,*) 'K, gfld%ipdtmpl(K) for rain: ', gfld%ipdtmpl(K)
+        endif
         enddo
 
         gfld%ipdtmpl(9)=ihrs1
-        do J=16,21
+        do J=time_s_rec,time_e_rec
         gfld%ipdtmpl(J)=PDS_RAIN_HOLD(J)
         enddo
 
-        gfld%ipdtmpl(22)=1
-        gfld%ipdtmpl(27)=interv
+        gfld%ipdtmpl(num_time_rec)=1
+        gfld%ipdtmpl(intv_rec)=interv
 
-        write(0,*) 'interval specified in 27: ', interv
+        write(0,*) 'interval specified in intv_rec: ', interv
 
-!        gfld%ipdtmpl(28)=1
         gfld%fld=dprecip
 
 	call putgb2(13,GFLD,IRET)
@@ -318,21 +349,19 @@ C    &                  UNPACK,K,GFLD,IRET)
         enddo
 
         gfld%ipdtmpl(9)=ihrs1
-        do J=16,21
+      
+        do J=time_s_rec,time_e_rec
         gfld%ipdtmpl(J)=PDS_FRZR_HOLD(J)
         enddo
 
-        gfld%ipdtmpl(22)=1
-        gfld%ipdtmpl(27)=interv
+        gfld%ipdtmpl(num_time_rec)=1
+        gfld%ipdtmpl(intv_rec)=interv
 
-        write(0,*) 'interval specified in 27: ', interv
+        write(0,*) 'interval specified in intv_rec: ', interv
 
-!        gfld%ipdtmpl(28)=1
         gfld%fld=dfrzr
 
 	call putgb2(13,GFLD,IRET)
-
-
 
         write(0,*) 'IRET from putgb2 for dprecip', IRET
 

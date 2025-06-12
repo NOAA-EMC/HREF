@@ -20,7 +20,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -65,16 +65,17 @@ c    for derived variables
         write(*,*)'est=',est,'wst=',wst,'mid=',mid
  
         miss=0
-        if (jpdtn.eq.0) then
-          jpdtnp=8
-        else if(jpdtn.eq.1) then
+
+        iensloop: do i = 1, iens
+
+        if (jpdtn(i).eq.0) then
+           jpdtnp=8
+        else if(jpdtn(i).eq.1) then
            jpdtnp=11
         else
            jpdtnp=8
         end if
-         
 
-        iensloop: do i = 1, iens
 
          call readGB2(ipunit(i),jpdtnp,1,10,1,0,1,gfld,eps,ie)
 

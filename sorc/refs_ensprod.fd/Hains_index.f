@@ -19,7 +19,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -47,7 +47,6 @@ c    for derived variables
         real index_hains(iens)
         character*5 eps
 
-        !jpdtn=0
         jp27=-9999
 
         write(*,*) 'In Hains Index  .....'
@@ -59,7 +58,7 @@ c    for derived variables
 
         k_loop: do k=1,iens
           jpd12=dProbLevel(nv,1)
-           call readGB2(ifunit(k),jpdtn,0,0,100,925,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),0,0,100,925,jp27,gfld,
      +          eps,iret) !T950, hirew has no 950mb, use 925 to replace
            if(iret.eq.0) then
              T950(:,k)=gfld%fld
@@ -68,7 +67,7 @@ c    for derived variables
              cycle k_loop
            end if
 
-           call readGB2(ifunit(k),jpdtn,0,0,100,850,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),0,0,100,850,jp27,gfld,
      +         eps,iret) !T850
            if(iret.eq.0) then
              T850(:,k)=gfld%fld
@@ -77,7 +76,7 @@ c    for derived variables
              cycle k_loop
            end if
 
-           call readGB2(ifunit(k),jpdtn,0,6,100,850,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),0,6,100,850,jp27,gfld,
      +         eps, iret) !Td850
            if(iret.eq.0) then
              Td850(:,k)=gfld%fld
@@ -86,7 +85,7 @@ c    for derived variables
              cycle k_loop
            end if
 
-           call readGB2(ifunit(k),jpdtn,3,5,1,0,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),3,5,1,0,jp27,gfld,
      +         eps, iret)     !Sfc height
            if(iret.eq.0) then
              Hsfc(:,k)=gfld%fld
@@ -95,7 +94,7 @@ c    for derived variables
              cycle k_loop
            end if
 
-           call readGB2(ifunit(k),jpdtn,0,0,100,700,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),0,0,100,700,jp27,gfld,
      +         eps, iret) !T700
            if(iret.eq.0) then
              T700(:,k)=gfld%fld
@@ -104,7 +103,7 @@ c    for derived variables
              cycle k_loop
            end if
 
-           call readGB2(ifunit(k),jpdtn,0,0,100,500,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),0,0,100,500,jp27,gfld,
      +         eps, iret) !T500
            if(iret.eq.0) then
              T500(:,k)=gfld%fld
@@ -113,7 +112,7 @@ c    for derived variables
              cycle k_loop
            end if
 
-           call readGB2(ifunit(k),jpdtn,0,6,100,700,jp27,gfld,
+           call readGB2(ifunit(k),jpdtn(k),0,6,100,700,jp27,gfld,
      +         eps, iret) !Td700
            if(iret.eq.0) then
              Td700(:,k)=gfld%fld

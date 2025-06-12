@@ -67,7 +67,7 @@ then
         echo here a $hr
 
 ## the hourly will sum up three hourly at the appropriate time.
-        echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. .false. 1 ${NEST} no |$EXECrefs/enspost_get_prcip > output.refs_get_prcip1h.f${hr}.${NEST}
+        echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. .false. 1 ${NEST} no 8 |$EXECrefs/enspost_get_prcip > output.refs_get_prcip1h.f${hr}.${NEST}
         export err=$? ; err_chk
 
         if [ ${hr}%3 -eq 0 ]

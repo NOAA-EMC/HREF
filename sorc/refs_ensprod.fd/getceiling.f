@@ -19,7 +19,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -60,7 +60,7 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
         miss=0
         loop400: do irun=1,iens
 
-           call readGB2(ifunit(irun),jpdtn,6,1,200,0,jp27,gfld,
+           call readGB2(ifunit(irun),jpdtn(irun),6,1,200,0,jp27,gfld,
      +                  eps,iret) !total cloud
             if(iret.eq.0) then
              tcld(:,irun)=gfld%fld
@@ -72,7 +72,7 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
 
 ! --------------------
 
-           call readGB2(ifunit(irun),jpdtn,3,5,1,0,jp27,gfld,
+           call readGB2(ifunit(irun),jpdtn(irun),3,5,1,0,jp27,gfld,
      +                 eps,iret)   ! surface hgt
             if(iret.eq.0) then
              hsfc(:,irun)=gfld%fld
@@ -82,7 +82,7 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
             end if
 ! --------------------
 
-           call readGB2(ifunit(irun),jpdtn,3,5,2,0,jp27,gfld,
+           call readGB2(ifunit(irun),jpdtn(irun),3,5,2,0,jp27,gfld,
      +                 eps,iret)   !cloud base
             if(iret.eq.0) then            
 
@@ -104,7 +104,7 @@ c     +              nv,ifunit,jf,iens,Lp,Lt
 
             else
 
-           call readGB2(ifunit(irun),jpdtn,3,5,215,0,jp27,gfld,
+           call readGB2(ifunit(irun),jpdtn(irun),3,5,215,0,jp27,gfld,
      +                 eps,iret)   !cloud ceiling
 
             if(iret.eq.0) then            

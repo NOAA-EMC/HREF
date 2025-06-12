@@ -28,7 +28,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -56,7 +56,6 @@ c    for derived variables
         type(gribfield) :: gfld
 
         jpd10=dk6(nv)
-        !jpdtn=0
         jp27=-9999
 
         write(*,*) 'In bulkshear .....'
@@ -78,7 +77,8 @@ C     +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
              jpd1=2
            end if
            
-           call readGB2(ifunit(irun),jpdtn,jpd1,15,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,15,
+     +       jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !U mean -component
             if (iret.eq.0) then
              u(:,irun)=gfld%fld
@@ -88,7 +88,8 @@ C     +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
              missing(lv,irun)=1
              cycle loop400
             end if
-           call readGB2(ifunit(irun),jpdtn,jpd1,16,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,16,
+     +       jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !V mean -component
             if (iret.eq.0) then
              v(:,irun)=gfld%fld
@@ -129,7 +130,8 @@ C     +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
              jpd1=2
            end if
 
-           call readGB2(ifunit(irun),jpdtn,jpd1,15,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,15,
+     +       jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !U Prob -component
             if (iret.eq.0) then
              u(:,irun)=gfld%fld
@@ -137,7 +139,8 @@ C     +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
              missing(lv,irun)=1
              cycle loop401
             end if
-           call readGB2(ifunit(irun),jpdtn,jpd1,16,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,16,
+     +       jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !V Prob -component
             if (iret.eq.0) then
              v(:,irun)=gfld%fld

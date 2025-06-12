@@ -1,4 +1,4 @@
-	subroutine get_temp(filehead, ff, jf)
+	subroutine get_temp(filehead, ff, jf,jpdtn)
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -18,7 +18,7 @@ C  raw data
        integer ff,kgdss(200),lengds,jf
        character*40 filehead,filename1,filename2,fname
        integer p(level)
-       integer iunit1,iunit2,ounit
+       integer iunit1,iunit2,ounit, jpdtn
        type(gribfield) :: gfld
        character*3 fhr(60)
 
@@ -67,8 +67,8 @@ c    +  /1000,975,950,925,900,875,850,825,800,775/
 ccc  Read Temperature
 c       if(ff.gt.1) then
 c       if(ff.ge.1) then
-         jpdtn=0
          jp27=-9999
+	write(0,*) 'jpdtn for readGB2_ext call in get_temp.f: ',jpdtn
          call readGB2_ext(iunit1,jpdtn,0,0,103,2,jp27,gfld)
          T2m(:,1)=gfld%fld
          call readGB2_ext(iunit2,jpdtn,0,0,103,2,jp27,gfld)
@@ -134,7 +134,7 @@ c
         call baopen(ounit,fname,ierr)
         
 c       gfld%ipdtnum=8
-        gfld%ipdtnum=0
+c        gfld%ipdtnum=0
 
           gfld%fld(:)=dt2m(:)
           gfld%ipdtmpl(1)=0
@@ -197,10 +197,13 @@ c           gfld%ipdtmpl(27)=-9999
            jpdt(12)=jpd12
         end if
 
-        jpdt(27)=jpd27  !Time range (1 hour, 3 hr etc)
+         call getgb2(igrb2,ifile,jskp,jdisc,jids,
+     +               jpdtn,jpdt,jgdtn,jgdt,
+     +               unpck, jskp1, gfld,iret)
 
-         call getgb2(igrb2,ifile,jskp,jdisc,jids,jpdtn,jpdt,jgdtn,jgdt,
-     +        unpck, jskp1, gfld,iret)
+	write(0,*) 'back from getgb in get_temp with jpdtn: ',iret,
+     &          gfld%ipdtnum
+
 
         return
         end 

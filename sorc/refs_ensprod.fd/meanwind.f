@@ -20,7 +20,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -59,25 +59,25 @@ c   Get all paramters from current and previous files
 c   
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
-
         write(*,*) 'In meanwind (850-300mb wind average).....'
 !        write(*,*) 'ifunit=', ifunit, eps
 
-!        write(*,*)  nv,jf,iens,Lm,Lp,Lt,jpdtn
-
-        !jpdtn=0
         jp27=-9999
-
          miss=0
 
          Wpr=0.0
          do 600 irun=1,iens
+ 
+!           write(0,*) 'mbrname(irun):', mbrname(irun)
            lvl_loop: do k=1,lvl
 
+!	write(0,*) 'looping with K: ', K
           if(mbrname(irun)(1:5).eq.'conus'.and.(p(k).eq.475
      +   .or.p(k).eq.425.or.p(k).eq.375.or.p(k).eq.325)) cycle lvl_loop
 
-          if(mbrname(irun)(1:4).eq.'fv3s'.and.(p(k).eq.475
+          if((mbrname(irun)(1:4).eq.'fv3s' .or. 
+     +        mbrname(irun)(1:4).eq.'refs')
+     +       .and.(p(k).eq.475
      +   .or.p(k).eq.425.or.p(k).eq.375.or.p(k).eq.325)) cycle lvl_loop
 
           if( (mbrname(irun)(1:2).eq.'ak'.or.mbrname(irun)(1:2).eq.'hi'
@@ -90,12 +90,18 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
      +   .or. p(k) .eq. 450 .or.p(k).eq.425.or.p(k).eq.375
      +   .or. p(k) .eq. 350 .or.p(k).eq.325)) cycle lvl_loop
 
-            call readGB2(ifunit(irun),jpdtn,2,2,100,p(k),jp27,gfld,
+!	write(0,*) 'K,ifunit(irun),jpdtn(irun),p(k): ', 
+!     +              K,ifunit(irun),jpdtn(irun),p(k)
+            call readGB2(ifunit(irun),jpdtn(irun),2,2,100,
+     +              p(k),jp27,gfld,
      +              eps,ie)
                 Upr(:,irun)=gfld%fld
 !                write(*,*) 'read U at lev',p(k),' is done, ens=',irun
-            call readGB2(ifunit(irun),jpdtn,2,3,100,p(k),jp27,gfld,
+
+            call readGB2(ifunit(irun),jpdtn(irun),2,3,100,
+     +              p(k),jp27,gfld,
      +              eps,ie)
+
                 Vpr(:,irun)=gfld%fld
 !                write(*,*) 'read V at lev',p(k),' is done, ens=',irun
             Wpr(:,irun,k)=sqrt(Upr(:,irun)*Upr(:,irun)+

@@ -9,8 +9,8 @@
         logical :: unpack=.true.
         character*5 eps   
 
-c        write(*,*)'readGB2 igrb2=',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,
-c     +          jpdx,eps 
+!        write(*,*)'readGB2 igrb2=',igrb2,jpdtn,jpd1,jpd2,jpd10,jpd12,
+!     +          jpdx
 
         jids=-9999  !array define center, master/local table, year,month,day, hour, etc, -9999 wildcard to accept any
         jpdt=-9999  !array define Product, to be determined
@@ -50,13 +50,14 @@ c     +          jpdx,eps
           jpdt(15)=jpdx
         end if 
 
-c       write(*,*) 'jpdtn=',jpdtn
         call getgb2(igrb2,0,jskp,jdisc,jids,jpdtn,jpdt,jgdtn,jgdt,
      +     unpack, jskp1, gfld,iret)
 
         if(iret.ne.0) then
+!       write(*,*) 'jskp,jskp1,jpdtn=',jskp,jskp1,jpdtn
          write(*,*) 'getgb2 error:',iret,' in read ',igrb2,
-     +   ' for var ', jpd1,jpd2,jpd10,jpd12
+     +   ' for var ', jpdtn,jpd1,jpd2,jpd10,jpd12
+!         write(0,*) 'fuller jpdt(1:12): ', jpdt(1:12)
         end if
 
         return

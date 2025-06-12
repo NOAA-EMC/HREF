@@ -24,7 +24,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -62,11 +62,10 @@ c    for derived variables
         mbrs=iens
         !First get necessary data from raw ensemble members 
         jpd27=-9999
-        !jpdtn=0
 !        loop101: DO irun=1,iens
         loop101: DO irun=iens,1,-1
           do i=1,4
-           call readGB2(ifunit(irun),jpdtn,jpd1(i),jpd2(i),
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1(i),jpd2(i),
      +       jpd10(i),jpd12(i),jp27,gfld,eps,iret)
            if(iret.eq.0) then
 !	write(0,*) 'irun, i, max(gfld%fld): ', 

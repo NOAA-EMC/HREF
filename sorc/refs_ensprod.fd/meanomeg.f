@@ -21,7 +21,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -64,7 +64,6 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 !        write(*,*)  nv,jf,iens,Lm,Lp,Lt
 
-        !jpdtn=0
         jp27=-9999
 
          miss=0
@@ -73,7 +72,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
          do 600 irun=1,iens
            do 500 k=1,lvl
-            call readGB2(ifunit(irun),jpdtn,2,8,100,p(k),jp27,gfld,
+            call readGB2(ifunit(irun),jpdtn(irun),2,8,100,p(k),jp27,gfld,
      +              eps,ie)
                 OMEGpr(:,irun,k)=gfld%fld
 500        continue

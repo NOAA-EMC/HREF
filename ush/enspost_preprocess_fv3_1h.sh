@@ -29,6 +29,14 @@ hr=${5}
 region=${6}
 
 
+if [ ${mem} = '01' -o ${mem} = '07' ]
+then
+JPDTN=8
+echo set JPDTN for deterministic
+else
+JPDTN=11
+echo set JPDTN for REFS
+fi
 
 if [ $region = 'conus' ]
 then
@@ -227,6 +235,7 @@ echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
+echo $JPDTN >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
@@ -281,6 +290,7 @@ echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
+echo $JPDTN >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
@@ -319,7 +329,6 @@ fi
 	if [ $hr -eq  24 -o $hr -eq 48 ]; then
          cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${PREPROC_HOLD}
         fi
-
 
         err=$? ; export err
 	if [ $err -ne 0 ]

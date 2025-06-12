@@ -21,7 +21,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -53,14 +53,13 @@ c    for derived variables
         miss=0 
         mbrs=iens
         jpd27=-9999
-        !jpdtn=0
 
 !        write(*,*) 'In get_wind_rh_joint', ifunit
 !        write(*,*) 'jf,iens,Lp,Lt=',jf,iens,Lp,Lt
 
         DO 101 irun=1,iens
 
-           call readGB2(ifunit(irun),jpdtn,1,1,103,2,jpd27,
+           call readGB2(ifunit(irun),jpdtn(irun),1,1,103,2,jpd27,
      +                    gfld,eps,iret)
  
            if (iret.eq.0) then
@@ -69,7 +68,7 @@ c    for derived variables
 
            else !RH 2m not exist, then use SPFH to compute it
 
-              call readGB2(ifunit(irun),jpdtn,0,0,103,2,jpd27,
+              call readGB2(ifunit(irun),jpdtn(irun),0,0,103,2,jpd27,
      +                     gfld,eps,iret)
               if (iret.eq.0) then
                  t2m(:)=gfld%fld(:)
@@ -78,7 +77,7 @@ c    for derived variables
                  stop 123
               end if
 
-              call readGB2(ifunit(irun),jpdtn,1,0,103,2,jpd27,
+              call readGB2(ifunit(irun),jpdtn(irun),1,0,103,2,jpd27,
      +                     gfld,eps,iret)
               if (iret.eq.0) then 
                 q2(:)=gfld%fld(:)
@@ -96,14 +95,14 @@ c    for derived variables
 
            end if
 
-           call readGB2(ifunit(irun),jpdtn,2,2,103,10,jpd27,
+           call readGB2(ifunit(irun),jpdtn(irun),2,2,103,10,jpd27,
      +                   gfld,eps,iret)
              if(iret.eq.0) then
                u10(:)=gfld%fld(:)
              else
                write(*,*) 'read 2,2,103,10 error', iret
              end if
-           call readGB2(ifunit(irun),jpdtn,2,3,103,10,jpd27,
+           call readGB2(ifunit(irun),jpdtn(irun),2,3,103,10,jpd27,
      +                  gfld,eps,iret)
              if(iret.eq.0) then
               v10(:)=gfld%fld(:)

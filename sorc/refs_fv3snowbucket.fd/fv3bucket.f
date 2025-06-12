@@ -9,7 +9,7 @@
         real, allocatable :: pdiff(:,:)
 
         integer :: ihrs1, ihrs2, reset_flag
-        integer :: mm,nn,oo,m,n
+        integer :: mm,nn,oo,m,n,JPDTN_USE
 	character(len=2), dimension(2):: hrs
         integer :: is_hrrr
 
@@ -25,6 +25,7 @@
         read(5,FMT='(I1)') reset_flag
         read(5,*) IM, JM
         read(5,FMT='(I)') is_hrrr
+        read(5,*) JPDTN_USE
 
         allocate(pdiff(im,jm))
 
@@ -67,11 +68,13 @@
 	reset_flag=0
 	endif
 
-        write(0,*) 'call calc_pdiff with reset_flag: ', reset_flag
+        write(0,*) 'call calc_pdiff with reset_flag,JPDTN_USE: ',
+     &         reset_flag,JPDTN_USE
 
 	call calc_pdiff(file1(1:mm),file2(1:nn),
      &                  TESTOUT(1:mmm),
-     &                  pdiff,reset_flag,ihrs1,interv,IM,JM,is_hrrr)
+     &                  pdiff,reset_flag,ihrs1,interv,
+     &                  IM,JM,is_hrrr,JPDTN_USE)
 
         write(0,*) 'past calc_pdiff'
 
@@ -81,7 +84,8 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	SUBROUTINE CALC_PDIFF(FNAME1,FNAME2,TESTOUT,SPRECIP,
-     &                   reset_flag,ihrs1,interv,IM,JM,is_hrrr)
+     &                   reset_flag,ihrs1,interv,
+     &                   IM,JM,is_hrrr,JPDTN)
         USE GRIB_MOD
         USE pdstemplates
 	character(*):: FNAME1,FNAME2,testout
@@ -136,7 +140,6 @@ C grib2
         s_earlier=0.
 
         JIDS=-9999
-        JPDTN=-1
         JPDT=-9999
         JGDTN=-1
         JGDT=-9999
@@ -152,18 +155,26 @@ C grib2
 
         J=0
         JIDS=-9999
-        JPDTN=0
         JPDT=-9999
         JPDT(2)=13
         JGDTN=-1
         JGDT=-9999
         UNPACK=.true.
 
-        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+	
+	write(*,*) 'calling WEASD with JPDTN: ', JPDTN
+
+	if (JPDTN .eq. 11) then
+	JPDTN_LOC=1
+        elseif (JPDTN .eq. 8) then
+        JPDTN_LOC=0
+        endif
+
+        call getgb2(11,0,J,0,JIDS,JPDTN_LOC,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
 	if (IRET .ne. 0) then
-	write(0,*) 'bad getgb1 (13)  earlier ', IRET
+	write(0,*) 'bad getgb1 (13) earlier ', IRET
 	STOP 999
 	endif
 
@@ -176,7 +187,6 @@ C grib2
 
         J=0
         JIDS=-9999
-        JPDTN=8
         JPDT=-9999
         JPDT(2)=225
         JGDTN=-1
@@ -200,7 +210,6 @@ C grib2
 
         J=0
         JIDS=-9999
-        JPDTN=8
         JPDT=-9999
         JPDT(2)=29
         JGDTN=-1
@@ -224,13 +233,12 @@ C grib2
 
         J=0
         JIDS=-9999
-        JPDTN=0
         JPDT=-9999
         JPDT(2)=13
         JGDTN=-1
         JGDT=-9999
 
-        call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+        call getgb2(12,0,0,0,JIDS,JPDTN_LOC,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET1)
 
         write(0,*) 'K: ', K
@@ -257,7 +265,6 @@ C grib2
 
         J=0
         JIDS=-9999
-        JPDTN=8
         JPDT=-9999
         JPDT(2)=225
         JGDTN=-1
@@ -290,7 +297,6 @@ C grib2
 
         J=0
         JIDS=-9999
-        JPDTN=8
         JPDT=-9999
         JPDT(2)=29
         JGDTN=-1
@@ -319,7 +325,6 @@ C grib2
 ! Pull in QPF to get more proper PDS for WEASD bucket
 
         JIDS=-9999
-        JPDTN=8
         JPDT=-9999
         JPDT(2)=8
         JGDTN=-1
@@ -418,20 +423,20 @@ C grib2
 
 	write(0,*) 'shape(gfld_qpf%ipdtmpl): ', shape(gfld_qpf%ipdtmpl)
 
+
+        if (gfld%ipdtnum .eq. 8) then
+
         gfld_qpf%ipdtmpl(22)=1
         gfld_qpf%ipdtmpl(27)=interv
 
         write(0,*) 'interval specified in 27: ', interv
-
 ! -------------------------------------------
-
-
        gfld_qpf%ipdtmpl(1)=1
        gfld_qpf%ipdtmpl(2)=13
        gfld_qpf%ipdtmpl(3)=2
        gfld_qpf%ipdtmpl(4)=0
 !      gfld_qpf%ipdtmpl(5)=84
-       gfld_qpf%ipdtmpl(5)=134 !for rrfs, J. Du
+       gfld_qpf%ipdtmpl(5)=136 !for refs, J. Du
        gfld_qpf%ipdtmpl(6)=0 ! hours cutoff
        gfld_qpf%ipdtmpl(7)=0 ! minutes cutoff
        gfld_qpf%ipdtmpl(8)=1 ! units of hours
@@ -476,8 +481,69 @@ C grib2
         gfld_qpf%ipdtmpl(29)=0
 
         gfld_qpf%fld=sprecip
-
 	write(0,*) 'use gfld_qpf%idrtmpl(1:10): ', gfld_qpf%idrtmpl(1:10)
+
+        elseif (gfld%ipdtnum .eq. 11) then
+
+        gfld_qpf%ipdtmpl(25)=1
+        gfld_qpf%ipdtmpl(30)=interv
+
+        write(0,*) 'interval specified in 30 for 4.11: ', interv
+! -------------------------------------------
+       gfld_qpf%ipdtmpl(1)=1
+       gfld_qpf%ipdtmpl(2)=13
+       gfld_qpf%ipdtmpl(3)=2
+       gfld_qpf%ipdtmpl(4)=0
+!      gfld_qpf%ipdtmpl(5)=84
+       gfld_qpf%ipdtmpl(5)=136 !for refs, J. Du
+       gfld_qpf%ipdtmpl(6)=0 ! hours cutoff
+       gfld_qpf%ipdtmpl(7)=0 ! minutes cutoff
+       gfld_qpf%ipdtmpl(8)=1 ! units of hours
+       gfld_qpf%ipdtmpl(9)=ihrs1 ! earlier forecast time of period?
+       gfld_qpf%ipdtmpl(10)=1 ! sfc
+       gfld_qpf%ipdtmpl(11)=0 ! sfc
+       gfld_qpf%ipdtmpl(12)=0 ! sfc
+       gfld_qpf%ipdtmpl(13)=255 ! sfc
+       gfld_qpf%ipdtmpl(14)=0 ! sfc
+       gfld_qpf%ipdtmpl(15)=0 ! sfc
+
+!!! need to figure out how to do this end of period date stuff right
+
+       rinc=0.
+       rinc(2)=float(ihrs1+interv)
+
+       write(0,*) 'rinc: ', rinc
+       idat=0
+       idat(1)=gfld_qpf%idsect(6)
+       idat(2)=gfld_qpf%idsect(7)
+       idat(3)=gfld_qpf%idsect(8) 
+       idat(5)=gfld_qpf%idsect(9)
+
+
+       call w3movdat(rinc,idat,jdat)
+
+       gfld_qpf%ipdtmpl(19)=jdat(1)
+       gfld_qpf%ipdtmpl(20)=jdat(2)
+       gfld_qpf%ipdtmpl(21)=jdat(3)
+       gfld_qpf%ipdtmpl(22)=jdat(5)
+       gfld_qpf%ipdtmpl(23)=0
+       gfld_qpf%ipdtmpl(24)=0
+
+        gfld_qpf%ipdtnum=11
+        gfld_qpf%ipdtmpl(25)=1
+        gfld_qpf%ipdtmpl(26)=0
+        gfld_qpf%ipdtmpl(27)=1 ! accum?
+        gfld_qpf%ipdtmpl(28)=2 ! fcst hour increments
+        gfld_qpf%ipdtmpl(29)=1 ! hours?
+        gfld_qpf%ipdtmpl(30)=interv
+        gfld_qpf%ipdtmpl(31)=255
+        gfld_qpf%ipdtmpl(32)=0
+
+        gfld_qpf%fld=sprecip
+	write(0,*) 'use gfld_qpf%idrtmpl(1:10): ', gfld_qpf%idrtmpl(1:10)
+
+        endif
+
 
 !! use GET_BITS to compute nbits?
 

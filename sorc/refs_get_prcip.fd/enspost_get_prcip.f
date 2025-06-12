@@ -11,11 +11,12 @@ C  raw data
        integer IENS, GRIBID, kgdss(200),lengds,im,jm,km,jf
        character*40 filehead,filename(8), output, outdone
        
-       integer ff
+       integer ff, jpd27_rec
        logical do_old, do_hrrr, do_hrrr_pre, do_fv3_pre, skip_1h
        character*3 fhr(20),fog
        character*5 domain
-       integer iunit,ounit, pdt9_orig, acclength
+       integer iunit,ounit, pdt9_orig, acclength,jpdtn_use
+       integer jpdtn_temp
        type(gribfield) :: gfld,gfld_save,gfld_save_snow,
      +                    gfld_save_frzr,gfld_save_asn
 
@@ -34,9 +35,10 @@ C  raw data
 ! acc_length: 1
 ! domain: conus
 ! fog: yes
+! jpdtn_use
 
        read (*,*) filehead, ff, do_old, do_hrrr, do_hrrr_pre, 
-     +            do_fv3_pre,skip_1h,acclength,domain,fog
+     +            do_fv3_pre,skip_1h,acclength,domain,fog,jpdtn_use
 
 	if (domain(1:5) .eq. 'conus') then
          GRIBID=255            !namnest grid
@@ -58,6 +60,13 @@ C  raw data
 	write(0,*) 'do_fv3_pre: ', do_fv3_pre
 	write(0,*) 'acclength: ', acclength
 	write(0,*) 'fog: ', fog
+        write(0,*) 'jpdtn_use: ', jpdtn_use
+
+	if (jpdtn_use .eq. 11) then
+		jpdtn_temp=1
+        elseif (jpdten_use .eq. 8) then
+		jpdtn_temp=0
+        endif
 
 cc     RAP has one-hour accumu precip, so only one file is used
 cc     NAM has no one-hour accumu precip, so two files are needed
@@ -128,8 +137,6 @@ cc     NAM has no one-hour accumu precip, so two files are needed
 
         iunit=20+nf
 
-        jpdtn=8    !APCP's Product Template# is  4.8 
-
         call baopenr(iunit,filename(nf),ierr)
         write(*,*) 'open ', filename(nf), 'ierr=',ierr
 
@@ -137,6 +144,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
 
 !       APCP
 
+        jpdtn=jpdtn_use   !APCP's Product Template# is  4.8  (or 4.11)
         jpd1=1
         jpd2=8
         jpd27=3 !3 hr accumulation
@@ -146,25 +154,34 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          dp3(:,nf)=gfld%fld(:)
          if (nf.eq.1) then 
            gfld_save=gfld
-	write(0,*) 'gfld_save%ipdtmpl(9) when saved: ', gfld_save%ipdtmpl(9)
-	pdt9_orig=gfld_save%ipdtmpl(9)
+         write(*,*) 'gfld_save%ipdtmpl(9) saved: ', gfld_save%ipdtmpl(9)
+	   pdt9_orig=gfld_save%ipdtmpl(9)
+
            do i=1,gfld_save%ipdtlen
             write(*,*) i, gfld_save%ipdtmpl(i)
            end do
          end if
+        endif
+
+        if (gfld%ipdtnum .eq. 11) then
+          jpd27_rec=30
+        elseif (gfld%ipdtnum .eq. 8) then
+          jpd27_rec=27
         else
-         write(*,*) '3h readGB2 apcp error=',ie
-        end if
+  	  write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
+	endif
 
 !       FRZR
 
         jpd1=1
         jpd2=225
         jpd27=3 !3 hr accumulation
+        jpdtn=jpdtn_use   !APCP's Product Template# is  4.8  (or 4.11)
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
 
         if (ie.eq.0) then
          fz3(:,nf)=gfld%fld(:)
+         write(*,*) 'maxval of fz3: ', maxval(gfld%fld(:))
          if (nf.eq.1) then 
            gfld_save_frzr=gfld
          end if
@@ -177,10 +194,12 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         jpd1=1
         jpd2=29
         jpd27=3 !3 hr accumulation
+        jpdtn=jpdtn_use   !APCP's Product Template# is  4.8  (or 4.11)
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! ASNOW
 
         if (ie.eq.0) then
          asn3(:,nf)=gfld%fld(:)
+         write(*,*) 'maxval of asn3: ', maxval(gfld%fld(:))
          if (nf.eq.1) then 
            gfld_save_asn=gfld
          end if
@@ -193,6 +212,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         jpd1=1
         jpd2=13
         jpd27=3 !3 hr accumulation
+        jpdtn=jpdtn_use   !APCP's Product Template# is  4.8  (or 4.11)
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !
         if (ie.eq.0) then
 	write(0,*) 'populate nf of nfile: ', nf, nfile
@@ -267,7 +287,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
 cccccc  Then call putgb2 to store the calculated data into a grib2 file
 c
 c      data structure gfld is re-used for pack data since all are same
-c      only gfld%fld and gfld%ipdtmpl(27) are different
+c      only gfld%fld and gfld%ipdtmpl(jpd27_rec) are different
 
 Cmp   believe gfld%ipdtmpl(9) matters as well
 c
@@ -287,219 +307,224 @@ c      so use previously saved gfld_save
           if(ff.ge.24) then
 
 	     gfld=gfld_save
+
+             write(0,*) 'gfld%ipdtnum: ', gfld%ipdtnum
              gfld%fld(:)=dp3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
-             gfld%ipdtmpl(27)=3
-	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+             gfld%ipdtmpl(jpd27_rec)=3
+	     write(0,*) 'ASNOW 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
 	write(0,*) 'dp6 gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
              gfld%fld(:)=sn6(:)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
              gfld%fld(:)=asn6(:)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3 + pdt9_orig
              gfld%fld(:)=fz6(:)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
 	write(0,*) 'gfld%ipdtmpl(9) for dp12 now: ', gfld%ipdtmpl(9)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9 + pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp24(:)
-             gfld%ipdtmpl(27)=24
+             gfld%ipdtmpl(jpd27_rec)=24
              gfld%ipdtmpl(9)=-21+pdt9_orig
 	write(0,*) 'dp24 gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn24(:)
-             gfld%ipdtmpl(27)=24
+             gfld%ipdtmpl(jpd27_rec)=24
              gfld%ipdtmpl(9)=-21+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn24(:)
-             gfld%ipdtmpl(27)=24
+             gfld%ipdtmpl(jpd27_rec)=24
              gfld%ipdtmpl(9)=-21+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz24(:)
-             gfld%ipdtmpl(27)=24
+             gfld%ipdtmpl(jpd27_rec)=24
              gfld%ipdtmpl(9)=-21+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
           else if (ff.lt.24.and.ff.ge.12) then
 
 	     gfld=gfld_save
+             write(0,*) 'here 1 gfld%ipdtnum: ', gfld%ipdtnum
              gfld%fld(:)=dp3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
 	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
 	write(0,*) 'dp6 gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn6(:)
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn6(:)
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz6(:)
-             gfld%ipdtmpl(27)=6
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9+pdt9_orig
 	write(0,*) 'dp12(b) gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz12(:)
-             gfld%ipdtmpl(27)=12
+             gfld%ipdtmpl(jpd27_rec)=12
              gfld%ipdtmpl(9)=-9+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
           else if (ff.lt.12.and.ff.ge.6) then
 
 	     gfld=gfld_save
+             write(0,*) 'here 2 gfld%ipdtnum: ', gfld%ipdtnum
              gfld%fld(:)=dp3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
 	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp6(:)
-             gfld%ipdtmpl(27)=6       
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
 	write(0,*) 'dp6(b) gfld%ipdtmpl(9) now: ', gfld%ipdtmpl(9)
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn6(:)
-             gfld%ipdtmpl(27)=6       
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn6(:)
-             gfld%ipdtmpl(27)=6       
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
+	     write(0,*) 'ASN 6 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz6(:)
-             gfld%ipdtmpl(27)=6       
+             gfld%ipdtmpl(jpd27_rec)=6
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
@@ -507,23 +532,23 @@ c      so use previously saved gfld_save
 
 	     gfld=gfld_save
              gfld%fld(:)=dp3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_snow
              gfld%fld(:)=sn3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_frzr
              gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
 	     write(0,*) 'ASN 3 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             gfld%ipdtmpl(27)=3
+             gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
           end if
@@ -535,34 +560,34 @@ c      so use previously saved gfld_save
 	write(0,*) 'acclength=',acclength
         call baclose(ounit,ierr) 
 	write(0,*) 'calling just_hrly(a) with jf: ', jf
-        call just_hrly(filehead, ff, jf, do_old, skip_1h)
+        call just_hrly(filehead, ff, jf, do_old, skip_1h,jpdtn_use)
 
         ELSE !every hour with acclength=1
 
         if (fog .eq. 'yes' ) then
-         call get_temp(filehead, ff, jf)
+         call get_temp(filehead, ff, jf,jpdtn_temp)
         endif
 
 	if (.not. do_hrrr_pre .and. .not. do_fv3_pre ) then
-        write(0,*) 'I am here doing hourly at fcst hour ',ff
-	write(0,*) 'acclength=',acclength
-	write(0,*) 'calling just_hrly(b) with jf: ', jf
-        call just_hrly(filehead, ff, jf, do_old, skip_1h )
+        write(*,*) 'I am here doing hourly at fcst hour ',ff
+	write(*,*) 'acclength=',acclength
+	write(*,*) 'calling just_hrly(b) with jf: ', jf
+        call just_hrly(filehead, ff, jf, do_old, skip_1h,jpdtn_use)
         endif
 
 	if (do_hrrr) then
 	write(0,*) 'calling just_hrrr_3hrly'
-        call just_hrrr_3hrly(filehead, ff, jf)
+        call just_hrrr_3hrly(filehead, ff, jf, jpdtn_use)
         endif
 
 	if (do_hrrr_pre) then
 	write(0,*) 'calling just_hrrr_3hrly_pre'
-        call just_hrrr_3hrly_pre(filehead, ff, jf)
+        call just_hrrr_3hrly_pre(filehead, ff, jf, jpdtn_use)
         endif
 
 	if (do_fv3_pre) then
 	write(0,*) 'calling just_fv3_3hrly_pre'
-        call just_fv3_3hrly_pre(filehead, ff, jf)
+        call just_fv3_3hrly_pre(filehead, ff, jf, jpdtn_use)
         endif
 
 	ENDIF
@@ -572,7 +597,8 @@ c      so use previously saved gfld_save
 
 ! -----------------------------
 
-	subroutine just_hrly(filehead, ff, jf, do_old, skip_1h)
+	subroutine just_hrly(filehead, ff, jf, do_old, skip_1h,
+     +                                              jpdtn_use)
 
 C  raw data
        use grib_mod
@@ -585,7 +611,7 @@ C  raw data
        real,allocatable,dimension(:,:) ::  asnhold !jf,4        
        real,allocatable,dimension(:)   ::  asn1
 
-       integer iyr,imon,idy,ihr
+       integer iyr,imon,idy,ihr,jpdtn_use
        character*50 gdss(400)
        integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
        character*40 filehead,filename(8),output,outdone
@@ -646,7 +672,6 @@ C  raw data
         iunit=20+nf
 
 c default is set to APCP
-        jpdtn=8    !APCP's Product Template# is  4.8 
 
         call baopenr(iunit,filename(nf),ierr)
         write(0,*) 'open ', iunit, filename(nf), 'ierr=',ierr
@@ -667,12 +692,15 @@ c default is set to APCP
         jpd1=1
         jpd2=8
         jpd27=1 !1 hr accumulation
+
+	jpdtn=jpdtn_use
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
         if (ie.eq.0) then
 
 !	write(0,*) 'populate nf (mod=0) of nfile: ', nf, nfile
          dp1(:)=gfld%fld(:)
+
          if (nf.eq.1) then 
            gfld_save_1h=gfld
 !  	   write(0,*) 'gfld_save(9) when saved: ', gfld_save_1h%ipdtmpl(9)
@@ -681,7 +709,7 @@ c default is set to APCP
            end do
          end if
 
-        else
+       else
 
 ! get 3 h accumulation that will be used in MOD=2 block to get the 1 h total
 
@@ -689,6 +717,7 @@ c default is set to APCP
         jpd2=8
         jpd27=3 !3 hr accumulation
 !	write(0,*) 'seek 3 h accum'
+	jpdtn=jpdtn_use
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
         if (ie.eq.0) then
@@ -698,6 +727,7 @@ c default is set to APCP
 
        endif  ! ie=0 for 1 h accum
 
+	write(0,*) 'down here with jpdtn: ', jpdtn
 
 !    SNOW
 
@@ -798,16 +828,18 @@ c default is set to APCP
 
 !	write(0,*) 'START MOD=1 BLOCK'
 
-
         jpd1=1
         jpd2=8
         jpd27=1 !1 hr accumulation
+         jpdtn=jpdtn_use
+	write(0,*) 'calling 1 h total here with jpdtn: ', jpdtn
+         
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
         if (ie.eq.0) then
 
 	if (nf .eq. 1) then
-!	write(0,*) 'mod=1, populate nf of nfile: ', nf, nfile
+	write(0,*) 'mod=1, populate nf of nfile: ', nf, nfile
          dp1(:)=gfld%fld(:)
            gfld_save_1h=gfld
 
@@ -817,7 +849,7 @@ c default is set to APCP
 
         else
 
-!	write(0,*) 'in here when 1 h old from 2 h block'
+	write(0,*) 'in here when 1 h old from 2 h block'
           dp1(:)=dphold(:,2)-gfld%fld(:)
 	   gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+1
@@ -948,11 +980,11 @@ c default is set to APCP
 
 !  if nfile = 2, read current and previous
 
-         jpdtn=8    !APCP's Product Template# is  4.8 
          jpd1=1
          jpd2=8
          jpd27=1 !1 hr accumulation
 
+         jpdtn=jpdtn_use
          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
          if (ie.eq.0) then
@@ -976,28 +1008,6 @@ c default is set to APCP
            enddo
           end if
 
-         else ! ie not = 0
-
-          jpd1=1
-          jpd2=8
-          jpd27=2 !2 hr accumulation
-          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
-          if (ie.eq.0) then
-!	    write(0,*) 'populate mod=2, 2 h accum nf of nfile: ', nf, nfile
-            dphold(:,2)=gfld%fld(:)
-!	    write(0,*) 'maxval(dphold(:,2)) ', maxval(dphold(:,2))
-	
-	  if (nf .eq. 2) then
-	   dp1(:)=dphold(:,3)-dphold(:,2)
-!	   write(0,*) 'definined dp1 from difference'
-!	   write(0,*) 'maxval(dp1): ', maxval(dp1)
-	   gfld%fld(:)=dp1(:)
-           gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
-           gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
-           gfld_save_1h=gfld
-          endif ! nf=2
-
-          endif  ! ie check
           endif  ! ie check
 
 ! SNOW 
@@ -1176,7 +1186,7 @@ c default is set to APCP
 cccccc  Then call putgb2 to store the calculated data into a grib2 file
 c
 c      data structure gfld is re-used for pack data since all are same
-c      only gfld%fld and gfld%ipdtmpl(27) are different
+c      only gfld%fld and gfld%ipdtmpl(jpd27_rec) are different
 
 Cmp   believe gfld%ipdtmpl(9) matters as well
 c
@@ -1199,7 +1209,7 @@ c      so use previously saved gfld_save
 !!        Add a 1 h total for everyone
 	   gfld=gfld_save_1h
            gfld%fld(:)=dp1(:)
-           gfld%ipdtmpl(27)=1
+           gfld%ipdtmpl(jpd27_rec)=1
 	write(0,*) 'to putgb2 for ounit: ', ounit
 	write(0,*) 'minval/maxval APCP 1h (gfld%fld(:)): ', 
      &    minval(gfld%fld(:)),maxval(gfld%fld(:))
@@ -1207,19 +1217,19 @@ c      so use previously saved gfld_save
 
 	   gfld=gfld_save_1h_snow
            gfld%fld(:)=sn1(:)
-           gfld%ipdtmpl(27)=1
+           gfld%ipdtmpl(jpd27_rec)=1
 	write(0,*) 'SNOW 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_frzr
            gfld%fld(:)=fz1(:)
-           gfld%ipdtmpl(27)=1
+           gfld%ipdtmpl(jpd27_rec)=1
 	write(0,*) 'FRZR 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_asn
            gfld%fld(:)=asn1(:)
-           gfld%ipdtmpl(27)=1
+           gfld%ipdtmpl(jpd27_rec)=1
 	write(0,*) 'ASN 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
     
@@ -1249,26 +1259,40 @@ c=========================================
         type(gribfield) :: gfld 
  
         integer jids(200), jpdt(200), jgdt(200)
-        integer jpd1,jpd2,jpdtn
+        integer jpd1,jpd2,jpdtn,K,jskp
         logical :: unpck=.true. 
-   
 
         jids=-9999  !array define center, master/local table, year,month,day, hour, etc, -9999 wildcard to accept any
         jpdt=-9999  !array define Product, to be determined
         jgdt=-9999  !array define Grid , -9999 wildcard to accept any
-
         jdisc=-1    !discipline#  -1 wildcard 
         jgdtn=-1    !grid template number,    -1 wildcard 
-        jskp=0      !Number of fields to be skip, 0 search from beginning
         ifile=0
+	jpdt(1)=jpd1
+        jpdt(2)=jpd2
 
-        jpdt(1)=jpd1   !Category #     
-        jpdt(2)=jpd2   !Product # under this category     
+	write(0,*) 'jpd1, jpd2 for search: ', jpd1, jpd2
+
+        if (jpdtn .eq. 8) then
         jpdt(27)=jpd27
-        write(*,*) jpdtn,jpd1,jpd2,jpd27
+	write(*,*) 'set jpdt(27) to: ', jpdt(27)
+        elseif (jpdtn .eq. 11) then
+        jpdt(30)=jpd27
+        endif
 
-         call getgb2(igrb2,ifile,jskp,jdisc,jids,jpdtn,jpdt,jgdtn,jgdt,
-     +        unpck, jskp1, gfld,iret)
+        jskp=0
+         call getgb2(igrb2,ifile,jskp,jdisc,
+     +         jids,jpdtn,jpdt,jgdtn,jgdt,
+     +        unpck, K, gfld,iret)
+
+	if (iret .ne. 0) then
+	write(*,*) 'FATAL: iret for actual get: ', iret
+        write(*,*) 'bad for jpdtn,jpdt(1:2): ', jpdtn,jpdt(1:2)
+
+        else
+        write(0,*) 'K, maxval(fld): ', K,maxval(gfld%fld)
+        write(*,*) 'okay for jpdt(1:2): ', jpdt(1:2)
+	endif
 
          
         return
@@ -1276,7 +1300,7 @@ c=========================================
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          
-	subroutine just_hrrr_3hrly (filehead, ff, jf)
+	subroutine just_hrrr_3hrly (filehead, ff, jf,jpdtn_use)
 
 C  raw data
        use grib_mod
@@ -1289,7 +1313,7 @@ C  raw data
        integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
        character*40 filehead,filename(8), output, outdone
        
-       integer ff, nfm1,nfm2
+       integer ff, nfm1,nfm2,jpdtn_use
        logical do_old
        character*3 fhr(48)
        integer iunit,ounit, pdt9_orig
@@ -1334,11 +1358,12 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
         write(0,*) 'open ', iunit, filename(1), 'ierr=',ierr
 	if (ierr /= 0) STOP
 
-        jpdtn=8    !APCP's Product Template# is  4.8 
 
         jpd1=1
         jpd2=8
         jpd27=1 !1 hr accumulation
+
+        jpdtn=jpdtn_use
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
 
         if (ie.eq.0) then
@@ -1352,7 +1377,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
            write(0,*) 'MOD=0 ', i, gfld_save_curr%ipdtmpl(i)
          end do
 
-        end if
+        endif
 
         jpd1=1
         jpd2=13
@@ -1418,7 +1443,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 cccccc  Then call putgb2 to store the calculated data into a grib2 file
 c
 c      data structure gfld is re-used for pack data since all are same
-c      only gfld%fld and gfld%ipdtmpl(27) are different
+c      only gfld%fld and gfld%ipdtmpl(jpd27_rec) are different
 
 Cmp   believe gfld%ipdtmpl(9) matters as well
 c
@@ -1434,12 +1459,10 @@ c      so use previously saved gfld_save
         ounit=50+nff
         call baopen(ounit,output,ierr)
 
-
-
 !!        Add a 1 h total for everyone
 	   gfld=gfld_save_curr
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
-           gfld%ipdtmpl(27)=3
+           gfld%ipdtmpl(jpd27_rec)=3
 	write(0,*) 'to putgb2 for ounit: ', ounit
 	write(0,*) 'minval/maxval APCP 3h (gfld%fld(:)): ', 
      &    minval(gfld%fld(:)),maxval(gfld%fld(:))
@@ -1450,7 +1473,7 @@ c      so use previously saved gfld_save
 
 	   gfld=gfld_save_curr_snow
            gfld%fld(:)=snhold(:,1)+snhold(:,2)+snhold(:,3)
-           gfld%ipdtmpl(27)=3
+           gfld%ipdtmpl(jpd27_rec)=3
 	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
     
@@ -1466,7 +1489,7 @@ c      so use previously saved gfld_save
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          
-	subroutine just_hrrr_3hrly_pre(filehead, ff, jf)
+	subroutine just_hrrr_3hrly_pre(filehead, ff, jf,jpdtn_use)
 
 C  raw data
        use grib_mod
@@ -1474,7 +1497,7 @@ C  raw data
        real,allocatable,dimension(:)   ::  dp1
        real,allocatable,dimension(:,:) ::  snhold !jf,4        
        real,allocatable,dimension(:)   ::  sn1
-       integer iyr,imon,idy,ihr
+       integer iyr,imon,idy,ihr,jpdtn_use
        character*50 gdss(400)
        integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
        character*40 filehead,filename(8), output, outdone
@@ -1526,10 +1549,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
 
         iunit=21
         call baopenr(iunit,filename(1),ierr)
-        write(0,*) 'open ', iunit, filename(1), 'ierr=',ierr
+        write(*,*) 'open ', iunit, filename(1), 'ierr=',ierr
 	if (ierr /= 0) STOP
 
-        jpdtn=8    !APCP's Product Template# is  4.8 
+        jpdtn=jpdtn_use    !APCP's Product Template# is  4.8  (or 4.11)
 
         jpd1=1
         jpd2=8
@@ -1539,12 +1562,13 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
         if (ie.eq.0) then
          dphold(:,1)=gfld%fld(:)
 	 pdt9_orig=gfld%ipdtmpl(9)
-         write(0,*) 'gfld(9) before saved: ', gfld%ipdtmpl(9)
+         write(*,*) 'HRRR gfld(9) before saved: ', gfld%ipdtmpl(9)
+         write(*,*) 'gfld%ipdtmpl(27): ', gfld%ipdtmpl(27)
          gfld%ipdtmpl(9)=-2 + pdt9_orig
          gfld_save_curr=gfld
 
          do i=1,gfld_save_curr%ipdtlen
-           write(0,*) 'MOD=0 ', i, gfld_save_curr%ipdtmpl(i)
+           write(*,*) 'MOD=0 ', i, gfld_save_curr%ipdtmpl(i)
          end do
 
         end if
@@ -1552,7 +1576,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
         jpd1=1
         jpd2=13
         jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! WEASD
         if (ie.eq.0) then
          snhold(:,1)=gfld%fld(:)
          gfld%ipdtmpl(9)=-2 + pdt9_orig
@@ -1578,7 +1602,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCC
         jpd1=1
         jpd2=13
         jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)   ! WEASD
         if (ie.eq.0) then
          snhold(:,2)=gfld%fld(:)
         endif
@@ -1601,7 +1625,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCC
         jpd1=1
         jpd2=13
         jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !Large scale APCP
+        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! WEASD
         if (ie.eq.0) then
          snhold(:,3)=gfld%fld(:)
         endif
@@ -1613,7 +1637,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 cccccc  Then call putgb2 to store the calculated data into a grib2 file
 c
 c      data structure gfld is re-used for pack data since all are same
-c      only gfld%fld and gfld%ipdtmpl(27) are different
+c      only gfld%fld and gfld%ipdtmpl(jpd27_rec) are different
 
 Cmp   believe gfld%ipdtmpl(9) matters as well
 c
@@ -1629,16 +1653,14 @@ c      so use previously saved gfld_save
         ounit=50+nff
         call baopen(ounit,output,ierr)
 
-
-
-!!        Add a 1 h total for everyone
 	   gfld=gfld_save_curr
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
+!          gfld%ipdtmpl(jpd27_rec)=3
            gfld%ipdtmpl(27)=3
 	write(0,*) 'to putgb2 for ounit: ', ounit
 	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
          do i=1,gfld_save_curr%ipdtlen
-         write(0,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
+         write(*,*) 'at output of apcp3h ',i,gfld%ipdtmpl(i)
          end do
            call putgb2_wrap(ounit,gfld,ierr)
 
@@ -1659,7 +1681,7 @@ c      so use previously saved gfld_save
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
          
-	subroutine just_fv3_3hrly_pre(filehead, ff, jf)
+	subroutine just_fv3_3hrly_pre(filehead, ff, jf,jpdtn_use)
 
 C  raw data
        use grib_mod
@@ -1669,7 +1691,7 @@ C  raw data
        real,allocatable,dimension(:)   ::  sn1
        real,allocatable,dimension(:,:) ::  fzhold !jf,4        
        real,allocatable,dimension(:)   ::  fz1
-       integer iyr,imon,idy,ihr
+       integer iyr,imon,idy,ihr,jpdtn_use
        character*50 gdss(400)
        integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
        character*40 filehead,filename(8), output, outdone
@@ -1728,7 +1750,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
         write(0,*) 'open ', iunit, filename(1), 'ierr=',ierr
 	if (ierr /= 0) STOP
 
-        jpdtn=8    !APCP's Product Template# is  4.8 
+        jpdtn=jpdtn_use !   !APCP's Product Template# is  4.8  (or 4.11)
 
         jpd1=1
         jpd2=8
@@ -1838,7 +1860,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 cccccc  Then call putgb2 to store the calculated data into a grib2 file
 c
 c      data structure gfld is re-used for pack data since all are same
-c      only gfld%fld and gfld%ipdtmpl(27) are different
+c      only gfld%fld and gfld%ipdtmpl(jpd27_rec) are different
 
 Cmp   believe gfld%ipdtmpl(9) matters as well
 c
@@ -1859,7 +1881,7 @@ c      so use previously saved gfld_save
 !!        Add a 1 h total for everyone
 	   gfld=gfld_save_curr
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
-           gfld%ipdtmpl(27)=3
+           gfld%ipdtmpl(jpd27_rec)=3
 	write(0,*) 'to putgb2 for ounit: ', ounit
 	write(0,*) 'maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
          do i=1,gfld_save_curr%ipdtlen
@@ -1869,7 +1891,7 @@ c      so use previously saved gfld_save
 
 	   gfld=gfld_save_curr_snow
            gfld%fld(:)=snhold(:,1)+snhold(:,2)+snhold(:,3)
-           gfld%ipdtmpl(27)=3
+           gfld%ipdtmpl(jpd27_rec)=3
 	write(0,*) 'SNOW maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
     

@@ -39,13 +39,13 @@ C for variable table:
 
 !        write(*,*) 'packing direct mean/spread for nv ', nv
 
-!        write(*,*) nv, imean,isprd,
-!     +     jpd1,jpd2,jpd10,jpd27,jf,Lm,
-!     +     iens,iyr,imon,idy,ihr,ifhr,gribid
+        write(*,*) nv, imean,isprd,
+     +     jpd1,jpd2,jpd10,jpd27,jf,Lm,
+     +     iens,iyr,imon,idy,ihr,ifhr,gribid
 
 
 
-!	write(0,*) 'nv, Mlvl(nv): ', nv, Mlvl(nv)
+	write(0,*) 'nv, Mlvl(nv): ', nv, Mlvl(nv)
 
         DO 1000 ml=1,Mlvl(nv)
 
@@ -88,7 +88,7 @@ C for variable table:
              ipdtmpl(3)=4
              ipdtmpl(4)=0
 c            ipdtmpl(5)=132              !assigned 20161214
-             ipdtmpl(5)=136              !for refs 
+             ipdtmpl(5)=134              !for refs 
              ipdtmpl(6)=0
              ipdtmpl(7)=0
              ipdtmpl(8)=1

@@ -22,7 +22,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -70,32 +70,34 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 !        write(*,*)  nv,jf,iens,Lm,Lp,Lt,lvls,jpdtn
 
-        !jpdtn=0
         jp27=-9999
 
          miss=0
 
          do irun=1,iens
 
-          call readGB2(ifunit(irun),jpdtn,2,2,103,10,jp27,gfld,eps,ie) !U10m 
+          call readGB2(ifunit(irun),jpdtn(irun),2,2,103,10,
+     +                 jp27,gfld,eps,ie) !U10m 
            U10m(:,irun)=gfld%fld
 !           write(*,*) 'read U10m data done'
-          call readGB2(ifunit(irun),jpdtn,2,3,103,10,jp27,gfld,eps,ie) !V10m 
+          call readGB2(ifunit(irun),jpdtn(irun),2,3,103,10,
+     +                 jp27,gfld,eps,ie) !V10m 
            V10m(:,irun)=gfld%fld
 !           write(*,*) 'read V10m data done'
-          call readGB2(ifunit(irun),jpdtn,3,5,1,0,jp27,gfld,eps,ie) !Hsfc
+          call readGB2(ifunit(irun),jpdtn(irun),3,5,1,0,
+     +                 jp27,gfld,eps,ie) !Hsfc
            HS(:,irun)=gfld%fld
 !           write(*,*) 'read surface height data done'
 
            do k=1,lvls
               !write(*,*) 'Level=',p(k)
-            call readGB2(ifunit(irun),jpdtn,2,2,100,p(k),jp27,gfld,
+          call readGB2(ifunit(irun),jpdtn(irun),2,2,100,p(k),jp27,gfld,
      +                   eps,ie)
                 Upr(:,irun,k)=gfld%fld
-            call readGB2(ifunit(irun),jpdtn,2,3,100,p(k),jp27,gfld,
+          call readGB2(ifunit(irun),jpdtn(irun),2,3,100,p(k),jp27,gfld,
      +                   eps,ie)
                 Vpr(:,irun,k)=gfld%fld
-            call readGB2(ifunit(irun),jpdtn,3,5,100,p(k),jp27,gfld,
+          call readGB2(ifunit(irun),jpdtn(irun),3,5,100,p(k),jp27,gfld,
      +                   eps,ie)      
                 Hpr(:,irun,k)=gfld%fld
             end do

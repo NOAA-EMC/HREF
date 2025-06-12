@@ -6,7 +6,8 @@ export cray_mpich_ver=8.1.12
 export cray_pals_ver=1.0.12
 
 
-export refs_ver=v1.0.0
+export refs_ver=v1.0
+export rrfs_ver=v1.0
 export hrrr_ver=v4.1
 
 export python_ver=3.8.6

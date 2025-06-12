@@ -23,7 +23,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -48,7 +48,6 @@ c    for derived variables
 
         character*5 eps
 
-        !jpdtn=0
         jdp1=dk4(nv)
         jdp2=dk5(nv)
         jpd10=100       
@@ -62,7 +61,7 @@ c     +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
          miss=0
           loop400: do irun=1,iens
            jpd12=MPairLevel(nv,1,1)
-           call readGB2(ifunit(irun),jpdtn,jdp1,jdp2,jpd10,jpd12,
+           call readGB2(ifunit(irun),jpdtn(irun),jdp1,jdp2,jpd10,jpd12,
      +                                      jp27,gfld,eps,ie) !higher level  
            if(ie.eq.0) then
              h1(:,irun)=gfld%fld
@@ -72,7 +71,7 @@ c     +              nv,ifunit,jf,iens,Lm,Lp,Lt,jpd10
            end if
 
            jpd12=MPairLevel(nv,1,2)
-           call readGB2(ifunit(irun),jpdtn,jdp1,jdp2,jpd10,jpd12,
+           call readGB2(ifunit(irun),jpdtn(irun),jdp1,jdp2,jpd10,jpd12,
      +                                      jp27,gfld,eps,ie) !lower level  
            if(ie.eq.0) then
             h2(:,irun)=gfld%fld

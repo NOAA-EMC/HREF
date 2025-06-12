@@ -24,7 +24,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -120,7 +120,7 @@ c    for derived variables
      +             kx,ky,km,jf,iens,
      +             terr_ens,hel1_ens,hel3_ens,cape_ens,
      +             dryt_ens, dapelcl_ens,cptp2_ens,
-     +             dcape_ens,eshr_ens,tc500_ens)
+     +             dcape_ens,eshr_ens,tc500_ens,jpdtn)
 
         !step 2-1: get cptpp1 (ie ensemble prob of cptp>1)    !for now only hel3_ens and dryt_ens are are used used.      
         !note: in David code, this computation is done in getens_data.f (see line 8055), but here we move it to here 
@@ -447,7 +447,7 @@ c
      +             kx,ky,km,jf,iens,
      +             terr_ens,hel1_ens,hel3_ens,cape_ens,
      +             dryt_ens, dapelcl_ens,cptp2_ens,
-     +             dcape_ens,eshr_ens,tc500_ens)
+     +             dcape_ens,eshr_ens,tc500_ens,jpdtn)
 
 
         use grib_mod
@@ -460,7 +460,7 @@ c
      +        cptp2_ens(jf,iens),
      +        dcape_ens(jf,iens),eshr_ens(jf,iens),
      +        tc500_ens(jf,iens)
-        integer  ifunit(iens)
+        integer  ifunit(iens),jpdtn(iens)
 
 	REAL		grid(jf), 
      &                  lclht(jf), 
@@ -655,20 +655,22 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
          enddo
           
          !!!!!!!!!!!!!!!  2D DATA  !!!!!!!!!!!!!!!!!
-          !jpdtn=0
           jp27=-9999
           !sfc height
-          call readGB2(ifunit(imem),jpdtn,3,5,1,0,jp27,gfld,
+          call readGB2(ifunit(imem),jpdtn(imem),3,5,1,0,
+     +                 jp27,gfld,
      +                 eps,ie) !Hsfc
            sfcz=gfld%fld
           
           !sfc pressure
-           call readGB2(ifunit(imem),jpdtn,3,0,1,0,jp27,gfld,
+          call readGB2(ifunit(imem),jpdtn(imem),3,0,1,0,
+     +                 jp27,gfld,
      +                 eps,ie) !Sfc Pressure
            sfcp=gfld%fld/100.0
 
           !2m T (in C) 
-           call readGB2(ifunit(imem),jpdtn,0,0,103,2,jp27,gfld,
+          call readGB2(ifunit(imem),jpdtn(imem),0,0,103,2,
+     +                 jp27,gfld,
      +                 eps,ie)
            sfct=gfld%fld-273.15
 
@@ -689,13 +691,14 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           !specific humidity (kg/kg) to derive vapor mixing ratio (g/kg)
 
           if (trim(eps).eq.'sref') then 
-             call readGB2(ifunit(imem),jpdtn,1,0,103,2,jp27,gfld,
+           call readGB2(ifunit(imem),jpdtn(imem),1,0,103,2,jp27,gfld,
      +                     eps,ie)
               sfctd=gfld%fld/(1-gfld%fld/0.622)       !adjusted from specific humidity to mixing ratio
               sfctd=sfctd*1000.0                      ! --> g/kg
           else                                        !NARRE has no specific humidity
                                                       !so use RH to derive
-             call readGB2(ifunit(imem),jpdtn,1,1,103,2,jp27,gfld,
+          call readGB2(ifunit(imem),jpdtn(imem),1,1,103,2,
+     +                     jp27,gfld,
      +                     eps,ie)  !RH (%)
              do k=ibeginc,iendinc
 
@@ -709,12 +712,14 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
           end if
 
           ! 10 m u-wind
-           call readGB2(ifunit(imem),jpdtn,2,2,103,10,jp27,gfld,
-     +                    eps,ie)
+        call readGB2(ifunit(imem),jpdtn(imem),2,2,103,10,
+     +               jp27,gfld,
+     +               eps,ie)
            sfcu=gfld%fld
 
           ! 10 m v-wind
-           call readGB2(ifunit(imem),jpdtn,2,3,103,10,jp27,gfld,
+        call readGB2(ifunit(imem),jpdtn(imem),2,3,103,10,
+     +                 jp27,gfld,
      +                    eps,ie)
            sfcv=gfld%fld
        
@@ -723,7 +728,7 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
          !!!!!!!!!!!!!!!  3D DATA  !!!!!!!!!!!!!!!!!
            do i = 1,ilayers
               !Temperature profile
-               call readGB2(ifunit(imem),jpdtn,0,0,100,rht(i),
+               call readGB2(ifunit(imem),jpdtn(imem),0,0,100,rht(i),
      +           jp27,gfld,eps,ie)
                do k=ibeginc,iendinc
                 tmtm(i,k)=gfld%fld(k)-273.15
@@ -739,7 +744,7 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              !Pure Specific humidity (kg/kg) profile
             if(trim(eps).eq.'sref') then
-              call readGB2(ifunit(imem),jpdtn,1,0,100,rht(i),
+              call readGB2(ifunit(imem),jpdtn(imem),1,0,100,rht(i),
      +              jp27,gfld,eps,ie) !Specific humidity
               do k=ibeginc,iendinc
                vr=gfld%fld(k)/(1.0-gfld%fld(k)/0.332)    !first adjusted from specific humidity to mixing ratio
@@ -747,7 +752,7 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                tdtd(i,k)=(237.3*log(emb/6.108))/(17.27-log(emb/6.108))   !Mixing ratio (g/kg)
               enddo
             else
-              call readGB2(ifunit(imem),jpdtn,1,1,100,rht(i),
+              call readGB2(ifunit(imem),jpdtn(imem),1,1,100,rht(i),
      +               jp27,gfld,eps,ie)  !RH(%) 
               do k=ibeginc,iendinc
                  tt=17.62*tmtm(i,k)/(243.12 + tmtm(i,k))
@@ -761,7 +766,7 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             !write(*,*) '... Spedific H ... for ', rht(i)
 
              !U profile
-              call readGB2(ifunit(imem),jpdtn,2,2,100,rht(i),
+              call readGB2(ifunit(imem),jpdtn(imem),2,2,100,rht(i),
      +               jp27,gfld,eps,ie)
               do k=ibeginc,iendinc
                if(lclht(k).gt.0.5) then
@@ -776,7 +781,7 @@ cc^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
               end do
 
              !V profile
-             call readGB2(ifunit(imem),jpdtn,2,3,100,rht(i),
+             call readGB2(ifunit(imem),jpdtn(imem),2,3,100,rht(i),
      +                jp27,gfld,eps,ie)
               do k=ibeginc,iendinc
                if(lclht(k).gt.0.5) then

@@ -25,6 +25,7 @@ mem=${3}
 name=${4}
 hr=${5}
 NEST=${6}
+JPDTN=8
 
 
 if [ $NEST = 'conus' ]
@@ -183,6 +184,7 @@ fi
     echo 0 >> input.${hr}.hrrr.snow
     echo "$dim1 $dim2" >> input.${hr}.hrrr.snow
     echo 1 >> input.${hr}.hrrr.snow
+    echo $JPDTN >> input.${hr}.hrrr.snow
 
     $EXECrefs/enspost_fv3snowbucket < input.${hr}.hrrr.snow
     export err=$? # ; err_chk
@@ -232,6 +234,7 @@ echo $hr >> input.${hr}.hrrr.snow
 echo 0 >> input.${hr}.hrrr.snow
 echo "$dim1 $dim2" >> input.${hr}.hrrr.snow
 echo 1 >> input.${hr}.hrrr.snow
+echo $JPDTN >> input.${hr}.hrrr.snow
 
 if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then

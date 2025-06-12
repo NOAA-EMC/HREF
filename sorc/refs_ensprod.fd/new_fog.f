@@ -22,7 +22,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -78,29 +78,34 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !        write(*,*) 'ipunit=', ipunit
 !        write(*,*) 'nv,jf,im,jm,dx,dy,iens,Lm,Lp,Lt='
 !        write(*,*)  nv,jf,im,jm,dx,dy,iens,Lm,Lp,Lt
-        !jpdtn=0
-          if (jpdtn.eq.0) then
+
+C          if (jpdtn.eq.0) then
 c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
-           jpdtnp=0    !Jun Du: added a new code and use 0 for rrfs as Template 4.0 (Sec 4)
-          else if (jpdtn.eq.1) then
-           jpdtnp=11
-          else 
-           jpdtnp=8
-          end if
+C           jpdtnp=0    !Jun Du: added a new code and use 0 for rrfs as Template 4.0 (Sec 4)
+C          else if (jpdtn.eq.1) then
+C           jpdtnp=11
+C          else 
+C           jpdtnp=8
+C          end if
 
         jp27=-9999
 
         miss=0
 
-!        write(*,*) 'jpdtn=',jpdtn
-!        write(*,*) 'jpdtnp=',jpdtnp
 !        write(*,*) 'jp27=',jp27
 !        write(*,*) 'miss=',miss
 
       bigloop:  do irun=1,iens
-          !jpdtn=0
+	
+	if (jpdtn(irun) .eq. 1) then
+	      jpdtnp=11
+        elseif (jpdtn(irun) .eq. 0) then
+              jpdtnp=8
+        endif
+
 !        write(*,*) 'before read U10m'
-          call readGB2(ifunit(irun),jpdtn,2,2,103,10,jp27,gfld,eps,ie) !U10m 
+          call readGB2(ifunit(irun),jpdtn(irun),2,2,103,10,
+     +                 jp27,gfld,eps,ie) !U10m 
           if(ie.eq.0) then
            U10m(:,irun)=gfld%fld
           else
@@ -109,7 +114,8 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
           end if
 !        write(*,*) 'after read U10m'
 
-          call readGB2(ifunit(irun),jpdtn,2,3,103,10,jp27,gfld,eps,ie) !V10m 
+          call readGB2(ifunit(irun),jpdtn(irun),2,3,103,10,
+     +                jp27,gfld,eps,ie) !V10m 
           if(ie.eq.0) then
            V10m(:,irun)=gfld%fld
           else
@@ -118,7 +124,8 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
           end if
 !        write(*,*) 'after read V10m'
 
-          call readGB2(ifunit(irun),jpdtn,1,1,103,2,jp27,gfld,eps,ie) !RH2m
+          call readGB2(ifunit(irun),jpdtn(irun),1,1,103,2,
+     +                 jp27,gfld,eps,ie) !RH2m
           if(ie.eq.0) then
            RH2m(:,irun)=gfld%fld
           else
@@ -127,40 +134,40 @@ c          jpdtnp=8    !Temperature variation in prcip file is in Template 4.8
           end if
 !        write(*,*) 'after read RH2m'
 
-          call readGB2(ifunit(irun),jpdtn,0,0,103,2,jp27,gfld,eps,ie) !T2m(current)
+	write(0,*) 'trying for 2 m T with jpdtn: ', jpdtn(irun)
+          call readGB2(ifunit(irun),jpdtn(irun),0,0,103,2,
+     +                 jp27,gfld,eps,ie) !T2m(current)
           if(ie.eq.0) then
            T2m(:,irun)=gfld%fld-273.15
           else
              miss(irun)=1
              cycle bigloop
           end if
-!        write(*,*) 'after read T2m (current)'
+          write(*,*) 'after read T2m (current)'
 
-          call readGB2(ifunit(irun),jpdtn,3,5,2,0,jp27,gfld,eps,ie) !CLDBS
+!	write(0,*) 'trying for 2 m T with jpdtnp: ', jpdtnp
+!          call readGB2(ifunit(irun),jpdtnp,0,0,103,2,
+!     +                 jp27,gfld,eps,ie) !T2m(current)
+!          if(ie.eq.0) then
+!           T2m(:,irun)=gfld%fld-273.15
+!          else
+!             miss(irun)=1
+!             cycle bigloop
+!          end if
+!          write(*,*) 'after read T2m (current)'
+
+          call readGB2(ifunit(irun),jpdtn(irun),3,5,2,0,
+     +                 jp27,gfld,eps,ie) !CLDBS
 !        write(*,*) 'after read cloud base'
           if(ie.eq.0) then
-! account for bmap
-
-c This block was commented out by Jun Du to make it work for rrfs ensemble
-c       if (jf .ne. 37910 .and. jf .ne. 70720) then
-
-c           do JJ=1,jf
-c           if (.not. gfld%bmap(JJ)) then
-c            CLDBS(JJ,irun)=-5000.
-c           else
-c            CLDBS(JJ,irun)=gfld%fld(JJ)
-c           endif
-c           enddo
-c        else
-             CLDBS(:,irun)=gfld%fld
-c        endif
-
+           CLDBS(:,irun)=gfld%fld
           else
              miss(irun)=1
              cycle bigloop
           end if
 
-          call readGB2(ifunit(irun),jpdtn,3,5,3,0,jp27,gfld,eps,ie) !CLDT
+          call readGB2(ifunit(irun),jpdtn(irun),3,5,3,0,
+     +                 jp27,gfld,eps,ie) !CLDT
           if(ie.eq.0) then
            CLDTP(:,irun)=gfld%fld
           else
@@ -169,7 +176,8 @@ c        endif
           end if
 !        write(*,*) 'after read cloud top'
 
-          call readGB2(ifunit(irun),jpdtn,3,5,1,0,jp27,gfld,eps,ie) !Hsfc
+          call readGB2(ifunit(irun),jpdtn(irun),3,5,1,0,
+     +                 jp27,gfld,eps,ie) !Hsfc
           if(ie.eq.0) then
            HS(:,irun)=gfld%fld
           else
@@ -183,8 +191,8 @@ c Temperature variation in prcip file is in Template 8
 !        write(*,*) 'ipunit=',ipunit
 !        write(*,*) 'jpdtnp=',jpdtnp
 c use Td2m as a placeholder for testing
-c         call readGB2(ifunit(irun),jpdtn,0,6,103,2,jp27,gfld,eps,ie)        !dTd2m
-          call readGB2(ipunit(irun),jpdtnp,0,0,103,2,jp27,gfld,eps,ie)       !dT2m
+c          call readGB2(ifunit(irun),jpdtn,0,6,103,2,jp27,gfld,eps,ie)        !dTd2m
+          call readGB2(ipunit(irun),jpdtn,0,0,103,2,jp27,gfld,eps,ie)       !dT2m
 
           if(ie.eq.0) then
            dT2m(:,irun)=gfld%fld
@@ -192,39 +200,44 @@ c         call readGB2(ifunit(irun),jpdtn,0,6,103,2,jp27,gfld,eps,ie)        !dT
              miss(irun)=1
              cycle bigloop
           end if
-!        write(*,*) 'after read dT2m'
+         write(*,*) 'after read dT2m'
  
            do k=1,10
             lvl=p(k)
               !jpdtn=0
-              call readGB2(ifunit(irun),jpdtn,2,2,100,lvl,jp27,gfld,
+              call readGB2(ifunit(irun),jpdtn(irun),
+     +                  2,2,100,lvl,jp27,gfld,
      +           eps,ie) 
                 Upr(:,irun,k)=gfld%fld
 !        write(*,*) 'after read Upr'
-              call readGB2(ifunit(irun),jpdtn,2,3,100,lvl,jp27,gfld,
+              call readGB2(ifunit(irun),jpdtn(irun),
+     +                  2,3,100,lvl,jp27,gfld,
      +           eps,ie) 
                 Vpr(:,irun,k)=gfld%fld
 !        write(*,*) 'after read Vpr'
-              call readGB2(ifunit(irun),jpdtn,1,1,100,lvl,jp27,gfld,
+              call readGB2(ifunit(irun),jpdtn(irun),
+     +                  1,1,100,lvl,jp27,gfld,
      +            eps,ie)  
                 RHpr(:,irun,k)=gfld%fld
 !        write(*,*) 'after read RHpr'
-              call readGB2(ifunit(irun),jpdtn,3,5,100,lvl,jp27,gfld,
+              call readGB2(ifunit(irun),jpdtn(irun),
+     +                3,5,100,lvl,jp27,gfld,
      +            eps,ie)      
                 Hpr(:,irun,k)=gfld%fld
 !        write(*,*) 'after read Hpr'
-              call readGB2(ifunit(irun),jpdtn,0,0,100,lvl,jp27,gfld,
+              call readGB2(ifunit(irun),jpdtn(irun),
+     +              0,0,100,lvl,jp27,gfld,
      +            eps,ie)      
                 Tpr(:,irun,k)=gfld%fld-273.15
-!        write(*,*) 'after read Tpr'
+         write(*,*) 'after read Tpr'
                
 c use Td as a placeholder for testing
 c             call readGB2(ifunit(irun),jpdtn,0,6,100,lvl,jp27,gfld,
-              call readGB2(ipunit(irun),jpdtnp,0,0,100,lvl,jp27,gfld,
-     +            eps,ie)      
-                dTpr(:,irun,k)=gfld%fld
+C              call readGB2(ipunit(irun),jpdtnp,0,0,100,lvl,jp27,gfld,
+C     +            eps,ie)      
+C                dTpr(:,irun,k)=gfld%fld
             end do
-!        write(*,*) 'after read dTpr (past)'
+C        write(*,*) 'after read dTpr (past)'
 
            end do bigloop
 
@@ -406,6 +419,7 @@ C   Observation (CIMO Guide):
              end do
 700        continue
 
+           write(*,*) 'done new_fog'
            return
            end
 

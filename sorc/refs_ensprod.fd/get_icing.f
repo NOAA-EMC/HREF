@@ -19,7 +19,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -46,7 +46,6 @@ c    for derived variables
         character*5 eps
 
         jpd10=dk6(nv)
-        !jpdtn=0
         jp27=-9999
 
 c        write(*,*) 'In get_icing .....'
@@ -63,7 +62,7 @@ c          write(*,*) 'jpd10 jpd12=',jpd10, jpd12
 
           loop601: do irun=1,iens
 
-           call readGB2(ifunit(irun),jpdtn,0,0,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),0,0,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !T
             if(iret.eq.0) then 
              T(:,irun)=gfld%fld
@@ -72,7 +71,7 @@ c          write(*,*) 'jpd10 jpd12=',jpd10, jpd12
              cycle loop601
             end if
 
-           call readGB2(ifunit(irun),jpdtn,1,1,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),1,1,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !RH
             if(iret.eq.0) then
              R(:,irun)=gfld%fld
@@ -81,7 +80,7 @@ c          write(*,*) 'jpd10 jpd12=',jpd10, jpd12
              cycle loop601
             end if
 
-           call readGB2(ifunit(irun),jpdtn,2,9,jpd10,jpd12,jp27,
+           call readGB2(ifunit(irun),jpdtn(irun),2,9,jpd10,jpd12,jp27,
      +       gfld,eps,iret)   !W
             if(iret.eq.0) then
              W(:,irun)=-gfld%fld  ! flip sign

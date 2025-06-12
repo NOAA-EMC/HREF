@@ -19,7 +19,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens)
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -45,7 +45,6 @@ c    for derived variables
 
         Character*5 eps
 
-        !jpdtn=0
         jp27=-9999
 
         write(*,*) 'In flight_res .....'
@@ -59,7 +58,7 @@ c    for derived variables
 
           jpd12=dProbLevel(nv,1)
 
-           call readGB2(ifunit(k),jpdtn,6,1,200,0,jp27,gfld,eps,iret) !Total cloud
+           call readGB2(ifunit(k),jpdtn(k),6,1,200,0,jp27,gfld,eps,iret) !Total cloud
             if(iret.eq.0) then 
              totcld(:,k)=gfld%fld
             else
@@ -68,7 +67,7 @@ c    for derived variables
              cycle loop200
             end if
 
-           call readGB2(ifunit(k),jpdtn,3,5,1,0,jp27,gfld,eps,iret)  !Sfc height
+           call readGB2(ifunit(k),jpdtn(k),3,5,1,0,jp27,gfld,eps,iret)  !Sfc height
             if(iret.eq.0) then
              sfcght(:,k)=gfld%fld
             else
@@ -78,7 +77,7 @@ c    for derived variables
             end if
 
  
-           call readGB2(ifunit(k),jpdtn,3,5,2,0,jp27,gfld,eps,iret)   !Cloud base
+           call readGB2(ifunit(k),jpdtn(k),3,5,2,0,jp27,gfld,eps,iret)   !Cloud base
             if(iret.eq.0) then
 
 ! account for bmap
@@ -103,7 +102,7 @@ c    for derived variables
              write(*,*) 'Cloud base missing in file',ifunit(k)
              write(*,*) 'try cloud ceiling'
 
-           call readGB2(ifunit(k),jpdtn,3,5,215,0,jp27,gfld,eps,iret)   !Cloud ceiling
+           call readGB2(ifunit(k),jpdtn(k),3,5,215,0,jp27,gfld,eps,iret)   !Cloud ceiling
             if(iret.eq.0) then
 
 ! account for bmap
@@ -133,7 +132,7 @@ c    for derived variables
 
             end if
 
-           call readGB2(ifunit(k),jpdtn,19,0,1,0,jp27,gfld,eps,iret) !Sfc visb
+           call readGB2(ifunit(k),jpdtn(k),19,0,1,0,jp27,gfld,eps,iret) !Sfc visb
             if(iret.eq.0) then
              visbil(:,k)=gfld%fld
             else

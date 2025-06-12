@@ -164,7 +164,7 @@ C others
        real,allocatable, dimension(:)    :: Hsfc                       !surface height for DTRA  
  
        integer,allocatable,dimension(:,:)   :: missing                 ! to deal with missing data 
-       integer,allocatable,dimension(:)     :: miss
+       integer,allocatable,dimension(:) :: miss, jpdtn_arr,jpdtn_acc_arr
        real,allocatable,dimension(:) ::           apoint               !iens
 
        integer :: patch_nx, patch_ny, ovx, ovy
@@ -551,6 +551,11 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c Loop 1-1: Read direct variable's GRIB2 data from all members 
 
 
+        if (.NOT.allocated(jpdtn_arr)) then
+          allocate(jpdtn_arr(iens))
+          allocate(jpdtn_acc_arr(iens))
+        endif
+
         loop1001: DO irun=1,iens         ! members
 
          jret=0
@@ -599,22 +604,21 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
                 allocate (ptype_pr2(jf,4))
               end if
              
- 
-!	      if (slr_derv(1)<0.01) then
-!              call preciptype (nv,ifunit,jpdtn,jf,iens,
-!     +         ptype_mn,ptype_pr,ptype_pr2,slr_derv)
-!              endif
-
 
 !  end of inserted ptype stuff
 
 
 !         write(0,*) 'get APCP GRIB2 data for member ', irun
 
-             if(mbrname(irun)(1:4).eq.'sref') then
+             if(mbrname(irun)(1:4).eq.'sref' .or. 
+     +          mbrname(irun)(1:4).eq.'refs') then
               jpdtn=11
+              jpdtn_acc_arr(irun)=11
+              jpdtn_arr(irun)=1
              else
               jpdtn=8
+              jpdtn_acc_arr(irun)=8
+              jpdtn_arr(irun)=0
              end if
 
              jpd1=k4(nv)
@@ -696,10 +700,13 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
             else   !Non-APCP/SNOW products, Non-SSEO product      
 
               if(mbrname(irun)(1:4).eq.'sref'.or.
+     +           mbrname(irun)(1:4).eq.'refs'.or.  
      +           mbrname(irun)(1:4).eq.'gefs') then
                jpdtn=1
+               jpdtn_arr(irun)=1
               else
                jpdtn=0
+               jpdtn_arr(irun)=0
               end if
 
               if((k4(nv).eq.2.and.k5(nv).eq.222).or.
@@ -709,9 +716,12 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +         (k4(nv).eq.17.and.k5(nv).eq.192).or.
      +         (k4(nv).eq.2.and.k5(nv).eq.220).or.
      +         (k4(nv).eq.2.and.k5(nv).eq.221) ) then
-                if(mbrname(irun)(1:4).eq.'sref') then
+                if(mbrname(irun)(1:4).eq.'sref'.or.
+     +             mbrname(irun)(1:4).eq.'refs') then
                  jpdtn=11
+                 jpdtn_acc_arr(irun)=11
                 else 
+                 jpdtn_acc_arr(irun)=8
                  jpdtn=8
                 end if 
               end if
@@ -1109,8 +1119,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                enddo
                enddo
 
-!            write(0,*) 'presmooth max(vrbl_mn_locpm): ', 
-!     &                  maxval(vrbl_mn_locpm)
+            write(0,*) 'presmooth max(vrbl_mn_locpm): ', 
+     &                  maxval(vrbl_mn_locpm)
 
              call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
      +           'M','M')
@@ -1121,8 +1131,8 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
                deallocate(vrbl_pmmn_2d)
 
 
-!            write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 
-!     &                  maxval(vrbl_mn_locpm)
+            write(0,*) 'postsmooth max(vrbl_mn_locpm): ', 
+     &                  maxval(vrbl_mn_locpm)
 
                endif ! lpm variable selection
 
@@ -1953,6 +1963,9 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 	endif
         if(trim(Msignal(nv)).eq.'L') then
 ! LPMM
+	write(0,*) 'calling packGB2_mean for LPMM'
+        write(0,*) 'gfld%ipdtnum: ', gfld%ipdtnum
+
           call packGB2_mean(ilocpmmn,isprd,vrbl_mn_locpm,vrbl_sp,
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
@@ -1974,6 +1987,10 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 
 
 ! PMMN
+	write(0,*) 'calling packGB2_mean for PMMN'
+        write(0,*) 'gfld%ipdtnum: ', gfld%ipdtnum
+        write(0,*) 'max of field: ', maxval(gfld%fld)
+
           call packGB2_mean(ipmmn,isprd,vrbl_mn_pm,vrbl_sp,    
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
@@ -2132,7 +2149,10 @@ c   Loop 2-0: allocation
          jpd10=dk6(nv)
          jpd27=-9999
 
-         if(trim(eps).eq.'sref' ) then
+
+! defining here, but dont think will be used
+
+         if(trim(eps).eq.'sref' .or. trim(eps).eq.'refs') then
            if (jpd1.eq.1.and.
      +      (jpd2.eq.8.or.jpd2.eq.11.or.jpd2.eq.15)) then
               jpdtn=11
@@ -2186,12 +2206,12 @@ cc%%%%%%% 2. To see if there is precipitation type computation, if yes, do it
              
              if (trim(eps).eq.'sseo') then
 
-              call preciptype (nv,ipunit,jpdtn,jf,iens,
+              call preciptype (nv,ipunit,jpdtn_arr,jf,iens,
      +         ptype_mn,ptype_pr,ptype_pr2)
 
              else
  
-              call preciptype (nv,ifunit,jpdtn,jf,iens,
+              call preciptype (nv,ifunit,jpdtn_arr,jf,iens,
      +         ptype_mn,ptype_pr,ptype_pr2)
 
              end if
@@ -2244,13 +2264,13 @@ cc%%%%%%% 3. To see if there is wind speed computation, if yes, do it
 
           if (dk4(nv).eq.2.and.dk5(nv).eq.1.and.dk6(nv).ne.108) then
             write(*,*) 'call wind'
-            call wind (nv,ifunit,jpdtn,jf,im,jm,iens,Lm,Lp,Lth,
+            call wind (nv,ifunit,jpdtn_arr,jf,im,jm,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind done'
           else if (dk4(nv).eq.2 .and. dk5(nv).eq.192 .and.
      +             dk6(nv).eq.103) then
             write(*,*) 'call bulkshear'
-            call bulkshear(nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
+            call bulkshear(nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,
      +        derv_mn,derv_sp,derv_pr,weight,mbrname)
             write(*,*) 'Wind(shear) done'
           end if
@@ -2258,14 +2278,15 @@ cc%%%%%%% 3. To see if there is wind speed computation, if yes, do it
 
 cc%%%%%%% 4. To see if there is icing computation, if yes, do it
           if (dk4(nv).eq.19.and.dk5(nv).eq.7) then
-            call get_icing (nv,ifunit,jpdtn,jf,iens,Lp,Lth,
+	write(0,*) 'call get_icing with jpdtn: ', jpdtn
+            call get_icing (nv,ifunit,jpdtn_arr,jf,iens,Lp,Lth,
      +              derv_pr,weight)
             write(*,*) 'Icing done'
           end if
 
 cc%%%%%%% 5. To see if there is CAT computation, if yes, do it
           if (dk4(nv).eq.19.and.dk5(nv).eq.22) then
-            call get_cat (nv,ifunit,jpdtn,jf,iens,Lp,Lth,
+            call get_cat (nv,ifunit,jpdtn_arr,jf,iens,Lp,Lth,
      +              derv_pr,im,jm,dx,dy,weight)
             dPlvl(nv)=dPlvl(nv)-1
             write(*,*) 'CAT done' 
@@ -2273,7 +2294,7 @@ cc%%%%%%% 5. To see if there is CAT computation, if yes, do it
 
 cc%%%%%%% 6. To see if there is flight restriction  computation, if yes, do it
           if (dk4(nv).eq.19.and.dk5(nv).eq.205) then
-            call  flight_res (nv,ifunit,jpdtn,jf,iens,Lp,Lth,
+            call  flight_res (nv,ifunit,jpdtn_arr,jf,iens,Lp,Lth,
      +              derv_pr,weight)
              write(*,*) 'Flight restiction done'
           end if
@@ -2282,7 +2303,7 @@ cc%%%%%%% 7. To see if there is Hains index for fire weather computation, if yes
           if (dk4(nv).eq.4.and.dk5(nv).eq.2) then
             dTlvl(nv)=dTlvl(nv)-1
             Lth=Lth-1                     !since dop='-'
-            call fire_weather (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
+            call fire_weather (nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,
      +            derv_mn,derv_sp,derv_pr,weight)
             
             gfld%discipline=2      !Fireweather discipline = 2, used for packing
@@ -2294,7 +2315,7 @@ cc%%%%%%% 7. To see if there is Hains index for fire weather computation, if yes
 
 cc%%%%%%% 7-1. To see if there is Fosberg index fire weather computation, if yes, do it
           if (dk4(nv).eq.4.and.dk5(nv).eq.4) then
-             call  get_fosberg(nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
+             call  get_fosberg(nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,
      +         derv_mn,derv_sp,derv_pr,weight)
 
              gfld%discipline=2      !Fireweather discipline = 2, used for packing
@@ -2305,7 +2326,7 @@ cc%%%%%%% 8. To see if there is ceiling computation, if yes, do it
 
           if (dk4(nv).eq.3.and.dk5(nv).eq.5.and.dk6(nv).eq.215) then
             write(0,*) 'call getceiling'
-            call  getceiling (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
+            call  getceiling (nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,
      +             derv_mn,derv_sp,derv_pr,weight)
 
             write(0,*) 'getceiling done'
@@ -2318,8 +2339,9 @@ cc%%%%%%% 9. To see if there is fog  computation, if yes, do it
 !tst     +                             and.itime.ge.2) then
 	write(*,*) 'call new_fog'
 
-          call new_fog(nv,ifunit,ipunit,jpdtn,jf,im,jm,dx,dy,interval,
-     +      iens,Lm,Lp,Lth,derv_mn,derv_sp,derv_pr,weight)
+          call new_fog(nv,ifunit,ipunit,jpdtn_arr,jf,im,jm,
+     +                 dx,dy,interval,
+     +                 iens,Lm,Lp,Lth,derv_mn,derv_sp,derv_pr,weight)
 
           write(*,*) 'new_fog done'
 
@@ -2329,7 +2351,7 @@ cc%%%%%%% 10. To see if there is thickness computation, if yes, do it
           if(dk4(nv).eq.3.and.dk5(nv).eq.5.and.
      +                             dk6(nv).eq.101) then
               
-            call thickness (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,
+            call thickness (nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,
      +             derv_mn,derv_sp,derv_pr,weight)
 
               write(*,*) 'Thickness done'
@@ -2344,7 +2366,7 @@ cc%%%%%%% 11. To see if there is LLWS computation, if yes, do it
 
          !write(*,*) 'call llws ', eps       !??? Can not write to std !output   
 
-         call llws (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,eps,
+         call llws (nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,eps,
      +          derv_mn,derv_sp,derv_pr,weight)
 
          write(*,*) 'LLWS done'
@@ -2354,7 +2376,8 @@ cc%%%%%%% 11. To see if there is LLWS computation, if yes, do it
 cc%%%%%%% 11. To see if there is CONVECTION  computation, if yes, do it
         if(dk4(nv).eq.1.and.dk5(nv).eq.196.and.
      +                             dk6(nv).eq.200) then
-         call getconv(nv,ipunit,jpdtn,jf,im,jm,est,iens,Lm,Lp,Lth,
+         call getconv(nv,ipunit,jpdtn_arr,jf,im,jm,est,
+     +      iens,Lm,Lp,Lth,
      +      gribid,derv_pr,weight)
 
            write(*,'(a9,10f9.2)')'CONV PROB',
@@ -2369,7 +2392,7 @@ c         missing() array is not considered, so current NSSE won't do this
          if(dk4(nv).eq.17.and.dk5(nv).eq.192.and.
      +                             dk6(nv).eq.1) then
          call get_cptp_severe(nv,cycle(ihr+1),cfhr,ifunit,p03mp01,
-     +       im,jm,km,jpdtn,jf,iens,Lp,Lth,derv_pr,weight,eps)
+     +       im,jm,km,jpdtn_arr,jf,iens,Lp,Lth,derv_pr,weight,eps)
            write(*,*) 'CPTP done '
          end if
 
@@ -2378,7 +2401,8 @@ cc%%%%%%% 13. To see if there is 850-300mb mean wind, if yes, do it
          if(dk4(nv).eq.2.and.dk5(nv).eq.1.and.
      +                             dk6(nv).eq.108) then
 
-           call meanwind(nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,eps,
+	write(0,*) 'calling meanwind'
+           call meanwind(nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,eps,
      +          derv_pr,weight,mbrname)
 
             write(*,*) '850-300mb mean-wind done'
@@ -2388,7 +2412,7 @@ cc%%%%%%% 14. To see if there is 10m wind and 2m RH joint prob, if yes, do it
           if(dk4(nv).eq.19.and.dk5(nv).eq.235) then
             dTlvl(nv)=dTlvl(nv)-1
             Lth = Lth -1 
-            call get_wind_rh_joint_prob(nv,ifunit,jpdtn,
+            call get_wind_rh_joint_prob(nv,ifunit,jpdtn_arr,
      +          jf,iens,Lp,Lth,derv_pr,weight)
 
             write(*,*) 'Wind-RH joint prob done'
@@ -2408,7 +2432,7 @@ cc%%%%%%% 16. To see if there is 700-500mb mean omeg, if yes, do it
      +                             dk6(nv).eq.108) then
 
 	write(0,*) 'call meanomeg '
-           call meanomeg(nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lth,eps,
+           call meanomeg(nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,eps,
      +          derv_mn,derv_sp,weight,mbrname)
             write(*,*) '700-500mb mean-omeg done'
          end if

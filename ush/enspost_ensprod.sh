@@ -92,6 +92,7 @@ typeset -Z2 m
 if [ $dom = 'conus' ]
   then
     files="14 fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s hrrr hrrr"
+    files="14 fv3s refs refs refs refs refs fv3s refs refs refs refs refs hrrr hrrr"
 elif [ $dom = 'hi' ]
   then
     files="12 hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s"

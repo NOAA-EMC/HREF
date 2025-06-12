@@ -26,7 +26,7 @@ c    for derived variables
         Integer dMlvl(maxvar), dMeanLevel(maxvar,maxmlvl)
         Integer dPlvl(maxvar), dProbLevel(maxvar,maxplvl)
         Character*1 dop(maxvar)
-        Integer dTlvl(maxvar)
+        Integer dTlvl(maxvar),jpdtn(iens),jpdtn_acc
         Real    dThrs(maxvar,maxtlvl)
         Integer MPairLevel(maxvar,maxmlvl,2)
         Integer PPairLevel(maxvar,maxplvl,2)
@@ -55,7 +55,6 @@ c    for derived variables
         type(gribfield) :: gfld
 
         jpd10=dk6(nv)
-        !jpdtn=0
         jp27=-9999
 
         write(*,*) 'In wind .....'
@@ -73,20 +72,30 @@ c    for derived variables
           jpd12=dMeanLevel(nv,lv)
           
           loop400: do irun=1,iens
+	   if (jpdtn(irun).eq.0) then
+		jpdtn_acc=8
+           elseif (jpdtn(irun) .eq. 1) then
+                jpdtn_acc=11
+           else
+                write(0,*) ' problem in wind'
+                write(0,*) 'have irun,jpdtn(irun): ', irun,jpdtn(irun)
+           endif
 
            if(mbrname(irun).eq.'hrrrgsd'.and.jpd12.eq.80) then  !GSD HRRR use category 1 instead of 2 for 80m U and V
              jpd1=1
            else
              jpd1=2
            end if
+
+
+	   
            
 
 
 	if (jpd12 .eq. 10) then
 
 
-!	write(0,*) 'jpdtn, jpd1: ', jpdtn, jpd1
-           call readGB2(ifunit(irun),8,2,222,103,10,jp27,
+           call readGB2(ifunit(irun),jpdtn_acc,2,222,103,10,jp27,
      +       gfld,eps,iret)   !UMAX mean -component
 
            if (iret .eq. 0) then
@@ -96,8 +105,9 @@ c    for derived variables
 
           
 !	write(0,*) 'no UMAX'
-           call readGB2(ifunit(irun),jpdtn,jpd1,2,jpd10,jpd12,jp27,
-     +       gfld,eps,iret)   !U mean -component
+           call readGB2(ifunit(irun),jpdtn(irun),
+     +          jpd1,2,jpd10,jpd12,jp27,
+     +          gfld,eps,iret)   !U mean -component
             if (iret.eq.0) then
              u(:,irun)=gfld%fld
             else
@@ -108,8 +118,9 @@ c    for derived variables
 
         else ! non level=10
 
-           call readGB2(ifunit(irun),jpdtn,jpd1,2,jpd10,jpd12,jp27,
-     +       gfld,eps,iret)   !U mean -component
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,2,
+     +                 jpd10,jpd12,jp27,
+     +                 gfld,eps,iret)   !U mean -component
             if (iret.eq.0) then
              u(:,irun)=gfld%fld
             else
@@ -121,7 +132,7 @@ c    for derived variables
 
 	if (jpd12 .eq. 10) then
 
-           call readGB2(ifunit(irun),8,2,223,103,10,jp27,
+           call readGB2(ifunit(irun),jpdtn_acc,2,223,103,10,jp27,
      +       gfld,eps,iret)   !VMAX mean -component
 
            if (iret .eq. 0) then
@@ -129,8 +140,9 @@ c    for derived variables
              v(:,irun)=gfld%fld
            else
 !	     write(0,*) 'no VMAX'
-           call readGB2(ifunit(irun),jpdtn,jpd1,3,jpd10,jpd12,jp27,
-     +       gfld,eps,iret)   !V mean -component
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,3,
+     +                  jpd10,jpd12,jp27,
+     +                  gfld,eps,iret)   !V mean -component
             if (iret.eq.0) then
              v(:,irun)=gfld%fld
             else
@@ -142,8 +154,9 @@ c    for derived variables
          
 
          else ! not level 10
-           call readGB2(ifunit(irun),jpdtn,jpd1,3,jpd10,jpd12,jp27,
-     +       gfld,eps,iret)   !V mean -component
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,3,
+     +                  jpd10,jpd12,jp27,
+     +                  gfld,eps,iret)   !V mean -component
             if (iret.eq.0) then
              v(:,irun)=gfld%fld
             else
@@ -195,16 +208,18 @@ c    for derived variables
            end if
 
 
-           call readGB2(ifunit(irun),jpdtn,jpd1,2,jpd10,jpd12,jp27,
-     +       gfld,eps,iret)   !U Prob -component
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,2,
+     +                  jpd10,jpd12,jp27,
+     +                   gfld,eps,iret)   !U Prob -component
             if (iret.eq.0) then
              u(:,irun)=gfld%fld
             else
              missing(lv,irun)=1
              cycle loop401
             end if
-           call readGB2(ifunit(irun),jpdtn,jpd1,3,jpd10,jpd12,jp27,
-     +       gfld,eps,iret)   !V Prob -component
+           call readGB2(ifunit(irun),jpdtn(irun),jpd1,3,
+     +                  jpd10,jpd12,jp27,
+     +                  gfld,eps,iret)   !V Prob -component
             if (iret.eq.0) then
              v(:,irun)=gfld%fld
             else
