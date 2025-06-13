@@ -15,7 +15,7 @@ date
 ###########################################################
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
-rm -rf $DATA/*
+# rm -rf $DATA/*
 cd $DATA
 
 msg="JOB $job HAS BEGUN"

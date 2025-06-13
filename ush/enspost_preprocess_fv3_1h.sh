@@ -28,6 +28,12 @@ name=${4}
 hr=${5}
 region=${6}
 
+if [ ${mem} = '01' ]
+then
+JPDTN_USE=8
+else
+JPDTN_USE=11
+fi
 
 
 if [ $region = 'conus' ]
@@ -229,6 +235,7 @@ echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
+echo "$JPDTN_USE" >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
@@ -283,6 +290,7 @@ echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
+echo "$JPDTN_USE" >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_fv3snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
