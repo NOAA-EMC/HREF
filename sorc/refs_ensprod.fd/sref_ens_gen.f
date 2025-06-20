@@ -131,7 +131,6 @@ C mean
       real,allocatable,dimension(:,:) :: vrbl_mn_pm                 !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_locpm               !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_blend              !jf, maxmlvl
-      real,allocatable,dimension(:,:) :: vrbl_mn_blendlpm           !jf, maxmlvl
       real,allocatable,dimension(:,:) :: derv_mn                    !jf, maxmlvl
       real,allocatable,dimension(:,:) :: vrbl_mn_2d, vrbl_lpm_2d
       real,allocatable,dimension(:,:) :: vrbl_pmmn_2d
@@ -531,7 +530,6 @@ c  Loop  1-0: Allocate nesessary arrays
            allocate (vrbl_mn_pm(jf,Lm))       
            allocate (vrbl_mn_locpm(jf,Lm))       
            allocate (vrbl_mn_blend(jf,Lm))       
-           allocate (vrbl_mn_blendlpm(jf,Lm))       
          end if
         if (.NOT.allocated(vrbl_sp)) then
            Lm=max(1,Mlvl(nv))
@@ -1073,10 +1071,10 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
 
 
 !	write(0,*) 'AP1h/AP3h branch'
-               patch_nx=6
-               patch_ny=6
-               ovx=patch_nx*5
-               ovy=patch_ny*5
+               patch_nx=8
+               patch_ny=8
+               ovx=patch_nx*4
+               ovy=patch_ny*4
                filt_min=0.01
                gauss_sig=2.0
 
@@ -1125,7 +1123,6 @@ C	        write(0,*) 'set miss for hrrr: ', k4(nv),k5(nv)
              call Gsmoothing(vrbl_mn_locpm(:,1),jf,im,jm,
      +           'M','M')
 
-	       vrbl_mn_blendlpm(:,:)=0.5*(vrbl_mn_locpm(:,:)+vrbl_mn(:,:))
 
 	       deallocate(vrbl_mn_2d,vrbl_lpm_2d,rawdata_mn_2d)
                deallocate(vrbl_pmmn_2d)
@@ -1970,15 +1967,6 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
      +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
 
-! AVRG
-! limit avrg to precip
-
-!          if (vname(nv).eq.'AP1h' .or. vname(nv).eq.'AP3h' .or. 
-!     &        vname(nv).eq.'AP6h' .or. vname(nv).eq.'AP24') then
-!          call packGB2_mean(ilocavg,isprd,vrbl_mn_blendlpm,vrbl_sp,    
-!     +          nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
-!     +          iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)         
-!          endif
 
         endif
 
@@ -2112,7 +2100,6 @@ c Loop 1-4: Deallocation
         deallocate (vrbl_mn_pm)
         deallocate (vrbl_mn_locpm)
         deallocate (vrbl_mn_blend)
-        deallocate (vrbl_mn_blendlpm)
         deallocate (vrbl_sp)
         deallocate (vrbl_pr)
         deallocate (return_int)
