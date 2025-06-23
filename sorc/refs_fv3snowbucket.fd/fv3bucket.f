@@ -219,12 +219,15 @@ C grib2
         call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
-	if (IRET .ne. 0) then
-	write(0,*) 'bad getgb1 (29) earlier ', IRET
-	STOP 999
-	endif
+        if (IRET .ne. 0 .and.  ihrs2 .eq. 1) then
+           asnow_earlier=0.
+        elseif (IRET .ne. 0 .and.  ihrs2 .ne. 1) then
+           write(0,*) 'bad getgb1 (29) earlier ', IRET
+           STOP 999
+        else
+           asnow_earlier=gfld%fld
+        endif
 
-        asnow_earlier=gfld%fld
         write(0,*) 'maxval(asnow_earlier): ', maxval(asnow_earlier)
 
 ! -------------------------------
