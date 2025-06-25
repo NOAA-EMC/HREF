@@ -1,8 +1,9 @@
-  22      row variables and mean/spread/prob info
+  23      row variables and mean/spread/prob info
 U10   2  2  103  M1  10
 V10   2  3  103  M1  10
 U     2  2  100  M6  250 500 550 700 850 925
 V     2  3  100  M6  250 500 550 700 850 925
+VVEL  2  9  100  M1  700
 T     0  0  100  M5  250 500 700 850 925
 T     0  0  103  M1  2  P1  2   < T1 273.15
 T     0  0    1  M1  0
