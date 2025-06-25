@@ -4,6 +4,7 @@ c     subroutine meanomeg: compute average vertical motion between two levels
 c     
 c     04-17-2014, B. Zhou
 c     09-09-2016, M. Pyle (adapted from meanwind.f)
+c     06-24-2025, M Pyle (switch to using dzdt instead of vvel)
 c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
    	subroutine meanomeg (nv,ifunit,jpdtn,jf,iens,Lm,Lp,Lt,eps,  
@@ -59,9 +60,8 @@ c
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 
-        write(*,*) 'In meanomeg (700-500mb omeg average).....'
+        write(*,*) 'In meanomeg (700-500mb dzdt average).....'
 !        write(*,*) 'ifunit=', ifunit, eps
-
 !        write(*,*)  nv,jf,iens,Lm,Lp,Lt
 
         jp27=-9999
@@ -72,9 +72,16 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
          do 600 irun=1,iens
            do 500 k=1,lvl
-            call readGB2(ifunit(irun),jpdtn(irun),2,8,100,p(k),jp27,gfld,
+            call readGB2(ifunit(irun),jpdtn(irun),2,9,
+     +              100,p(k),jp27,gfld,
      +              eps,ie)
+                if (ie .eq. 0) then
                 OMEGpr(:,irun,k)=gfld%fld
+                else
+                write(*,*) 'W field not found'
+!                OMEGpr(:,irun,k)=0.
+	        miss(irun)=1
+                endif
 500        continue
 
             meanOMEGpr(:,irun) = 0.0

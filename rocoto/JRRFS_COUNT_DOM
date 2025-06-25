@@ -1,0 +1,37 @@
+#! /bin/sh
+
+
+dom=${DOM}
+
+
+
+proddir_enspost=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refs.${PDY}/ensprod
+
+count=`ls $proddir_enspost/refs.t${cyc}z.${dom}*.grib2 | wc -l`
+
+
+
+if [ ${dom} = 'ak' -o $dom = 'hi' -o ${dom} = 'pr' ]
+then
+
+echo $dom $count
+
+if [ $count -ne 420 ]
+then
+echo MISSING FILES FROM ${dom} for $PDY $cyc 
+exit 99
+fi
+
+elif [ $dom = 'conus' ]
+then
+
+echo $dom $count
+if [ $count -ne 480 ]
+then
+echo MISSING FILES FROM ${dom} for $PDY $cyc 
+exit 99
+fi
+
+
+fi
+
