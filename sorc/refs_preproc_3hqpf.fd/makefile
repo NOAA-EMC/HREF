@@ -9,7 +9,7 @@ OBJS=	WRFBUCKETG2.o
 # LIBS		List of libraries
 # CMD		Name of the executable
 #
-CMD = ./enspost_fv3_3hqpf
+CMD = ./enspost_3hqpf
 
 INC = ${G2_INC4}
 LIBS =  ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \

@@ -43,7 +43,7 @@ fi
 
 if [ $BUCKET = "1" ]
 then
-cd ${BASE}/refs_fv3_3hqpf.fd
+cd ${BASE}/refs_preproc_3hqpf.fd
 make copy
 make clean
 fi
@@ -52,7 +52,7 @@ fi
 
 if [ $SNOW = "1" ]
 then
-cd ${BASE}/refs_fv3snowbucket.fd
+cd ${BASE}/refs_preproc_snowbucket.fd
 make copy
 make clean
 fi

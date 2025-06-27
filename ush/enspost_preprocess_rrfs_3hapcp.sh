@@ -1,7 +1,7 @@
 #! /bin/ksh
 #####################################################
 #
-#  Script: preprocess_fv3_3hapcp.sh.ecf
+#  Script: preprocess_rrfs_3hapcp.sh.ecf
 #
 # Purpose: Generates 3 h QPF buckets from the FV3
 #
@@ -116,7 +116,7 @@ then
         if [ $hr%3 -eq 0 ]
         then
 
-## do 3 h QPF from hireswfv3_bucket
+## do 3 h QPF from enspost_3hqpf
 
   curpath=`pwd`
 	
@@ -146,7 +146,7 @@ fi
   echo $JPDTN_USE >> input.card.${mem}.${hr}
 
 
- $EXECrefs/enspost_fv3_3hqpf < input.card.${mem}.${hr}
+ $EXECrefs/enspost_3hqpf < input.card.${mem}.${hr}
  export err=$? ; err_chk
 
  cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
