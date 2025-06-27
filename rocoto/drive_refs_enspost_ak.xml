@@ -80,7 +80,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>3:ppn=24</nodes>
-    <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_1</command>
+    <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS_1</command>
     <jobname><cyclestr>preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_1_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
@@ -189,7 +189,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>3:ppn=24</nodes>
-    <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_2</command>
+    <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS_2</command>
     <jobname><cyclestr>preprocfv3_2_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_2_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 
@@ -299,7 +299,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>1:ppn=36</nodes>
-    <command>&PRE; &JOBS;/JREFS_PREPROC_FV3_3</command>
+    <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS_3</command>
     <jobname><cyclestr>preprocfv3_3_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_3_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
 

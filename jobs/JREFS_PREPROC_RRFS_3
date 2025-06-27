@@ -58,7 +58,7 @@ export pid=$$
 export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
 echo now have DATA $DATA
 
-export PREPROC_HOLD=${DATAROOT}/refs_preprocfv3_${NEST}_${cyc}
+export PREPROC_HOLD=${DATAROOT}/refs_preprocrrfs_${NEST}_${cyc}
 
 mkdir -p $DATA
 rm -rf $DATA/*
@@ -133,9 +133,9 @@ region=${NEST}
 
 echo defined region $region
 
-if [ -e poe.fv3 ]
+if [ -e poe.rrfs ]
 then
-rm poe.fv3
+rm poe.rrfs
 fi
 
 for mem in $mems
@@ -175,20 +175,20 @@ do
    backday=`echo $backdate | cut -c1-8`
    backcyc=`echo $backdate | cut -c9-10`
 
-   echo "$USHrefs/enspost_preprocess_fv3_1h.sh ${backday} ${backcyc} ${mem} ${name} $hr ${region}" >> poe.fv3
+   echo "$USHrefs/enspost_preprocess_rrfs_1h.sh ${backday} ${backcyc} ${mem} ${name} $hr ${region}" >> poe.rrfs
   else
-   echo "$USHrefs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3
+   echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.rrfs
   fi
  else
-  echo "$USHrefs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3
+  echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.rrfs
  fi
 
 done
 done
 
-chmod 775 poe.fv3  
+chmod 775 poe.rrfs  
 
-mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.fv3
+mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.rrfs
 export err=$?; err_chk
 
 
@@ -206,7 +206,7 @@ fi
 
 for mem in $mems
 do
-echo " calling preprocess_fv3_3hapcp.sh for mem " $mem
+echo " calling preprocess_rrfs_3hapcp.sh for mem " $mem
 if [ $type = single ]; then
 if [ $mem = 01 ]; then name=00; fi
 if [ $mem = 02 ]; then name=01; fi
@@ -240,12 +240,12 @@ fi
    backdate=`$ndate -06 $PDY$cyc`
    backday=`echo $backdate | cut -c1-8`
    backcyc=`echo $backdate | cut -c9-10`
-  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name} 3" >> poe.3hqpf.tlb
+  echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name} 3" >> poe.3hqpf.tlb
   else
-   echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} 3" >> poe.3hqpf
+   echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} 3" >> poe.3hqpf
   fi 
  else
-  echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} 3" >> poe.3hqpf
+  echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} 3" >> poe.3hqpf
  fi
 
 done
