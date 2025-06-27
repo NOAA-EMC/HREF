@@ -86,7 +86,7 @@
   &RESERVATION;
   &PREPROC_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&PRE; &JOBS;/JREFS_PREPROC_FV3</command>
+    <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H_f#fhr#</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_&TYPE;_&PHYS;_&domain;_@H_f#fhr#.log</cyclestr></join>
 

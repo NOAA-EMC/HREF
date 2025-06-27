@@ -165,9 +165,9 @@ region=${NEST}
 
 echo defined region $region
 
-if [ -e ./poe.fv3.${hr} ]
+if [ -e ./poe.rrfs.${hr} ]
 then
-rm ./poe.fv3.${hr}
+rm ./poe.rrfs.${hr}
 fi
 
 for mem in $mems
@@ -179,13 +179,13 @@ if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
- echo "$USHrefs/enspost_preprocess_fv3_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.fv3.${hr}
+ echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.rrfs.${hr}
 
 done
 
-chmod 775 poe.fv3.${hr}
+chmod 775 poe.rrfs.${hr}
 
-mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.fv3.${hr}
+mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.rrfs.${hr}
 export err=$?; err_chk
 
 
@@ -202,7 +202,7 @@ fi
 for mem in $mems
 do
 
-echo " calling preprocess_fv3_3hapcp.sh for mem " $mem
+echo " calling preprocess_rrfs_3hapcp.sh for mem " $mem
 if [ $mem = 01 ]; then name=00; fi
 if [ $mem = 02 ]; then name=01; fi
 if [ $mem = 03 ]; then name=02; fi
@@ -210,7 +210,7 @@ if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
-echo "$USHrefs/enspost_preprocess_fv3_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> poe.3hqpf.${hr}
+echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> poe.3hqpf.${hr}
 
 done
 
