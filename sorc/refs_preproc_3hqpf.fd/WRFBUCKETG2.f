@@ -10,7 +10,7 @@
 !	real pdiff(im,jm)
         real, allocatable :: pdiff(:,:)
 
-        integer :: ihrs1, ihrs2, reset_flag
+        integer :: ihrs1, ihrs2, reset_flag,JPDTN_USE
 	character(len=2), dimension(2):: hrs
 
 	character(len=255):: file1,file2,file3,file4,file5,testout
@@ -26,10 +26,12 @@ c       read(5,FMT='(A)') cycname
         read(5,FMT='(A)') hrs(2)
         read(5,FMT='(I1)') reset_flag
         read(5,*) IM, JM
+        read(5,*) JPDTN_USE
 
         allocate(pdiff(im,jm))
 
 	write(0,*) 'read reset_flag: ', reset_flag
+        write(*,*) 'read JPDTN_USE: ', JPDTN_USE
 
 	n=index(dirname,' ')-1
 	m=index(filename,' ')-1
@@ -72,7 +74,8 @@ c       read(5,FMT='(A)') cycname
         write(0,*) 'call calc_pdiff with reset_flag: ', reset_flag
 
 	call calc_pdiff(file1(1:mm),file2(1:nn),TESTOUT(1:mmm),
-     &                  pdiff,reset_flag,ihrs1,interv,IM,JM)
+     &                  pdiff,reset_flag,ihrs1,interv,IM,JM,
+     &                  JPDTN_USE)
 
 	enddo
 
@@ -81,7 +84,8 @@ c       read(5,FMT='(A)') cycname
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	SUBROUTINE CALC_PDIFF(FNAME1,FNAME2,TESTOUT,DPRECIP,
-     &                           reset_flag,ihrs1,interv,IM,JM)
+     &                           reset_flag,ihrs1,interv,IM,JM,
+     &                           JPDTN)
 C	include "parmeta"
         USE GRIB_MOD
         USE pdstemplates
@@ -121,7 +125,6 @@ C grib2
 	p_earlier=0.
 
         JIDS=-9999
-        JPDTN=-1
         JPDT=-9999
         JGDTN=-1
         JGDT=-9999
@@ -134,39 +137,16 @@ C grib2
         allocate(gfld%idrtmpl(200))
         allocate(gfld%bmap(im*jm))
 
-C USAGE:    CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-C    &                  UNPACK,K,GFLD,IRET)
 
-        J=3
-
-        if ( reset_flag .eq. 0) then
-        JIDS=-9999
-        JPDTN=-1
-        JPDT=-9999
-        JPDT(2)=8
-! try force getting the total from 0-h?
-        JPDT(9)=0
-        JGDTN=-1
-        JGDT=-9999
-        UNPACK=.true.
-
-	write(0,*) 'JPDT(1:10): ', JPDT(1:10)
-
-        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET)
-
-        write(0,*) 'IRET, pulled gfld%ipdtnum: ', IRET, gfld%ipdtnum
-        write(0,*) 'early apcp K: ', K
-        write(0,*) 'gfld%ipdtmpl(1:10): ', gfld%ipdtmpl(1:10)
-
-	if (gfld%ipdtnum .eq. 11) then
-
+	if (JPDTN .eq. 11) then
+         write(*,*) 'ipdtnum 11 block'
 	intv_rec=30
         time_s_rec=19
         time_e_rec=24
         num_time_rec=25
 
-	elseif (gfld%ipdtnum .eq. 8) then
+	elseif (JPDTN .eq. 8) then
+         write(*,*) 'ipdtnum 8 block'
 
 	intv_rec=27
         time_s_rec=16 
@@ -175,9 +155,37 @@ C    &                  UNPACK,K,GFLD,IRET)
 
         else
 
-	write(0,*) 'unexpected ipdtnum: ', gfld%ipdtnum
+	write(*,*) 'unexpected ipdtnum: ', gfld%ipdtnum
 
         endif
+
+
+
+C USAGE:    CALL GETGB2(LUGB,LUGI,J,JDISC,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+C    &                  UNPACK,K,GFLD,IRET)
+
+        J=0
+
+        if ( reset_flag .eq. 0) then
+
+        JIDS=-9999
+        JPDT=-9999
+        JPDT(1)=1
+        JPDT(2)=8
+! try force getting the total from 0-h?
+        JPDT(9)=0
+        JGDTN=-1
+        JGDT=-9999
+        UNPACK=.true.
+
+	write(*,*) 'JPDT(1:10): ', JPDT(1:10)
+
+        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+     &     UNPACK,K,GFLD,IRET)
+
+        write(0,*) 'IRET, pulled gfld%ipdtnum: ', IRET, gfld%ipdtnum
+        write(0,*) 'early apcp K: ', K
+        write(0,*) 'gfld%ipdtmpl(1:10): ', gfld%ipdtmpl(1:10)
 
 	if (IRET .ne. 0) then
 	write(0,*) 'bad getgb2 earlier ', IRET
@@ -195,11 +203,10 @@ C    &                  UNPACK,K,GFLD,IRET)
         enddo
         write(0,*) 'maxval(p_earlier): ', maxval(p_earlier)
 
-
         J=0
         JIDS=-9999
-        JPDTN=-1
         JPDT=-9999
+        JPDT(1)=1
         JPDT(2)=225
 ! try force getting the 0-hr total
         JPDT(9)=0
@@ -225,24 +232,27 @@ C    &                  UNPACK,K,GFLD,IRET)
         endif  ! make sure reset_flag = 0 
 
 ! later apcp
-        J=3
+        J=0
         JIDS=-9999
-        JPDTN=-1
         JPDT=-9999
-        JPDT(1)=0
+        JPDT(1)=1
         JPDT(2)=8
 ! try force getting the 0-hr total
         JPDT(9)=0
+!        JPDT(intv_rec)=interv
+        write(*,*) 'intv_rec,JPDT(intv_rec):',intv_rec,JPDT(intv_rec)
         JGDTN=-1
         JGDT=-9999
+
+	write(*,*) 'JPDT(1:intv_rec): ',JPDT(1:intv_rec)
+        write(0,*) 'JPDTN: ', JPDTN
 
         call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET1)
 
-        write(0,*) 'p_later K: ', K
-
 	if (IRET1 .ne. 0) then
-	 write(0,*) 'bad getgb later ', IRET1
+         write(0,*) 'p_later K: ', K
+	 write(0,*) 'bad APCP getgb later ', IRET1
 	STOP 999
 	endif
 
@@ -256,6 +266,7 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	if (reset_flag .eq. 1) then
 	write(0,*) 'just later value'
+        PDS_RAIN_HOLD_EARLY=PDS_RAIN_HOLD
 
 	do NPT=1,IM*JM
 	dprecip(NPT)=p_later(NPT)
@@ -275,11 +286,11 @@ C    &                  UNPACK,K,GFLD,IRET)
 ! later frzr
         J=0
         JIDS=-9999
-        JPDTN=-1
         JPDT=-9999
         JPDT(2)=225
 ! try force getting the 0-hr total
         JPDT(9)=0
+!        JPDT(intv_rec)=interv
         JGDTN=-1
         JGDT=-9999
 
@@ -289,7 +300,7 @@ C    &                  UNPACK,K,GFLD,IRET)
         write(0,*) 'K: ', K
 
 	if (IRET1 .ne. 0) then
-	 write(0,*) 'bad getgb later ', IRET1
+	 write(0,*) 'bad FRZR getgb later ', IRET1
 	STOP 999
 	endif
 
@@ -303,6 +314,7 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	if (reset_flag .eq. 1) then
 	write(0,*) 'just later value'
+        PDS_FRZR_HOLD_EARLY=PDS_FRZR_HOLD
 
 	do NPT=1,IM*JM
 	dfrzr(NPT)=frzr_later(NPT)
@@ -318,17 +330,18 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	endif
 
-
         write(0,*) 'define gfld%fld with dprecip'
 
         do K=1,gfld%ipdtlen
         gfld%ipdtmpl(K)=PDS_RAIN_HOLD_EARLY(K)
         if (K .le. 10) then
-	write(0,*) 'K, gfld%ipdtmpl(K) for rain: ', gfld%ipdtmpl(K)
+ 	write(*,*) 'K, gfld%ipdtmpl(K) for rain: ', gfld%ipdtmpl(K)
         endif
         enddo
 
         gfld%ipdtmpl(9)=ihrs1
+
+! should this be redefined?
         do J=time_s_rec,time_e_rec
         gfld%ipdtmpl(J)=PDS_RAIN_HOLD(J)
         enddo
@@ -337,6 +350,9 @@ C    &                  UNPACK,K,GFLD,IRET)
         gfld%ipdtmpl(intv_rec)=interv
 
         write(0,*) 'interval specified in intv_rec: ', interv
+
+        write(*,*) 'APCP gfld%ipdtmpl(1:intv_rec) at write: ', 
+     +              gfld%ipdtmpl(1:intv_rec)
 
         gfld%fld=dprecip
 
@@ -369,9 +385,9 @@ C    &                  UNPACK,K,GFLD,IRET)
 
         call baclose(13,IRET)
 
-	write(0,*) 'extremes of precip: ', 
+	write(*,*) 'extremes of precip: ', 
      +		maxval(dprecip)
-	write(0,*) 'extremes of frzr: ', 
+	write(*,*) 'extremes of frzr: ', 
      +		maxval(dfrzr)
 
   633	format(25(f4.1,1x))
