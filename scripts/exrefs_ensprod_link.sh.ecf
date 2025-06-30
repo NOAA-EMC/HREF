@@ -35,27 +35,37 @@ then
 rm -rf *${fhr}
 fi
 
-
 typeset -Z2 fhrm1
+typeset -Z2 fhrm2
 
-if [ $fhr -gt 1 ]
+if [ $fhr -gt 2 ]
 then
 let fhrm1=fhr-1
+let fhrm2=fhr-2
 echo have fhrm1 as $fhrm1
 
-looplim=30
+looplim=50
 loop=1
+sleeptime=30
 
-while [ $loop -lt $looplim -a ! -e $DATA/ensprepdone.${fhrm1} ]
+while [ $loop -lt $looplim -a ! -e $DATA/ensprepstart.${fhrm1} ]
 do
 echo missing previous hour
-sleep 20
+sleep $sleeptime
 let loop=loop+1
 done
 
-if [ ! -e $DATA/ensprepdone.${fhrm1} ]
+loop=1
+while [ $loop -lt $looplim -a ! -e $DATA/ensprepdone.${fhrm2} ]
+do
+echo two hours previous did not complete yet
+sleep $sleeptime
+let loop=loop+1
+done
+
+if [ ! -e $DATA/ensprepstart.${fhrm1} -o ! -e $DATA/ensprepdone.${fhrm2} ]
 then
-echo "NEVER FOUND PREVIOUS HOUR ENSPROD PREP, so quitting"
+echo "NEVER FOUND PREVIOUS HOURS ENSPROD PREP, so quitting"
 exit 99
 fi
 
@@ -67,12 +77,14 @@ fi
 
 echo NEST is $NEST
 
+echo "DONE" > $DATA/ensprepstart.${fhr}
+
 $USHrefs/enspost_getmbr.sh $fhr $NEST $type
 err=$?
 
 if [ $err -eq 0 ]
 then
-echo "DONE" > $DATA/ensprepdone.${fhr}
+ echo "DONE" > $DATA/ensprepdone.${fhr}
 fi
 
 ####################################################################r
