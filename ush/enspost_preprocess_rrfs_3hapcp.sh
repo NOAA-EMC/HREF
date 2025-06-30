@@ -131,7 +131,7 @@ fi
   echo $JPDTN_USE >> input.card.${mem}.${hr}
 
 
- $EXECrefs/enspost_fv3_3hqpf < input.card.${mem}.${hr}
+ $EXECrefs/enspost_3hqpf < input.card.${mem}.${hr}
  export err=$? ; err_chk
 
  cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
