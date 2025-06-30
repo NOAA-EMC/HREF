@@ -121,6 +121,16 @@ fi
 
   echo "$dim1 $dim2" >> input.card.${mem}.${hr}
 
+if [ ${mem} = '01' ]
+then     
+JPDTN_USE=8
+else
+JPDTN_USE=11
+fi
+
+  echo $JPDTN_USE >> input.card.${mem}.${hr}
+
+
  $EXECrefs/enspost_fv3_3hqpf < input.card.${mem}.${hr}
  export err=$? ; err_chk
 
