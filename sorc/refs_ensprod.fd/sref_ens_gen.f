@@ -569,9 +569,11 @@ c Loop 1-1: Read direct variable's GRIB2 data from all members
      +        (k4(nv).eq.3.and.k5(nv).eq.1).or.
      +        (k4(nv).eq.1.and.k5(nv).eq.192).or.
      +        (k4(nv).eq.6.and.k5(nv).eq.1).or.
+     +        (k4(nv).eq.2.and.k5(nv).eq.9).or.
      +        (k4(nv).eq.7.and.k5(nv).eq.197) ) then
 
               if(mbrname(irun)(1:4).eq.'hrrr') then ! These 8 fields are not in GSD's HRRR
+	write(0,*) 'setting missing for hrrr: ', k4(nv),k5(nv)
                  rawdata_pr(:,irun,:)=-9999.0
                  rawdata_mn(:,irun,:)=-9999.0
                  cycle loop1001
@@ -993,6 +995,7 @@ c Loop 1-2:   Compute mean/spread/prob for this direct variable
      +        (k4(nv).eq.3.and.k5(nv).eq.1).or.
      +        (k4(nv).eq.1.and.k5(nv).eq.192).or.
      +        (k4(nv).eq.6.and.k5(nv).eq.1).or.
+     +        (k4(nv).eq.2.and.k5(nv).eq.9).or.
      +        (k4(nv).eq.7.and.k5(nv).eq.197) ) then
              do ie=1,iens
                if(mbrname(ie)(1:4).eq.'hrrr') then
@@ -2415,13 +2418,13 @@ cc%%%%%%% 15. To see if there is snowfall for HREF
             end if
 
 cc%%%%%%% 16. To see if there is 700-500mb mean omeg, if yes, do it
-         if(dk4(nv).eq.2.and.dk5(nv).eq.8.and.
+         if(dk4(nv).eq.2.and.dk5(nv).eq.9.and.
      +                             dk6(nv).eq.108) then
 
 	write(0,*) 'call meanomeg '
            call meanomeg(nv,ifunit,jpdtn_arr,jf,iens,Lm,Lp,Lth,eps,
      +          derv_mn,derv_sp,weight,mbrname)
-            write(*,*) '700-500mb mean-omeg done'
+            write(*,*) '700-500mb mean-dzdt done'
          end if
 
 
