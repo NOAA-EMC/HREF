@@ -27,12 +27,11 @@ export fhr=${1}
 export type=${2}
 
 
-
 # clean up old if needed
 
 if [ -e ./${fhr}/ ]
 then
-rm -rf *${fhr}
+rm -rf *.f${fhr}*
 fi
 
 typeset -Z2 fhrm1

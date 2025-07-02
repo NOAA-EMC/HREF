@@ -4,13 +4,13 @@
 
 <!ENTITY STARTYEAR "2025">
 <!ENTITY STARTMONTH "06">
-<!ENTITY STARTDAY "02">
-<!ENTITY STARTHOUR "18">
+<!ENTITY STARTDAY "30">
+<!ENTITY STARTHOUR "00">
 
 <!ENTITY ENDYEAR "2025">
-<!ENTITY ENDMONTH "06">
-<!ENTITY ENDDAY "03">
-<!ENTITY ENDHOUR "00">
+<!ENTITY ENDMONTH "07">
+<!ENTITY ENDDAY "02">
+<!ENTITY ENDHOUR "18">
 
 <!ENTITY USER "emc.lam">
 <!ENTITY ACCOUNT "RRFS-DEV">
@@ -19,7 +19,7 @@
 <!ENTITY RUN "refs">
 
 <!ENTITY USERLAM "emc.lam">
-<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.1.0">
+<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.2.0_alt">
 <!ENTITY domain "conus">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">
@@ -27,21 +27,21 @@
 <!ENTITY PRE "&HOMErefs;/rocoto/launch.ksh">
 
 <!ENTITY SCRIPTS "&HOMErefs;/scripts">
-<!ENTITY COMINhrrr "/lfs/h3/emc/eib/noscrub/emc.lam/ecflow_rrfs/para/com/hrrr/v4.1/hrrr"> 
-<!ENTITY COMINrrfsdet "/lfs/h3/emc/eib/noscrub/emc.lam/ecflow_rrfs/para/com/rrfs/v1.0"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/nwges/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/nwges/">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/">
+<!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
+<!ENTITY COMINrrfsdet "/lfs/h3/emc/lam/noscrub/ecflow/ptmp/emc.lam/ecflow_rrfs/para/com/rrfs/v1.0">
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.2/nwges/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.2/nwges/">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.2/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
-<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpv11">
+<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpv12">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
 <!ENTITY KEEPDATA "YES">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
 <!ENTITY TIMEOFFSET_TWELVE "-00:12:00:00">
 
 
-<!ENTITY RESERVATION '<queue>dev</queue><account>&ACCOUNT;</account>'>
+<!ENTITY RESERVATION '<queue>pridev</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 <!ENTITY TRANSFER_RESOURCES '<nodes>1:ppn=1</nodes><walltime>04:59:00</walltime>'>
@@ -51,8 +51,8 @@
 <!ENTITY PREPROC_RESOURCES '<walltime>00:09:00</walltime><native></native>'>
 
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
-<!ENTITY EAS_RESOURCES '<walltime>00:20:00</walltime><native></native>'>
-<!ENTITY ENSPROD_RESOURCES '<walltime>00:20:00</walltime><native></native>'>
+<!ENTITY EAS_RESOURCES '<walltime>00:30:00</walltime><native></native>'>
+<!ENTITY ENSPROD_RESOURCES '<walltime>00:45:00</walltime><native></native>'>
 <!ENTITY GEMPAK_RESOURCES '<walltime>00:59:00</walltime><native></native>'>
 <!ENTITY SENDDBN "NO">
 <!ENTITY FHRSZERO "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
@@ -65,8 +65,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<!-- <workflow realtime="F" scheduler="pbspro" taskthrottle="11"> -->
-<workflow realtime="F" scheduler="pbspro" taskthrottle="15" cyclethrottle="2" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="9" cyclethrottle="3" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -88,7 +87,7 @@
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H_f#fhr#</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_&TYPE;_&PHYS;_&domain;_@H_f#fhr#.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocrefs_&TYPE;_&PHYS;_&domain;_@Y@m@d@H_f#fhr#.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -188,12 +187,12 @@
 
     <dependency>
     <and>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m003/rrfs.t@Hz.m003.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m004/rrfs.t@Hz.m004.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m005/rrfs.t@Hz.m005.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m003/rrfs.t@Hz.m003.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m004/rrfs.t@Hz.m004.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m005/rrfs.t@Hz.m005.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
@@ -304,9 +303,9 @@
 
     <dependency>
     <and>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
-          <datadep age="05:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
+          <datadep age="03:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
@@ -389,8 +388,8 @@
 
       <dependency>
        <and>
-        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f024.conus.grib2</cyclestr></datadep>
-        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f024.conus.grib2</cyclestr></datadep>
+        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f001.conus.grib2</cyclestr></datadep>
+        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f001.conus.grib2</cyclestr></datadep>
        </and>
       </dependency>
   </task>
@@ -409,7 +408,7 @@
     <nodes>1:ppn=12</nodes>
       <command>&PRE; &JOBS;/JREFS_EAS</command>
       <jobname><cyclestr>easgen_&TYPE;_&PHYS;_&domain;_@H_f#fhr#</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_&TYPE;_&PHYS;_&domain;@H_f#fhr#.log</cyclestr></join>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_&TYPE;_&PHYS;_&domain;_@Y@m@d@H_f#fhr#.log</cyclestr></join>
    
     <envar>
       <name>NODES</name>
@@ -482,6 +481,11 @@
       <value>&COMINall;</value>
     </envar>
 
+     <envar>
+       <name>SENDDBN</name>
+       <value>&SENDDBN;</value>
+     </envar>
+
     <envar>
       <name>COMINhrrr</name>
       <value>&COMINall;</value>
@@ -527,7 +531,7 @@
   <nodes>1:ppn=4</nodes>
     <command>&PRE; &JOBS;/JREFS_ENSPROD</command>
     <jobname><cyclestr>ensprod_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_&TYPE;_&PHYS;_&domain;_@H_f#fhr#.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/ensprod_&TYPE;_&PHYS;_&domain;_@Y@m@d@H_f#fhr#.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
@@ -609,6 +613,11 @@
      <value>&COMROOT;</value>
     </envar>
 
+     <envar>
+       <name>SENDDBN</name>
+       <value>&SENDDBN;</value>
+     </envar>
+
     <envar>
       <name>KEEPDATA</name>
       <value>&KEEPDATA;</value>
@@ -645,7 +654,7 @@
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JREFS_AWIPS</command>
     <jobname><cyclestr>refsawips_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/refsawips_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsawips_&TYPE;_&PHYS;_&domain;_@Y@m@d@H.log</cyclestr></join>
 
 
     <envar>
@@ -728,7 +737,7 @@
   <nodes>1:ppn=8</nodes>
     <command>&PRE; &JOBS;/JREFS_GEMPAK</command>
     <jobname><cyclestr>refsgempak_&TYPE;_&PHYS;_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/refsgempak_&TYPE;_&PHYS;_&domain;_@H.log</cyclestr></join>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsgempak_&TYPE;_&PHYS;_&domain;_@Y@m@d@H.log</cyclestr></join>
 
     <envar>
       <name> PTILE </name>

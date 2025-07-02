@@ -27,42 +27,29 @@ from functools import partial
 
 # import fortranfile as F
 
-def simplewgrib2_optimized(txtfile):
-    with open(txtfile) as F1:
-        header = next(F1)
-        nx_ny = header.split()
-        nx = int(nx_ny[0])
-        ny = int(nx_ny[1])
-        
-        # Preallocate the array with correct shape and type
-        array2d = np.zeros((ny, nx), dtype=np.float32)
-        
-        # Read all data at once instead of line by line
-        flat_data = np.fromfile(F1, sep=' ', dtype=np.float32)
-        
-        # Reshape directly to the correct dimensions
-        array2d = flat_data.reshape(ny, nx)
-        
-        return array2d, nx, ny
+def optimized_wgrib2(txtfile):
+    """
+    Reads grid dimensions and data from a text file more efficiently.
 
-def direct_wgrib2(grib_file, match_pattern):
-    import subprocess
-    
-    # Run wgrib2 and capture output directly without intermediate file
-    cmd = [WGRIB2, grib_file, '-match', match_pattern, '-end', '-text', '-']
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    
-    # Process the output
-    lines = result.stdout.strip().split('\n')
-    nx_ny = lines[0].split()
-    nx = int(nx_ny[0])
-    ny = int(nx_ny[1])
-    
-    # Convert data lines to numpy array
-    data = np.array([float(val) for line in lines[1:] for val in line.split()], 
-                    dtype=np.float32).reshape(ny, nx)
-    
-    return data, nx, ny
+    Args:
+        txtfile (str): The path to the input text file.
+
+    Returns:
+        tuple: A tuple containing the 2D NumPy array, nx, and ny.
+    """
+    # Open the file to read just the header line
+    with open(txtfile) as f:
+        nx, ny = [int(x) for x in f.readline().split()]
+
+    # Use NumPy's highly optimized loadtxt to read the remaining data
+    # This is much faster than iterating line-by-line in Python
+    data = np.loadtxt(txtfile, dtype=np.float32, skiprows=1)
+
+    # Directly reshape the loaded data into the final 2D array
+    # An error will be raised if the number of elements doesn't match nx * ny
+    array2d = data.reshape(ny, nx)
+
+    return array2d, nx, ny
 
 def simplewgrib2(txtfile):
   tmps= []
@@ -568,17 +555,9 @@ os.system(WGRIB2+' '+template+' -rpn rcl_lat -text lat.txt  -rpn rcl_lon -text l
 lons,nx,ny=simplewgrib2('lon.txt')
 lats,nx,ny=simplewgrib2('lat.txt')
 
-# get dimensions and message from template file
-# grbs = pygrib.open(template)
-# grbtmp = grbs[record]
-# lats, lons = grbtmp.latlons()
-# grbs.close()
-
 nlats, nlons = np.shape(lats)
-# nlons, nlats = np.shape(lats)
 
 print('nlons, nlats: ', nlons, nlats)
-
 
 if dom == 'ak':
   maskfile = HOMErefs + '/fix/akrrfs_mask.grib2'
@@ -842,14 +821,6 @@ for mem in members:
  
       wgribzero=time.time()
       print('dealing with file1: ', file1)
-#      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf1.txt ')
-#      wgribone=time.time()
-#      print('time for os.system WGRIB2 call: ', wgribone-wgribzero)
-#      qpf1,nx,ny=simplewgrib2('qpf1.txt')
-#      print('max qpf1 wgrib2 read: ', np.max(qpf1))
-#      print('shape wgrib2 read: ', np.shape(qpf1))
-#      wgribtwo=time.time()
-#      print('time for simplewgrib2 call: ', wgribtwo-wgribone)
 
       grib2iozero=time.time()
       grbs = grib2io.open(file1)
@@ -860,28 +831,13 @@ for mem in members:
       print('shape grib2io read: ', np.shape(qpf1))
       grbs.close()
 
-
-#      match_pattern = f"APCP:surface:{shour}-{fhour}"
-#      qpf1,nx,ny = direct_wgrib2(file1,match_pattern)
-
 ## how get the proper hours for each file??
       fhour=fhours[memcount]+incr
       shour=fhour-3
 
       grbs = grib2io.open(file2)
       qpf2 = grbs.select(shortName='APCP',duration=3)[0].data()
-#      wgribzero=time.time()
-#      os.system(WGRIB2+' '+file2+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf2.txt ')
-#      wgribone=time.time()
-#      print('time for next os.system WGRIB2 call: ', wgribone-wgribzero)
       grbs.close()
-
-#      qpf2,nx,ny=simplewgrib2('qpf2.txt')
-#      wgribtwo=time.time()
-#      print('time for simplewgrib2 call: ', wgribtwo-wgribone)
-
-#      match_pattern = f"APCP:surface:{shour}-{fhour}"
-#      qpf2,nx,ny=direct_wgrib2(file1,match_pattern)
 
       qpf12 = qpf1 + qpf2    
 
@@ -897,23 +853,11 @@ for mem in members:
 
 ## figure out fhour for two pieces here
 
-#      fhour=fhr+6
-#      fhour=fhours[memcount]+incr*2
-#      shour=fhour-3
       print('looking for file 3: ', file3)
-#      print('shour: ', shour)
-#      print('fhour: ', fhour)
-#      os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf3.txt ')
-#      qpf3,nx,ny=simplewgrib2('qpf3.txt')
       grbs = grib2io.open(file3)
       qpf3 = grbs.select(shortName='APCP',duration=3)[0].data()
       grbs.close()
 
-#      fhour=fhr+9
-#      fhour=fhours[memcount]+incr*3
-#      shour=fhour-3
-#      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf4.txt ')
-#      qpf4,nx,ny=simplewgrib2('qpf4.txt')
       grbs = grib2io.open(file4)
       qpf4 = grbs.select(shortName='APCP',duration=3)[0].data()
       grbs.close()
@@ -929,47 +873,23 @@ for mem in members:
     if qpf_interval == 24 :
 
 # Process third 6 hours
-## figure out fhour for two pieces here
-#      fhour=fhr+12
-#      fhour=fhours[memcount]+incr*4
-#      shour=fhour-3
-#      os.system(WGRIB2+' '+file5+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf5.txt ')
-#      qpf5,nx,ny=simplewgrib2('qpf5.txt')
       grbs = grib2io.open(file5)
       qpf5 = grbs.select(shortName='APCP',duration=3)[0].data()
       grbs.close()
 
-#      fhour=fhr+15
-#      fhour=fhours[memcount]+incr*5
-#      shour=fhour-3
-#      os.system(WGRIB2+' '+file6+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf6.txt ')
-#      qpf6,nx,ny=simplewgrib2('qpf6.txt')
       grbs = grib2io.open(file6)
       qpf6 = grbs.select(shortName='APCP',duration=3)[0].data()
       grbs.close()
 
       qpf56 = qpf5 + qpf6
 
-
 # Process last 6 hours
 ## figure out fhour for two pieces here
-
-#      fhour=fhr+18
-#      fhour=fhours[memcount]+incr*6
-#      shour=fhour-3
-#      os.system(WGRIB2+' '+file7+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf7.txt ')
-#      qpf7,nx,ny=simplewgrib2('qpf7.txt')
 
       grbs = grib2io.open(file7)
       qpf7 = grbs.select(shortName='APCP',duration=3)[0].data()
       grbs.close()
 
-#      fhour=fhr+21
-#      fhour=fhours[memcount]+incr*7
-#      shour=fhour-3
-#      os.system(WGRIB2+' '+file8+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf8.txt ')
-#      qpf8,nx,ny=simplewgrib2('qpf8.txt')
-#
       grbs = grib2io.open(file8)
       qpf8 = grbs.select(shortName='APCP',duration=3)[0].data()
       grbs.close()
@@ -988,18 +908,6 @@ for mem in members:
 # Process first 3 hours
       print('Processing member',(1+memcount),'of',nm_use)
       print('fhours of mem: ', fhours[memcount])
-#      fhour=fhours[memcount]
-#      shour=fhour-3
-
-#      print('shour: ', shour)
-#      print('fhour: ', fhour)
-
-#      print('nx, ny: ', nx, ny)
-#      print('for file1: ', file1)
-#      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-#      qpfhere,nx,ny=simplewgrib2('qpf.txt')
-#      os.system('rm -f qpf.txt')
-#      qpf[itime]=qpfhere
 
       grbs = grib2io.open(file1)
       qpfhere = grbs.select(shortName='APCP',duration=3)[0].data()
@@ -1019,14 +927,7 @@ for mem in members:
 
 # Process first 1 hour
       print('Processing member',(1+memcount),'of',nm_use)
-#      print('fhours of mem: ', fhours[memcount])
-#      fhour=fhours[memcount]
-#      shour=fhour-1
       print('from memfiles file1 for 1 h qpf: ', file1)
-#      print('fhour is: ', fhour)
-#      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-#      qpf1,nx,ny=simplewgrib2('qpf.txt')
-#      qpf[itime] = qpf1
 
       grbs = grib2io.open(file1)
       qpf1 = grbs.select(shortName='APCP',duration=1)[0].data()
