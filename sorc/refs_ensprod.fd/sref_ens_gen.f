@@ -2469,6 +2469,12 @@ C
         if(trim(eps).eq.'refs' .and. 
      +          associated(gfld%bmap)) gfld%bmap=bmap_f
 
+! increase packing precision if mean w field
+                if(dk4(nv).eq.2.and.dk5(nv).eq.9.and.
+     +                             dk6(nv).eq.108) then
+                    gfld%idrtmpl(2)=-5
+                endif
+
                call packGB2_mean_derv(imean,isprd,derv_mn,
      +              derv_sp,nv,jpd1,jpd2,jpd10,jpd27,jf,Lm,
      +              iens,iyr,imon,idy,ihr,ifhr,gribid,bmap_f,gfld)  !borrow gfld from what was got from previous direct variables
