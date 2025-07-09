@@ -9,8 +9,8 @@
 
 <!ENTITY ENDYEAR "2025">
 <!ENTITY ENDMONTH "07">
-<!ENTITY ENDDAY "02">
-<!ENTITY ENDHOUR "18">
+<!ENTITY ENDDAY "09">
+<!ENTITY ENDHOUR "12">
 
 <!ENTITY USER "emc.lam">
 <!ENTITY ACCOUNT "RRFS-DEV">
@@ -19,7 +19,7 @@
 <!ENTITY RUN "refs">
 
 <!ENTITY USERLAM "emc.lam">
-<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.2.0_alt">
+<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.2.0">
 <!ENTITY domain "conus">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">
@@ -503,7 +503,7 @@
       <name>envir</name>
       <value>&envir;</value>
     </envar>
-    <envar><name>jobid</name><value>refs_qpfeasfrac_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_qpfeasfrac_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
 
 
       <dependency>
@@ -818,5 +818,99 @@
     </dependency>
 
   </task>
+
+<!--  ************************* CLEANUP *****************************  -->
+
+  <task name="refs_cleanup" cycledefs="regional" maxtries="1">
+  &RESERVATION;
+  &GEMPAK_RESOURCES;
+  <nodes>1:ppn=1</nodes>
+    <command>&PRE; &JOBS;/../rocoto/JREFS_CLEANUP</command>
+    <jobname><cyclestr>refscleanup_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refscleanup_&domain;_@H.log</cyclestr></join>
+
+    <envar>
+      <name> PTILE </name>
+      <value>1</value>
+    </envar>
+
+    <envar>
+      <name> NTASK</name>
+      <value>1</value>
+    </envar>
+
+    <envar>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
+    </envar>
+
+    <envar>
+      <name>job</name>
+      <value><cyclestr>cleanup_&domain;_@Y@m@d</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>machine</name>
+      <value>&machine;</value>
+    </envar>
+
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+
+    <envar>
+      <name>CDATE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <envar>
+     <name>NEST</name>
+     <value>&domain;</value>
+    </envar>
+
+    <envar>
+      <name>DATAROOT</name>
+      <value>&DATAROOT;</value>
+    </envar>
+
+    <envar>
+     <name>COMROOT</name>
+     <value>&COMROOT;</value>
+    </envar>
+
+    <envar>
+      <name>KEEPDATA</name>
+      <value>&KEEPDATA;</value>
+    </envar>
+
+    <envar>
+      <name>envir</name>
+      <value>&envir;</value>
+    </envar>
+
+    <envar><name>jobid</name><value>refs_cleanup_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+
+    <dependency>
+     <and>
+     <metataskdep metatask="ensprod"/>
+     <metataskdep metatask="eas_gen"/>
+     <taskdep task="refs_gempak"/>
+     <taskdep task="refs_awips"/>
+     </and>
+    </dependency>
+
+  </task>
+
 
 </workflow>

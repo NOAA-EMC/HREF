@@ -88,7 +88,7 @@ msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.gr
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 cat $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
 
 if [ $((10#$fhr)) -ge 3 -a $((10#$fhr%3)) -eq 0 ]

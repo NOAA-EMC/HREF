@@ -179,11 +179,11 @@ if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
- echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> poe.rrfs.${hr}
+ echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> ./poe.rrfs.${hr}
 
 done
 
-chmod 775 poe.rrfs.${hr}
+chmod 775 ./poe.rrfs.${hr}
 
 mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.rrfs.${hr}
 export err=$?; err_chk
@@ -191,9 +191,9 @@ export err=$?; err_chk
 
 # need to generate 3 h QPF
 
-if [ -e poe.3hqpf.${hr} ]
+if [ -e ./poe.3hqpf.${hr} ]
 then
-rm poe.3hqpf.${hr}
+rm ./poe.3hqpf.${hr}
 fi
 
 	if [ $FHR1 -gt 0 ]; then 
@@ -210,13 +210,13 @@ if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
-echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> poe.3hqpf.${hr}
+echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> ./poe.3hqpf.${hr}
 
 done
 
-nproc=`cat poe.3hqpf.${hr} | wc -l`
+nproc=`cat ./poe.3hqpf.${hr} | wc -l`
 
-chmod 775 poe.3hqpf.${hr}
+chmod 775 ./poe.3hqpf.${hr}
 
 mpiexec -n $nproc -ppn 2 --cpu-bind verbose,core cfp ./poe.3hqpf.${hr}
 export err=$?; err_chk

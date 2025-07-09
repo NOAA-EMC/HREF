@@ -2,13 +2,13 @@
 <!DOCTYPE workflow
 [
 
-<!ENTITY STARTYEAR "2023">
-<!ENTITY STARTMONTH "09">
-<!ENTITY STARTDAY "20">
+<!ENTITY STARTYEAR "2025">
+<!ENTITY STARTMONTH "07">
+<!ENTITY STARTDAY "03">
 <!ENTITY STARTHOUR "00">
 
-<!ENTITY ENDYEAR "2025">
-<!ENTITY ENDMONTH "12">
+<!ENTITY ENDYEAR "2026">
+<!ENTITY ENDMONTH "03">
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "12">
 
@@ -19,7 +19,7 @@
 <!ENTITY RUN "refs">
 
 <!ENTITY USERLAM "emc.lam">
-<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.1.0">
+<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.0.0">
 <!ENTITY domain "hi">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">
@@ -28,13 +28,13 @@
 
 <!ENTITY SCRIPTS "&HOMErefs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
-<!ENTITY COMINrrfsdet "/lfs/h3/emc/lam/noscrub/ecflow/ptmp/emc.lam/ecflow_rrfs/para/com/rrfs/v1.0"> 
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/nwges/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/nwges/">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.1/">
+<!ENTITY COMINrrfsdet "/lfs/h3/emc/lam/noscrub/ecflow/ptmp/emc.lam/ecflow_rrfs/para/com/rrfs/v1.0">
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
-<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpv11">
+<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpv10">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
 <!ENTITY KEEPDATA "YES">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
@@ -51,11 +51,12 @@
 <!ENTITY PREPROC_RESOURCES '<walltime>00:09:00</walltime><native></native>'>
 
 <!ENTITY EAS_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
-<!ENTITY ENSPROD_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
+<!ENTITY ENSPROD_RESOURCES '<walltime>00:30:00</walltime><native></native>'>
 <!ENTITY GEMPAK_RESOURCES '<walltime>00:59:00</walltime><native></native>'>
 
 <!ENTITY FHRSZERO "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
 <!ENTITY FHRS "01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
+<!ENTITY SENDDBN "NO">
 
 
 ]>
@@ -64,8 +65,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<!-- <workflow realtime="F" scheduler="pbspro" taskthrottle="14"> -->
-<workflow realtime="T" scheduler="pbspro" taskthrottle="14" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="9" cyclethrottle="3" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -86,8 +86,8 @@
   &PREPROC_RESOURCES;
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS</command>
-    <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H_#fhr#</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocfv3_&TYPE;_&PHYS;_&domain;_@H_#fhr#.log</cyclestr></join>
+    <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H_f#fhr#</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprocrefs_&TYPE;_&PHYS;_&domain;_@Y@m@d@H_f#fhr#.log</cyclestr></join>
 
     <envar>
     <name>NTASK</name><value>6</value>
@@ -573,5 +573,99 @@
     </dependency>
 
   </task>
+
+<!--  ************************* CLEANUP *****************************  -->
+
+  <task name="refs_cleanup" cycledefs="regional" maxtries="1">
+  &RESERVATION;
+  &GEMPAK_RESOURCES;
+  <nodes>1:ppn=1</nodes>
+    <command>&PRE; &JOBS;/../rocoto/JREFS_CLEANUP</command>
+    <jobname><cyclestr>refscleanup_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refscleanup_&domain;_@H.log</cyclestr></join>
+
+    <envar>
+      <name> PTILE </name>
+      <value>1</value>
+    </envar>
+
+    <envar>
+      <name> NTASK</name>
+      <value>1</value>
+    </envar>
+
+    <envar>
+      <name>HOMErefs</name>
+      <value>&HOMErefs;</value>
+    </envar>
+
+    <envar>
+      <name>job</name>
+      <value><cyclestr>cleanup_&domain;_@Y@m@d</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>machine</name>
+      <value>&machine;</value>
+    </envar>
+
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+
+    <envar>
+      <name>CDATE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <envar>
+     <name>NEST</name>
+     <value>&domain;</value>
+    </envar>
+
+    <envar>
+      <name>DATAROOT</name>
+      <value>&DATAROOT;</value>
+    </envar>
+
+    <envar>
+     <name>COMROOT</name>
+     <value>&COMROOT;</value>
+    </envar>
+
+    <envar>
+      <name>KEEPDATA</name>
+      <value>&KEEPDATA;</value>
+    </envar>
+
+    <envar>
+      <name>envir</name>
+      <value>&envir;</value>
+    </envar>
+
+    <envar><name>jobid</name><value>refs_cleanup_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+
+    <dependency>
+     <and>
+     <metataskdep metatask="ensprod"/>
+     <metataskdep metatask="eas_gen"/>
+     <taskdep task="refs_gempak"/>
+     <taskdep task="refs_awips"/>
+     </and>
+    </dependency>
+
+  </task>
+
 
 </workflow>
