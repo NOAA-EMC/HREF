@@ -3,23 +3,23 @@
 [
 
 <!ENTITY STARTYEAR "2025">
-<!ENTITY STARTMONTH "06">
-<!ENTITY STARTDAY "30">
+<!ENTITY STARTMONTH "07">
+<!ENTITY STARTDAY "10">
 <!ENTITY STARTHOUR "00">
 
-<!ENTITY ENDYEAR "2025">
-<!ENTITY ENDMONTH "07">
-<!ENTITY ENDDAY "09">
+<!ENTITY ENDYEAR "2026">
+<!ENTITY ENDMONTH "03">
+<!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "12">
 
 <!ENTITY USER "emc.lam">
 <!ENTITY ACCOUNT "RRFS-DEV">
 <!ENTITY TYPE "timelag">
-<!ENTITY PHYS "singlephys">
+<!ENTITY PHYS "multiphys">
 <!ENTITY RUN "refs">
 
 <!ENTITY USERLAM "emc.lam">
-<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.2.0">
+<!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.0.0">
 <!ENTITY domain "conus">
 <!ENTITY machine "WCOSS2">
 <!ENTITY envir "para">
@@ -29,12 +29,12 @@
 <!ENTITY SCRIPTS "&HOMErefs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
 <!ENTITY COMINrrfsdet "/lfs/h3/emc/lam/noscrub/ecflow/ptmp/emc.lam/ecflow_rrfs/para/com/rrfs/v1.0">
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.2/nwges/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.2/nwges/">
-<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.2/">
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/nwges/">
+<!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
-<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpv12">
+<!ENTITY DATAROOT "/lfs/h2/emc/stmp/&USER;/tmpv10">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;/&envir;">
 <!ENTITY KEEPDATA "YES">
 <!ENTITY TIMEOFFSET_SIX "-00:06:00:00">
