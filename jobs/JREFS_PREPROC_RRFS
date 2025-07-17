@@ -63,10 +63,10 @@ echo now have DATA $DATA
 mkdir -p $DATA
 
 # temp solution?
-if [ $fhr -eq '00' ]
-then
-rm -rf $DATA/*
-fi
+# if [ $fhr -eq '00' ]
+# then
+# rm -rf $DATA/*
+# fi
 
 if [ $fhr -lt 10 ]
 then
