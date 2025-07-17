@@ -213,12 +213,12 @@ do
    break
  else
   loop=$((loop+1))
-  sleep 5
+  sleep 10 
  fi
 
   if [ $loop -ge $looplim ]
    then
-   msg="FATAL ERROR: ABORTING after 150 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold}.grib2"
+   msg="FATAL ERROR: ABORTING after 300 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold}.grib2"
    err_exit $msg
   fi
 
@@ -269,12 +269,12 @@ do
    break
  else
   loop=$((loop+1))
-  sleep 5
+  sleep 10 
  fi
 
   if [ $loop -ge $looplim ]
    then
-   msg="FATAL ERROR: ABORTING after 150 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold3}.grib2"
+   msg="FATAL ERROR: ABORTING after 300 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold3}.grib2"
    err_exit $msg
   fi
 

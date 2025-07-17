@@ -5,6 +5,8 @@ export RUN=rrfs_a
 
 dom=${DOM}
 
+ff=${fhr}
+
 # If the data directory does not exist, then stop the job
 export DATA=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refs.${PDY}/ensprod/
 export DATASNOW=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.2/refs.${PDY}/ensprod/
@@ -25,19 +27,18 @@ export pgmout="OUTPUT.${pid}"
 
 types="prob avrg eas ffri lpmm mean pmmn sprd"
 
-aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.${dom}.*.grib2*"
+aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.${dom}.*.f${ff}.grib2*"
 
 
-if [ -d $DATASNOW ]; then
-cd $DATASNOW
+# if [ -d $DATASNOW ]; then
+# cd $DATASNOW
 
+# aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.*snow*.grib2*"
 
-aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.*snow*.grib2*"
-
-else
-echo "WARNING: no snow data"
-exit
-fi
+# else
+# echo "WARNING: no snow data"
+# exit
+# fi
 
 
 # if [ $cyc -eq 00 -o $cyc -eq 06 -o $cyc -eq 12 -o $cyc -eq 18 ]; then

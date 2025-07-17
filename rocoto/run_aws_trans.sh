@@ -21,10 +21,13 @@ then
                         echo "looks like prod, so proceed"
 fi
 
-doms="conus ak hi pr"
+doms="ak hi pr"
 for dom in $doms
 do
 thing=drive_refs_transfers_${dom}
 rocotorun -v 10 -w ${dir}/${thing}.xml -d ${dir}/${thing}.db
-sleep 20
+sleep 12
 done
+
+thing=drive_refs_transfers_conus_mixed
+rocotorun -v 10 -w ${dir}/${thing}.xml -d ${dir}/${thing}.db

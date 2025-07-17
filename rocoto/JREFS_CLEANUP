@@ -13,10 +13,20 @@ echo cyc is $cyc
 dom=$NEST
 
 
-rm -rf ./refs_qpfeasfrac_timelag_singlephys_${dom}_${cyc}_para_??
+rm -rf ./refs_qpfeasfrac_timelag_multiphys_${dom}_${cyc}_para_??
 
-rm -rf ./refs_awips_timelag_singlephys_${dom}_${cyc}_para 
-rm -rf ./refs_ensprodpreprocfv3_timelag_singlephys_${dom}_${cyc}_para
-rm -rf ./refs_ensprod_timelag_singlephys_${dom}_${cyc}_para
-rm -rf ./refs_gempak_timelag_singlephys_${dom}_${cyc}_para
+rm -rf ./refs_awips_timelag_multiphys_${dom}_${cyc}_para 
+rm -rf ./refs_ensprodpreprocfv3_timelag_multiphys_${dom}_${cyc}_para
+rm -rf ./refs_ensprod_timelag_multiphys_${dom}_${cyc}_para
+rm -rf ./refs_gempak_timelag_multiphys_${dom}_${cyc}_para
 
+if [ $dom = "conus" ]
+then
+rm -rf refs_ffggen_timelag_multiphys_${dom}_${cyc}_para
+rm -rf refs_ensprodpreprochrrr_timelag_multiphys_${dom}_${cyc}_para.*
+fi
+
+if [ $dom = "ak" ]
+then
+rm -rf refs_ensprodpreprochrrr_timelag_multiphys_${dom}_${cyc}_para.*
+fi

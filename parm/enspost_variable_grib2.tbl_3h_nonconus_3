@@ -1,8 +1,13 @@
-  4      row variables and mean/spread/prob info
+  9      row variables and mean/spread/prob info
 AP1h   1 8     1 L1  0  
 AP3h   1 8     1 L1  0 
 AP6h   1 8     1 L1  0 
 AP6h   1 8     1 M1  0 
+AP1h   1 8     1 P1  0  A1  0   > A4 12.7 25.4 50.8 76.2
+AP3h   1 8     1 P1  0  A1  0   > A5 12.7 25.4 50.8 76.2 127.0
+AP6h   1 8     1 P0     A1  0   > A5 12.7 25.4 50.8 76.2 127.0
+AP12h  1 8     1 M0     A1  0   > A6 12.7 25.4 50.8 76.2 127.0 203.2
+AP24h  1 8     1 P0     A1  0   > A6 12.7 25.4 50.8 76.2 127.0 203.2
 
    0       special derived variables, each  of which, needs code to process specially
 

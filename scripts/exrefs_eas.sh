@@ -146,7 +146,7 @@ fi
 if [ $((10#$fhr)) -ge 24 -a $((10#$fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 -]
+if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2  ]
 then
 msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2"
 err_exit $msg

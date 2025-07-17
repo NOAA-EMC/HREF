@@ -37,9 +37,9 @@ subtype=${3}
 
 mkdir -p $DATA/${ff}/${subtype}
 
-if [ $(subtype) = "1" ]
+if [ -e $DATA/${ff}/DONE.*_${subtype} ]
 then
-rm -f $DATA/${ff}/DONE.*
+rm -f $DATA/${ff}/DONE.*_${subtype}
 fi
 
 cd $DATA/${ff}/${subtype}
@@ -274,7 +274,8 @@ if [ $SENDCOM = YES ]; then
   then
 # eventually make this a cat?
 #  cp $DATA/$ff/${subtype}/${RUN}.${typ}.t${cyc}z.f$ff  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtype}
-  cp $DATA/$ff/${subtype}/${RUN}.${typ}.t${cyc}z.f$ff  $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtype}
+  cpreq $DATA/$ff/${subtype}/${RUN}.${typ}.t${cyc}z.f$ff  $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtype}
+
   fi
 ##  $WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
  done
@@ -306,10 +307,10 @@ then
 
  done
 
-fi
-
 # hopefully have all available down here
 
+
+echo to this test
 
 if [ -s  $filea -a  -s $fileb -a -s  $filec -a -s $filed ]
 then
@@ -318,30 +319,41 @@ subtypes="1 2 3 4"
 
 for typ in $types
 do
-for subtypeloc in ${subtypes}
-do
+# for subtypeloc in ${subtypes}
+# do
 
-if [ $subtypeloc = "1" -a -e $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2 ]
-then
+# if [ $subtypeloc = "1" -a -e $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2 ]
+# then
 # purge any existing file in COMOUT to avoid duplicate output
-rm -f $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-fi
+# rm -f $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
+# fi
 
-if [ -s $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtypeloc} ]
-then
-cat $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtypeloc} >> $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-fi
-done
+# if [ -s $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtypeloc} ]
+# then
+# sleep 1
+# cat $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtypeloc} >> $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
+# err=$?; err_chk
+# fi
+
+files=`ls $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_?`
+
+
+
+# cat $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_1 $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_2 $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_3 $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_4 > $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
+
+cat ${files} > $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
+err=$?; err_chk
 
 $WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
+err=$?; err_chk
 
 done
-
-
 
 else
 
 err_exit "Never got all of the DONE files generated for domain $dom and fhr $ff"
+
+fi
 
 fi
 
