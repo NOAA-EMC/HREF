@@ -140,8 +140,7 @@ echo filecheck is $filecheck
 
 ## snow proc
 
-!tst       if [ $hr -ge 02 ] 
-       if [ $hr -ge 01 ] 
+     if [ $hr -ge 01 ] 
          then
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
