@@ -29,6 +29,14 @@ $(CMD):		$(OBJS)
 
 $(OBJS):       
 	$(FC) -I${INC} -c $(FFLAGS) $(@:.o=.f)
+
+# debug:	$(OBJS_DEBUG)
+#	$(FC) -I${INC} -o enspost_3hqpf $(OBJS_DEBUG) $(LIBS)
+
+# $(OBJS_DEBUG):
+#	$(FC) -I${INC} -c $(FFLAGS_DEBUG) $(@:.o=.f)
+
+
 clean:
 	@rm *.o ${CMD}
 delete:

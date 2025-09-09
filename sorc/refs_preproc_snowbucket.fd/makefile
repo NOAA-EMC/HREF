@@ -7,7 +7,7 @@ OBJS=	snowbucket.o  GET_BITS.o
 INC = ${G2_INC4}
 LIBS =  ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4} ${SP_LIB4} ${G2_LIB4}  \
                        ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
-DEBUG = -fpe0 -ftrapuv -g -traceback
+FFLAGS_DEBUG = -O3 -fp-model precise  -g -traceback -convert big_endian -assume noold_ldout_format -I $(INC) -ftrapuv  -check all  -fp-stack-check -check bounds
 
 FFLAGS =        -fp-model strict -g -traceback -O3 -assume noold_ldout_format -g -convert big_endian -I $(INC)
 
@@ -21,6 +21,8 @@ $(OBJS):
 
 enspost_snowbucket:
 	$(FC) -I ${INC} $(FFLAGS) -o $(@) snowbucket.f GET_BITS.f $(LIBS)
+debug:
+	$(FC) -I ${INC} $(FFLAGS_DEBUG) -o enspost_snowbucket snowbucket.f GET_BITS.f $(LIBS)
 clean:
 	/bin/rm   enspost_snowbucket
 copy:
