@@ -8,6 +8,8 @@ cd ../fix
 
 cp ${ENSPOST_FIX}/* .
 
+rm -f sref*
+
 cd ../sorc/
 
 
