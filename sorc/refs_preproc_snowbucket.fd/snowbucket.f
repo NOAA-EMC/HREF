@@ -2,13 +2,11 @@
 
 !       Special program to get 1-h and 3-h snow from FV3SAR instantaneous WEASD
 
-
-
         USE GRIB_MOD
 
         real, allocatable :: pdiff(:,:)
 
-        integer :: ihrs1, ihrs2, reset_flag
+        integer :: ihrs1, ihrs2,reset_flag
         integer :: mm,nn,oo,m,n,JPDTN_USE
 	character(len=2), dimension(2):: hrs
         integer :: is_hrrr
@@ -18,8 +16,8 @@
 	character(len=150):: filename
 	character(len=1):: reflag
 
-	read(5,FMT='(A)') dirname
-	read(5,FMT='(A)') filename
+        read(5,FMT='(A)') dirname
+        read(5,FMT='(A)') filename
         read(5,FMT='(A)') hrs(1)
         read(5,FMT='(A)') hrs(2)
         read(5,FMT='(I1)') reset_flag
@@ -29,10 +27,10 @@
 
         allocate(pdiff(im,jm))
 
-	write(0,*) 'read reset_flag: ', reset_flag
+        write(0,*) 'read reset_flag: ', reset_flag
 
-	n=index(dirname,' ')-1
-	m=index(filename,' ')-1
+        n=index(dirname,' ')-1
+        m=index(filename,' ')-1
 
 	I=2
 	
@@ -45,7 +43,7 @@
 
 	interv=ihrs2-ihrs1
 
-        write(0,*) 'ihrs1, ihrs2: ', ihrs1, ihrs2
+        write(*,*) 'ihrs1, ihrs2: ', ihrs1, ihrs2
 	
 	if (interv .eq. 3) then
 	  testout= dirname(1:n)//'/PCP3HR'//HRS(I)//'.tm00'
@@ -68,12 +66,14 @@
 	reset_flag=0
 	endif
 
-        write(0,*) 'call calc_pdiff with reset_flag,JPDTN_USE: ',
+        write(*,*) 'call calc_pdiff with reset_flag,JPDTN_USE: ',
      &         reset_flag,JPDTN_USE
+	write(*,*) 'calling calc_pdiff with ihrs1, ihrs2: ', 
+     &         ihrs1,ihrs2
 
 	call calc_pdiff(file1(1:mm),file2(1:nn),
      &                  TESTOUT(1:mmm),
-     &                  pdiff,reset_flag,ihrs1,interv,
+     &                  pdiff,reset_flag,ihrs1,ihrs2,interv,
      &                  IM,JM,is_hrrr,JPDTN_USE)
 
         write(0,*) 'past calc_pdiff'
@@ -84,12 +84,13 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	SUBROUTINE CALC_PDIFF(FNAME1,FNAME2,TESTOUT,SPRECIP,
-     &                   reset_flag,ihrs1,interv,
+     &                   reset_flag,ihrs1,ihrs2,interv,
      &                   IM,JM,is_hrrr,JPDTN)
         USE GRIB_MOD
         USE pdstemplates
 	character(*):: FNAME1,FNAME2,testout
 	integer:: reset_flag,lencheck,ihrs1,interv,is_hrrr
+        integer:: ihrs2
 	logical:: FIRST
 
         real:: rinc(5),sprecip(IM*JM)
@@ -220,9 +221,14 @@ C grib2
      &     UNPACK,K,GFLD,IRET)
 
 	if (IRET .ne. 0 .and.  ihrs2 .eq. 1) then
+           write(*,*) 'set 1 h asnow_earlier to zero'
+           asnow_earlier=0.
+	elseif (IRET .ne. 0 .and. ihrs2 .eq. 3 .and. ihrs1 .eq. 0)then
+           write(*,*) 'set 3 h asnow_earlier to zero'
            asnow_earlier=0.
         elseif (IRET .ne. 0 .and.  ihrs2 .ne. 1) then
            write(0,*) 'bad getgb1 (29) earlier ', IRET
+           write(*,*) 'ihrs1,ihrs2 is: ', ihrs1,ihrs2
            STOP 999
         else
 	   asnow_earlier=gfld%fld
@@ -380,6 +386,10 @@ C grib2
 
         if (is_hrrr .eq. 1) then
 	fzprecip(NPT)=max(fz_later(NPT)-fz_earlier(NPT),0.0)
+        endif
+
+	if (NPT .eq. 1) then
+	write(*,*) 'creating asnowprecip field'
         endif
 
 	asnowprecip(NPT)=asnow_later(NPT)-asnow_earlier(NPT)
@@ -576,12 +586,12 @@ C grib2
 
       write(0,*) 'returned NBIT for WEASD as: ', NBIT
 !      write(0,*) 'returned ISCALE as: ', ISCALE
-!      write(0,*) 'GMAX: ', GMAX
+!      write(0,*) 'GMIN,GMAX: ', GMIN,GMAX
 
 
         gfld_qpf%idrtmpl(4)=NBIT
 
-	write(0,*) 'use gfld%idrtmpl(1:10): ', gfld%idrtmpl(1:10)
+	write(0,*) 'WEASD use gfld%idrtmpl(1:10): ', gfld%idrtmpl(1:10)
 
         if (is_hrrr .eq. 0) then
 	call putgb2(13,GFLD_QPF,IRET)
@@ -621,7 +631,7 @@ C grib2
 
       write(0,*) 'returned NBIT for ASNOW as: ', NBIT
 !      write(0,*) 'returned ISCALE as: ', ISCALE
-!      write(0,*) 'GMAX: ', GMAX
+!      write(0,*) 'GMIN,GMAX: ', GMIN,GMAX
 
 
         gfld_qpf%idrtmpl(4)=NBIT

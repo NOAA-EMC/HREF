@@ -20,7 +20,7 @@
 <!ENTITY JOBS "&HOMEfv3;/rocoto">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY COMOUT_ENSPOST "/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0">
-<!ENTITY NWGES "/lfs/h2/emc/ptmp/emc.lam/rrfs/conus/nwges">
+<!ENTITY NWGES "/lfs/h2/emc/ptmp/emc.lam/rrfs/hi/nwges">
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
@@ -56,25 +56,25 @@
     <command>&JOBS;/launch.sh &JOBS;/JRRFS_COUNT_DOM</command>
     <nodes>&SEND_NODES;</nodes>
     <jobname><cyclestr>count_files_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/count_files_conus_@H.log</cyclestr></join>  
+    <join><cyclestr>&OUTDIR;/logfiles/count_files_hi_@H.log</cyclestr></join>  
 
     <envar><name>job</name><value>count_files</value></envar>
     <envar><name>machine</name><value>&machine;</value></envar>
     <envar><name>USER</name><value>&USER;</value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>DOM</name><value>conus</value></envar>
+    <envar><name>DOM</name><value>hi</value></envar>
 
     <dependency>
         <and>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f51.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f51.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f48.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f48.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f24.grib2</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f24.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f51.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f51.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f48.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f48.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f24.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f24.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -90,7 +90,7 @@
     <command>&JOBS;/launch.sh &JOBS;/JRRFSA_SENDENSPOST_AWS_TL_DOM_byhour</command>
     <nodes>&SEND_NODES;</nodes>
     <jobname><cyclestr>send_enspostaws_single_tl_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/send_enspostaws_single_tl_conus_@H_f#fhr#.log</cyclestr></join>  
+    <join><cyclestr>&OUTDIR;/logfiles/send_enspostaws_single_tl_hi_@H_f#fhr#.log</cyclestr></join>  
 
     <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
     <envar><name>job</name><value>sendpostaws_tl</value></envar>
@@ -100,15 +100,15 @@
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>tmmark</name><value>tm00</value></envar>
-    <envar><name>DOM</name><value>conus</value></envar>
+    <envar><name>DOM</name><value>hi</value></envar>
     <envar><name>fhr</name><value>#fhr#</value></envar>
 
     <dependency>
         <and>
-          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f#fhr#.grib2</cyclestr></datadep>
-          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f#fhr#.grib2</cyclestr></datadep>
-          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.pmmn.f#fhr#.grib2</cyclestr></datadep>
-          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.mean.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.pmmn.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.mean.f#fhr#.grib2</cyclestr></datadep>
         </and>
     </dependency>
 
@@ -123,7 +123,7 @@
     <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_DOM</command>
     <nodes>&SEND_NODES;</nodes>
     <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_conus_@H.log</cyclestr></join>  
+    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_hi_@H.log</cyclestr></join>  
 
     <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
     <envar><name>job</name><value>mirror_enspost</value></envar>
@@ -133,14 +133,14 @@
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>tmmark</name><value>tm00</value></envar>
-    <envar><name>DOM</name><value>conus</value></envar>
+    <envar><name>DOM</name><value>hi</value></envar>
 
     <dependency>
         <and>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f60.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.eas.f36.grib2</cyclestr></datadep>
-          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.conus.prob.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.hi.prob.f36.grib2</cyclestr></datadep>
           <taskdep task="count_files"/>
         </and>
     </dependency>

@@ -25,7 +25,7 @@ fhr=$1
 dom=${2}
 type=${3}
 
-looplim=20
+looplim=40
 sleeptime=9
 
 echo here in ush script with dom $dom
@@ -312,6 +312,16 @@ typeset -Z2 fcheckloc
         then
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
+
+	if [ $err -ne 0 ]
+	then
+	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}_retry 2>&1
+        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        fi
+
         fi
         fi
 
@@ -330,6 +340,15 @@ typeset -Z2 fcheckloc
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} yes 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
 
         export err=$? ; err_chk
+
+	if [ $err -ne 0 ]
+	then
+	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff}_retry 2>&1
+        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -667,6 +686,16 @@ typeset -Z2 fcheckloc
         then
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
+
+	if [ $err -ne 0 ]
+	then
+	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}_retry 2>&1
+        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        fi
+
         fi
 
         loop=0
@@ -679,6 +708,14 @@ typeset -Z2 fcheckloc
 
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
+	if [ $err -ne 0 ]
+	then
+	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then
