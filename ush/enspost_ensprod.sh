@@ -91,17 +91,16 @@ typeset -Z2 m
 
 if [ $dom = 'conus' ]
   then
-    files="14 fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s fv3s hrrr hrrr"
     files="14 fv3s refs refs refs refs refs fv3s refs refs refs refs refs hrrr hrrr"
 elif [ $dom = 'hi' ]
   then
-    files="12 hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s hifv3s"
+    files="12 hifv3s refs refs refs refs refs hifv3s refs refs refs refs refs" 
 elif [ $dom = 'pr' ]
   then
-    files="12 prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s prfv3s"
+    files="12 prfv3s refs refs refs refs refs prfv3s refs refs refs refs refs" 
 elif [ $dom = 'ak' ]
    then
-    files="14 akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s akfv3s hrrrak hrrrak"
+    files="14 akfv3s refs refs refs refs refs akfv3s refs refs refs refs refs hrrrak hrrrak"
 else
     echo "bad domain $dom"
     msg="FATAL ERROR: dom was not conus, hi, pr, or ak"

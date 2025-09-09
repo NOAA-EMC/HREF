@@ -251,6 +251,10 @@ typeset -Z2 fcheckloc
 
       fi
 
+
+
+###############
+
       if [  ${file[$m]} = 'refs' -a $fcst -le 60  ] ; then
 
 	      echo working REFS
@@ -611,6 +615,8 @@ typeset -Z2 fcheckloc
         then
         cat $DATA/prcip3h.m${m}.t${cyc}z.f${ff} >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
 	fi
+
+        cat $DATA/${RUN}.m${m}.t${cyc}z.f$ff.temp >> $DATA/prcip.m${m}.t${cyc}z.f${ff}
 
         ln -sf $DATA/prcip.m${m}.t${cyc}z.f${ff} $DATA/${ff}/prcip.m${m}.t${cyc}z.f${ff}
         

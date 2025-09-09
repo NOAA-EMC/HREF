@@ -35,7 +35,6 @@ else
 JPDTN_USE=11
 fi
 
-
 if [ $region = 'conus' ]
 then
 dim1=1799
@@ -141,6 +140,7 @@ echo filecheck is $filecheck
 ## snow proc
 
      if [ $hr -ge 01 ] 
+
          then
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
@@ -165,6 +165,7 @@ cp ../temp.t${cyc}z.m${mem}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
 # disabled this check
 if [ $hr -eq 490 -o  $hr -eq 250  ] ; then
+
 # believe these two times being processed will be the same.  Need f24 and f48
 
 echo looking for hrold $hrold
@@ -328,7 +329,6 @@ fi
 	if [ $hr -eq  24 -o $hr -eq 48 ]; then
          cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${PREPROC_HOLD}
         fi
-
 
         err=$? ; export err
 	if [ $err -ne 0 ]

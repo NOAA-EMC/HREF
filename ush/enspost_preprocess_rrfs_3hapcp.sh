@@ -1,7 +1,8 @@
 #! /bin/ksh
 #####################################################
 #
-#  Script: preprocess_fv3_3hapcp.sh.ecf
+
+#  Script: preprocess_rrfs_3hapcp.sh.ecf
 #
 # Purpose: Generates 3 h QPF buckets from the FV3
 #
@@ -28,6 +29,7 @@ cyc=${3}
 mem=${4}
 name=${5}
 fhr=${6}
+
 
 if [ $dom = 'conus' ]
 then
@@ -66,6 +68,7 @@ EXECrefs=${HOMErefs}/exec
 hrs=$fhr
 
 for hr in $hrs
+
 do
 filein=../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fileout=../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2

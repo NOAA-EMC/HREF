@@ -84,10 +84,12 @@
   <task name="preproc_fv3_f#fhr#" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
+
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_RRFS</command>
     <jobname><cyclestr>preprocfv3_&TYPE;_&PHYS;_&domain;_@H_f#fhr#</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/preprocrefs_&TYPE;_&PHYS;_&domain;_@Y@m@d@H_f#fhr#.log</cyclestr></join>
+
 
     <envar>
       <name>NTASK</name>
@@ -98,6 +100,7 @@
       <value>6</value>
     </envar>
     <envar><name>fhr</name><value>#fhr#</value></envar>
+
 
 
     <envar>
@@ -153,6 +156,7 @@
        <name>SENDDBN</name>
        <value>&SENDDBN;</value>
      </envar>
+
 
 
     <envar>

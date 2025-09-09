@@ -45,6 +45,7 @@ fi
 #   aws s3 cp donefile.enspostaws.${CDATE} s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/enspost_timelag/
 # fi
 
+
 date
 
 exit

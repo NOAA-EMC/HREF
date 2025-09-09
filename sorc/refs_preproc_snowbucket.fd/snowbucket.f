@@ -2,11 +2,13 @@
 
 !       Special program to get 1-h and 3-h snow from FV3SAR instantaneous WEASD
 
+
         USE GRIB_MOD
 
         real, allocatable :: pdiff(:,:)
 
         integer :: ihrs1, ihrs2,reset_flag
+
         integer :: mm,nn,oo,m,n,JPDTN_USE
 	character(len=2), dimension(2):: hrs
         integer :: is_hrrr
@@ -16,8 +18,10 @@
 	character(len=150):: filename
 	character(len=1):: reflag
 
+
         read(5,FMT='(A)') dirname
         read(5,FMT='(A)') filename
+
         read(5,FMT='(A)') hrs(1)
         read(5,FMT='(A)') hrs(2)
         read(5,FMT='(I1)') reset_flag
@@ -27,10 +31,12 @@
 
         allocate(pdiff(im,jm))
 
+
         write(0,*) 'read reset_flag: ', reset_flag
 
         n=index(dirname,' ')-1
         m=index(filename,' ')-1
+
 
 	I=2
 	
@@ -44,6 +50,7 @@
 	interv=ihrs2-ihrs1
 
         write(*,*) 'ihrs1, ihrs2: ', ihrs1, ihrs2
+
 	
 	if (interv .eq. 3) then
 	  testout= dirname(1:n)//'/PCP3HR'//HRS(I)//'.tm00'
@@ -220,6 +227,7 @@ C grib2
         call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
+
 	if (IRET .ne. 0 .and.  ihrs2 .eq. 1) then
            write(*,*) 'set 1 h asnow_earlier to zero'
            asnow_earlier=0.
@@ -387,6 +395,7 @@ C grib2
         if (is_hrrr .eq. 1) then
 	fzprecip(NPT)=max(fz_later(NPT)-fz_earlier(NPT),0.0)
         endif
+
 
 	if (NPT .eq. 1) then
 	write(*,*) 'creating asnowprecip field'
@@ -587,6 +596,7 @@ C grib2
       write(0,*) 'returned NBIT for WEASD as: ', NBIT
 !      write(0,*) 'returned ISCALE as: ', ISCALE
 !      write(0,*) 'GMIN,GMAX: ', GMIN,GMAX
+
 
 
         gfld_qpf%idrtmpl(4)=NBIT
