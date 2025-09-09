@@ -28,14 +28,11 @@ name=${4}
 hr=${5}
 region=${6}
 
-
-if [ ${mem} = '01' -o ${mem} = '07' ]
+if [ ${mem} = '01' ]
 then
-JPDTN=8
-echo set JPDTN for deterministic
+JPDTN_USE=8
 else
-JPDTN=11
-echo set JPDTN for REFS
+JPDTN_USE=11
 fi
 
 if [ $region = 'conus' ]
@@ -142,7 +139,8 @@ echo filecheck is $filecheck
 
 ## snow proc
 
-       if [ $hr -ge 02 ] 
+     if [ $hr -ge 01 ] 
+
          then
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
@@ -165,7 +163,9 @@ curpath=`pwd`
 
 cp ../temp.t${cyc}z.m${mem}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
-if [ $hr -eq 49 -o  $hr -eq 25  ] ; then
+# disabled this check
+if [ $hr -eq 490 -o  $hr -eq 250  ] ; then
+
 # believe these two times being processed will be the same.  Need f24 and f48
 
 echo looking for hrold $hrold
@@ -213,12 +213,12 @@ do
    break
  else
   loop=$((loop+1))
-  sleep 5
+  sleep 10 
  fi
 
   if [ $loop -ge $looplim ]
    then
-   msg="FATAL ERROR: ABORTING after 150 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold}.grib2"
+   msg="FATAL ERROR: ABORTING after 300 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold}.grib2"
    err_exit $msg
   fi
 
@@ -235,7 +235,7 @@ echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
-echo $JPDTN >> input.${hr}.mem${mem}.snow
+echo "$JPDTN_USE" >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
@@ -269,12 +269,12 @@ do
    break
  else
   loop=$((loop+1))
-  sleep 5
+  sleep 10 
  fi
 
   if [ $loop -ge $looplim ]
    then
-   msg="FATAL ERROR: ABORTING after 150 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold3}.grib2"
+   msg="FATAL ERROR: ABORTING after 300 seconds of waiting for temp.t${cyc}z.m${mem}.f${hrold3}.grib2"
    err_exit $msg
   fi
 
@@ -290,7 +290,7 @@ echo $hr >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
 echo "$dim1 $dim2" >> input.${hr}.mem${mem}.snow
 echo 0 >> input.${hr}.mem${mem}.snow
-echo $JPDTN >> input.${hr}.mem${mem}.snow
+echo "$JPDTN_USE" >> input.${hr}.mem${mem}.snow
 
 $EXECrefs/enspost_snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk

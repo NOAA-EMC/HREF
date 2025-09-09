@@ -15,11 +15,11 @@ date
 ###########################################################
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
-rm -rf $DATA/*
+# rm -rf $DATA/*
 cd $DATA
 
 msg="JOB $job HAS BEGUN"
-postmsg "$msg"
+postmsg  "$msg"
 
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
@@ -42,7 +42,7 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ## PDY not included here as pull data from PDYm1 as well
 
 # Save it for time lag ensemble
-export COMINhrrr=${COMINhrrr:-$GESROOT/refs}
+# export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver}/hiresw)}
 
 export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}}
 export EXECrefs=${EXECrefs:-$HOMErefs/exec}
@@ -74,7 +74,7 @@ export pgmout="OUTPUT.$$"
 ########################################################
 # Execute the script.
 
-$HOMErefs/scripts/exrefs_eas_3.sh.ecf $type
+$HOMErefs/scripts/exrefs_eas.sh $type
 ########################################################
 
 msg="JOB $job HAS COMPLETED NORMALLY."

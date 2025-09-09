@@ -22,7 +22,390 @@ import math as m
 from datetime import datetime, timedelta
 from scipy import ndimage, optimize, signal
 from scipy.io import FortranFile 
-# import fortranfile as F
+import multiprocessing as mp
+from functools import partial
+
+#--------------------------------------------------------------------------------
+#### FUNCTIONS AND ROUTINES ####
+
+def simplewgrib2(txtfile):
+  tmps= []
+  with open(txtfile) as F1:
+    i=1
+    nx,ny=[int(x) for x in next(F1).split()]
+    ilim=nx*ny
+    while i <= ilim:
+      tmp=[float(x) for x in next(F1).split()]
+      tmps.append(tmp)
+      i=i+1
+    array2d = np.asarray(tmps,dtype=np.float32)
+    array2d.shape = (ny,nx)
+    return array2d,nx,ny
+  F1.close()
+
+# calculate footprint routine
+def get_footprint(r):
+#    footprint = np.ones(((r/dx)*2+1,(r/dx)*2+1),dtype=int)
+    footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
+    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
+    dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
+    footprint = np.where(np.greater(dist,r),0,1)
+    return footprint
+
+def process_radius(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, fracsum):
+    """
+    Process a single radius from rlist.
+    """
+    r = rlist_i
+    dcrit = alpha
+    footprint = get_footprint(r)
+
+    # Pre-calculate the denominator for the footprint sum
+    footprint_sum = float(np.sum(footprint))
+
+    # Pre-allocate arrays
+    frac = np.zeros((nm_use, isize, jsize), dtype=float)
+    dijmean = np.zeros((isize, jsize), dtype=float)
+
+    # Vectorized convolution for all members at once
+    for mem in range(nm_use):
+        frac[mem] = np.around(signal.fftconvolve(exceed3d[mem], footprint, mode='same')) / footprint_sum
+
+    # Process pairs efficiently
+    for pair in range(len(pr1)):
+        m1, m2 = pr1[pair], pr2[pair]
+        mask = np.logical_and(frac[m1] > 0, frac[m2] > 0)
+
+        # Only compute where mask is True
+        diff_squared = np.zeros((isize, jsize), dtype=float)
+        sum_squared = np.zeros((isize, jsize), dtype=float)
+
+        np.putmask(diff_squared, mask, (frac[m1] - frac[m2])**2)
+        np.putmask(sum_squared, mask, (frac[m1]**2 + frac[m2]**2))
+
+        # Avoid division by zero
+        ratio = np.ones((isize, jsize), dtype=float)
+        np.putmask(ratio, mask, diff_squared / np.maximum(sum_squared, 1e-10))
+
+        dijmean += ratio / float(len(pr1))
+
+    # Check which points meet the similarity criteria
+    meets_criteria = np.less_equal(dijmean, dcrit)
+
+    return r, meets_criteria
+
+
+def calculate_eas_probability_para(ensemble_qpf, t, rlist, alpha, dx, p_smooth, n_processes=None):
+    """
+    Optimized version of the EAS probability calculation function.
+
+    Parameters:
+    -----------
+    ensemble_qpf: 3-D QPF array (members x lat x lon)
+    t: QPF threshold in inches
+    rlist: list of potential EAS radii (km)
+    alpha: similarity criteria parameter
+    dx: model grid spacing (km)
+    p_smooth: width of Gaussian filter for smoothing radius field (grid points)
+    n_processes: number of processes to use for parallel computation (default: CPU count)
+
+    Returns:
+    --------
+    optrad: Optimized radius array
+    """
+    # Convert inches to mm
+    exceed3d = np.where(np.greater_equal(ensemble_qpf, t), 1, 0)
+    print('sum of exceed3d for t: ', t, ' is : ', np.sum(exceed3d))
+
+    nm_use, isize, jsize = np.shape(exceed3d)
+    print('nm_use within get_footprint: ', nm_use)
+    print('isize, jsize within get_footprint: ', isize, jsize)
+
+    # Create lists of ensemble member pairs - do this once
+    pr1, pr2 = [], []
+    for m1 in range(nm_use-1):
+        for m2 in range(m1+1, nm_use):
+            pr1.append(m1)
+            pr2.append(m2)
+
+    # Initialize with maximum radius
+    optrad = np.full((isize, jsize), float(max(rlist)), dtype=float)
+
+    # Sort radii from largest to smallest
+    rlist = sorted(rlist, reverse=True)
+
+    # Calculate initial fractions for the largest radius
+    initial_footprint = get_footprint(rlist[0])
+    footprint_sum = float(np.sum(initial_footprint))
+    frac_initial = np.zeros((nm_use, isize, jsize), dtype=float)
+
+    for mem in range(nm_use):
+        frac_initial[mem] = np.around(signal.fftconvolve(exceed3d[mem], initial_footprint, mode='same')) / footprint_sum
+
+    # Identify points where QPF threshold is not met within the maximum radius in any ensemble member
+    fracsum = np.sum(frac_initial, axis=0)
+
+    # Set up parallel processing
+    if n_processes is None:
+        n_processes = mp.cpu_count()
+
+    # Use at most the number of radii or CPUs available
+    n_processes = min(n_processes, len(rlist), mp.cpu_count())
+
+    if n_processes > 1:
+        print(f"Using {n_processes} processes for parallel computation")
+
+        # Create a partial function with fixed arguments
+
+        partial_process = partial(
+            process_radius,
+            exceed3d=exceed3d,
+            nm_use=nm_use,
+            isize=isize,
+            jsize=jsize,
+            pr1=pr1,
+            pr2=pr2,
+            alpha=alpha,
+            fracsum=fracsum
+        )
+
+        # Process each radius in parallel
+        with mp.Pool(processes=n_processes) as pool:
+            results = pool.map(partial_process, rlist)
+
+        # Update optrad based on results
+        for r, meets_criteria in results:
+            optrad = np.where(meets_criteria, r, optrad)
+    else:
+        # Sequential processing
+        for r in rlist:
+            r, meets_criteria = process_radius(
+                r, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, fracsum
+            )
+            optrad = np.where(meets_criteria, r, optrad)
+
+    # Smooth radius grid and zero out any dry areas
+    if p_smooth > 0:
+        optrad = ndimage.gaussian_filter(optrad, p_smooth)
+
+    # Zero out dry areas
+    optrad = np.where(np.equal(fracsum, 0), 0, optrad)
+
+    return optrad
+
+
+def get_footprint_flexi(r,i,j,nx,ny):
+
+    footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
+    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
+    dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
+    footprint = np.where(np.greater(dist,r),0,1)
+
+    rdx2 = int(r/dx)
+    nx1=nx-1
+    ny1=ny-1
+
+# if test is on domain grid indices.  Indices for footprint_flexi are footprint relative
+
+    if i < rdx2:
+      footprint[0:rdx2-i,:]=0
+    if j < rdx2:
+      footprint[:,0:rdx2-j]=0
+    if i > nx1-rdx2:
+      footprint[nx1-rdx2-i:,:]=0
+    if j > ny1-rdx2:
+      footprint[:,ny1-rdx2-j:]=0
+
+    return footprint
+
+
+def optimize_footprint_calculation(optrad, prob, t, nm_use, nlats, nlons, dx,
+                                  filter_footprint_10, filter_footprint_25,
+                                  filter_footprint_40, filter_footprint_55,
+                                  filter_footprint_70, filter_footprint_85,
+                                  filter_footprint_100, get_footprint_flexi):
+    """
+    Optimized version of the footprint calculation.
+
+    Parameters:
+    ----------
+    optrad : numpy.ndarray
+        The radius array
+    prob : dict of numpy.ndarray
+        Probability data indexed by threshold and radius
+    t : float
+        Current threshold value
+    nm_use : int
+        Number of ensemble members
+    nlats, nlons : int
+        Grid dimensions
+    dx : float
+        Grid spacing
+    filter_footprint_* : numpy.ndarray
+        Pre-computed footprint filters
+    get_footprint_flexi : function
+        Function to compute flexible footprint
+
+    Returns:
+    -------
+    probfinal : numpy.ndarray
+        Final probability array
+    optrad : numpy.ndarray
+        Updated radius array
+    """
+    # Pre-compute footprint sums
+    footprint_sums = {
+        10: float(np.sum(filter_footprint_10)),
+        25: float(np.sum(filter_footprint_25)),
+        40: float(np.sum(filter_footprint_40)),
+        55: float(np.sum(filter_footprint_55)),
+        70: float(np.sum(filter_footprint_70)),
+        85: float(np.sum(filter_footprint_85)),
+        100: float(np.sum(filter_footprint_100))
+    }
+
+    # Pre-allocate output array
+    probfinal = np.zeros_like(optrad)
+
+    # Create a mapping of radius ranges to footprint sizes and probability arrays
+    radius_map = [
+        ((2.5, 17.5), 10),
+        ((17.5, 32.5), 25),
+        ((32.5, 47.5), 40),
+        ((47.5, 62.5), 55),
+        ((62.5, 77.5), 70),
+        ((77.5, 92.5), 85),
+        ((92.5, float('inf')), 100)
+    ]
+
+    # Convert optrad to integer once
+    optrad_int = optrad.astype(int)
+
+    # Get all indices where the sum of exceed3d is not zero (assumed from context)
+    # This is just a placeholder - replace with your actual condition
+    valid_indices = np.where(optrad > 0)
+
+    # Process only valid indices
+    for row, column in zip(valid_indices[0], valid_indices[1]):
+        rad = optrad_int[row, column]
+
+        # Find the appropriate footprint size
+        footprint_size = 100  # Default to largest footprint
+        for (min_rad, max_rad), size in radius_map:
+            if min_rad <= rad < max_rad:
+                footprint_size = size
+                break
+
+        # Get initial footprint sum
+        footprint_use = footprint_sums[footprint_size]
+
+        # Calculate rdx once
+        rdx = int(rad / dx)
+
+        # Check boundaries and adjust footprint if needed
+        boundary_conditions = [
+            column < rdx,
+            row < rdx,
+            column > nlons - 1 - rdx,
+            row > nlats - 1 - rdx
+        ]
+
+        if any(boundary_conditions):
+            footprint_orig = footprint_use
+            footprint_use = np.sum(get_footprint_flexi(rad, column, row, nlons, nlats))
+
+            ratio = float(footprint_use) / float(footprint_orig)
+
+            # Common condition checks
+            interior_column = column > rdx and column < nlons - 1 - rdx
+            interior_row = row > rdx and row < nlats - 1 - rdx
+
+            if ratio < 0.5:
+                if (boundary_conditions[0] or boundary_conditions[2]) and interior_row:
+                    footprint_use = int(0.51 * footprint_orig)
+                elif (boundary_conditions[1] or boundary_conditions[3]) and interior_column:
+                    footprint_use = int(0.51 * footprint_orig)
+
+            if ratio < 0.25:
+                footprint_use = int(0.26 * footprint_orig)
+
+        # Calculate final probability
+        probfinal[row, column] = 100.0 * prob[t, footprint_size][row, column] / float(footprint_use * nm_use)
+
+        # Debug output for high probabilities
+        if probfinal[row, column] > 100.1:
+            print('row, column, probfinal[row, column]: ', row, column, probfinal[row, column])
+            print(f'prob[t,{footprint_size}][row,column], footprint_use: ',
+                 prob[t, footprint_size][row, column], footprint_use)
+
+        # Special case for large radii
+        if rad > 100:
+            optrad[row, column] = 0
+
+    return probfinal, optrad
+
+
+# ENSEMBLE AGREEMENT SCALES PROBABILITY FUNCTION
+#
+#   ensemble_qpf: 3-D QPF array (members x lat x lon)
+#   t:            QPF threshold in inches
+#   rlist:        list of potential EAS radii (km)
+#   alpha:        similarity criteria parameter
+#   dx:           model grid spacing (km)
+#   p_smooth:     width of Gaussian filter for smoothing radius field (grid points)
+#
+def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
+    exceed3d = np.where(np.greater_equal(ensemble_qpf/1.0,t),1,0)
+    print('sum of exceed3d for t: ', t, ' is : ', np.sum(exceed3d))
+    nm_use, isize, jsize = np.shape(exceed3d)
+    print('nm_use within get_footprint: ', nm_use)
+    print('isize, jsize within get_footprint: ', isize, jsize)
+    pr1, pr2 = [], []  # create lists of ens member pairs
+    for m1 in range(nm_use-1):
+      for m2 in range(m1+1,nm_use):
+        pr1.append(m1)
+        pr2.append(m2)
+    optrad = np.zeros((isize,jsize),dtype=float) + float(max(rlist)) # set initial radius to max for better smoothing
+    rlist = sorted(rlist,reverse=True)
+    for i in range(len(rlist)):  # loop through rlist to find smallest radius over which member pairs meet similarity criteria
+      dcrit = alpha
+#      dcrit = alpha + ((1 - alpha) * (rlist[i] / float(max(rlist))))
+      footprint = get_footprint(rlist[i])
+      dijmean = np.zeros((isize,jsize),dtype=float)
+      frac = np.zeros((nm_use,isize,jsize),dtype=float)
+      for mem in range(nm_use):
+        frac[mem,:,:] = np.around(signal.fftconvolve(exceed3d[mem,:,:],footprint,mode='same'))/float(np.sum(footprint))
+      if i == 0:  # identify points where QPF threshold is not met within the maximum radius in any ens member
+        fracsum = np.sum(frac,axis=0)
+      for pair in range(len(pr1)):
+        dijmean = dijmean + np.where(np.logical_and(np.greater(frac[pr1[pair]],0),np.greater(frac[pr2[pair]],0)),(frac[pr1[pair]]-frac[pr2[pair]])**2/(frac[pr1[pair]]**2+frac[pr2[pair]]**2),1)/float(len(pr1))
+      optrad=np.where(np.less_equal(dijmean,dcrit),rlist[i],optrad)
+#      p = np.where(np.less_equal(dijmean,dcrit),100.0*np.sum(frac,axis=0)/float(nm_use),p)
+# smooth radius grid and zero out any dry areas
+#    p = np.where(np.equal(fracsum,0),0,ndimage.filters.gaussian_filter(p,p_smooth))
+    optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
+    return optrad
+
+def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
+#?    exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
+    exceed3d = np.where(np.greater_equal(ensemble_qpf,t),1,0)
+    p_smooth_loc=p_smooth+2
+
+    nm_use, isize, jsize = np.shape(exceed3d)
+    pnt_prob = np.zeros((isize,jsize),dtype=float)
+
+    for mem in range(nm_use):
+        pnt_prob[:,:] = pnt_prob[:,:]+(exceed3d[mem,:,:]/float(nm_use))
+
+    pnt_prob = 100.0 * pnt_prob
+    pnt_prob = ndimage.filters.gaussian_filter(pnt_prob,p_smooth_loc)
+
+    return pnt_prob
+
+
+
+#--------------------------------------------------------------------------------
+#### REAL START OF SCRIPT ####
 
 starttime = time.time()
 
@@ -152,163 +535,6 @@ else:
 pqpf_6h_calibrate = 'no'
 pqpf_3h_calibrate = 'no'
 # print 'Calibration coefficients for '+mem+' members not found. Using raw model QPF'
-
-#--------------------------------------------------------------------------------
-#### FUNCTIONS AND ROUTINES ####
-
-def simplewgrib2(txtfile):
-  tmps= []
-  with open(txtfile) as F1:
-    i=1
-    nx,ny=[int(x) for x in next(F1).split()]
-    ilim=nx*ny
-    while i <= ilim:
-      tmp=[float(x) for x in next(F1).split()]
-      tmps.append(tmp)
-      i=i+1
-    array2d = np.asarray(tmps,dtype=np.float32)
-    array2d.shape = (ny,nx)
-    return array2d,nx,ny
-  F1.close()
-
-
-def process_nam_qpf(file3,file4,fhr):
-
-
-    fhour=fhr
-    if fhr%3 == 1:
-      shour=fhour-1
-      print('process_nam_qpf remainder 1')
-      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-      qpf1,nx,ny=simplewgrib2('qpf.txt')
-      os.system('rm -f qpf.txt')
-
-
-    if fhr%3 == 2:
-      shour1=fhour-2
-      shour2=fhour-1
-      print('process_nam_qpf remainder 2 - f02 minus f01')
-      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
-      qpfa,nx,ny=simplewgrib2('qpf.txt')
-      os.system('rm -f qpf.txt')
-
-      os.system(WGRIB2+' '+file4+' -match "ASNOW:surface:%i'%shour1+'-%i'%shour2+'" -end -text qpf.txt')
-      qpfb,nx,ny=simplewgrib2('qpf.txt')
-      os.system('rm -f qpf.txt')
-
-      qpf1=qpfa-qpfb
-
-    if fhr%3 == 0:
-      shour1=fhour-3
-      shour2=fhour-2
-      fhourm1=fhour-1
-      print('process_nam_qpf remainder 3 - f03 minus f02')
-      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour1+'-%i'%fhour+'" -end -text qpf.txt')
-      qpfa,nx,ny=simplewgrib2('qpf.txt')
-      os.system('rm -f qpf.txt')
-
-      os.system(WGRIB2+' '+file4+' -match "ASNOW:surface:%i'%shour1+'-%i'%fhourm1+'" -end -text qpf.txt')
-      qpfb,nx,ny=simplewgrib2('qpf.txt')
-      os.system('rm -f qpf.txt')
-      qpf1=qpfa-qpfb
-
-    return qpf1
-
-# calculate footprint routine
-def get_footprint(r):
-#    footprint = np.ones(((r/dx)*2+1,(r/dx)*2+1),dtype=int)
-    footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
-    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
-    dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
-    footprint = np.where(np.greater(dist,r),0,1)
-    return footprint
-
-def get_footprint_flexi(r,i,j,nx,ny):
-
-    footprint = np.ones((int((r/dx)*2+1),int((r/dx)*2+1)),dtype=int)
-    footprint[int(m.ceil(r/dx)),int(m.ceil(r/dx))] = 0
-    dist = ndimage.distance_transform_edt(footprint,sampling=[dx,dx])
-    footprint = np.where(np.greater(dist,r),0,1)
-
-    rdx2 = int(r/dx)
-    nx1=nx-1
-    ny1=ny-1
-
-# if test is on domain grid indices.  Indices for footprint_flexi are footprint relative
-
-    if i < rdx2:
-      footprint[0:rdx2-i,:]=0
-    if j < rdx2:
-      footprint[:,0:rdx2-j]=0
-    if i > nx1-rdx2:
-      footprint[nx1-rdx2-i:,:]=0
-    if j > ny1-rdx2:
-      footprint[:,ny1-rdx2-j:]=0
-
-    return footprint
-
-
-# ENSEMBLE AGREEMENT SCALES PROBABILITY FUNCTION
-#
-#   ensemble_qpf: 3-D QPF array (members x lat x lon)
-#   t:            QPF threshold in inches
-#   rlist:        list of potential EAS radii (km)
-#   alpha:        similarity criteria parameter
-#   dx:           model grid spacing (km)
-#   p_smooth:     width of Gaussian filter for smoothing radius field (grid points)
-#
-def calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth):
-    exceed3d = np.where(np.greater_equal(ensemble_qpf/1.0,t),1,0)
-    print('sum of exceed3d for t: ', t, ' is : ', np.sum(exceed3d))
-    nm_use, isize, jsize = np.shape(exceed3d)
-    print('nm_use within get_footprint: ', nm_use)
-    print('isize, jsize within get_footprint: ', isize, jsize)
-    pr1, pr2 = [], []  # create lists of ens member pairs
-    for m1 in range(nm_use-1):
-      for m2 in range(m1+1,nm_use):
-        pr1.append(m1)
-        pr2.append(m2)
-    optrad = np.zeros((isize,jsize),dtype=float) + float(max(rlist)) # set initial radius to max for better smoothing
-    rlist = sorted(rlist,reverse=True)
-    for i in range(len(rlist)):  # loop through rlist to find smallest radius over which member pairs meet similarity criteria
-      dcrit = alpha
-#      dcrit = alpha + ((1 - alpha) * (rlist[i] / float(max(rlist))))
-      footprint = get_footprint(rlist[i])
-      dijmean = np.zeros((isize,jsize),dtype=float)
-      frac = np.zeros((nm_use,isize,jsize),dtype=float)
-      for mem in range(nm_use):
-        frac[mem,:,:] = np.around(signal.fftconvolve(exceed3d[mem,:,:],footprint,mode='same'))/float(np.sum(footprint))
-      if i == 0:  # identify points where QPF threshold is not met within the maximum radius in any ens member
-        fracsum = np.sum(frac,axis=0)
-      for pair in range(len(pr1)):
-        dijmean = dijmean + np.where(np.logical_and(np.greater(frac[pr1[pair]],0),np.greater(frac[pr2[pair]],0)),(frac[pr1[pair]]-frac[pr2[pair]])**2/(frac[pr1[pair]]**2+frac[pr2[pair]]**2),1)/float(len(pr1))
-      optrad=np.where(np.less_equal(dijmean,dcrit),rlist[i],optrad)
-#      p = np.where(np.less_equal(dijmean,dcrit),100.0*np.sum(frac,axis=0)/float(nm_use),p)
-# smooth radius grid and zero out any dry areas
-#    p = np.where(np.equal(fracsum,0),0,ndimage.filters.gaussian_filter(p,p_smooth))
-    optrad = np.where(np.equal(fracsum,0),slim+5,ndimage.filters.gaussian_filter(optrad,p_smooth))
-    return optrad
-
-def calculate_pnt_probability(ensemble_qpf,t,p_smooth):
-#?    exceed3d = np.where(np.greater_equal(ensemble_qpf/25.4,t),1,0)
-    exceed3d = np.where(np.greater_equal(ensemble_qpf,t),1,0)
-    p_smooth_loc=p_smooth+2
-
-    nm_use, isize, jsize = np.shape(exceed3d)
-    pnt_prob = np.zeros((isize,jsize),dtype=float)
-
-    for mem in range(nm_use):
-        pnt_prob[:,:] = pnt_prob[:,:]+(exceed3d[mem,:,:]/float(nm_use))
-
-    pnt_prob = 100.0 * pnt_prob
-    pnt_prob = ndimage.filters.gaussian_filter(pnt_prob,p_smooth_loc)
-
-    return pnt_prob
-
-
-
-#--------------------------------------------------------------------------------
-#### START OF SCRIPT ####
 
 cy, cm, cd, ch = int(PDY[0:4]), int(PDY[4:6]), int(PDY[6:8]), int(cyc[0:2])
 d0 = datetime(cy,cm,cd,ch,0)
@@ -483,29 +709,17 @@ for mem in members:
 
     else:
 
-### HERE
+      print('ready from file3 in 1h: ', file3)
+      fhour=fhours[memcount]
+      shour=fhour-1
+      print('ASNOW accum from : ', shour, ' to : ', fhour)
+      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
+      qpf1,nx,ny=simplewgrib2('qpf.txt')
 
-      if mem == 'nam':
-        fcst_hour=fhours[memcount]
-        file4 = memfiles4[itime]
-
-        print('call process_nam_qpf with file3: ', file3)
-        print('call process_nam_qpf with file4: ', file4)
-        print('call process_nam_qpf with fcst_hour: ', fcst_hour)
-        qpf1=process_nam_qpf(file3,file4,fcst_hour)
-
-      else:
-        print('ready from file3 in 1h: ', file3)
-        fhour=fhours[memcount]
-        shour=fhour-1
-        print('ASNOW accum from : ', shour, ' to : ', fhour)
-        os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
-        qpf1,nx,ny=simplewgrib2('qpf.txt')
-
-        undefsnow,nx,ny=simplewgrib2('qpf.txt')
-        undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
-        snowmaskregion = np.ma.filled(undefsnow,-9999)
-        qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
+      undefsnow,nx,ny=simplewgrib2('qpf.txt')
+      undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
+      snowmaskregion = np.ma.filled(undefsnow,-9999)
+      qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
 
       print('defining qpf from qpf1')
       qpf[itime] = qpf1*39.370079 # meters to inches
@@ -596,7 +810,7 @@ for t in thresh_use:
   exceed3d = np.where(np.greater_equal(ensemble_qpf/1.0,t),1,0)
   exceed_sum=np.sum(exceed3d)
   print('t, dx, max(ensemble_qpf): ', t, dx, np.max(ensemble_qpf))
-  optrad = calculate_eas_probability(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
+  optrad = calculate_eas_probability_para(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
   print('Time for optrad routine:', t4-t3)
   pnt_prob = calculate_pnt_probability (ensemble_qpf, t, p_smooth)
@@ -609,119 +823,15 @@ for t in thresh_use:
 #
   print('nm_use for final prob: ', nm_use)
 
-
   if exceed_sum > 0:
-
-    for row in range(nlats):
-      for column in range(nlons):
-        rad = (optrad[row,column]).astype(int)
-
-# assign the default radius footprint size to footprint_use
-
-        if (2.5 <= rad < 17.5):
-          footprint_use  =  float(np.sum(filter_footprint_10))
-        elif (17.5 <= rad < 32.5):
-          footprint_use  =  float(np.sum(filter_footprint_25))
-        elif (32.5 <= rad < 47.5):
-          footprint_use  =  float(np.sum(filter_footprint_40))
-        elif (47.5 <= rad < 62.5):
-          footprint_use  =  float(np.sum(filter_footprint_55))
-        elif (62.5 <= rad < 77.5):
-          footprint_use  =  float(np.sum(filter_footprint_70))
-        elif (77.5 <= rad < 92.5):
-          footprint_use  =  float(np.sum(filter_footprint_85))
-        elif (92.5 <= rad <= 100):
-          footprint_use  =  float(np.sum(filter_footprint_100))
-        elif (rad > 100):
-          footprint_use  =  float(np.sum(filter_footprint_100))
-
-
-        rdx=int(rad/dx)
-# now insert something to compute the smaller footprint_use if in proper row/colum using flexi?
-
-        if column < rdx:
-           footprint_orig=np.sum(footprint_use)
-           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-           if float(footprint_use)/float(footprint_orig) < 0.5:
-#            print 'W bound less than 0.5'
-              if row > rdx and row < nlats-1-rdx:
-#              print('column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-                footprint_use=int(0.51*footprint_orig)
-                print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-              if float(footprint_use)/float(footprint_orig) < 0.25:
-                print('corner boost')
-                footprint_use=int(0.26*footprint_orig)
-
-        if row < rdx:
-           footprint_orig=np.sum(footprint_use)
-           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-           if float(footprint_use)/float(footprint_orig) < 0.5:
-#            print 'S bound less than 0.5'
-              if column > rdx and column < nlons-1-rdx:
-#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-                footprint_use=int(0.51*footprint_orig)
-                print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-           if float(footprint_use)/float(footprint_orig) < 0.25:
-                print('corner boost')
-                footprint_use=int(0.26*footprint_orig)
-
-        if column > nlons-1-rdx:
-           footprint_orig=np.sum(footprint_use)
-           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-           if float(footprint_use)/float(footprint_orig) < 0.5:
-#            print 'E bound less than 0.5'
-              if row > rdx and row < nlats-1-rdx:
-#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-                footprint_use=int(0.51*footprint_orig)
-                print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-           if float(footprint_use)/float(footprint_orig) < 0.25:
-                print('corner boost')
-                footprint_use=int(0.26*footprint_orig)
-
-        if row > nlats-1-rdx:
-           footprint_orig=np.sum(footprint_use)
-           footprint_use = np.sum(get_footprint_flexi(rad,column,row,nlons,nlats))
-           if float(footprint_use)/float(footprint_orig) < 0.5:
-#            print 'N bound less than 0.5'
-              if column > rdx and column < nlons-1-rdx:
-#              print 'column, row, reduced, orig: ', column, row, footprint_use, footprint_orig
-                footprint_use=int(0.51*footprint_orig)
-                print('revised column, row, reduced, orig: ', column, row, footprint_use, footprint_orig)
-           if float(footprint_use)/float(footprint_orig) < 0.25:
-                print('corner boost')
-                footprint_use=int(0.26*footprint_orig)
-              
-
-
-        if (2.5 <= rad < 17.5):
-          probfinal[row,column] = prob[t,10][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (17.5 <= rad < 32.5):
-          probfinal[row,column] = prob[t,25][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (32.5 <= rad < 47.5):
-          probfinal[row,column] = prob[t,40][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (47.5 <= rad < 62.5):
-          probfinal[row,column] = prob[t,55][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (62.5 <= rad < 77.5):
-          probfinal[row,column] = prob[t,70][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (77.5 <= rad < 92.5):
-          probfinal[row,column] = prob[t,85][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (92.5 <= rad <= 100):
-          probfinal[row,column] = prob[t,100][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-        elif (rad > 100):
-          probfinal[row,column] = prob[t,100][row,column]
-          probfinal[row,column] = 100.0*probfinal[row,column] / float(footprint_use*nm_use)
-          optrad[row,column] = 0
-
+    probfinal, optrad = optimize_footprint_calculation(
+    optrad, prob, t, nm_use, nlats, nlons, dx,
+    filter_footprint_10, filter_footprint_25, filter_footprint_40,
+    filter_footprint_55, filter_footprint_70, filter_footprint_85,
+    filter_footprint_100, get_footprint_flexi)
   else:
-     print('sum of exceed3d was zero, so setting zero probfinal')
-     probfinal[:,:] = 0.0
+    print('sum of exceed3d was zero, so setting zero probfinal')
+    probfinal[:,:] = 0.0
 
 # slight smoothing of probfinal
   probfinal = ndimage.filters.gaussian_filter(probfinal,1)

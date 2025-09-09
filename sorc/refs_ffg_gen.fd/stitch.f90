@@ -214,7 +214,6 @@ RFC_LOOP:    DO II=1,12  ! loop over RFC regions
          maxval(gfld_full%fld)
 
 
-
 !! fill in some missing values (mostly or entirely water points??)
         do KK=1,3
 
@@ -232,17 +231,17 @@ RFC_LOOP:    DO II=1,12  ! loop over RFC regions
          endif
          enddo
 
-        do J=3+1473,nxny-2-1473
-
-        if ((gfld_full%bmap(J-1473).and.gfld_full%bmap(J+1473)).and. &
-            .not. gfld_full%bmap(J)) then
-         write(0,*) '2 - reset J to true: ',KK, J
-         gfld_full%bmap(J)=.true.
-         gfld_full%fld(J)=0.5*(gfld_full%fld(J-1473)+gfld_full%fld(J+1473))
-         write(0,*) '2 - defined gfld_full%fld: ', KK,J, gfld_full%fld(J)
-        endif
-
-         enddo
+!        do J=3+1799,nxny-2-1799
+!
+!        if ((gfld_full%bmap(J-1799).and.gfld_full%bmap(J+1799)).and. &
+!            .not. gfld_full%bmap(J)) then
+!         write(0,*) '2 - reset J to true: ',KK, J
+!         gfld_full%bmap(J)=.true.
+!         gfld_full%fld(J)=0.5*(gfld_full%fld(J-1799)+gfld_full%fld(J+1799))
+!         write(0,*) '2 - defined gfld_full%fld: ', KK,J, gfld_full%fld(J)
+!        endif
+!
+!         enddo
 
         do J=3,nxny-2
  

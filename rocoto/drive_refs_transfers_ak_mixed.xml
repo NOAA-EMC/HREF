@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!DOCTYPE workflow
+[
+
+<!ENTITY STARTYEAR "2023">
+<!ENTITY STARTMONTH "05">
+<!ENTITY STARTDAY "10">
+<!ENTITY STARTHOUR "12">
+
+<!ENTITY ENDYEAR "2025">
+<!ENTITY ENDMONTH "12">
+<!ENTITY ENDDAY "31">
+<!ENTITY ENDHOUR "12">
+
+<!ENTITY USER "emc.lam">
+<!ENTITY machine "WCOSS2">
+<!ENTITY ACCOUNT "RRFS-DEV">
+
+<!ENTITY HOMEfv3 "/lfs/h2/emc/lam/noscrub/emc.lam/enspost/refs.v1.0.0">
+<!ENTITY JOBS "&HOMEfv3;/rocoto">
+<!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;">
+<!ENTITY COMOUT_ENSPOST "/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0">
+<!ENTITY NWGES "/lfs/h2/emc/ptmp/emc.lam/rrfs/ak/nwges">
+
+<!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
+
+<!ENTITY SEND_NODES '1:ppn=1'>
+<!ENTITY SEND_RESOURCES '<walltime>04:40:00</walltime>'>
+<!ENTITY FHRS "01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
+
+]>
+
+
+<!--  ************************************************************* -->
+<!--  ******************* STARTING THE WORKFLOW ******************* -->
+
+<workflow realtime="T" scheduler="pbspro" taskthrottle="2" cyclethrottle="10" cyclelifespan="00:32:00:00">
+
+  <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
+
+  <log>
+    <cyclestr>&OUTDIR;/logfiles/workflow_regional_@Y@m@d@H.log</cyclestr>
+  </log>
+
+
+<!-- ******************************************************************* -->
+<!-- ************************* Transfer Jobs *************************** -->
+
+
+<!-- ****** AWS transfer - enspost                   ****** -->
+
+  <task name="count_files" cycledefs="regional" maxtries="12">
+    &RESERVATION_TRANSFER;
+    &SEND_RESOURCES;
+
+    <command>&JOBS;/launch.sh &JOBS;/JRRFS_COUNT_DOM</command>
+    <nodes>&SEND_NODES;</nodes>
+    <jobname><cyclestr>count_files_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles/count_files_ak_@H.log</cyclestr></join>  
+
+    <envar><name>job</name><value>count_files</value></envar>
+    <envar><name>machine</name><value>&machine;</value></envar>
+    <envar><name>USER</name><value>&USER;</value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>DOM</name><value>ak</value></envar>
+
+    <dependency>
+        <and>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f51.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f51.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f48.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f48.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f24.grib2</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f24.grib2</cyclestr></datadep>
+        </and>
+    </dependency>
+
+  </task>
+
+<metatask name="send_enspost_aws">
+  <var name="fhr">&FHRS;</var>
+  <task name="send_enspost_f#fhr#" cycledefs="regional" maxtries="3">
+
+    &RESERVATION_TRANSFER;
+    &SEND_RESOURCES;
+
+    <command>&JOBS;/launch.sh &JOBS;/JRRFSA_SENDENSPOST_AWS_TL_DOM_byhour</command>
+    <nodes>&SEND_NODES;</nodes>
+    <jobname><cyclestr>send_enspostaws_single_tl_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles/send_enspostaws_single_tl_ak_@H_f#fhr#.log</cyclestr></join>  
+
+    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
+    <envar><name>job</name><value>sendpostaws_tl</value></envar>
+    <envar><name>machine</name><value>&machine;</value></envar>
+    <envar><name>USER</name><value>&USER;</value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>tmmark</name><value>tm00</value></envar>
+    <envar><name>DOM</name><value>ak</value></envar>
+    <envar><name>fhr</name><value>#fhr#</value></envar>
+
+    <dependency>
+        <and>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.pmmn.f#fhr#.grib2</cyclestr></datadep>
+          <datadep age="04:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.mean.f#fhr#.grib2</cyclestr></datadep>
+        </and>
+    </dependency>
+
+  </task>
+</metatask>
+
+
+  <task name="mirror_enspost_tl" cycledefs="regional" maxtries="1">
+    &RESERVATION_TRANSFER;
+    &SEND_RESOURCES;
+
+    <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_DOM</command>
+    <nodes>&SEND_NODES;</nodes>
+    <jobname><cyclestr>mirror_enspost_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles/mirror_enspost_ak_@H.log</cyclestr></join>  
+
+    <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
+    <envar><name>job</name><value>mirror_enspost</value></envar>
+    <envar><name>machine</name><value>&machine;</value></envar>
+    <envar><name>USER</name><value>&USER;</value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>tmmark</name><value>tm00</value></envar>
+    <envar><name>DOM</name><value>ak</value></envar>
+
+    <dependency>
+        <and>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f60.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.eas.f36.grib2</cyclestr></datadep>
+          <datadep age="07:00"><cyclestr>&COMOUT_ENSPOST;/refs.@Y@m@d/ensprod/refs.t@Hz.ak.prob.f36.grib2</cyclestr></datadep>
+          <taskdep task="count_files"/>
+        </and>
+    </dependency>
+
+  </task>
+
+
+</workflow>
