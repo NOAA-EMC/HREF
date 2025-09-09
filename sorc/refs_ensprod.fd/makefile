@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#  This makefile is to compile ensembel production generator
+#  This makefile is to compile ensemble production generator
 #  Author: Binbin Zhou
 #          Aug 1, 2005
 #  OS: Linux (on WCOSS)
