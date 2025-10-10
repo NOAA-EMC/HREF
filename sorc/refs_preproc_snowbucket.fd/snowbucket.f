@@ -2,13 +2,11 @@
 
 !       Special program to get 1-h and 3-h snow from FV3SAR instantaneous WEASD
 
-
         USE GRIB_MOD
 
         real, allocatable :: pdiff(:,:)
 
         integer :: ihrs1, ihrs2,reset_flag
-
         integer :: mm,nn,oo,m,n,JPDTN_USE
 	character(len=2), dimension(2):: hrs
         integer :: is_hrrr
@@ -18,10 +16,8 @@
 	character(len=150):: filename
 	character(len=1):: reflag
 
-
         read(5,FMT='(A)') dirname
         read(5,FMT='(A)') filename
-
         read(5,FMT='(A)') hrs(1)
         read(5,FMT='(A)') hrs(2)
         read(5,FMT='(I1)') reset_flag
@@ -31,12 +27,10 @@
 
         allocate(pdiff(im,jm))
 
-
         write(0,*) 'read reset_flag: ', reset_flag
 
         n=index(dirname,' ')-1
         m=index(filename,' ')-1
-
 
 	I=2
 	
@@ -50,7 +44,6 @@
 	interv=ihrs2-ihrs1
 
         write(*,*) 'ihrs1, ihrs2: ', ihrs1, ihrs2
-
 	
 	if (interv .eq. 3) then
 	  testout= dirname(1:n)//'/PCP3HR'//HRS(I)//'.tm00'
@@ -227,7 +220,6 @@ C grib2
         call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
      &     UNPACK,K,GFLD,IRET)
 
-
 	if (IRET .ne. 0 .and.  ihrs2 .eq. 1) then
            write(*,*) 'set 1 h asnow_earlier to zero'
            asnow_earlier=0.
@@ -396,7 +388,6 @@ C grib2
 	fzprecip(NPT)=max(fz_later(NPT)-fz_earlier(NPT),0.0)
         endif
 
-
 	if (NPT .eq. 1) then
 	write(*,*) 'creating asnowprecip field'
         endif
@@ -503,7 +494,7 @@ C grib2
         gfld_qpf%ipdtmpl(29)=0
 
         gfld_qpf%fld=sprecip
-	write(0,*) 'use gfld_qpf%idrtmpl(1:10): ', gfld_qpf%idrtmpl(1:10)
+	write(0,*) 'use gfld_qpf%idrtmpl(1:5): ', gfld_qpf%idrtmpl(1:5)
 
         elseif (gfld%ipdtnum .eq. 11) then
 
@@ -562,7 +553,8 @@ C grib2
         gfld_qpf%ipdtmpl(32)=0
 
         gfld_qpf%fld=sprecip
-	write(0,*) 'use gfld_qpf%idrtmpl(1:10): ', gfld_qpf%idrtmpl(1:10)
+	write(0,*) 'use gfld_qpf%idrtmpl(1:5): ', gfld_qpf%idrtmpl(1:5)
+	write(0,*) 'max(sprecip): ', maxval(sprecip)
 
         endif
 
@@ -571,7 +563,7 @@ C grib2
 
       IBM=0
       IBITM = 0
-      gfld_qpf%idrtmpl(3)=5.0
+!      gfld_qpf%idrtmpl(3)=5.0
       SGDS  = gfld%idrtmpl(3)
 
 !     set bitmap
@@ -598,10 +590,15 @@ C grib2
 !      write(0,*) 'GMIN,GMAX: ', GMIN,GMAX
 
 
+	if (NBIT .gt. 23) then
+	write(0,*) 'NBIT was: ', NBIT
+		NBIT=23
+        endif
 
         gfld_qpf%idrtmpl(4)=NBIT
 
-	write(0,*) 'WEASD use gfld%idrtmpl(1:10): ', gfld%idrtmpl(1:10)
+	write(0,*) 'WEASD use gfld_qpf%idrtmpl(1:5): ', 
+     &                        gfld_qpf%idrtmpl(1:5)
 
         if (is_hrrr .eq. 0) then
 	call putgb2(13,GFLD_QPF,IRET)
@@ -646,7 +643,7 @@ C grib2
 
         gfld_qpf%idrtmpl(4)=NBIT
 
-	write(0,*) 'use gfld%idrtmpl(1:10): ', gfld%idrtmpl(1:10)
+	write(0,*) 'use gfld%idrtmpl(1:5): ', gfld%idrtmpl(1:5)
 
 	call putgb2(13,GFLD_QPF,IRET)
         write(0,*) 'IRET from putgb2 for asnowprecip ', IRET
@@ -694,7 +691,7 @@ C grib2
 
         gfld_qpf%idrtmpl(4)=NBIT
 
-	write(0,*) 'use gfld%idrtmpl(1:10): ', gfld%idrtmpl(1:10)
+	write(0,*) 'use gfld%idrtmpl(1:5): ', gfld%idrtmpl(1:5)
 
 	call putgb2(13,GFLD_QPF,IRET)
         write(0,*) 'IRET from putgb2 for fzprecip ', IRET
