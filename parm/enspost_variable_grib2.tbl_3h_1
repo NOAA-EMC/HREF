@@ -1,6 +1,4 @@
-  19      row variables and mean/spread/prob info
-REFC  16   5 200 P1 0    A1  0   > A5 10 20 30 40 50
-ETOP  16   3 200 P1  0 A1  0   > A5 6096 9144 10668 12192 15240
+  17      row variables and mean/spread/prob info
 MXUPHL 7  199 103 P1  5000 A1 5000 > A3 25 75 150
 MXUV   2 220 100 M0    P1 100  > A3 1 10 20
 MUCP  7  6  108  M2  9000 18000 P1 9000 > T5 500 1000 1500 2000 3000
