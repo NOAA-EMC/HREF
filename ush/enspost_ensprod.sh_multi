@@ -283,7 +283,7 @@ if [ $SENDCOM = YES ]; then
  echo done > $DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_${subtype}
 
 
- loops=30
+ loops=60
  loop=1
  filea=$DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_1
  fileb=$DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_2
@@ -301,7 +301,7 @@ then
  loop=$loops
  else
  echo still waiting for another DONE file
- sleep 20
+ sleep 10
  let loop=loop+1
  fi
 

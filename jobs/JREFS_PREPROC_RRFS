@@ -1,7 +1,6 @@
 
 #!/bin/bash
 
-
 #############################################################
 # 02/02/2015 Binbin Zhou, create for run all scripts 
 # 08/11/2022 Jun Du, added a variable "region"
@@ -59,7 +58,6 @@ echo here with DATA $DATA
 echo here with DATAROOT $DATAROOT
 
 export pid=$$
-
 # export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
 export DATA=${DATA:-${DATAROOT}/${jobid}}
 echo now have DATA $DATA
@@ -79,7 +77,6 @@ echo FHR1 is $FHR1
 else
 FHR1=$fhr
 fi
-
 
 cd $DATA
 
@@ -165,7 +162,6 @@ hr=$fhr
 # hrlist="$hrold3 $hrold2 $hrold1 $fhr"
 # hrlist="$fhr"
 
-
 mems="01 02 03 04 05 06"
 
 region=${NEST}
@@ -238,59 +234,9 @@ export err=$?; err_chk
 fi
 fi # check on FHR1 gt 0
 
-if [ $mem = 01 ]; then name=00; fi
-if [ $mem = 02 ]; then name=01; fi
-if [ $mem = 03 ]; then name=02; fi
-if [ $mem = 04 ]; then name=03; fi
-if [ $mem = 05 ]; then name=04; fi
-if [ $mem = 06 ]; then name=05; fi
-if [ $mem = 07 ]; then name=00; fi
-if [ $mem = 08 ]; then name=01; fi
-if [ $mem = 09 ]; then name=02; fi
-if [ $mem = 10 ]; then name=03; fi
-if [ $mem = 11 ]; then name=04; fi
-if [ $mem = 12 ]; then name=05; fi
-fi
-
-#
-
- if [ $type = timelag ]; then
-  if [ $mem = 07 -o $mem = 08 -o $mem = 09 -o $mem = 10 -o $mem = 11 -o $mem = 12 ];then
-   backdate=`$ndate -06 $PDY$cyc`
-   backday=`echo $backdate | cut -c1-8`
-   backcyc=`echo $backdate | cut -c9-10`
-  echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${backday} ${backcyc} ${mem} ${name}" >> poe.3hqpf.tlb
-  else
-   echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
-  fi 
- else
-  echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name}" >> poe.3hqpf
- fi
-
-done
-
-nproc=`cat poe.3hqpf | wc -l`
-
-chmod 775 poe.3hqpf
-
-# mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf
-mpiexec -n $nproc -ppn 2 --cpu-bind verbose,core cfp ./poe.3hqpf
-export err=$?; err_chk
-
-if [ -e poe.3hqpf.tlb ]
-then
-
-nproc=`cat poe.3hqpf.tlb | wc -l`
-chmod 775 poe.3hqpf.tlb
-mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf.tlb
-export err=$?; err_chk
-
-fi
-
 # end QPF
 
 cd $DATAROOT
 if [ $KEEPDATA = NO -a $hr -eq '60' ]; then rm -rf $DATA; fi
-
 
 date
