@@ -1,8 +1,9 @@
 #! /bin/sh
 
-export ip_ver=3.3.3
+export ip_ver=5.0.0
 export bacio_ver=2.4.1
 export w3nco_ver=2.4.1
+export w3emc_ver=2.12.0
 export g2_ver=3.4.4
 export g2tmpl_ver=1.15.0
 export jasper_ver=2.0.25
