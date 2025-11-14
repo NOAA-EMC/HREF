@@ -29,7 +29,6 @@ A24R   1 8     1 M0     A1  0   > A7 1 2 5 10 25 50 100
 
   0        No mxp computation for NSSE
 
-FOG   6 193    1 M0  P1  1  =  T1  1.0
 A1RI   1 8     1 M0     A1  0   > A4 2 5 10 100
 A3RI   1 8     1 M0     A1  0   > A4 2 5 10 100
 A6RI   1 8     1 M0     A1  0   > A4 2 5 10 100

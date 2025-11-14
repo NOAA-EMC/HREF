@@ -49,6 +49,7 @@ module load zlib/${zlib_ver}
 module load cfp/${cfp_ver}
 module load python/${python_ver}
 module load libjpeg/${libjpeg_ver}
+module load libjpeg-turbo/${libjpegturbo_ver}
 module load grib_util/${grib_util_ver}
 module load gempak/${gempak_ver}
 

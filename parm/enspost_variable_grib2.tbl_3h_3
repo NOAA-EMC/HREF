@@ -22,7 +22,6 @@ FZ24   1 225   1 M0     K1  0   > K5 0.254 2.54 6.35 12.7 25.4
 
   0        No mxp computation for NSSE
 
-FOG   6 193    1 M0  P1  1  =  T1  1.0
 A1RI   1 8     1 M0     A1  0   > A4 2 5 10 100
 A3RI   1 8     1 M0     A1  0   > A4 2 5 10 100
 A6RI   1 8     1 M0     A1  0   > A4 2 5 10 100
