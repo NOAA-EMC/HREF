@@ -32,10 +32,10 @@ source /lfs/h2/emc/lam/noscrub/emc.lam/enspost/refs.v1.0.0/versions/run.ver
 
 module load prod_envir/2.0.6
 module load cfp/2.0.4
-module load PrgEnv-intel/8.1.0
-module load craype/2.7.13
+module load PrgEnv-intel/8.5.0
+module load craype/2.7.17
 module load intel/19.1.3.304
-module load cray-mpich/8.1.12
+module load cray-mpich/8.1.9
 module load cray-pals/1.0.12
 
 module load prod_util/${prod_util_ver}
