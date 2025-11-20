@@ -307,13 +307,129 @@
 
     <dependency>
     <and>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="30000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf48.ak.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="30000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf12.ak.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="30000000"><cyclestr>&COMINhrrr;.@Y@m@d/alaska/hrrr.t@Hz.wrfprsf36.ak.grib2</cyclestr></datadep>
     </and>
     </dependency>
 
   </task>
+
+<!--  *******************************************************************  -->
+<!--  ********************** Run the main EAS piece *************************  -->
+
+
+ <metatask name="eas_gen">
+  <var name="fhr">&FHRS;</var>
+  <task name="eas_gen_#fhr#" cycledefs="regional" maxtries="2">
+    &RESERVATION;
+    &EAS_RESOURCES;
+    <nodes>1:ppn=24</nodes>
+      <command>&PRE; &JOBS;/JREFS_EAS</command>
+      <jobname><cyclestr>easgen_&TYPE;_&PHYS;_&domain;_@Hz_#fhr#</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_&TYPE;_&PHYS;_&domain;@H_#fhr#.log</cyclestr></join>
+   
+    <envar>
+      <name>NODES</name>
+      <value>1</value>
+    </envar>
+    <envar>
+      <name>NTASK</name>
+      <value>12</value>
+    </envar>
+    <envar>
+      <name>PTILE</name>
+      <value>12</value>
+    </envar>
+
+    <envar>
+     <name>type</name>
+     <value>&TYPE;</value>
+    </envar>
+
+    <envar><name>fhr</name><value>#fhr#</value></envar>
+
+      <envar>
+        <name>HOMErefs</name>
+        <value>&HOMErefs;</value>
+      </envar>
+      <envar>
+        <name>job</name>
+        <value>eas_gen_&TYPE;_&PHYS;_&domain;</value>
+      </envar>
+      <envar>
+        <name>machine</name>
+        <value>&machine;</value>
+      </envar>
+      <envar>
+        <name>USER</name>
+        <value>&USER;</value>
+      </envar>
+      <envar>
+        <name>CDATE</name>
+        <value><cyclestr>@Y@m@d@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>PDY</name>
+        <value><cyclestr>@Y@m@d</cyclestr></value>
+      </envar>
+      <envar>
+        <name>cyc</name>
+        <value><cyclestr>@H</cyclestr></value>
+      </envar>
+      <envar>
+       <name>NEST</name>
+       <value>&domain;</value>
+      </envar>
+    <envar>
+     <name>dom</name>
+     <value>&domain;</value>
+    </envar>
+    <envar>
+     <name>MYCOMROOT</name>
+     <value>&MYCOMROOT; </value>
+    </envar>
+
+    <envar>
+     <name>COMROOT</name>
+     <value>&COMROOT;</value>
+    </envar>
+
+    <envar>
+      <name>COMINrefs</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>COMINhrrr</name>
+      <value>&COMINall;</value>
+    </envar>
+
+    <envar>
+      <name>DATAROOT</name>
+      <value>&DATAROOT;</value>
+    </envar>
+    <envar>
+      <name>KEEPDATA</name>
+      <value>&KEEPDATA;</value>
+    </envar>
+    <envar>
+      <name>envir</name>
+      <value>&envir;</value>
+    </envar>
+    <envar><name>jobid</name><value>refs_qpfeasfrac_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
+
+
+      <dependency>
+        <and>
+       <taskdep task="preproc_fv3_f#fhr#"/>
+       <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
+       <taskdep task="preproc_hrrr"/>
+       <taskdep task="preproc_hrrr" cycle_offset="-6:00:00"/>
+       </and>
+      </dependency>
+  </task>
+</metatask>
 
 
 <!--  ***********************************************************************  -->
@@ -437,122 +553,6 @@
      </and>
     </dependency>
 
-  </task>
-</metatask>
-
-<!--  *******************************************************************  -->
-<!--  ********************** Run the main EAS piece *************************  -->
-
-
- <metatask name="eas_gen">
-  <var name="fhr">&FHRS;</var>
-  <task name="eas_gen_#fhr#" cycledefs="regional" maxtries="2">
-    &RESERVATION;
-    &EAS_RESOURCES;
-    <nodes>1:ppn=24</nodes>
-      <command>&PRE; &JOBS;/JREFS_EAS</command>
-      <jobname><cyclestr>easgen_&TYPE;_&PHYS;_&domain;_@Hz_#fhr#</cyclestr></jobname>
-      <join><cyclestr>&OUTDIR;/logfiles_refs/eas_gen_&TYPE;_&PHYS;_&domain;@H_#fhr#.log</cyclestr></join>
-   
-    <envar>
-      <name>NODES</name>
-      <value>1</value>
-    </envar>
-    <envar>
-      <name>NTASK</name>
-      <value>12</value>
-    </envar>
-    <envar>
-      <name>PTILE</name>
-      <value>12</value>
-    </envar>
-
-    <envar>
-     <name>type</name>
-     <value>&TYPE;</value>
-    </envar>
-
-    <envar><name>fhr</name><value>#fhr#</value></envar>
-
-      <envar>
-        <name>HOMErefs</name>
-        <value>&HOMErefs;</value>
-      </envar>
-      <envar>
-        <name>job</name>
-        <value>eas_gen_&TYPE;_&PHYS;_&domain;</value>
-      </envar>
-      <envar>
-        <name>machine</name>
-        <value>&machine;</value>
-      </envar>
-      <envar>
-        <name>USER</name>
-        <value>&USER;</value>
-      </envar>
-      <envar>
-        <name>CDATE</name>
-        <value><cyclestr>@Y@m@d@H</cyclestr></value>
-      </envar>
-      <envar>
-        <name>PDY</name>
-        <value><cyclestr>@Y@m@d</cyclestr></value>
-      </envar>
-      <envar>
-        <name>cyc</name>
-        <value><cyclestr>@H</cyclestr></value>
-      </envar>
-      <envar>
-       <name>NEST</name>
-       <value>&domain;</value>
-      </envar>
-    <envar>
-     <name>dom</name>
-     <value>&domain;</value>
-    </envar>
-    <envar>
-     <name>MYCOMROOT</name>
-     <value>&MYCOMROOT; </value>
-    </envar>
-
-    <envar>
-     <name>COMROOT</name>
-     <value>&COMROOT;</value>
-    </envar>
-
-    <envar>
-      <name>COMINrefs</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>COMINhrrr</name>
-      <value>&COMINall;</value>
-    </envar>
-
-    <envar>
-      <name>DATAROOT</name>
-      <value>&DATAROOT;</value>
-    </envar>
-    <envar>
-      <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
-    </envar>
-    <envar>
-      <name>envir</name>
-      <value>&envir;</value>
-    </envar>
-    <envar><name>jobid</name><value>refs_qpfeasfrac_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
-
-
-      <dependency>
-        <and>
-       <taskdep task="preproc_fv3_f#fhr#"/>
-       <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
-       <taskdep task="preproc_hrrr"/>
-       <taskdep task="preproc_hrrr" cycle_offset="-6:00:00"/>
-       </and>
-      </dependency>
   </task>
 </metatask>
 
