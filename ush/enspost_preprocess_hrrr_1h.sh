@@ -13,18 +13,16 @@
 
 set -x
 
-if [ $# -ne 6 ]
+if [ $# -ne 4 ]
 then
-echo "FATAL ERROR: need 6 arguments, day,cycle,member,member file name,forecast hour,and domain"
+echo "FATAL ERROR: need 4 arguments, day,cycle,forecast hour,and domain"
 exit
 fi
 
 PDY=${1}
 cyc=${2}
-mem=${3}
-name=${4}
-hr=${5}
-NEST=${6}
+hr=${3}
+NEST=${4}
 JPDTN=8
 
 
@@ -275,4 +273,3 @@ $WGRIB2 ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"
          err_exit $msg
 
         fi
-

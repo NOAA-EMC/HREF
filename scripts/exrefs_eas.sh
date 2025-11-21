@@ -3,7 +3,6 @@ set -x
 cd $DATA
 
 #export fhr=$1
-export type=$1
 
 echo "$0 STRDATE "`date`
 
@@ -29,7 +28,7 @@ fi
 
 if [ $((10#$fhr)) -ge 24 -a $((10#$fhr%3)) -eq 0 ]
 then
-echo "cd ${DATA}; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 24 >  qpf_combo_${dom}_${cyc}_24h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 24 >  qpf_combo_${dom}_${cyc}_24h_${fhr}.log" >> poe.qpf_snow_${fhr}
 fi
 
 # done
@@ -42,8 +41,8 @@ fi
 
 if [ $((10#$fhr)) -ge 6 -a $((10#$fhr%3)) -eq 0 ]
 then
-echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 6 > qpf_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow_${fhr}
-echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHrefs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 6 > qpf_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHrefs}/enspost_make_easfracsnow_combo.py ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow_${fhr}
 fi
 
 # done
@@ -52,19 +51,19 @@ fi
 if [ $((10#$fhr)) -ge 12 -a $((10#$fhr%3)) -eq 0 ]
 then
 
-echo "cd ${DATA}; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 12 >  qpf_combo_${dom}_${cyc}_12h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 12 >  qpf_combo_${dom}_${cyc}_12h_${fhr}.log" >> poe.qpf_snow_${fhr}
 fi
 
 
 # need full list for this 3 h product (all 3 hourly from 3 onward?)
 if [ $((10#$fhr)) -ge 3 -a $((10#$fhr%3)) -eq 0 ]
 then
-echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 3  > qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow_${fhr}
-echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHrefs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 3 > snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 3  > qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir snow_${fhr}_3; cd snow_${fhr}_3; python ${USHrefs}/enspost_make_easfracsnow_combo.py ${fhr} 3 > snow_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow_${fhr}
 fi
 
-echo "cd ${DATA}; mkdir qpf_${fhr}_1; cd qpf_${fhr}_1 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py_${type} ${fhr} 1 > qpf_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow_${fhr}
-echo "cd ${DATA}; mkdir snow_${fhr}_1; cd snow_${fhr}_1; python ${USHrefs}/enspost_make_easfracsnow_combo.py_${type} ${fhr} 1 >  snow_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir qpf_${fhr}_1; cd qpf_${fhr}_1 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 1 > qpf_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow_${fhr}
+echo "cd ${DATA}; mkdir snow_${fhr}_1; cd snow_${fhr}_1; python ${USHrefs}/enspost_make_easfracsnow_combo.py ${fhr} 1 >  snow_combo_${dom}_${cyc}_1h_${fhr}.log" >> poe.qpf_snow_${fhr}
 
 
 chmod 775 poe.qpf_snow_${fhr}
