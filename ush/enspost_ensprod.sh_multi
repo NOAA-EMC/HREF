@@ -32,7 +32,7 @@ dd=`echo ${PDY} | cut -c 7-8`
 ff=$fhr
 dom=${NEST}
 
-subtype=${3}
+subtype=${2}
 
 mkdir -p $DATA/${ff}/${subtype}
 
