@@ -20,12 +20,6 @@ date
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 
-# temp - need a better option
-# if [ $fhr -eq '01' ]
-# then
-# rm -rf $DATA/*
-# fi
-
 cd $DATA
 
 msg="JOB $job HAS BEGUN"
@@ -96,19 +90,9 @@ export pgmout="OUTPUT.$$"
 ###################################################
 # Execute the Script exrefs_ensprod.sh.ecf
 
-# if [ -e ./poe.* ]
-# then
-# rm -rf ./poe.*
-# fi
 
-# echo "$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $fhr $type" > poe.link.${fhr}
-# echo "$SCRIPTSrefs/exrefs_ensprod.sh.ecf $fhr $type" > poe.ensprod.${fhr}
-
-
-$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $fhr $type
-
-
-$SCRIPTSrefs/exrefs_ensprod.sh.ecf $fhr $type
+$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $fhr
+$SCRIPTSrefs/exrefs_ensprod.sh.ecf $fhr
 
 
 msg="JOB $job HAS COMPLETED NORMALLY."

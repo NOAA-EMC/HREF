@@ -31,7 +31,6 @@ dd=`echo ${PDY} | cut -c 7-8`
 
 ff=$fhr
 dom=${NEST}
-type=${type}
 
 subtype=${3}
 
@@ -124,31 +123,24 @@ else
 fi
 
 set -A file  $files
-if [ $type = single ];then
- days="12 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY"
- cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc"
- ages="12  0    0    0    0    0    0    0    0    0    0    0    0"
- mbrs="1  2  3  4  5  6  7  8  9 10"
+backdate=`$ndate -06 $PDY$cyc`
+backday=`echo $backdate | cut -c1-8`
+backcyc=`echo $backdate | cut -c9-10`
+
+if [ $dom = 'conus' -o $dom = 'ak' ]
+then
+  days="14 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $PDY $backday"
+  cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $cyc $backcyc"
+  ages="14  0    0    0    0    0    0     6    6    6    6    6    6   0   6"
 else
- backdate=`$ndate -06 $PDY$cyc`
- backday=`echo $backdate | cut -c1-8`
- backcyc=`echo $backdate | cut -c9-10`
-
- if [ $dom = 'conus' -o $dom = 'ak' ]
- then
-   days="14 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $PDY $backday"
-   cycs="14 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc $cyc $backcyc"
-   ages="14  0    0    0    0    0    0     6    6    6    6    6    6   0   6"
- else
-   days="12 $PDY $PDY $PDY $PDY $PDY $PDY  $backday $backday $backday $backday $backday $backday"
-   cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc  $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
-   ages="12  0    0    0    0    0    0     6    6    6    6    6    6"
- fi
-
+  days="12 $PDY $PDY $PDY $PDY $PDY $PDY  $backday $backday $backday $backday $backday $backday"
+  cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc  $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
+  ages="12  0    0    0    0    0    0     6    6    6    6    6    6"
 fi
 
- if [ $dom = 'conus' -o $dom = 'ak' ]
- then
+
+if [ $dom = 'conus' -o $dom = 'ak' ]
+then
 
 if [ $fhr -le 42 ];then
  mbrs="1  2  3  4  5  6  7  8  9  10  11  12 13 14"
@@ -167,8 +159,6 @@ if [ $ff -le 54 ];then
 else
  mbrs="1  2  3  4  5  6"
 fi
-
-#try fi
 
 fi
 set -A  day  $days

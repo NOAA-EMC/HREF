@@ -16,7 +16,6 @@ set -x
 cd $DATA
 
 export fhr=$1
-export type=$2
 
 echo "$0 STRDATE "`date`
 
@@ -33,26 +32,19 @@ echo running on $location
 
 if [ ${NEST} = "hi" -o ${NEST} = "pr" ]
 then
-# $USHrefs/enspost_ensprod.sh ${NEST} $type
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 1" > ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 2" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 3" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 4" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 1" > ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 2" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 3" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 4" >> ./poe.${fhr}
 chmod 775 ${DATA}/poe.${fhr}
 mpiexec -n 4 -ppn 4 --cpu-bind verbose,core cfp ${DATA}/poe.${fhr}
 
 else
 
-# let all ak/conus ones use this approach
-
-# if [ $((10#$fhr%3)) -eq 0 ]
-# then
-# only use multi for 3-hourly large domains
-
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 1" > ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 2" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 3" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} $type 4" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 1" > ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 2" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 3" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 4" >> ./poe.${fhr}
 chmod 775 ${DATA}/poe.${fhr}
 mpiexec -n 4 -ppn 4 --cpu-bind verbose,core cfp ${DATA}/poe.${fhr}
 err=$?
@@ -62,13 +54,7 @@ then
 echo "some kind of failure with err $err"
 fi
 
-## ./poe.${fhr}
-# else
-# $USHrefs/enspost_ensprod.sh ${NEST} $type
-# fi
-
 fi
-
 
 #####################################################################
 # GOOD RUN
