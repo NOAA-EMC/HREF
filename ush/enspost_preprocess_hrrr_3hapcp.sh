@@ -11,9 +11,9 @@
 
 set -x
 
-if [ $# -ne 5 ]
+if [ $# -ne 3 ]
 then
-echo need 4 inputs: dom, day, cyc
+echo need 3 inputs: dom, day, cyc
 exit
 fi
 
