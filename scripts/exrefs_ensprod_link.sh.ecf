@@ -24,7 +24,6 @@ location=`hostname`
 echo running on $location
 
 export fhr=${1}
-export type=${2}
 
 
 # clean up old if needed
@@ -78,7 +77,7 @@ echo NEST is $NEST
 
 echo "DONE" > $DATA/ensprepstart.${fhr}
 
-$USHrefs/enspost_getmbr.sh $fhr $NEST $type
+$USHrefs/enspost_getmbr.sh $fhr $NEST 
 err=$?
 
 if [ $err -eq 0 ]

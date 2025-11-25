@@ -4,6 +4,7 @@
 # Preliminary data setup step
 #
 # 05/01/2023, Jun Du: added a timelag version (type=timelag, single)
+# 11/21/2025, M. Pyle: eliminated generality to focus on timelag version.
 #
 ########################################
 set -xa
@@ -74,7 +75,7 @@ export pgmout="OUTPUT.$$"
 ########################################################
 # Execute the script.
 
-$HOMErefs/scripts/exrefs_eas.sh $type
+$HOMErefs/scripts/exrefs_eas.sh
 ########################################################
 
 msg="JOB $job HAS COMPLETED NORMALLY."

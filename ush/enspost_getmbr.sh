@@ -23,7 +23,6 @@ typeset -Z2 m
 
 fhr=$1
 dom=${2}
-type=${3}
 
 looplim=40
 sleeptime=9
@@ -56,16 +55,10 @@ else
    err_exit $msg
 fi
 
-if [ $type = single ];then
- days="12 $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY $PDY"
- cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc $cyc"
- ages="12  0    0    0    0    0    0    0    0    0    0    0    0"
- nams="12 m01 m02 m03 m04 m05 m06 m07 m08 m09 m10 m11 m12" 
- mbrs="1  2  3  4  5  6  7  8  9 10" 
-else
- backdate=`$ndate -06 $PDY$cyc`
- backday=`echo $backdate | cut -c1-8`
- backcyc=`echo $backdate | cut -c9-10`
+backdate=`$ndate -06 $PDY$cyc`
+backday=`echo $backdate | cut -c1-8`
+backcyc=`echo $backdate | cut -c9-10`
+
 if [ $dom = 'conus' -o $dom = 'ak' ]
 then
  days="14 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday $PDY $backday"
@@ -86,9 +79,8 @@ else
   mbrs="1  2  3  4  5  6" 
  fi
 
-else
+else # without HRRR members
 
-	echo not single and not conus or ak
 
  days="12 $PDY $PDY $PDY $PDY $PDY $PDY $backday $backday $backday $backday $backday $backday"
  cycs="12 $cyc $cyc $cyc $cyc $cyc $cyc $backcyc $backcyc $backcyc $backcyc $backcyc $backcyc"
@@ -100,7 +92,6 @@ else
   mbrs="1  2  3  4  5  6" 
  fi
 
-fi
 fi
 
 set -A file  $files
@@ -165,7 +156,7 @@ echo made it to conus fv3 check
 	      echo working CONUS FV3
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
+
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
          filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo filecheck00 is $filecheck00
@@ -177,11 +168,6 @@ echo made it to conus fv3 check
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
-       else
-        filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
       fi
 
         filecheck=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
@@ -260,7 +246,6 @@ typeset -Z2 fcheckloc
 	      echo working REFS
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
          filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo filecheck00 is $filecheck00
@@ -272,11 +257,6 @@ typeset -Z2 fcheckloc
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
-       else
-        filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
       fi
 
         filecheck=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
@@ -379,7 +359,6 @@ typeset -Z2 fcheckloc
 # need a filecheck00 block for HRRR
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
         if [ $m = 14  ];then
          filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
 	 echo filecheck00 is $filecheck00
@@ -390,11 +369,6 @@ typeset -Z2 fcheckloc
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
-       else
-        filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
       fi
     
         filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
@@ -460,7 +434,6 @@ typeset -Z2 fcheckloc
         echo "in HRRRAK block"
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
         if [ $m = 14  ];then
          filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
 	 echo filecheck00 is $filecheck00
@@ -471,11 +444,6 @@ typeset -Z2 fcheckloc
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
-       else
-        filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
       fi
         filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
 
@@ -539,8 +507,6 @@ typeset -Z2 fcheckloc
        if [ $fcst -le 60 ] ; then
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
-
         if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
          filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
@@ -552,11 +518,6 @@ typeset -Z2 fcheckloc
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
-       else
-        filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
       fi
  
         filecheck=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
@@ -633,8 +594,6 @@ typeset -Z2 fcheckloc
 # hifv3s prfv3s akfv3s
 
       if [  $ff -eq 01  ] ; then
-       if [ $type = 'timelag' ];then
-
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
          filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
@@ -646,11 +605,6 @@ typeset -Z2 fcheckloc
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
-       else
-        filecheck00=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
-        ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
-        ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
-       fi
       fi
  
         filecheck=${COMINrefs}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2

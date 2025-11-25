@@ -11,9 +11,9 @@
 
 set -x
 
-if [ $# -ne 5 ]
+if [ $# -ne 3 ]
 then
-echo need 4 inputs: dom, day, cyc, mem, and file name
+echo need 3 inputs: dom, day, cyc
 exit
 fi
 
@@ -21,8 +21,6 @@ fi
 NEST=${1}
 PDY=${2}
 cyc=${3}
-mem=${4}
-name=${5}
 
 hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48" 
 
