@@ -66,14 +66,14 @@ TCODE=R
 cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf${hr}
 
 # hrs="13 14 16 17 19 20 22 23 25 26 28 29 31 32 34 35"
-hrs="19 20 22 23"
+# hrs="19 20 22 23"
 
-for hr in $hrs
-do
-let hrold=hr-1
-TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf${hr}
-done
+# for hr in $hrs
+# do
+# let hrold=hr-1
+# TCODE=Z
+# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf${hr}
+# done
 
 echo DONE non3h
 

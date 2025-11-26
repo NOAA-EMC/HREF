@@ -43,14 +43,16 @@ module load prod_util/${prod_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load netcdf-D/${netcdf_ver}
 module load g2/${g2_ver}
+module load g2c/${g2c_ver}
 module load g2tmpl/${g2tmpl_ver}
 module load jasper/${jasper_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
 module load cfp/${cfp_ver}
+module load libaec/${libaec_ver}
 module load python/${python_ver}
 module load libjpeg/${libjpeg_ver}
-module load libjpeg-turbo/${libjpegturbo_ver}
+module load libjpeg-turbo/${libjpeg_turbo_ver}
 module load grib_util/${grib_util_ver}
 module load gempak/${gempak_ver}
 
