@@ -56,7 +56,7 @@ export pgmout=OUTPUT.$$
 
 #################################################################
 # Execute the script
-$HOMErefs/scripts/exrefs_ffggen.sh.ecf
+$HOMErefs/scripts/exrefs_ffggen.sh
 #################################################################
 
 cd ${DATAROOT}

@@ -88,11 +88,11 @@ export pgmout="OUTPUT.$$"
 # export VERBOSE=YES
 
 ###################################################
-# Execute the Script exrefs_ensprod.sh.ecf
+# Execute the Script exrefs_ensprod.sh
 
 
-$SCRIPTSrefs/exrefs_ensprod_link.sh.ecf $fhr
-$SCRIPTSrefs/exrefs_ensprod.sh.ecf $fhr
+$SCRIPTSrefs/exrefs_ensprod_link.sh $fhr
+$SCRIPTSrefs/exrefs_ensprod.sh $fhr
 
 
 msg="JOB $job HAS COMPLETED NORMALLY."

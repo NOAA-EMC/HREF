@@ -49,7 +49,7 @@ export pgmout=OUTPUT.$$
 
 #################################################################
 # Execute the script
-$HOMErefs/scripts/exrefs_awips.sh.ecf $type
+$HOMErefs/scripts/exrefs_awips.sh $type
 #################################################################
 
 cd ${DATAROOT}
