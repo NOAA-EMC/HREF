@@ -302,7 +302,7 @@
       <value><cyclestr>@H</cyclestr></value>
     </envar>
 
-    <envar><name>jobid</name><value>refs_preprochrrr_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_#fhr#_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_preprochrrr_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
 
 
     <dependency>
