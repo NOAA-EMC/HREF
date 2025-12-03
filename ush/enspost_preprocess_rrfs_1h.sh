@@ -276,22 +276,6 @@ $WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZ
 fi
 
         cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${region}.m${name1}.f${hr}.grib2
-
-        err=$? ; export err
-	if [ $err -ne 0 ]
-         then
-         msg="FATAL ERROR: fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 not copied properly"
-         err_exit $msg
-        fi
-
-        if [ ! -e $PREPROC_HOLD ] ; then
-            mkdir -p ${PREPROC_HOLD}
-        fi
-
-	if [ $hr -eq  24 -o $hr -eq 48 ]; then
-         cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${PREPROC_HOLD}
-        fi
-
         err=$? ; export err
 	if [ $err -ne 0 ]
          then
