@@ -163,44 +163,6 @@ curpath=`pwd`
 
 cp ../temp.t${cyc}z.m${mem}.f${hr}.grib2 temp.t${cyc}z.f${hr}.grib2
 
-# disabled this check
-if [ $hr -eq 490 -o  $hr -eq 250  ] ; then
-
-# believe these two times being processed will be the same.  Need f24 and f48
-
-echo looking for hrold $hrold
-
-looplim=30
-loop=1
-
-while [ $loop -le $looplim ]
-do
-
-if [ -s ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2 ]
-then
-  break
-else
-  loop=$((loop+1))
-  sleep 3
-fi
-
-ls -l ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2
-
-  if [ $loop -ge $looplim ]
-   then
-   msg="FATAL ERROR: ABORTING after 90 seconds of waiting for ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2"
-   err_exit $msg
-  fi
-
-done
-
-$WGRIB2 ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hrold}.grib2
-fi
-
-# if [ $hr -eq 51 -o $hr -eq 27 ] ; then
-# $WGRIB2 ${PREPROC_HOLD}/fv3s.t${cyc}z.${region}.m${mem}.f${hrold3}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hrold3}.grib2
-# fi
-
 # need to wait for it to be available??
 
 looplim=30
