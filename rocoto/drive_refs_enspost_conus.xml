@@ -290,11 +290,7 @@
       <value><cyclestr>@H</cyclestr></value>
     </envar>
 
-<<<<<<< HEAD
-    <envar><name>jobid</name><value>refs_ensprodpreprochrrr_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
-=======
-    <envar><name>jobid</name><value>refs_preprochrrr_&TYPE;_&PHYS;_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
->>>>>>> feature/morepids
+    <envar><name>jobid</name><value>refs_preprochrrr_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
 
     <dependency>
