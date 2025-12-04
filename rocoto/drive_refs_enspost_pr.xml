@@ -142,7 +142,7 @@
     <envar>
     <name>cyc</name><value><cyclestr>@H</cyclestr></value>
     </envar>
-    <envar><name>jobid</name><value>refs_ensprodpreprocfv3_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_preprocfv3_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
 
 
     <dependency>

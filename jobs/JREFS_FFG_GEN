@@ -10,7 +10,8 @@ date
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
 mkdir -p $DATA
 cd $DATA 
 
