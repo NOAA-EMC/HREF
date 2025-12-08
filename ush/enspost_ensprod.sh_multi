@@ -30,8 +30,8 @@ mm=`echo ${PDY} | cut -c 5-6`
 dd=`echo ${PDY} | cut -c 7-8`
 
 ff=$fhr
-dom=${NEST}
 
+dom=${1}
 subtype=${2}
 
 mkdir -p $DATA/${ff}/${subtype}
@@ -48,9 +48,9 @@ ln -sf $FIXrefs/new*rrfs* .
 ln -sf $DATA/${ff}/*.f${ff} .
 
 # If testing without the flash flood products
-#  if [ $NEST = 'conusavoidnow' ]
+#  if [ $dom = 'conusavoidnow' ]
 
-if [ $NEST = 'conus' ]
+if [ $dom = 'conus' ]
 then
 
 cp $COMINffg/${RUN}.t${cyc}z.ffg1h.3km.grib2 ./${RUN}.ffg1h.3km.grib2
@@ -359,9 +359,9 @@ fi
   for m in $mbrs ; do
    if [ ${subtype} = "1" ]
    then
-   cp -d $DATA/refs.m${m}.t${cyc}z.f${ff}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${NEST}.f${ff}
-   cp -d $DATA/prcip.m${m}.t${cyc}z.f${ff} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${NEST}.f${ff}
-   cp -d $DATA/${ff}/${subtype}/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${NEST}.f${ff}
+   cp -d $DATA/refs.m${m}.t${cyc}z.f${ff}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${dom}.f${ff}
+   cp -d $DATA/prcip.m${m}.t${cyc}z.f${ff} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${dom}.f${ff}
+   cp -d $DATA/${ff}/${subtype}/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${dom}.f${ff}
    fi
   done
  fi

@@ -18,7 +18,7 @@ exit
 fi
 
 
-NEST=${1}
+dom=${1}
 PDY=${2}
 cyc=${3}
 
@@ -38,10 +38,10 @@ hrsln="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 2
 
 for hr in $hrsln
 do
-filecheck=hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+filecheck=hrrr.t${cyc}z.${dom}.f${hr}.grib2
 if [ -e $filecheck ]
 then
-ln -sf hrrr.t${cyc}z.${NEST}.f${hr}.grib2 hrrr.t${cyc}z.f${hr}.grib2
+ln -sf hrrr.t${cyc}z.${dom}.f${hr}.grib2 hrrr.t${cyc}z.f${hr}.grib2
 fi
 done
 
@@ -55,7 +55,7 @@ then
 hrold=0${hrold}
 fi
 
-filecheck=hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+filecheck=hrrr.t${cyc}z.${dom}.f${hr}.grib2
 
 if [ -e $filecheck ]
 then
@@ -65,12 +65,12 @@ then
         echo here a $hr
 
 ## the hourly will sum up three hourly at the appropriate time.
-        echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. .false. 1 ${NEST} no 8 |$EXECrefs/enspost_get_prcip > output.refs_get_prcip1h.f${hr}.${NEST}
+        echo hrrr.t${cyc}z.f $hr .false. .false. .true. .false. .false. 1 ${dom} no 8 |$EXECrefs/enspost_get_prcip > output.refs_get_prcip1h.f${hr}.${dom}
         export err=$? ; err_chk
 
         if [ ${hr}%3 -eq 0 ]
         then
-        cat prcip3h.t${cyc}z.f${hr}.grib2 >> hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+        cat prcip3h.t${cyc}z.f${hr}.grib2 >> hrrr.t${cyc}z.${dom}.f${hr}.grib2
         fi
         fi
 
@@ -83,7 +83,7 @@ done
 
 for hr in $hrsln
 do
- cp hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${GESOUT}.${PDY}
+ cp hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}
  err=$?
  export err ; err_chk
 done

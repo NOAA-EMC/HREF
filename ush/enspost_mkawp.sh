@@ -16,7 +16,7 @@
 
 set -xa
 
-NEST=${1}
+dom=${1}
 type=${2}
 
 runhrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 27 30 33 36 39 42 45 48 51 54 57 60"
@@ -37,7 +37,7 @@ do
 
 if [ $type = "mean" ]
 then
-  if [ $NEST = "conus" ]
+  if [ $dom = "conus" ]
   then
    alttype="ffri"
   else
@@ -57,75 +57,75 @@ fi
 
 
 loop=0
-while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 -a $loop -lt $looplim ]
+while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 -a $loop -lt $looplim ]
 do
-         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
          sleep ${sleeptime}
          let loop=loop+1
 done
 
 loop=0
-while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 -a $loop -lt $looplim ]
+while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2 -a $loop -lt $looplim ]
 do
-         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2
+         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2
          sleep ${sleeptime}
          let loop=loop+1
 done
 
-if [ ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2  -o ! -e ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 ]
+if [ ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2  -o ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2 ]
 then
-         msg="FATAL ERROR: ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 or ${COMIN}/${RUN}.t${cyc}z.${NEST}.${alttype}.f${fhr}.grib2 missing but required"
+         msg="FATAL ERROR: ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 or ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2 missing but required"
          err_exit $msg
 fi
 
   if [ $type = "prob" ]
   then
-  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 .
 # also want EAS prob
-  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2 .
+  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 .
 # want FFRI prob for conus
-  if [ $NEST = "conus" ]
+  if [ $dom = "conus" ]
   then
-    cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 .
-    cat ${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+    cp ${COMIN}/${RUN}.t${cyc}z.${dom}.ffri.f${fhr}.grib2 .
+    cat ${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${dom}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
   else
-    cat ${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2  >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+    cat ${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2  >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
   fi
 
-  cat ${RUN}.t${cyc}z.${NEST}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${NEST}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+  cat ${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${dom}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
 
   elif [ $type = "pmmn" ]
   then
-  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 .
-  cp ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
-  cat ${RUN}.t${cyc}z.${NEST}.lpmm.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
+  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.lpmm.f${fhr}.grib2 .
+  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 .
+  cat ${RUN}.t${cyc}z.${dom}.lpmm.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
 
   else
-  ln -sf ${COMIN}/${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 .
+  ln -sf ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 .
   fi
 
-  $GRBINDEX ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2 ${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i 
+  $GRBINDEX ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2i 
   export pgm=tocgrib2
   . prep_step
   startmsg
 
   export FORTREPORTS=unit_vars=yes 
-  export FORT11=${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2
-  export FORT12=${RUN}.t${cyc}z.${NEST}.${type}.f${fhr}.grib2i
-  export FORT51=xtrn.${cycle}.${RUN}.${NEST}_${type}_${fhr}
-  $TOCGRIB2 <$PARMwmo/grib2_awips_${RUN}_${NEST}_${type}f${fhr} parm='KWBB'
+  export FORT11=${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
+  export FORT12=${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2i
+  export FORT51=xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr}
+  $TOCGRIB2 <$PARMwmo/grib2_awips_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
   then
 # J.Du: Change processing id to rrfs (134) if it is different in the original input data
-#   $WGRIB2 xtrn.${cycle}.${RUN}.${NEST}_${type}_${fhr} -set analysis_or_forecast_process_id 134 -grib $COMOUT/grib2.t${cyc}z.awp${RUN}_${NEST}_${type}_f${fhr}_${cyc}
-    cp xtrn.${cycle}.${RUN}.${NEST}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awp${RUN}_${NEST}_${type}_f${fhr}_${cyc}
+#   $WGRIB2 xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} -set analysis_or_forecast_process_id 134 -grib $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
+    cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.t${cyc}z.awp${RUN}_${NEST}_${type}_f${fhr}_${cyc}
+    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
   fi
 
 done

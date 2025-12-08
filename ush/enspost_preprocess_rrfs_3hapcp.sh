@@ -39,11 +39,11 @@ elif [ $dom = 'ak' ]
 then
 dim1=1649
 dim2=1105
-elif [ $region = 'hi' ]
+elif [ $dom = 'hi' ]
 then
 dim1=321
 dim2=225
-elif [ $region = 'pr' ]
+elif [ $dom = 'pr' ]
 then
 dim1=544
 dim2=310

@@ -22,25 +22,25 @@ fi
 PDY=${1}
 cyc=${2}
 hr=${3}
-NEST=${4}
+dom=${4}
 JPDTN=8
 
 
-if [ $NEST = 'conus' ]
+if [ $dom = 'conus' ]
 then
 dim1=1799
 dim2=1059
-elif [ $NEST = 'ak' ]
+elif [ $dom = 'ak' ]
 then
 dim1=1649
 dim2=1105
 else
-echo "FATAL ERROR: improper region for HRRR preprocessing job" $NEST
+echo "FATAL ERROR: improper region for HRRR preprocessing job" $dom
 exit 99
 fi
 
 
-echo $NEST $hr
+echo $dom $hr
 
 if [ ! -e $GESOUT.${PDY} ]
 then
@@ -49,20 +49,20 @@ fi
 
 cd ${DATA}
 
-mkdir hrrr_${NEST}_${hr}
-cd hrrr_${NEST}_${hr}
+mkdir hrrr_${dom}_${hr}
+cd hrrr_${dom}_${hr}
 
 
-if [ $NEST = "conus" ]
+if [ $dom = "conus" ]
 then
  wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
- NESTLOC=conus
- filecheck=${COMINhrrr}.${PDY}/${NESTLOC}/hrrr.t${cyc}z.wrfprsf${hr}.grib2
-elif [ $NEST = "ak" ]
+ domloc=conus
+ filecheck=${COMINhrrr}.${PDY}/${domloc}/hrrr.t${cyc}z.wrfprsf${hr}.grib2
+elif [ $dom = "ak" ]
 then 
- NESTLOC=alaska
+ domloc=alaska
  wgrib2def='nps:210.0:60.0 181.429:1649:2976.0 40.530:1105:2976.0'
- filecheck=${COMINhrrr}.${PDY}/${NESTLOC}/hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
+ filecheck=${COMINhrrr}.${PDY}/${domloc}/hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
 fi
 
 
@@ -112,16 +112,16 @@ fi
 	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb maxuvv.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
          rm mslet.t${cyc}z.f${hr}.grb pblh*.t${cyc}z.f${hr}.grb
 
-	if [ $NEST = "ak" ]
+	if [ $dom = "ak" ]
 then
          $WGRIB2 hrrr.t${cyc}z.f${hr} -set_grib_type  jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp.t${cyc}z.f${hr}
          $WGRIB2  inputs_nn.t${cyc}z.f${hr}.grb -new_grid_interpolation neighbor -set_grib_type jpeg -new_grid_winds grid -new_grid ${wgrib2def} interp_nn.t${cyc}z.f${hr}
 
-         cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+         cat interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  > ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
          rm interp.t${cyc}z.f${hr}  interp_nn.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb   hrrr.t${cyc}z.f${hr}
 
 else # conus, so no interp
-	cat hrrr.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb  > ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+	cat hrrr.t${cyc}z.f${hr}  inputs_nn.t${cyc}z.f${hr}.grb  > ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
 fi
 
 
@@ -131,7 +131,7 @@ fi
          then
           echo working to generate ../temp.t${cyc}z.f${hr}.grib2
 
-	  $WGRIB2 ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
+	  $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
 	  hrold=$((hr-1))
 	  hrold3=$((hr-3))
 
@@ -189,11 +189,11 @@ fi
 
  # 1 h added to f01
  
- if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+ if [ -s ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
  then
 	 $EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
 	 export err=$? # ; err_chk
-	 cat ./PCP1HR${hr}.tm00 >> ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+	 cat ./PCP1HR${hr}.tm00 >> ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
  fi
 
  # 3 h SNOW if 3 hour time
@@ -234,11 +234,11 @@ echo "$dim1 $dim2" >> input.${hr}.hrrr.snow
 echo 1 >> input.${hr}.hrrr.snow
 echo $JPDTN >> input.${hr}.hrrr.snow
 
-if [ -s ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+if [ -s ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 	$EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
 	export err=$? # ; err_chk
-	cat ./PCP3HR${hr}.tm00 >> ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+	cat ./PCP3HR${hr}.tm00 >> ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
 fi
 
  fi # 3 hour time
@@ -250,16 +250,16 @@ else
 
 	# just extract for f00
  echo working to generate ../temp.t${cyc}z.f${hr}.grib2
-$WGRIB2 ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
+$WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
  fi
 
 
-         cp ../hrrr.t${cyc}z.${NEST}.f${hr}.grib2 ${GESOUT}.${PDY}/hrrr.t${cyc}z.${NEST}.f${hr}.grib2
+         cp ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
         err=$? ; export err
 
         if [ $err -ne 0 ]
          then
-         msg="FATAL ERROR: hrrr.t${cyc}z.${NEST}.f${hr}.grib2 not copied properly"
+         msg="FATAL ERROR: hrrr.t${cyc}z.${dom}.f${hr}.grib2 not copied properly"
            err_exit $msg
 	fi
 
