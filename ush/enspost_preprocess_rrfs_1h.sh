@@ -9,7 +9,7 @@
 #  Author: Matthew Pyle
 #          March 2020
 #  change log:
-#  07/29/2022: Jun Du, added an argument for region
+#  07/29/2022: Jun Du, added an argument for dom
 ####################################################
 
 set -x
@@ -26,7 +26,7 @@ cyc=${2}
 mem=${3}
 name=${4}
 hr=${5}
-region=${6}
+dom=${6}
 
 if [ ${mem} = '01' ]
 then
@@ -35,19 +35,19 @@ else
 JPDTN_USE=11
 fi
 
-if [ $region = 'conus' ]
+if [ $dom = 'conus' ]
 then
 dim1=1799
 dim2=1059
-elif [ $region = 'ak' ]
+elif [ $dom = 'ak' ]
 then
 dim1=1649
 dim2=1105
-elif [ $region = 'hi' ]
+elif [ $dom = 'hi' ]
 then
 dim1=321
 dim2=225
-elif [ $region = 'pr' ]
+elif [ $dom = 'pr' ]
 then
 dim1=544
 dim2=310
@@ -80,15 +80,15 @@ cd fv3_${mem}_${hr}
 
 if [ $name = 00 ];then
 
-if [[ $region == "conus" || $region == "ak" ]]
+if [[ $dom == "conus" || $dom == "ak" ]]
 then
- filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${region}.grib2
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
 else # HI/PR
- filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${region}.grib2
+ altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
 fi
 
 if [ ! -e $filecheck -a -e $altfilecheck ]
@@ -97,11 +97,11 @@ filecheck=$altfilecheck
 fi
 
 else
-if [[ $region == "conus" || $region == "ak" ]]
+if [[ $dom == "conus" || $dom == "ak" ]]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2
 else # HI/PR
- filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${region}.grib2
+ filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2
 
 fi
 
@@ -135,7 +135,7 @@ echo filecheck is $filecheck
         $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb top.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
-       cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
+       cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
 
 ## snow proc
 
@@ -145,7 +145,7 @@ echo filecheck is $filecheck
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 
-$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 hrold=$((hr-1)) 
 hrold3=$((hr-3)) 
 
@@ -205,12 +205,12 @@ export err=$? ; err_chk
 # 1 h added to f01
 
 
-if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+if [ -s ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrefs/enspost_snowbucket < input.${hr}.mem${mem}.snow
 export err=$?  ; err_chk
 
-cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
+cat ./PCP1HR${hr}.tm00 >> ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
 fi
 
 
@@ -257,11 +257,11 @@ echo "$JPDTN_USE" >> input.${hr}.mem${mem}.snow
 $EXECrefs/enspost_snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
 
-if [ -s ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
+if [ -s ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 $EXECrefs/enspost_snowbucket < input.${hr}.mem${mem}.snow
 export err=$? ; err_chk
-cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2
+cat ./PCP3HR${hr}.tm00 >> ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
 fi
 
 
@@ -272,14 +272,14 @@ fi # 3 hour time
 else
 # just extract for f00
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
-$WGRIB2 ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
-        cp ../fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${region}.m${name1}.f${hr}.grib2
+        cp ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
         err=$? ; export err
 	if [ $err -ne 0 ]
          then
-         msg="FATAL ERROR: fv3s.t${cyc}z.${region}.m${mem}.f${hr}.grib2 not copied properly"
+         msg="FATAL ERROR: fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 not copied properly"
          err_exit $msg
         fi
 
