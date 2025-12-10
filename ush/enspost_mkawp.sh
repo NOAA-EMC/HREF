@@ -12,6 +12,7 @@
 # 2023-04-01  J Du - adopted for RRFS Ensemble
 # 2023-05-04   J Du - added an option for time-lag ensemble
 # 2024-0301   M Pyle - shifted from rrfs to $RUN (now REFS)
+# 2025-12  M Pyle - reduced to every 3 h to 48, then 6 hourly
 #################################################################################
 
 set -xa
@@ -19,9 +20,7 @@ set -xa
 dom=${1}
 type=${2}
 
-runhrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 27 30 33 36 39 42 45 48 51 54 57 60"
-runhrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 18 21 24 27 30 33 36 39 42 45 48 54 60"
-altrunhrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60"
+runhrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60"
 
 looplim=90
 sleeptime=15
@@ -118,8 +117,6 @@ fi
 
   if test "$SENDCOM" = 'YES'
   then
-# J.Du: Change processing id to rrfs (134) if it is different in the original input data
-#   $WGRIB2 xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} -set analysis_or_forecast_process_id 134 -grib $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
     cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
   fi
 
