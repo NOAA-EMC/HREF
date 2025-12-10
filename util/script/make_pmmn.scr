@@ -8,22 +8,22 @@ base=grib2_awips_${RUN}_conus_pmmn_no3h
 hr=1
 TCODE=B
 hrold=0
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
+# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
 
 hr=2
 TCODE=C
 hrold=1
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
+# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
 
 hr=4
 TCODE=E
 hrold=3
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
+# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
 
 hr=5
 TCODE=F
 hrold=4
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
+# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_awips_${RUN}_conus_pmmnf0${hr}
 
 hr=7
 TCODE=H
