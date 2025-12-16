@@ -32,19 +32,19 @@ echo running on $location
 
 if [ ${NEST} = "hi" -o ${NEST} = "pr" ]
 then
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 1" > ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 2" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 3" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 4" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 1" > ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 2" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 3" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 4" >> ./poe.${fhr}
 chmod 775 ${DATA}/poe.${fhr}
 mpiexec -n 4 -ppn 4 --cpu-bind verbose,core cfp ${DATA}/poe.${fhr}
 
 else
 
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 1" > ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 2" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 3" >> ./poe.${fhr}
-echo "$USHrefs/enspost_ensprod.sh_multi ${NEST} 4" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 1" > ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 2" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 3" >> ./poe.${fhr}
+echo "$USHrefs/enspost_ensprod_multi.sh ${NEST} 4" >> ./poe.${fhr}
 chmod 775 ${DATA}/poe.${fhr}
 mpiexec -n 4 -ppn 4 --cpu-bind verbose,core cfp ${DATA}/poe.${fhr}
 err=$?
