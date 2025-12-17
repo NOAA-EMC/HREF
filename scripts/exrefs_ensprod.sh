@@ -68,6 +68,10 @@ do
 files=`ls $DATA/${fhr}/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2_?`
 cat ${files} > $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2
 err=$?; err_chk
+
+$WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2.idx
+err=$?; err_chk
+
 done
 
 fi # SENDCOM
