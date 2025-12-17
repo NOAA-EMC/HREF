@@ -47,9 +47,6 @@ ln -sf $FIXrefs/new*rrfs* .
 
 ln -sf $DATA/${ff}/*.f${ff} .
 
-# If testing without the flash flood products
-#  if [ $dom = 'conusavoidnow' ]
-
 if [ $dom = 'conus' ]
 then
 
@@ -239,7 +236,7 @@ fi
 
 $EXECrefs/enspost_ensprod   > $DATA/$ff/output_enspost_ensprod.$ff_${subtype} 2>&1
 errsave=$?
-echo past enspost_ensprod for ff $ff
+echo past enspost_ensprod for ff $ff ${subtype}
 export err=$errsave; err_chk
 
 if [ ! -e $COMOUT/log ]
@@ -249,130 +246,5 @@ fi
 
 cat $DATA/$ff/output_enspost_ensprod.$ff_${subtype} >> $COMOUT/log/output_enspost_ensprod.t${cyc}z.$ff
 
-if [ $dom = 'conus' ]
-then
-types="mean pmmn avrg prob sprd lpmm ffri"
-else
-types="mean pmmn avrg prob sprd lpmm"
-fi
-
-if [ $SENDCOM = YES ]; then
-
- for typ in $types
- do
-  if [ -s $DATA/$ff/${subtype}/${RUN}.${typ}.t${cyc}z.f$ff ]
-  then
-# eventually make this a cat?
-#  cp $DATA/$ff/${subtype}/${RUN}.${typ}.t${cyc}z.f$ff  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtype}
-  cpreq $DATA/$ff/${subtype}/${RUN}.${typ}.t${cyc}z.f$ff  $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtype}
-
-  fi
-##  $WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
- done
-
- echo done > $DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_${subtype}
-
-
- loops=60
- loop=1
- filea=$DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_1
- fileb=$DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_2
- filec=$DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_3
- filed=$DATA/${ff}/DONE.t${cyc}z.${dom}.f${ff}_4
-
- if [ $subtype = "1" ]
-then
- while [ $loop -lt $loops  ]
- do
-
- if [ -s $filea -a -s $fileb -a -s $filec -a -s $filed ]
- then
- echo have all DONE files
- loop=$loops
- else
- echo still waiting for another DONE file
- sleep 10
- let loop=loop+1
- fi
-
- done
-
-# hopefully have all available down here
-
-
-echo to this test
-
-if [ -s  $filea -a  -s $fileb -a -s  $filec -a -s $filed ]
-then
-
-subtypes="1 2 3 4"
-
-for typ in $types
-do
-# for subtypeloc in ${subtypes}
-# do
-
-# if [ $subtypeloc = "1" -a -e $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2 ]
-# then
-# purge any existing file in COMOUT to avoid duplicate output
-# rm -f $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-# fi
-
-# if [ -s $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtypeloc} ]
-# then
-# sleep 1
-# cat $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_${subtypeloc} >> $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-# err=$?; err_chk
-# fi
-
-files=`ls $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_?`
-
-
-
-# cat $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_1 $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_2 $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_3 $DATA/${ff}/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2_4 > $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-
-cat ${files} > $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-err=$?; err_chk
-
-$WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
-err=$?; err_chk
-
-done
-
-else
-
-err_exit "Never got all of the DONE files generated for domain $dom and fhr $ff"
-
-fi
-
-fi
-
- if [ ${ff}%3 -eq 0 ]
- then
-
-  if [ ! -e $COMOUT/verf_g2g ]
-  then
-   msg="FATAL ERROR: no $COMOUT/verf_g2g directory to copy member files to" 
-   err_exit $msg
-  fi
-
-  for m in $mbrs ; do
-   if [ ${subtype} = "1" ]
-   then
-   cp -d $DATA/refs.m${m}.t${cyc}z.f${ff}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${dom}.f${ff}
-   cp -d $DATA/prcip.m${m}.t${cyc}z.f${ff} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${dom}.f${ff}
-   cp -d $DATA/${ff}/${subtype}/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${dom}.f${ff}
-   fi
-  done
- fi
-fi
-
-if [ $SENDDBN = YES ]; then
- for typ in $types
- do
-  $DBNROOT/bin/dbn_alert MODEL RRFS_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2
-  $DBNROOT/bin/dbn_alert MODEL RRFS_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f$ff.grib2.idx
- done
-fi
 
 exit
