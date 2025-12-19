@@ -55,7 +55,7 @@ else
    err_exit $msg
 fi
 
-backdate=`$ndate -06 $PDY$cyc`
+backdate=`$NDATE -06 $PDY$cyc`
 backday=`echo $backdate | cut -c1-8`
 backcyc=`echo $backdate | cut -c9-10`
 
