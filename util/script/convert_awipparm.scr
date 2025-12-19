@@ -22,6 +22,7 @@ cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:
           | sed s:YQB:YQ${TMAP}:g | sed s:YRB:YR${TMAP}:g | sed s:YSB:YS${TMAP}:g | sed s:YTB:YT${TMAP}:g | sed s:YUB:YU${TMAP}:g \
           | sed s:YVB:YV${TMAP}:g | sed s:YWB:YW${TMAP}:g | sed s:YXB:YX${TMAP}:g | sed s:YYB:YY${TMAP}:g | sed s:YZB:YZ${TMAP}:g  > $fileout
 
+mv ${fileout} ../../parm/wmo/
 done
 done
           
@@ -43,6 +44,7 @@ cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:
           | sed s:YQB:YQ${TMAP}:g | sed s:YRB:YR${TMAP}:g | sed s:YSB:YS${TMAP}:g | sed s:YTB:YT${TMAP}:g | sed s:YUB:YU${TMAP}:g \
           | sed s:YVB:YV${TMAP}:g | sed s:YWB:YW${TMAP}:g | sed s:YXB:YX${TMAP}:g | sed s:YYB:YY${TMAP}:g | sed s:YZB:YZ${TMAP}:g  > $fileout
 
+mv ${fileout} ../../parm/wmo/
 done
 done
 
@@ -63,5 +65,6 @@ cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:
           | sed s:YQB:YQ${TMAP}:g | sed s:YRB:YR${TMAP}:g | sed s:YSB:YS${TMAP}:g | sed s:YTB:YT${TMAP}:g | sed s:YUB:YU${TMAP}:g \
           | sed s:YVB:YV${TMAP}:g | sed s:YWB:YW${TMAP}:g | sed s:YXB:YX${TMAP}:g | sed s:YYB:YY${TMAP}:g | sed s:YZB:YZ${TMAP}:g  > $fileout
 
+mv ${fileout} ../../parm/wmo/
 done
 done
