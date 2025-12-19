@@ -37,7 +37,6 @@ module load cray-mpich/$::env(cray_mpich_ver)
 
 module load ip/$::env(ip_ver)
 module load bacio/$::env(bacio_ver)
-module load w3nco/$::env(w3nco_ver)
 module load w3emc/$::env(w3emc_ver)
 module load g2/$::env(g2_ver)
 module load g2tmpl/$::env(g2tmpl_ver)
