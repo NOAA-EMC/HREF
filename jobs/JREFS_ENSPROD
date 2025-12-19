@@ -38,7 +38,7 @@ setpdy.sh
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
 ##################################################
-export ndate=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate
+# export ndate=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -66,8 +66,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 
 ## PDY not included here as pull data from PDYm1 as well
 
-# think about this one.  is it COMINrefs?  Or just COMIN, as is internal to system?
-export COMINrefs=${COMINrefs:-$GESROOT/${RUN}}
+export COMIN=${COMIN:-$GESROOT/${RUN}}
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}}
 export COMINffg=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}

@@ -37,7 +37,6 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ## PDY not included here as pull data from PDYm1 as well
 # without timelagging maybe should include PDY here?
 
-# this should definitely be COMINrrfs
 export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver}/rrfs)}
 
 export HOMErefs=${HOMErefs:-$NWROOT/refs.${refs_ver}} 
@@ -46,9 +45,6 @@ export PARMrefs=${PARMrefs:-$HOMErefs/parm}
 export USHrefs=${USHrefs:-$HOMErefs/ush}
 export FIXrefs=${FIXrefs:-$HOMErefs/fix}
 export SCRIPTSrefs=${SCRIPTSrefs:-$HOMErefs/scripts}
-
-# CLEAN
-export ndate=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate
 
 ###########################################################
 # obtain unique process id (pid) and make temp directories
