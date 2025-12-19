@@ -431,12 +431,12 @@ HOMErefs=os.environ.get('HOMErefs','trash')
 print('found HOMErefs as ', HOMErefs)
 
 try:
-  os.environ["COMINrefs"]
+  os.environ["COMIN"]
 except KeyError:
-  print("NEED TO DEFINE COMINrefs")
+  print("NEED TO DEFINE COMIN")
   exit(1)
-COMINrefs=os.environ.get('COMINrefs','trash')
-print ('found COMINrefs as ', COMINrefs)
+COMIN=os.environ.get('COMIN','trash')
+print ('found COMIN as ', COMIN)
 
 try:
   os.environ["COMINhrrr"]
@@ -610,13 +610,13 @@ for mem in members:
     print('itime for this member: ', itime)
 
     if memname == 'rrfs':
-      file3 = COMINrefs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file3 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       print('file3 is: ', file3)
-      file6 = COMINrefs + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       print('file6 is: ', file6)
-      file3alt = COMINrefs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
+      file3alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
       print('file3alt is: ', file3alt)
-      file6alt = COMINrefs + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
+      file6alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
       print('file6alt is: ', file6alt)
     elif memname == 'hrrr':
       file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
