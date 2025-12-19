@@ -45,7 +45,6 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ## PDY not included here as pull data from PDYm1 as well
 
 # Save it for time lag ensemble
-# export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver}/hiresw)}
 
 export HOMErefs=${HOMErefs:-$PACKAGEROOT/refs.${refs_ver}}
 export EXECrefs=${EXECrefs:-$HOMErefs/exec}
@@ -66,6 +65,7 @@ export IOBUF_PARAMS='*:size=8M:count=8'
 ##############################################
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN.${PDY}}
 
 if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT/ensprod

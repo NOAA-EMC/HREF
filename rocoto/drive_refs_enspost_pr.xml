@@ -237,7 +237,7 @@
     </envar>
 
     <envar>
-      <name>COMINrefs</name>
+      <name>COMIN</name>
       <value>&COMINall;</value>
     </envar>
 
@@ -347,7 +347,7 @@
     </envar>
 
     <envar>
-      <name>COMINrefs</name>
+      <name>COMIN</name>
       <value>&COMINall;</value>
     </envar>
 
