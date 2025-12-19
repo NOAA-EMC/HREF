@@ -38,10 +38,10 @@ do
    if [ "$cyc" == $i ]; then
    proddir_enspost_sinphys_tl=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refs.${PDY}
    proddir_enspost_mphys_tl=/lfs/h2/emc/ptmp/emc.lam/testmp/com/refs/v1.0/refs.${PDY}
-   proddir_enspost_sinphys_tl_nwges=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/nwges/refs.${PDY}
+   proddir_enspost_sinphys_tl_nwges=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refsprep/refs.${PDY}
 
 
-nwges_hrs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 27 30 33 36 39 42 45 48 51 54 57 60"
+nwges_hrs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 30 33 36 39 42 45 48 51 54 57 60"
 
 # single phys, timelag
      destination_refs=$proddir_enspost_sinphys_tl

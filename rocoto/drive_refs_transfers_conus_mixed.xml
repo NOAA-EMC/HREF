@@ -20,7 +20,6 @@
 <!ENTITY JOBS "&HOMEfv3;/rocoto">
 <!ENTITY OUTDIR "/lfs/h2/emc/ptmp/&USER;">
 <!ENTITY COMOUT_ENSPOST "/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0">
-<!ENTITY NWGES "/lfs/h2/emc/ptmp/emc.lam/rrfs/conus/nwges">
 
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
