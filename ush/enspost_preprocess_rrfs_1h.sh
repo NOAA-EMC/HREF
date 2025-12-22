@@ -113,13 +113,14 @@ echo filecheck is $filecheck
         if [ -s $filecheck ]
         then
         $WGRIB2 $filecheck | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -grib fv3.t${cyc}z.f${hr} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
-#       $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
+        
         $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
         $WGRIB2 $filecheck -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
 
-        cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb  >> nn2.t${cyc}z.f${hr}.grb
+        cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb soil.t${cyc}z.f${hr}.grb  >> nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
@@ -284,7 +285,7 @@ fi
         fi
 
         rm  fv3.t${cyc}z.f${hr} 
-        rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb 
+        rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb  soil.t${cyc}z.f${hr}.grb
 
 
         else

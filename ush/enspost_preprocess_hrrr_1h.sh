@@ -70,9 +70,10 @@ fi
         then
 
          $WGRIB2 $filecheck | grep -F -f $PARMrefs/enspost_hrrr_filter.txt | $WGRIB2 -i -grib hrrr.t${cyc}z.f${hr} $filecheck
-         $WGRIB2 $filecheck -match ":(HINDEX|TSOIL|SOILW|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|REFD|MAXREF|APCP):" -grib nn.t${cyc}z.f${hr}.grb
          $WGRIB2 nn.t${cyc}z.f${hr}.grb -match "REFD" -set_byte 4 11 4 -grib refd.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "LTNG" -set_byte 4 23 10 -grib ltng.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
 #         $WGRIB2 $filecheck -match "LTNG"  -grib ltng.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "MSLMA" -set_byte 4 11 192 -grib mslet.t${cyc}z.f${hr}.grb
 	 $WGRIB2 $filecheck -match MAXUVV -set_byte 4 23 100 -set_byte 4 29 100 -grib maxuvv.t${cyc}z.f${hr}.grb
@@ -102,12 +103,13 @@ fi
          cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb  nn3.t${cyc}z.f${hr}.grb \
 	 nn3b.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
          top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb \
-         refd.t${cyc}z.f${hr}.grb refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
+         refd.t${cyc}z.f${hr}.grb refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb \
+         soil.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
          rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb \
 	 nn3b.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
          refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb  \
-	 top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb
+	 top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb soil.t${cyc}z.f${hr}.grb
 
 	 cat mslet.t${cyc}z.f${hr}.grb pblh.t${cyc}z.f${hr}.grb maxuvv.t${cyc}z.f${hr}.grb >> hrrr.t${cyc}z.f${hr}
          rm mslet.t${cyc}z.f${hr}.grb pblh*.t${cyc}z.f${hr}.grb
