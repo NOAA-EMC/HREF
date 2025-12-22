@@ -71,8 +71,48 @@ err=$?; err_chk
 
 $WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2.idx
 err=$?; err_chk
+done
+
+# add verf_g2g and dbnet stuff here
+
+if [ ${fhr}%3 -eq 0 ]
+then
+
+  if [ ! -e $COMOUT/verf_g2g ]
+  then
+   msg="FATAL ERROR: no $COMOUT/verf_g2g directory to copy member files to" 
+   err_exit $msg
+  fi
+
+
+mems="01 02 03 04 05 06 07 08 09 10 11 12 13 14"
+
+for m in $mems
+do
+
+if [ -e $DATA/refs.m${m}.t${cyc}z.f${fhr} ]
+then
+cp -d $DATA/refs.m${m}.t${cyc}z.f${fhr}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${NEST}.f${fhr}
+fi
+
+if [ -e $DATA/prcip.m${m}.t${cyc}z.f${fhr} ]
+then
+cp -d $DATA/prcip.m${m}.t${cyc}z.f${fhr} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${NEST}.f${fhr}
+fi
+
+cp -d $DATA/${fhr}/1/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${NEST}.f${fhr}
 
 done
+
+fi # 3 hourly for verf_g2g
+
+if [ $SENDDBN = YES ]; then
+ for typ in $types
+ do
+  $DBNROOT/bin/dbn_alert MODEL RRFS_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2
+  $DBNROOT/bin/dbn_alert MODEL RRFS_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2.idx
+ done
+fi
 
 fi # SENDCOM
 
