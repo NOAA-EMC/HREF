@@ -26,6 +26,9 @@ from functools import partial
 
 # import fortranfile as F
 
+# CRITICAL: Prevent numpy/scipy from fighting for threads inside multiprocessing
+os.environ["OMP_NUM_THREADS"] = "1"
+
 def optimized_wgrib2(txtfile):
     """
     Reads grid dimensions and data from a text file more efficiently.
