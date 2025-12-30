@@ -25,6 +25,9 @@ from scipy.io import FortranFile
 import multiprocessing as mp
 from functools import partial
 
+# CRITICAL: Prevent numpy/scipy from fighting for threads inside multiprocessing
+os.environ["OMP_NUM_THREADS"] = "1"
+
 #--------------------------------------------------------------------------------
 #### FUNCTIONS AND ROUTINES ####
 
@@ -331,7 +334,6 @@ def optimize_footprint_calculation(optrad, prob, t, nm_use, nlats, nlons, dx,
 
         # Calculate final probability
         probfinal[row, column] = 100.0 * prob[t, footprint_size][row, column] / float(footprint_use * nm_use)
-
         # Debug output for high probabilities
         if probfinal[row, column] > 100.1:
             print('row, column, probfinal[row, column]: ', row, column, probfinal[row, column])
@@ -342,6 +344,8 @@ def optimize_footprint_calculation(optrad, prob, t, nm_use, nlats, nlons, dx,
         if rad > 100:
             optrad[row, column] = 0
 
+    # cap probfinal at 100
+    probfinal = np.where(probfinal > 100.0,100.0,probfinal)
     return probfinal, optrad
 
 
