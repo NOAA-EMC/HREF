@@ -63,7 +63,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="9" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="12" cyclethrottle="4" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -147,11 +147,11 @@
 
     <dependency>
     <and>
-          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m003/rrfs.t@Hz.m003.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m004/rrfs.t@Hz.m004.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m005/rrfs.t@Hz.m005.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m003/rrfs.t@Hz.m003.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m004/rrfs.t@Hz.m004.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m005/rrfs.t@Hz.m005.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
           <datadep age="02:00" minsize="3000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.2p5km.f0#fhr#.hi.grib2</cyclestr></datadep>
     </and>
     </dependency>

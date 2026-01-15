@@ -99,9 +99,9 @@ fi
 else
 if [[ $dom == "conus" || $dom == "ak" ]]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2
+ filecheck=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2
 else # HI/PR
- filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2
+ filecheck=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2
 
 fi
 
