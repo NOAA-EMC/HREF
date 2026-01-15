@@ -117,12 +117,12 @@ fi
 
   if test "$SENDCOM" = 'YES'
   then
-    cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
+    cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.${RUN}.t${cyc}z.awips_${type}.f${fhr}.${dom}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
+    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.${RUN}.t${cyc}z.awips_${type}.f${fhr}.${dom}
   fi
 
 done
