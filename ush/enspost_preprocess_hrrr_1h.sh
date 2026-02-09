@@ -52,7 +52,6 @@ cd ${DATA}
 mkdir hrrr_${dom}_${hr}
 cd hrrr_${dom}_${hr}
 
-
 if [ $dom = "conus" ]
 then
  wgrib2def="lambert:265:25:25 226.541:1473:5079 12.190:1025:5079"
@@ -64,7 +63,6 @@ then
  wgrib2def='nps:210.0:60.0 181.429:1649:2976.0 40.530:1105:2976.0'
  filecheck=${COMINhrrr}.${PDY}/${domloc}/hrrr.t${cyc}z.wrfprsf${hr}.ak.grib2
 fi
-
 
         if [ -e $filecheck ]
         then

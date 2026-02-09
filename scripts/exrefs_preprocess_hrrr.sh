@@ -33,6 +33,14 @@ chmod 775 poe.hrrr
 mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.hrrr
 export err=$?; err_chk
 
+if [ $fhr -lt 10 ]
+then
+FHR1=$(printf %1.1i $((10#$fhr)) )
+echo FHR1 is $FHR1
+else
+FHR1=$fhr
+fi
+
 # need to generate 3 h QPF
  if [ $FHR1 -gt 0 ]; then
  if (( 10#$hr%3 == 0 )); then
