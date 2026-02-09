@@ -53,7 +53,8 @@ export SCRIPTSrefs=${SCRIPTSrefs:-$HOMErefs/scripts}
 ###########################################################
 
 export pid=$$
-export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
+# export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
+export DATA=${DATA:-${DATAROOT}/${jobid}}
 mkdir -p $DATA
 rm -rf $DATA/*
 cd $DATA
