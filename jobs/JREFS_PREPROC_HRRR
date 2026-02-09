@@ -9,6 +9,7 @@
 # 04/25/2023 Jun Du, added a version of time-lag ensemble (type=single or timelag)
 # 09/21/2023 M. Pyle, adding a HRRR preprocessing job
 # 02/06/2024 M. Pyle, Switch from rrfs --> refs
+# 02/09/2026 M. Pyle, switch to hour-by-hour processing
 #############################################################
 
 ########################################
@@ -109,9 +110,9 @@ export GESOUT=${GESOUT:-${GESROOT}/${RUN}}
 
 ###################################################
 
-${SCRIPTSrefs}/exrefs_preprocess_hrrr.sh
+${SCRIPTSrefs}/exrefs_preprocess_hrrr.sh ${fhr}
 
 cd $DATAROOT
-if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+if [ $KEEPDATA = NO -a $fhr -eq '48' ]; then rm -rf $DATA; fi
 
 date
