@@ -24,7 +24,9 @@
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
 <!ENTITY SEND_NODES '1:ppn=1'>
-<!ENTITY SEND_RESOURCES '<walltime>04:40:00</walltime>'>
+<!ENTITY SEND_RESOURCES_SHORT '<walltime>00:30:00</walltime>'>
+<!ENTITY SEND_RESOURCES '<walltime>02:00:00</walltime>'>
+<!ENTITY SEND_RESOURCES_LONG '<walltime>05:59:00</walltime>'>
 <!ENTITY FHRS "01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
 
 ]>
@@ -50,7 +52,7 @@
 
   <task name="count_files" cycledefs="regional" maxtries="12">
     &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
+    &SEND_RESOURCES_SHORT;
 
     <command>&JOBS;/launch.sh &JOBS;/JRRFS_COUNT_DOM</command>
     <nodes>&SEND_NODES;</nodes>
@@ -84,7 +86,7 @@
   <task name="send_enspost_f#fhr#" cycledefs="regional" maxtries="3">
 
     &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
+    &SEND_RESOURCES_SHORT;
 
     <command>&JOBS;/launch.sh &JOBS;/JRRFSA_SENDENSPOST_AWS_TL_DOM_byhour</command>
     <nodes>&SEND_NODES;</nodes>
@@ -117,7 +119,7 @@
 
   <task name="mirror_enspost_tl" cycledefs="regional" maxtries="1">
     &RESERVATION_TRANSFER;
-    &SEND_RESOURCES;
+    &SEND_RESOURCES_LONG;
 
     <command>&JOBS;/launch.sh &JOBS;/JREGIONAL_MIRROR_ENSPOST_DOM</command>
     <nodes>&SEND_NODES;</nodes>
