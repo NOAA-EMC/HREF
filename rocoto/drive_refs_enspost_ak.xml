@@ -405,8 +405,8 @@
         <and>
        <taskdep task="preproc_fv3_f#fhr#"/>
        <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
-       <taskdep task="preproc_hrrr"/>
-       <taskdep task="preproc_hrrr" cycle_offset="-6:00:00"/>
+       <taskdep task="preproc_hrrr_f#fhr#"/>
+       <metataskdep metatask="preproc_hrrr" cycle_offset="-6:00:00"/>
        </and>
       </dependency>
   </task>
@@ -524,8 +524,8 @@
      <and>
        <taskdep task="preproc_fv3_f#fhr#"/>
        <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
-       <taskdep task="preproc_hrrr"/>
-       <taskdep task="preproc_hrrr"  cycle_offset="-6:00:00"/>
+       <taskdep task="preproc_hrrr_f#fhr#"/>
+       <metataskdep metatask="preproc_hrrr" cycle_offset="-6:00:00"/>
      </and>
     </dependency>
 
