@@ -54,7 +54,6 @@
 <!ENTITY GEMPAK_RESOURCES '<walltime>00:59:00</walltime><native></native>'>
 <!ENTITY SENDDBN "NO">
 <!ENTITY FHRSZERO "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
-<!ENTITY FHRSHRRR "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48">
 <!ENTITY FHRS "01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
 
 
@@ -197,25 +196,22 @@
   </task>
 </metatask>
 
-  <metatask name="preproc_hrrr">
-  <var name="fhr">&FHRSHRRR;</var>
-  <task name="preproc_hrrr_f#fhr#" cycledefs="regional" maxtries="3">
+
+  <task name="preproc_hrrr" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &PREPROC_RESOURCES;
-  <nodes>1:ppn=1</nodes>
+  <nodes>1:ppn=49</nodes>
     <command>&PRE; &JOBS;/JREFS_PREPROC_HRRR</command>
     <jobname><cyclestr>preprochrrr_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/preprochrrr_&domain;_@Y@m@d@H_f#fhr#.log</cyclestr></join>
-
-    <envar><name>fhr</name><value>#fhr#</value></envar>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/preprochrrr_&domain;_@H.log</cyclestr></join>
 
     <envar>
       <name>NTASK</name>
-      <value>1</value>
+      <value>49</value>
     </envar>
     <envar>
       <name>PTILE</name>
-      <value>1</value>
+      <value>49</value>
     </envar>
 
     <envar>
@@ -298,11 +294,14 @@
 
 
     <dependency>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf#fhr#.grib2</cyclestr></datadep>
+    <and>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf48.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf12.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINhrrr;.@Y@m@d/conus/hrrr.t@Hz.wrfprsf36.grib2</cyclestr></datadep>
+    </and>
     </dependency>
 
   </task>
-</metatask>
 
 
 <!--  ***********************************************************************  -->
@@ -494,8 +493,8 @@
         <and>
        <taskdep task="preproc_fv3_f#fhr#"/>
        <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
-       <taskdep task="preproc_hrrr_f#fhr#"/>
-       <metataskdep metatask="preproc_hrrr" cycle_offset="-6:00:00"/>
+       <taskdep task="preproc_hrrr"/>
+       <taskdep task="preproc_hrrr" cycle_offset="-6:00:00"/>
        <taskdep task="ffg_gen"/>
        </and>
       </dependency>
@@ -614,8 +613,8 @@
      <and>
        <taskdep task="preproc_fv3_f#fhr#"/>
        <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
-       <taskdep task="preproc_hrrr_f#fhr#"/>
-       <metataskdep metatask="preproc_hrrr" cycle_offset="-6:00:00"/>
+       <taskdep task="preproc_hrrr"/>
+       <taskdep task="preproc_hrrr"  cycle_offset="-6:00:00"/>
        <taskdep task="ffg_gen"/>
      </and>
     </dependency>
