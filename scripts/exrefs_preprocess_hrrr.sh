@@ -12,9 +12,9 @@ msg="$job HAS BEGUN"
 postmsg "$msg"
 
 
-hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
-21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 \
-41 42 43 44 45 46 47 48"
+# hrlist="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
+# 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 \
+# 41 42 43 44 45 46 47 48"
 
 region=${NEST}
 
@@ -26,10 +26,7 @@ then
 rm poe.hrrr
 fi
 
-for hr in $hrlist
-do
-echo "$USHrefs/enspost_preprocess_hrrr_1h.sh $PDY ${cyc} $hr ${region}" >> poe.hrrr
-done
+echo "$USHrefs/enspost_preprocess_hrrr_1h.sh $PDY ${cyc} $fhr ${region}" >> poe.hrrr
 
 chmod 775 poe.hrrr
 
@@ -37,6 +34,8 @@ mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.hrrr
 export err=$?; err_chk
 
 # need to generate 3 h QPF
+ if [ $FHR1 -gt 0 ]; then
+ if (( 10#$hr%3 == 0 )); then
 
 if [ -e poe.3hqpf ]
 then
@@ -50,7 +49,7 @@ fi
 
 #
 
-echo "$USHrefs/enspost_preprocess_hrrr_3hapcp.sh ${region} ${PDY} ${cyc}" >> poe.3hqpf
+echo "$USHrefs/enspost_preprocess_hrrr_3hapcp.sh ${region} ${PDY} ${cyc} ${fhr}" >> poe.3hqpf
 
 nproc=`cat poe.3hqpf | wc -l`
 
@@ -68,6 +67,9 @@ mpiexec -n $nproc -ppn $nproc --cpu-bind verbose,core cfp ./poe.3hqpf.tlb
 export err=$?; err_chk
 
 fi
+
+ fi # three hourly
+ fi # gt 0
 
 # end QPF
 
