@@ -50,7 +50,7 @@ fi
 cd ${DATA}
 
 mkdir hrrr_${dom}_${hr}
-cd hrrr_${dom}_${hr}
+cd ./hrrr_${dom}_${hr}
 
 if [ $dom = "conus" ]
 then
@@ -262,9 +262,6 @@ $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):" 
          msg="FATAL ERROR: hrrr.t${cyc}z.${dom}.f${hr}.grib2 not copied properly"
            err_exit $msg
 	fi
-
-      rm hrrr.t${cyc}z.f${hr}
-      rm  nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb inputs_nn.t${cyc}z.f${hr}.grb
 
 
         else

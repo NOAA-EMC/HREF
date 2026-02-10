@@ -4,7 +4,7 @@ set -x
 
 cd $DATA
 
-export fhr=$1
+fhr=${1}
 
 echo "$0 STRDATE "`date`
 
@@ -15,17 +15,7 @@ region=${NEST}
 
 echo defined region $region
 
-
-if [ -e poe.hrrr ]
-then
-rm poe.hrrr
-fi
-
-echo "$USHrefs/enspost_preprocess_hrrr_1h.sh $PDY ${cyc} $fhr ${region}" >> poe.hrrr
-
-chmod 775 poe.hrrr
-
-mpiexec -n $NTASK -ppn $PTILE --cpu-bind verbose,core cfp ./poe.hrrr
+$USHrefs/enspost_preprocess_hrrr_1h.sh $PDY ${cyc} ${fhr} ${region}
 export err=$?; err_chk
 
 if [ $fhr -lt 10 ]
@@ -37,8 +27,10 @@ FHR1=$fhr
 fi
 
 # need to generate 3 h QPF
- if [ $FHR1 -gt 0 ]; then
- if (( 10#$hr%3 == 0 )); then
+if [ $FHR1 -gt 0 ]; then
+if (( 10#$fhr%3 == 0 )); then
+
+echo in three hourly processing
 
 if [ -e poe.3hqpf ]
 then
@@ -50,8 +42,8 @@ fi
 
 $USHrefs/enspost_preprocess_hrrr_3hapcp.sh ${region} ${PDY} ${cyc} ${fhr}
 
- fi # three hourly
- fi # gt 0
+fi # three hourly
+fi # gt 0
 
 # end QPF
 
