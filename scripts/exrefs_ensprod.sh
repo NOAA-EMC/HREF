@@ -109,8 +109,8 @@ fi # 3 hourly for verf_g2g
 if [ $SENDDBN = YES ]; then
  for typ in $types
  do
-  $DBNROOT/bin/dbn_alert MODEL RRFS_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2
-  $DBNROOT/bin/dbn_alert MODEL RRFS_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2.idx
  done
 fi
 

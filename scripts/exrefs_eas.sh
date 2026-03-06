@@ -162,8 +162,8 @@ $WGRIB2 ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT
 fi
 
 if [ $SENDDBN = YES ]; then
-  $DBNROOT/bin/dbn_alert MODEL RRFS_ENSPOST_GB2 $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
-  $DBNROOT/bin/dbn_alert MODEL RRFS_ENSPOST_GB2_WIDX $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2 $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2_WIDX $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
 fi
 
 
