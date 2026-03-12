@@ -33,7 +33,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="4" cyclethrottle="10" cyclelifespan="00:32:00:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="3" cyclethrottle="10" cyclelifespan="00:32:00:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
 
