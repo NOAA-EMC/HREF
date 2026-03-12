@@ -112,17 +112,17 @@ fi
   export FORT11=${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
   export FORT12=${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2i
   export FORT51=xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr}
-  $TOCGRIB2 <$PARMwmo/grib2_awips_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
+  $TOCGRIB2 <$PARMwmo/grib2_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
   then
-    cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.${RUN}.t${cyc}z.awips_${type}.f${fhr}.${dom}
+    cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.${RUN}.t${cyc}z.${type}.f${fhr}.${dom}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.${RUN}.t${cyc}z.awips_${type}.f${fhr}.${dom}
+    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.${RUN}.t${cyc}z.${type}.f${fhr}.${dom}
   fi
 
 done
