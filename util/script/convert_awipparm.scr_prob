@@ -12,8 +12,8 @@ do
 for type in $types
 do
 
-file=grib2_awips_${RUN}_conus_${type}f${hr}_noffri
-fileout=grib2_awips_${RUN}_ak_${type}f${hr}
+file=grib2_${RUN}_conus_${type}f${hr}_noffri
+fileout=grib2_${RUN}_ak_${type}f${hr}
 
 cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:g | sed s:YEB:YE${TMAP}:g \
           | sed s:YFB:YF${TMAP}:g | sed s:YGB:YG${TMAP}:g | sed s:YHB:YH${TMAP}:g | sed s:YIB:YI${TMAP}:g \
@@ -34,8 +34,8 @@ do
 for type in $types
 do
 
-file=grib2_awips_${RUN}_conus_${type}f${hr}_noffri
-fileout=grib2_awips_${RUN}_hi_${type}f${hr}
+file=grib2_${RUN}_conus_${type}f${hr}_noffri
+fileout=grib2_${RUN}_hi_${type}f${hr}
 
 cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:g | sed s:YEB:YE${TMAP}:g \
           | sed s:YFB:YF${TMAP}:g | sed s:YGB:YG${TMAP}:g | sed s:YHB:YH${TMAP}:g | sed s:YIB:YI${TMAP}:g \
@@ -55,8 +55,8 @@ do
 for type in $types
 do
 
-file=grib2_awips_${RUN}_conus_${type}f${hr}_noffri
-fileout=grib2_awips_${RUN}_pr_${type}f${hr}
+file=grib2_${RUN}_conus_${type}f${hr}_noffri
+fileout=grib2_${RUN}_pr_${type}f${hr}
 
 cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:g | sed s:YEB:YE${TMAP}:g \
           | sed s:YFB:YF${TMAP}:g | sed s:YGB:YG${TMAP}:g | sed s:YHB:YH${TMAP}:g | sed s:YIB:YI${TMAP}:g \
