@@ -223,9 +223,11 @@ C grib2
 	if (IRET .ne. 0 .and.  ihrs2 .eq. 1) then
            write(*,*) 'set 1 h asnow_earlier to zero'
            asnow_earlier=0.
+           IRET=0
 	elseif (IRET .ne. 0 .and. ihrs2 .eq. 3 .and. ihrs1 .eq. 0)then
            write(*,*) 'set 3 h asnow_earlier to zero'
            asnow_earlier=0.
+           IRET=0
         elseif (IRET .ne. 0 .and.  ihrs2 .ne. 1) then
            write(0,*) 'bad getgb1 (29) earlier ', IRET
            write(*,*) 'ihrs1,ihrs2 is: ', ihrs1,ihrs2
@@ -564,7 +566,8 @@ C grib2
       IBM=0
       IBITM = 0
 !      gfld_qpf%idrtmpl(3)=5.0
-      SGDS  = gfld%idrtmpl(3)
+      SGDS  = gfld_qpf%idrtmpl(3)
+      write(0,*) 'SGDS defined as: ', SGDS
 
 !     set bitmap
       DO N=1,IM*JM
@@ -600,9 +603,10 @@ C grib2
 	write(0,*) 'WEASD use gfld_qpf%idrtmpl(1:5): ', 
      &                        gfld_qpf%idrtmpl(1:5)
 
+
         if (is_hrrr .eq. 0) then
 	call putgb2(13,GFLD_QPF,IRET)
-        write(0,*) 'IRET from putgb2 for sprecip ', IRET
+        write(0,*) 'IRET from putgb2 for WEASD ', IRET
         endif
 
 ! add asnow piece
@@ -615,7 +619,7 @@ C grib2
       IBM=0
       IBITM = 0
       gfld_qpf%idrtmpl(3)=5.0
-      SGDS  = gfld%idrtmpl(3)
+      SGDS  = gfld_qpf%idrtmpl(3)
 
 !     set bitmap
       DO N=1,IM*JM
@@ -637,13 +641,12 @@ C grib2
      &                ISCALE,GROUND,GMIN,GMAX,NBIT)
 
       write(0,*) 'returned NBIT for ASNOW as: ', NBIT
-!      write(0,*) 'returned ISCALE as: ', ISCALE
-!      write(0,*) 'GMIN,GMAX: ', GMIN,GMAX
-
 
         gfld_qpf%idrtmpl(4)=NBIT
 
-	write(0,*) 'use gfld%idrtmpl(1:5): ', gfld%idrtmpl(1:5)
+	write(0,*) 'use gfld_qpf%idrtmpl(1:5): ', 
+     +         gfld_qpf%idrtmpl(1:5)
+
 
 	call putgb2(13,GFLD_QPF,IRET)
         write(0,*) 'IRET from putgb2 for asnowprecip ', IRET
@@ -663,7 +666,7 @@ C grib2
       IBITM = 0
       gfld_qpf%idrtmpl(2)=0.0
       gfld_qpf%idrtmpl(3)=5.0
-      SGDS  = gfld%idrtmpl(3)
+      SGDS  = gfld_qpf%idrtmpl(3)
 
 !     set bitmap
       DO N=1,IM*JM
