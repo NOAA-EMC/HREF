@@ -17,7 +17,6 @@ date
 export pid=$$
 export DATA=${DATA:-${DATAROOT}/${jobid}.${pid}}
 mkdir -p $DATA
-# rm -rf $DATA/*
 cd $DATA
 
 msg="JOB $job HAS BEGUN"
@@ -59,16 +58,20 @@ export SCRIPTSrefs=${SCRIPTSrefs:-$HOMErefs/scripts}
 export NET=${NET:-refs}
 export RUN=${RUN:-refs}
 
-export IOBUF_PARAMS='*:size=8M:count=8'
 ##############################################
 # Define running directory and COM directories
 ##############################################
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}}
-export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN.${PDY}}
+export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/$NET/${refs_ver})/refsprep/refs}
 
-if [ ! -d $COMOUT ] ; then
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}/${cyc}}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN}
+
+if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod
+fi
+
+if [ ! -d $COMOUT/verf_g2g ] ; then 
  mkdir -p $COMOUT/verf_g2g
 fi
 
@@ -76,12 +79,18 @@ export pgmout="OUTPUT.$$"
  
 ########################################################
 # Execute the script.
-
 $HOMErefs/scripts/exrefs_eas.sh
-########################################################
+export err=$?; err_chk
+#################################################################
 
+# Post successful completion message
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+postmsg $jlogfile "$msg"
+
+# Print exec output
+if [ -e $pgmout ]; then
+  cat $pgmout
+fi
 
 cd $DATAROOT
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

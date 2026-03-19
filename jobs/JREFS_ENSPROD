@@ -14,10 +14,23 @@ set -xa
 export PS4='$SECONDS + ' 
 date
 
+###################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-refs}
+export RUN=${RUN:-refs}
+
 ###########################################################
 # obtain unique process id (pid) and make temp directories
 ###########################################################
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+#export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+export DATA=${DATA:-${DATAROOT}/${NET}_ensprod_${NEST}_${cyc}_${refs_ver_2d}_${envir}}
+
+if [ $fhr -eq '01' -a -s $DATA ]; then
+  echo "$DATA existed at fhr=$fhr, move it to hold ..."
+  mv $DATA ${DATA}_$(date +%Y%m%d_%H%M).hold;
+fi
+
 mkdir -p $DATA
 
 cd $DATA
@@ -31,14 +44,17 @@ postmsg "$msg"
 
 export cycle=${cycle:-t${cyc}z}
 
-setpdy.sh
-. ./PDY
+if [ -s ${DATA}/PDY ]; then 
+  source ${DATA}/PDY
+else
+  setpdy.sh
+  . ./PDY
+fi
 
 ##################################################
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
 ##################################################
-# export ndate=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -52,30 +68,25 @@ export USHrefs=${USHrefs:-$HOMErefs/ush}
 export FIXrefs=${FIXrefs:-$HOMErefs/fix}
 export SCRIPTSrefs=${SCRIPTSrefs:-$HOMErefs/scripts}
 
-###################################
-# Specify NET and RUN Name and model
-####################################
-export NET=${NET:-refs}
-export RUN=${RUN:-refs}
-
-export IOBUF_PARAMS='*:size=8M:count=8'
-
 ##############################################
 # Define running directory and COM directories
 ##############################################
 
 ## PDY not included here as pull data from PDYm1 as well
 
-export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN.${PDY}}
+export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/$NET/${refs_ver})/refsprep/refs}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN}
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}}
-export COMINffg=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
-export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}/${cyc}}
+export COMINffg=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/${cyc}}
+export COMINffgm1=${COMINffg:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDYm1}/${cyc}}
 
 if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod
+fi
+
+if [ ! -d $COMOUT/verf_g2g ] ; then 
  mkdir -p $COMOUT/verf_g2g
- mkdir -p $COMOUT/wmo
 fi
 
 export pgmout="OUTPUT.$$"
@@ -88,17 +99,26 @@ export pgmout="OUTPUT.$$"
 
 ###################################################
 # Execute the Script exrefs_ensprod.sh
-
-
 $SCRIPTSrefs/exrefs_ensprod_link.sh $fhr
+export err=$?; err_chk 
 $SCRIPTSrefs/exrefs_ensprod.sh $fhr
+export err=$?; err_chk 
+#################################################################
 
-
+# Post successful completion message
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
-date
+postmsg $jlogfile "$msg"
+
+# Print exec output
+if [ -e $pgmout ]; then
+  cat $pgmout
+fi
 
 cd $DATAROOT
-if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+#if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+if [ $KEEPDATA = NO ]; then
+#  rm -rf $DATA;
+   echo "it is a shared working $DATA and JREFS_CLEANUP job will clean it later.."
+fi
 
 date
