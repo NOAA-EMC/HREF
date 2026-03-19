@@ -76,96 +76,101 @@ mpiexec -n $nproc_loc -ppn $nproc_loc --cpu-bind verbose,core cfp ./poe.qpf_snow
 
 export err=$?; err_chk
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.pqpf01_easfrac.f${fhr}.${dom}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.pqpf01_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.snow01_easfrac.f${fhr}.${dom}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.snow01_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf01_easfrac.f${fhr}.grib2 > $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/${RUN}.t${cyc}z.${dom}.snow01_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.pqpf01_easfrac.f${fhr}.${dom}.grib2 > $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
+cat $DATA/${RUN}.t${cyc}z.snow01_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
 
 if [ $((10#$fhr)) -ge 3 -a $((10#$fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2  ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.pqpf03_easfrac.f${fhr}.${dom}.grib2  ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.pqpf03_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.snow03_easfrac.f${fhr}.${dom}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.snow03_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf03_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/${RUN}.t${cyc}z.${dom}.snow03_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.pqpf03_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
+cat $DATA/${RUN}.t${cyc}z.snow03_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
 
 fi
 
 if [ $((10#$fhr)) -ge 6 -a $((10#$fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.pqpf06_easfrac.f${fhr}.${dom}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.pqpf06_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.snow06_easfrac.f${fhr}.${dom}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.snow06_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf06_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
-cat $DATA/${RUN}.t${cyc}z.${dom}.snow06_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.pqpf06_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
+cat $DATA/${RUN}.t${cyc}z.snow06_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
 
 fi
 
 if [ $((10#$fhr)) -ge 12 -a $((10#$fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.pqpf12_easfrac.f${fhr}.${dom}.grib2 ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.pqpf12_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf12_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.pqpf12_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
 fi
 
 if [ $((10#$fhr)) -ge 24 -a $((10#$fhr%3)) -eq 0 ]
 then
 
-if [ ! -e $DATA/${RUN}.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2  ]
+if [ ! -e $DATA/${RUN}.t${cyc}z.pqpf24_easfrac.f${fhr}.${dom}.grib2  ]
 then
-msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2"
+msg="FATAL ERROR: missing $DATA/${RUN}.t${cyc}z.pqpf24_easfrac.f${fhr}.${dom}.grib2"
 err_exit $msg
 fi
 
-cat $DATA/${RUN}.t${cyc}z.${dom}.pqpf24_easfrac.f${fhr}.grib2 >> $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
+cat $DATA/${RUN}.t${cyc}z.pqpf24_easfrac.f${fhr}.${dom}.grib2 >> $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
 fi
 
 if [ $SENDCOM == 'YES' ]
 then
-cp $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${COMOUT}/ensprod/
-## $WGRIB2 $DATA/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 -match APCP -grib ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.easffair.f${fhr}.grib2
-$WGRIB2 ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 -s > ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
+cpreq $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 ${COMOUT}/ensprod/
+## $WGRIB2 $DATA/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 -match APCP -grib ${COMOUT}/ensprod/${RUN}.t${cyc}z.easffair.f${fhr}.${dom}.grib2
+$WGRIB2 ${COMOUT}/ensprod/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 -s > ${COMOUT}/ensprod/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2.idx
 fi
 
 if [ $SENDDBN = YES ]; then
-  $DBNROOT/bin/dbn_alert MODEL REFS_GB2 $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2
-  $DBNROOT/bin/dbn_alert MODEL REFS_GB2_WIDX $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2 $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2_WIDX $job ${COMOUT}/ensprod/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2.idx
 fi
 
+if [ ! -d $COMOUT/log/eas ] ; then
+  mkdir -p $COMOUT/log/eas
+fi
+cp -p $DATA/*/qpf_combo*log $COMOUT/log/eas/.
+cp -p $DATA/*/snow_combo*log $COMOUT/log/eas/.
 
 #####################################################################
 # GOOD RUN

@@ -18,7 +18,7 @@ cd $DATA
 export fhr=$1
 
 echo "$0 STRDATE "`date`
-
+echo " NEST is $NEST"
 msg="$job HAS BEGUN"
 postmsg "$msg"
 
@@ -58,18 +58,18 @@ do
  do
   if [ -s $DATA/$fhr/${subtype}/${RUN}.${typ}.t${cyc}z.f$fhr ]
   then
-  cpreq $DATA/$fhr/${subtype}/${RUN}.${typ}.t${cyc}z.f$fhr  $DATA/${fhr}/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2_${subtype}
+  cpreq $DATA/$fhr/${subtype}/${RUN}.${typ}.t${cyc}z.f$fhr  $DATA/${fhr}/${RUN}.t${cyc}z.${typ}.f$fhr.${NEST}.grib2_${subtype}
   fi
  done
 done
 
 for typ in $types
 do
-files=`ls $DATA/${fhr}/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2_?`
-cat ${files} > $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2
+files=`ls $DATA/${fhr}/${RUN}.t${cyc}z.${typ}.f$fhr.${NEST}.grib2_?`
+cat ${files} > $COMOUT/ensprod/${RUN}.t${cyc}z.${typ}.f$fhr.${NEST}.grib2
 err=$?; err_chk
 
-$WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${NEST}.${typ}.f$fhr.grib2.idx
+$WGRIB2 $COMOUT/ensprod/${RUN}.t${cyc}z.${typ}.f$fhr.${NEST}.grib2  -s >  $COMOUT/ensprod/${RUN}.t${cyc}z.${typ}.f$fhr.${NEST}.grib2.idx
 err=$?; err_chk
 done
 
@@ -92,15 +92,18 @@ do
 
 if [ -e $DATA/refs.m${m}.t${cyc}z.f${fhr} ]
 then
-cp -d $DATA/refs.m${m}.t${cyc}z.f${fhr}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${NEST}.f${fhr}
+#cp -d $DATA/refs.m${m}.t${cyc}z.f${fhr}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.f${fhr}
+cpreq  $DATA/refs.m${m}.t${cyc}z.f${fhr}  $COMOUT/verf_g2g/refs.m${m}.t${cyc}z.${NEST}.f${fhr}
 fi
 
 if [ -e $DATA/prcip.m${m}.t${cyc}z.f${fhr} ]
 then
-cp -d $DATA/prcip.m${m}.t${cyc}z.f${fhr} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${NEST}.f${fhr}
+#cp -d $DATA/prcip.m${m}.t${cyc}z.f${fhr} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.f${fhr}
+cpreq $DATA/prcip.m${m}.t${cyc}z.f${fhr} $COMOUT/verf_g2g/prcip.m${m}.t${cyc}z.${NEST}.f${fhr}
 fi
 
-cp -d $DATA/${fhr}/1/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${NEST}.f${fhr}
+#cp -d $DATA/${fhr}/1/filename              $COMOUT/verf_g2g/filename.t${cyc}z.f${fhr}
+cpreq  $DATA/${fhr}/1/filename              $COMOUT/verf_g2g/filename.t${cyc}z.${NEST}.f${fhr}
 
 done
 
@@ -109,8 +112,8 @@ fi # 3 hourly for verf_g2g
 if [ $SENDDBN = YES ]; then
  for typ in $types
  do
-  $DBNROOT/bin/dbn_alert MODEL REFS_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2
-  $DBNROOT/bin/dbn_alert MODEL REFS_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${dom}.${typ}.f${fhr}.grib2.idx
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2 $job $COMOUT/ensprod/${RUN}.t${cyc}z.${typ}.f${fhr}.${NEST}.grib2
+  $DBNROOT/bin/dbn_alert MODEL REFS_GB2_WIDX $job $COMOUT/ensprod/${RUN}.t${cyc}z.${typ}.f${fhr}.${NEST}.grib2.idx
  done
 fi
 

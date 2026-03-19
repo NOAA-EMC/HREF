@@ -41,7 +41,7 @@ if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
- echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> ./poe.rrfs.${hr}
+ echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region} " >> ./poe.rrfs.${hr}
 
 done
 
@@ -76,7 +76,7 @@ if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
 
-echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> ./poe.3hqpf.${hr}
+echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr} " >> ./poe.3hqpf.${hr}
 
 done
 

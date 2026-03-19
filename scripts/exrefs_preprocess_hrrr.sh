@@ -28,7 +28,7 @@ fi
 
 for hr in $hrlist
 do
-echo "$USHrefs/enspost_preprocess_hrrr_1h.sh $PDY ${cyc} $hr ${region}" >> poe.hrrr
+echo "$USHrefs/enspost_preprocess_hrrr_1h.sh $PDY ${cyc} $hr ${region} " >> poe.hrrr
 done
 
 chmod 775 poe.hrrr
@@ -50,7 +50,7 @@ fi
 
 #
 
-echo "$USHrefs/enspost_preprocess_hrrr_3hapcp.sh ${region} ${PDY} ${cyc}" >> poe.3hqpf
+echo "$USHrefs/enspost_preprocess_hrrr_3hapcp.sh ${region} ${PDY} ${cyc} " >> poe.3hqpf
 
 nproc=`cat poe.3hqpf | wc -l`
 
