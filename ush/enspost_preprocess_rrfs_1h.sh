@@ -18,7 +18,9 @@ set -x
 if [ $# -ne 6 ]
 then
 echo need 6 arguments, day,cycle,member,member file name,forecast hour,and domain
-exit
+msg="need 6 arguments, day,cycle,member,member file name,forecast hour,and domain in $0"
+err_exit $msg 
+#exit
 fi
 
 day=${1}
@@ -27,6 +29,8 @@ mem=${3}
 name=${4}
 hr=${5}
 dom=${6}
+
+export PS4='$SECONDS + preproc_rrfs_1h:${dom}_${cyc}_${mem}_${name}_${hr}: '
 
 if [ ${mem} = '01' ]
 then
@@ -66,9 +70,9 @@ fi
 #then
 #mkdir -p $GESOUT.${PDY}
 #fi
-if [ ! -e $GESOUT.${day} ]
+if [ ! -e $GESOUT.${day}/${cyc} ]
 then
-mkdir -p $GESOUT.${day}
+mkdir -p $GESOUT.${day}/${cyc}
 fi
 
 cd ${DATA}
@@ -84,14 +88,15 @@ if [[ $dom == "conus" || $dom == "ak" ]]
 then
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
+#altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
 else # HI/PR
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
 # need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
+#altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
 fi
 
-if [ ! -e $filecheck -a -e $altfilecheck ]
+#if [ ! -e $filecheck -a -e $altfilecheck ]
+if [ ! -e $filecheck ]
 then
 filecheck=$altfilecheck
 fi
@@ -276,7 +281,7 @@ echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 $WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
-        cp ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+        cpreq ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
         err=$? ; export err
 	if [ $err -ne 0 ]
          then

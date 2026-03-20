@@ -34,6 +34,8 @@ ff=$fhr
 dom=${1}
 subtype=${2}
 
+export PS4='$SECONDS + ${dom}_f${fhr}_${subtype}: '
+
 mkdir -p $DATA/${ff}/${subtype}
 
 if [ -e $DATA/${ff}/DONE.*_${subtype} ]
@@ -244,7 +246,7 @@ then
 mkdir -p $COMOUT/log
 fi
 
-cat $DATA/$ff/output_enspost_ensprod.$ff_${subtype} >> $COMOUT/log/output_enspost_ensprod.t${cyc}z.$ff
+cat $DATA/$ff/output_enspost_ensprod.$ff_${subtype} >> $COMOUT/log/output_enspost_ensprod.${dom}.t${cyc}z.f${ff}_${subtype}
 
 
 exit

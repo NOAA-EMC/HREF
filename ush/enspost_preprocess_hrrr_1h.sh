@@ -25,6 +25,7 @@ hr=${3}
 dom=${4}
 JPDTN=8
 
+export PS4='$SECONDS + preproc_hrrr_1h:${dom}_${PDY}_${cyc}_${hr}: '
 
 if [ $dom = 'conus' ]
 then
@@ -42,9 +43,9 @@ fi
 
 echo $dom $hr
 
-if [ ! -e $GESOUT.${PDY} ]
+if [ ! -e $GESOUT.${PDY}/${cyc} ]
 then
-mkdir -p $GESOUT.${PDY}
+mkdir -p $GESOUT.${PDY}/${cyc}
 fi
 
 cd ${DATA}
@@ -256,7 +257,7 @@ $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):" 
  fi
 
 
-         cp ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
+         cpreq ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
         err=$? ; export err
 
         if [ $err -ne 0 ]
@@ -275,3 +276,4 @@ $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):" 
          err_exit $msg
 
         fi
+echo "exiting ..."

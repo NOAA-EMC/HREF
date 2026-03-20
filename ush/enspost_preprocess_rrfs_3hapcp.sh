@@ -30,6 +30,7 @@ mem=${4}
 name=${5}
 fhr=${6}
 
+export PS4='$SECONDS + preproc_rrfs_3hapcp:${dom}_${cyc}_${mem}_${name}_${hr}: '
 
 if [ $dom = 'conus' ]
 then
@@ -162,7 +163,8 @@ echo hrs down here is $hrs
 
 for hr in $hrs
 do
-cp fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+ cpreq fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2 
+#cpreq fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/fv3s.t${cyc}z.${dom}.3hapcp.m${name1}.f${hr}.grib2 
 
  err=$?
  export err # ; err_chk

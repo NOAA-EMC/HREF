@@ -608,27 +608,27 @@ wgribdate=PDY+cyc
 if qpf_interval == 1:
   incr = 1
   thresh_use=pqpf_1h_thresh
-  outbase = 'refs.t'+cyc[0:2]+'z.'+dom+'.pqpf01_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'refs.t'+cyc[0:2]+'z.pqpf01_easfrac.f%02d.'%(start_hour+qpf_interval)+dom+'.grib2'
 
 if qpf_interval == 3:
   incr = 3
   thresh_use=pqpf_3h_thresh
-  outbase = 'refs.t'+cyc[0:2]+'z.'+dom+'.pqpf03_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'refs.t'+cyc[0:2]+'z.pqpf03_easfrac.f%02d.'%(start_hour+qpf_interval)+dom+'.grib2'
 
 if qpf_interval == 6:
   incr = 3
   thresh_use=pqpf_6h_thresh
-  outbase = 'refs.t'+cyc[0:2]+'z.'+dom+'.pqpf06_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'refs.t'+cyc[0:2]+'z.pqpf06_easfrac.f%02d.'%(start_hour+qpf_interval)+dom+'.grib2'
 
 if qpf_interval == 12:
   incr = 3
   thresh_use=pqpf_12h_thresh
-  outbase = 'refs.t'+cyc[0:2]+'z.'+dom+'.pqpf12_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'refs.t'+cyc[0:2]+'z.pqpf12_easfrac.f%02d.'%(start_hour+qpf_interval)+dom+'.grib2'
 
 if qpf_interval == 24:
   incr = 3
   thresh_use=pqpf_24h_thresh
-  outbase = 'refs.t'+cyc[0:2]+'z.'+dom+'.pqpf24_easfrac.f%02d'%(start_hour+qpf_interval)+'.grib2'
+  outbase = 'refs.t'+cyc[0:2]+'z.pqpf24_easfrac.f%02d.'%(start_hour+qpf_interval)+dom+'.grib2'
 
 outfile = DATA + '/' + outbase
 
@@ -656,47 +656,47 @@ for mem in members:
     print('itime for this member: ', itime)
     itime_alt = starttime-timedelta((start_hour+latency+6)/24.0)
     if memname == 'rrfs':
-      file0 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
-      file1 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file2 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
-      file3 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
-      file4 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
-      file5 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
-      file6 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
-      file7 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'      
-      file8 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
+      file0 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency)+'.grib2'
+      file1 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file2 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr)+'.grib2'
+      file3 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+3*incr)+'.grib2'
+      file4 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+4*incr)+'.grib2'
+      file5 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+5*incr)+'.grib2'
+      file6 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6*incr)+'.grib2'
+      file7 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+7*incr)+'.grib2'
+      file8 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+8*incr)+'.grib2'
 
-      file0alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6)+'.grib2'
-      file1alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
-      file2alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
-      file3alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+3*incr+6)+'.grib2'
-      file4alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+4*incr+6)+'.grib2'
-      file5alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+5*incr+6)+'.grib2'
-      file6alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6*incr+6)+'.grib2'
-      file7alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+7*incr+6)+'.grib2'
-      file8alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day + '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+8*incr+6)+'.grib2'
+      file0alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6)+'.grib2'
+      file1alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
+      file2alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
+      file3alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+3*incr+6)+'.grib2'
+      file4alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+4*incr+6)+'.grib2'
+      file5alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+5*incr+6)+'.grib2'
+      file6alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+6*incr+6)+'.grib2'
+      file7alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+7*incr+6)+'.grib2'
+      file8alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+8*incr+6)+'.grib2'
 
     elif mem == 'hrrr':
-      file0 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency)+'.grib2'
-      file1 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+incr+latency)+'.grib2'
-      file2 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+2*incr+latency)+'.grib2'
-      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+3*incr+latency)+'.grib2'
-      file4 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+4*incr+latency)+'.grib2'
-      file5 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+5*incr+latency)+'.grib2'
-      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+6*incr+latency)+'.grib2'
-      file7 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+7*incr+latency)+'.grib2'
-      file8 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+8*incr+latency)+'.grib2'
+      file0 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency)+'.grib2'
+      file1 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+incr+latency)+'.grib2'
+      file2 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+2*incr+latency)+'.grib2'
+      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+3*incr+latency)+'.grib2'
+      file4 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+4*incr+latency)+'.grib2'
+      file5 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+5*incr+latency)+'.grib2'
+      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+6*incr+latency)+'.grib2'
+      file7 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+7*incr+latency)+'.grib2'
+      file8 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+8*incr+latency)+'.grib2'
 
     elif mem == 'hrrrak': 
-      file0 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency)+'.grib2'
-      file1 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+incr+latency)+'.grib2'
-      file2 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+2*incr+latency)+'.grib2'
-      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+3*incr+latency)+'.grib2'
-      file4 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+4*incr+latency)+'.grib2'
-      file5 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+5*incr+latency)+'.grib2'
-      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+6*incr+latency)+'.grib2'
-      file7 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+7*incr+latency)+'.grib2'
-      file8 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day + '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+8*incr+latency)+'.grib2'
+      file0 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency)+'.grib2'
+      file1 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+incr+latency)+'.grib2'
+      file2 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+2*incr+latency)+'.grib2'
+      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+3*incr+latency)+'.grib2'
+      file4 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+4*incr+latency)+'.grib2'
+      file5 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+5*incr+latency)+'.grib2'
+      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+6*incr+latency)+'.grib2'
+      file7 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+7*incr+latency)+'.grib2'
+      file8 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+8*incr+latency)+'.grib2'
 
 
     elif memname == 'fv3n':
@@ -1093,3 +1093,4 @@ for t in thresh_use:
   print('Wrote ', qpf_interval, ' PQPF to:',outfile, 'for ',t, 'inch threshold')
   os.system('rm record_out.bin')
   os.system('rm premod.grb')
+  print('exiting ush/enspost_make_easfracqpf_combo.py ...')
