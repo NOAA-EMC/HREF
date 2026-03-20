@@ -23,3 +23,18 @@ export libjpeg_ver=9c
 export libjpeg_turbo_ver=2.1.0
 export g2tmpl_ver=1.17.0
 export grib_util_ver=1.5.0
+export jasper_ver=2.0.25
+
+export refs_ver_2d=v1.0 
+#####################################
+## for para testing
+#####################################
+export SENDDBN=YES
+export COMPATH=/lfs/h1/ops/para/com/rrfs:/lfs/h1/ops/prod/com/hrrr
+export DBNLOG=YES
+export DCOMROOT=/lfs/h1/ops/prod/dcom
+export MAILTO='simon.hsiao@noaa.gov'
+export MAILCC='simon.hsiao@noaa.gov'
+#export KEEPDATA=YES
+#export PDY=20260207
+export DATAROOT=/lfs/f1/ops/para/tmp
