@@ -19,7 +19,7 @@ set -xa
 
 dom=${1}
 
-DBNDOM=${dom^^}
+DBNDOM="${dom^^}"
 
 type=${2}
 
