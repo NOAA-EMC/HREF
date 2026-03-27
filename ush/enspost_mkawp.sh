@@ -2,7 +2,7 @@
 ####  UNIX Script Documentation Block
 #                      .                                             .
 # Script name:         enspost_mkawp.sh
-# Script description:  To generate the AWIPS products for the RRFS ensemble prods
+# Script description:  To generate the WMO products for the RRFS ensemble prods
 #
 # Author:      G Manikin /  EMC         Date: 2014-06-30
 #
@@ -18,6 +18,9 @@
 set -xa
 
 dom=${1}
+
+DBNDOM=${dom^^}
+
 type=${2}
 
 runhrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60"
@@ -112,17 +115,17 @@ fi
   export FORT11=${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
   export FORT12=${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2i
   export FORT51=xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr}
-  $TOCGRIB2 <$PARMwmo/grib2_awips_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
+  $TOCGRIB2 <$PARMwmo/grib2_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
   then
-    cpreq xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.${RUN}.t${cyc}z.awips_${type}.f${fhr}.${dom}
+    cpreq xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.${RUN}.t${cyc}z.${type}.f${fhr}.${dom}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW REFS_ENSPOST_AWIPS $job $COMOUT/grib2.${RUN}.t${cyc}z.awips_${type}.f${fhr}.${dom}
+    $DBNROOT/bin/dbn_alert NTC_LOW REFS_ENSPOST_${DBNDOM} $job $COMOUT/grib2.${RUN}.t${cyc}z.${type}.f${fhr}.${dom}
   fi
 
 done
