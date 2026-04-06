@@ -94,7 +94,7 @@ fi
     cat ${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2  >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
   fi
 
-  cat ${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 ${RUN}.t${cyc}z.ffri.f${fhr}.${dom}.grib2 >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
+#avoid  cat ${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 ${RUN}.t${cyc}z.ffri.f${fhr}.${dom}.grib2 >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
 
   elif [ $type = "pmmn" ]
   then
