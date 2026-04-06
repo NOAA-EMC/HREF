@@ -390,13 +390,13 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* WMO/AWIP piece *****************************  -->
 
-  <task name="refs_awips" cycledefs="regional" maxtries="2">
+  <task name="refs_prdgen" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
     <command>&PRE; &JOBS;/JREFS_AWIPS</command>
-    <jobname><cyclestr>refsawips_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/refsawips_&domain;_@H.log</cyclestr></join>
+    <jobname><cyclestr>refsprdgen_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsprdgen_&domain;_@H.log</cyclestr></join>
 
 
     <envar>
@@ -405,7 +405,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value><cyclestr>awips_&domain;_@Y@m@d</cyclestr></value>
+      <value><cyclestr>prdgen_&domain;_@Y@m@d</cyclestr></value>
     </envar>
     <envar>
       <name>machine</name>
@@ -455,7 +455,7 @@
       <value>&envir;</value>
     </envar>
 
-    <envar><name>jobid</name><value>refs_awips_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_prdgen_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
     <dependency>
      <and>
@@ -640,7 +640,7 @@
      <metataskdep metatask="ensprod"/>
      <metataskdep metatask="eas_gen"/>
      <taskdep task="refs_gempak"/>
-     <taskdep task="refs_awips"/>
+     <taskdep task="refs_prdgen"/>
      </and>
     </dependency>
 
