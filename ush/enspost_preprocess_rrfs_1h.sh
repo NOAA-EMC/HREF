@@ -87,26 +87,21 @@ if [ $name = 00 ];then
 if [[ $dom == "conus" || $dom == "ak" ]]
 then
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
-# need logic for mphys to find ctrl member
-#altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
+ filecheck2d=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.2dfld.3km.f0${hr}.${dom}.grib2
 else # HI/PR
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
-# need logic for mphys to find ctrl member
-#altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
-fi
-
-#if [ ! -e $filecheck -a -e $altfilecheck ]
-if [ ! -e $filecheck ]
-then
-filecheck=$altfilecheck
+ filecheck2d=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.2dfld.2p5km.f0${hr}.${dom}.grib2
 fi
 
 else
+
 if [[ $dom == "conus" || $dom == "ak" ]]
 then
  filecheck=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2
+ filecheck2d=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.2dfld.3km.f0${hr}.${dom}.grib2
 else # HI/PR
  filecheck=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2
+ filecheck2d=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.2dfld.2p5km.f0${hr}.${dom}.grib2
 
 fi
 
@@ -118,27 +113,28 @@ echo filecheck is $filecheck
         if [ -s $filecheck ]
         then
         $WGRIB2 $filecheck | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -grib fv3.t${cyc}z.f${hr} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -append -grib fv3.t${cyc}z.f${hr} $filecheck2d
+
+        $WGRIB2 $filecheck2d -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck2d -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
         
-        $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
 
         cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb soil.t${cyc}z.f${hr}.grb  >> nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
-#        $WGRIB2 $filecheck -match "WEASD" -match "anl" -grib nn2b.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match "WEASD" -grib nn2b.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck2d -match "WEASD" -grib nn2b.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck2d -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
          cat nn2b.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
         fi
 
-        $WGRIB2 $filecheck -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb top.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
