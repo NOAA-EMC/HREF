@@ -64,7 +64,7 @@ C  raw data
 
 	if (jpdtn_use .eq. 11) then
 		jpdtn_temp=1
-        elseif (jpdten_use .eq. 8) then
+        elseif (jpdtn_use .eq. 8) then
 		jpdtn_temp=0
         endif
 
