@@ -168,8 +168,8 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         elseif (gfld%ipdtnum .eq. 8) then
           jpd27_rec=27
         else
-  	  write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
-	endif
+          write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
+        endif
 
 !       FRZR
 
@@ -597,7 +597,7 @@ c      so use previously saved gfld_save
 
 ! -----------------------------
 
-	subroutine just_hrly(filehead, ff, jf, do_old, skip_1h,
+      subroutine just_hrly(filehead, ff, jf, do_old, skip_1h,
      +                                              jpdtn_use)
 
 C  raw data
@@ -768,6 +768,7 @@ c default is set to APCP
         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
 
         if (ie.eq.0) then
+
 
 !  	 write(0,*) 'populate FRZR nf (mod=0) of nfile: ', nf, nfile
          fz1(:)=gfld%fld(:)
@@ -1208,6 +1209,15 @@ c      so use previously saved gfld_save
 
 !!        Add a 1 h total for everyone
 	   gfld=gfld_save_1h
+
+           if (gfld%ipdtnum .eq. 11) then
+             jpd27_rec=30
+           elseif (gfld%ipdtnum .eq. 8) then
+             jpd27_rec=27
+           else
+             write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
+           endif
+
            gfld%fld(:)=dp1(:)
            gfld%ipdtmpl(jpd27_rec)=1
 	write(0,*) 'to putgb2 for ounit: ', ounit
@@ -1459,8 +1469,17 @@ c      so use previously saved gfld_save
         ounit=50+nff
         call baopen(ounit,output,ierr)
 
-!!        Add a 1 h total for everyone
-	   gfld=gfld_save_curr
+!!      Add a 1 h total for everyone
+        gfld=gfld_save_curr
+
+        if (gfld%ipdtnum .eq. 11) then
+          jpd27_rec=30
+        elseif (gfld%ipdtnum .eq. 8) then
+          jpd27_rec=27
+        else
+          write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
+        endif
+
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
            gfld%ipdtmpl(jpd27_rec)=3
 	write(0,*) 'to putgb2 for ounit: ', ounit
@@ -1653,7 +1672,16 @@ c      so use previously saved gfld_save
         ounit=50+nff
         call baopen(ounit,output,ierr)
 
-	   gfld=gfld_save_curr
+       gfld=gfld_save_curr
+
+        if (gfld%ipdtnum .eq. 11) then
+          jpd27_rec=30
+        elseif (gfld%ipdtnum .eq. 8) then
+          jpd27_rec=27
+        else
+          write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
+        endif
+
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
 !          gfld%ipdtmpl(jpd27_rec)=3
            gfld%ipdtmpl(27)=3
@@ -1879,7 +1907,16 @@ c      so use previously saved gfld_save
 
 
 !!        Add a 1 h total for everyone
-	   gfld=gfld_save_curr
+        gfld=gfld_save_curr
+
+        if (gfld%ipdtnum .eq. 11) then
+          jpd27_rec=30
+        elseif (gfld%ipdtnum .eq. 8) then
+          jpd27_rec=27
+        else
+          write(0,*) 'unexpected gfld%ipdtnum: ', gfld%ipdtnum
+        endif
+
            gfld%fld(:)=dphold(:,1)+dphold(:,2)+dphold(:,3)
            gfld%ipdtmpl(jpd27_rec)=3
 	write(0,*) 'to putgb2 for ounit: ', ounit
