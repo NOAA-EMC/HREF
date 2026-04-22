@@ -630,7 +630,7 @@
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&PRE; &JOBS;/JREFS_AWIPS</command>
+    <command>&PRE; &JOBS;/JREFS_PRDGEN</command>
     <jobname><cyclestr>refsprdgen_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_refs/refsprdgen_&domain;_@Y@m@d@H.log</cyclestr></join>
 
