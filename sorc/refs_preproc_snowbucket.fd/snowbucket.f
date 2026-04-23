@@ -308,7 +308,11 @@
 
         write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
 
-        bmap_f=gfld%bmap
+        if (associated(gfld%bmap)) then
+          bmap_f=gfld%bmap
+        else
+          bmap_f(:)=.true.
+        endif
 
         write(0,*) 'set asnow_later to gfld%fld'
         asnow_later=gfld%fld
