@@ -57,6 +57,7 @@ do
 
 file=grib2_${RUN}_conus_${type}f${hr}_noffri
 fileout=grib2_${RUN}_pr_${type}f${hr}
+fileconus=grib2_${RUN}_conus_${type}f${hr}
 
 cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:g | sed s:YEB:YE${TMAP}:g \
           | sed s:YFB:YF${TMAP}:g | sed s:YGB:YG${TMAP}:g | sed s:YHB:YH${TMAP}:g | sed s:YIB:YI${TMAP}:g \
@@ -65,6 +66,7 @@ cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:
           | sed s:YVB:YV${TMAP}:g | sed s:YWB:YW${TMAP}:g | sed s:YXB:YX${TMAP}:g | sed s:YYB:YY${TMAP}:g | sed s:YZB:YZ${TMAP}:g  > $fileout
 
 mv ${fileout} ../../parm/wmo/
+mv ${fileconus} ../../parm/wmo/
 rm ${file}
 done
 done

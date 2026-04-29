@@ -66,5 +66,6 @@ cat $file | sed s:YBB:YB${TMAP}:g | sed s:YCB:YC${TMAP}:g | sed s:YDB:YD${TMAP}:
           | sed s:YVB:YV${TMAP}:g | sed s:YWB:YW${TMAP}:g | sed s:YXB:YX${TMAP}:g | sed s:YYB:YY${TMAP}:g | sed s:YZB:YZ${TMAP}:g  > $fileout
 
 mv ${fileout} ../../parm/wmo/
+mv ${file} ../../parm/wmo/
 done
 done
