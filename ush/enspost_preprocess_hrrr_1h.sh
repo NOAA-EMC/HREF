@@ -188,14 +188,14 @@ fi
     echo $JPDTN >> input.${hr}.hrrr.snow
 
     $EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
-    export err=$? # ; err_chk
+    export err=$? ; err_chk
 
  # 1 h added to f01
  
  if [ -s ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
  then
 	 $EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
-	 export err=$? # ; err_chk
+	 export err=$? ; err_chk
 	 cat ./PCP1HR${hr}.tm00 >> ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
  fi
 
@@ -240,7 +240,7 @@ echo $JPDTN >> input.${hr}.hrrr.snow
 if [ -s ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 	$EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
-	export err=$? # ; err_chk
+	export err=$? ; err_chk
 	cat ./PCP3HR${hr}.tm00 >> ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
 fi
 

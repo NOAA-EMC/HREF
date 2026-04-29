@@ -251,7 +251,12 @@
           endif
 
           write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
-          bmap_f=gfld%bmap
+
+          if (associated(gfld%bmap)) then
+            bmap_f=gfld%bmap
+          else
+            bmap_f(:)=.true.
+          endif
 
           write(0,*) 'set s_later to gfld%fld'
           s_later=gfld%fld
@@ -279,7 +284,11 @@
 
           write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
 
-          bmap_f=gfld%bmap
+          if (associated(gfld%bmap)) then
+            bmap_f=gfld%bmap
+          else
+            bmap_f(:)=.true.
+          endif
 
           write(0,*) 'set fz_later to gfld%fld'
           fz_later=gfld%fld
