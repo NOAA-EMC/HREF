@@ -1,5 +1,5 @@
 #!/bin/ksh
-# Name of Script: exrrfs_runall.sh.sms 
+# Name of Script: exrefs_ensprod.sh
 # This script runs 1 USH script:
 #  (1) rrfs_ensprod.sh to get final ensemble products 
 # Arguments: cycle

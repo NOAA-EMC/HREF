@@ -1,4 +1,17 @@
+#! /bin/bash
+
 set -x
+
+# Name of Script: exrefs_eas.sh
+# This script runs multiple instances of ush python scripts to
+# generate EAS probabilities
+#
+# 
+# Argument: forecast hour (fhr) passed in from ecflow task
+#
+# Author: Matthew Pyle, EMC/NCEP, 2025
+#
+###########################################################
 
 cd $DATA
 
@@ -20,24 +33,10 @@ then
 rm -f ./poe.qpf_snow_${fhr}
 fi
 
-# ge 24 and mod(fhr%3) = 0
-# hrs="24 27 30 33 36 39 42 45 48"
-# need full list for this 24 h product (all 3 hourly from 24 onward?)
-# for fhr in $hrs
-# do
-
 if [ $((10#$fhr)) -ge 24 -a $((10#$fhr%3)) -eq 0 ]
 then
 echo "cd ${DATA}; mkdir qpf_${fhr}_24; cd qpf_${fhr}_24 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 24 >  qpf_combo_${dom}_${cyc}_24h_${fhr}.log" >> poe.qpf_snow_${fhr}
 fi
-
-# done
-
-# hrs="06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
-# ge 6 and mod(fhr%3) = 0
-# need full list for this 6 h product (all 3 hourly from 6 onward?)
-# for fhr in $hrs
-# do
 
 if [ $((10#$fhr)) -ge 6 -a $((10#$fhr%3)) -eq 0 ]
 then
@@ -45,9 +44,8 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_6; cd qpf_${fhr}_6 ; python ${USHrefs}/enspos
 echo "cd ${DATA}; mkdir snow_${fhr}_6; cd snow_${fhr}_6; python ${USHrefs}/enspost_make_easfracsnow_combo.py ${fhr} 6 > snow_combo_${dom}_${cyc}_6h_${fhr}.log" >> poe.qpf_snow_${fhr}
 fi
 
-# done
 
-# need full list for this 12 h product (all 3 hourly from 12 onward?)
+# need full list for this 12 h product (all 3 hourly from 12 onward)
 if [ $((10#$fhr)) -ge 12 -a $((10#$fhr%3)) -eq 0 ]
 then
 
@@ -55,7 +53,7 @@ echo "cd ${DATA}; mkdir qpf_${fhr}_12; cd qpf_${fhr}_12 ; python ${USHrefs}/ensp
 fi
 
 
-# need full list for this 3 h product (all 3 hourly from 3 onward?)
+# need full list for this 3 h product (all 3 hourly from 3 onward)
 if [ $((10#$fhr)) -ge 3 -a $((10#$fhr%3)) -eq 0 ]
 then
 echo "cd ${DATA}; mkdir qpf_${fhr}_3; cd qpf_${fhr}_3 ; python ${USHrefs}/enspost_make_easfracqpf_combo.py ${fhr} 3  > qpf_combo_${dom}_${cyc}_3h_${fhr}.log" >> poe.qpf_snow_${fhr}

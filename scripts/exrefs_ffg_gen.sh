@@ -1,5 +1,5 @@
 #!/bin/ksh
-# Name of Script:  exrrfs_enspost_ffggen.sh.ecf
+# Name of Script:  exrefs_ffg_gen.sh
 #
 # This script :
 #  (1) Copies latest FFG files from dcom
@@ -11,7 +11,7 @@
 #      into final output
 #
 # Author: Matthew Pyle, NCEP/EMC, 05/02/2019
-#  04/10/2023:  Jun Du -- renamed href to rrfs_enspost
+#  04/10/2023:  Jun Du -- renamed href to refs
 #         
 ###########################################################
 set -x
@@ -24,7 +24,7 @@ msg="$job HAS BEGUN"
 postmsg "$msg"
 
 RFC_LIST="150 152 153 154 155 156 157 158 159 160 161 162"
-MAILTO=${MAILTO:-"jun.du@noaa.gov"}
+MAILTO=${MAILTO:-"matthew.pyle@noaa.gov"}
 echo $MAILTO
 
 echo here with PDY $PDY

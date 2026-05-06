@@ -1,4 +1,15 @@
 #!/bin/ksh
+# Name of Script:  exrefs_preprocess_hrrr.sh
+#
+# This script :
+# 1) executes the enspost_preprocess_hrrr_1h.sh ush script for hours 00-48
+# 2) executes the enspost_preprocess_hrrr_3hapcp.sh ush script for additional QPF/snow processing
+# 3) The end result is preprocessed HRRR data ready to be ingested by the ensprod and eas codes.
+#
+#
+# Author: Matthew Pyle, NCEP/EMC, 05/02/2019
+# Updated 2022(?) for REFS purposes, largely by Jun Du.
+#         
 ###########################################################
 set -x
 

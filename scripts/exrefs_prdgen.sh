@@ -1,7 +1,7 @@
 #!/bin/ksh
-# Name of Script:  exrrfs_enspost_awips.sh.ecf
+# Name of Script:  exrefs_prdgen.sh
 # This script runs 1 USH script:
-#  (1) href_mkawp.sh to generate output for AWIPS/SBN
+#  (1) enspost_mkawp.sh to generate output for AWIPS/SBN
 #
 # Author: Matthew Pyle, NCEP/EMC, 08/16/2017
 #         Jun Du, 3/30/2023: changed all names to rrfs_enspost etc.

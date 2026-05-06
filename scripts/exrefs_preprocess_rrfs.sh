@@ -1,4 +1,13 @@
 #!/bin/ksh
+# Name of Script:  exrefs_preprocess_rrfs.sh
+#
+# This script :
+# 1) executes the enspost_preprocess_rrfs_1h.sh ush script for hours 00-60
+# 2) executes the enspost_preprocess_rrfs_3hapcp.sh ush script for additional QPF/snow processing
+# 3) The end result is preprocessed RRFS and RRFSens data ready to be ingested by the ensprod and eas codes.
+#
+# Updated 2022(?) for REFS purposes, largely by Jun Du.
+#
 ###########################################################
 set -x
 

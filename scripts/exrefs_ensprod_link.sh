@@ -1,12 +1,12 @@
 #!/bin/ksh
 # This script runs 1 scripts
-#  (1) rrfs_getmbr.sh to get soft link for namnest, hireswnmmb and hireswarw
+#  (1) rrfs_getmbr.sh to get soft link for RRFS, RRFSens, and HRRR data as needed
 # Arguments: fhr
 # Author: Binbin Zhou, EMC/NCEP, 02/02/2015
 #         Matthew Pyle, 9 April 2015 - eliminated most arguments in USH calls
 #         Matthew Pyle, 29 Mar 2016 - new script to allow the href_getmbr.sh to be separately
 #                                     poescript submitted from main job.
-#         Jun Du, 03/21/2023 - All names have been following rrfs_enspost or enspost convention
+#         Jun Du, 03/21/2023 - All names have been following refs_enspost or enspost convention
 #         
 ###########################################################
 set -x
