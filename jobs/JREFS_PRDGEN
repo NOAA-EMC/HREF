@@ -50,7 +50,7 @@ export pgmout=OUTPUT.$$
 
 #################################################################
 # Execute the script
-$HOMErefs/scripts/exrefs_awips.sh $type
+$HOMErefs/scripts/exrefs_prdgen.sh $type
 export err=$?; err_chk
 #################################################################
 
