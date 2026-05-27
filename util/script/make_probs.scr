@@ -1,95 +1,19 @@
+#! /bin/bash
 
 RUN=refs
 
-##############################
-base=grib2_${RUN}_conus_prob_non3h
-basealt=grib2_${RUN}_conus_prob_non3h_noffri
-##############################
+t1targ='Y'
+domtarg='conus'
 
-hr=1
-TCODE=B
-hrold=0
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}_noffri
+# t1targ='A'
+# domtarg='ak'
 
-hr=2
-TCODE=C
-hrold=1
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}_noffri
+# t1targ='H'
+# domtarg='hi'
 
-hr=4
-TCODE=E
-hrold=3
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}_noffri
+# t1targ='P'
+# domtarg='pr'
 
-hr=5
-TCODE=F
-hrold=4
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}_noffri
-
-hr=7
-TCODE=H
-hrold=6
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}_noffri
-
-hr=8
-TCODE=I
-hrold=7
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}
- #cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf0${hr}_noffri
-
-hr=10
-TCODE=K
-hrold=9
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-
-hr=11
-hrold=10
-TCODE=L
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-
-hr=13
-hrold=12
-TCODE=N
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-
-hr=14
-hrold=13
-TCODE=O
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-
-# hr=16
-# hrold=15
-# TCODE=Q
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-
-# hr=17
-# hrold=16
-# TCODE=R
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-
-# hrs="13 14 16 17 19 20 22 23 25 26 28 29 31 32 34 35"
-# hrs="25 26 28 29"
-
-# for hr in $hrs
-# do
-# let hrold=hr-1
-# TCODE=Z
-# cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}
-# cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g > grib2_${RUN}_conus_probf${hr}_noffri
-# done
-
-echo DONE non3h
 
 #########################################################
 base=grib2_${RUN}_conus_prob_3h
@@ -101,11 +25,16 @@ hrold=2
 hr3old=0
 TCODE=D
 
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_conus_probf0${hr}
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_${domtarg}_probf0${hr}
 
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_conus_probf0${hr}_noffri
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_${domtarg}_probf0${hr}
+fi
+
 
 ###########################################################################
 base=grib2_${RUN}_conus_prob_6h
@@ -117,21 +46,30 @@ hrold=5
 hr3old=3
 hr6old=0
 TCODE=G
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_conus_probf0${hr}
 
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_conus_probf0${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            |  sed s:_T1_:${t1targ}:g | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_${domtarg}_probf0${hr}
+
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_${domtarg}_probf0${hr}
+fi
 
 hr=9
 hrold=8
 hr3old=6
 hr6old=3
 TCODE=J
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_conus_probf0${hr}
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_conus_probf0${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_${domtarg}_probf0${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g > grib2_${RUN}_${domtarg}_probf0${hr}
+fi
 
 echo DONE 6h
 
@@ -146,11 +84,16 @@ hr3old=9
 hr6old=6
 hr12old=0
 TCODE=M
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}
 
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=15
 hrold=14
@@ -158,10 +101,14 @@ hr3old=12
 hr6old=9
 hr12old=3
 TCODE=P
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=18
 hrold=17
@@ -169,10 +116,14 @@ hr3old=15
 hr6old=12
 hr12old=6
 TCODE=S
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=21
 hrold=20
@@ -180,10 +131,14 @@ hr3old=18
 hr6old=15
 hr12old=9
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 echo DONE 12h
 
@@ -200,11 +155,15 @@ hr6old=18
 hr12old=12
 hr24old=0
 TCODE=T
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
 
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=27
 hrold=26
@@ -213,11 +172,14 @@ hr6old=21
 hr12old=15
 hr24old=3
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=30
 hrold=29
@@ -226,11 +188,14 @@ hr6old=24
 hr12old=18
 hr24old=6
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=33
 hrold=32
@@ -239,11 +204,14 @@ hr6old=27
 hr12old=21
 hr24old=9
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=36
 hrold=35
@@ -252,11 +220,14 @@ hr6old=30
 hr12old=24
 hr24old=12
 TCODE=U
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=39
 hrold=38
@@ -265,11 +236,14 @@ hr6old=33
 hr12old=27
 hr24old=15
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=42
 hrold=41
@@ -278,10 +252,14 @@ hr6old=36
 hr12old=30
 hr24old=18
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=45
 hrold=44
@@ -290,11 +268,14 @@ hr6old=39
 hr12old=33
 hr24old=21
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=48
 hrold=47
@@ -303,11 +284,14 @@ hr6old=42
 hr12old=36
 hr24old=24
 TCODE=V
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 # TCODE=Z beyond f48????
 #
@@ -319,10 +303,10 @@ hr12old=39
 hr24old=27
 TCODE=Z
 # cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-#             | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
+#             | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
 
 # cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-#            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+#            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
 
 
 hr=54
@@ -332,11 +316,14 @@ hr6old=48
 hr12old=42
 hr24old=30
 TCODE=Z
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
-
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+if [ ${domtarg} = 'conus' ]
+then
+ cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 hr=57
 hrold=56
@@ -346,10 +333,10 @@ hr12old=45
 hr24old=33
 TCODE=Z
 # cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-#             | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
+#             | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
 #
 # cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-#            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+#            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
 
 hr=60
 hrold=59
@@ -358,10 +345,14 @@ hr6old=54
 hr12old=48
 hr24old=36
 TCODE=W
-cat ${base} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}
+if [ ${domtarg} = 'conus' ]
+then
+  cat ${base} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+else
 
-cat ${basealt} | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
-            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_conus_probf${hr}_noffri
+ cat ${basealt} |  sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
+            | sed s:_FOLD3_:${hr3old}:g | sed s:_FOLD6_:${hr6old}:g | sed s:_FOLD12_:${hr12old}:g | sed s:_FOLD24_:${hr24old}:g > grib2_${RUN}_${domtarg}_probf${hr}
+fi
 
 echo DONE 24h
