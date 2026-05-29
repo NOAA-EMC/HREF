@@ -2,17 +2,30 @@
 
 RUN=refs
 
-t1targ='Y'
+targs="Y A H P"
+
+for t1targ in $targs
+do
+
+if [ ${t1targ} = "Y" ]
+then
 domtarg='conus'
+fi
 
-# t1targ='A'
-# domtarg='ak'
+if [ ${t1targ} = "A" ]
+then
+domtarg='ak'
+fi
 
-# t1targ='H'
-# domtarg='hi'
+if [ ${t1targ} = "H" ]
+then
+domtarg='hi'
+fi
 
-# t1targ='P'
-# domtarg='pr'
+if [ ${t1targ} = "P" ]
+then
+domtarg='pr'
+fi
 
 
 #########################################################
@@ -356,3 +369,5 @@ else
 fi
 
 echo DONE 24h
+done
+

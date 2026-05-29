@@ -1,18 +1,31 @@
 
 RUN=refs
 
+targs="Y A H P"
 
-t1targ='Y'
+for t1targ in $targs
+do
+
+if [ ${t1targ} = "Y" ]
+then
 domtarg='conus'
+fi
 
-t1targ='A'
+if [ ${t1targ} = "A" ]
+then
 domtarg='ak'
+fi
 
-t1targ='H'  
+if [ ${t1targ} = "H" ]
+then
 domtarg='hi'
+fi
 
-t1targ='P'
+if [ ${t1targ} = "P" ]
+then
 domtarg='pr'
+fi
+
 
 #########################################################
 base=grib2_${RUN}_conus_mean_3h
@@ -160,3 +173,5 @@ hr3old=57
 TCODE=W
 cat ${base} | sed s:_T1_:${t1targ}:g | sed s:_CHAR_:${TCODE}:g | sed s:_F_:${hr}:g | sed s:_FOLD_:${hrold}:g \
             | sed s:_FOLD3_:${hr3old}:g > grib2_${RUN}_${domtarg}_meanf${hr}
+
+done
