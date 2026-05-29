@@ -117,7 +117,7 @@ fi
   export FORT11=${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
   export FORT12=${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2i
   export FORT51=xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr}
-  $TOCGRIB2 <$PARMwmo/grib2_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
+  $TOCGRIB2 <$PARMwmo/grib2_${RUN}_${dom}_${type}f${fhr} parm='KWDB'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
