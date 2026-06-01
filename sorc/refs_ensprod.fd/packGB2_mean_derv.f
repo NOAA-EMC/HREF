@@ -177,8 +177,15 @@ c    for derived variables
             ipdtmpl(13)=103
             ipdtmpl(14)=0
             ipdtmpl(15)=6000
-!           write(0,*) 'defined 12 and 15: ', 
-!     &           ipdtmpl(12),ipdtmpl(15)
+
+          else if (jpd10 .eq. 1 .and. jpd2 .eq. 192) then
+
+            ipdtmpl(10)=103
+            ipdtmpl(11)=0
+            ipdtmpl(12)=dMeanLevel(nv,ml)
+            ipdtmpl(13)=103
+            ipdtmpl(14)=0
+            ipdtmpl(15)=609
 
 
           else
