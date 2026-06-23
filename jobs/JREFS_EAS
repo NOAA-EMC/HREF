@@ -71,10 +71,6 @@ if [ ! -d $COMOUT/ensprod ] ; then
  mkdir -p $COMOUT/ensprod
 fi
 
-if [ ! -d $COMOUT/verf_g2g ] ; then 
- mkdir -p $COMOUT/verf_g2g
-fi
-
 export pgmout="OUTPUT.$$"
  
 ########################################################
