@@ -89,7 +89,7 @@ do
 
 if [ -e $DATA/prcip.m${m}.t${cyc}z.f${fhr} ]
 then
-cpreq $DATA/prcip.m${m}.t${cyc}z.f${fhr} $COMOUT/../../refsprep/refs.${PDY}/${cyc}/prcip/prcip.t${cyc}z.m${m}.${NEST}.f${fhr}.grib2
+cpreq $DATA/prcip.m${m}.t${cyc}z.f${fhr} $COMOUT/../../refsprep/refs.${PDY}/${cyc}/prcip/prcip.t${cyc}z.${NEST}.m${m}.f${fhr}.grib2
 fi
 
 done
