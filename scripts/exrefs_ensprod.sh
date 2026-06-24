@@ -89,7 +89,7 @@ do
 
 if [ -e $DATA/prcip.m${m}.t${cyc}z.f${fhr} ]
 then
-$WGRIB2 $DATA/prcip.m${m}.t${cyc}z.f${fhr} -not TMP $DATA/prcip.m${m}.t${cyc}z.f${fhr}.notemp
+$WGRIB2 $DATA/prcip.m${m}.t${cyc}z.f${fhr} -not TMP -grib $DATA/prcip.m${m}.t${cyc}z.f${fhr}.notemp
 cpreq $DATA/prcip.m${m}.t${cyc}z.f${fhr}.notemp $COMOUT/../../refsprep/refs.${PDY}/${cyc}/prcip/prcip.t${cyc}z.${NEST}.m${m}.f${fhr}.grib2
 fi
 
