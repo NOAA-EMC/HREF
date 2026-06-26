@@ -64,7 +64,7 @@ if [ -e $pgmout ]; then
 fi
 
 cd ${DATAROOT}
-echo in AWIPS jobs down here with KEEPDATA $KEEPDATA
-echo in AWIPS jobs down here with DATA $DATA
+echo in PRDGEN jobs down here with KEEPDATA $KEEPDATA
+echo in PRDGEN jobs down here with DATA $DATA
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
 date

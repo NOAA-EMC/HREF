@@ -94,7 +94,8 @@ if [ ! -d $COMOUT ] ; then
  mkdir -p $COMOUT
 fi
 
-export GESROOT=${GESROOT:-$(compath.py -o $NET/${refs_ver})/refsprep}
+#export GESROOT=${GESROOT:-$(compath.py -o $NET/${refs_ver})/refsprep}
+export GESROOT=${GESROOT:-$(compath.py -o $NET/${refs_ver})}
 if [ ! -d $GESROOT ] ; then
  mkdir -p $GESROOT
 fi

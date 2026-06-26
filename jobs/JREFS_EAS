@@ -62,13 +62,19 @@ export RUN=${RUN:-refs}
 # Define running directory and COM directories
 ##############################################
 
-export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/$NET/${refs_ver})/refsprep/refs}
+#export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/$NET/${refs_ver})/refsprep/refs}
+export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/$NET/${refs_ver})/refs}
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/$RUN.${PDY}/${cyc}}
-export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN}
+#export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/refsprep/$RUN}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/$RUN}
 
 if [ ! -d $COMOUT/ensprod ] ; then 
  mkdir -p $COMOUT/ensprod
+fi
+
+if [ ! -d $COMOUT/verf_g2g ] ; then 
+ mkdir -p $COMOUT/verf_g2g
 fi
 
 export pgmout="OUTPUT.$$"
