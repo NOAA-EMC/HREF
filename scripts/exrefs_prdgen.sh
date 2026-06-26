@@ -23,6 +23,7 @@ export type=${1}
 #  Generate AWIPS products
 
 $USHrefs/enspost_mkawp.sh ${NEST} $type
+export err=$?; err_chk
 
 #####################################################################
 # GOOD RUN
