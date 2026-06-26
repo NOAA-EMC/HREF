@@ -77,9 +77,9 @@ done
 if [ ${fhr}%3 -eq 0 ]
 then
 
-	if [ ! -e $COMOUT/../../refsprep/refs.${PDY}/${cyc}/prcip ]
+	if [ ! -e $COMOUT/preproc/prcip ]
 	then
-		mkdir -p $COMOUT/../../refsprep/refs.${PDY}/${cyc}/prcip
+		mkdir -p $COMOUT/preproc/prcip
 	fi
 
 mems="01 02 03 04 05 06 07 08 09 10 11 12 13 14"
@@ -90,7 +90,7 @@ do
 if [ -e $DATA/prcip.m${m}.t${cyc}z.f${fhr} ]
 then
 $WGRIB2 $DATA/prcip.m${m}.t${cyc}z.f${fhr} -not TMP -grib $DATA/prcip.m${m}.t${cyc}z.f${fhr}.notemp
-cpreq $DATA/prcip.m${m}.t${cyc}z.f${fhr}.notemp $COMOUT/../../refsprep/refs.${PDY}/${cyc}/prcip/prcip.t${cyc}z.${NEST}.m${m}.f${fhr}.grib2
+cpreq $DATA/prcip.m${m}.t${cyc}z.f${fhr}.notemp $COMOUT/preproc/prcip/prcip.t${cyc}z.${NEST}.m${m}.f${fhr}.grib2
 fi
 
 done
