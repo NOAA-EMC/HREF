@@ -43,9 +43,9 @@ fi
 
 echo $dom $hr
 
-if [ ! -e $GESOUT.${PDY}/${cyc} ]
+if [ ! -e $GESOUT.${PDY}/${cyc}/preproc ]
 then
-mkdir -p $GESOUT.${PDY}/${cyc}
+mkdir -p $GESOUT.${PDY}/${cyc}/preproc
 fi
 
 cd ${DATA}
@@ -257,7 +257,7 @@ $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):" 
  fi
 
 
-         cpreq ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
+         cpreq ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/preproc/hrrr.t${cyc}z.${dom}.f${hr}.grib2
         err=$? ; export err
 
         if [ $err -ne 0 ]

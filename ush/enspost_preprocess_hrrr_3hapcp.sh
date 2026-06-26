@@ -26,9 +26,9 @@ export PS4='$SECONDS + preproc_hrrr_3hapcp:${dom}_${PDY}_${cyc}: '
 
 hrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48" 
 
-if [ ! -e $GESOUT.${PDY}/${cyc} ]
+if [ ! -e $GESOUT.${PDY}/${cyc}/preproc ]
 then
-mkdir -p $GESOUT.${PDY}/${cyc}
+mkdir -p $GESOUT.${PDY}/${cyc}/preproc
 fi
 
 
@@ -85,8 +85,8 @@ done
 
 for hr in $hrsln
 do
- cpreq hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
-#cpreq hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/hrrr.t${cyc}z.${dom}.3hapcp.f${hr}.grib2
+ cpreq hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/preproc/hrrr.t${cyc}z.${dom}.f${hr}.grib2
+#cpreq hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/preproc/hrrr.t${cyc}z.${dom}.3hapcp.f${hr}.grib2
  err=$?
  export err ; err_chk
 done

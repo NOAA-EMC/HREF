@@ -158,19 +158,19 @@ echo made it to conus fv3 check
       if [  $ff -eq 01  ] ; then
 
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo filecheck00 is $filecheck00
 
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
 
-        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 	if [ -e $filecheck ]
         then
          ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
@@ -257,19 +257,19 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo filecheck00 is $filecheck00
 
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
 
-        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 	if [ -e $filecheck ]
         then
          ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
@@ -357,18 +357,18 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 14  ];then
-         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
 	 echo filecheck00 is $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
     
-        filecheck=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
+        filecheck=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
 
         if [ -e $filecheck ]
         then
@@ -435,17 +435,17 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 14  ];then
-         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
 	 echo filecheck00 is $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
-        filecheck=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
+        filecheck=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
 
         if [ -e $filecheck ]
         then
@@ -512,19 +512,19 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
 	 echo here ontime with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
  
-        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then
@@ -611,19 +611,19 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
 	 echo here ontime with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
  
-        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then

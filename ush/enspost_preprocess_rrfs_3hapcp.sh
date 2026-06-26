@@ -163,8 +163,8 @@ echo hrs down here is $hrs
 
 for hr in $hrs
 do
- cpreq fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2 
-#cpreq fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/fv3s.t${cyc}z.${dom}.3hapcp.m${name1}.f${hr}.grib2 
+ cpreq fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/preproc/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2 
+#cpreq fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/preproc/fv3s.t${cyc}z.${dom}.3hapcp.m${name1}.f${hr}.grib2 
 
  err=$?
  export err # ; err_chk

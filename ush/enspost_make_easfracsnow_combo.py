@@ -614,22 +614,22 @@ for mem in members:
     print('itime for this member: ', itime)
 
     if memname == 'rrfs':
-      file3 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file3 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/preproc/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr)+'.grib2'
       print('file3 is: ', file3)
-      file6 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file6 = COMIN + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day +'/'+'%02d'%itime.hour+ '/preproc/fv3s.t%02d'%itime.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       print('file6 is: ', file6)
-      file3alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
+      file3alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/preproc/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+incr+6)+'.grib2'
       print('file3alt is: ', file3alt)
-      file6alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
+      file6alt = COMIN + '.%02d'%itime_alt.year+'%02d'%itime_alt.month+'%02d'%itime_alt.day +'/'+'%02d'%itime_alt.hour+ '/preproc/fv3s.t%02d'%itime_alt.hour+'z.'+dom+'.m'+memnum+'.f%02d'%(start_hour+latency+2*incr+6)+'.grib2'
       print('file6alt is: ', file6alt)
     elif memname == 'hrrr':
-      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/preproc/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/preproc/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
     elif memname == 'hrrrak':
-      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
-      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
+      file3 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/preproc/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr)+'.grib2'
+      file6 = COMINhrrr + '.%02d'%itime.year+'%02d'%itime.month+'%02d'%itime.day+'/'+'%02d'%itime.hour+'/preproc/hrrr.t%02d'%itime.hour+'z.'+dom+'.f%02d'%(start_hour+latency+incr+incr)+'.grib2'
       file3alt = 'garb'
       file6alt = 'garb'
 

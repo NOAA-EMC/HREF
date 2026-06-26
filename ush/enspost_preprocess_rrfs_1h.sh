@@ -70,9 +70,9 @@ fi
 #then
 #mkdir -p $GESOUT.${PDY}
 #fi
-if [ ! -e $GESOUT.${day}/${cyc} ]
+if [ ! -e $GESOUT.${day}/${cyc}/preproc ]
 then
-mkdir -p $GESOUT.${day}/${cyc}
+mkdir -p $GESOUT.${day}/${cyc}/preproc
 fi
 
 cd ${DATA}
@@ -277,7 +277,7 @@ echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 $WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
-        cpreq ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+        cpreq ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/preproc/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
         err=$? ; export err
 	if [ $err -ne 0 ]
          then
