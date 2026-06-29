@@ -77,7 +77,8 @@ while [ $fhcnt -le $fend ] ; do
     if [ $icnt -ge $maxtries ]
     then
       msg="FATAL ERROR: ABORTING after 1 hour of waiting for F$fhr to end."
-      err_exit $msg
+#      err_exit $msg
+      return 99
     fi
   done
 
