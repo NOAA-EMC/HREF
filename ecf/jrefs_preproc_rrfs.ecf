@@ -1,0 +1,93 @@
+#PBS -N refs_preproc_rrfs_%DOMAIN%_f%FHR%_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=00:12:00
+#PBS -l select=%NODES%:ncpus=%NTASK%:mpiprocs=%PTILE%:mem=%MEM%
+#PBS -l debug=true
+
+export model=refs
+
+%include <head.h>
+%include <envir-p1.h>
+set -x
+export cyc=%CYC%
+export envir=%ENVIR%
+export NODES=%NODES%
+export NTASK=%NTASK%
+export PTILE=%PTILE%
+
+export numprocs=%NTASK%
+export spanprocs=%PTILE%
+export NEST=%DOMAIN%
+export fhr=%FHR%
+
+export OMP_NUM_THREADS=1
+export IOBUF_PARAMS='*:size=8M:count=8'
+
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load craype/${craype_ver}
+module load intel/${intel_ver}
+module load cray-mpich/${cray_mpich_ver}
+module load cray-pals/${cray_pals_ver}
+module load prod_util/${prod_util_ver}
+module load wgrib2/${wgrib2_ver}
+module load netcdf-D/${netcdf_D_ver}
+module load g2/${g2_ver}
+module load g2c/${g2c_ver}
+module load g2tmpl/${g2tmpl_ver}
+module load jasper/${jasper_ver}
+##module load libpng/${libpng_ver}
+##module load zlib/${zlib_ver}
+module load cfp/${cfp_ver}
+module load libaec/${libaec_ver}
+module load python/${python_ver}
+module load libjpeg/${libjpeg_ver}
+module load libjpeg-turbo/${libjpeg_turbo_ver}
+module load grib_util/${grib_util_ver}
+module list
+
+$HOMErefs/jobs/JREFS_PREPROC_RRFS
+%include <tail.h>
+%manual
+######################################################################
+#PURPOSE:  To execute the job that create the fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+#          out from needed RRFS inputs
+######################################################################
+
+scripts - jobs/JREFS_PREPROC_RRFS
+            -> scripts/exrefs_preprocess_rrfs.sh
+              -> ush/enspost_preprocess_rrfs_1h.sh  (mpiexec -n 6 ... cfp ./poe.rrfs.$fhr)
+              -> enspost_preprocess_rrfs_3hapcp.sh  (mpiexec -n 6 ... cfp ./poe.3hqpf.$fhr, 
+                                                     only for 3-hourly, adding surface:(hr-3)-hr for WEASD, ASNOW, APCP, FRZR) 
+Inputs: 
+  for CONUS or AK domains -  
+    $COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2                      (for m01)
+    $COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2 (for m02-m06)
+
+  for HI or PR domain
+    $COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2                      (for m01)
+    $COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2 (for m02-m06)
+
+  where hr: 00 - 48
+        name: 1-6
+
+Outputs - 
+  $COMROOT/refs/${refs_ver})/refsprep/refs.${PDY}/${cyc}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+
+  where hr: 00 - 48
+        name1: 1-6
+
+Note: refs_preproc_rrfs_fhh job, will wait/use temp.tCCz.m0?.f(hh-1).grib2 under $DATA
+      for 3-hourly job, will wait/use temp.tCCz.m0?.f(hh-1).grib2 and temp.tCCz.m0?.f(hh-3).grib2
+      ush/enspost_preprocess_rrfs_1h.sh - sleep 10 sec x 30 = 5 min
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end 

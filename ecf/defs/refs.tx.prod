@@ -1,0 +1,63 @@
+suite prod
+ family primary
+ family cron
+ family transfer
+ family v2.4
+ family wcoss_eval
+ family refs
+    edit PACKAGE 'refs'
+    edit MACHINE_PHASE 'p1'
+    edit refs_ver 'v1.0.5'
+
+  task refs_1
+    label l ""
+    cron 00:08 01:08 01:00
+    cron 01:28 03:55 00:05
+    cron 04:08 07:08 01:00
+    cron 07:28 09:55 00:05
+    cron 10:08 13:08 01:00
+    cron 13:28 15:55 00:05
+    cron 16:08 19:08 01:00
+    cron 19:28 21:55 00:05
+    cron 22:08 23:08 01:00
+  task refs_2
+    label l ""
+    cron 00:08 01:08 01:00
+    cron 01:28 03:55 00:05
+    cron 04:08 07:08 01:00
+    cron 07:28 09:55 00:05
+    cron 10:08 13:08 01:00
+    cron 13:28 15:55 00:05
+    cron 16:08 19:08 01:00
+    cron 19:28 21:55 00:05
+    cron 22:08 23:08 01:00
+  task refsprep_1
+    label l ""
+    cron 00:08 01:08 01:00
+    cron 01:28 03:55 00:05
+    cron 04:08 07:08 01:00
+    cron 07:28 09:55 00:05
+    cron 10:08 13:08 01:00
+    cron 13:28 15:55 00:05
+    cron 16:08 19:08 01:00
+    cron 19:28 21:55 00:05
+    cron 22:08 23:08 01:00
+  task refsprep_2
+    label l ""
+    cron 00:08 01:08 01:00
+    cron 01:28 03:55 00:05
+    cron 04:08 07:08 01:00
+    cron 07:28 09:55 00:05
+    cron 10:08 13:08 01:00
+    cron 13:28 15:55 00:05
+    cron 16:08 19:08 01:00
+    cron 19:28 21:55 00:05
+    cron 22:08 23:08 01:00
+ endfamily
+ endfamily
+ endfamily
+ endfamily
+ endfamily
+ endfamily
+endsuite
+
