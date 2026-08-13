@@ -74,7 +74,7 @@ Inputs:
         name: 1-6
 
 Outputs - 
-  $COMROOT/refs/${refs_ver})/refsprep/refs.${PDY}/${cyc}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+  $COMROOT/refs/${refs_ver})/refs.${PDY}/${cyc}/refsprep/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
 
   where hr: 00 - 48
         name1: 1-6

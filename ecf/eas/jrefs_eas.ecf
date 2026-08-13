@@ -60,8 +60,8 @@ $HOMErefs/jobs/JREFS_EAS
                --> ush/enspost_make_easfracqpf_combo.py
                --> ush/enspost_make_easfracsnow_combo.py
 
-  inputs: $COMIN/refsprep/refs.$PDY/$cyc/fv3s.t${cyc}z.${dom}.m??.f${fhr}.grib2
-          $COMIN/refsprep/refs.$PDY/$cyc/hrrr.t${cyc}z.${dom}.f${fhr}.grib2 
+  inputs: $COMIN/refs.$PDY/$cyc/refsprep/fv3s.t${cyc}z.${dom}.m??.f${fhr}.grib2
+          $COMIN/refs.$PDY/$cyc/refsprep/hrrr.t${cyc}z.${dom}.f${fhr}.grib2 
 
   outputs: $COMOUT/refs.$PDY/$cyc/ensprod/refs.t${cyc}z.${type}.f${fhr}.${dom}.grib2
            $COMOUT/refs.$PDY/$cyc/log/eas/qpf_combo*log, snow_combo*log

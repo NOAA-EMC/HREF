@@ -59,11 +59,11 @@ $HOMErefs/jobs/JREFS_ENSPROD
              --> scripts/exrefs_ensprod.sh 
                  --> ush/enspost_ensprod_multi.sh ${NEST} $subtype where subtype:1-4
 
-  inputs: $COMIN/${RUN}.t${cyc}z.ffg1h.3km.grib2 
-          $COMIN/${RUN}.t${cyc}z.ffg3h.3km.grib2
-          $COMIN/${RUN}.t${cyc}z.ffg6h.3km.grib2 
-          $COMIN/refsprep/refs.$PDY/$cyc/fv3s.t${cyc}z.${dom}.m??.f${fhr}.grib2
-          $COMIN/refsprep/refs.$PDY/$cyc/hrrr.t${cyc}z.${dom}.f${fhr}.grib2 
+  inputs: $COMIN/refs.$PDY/$cyc/${RUN}.t${cyc}z.ffg1h.3km.grib2 
+          $COMIN/refs.$PDY/$cyc/${RUN}.t${cyc}z.ffg3h.3km.grib2
+          $COMIN/refs.$PDY/$cyc/${RUN}.t${cyc}z.ffg6h.3km.grib2 
+          $COMIN/refs.$PDY/$cyc/refsprep/fv3s.t${cyc}z.${dom}.m??.f${fhr}.grib2
+          $COMIN/refs.$PDY/$cyc/refsprep/hrrr.t${cyc}z.${dom}.f${fhr}.grib2 
 
   outputs: $COMOUT/refs.$PDY/$cyc/ensprod/refs.t${cyc}z.${type}.f${fhr}.${dom}.grib2
            $COMOUT/refs.$PDY/$cyc/verf_g2g/${vtype}.${mem}.t${cyc}z.f${fhr3} 

@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:12:00
 #PBS -l select=%NODES%:ncpus=%NTASK%:mpiprocs=%PTILE%:mem=%MEM%
 #PBS -l debug=true
 
@@ -67,7 +67,7 @@ Inputs:
   where hr: 00 - 48
 
 Outputs - 
-  $COMROOT/refs/${refs_ver})/refsprep/refs.${PDY}/${cyc}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
+  $COMROOT/refs/${refs_ver})/refs.${PDY}/${cyc}/refsprep/hrrr.t${cyc}z.${dom}.f${hr}.grib2
 
 Note: in ush/enspost_preprocess_hrrr_1h.sh - sleep 5 sec x 30 = 150 sec
 ######################################################################
