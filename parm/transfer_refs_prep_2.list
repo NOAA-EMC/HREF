@@ -23,16 +23,24 @@
 # directory are included, so if no exclude patterns match that file, it will be
 # transferred.
 
-_COMROOT_/refs/_SHORTVER_/refsprep/refs._PDY_/
+_COMROOT_/refs/_SHORTVER_/refs._PDY_/
 + /??/
-+ /??/*ak*
-+ /??/*hi*
++ /??/preproc
++ /??/preproc/*ak*
++ /??/preproc/*hi*
++ /??/preproc/prcip
++ /??/preproc/prcip/*ak*
++ /??/preproc/prcip/*hi*
 - *
 B 75000
 
-_COMROOT_/refs/_SHORTVER_/refsprep/refs._PDYm1_/
+_COMROOT_/refs/_SHORTVER_/refs._PDYm1_/
 + /??/
-+ /??/*ak*
-+ /??/*hi*
++ /??/preproc
++ /??/preproc/*ak*
++ /??/preproc/*hi*
++ /??/preproc/prcip
++ /??/preproc/prcip/*ak*
++ /??/preproc/prcip/*hi*
 - *
 B 75000
