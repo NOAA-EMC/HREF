@@ -3,6 +3,7 @@ suite prod
  family cron
  family transfer
  family v2.4
+#family wcoss_2
  family wcoss_eval
  family refs
     edit PACKAGE 'refs'

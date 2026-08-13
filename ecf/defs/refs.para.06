@@ -945,9 +945,7 @@ suite para
           edit NTASK '12'
           edit PTILE '12'
           edit MEM '128GB'
-          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /para/primary/00/refs/v1.0/ak/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /para/primary/00/refs/v1.0/ak/preproc_hrrr == complete and /para/primary/00/refs/v1.0/ak/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete
+          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /para/primary/00/refs/v1.0/ak/preproc_hrrr == complete and /para/primary/00/refs/v1.0/ak/preproc_rrfs == complete
           task jrefs_eas_f01
             edit FHR '01'
             trigger ../preproc_rrfs/jrefs_preproc_rrfs_f01 == complete
@@ -1661,9 +1659,7 @@ suite para
           edit NTASK '12'
           edit PTILE '12'
           edit MEM '128GB'
-          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /para/primary/00/refs/v1.0/conus/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /para/primary/00/refs/v1.0/conus/preproc_hrrr == complete and /para/primary/00/refs/v1.0/conus/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete
+          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /para/primary/00/refs/v1.0/conus/preproc_hrrr == complete and /para/primary/00/refs/v1.0/conus/preproc_rrfs == complete
           task jrefs_eas_f01
             edit FHR '01'
             trigger ../preproc_rrfs/jrefs_preproc_rrfs_f01 == complete

@@ -1,6 +1,6 @@
 
-extern /prod/primary/06/hrrr/v4.1/06z/conus/post/post
-extern /prod/primary/06/hrrr/v4.1/06z/alaska/post/post
+#extern /prod/primary/06/hrrr/v4.1/06z/conus/post/post
+#extern /prod/primary/06/hrrr/v4.1/06z/alaska/post/post
 
 suite prod
  family primary
@@ -33,6 +33,27 @@ suite prod
  endfamily    ## 00
  
  family 06
+
+ family hrrr
+  family v4.1
+  family 06z
+   family conus
+   family post
+   family post
+   endfamily 
+   endfamily 
+   endfamily 
+
+   family alaska
+   family post
+   family post
+   endfamily 
+   endfamily 
+   endfamily 
+
+  endfamily  ## 06z
+  endfamily  ## v4.1
+ endfamily   ## hrrr
 
  family rrfs
  family v1.0
@@ -947,9 +968,7 @@ suite prod
           edit NTASK '12'
           edit PTILE '12'
           edit MEM '128GB'
-          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /prod/primary/00/refs/v1.0/ak/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /prod/primary/00/refs/v1.0/ak/preproc_hrrr == complete and /prod/primary/00/refs/v1.0/ak/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete
+          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /prod/primary/00/refs/v1.0/ak/preproc_hrrr == complete and /prod/primary/00/refs/v1.0/ak/preproc_rrfs == complete
           task jrefs_eas_f01
             edit FHR '01'
             trigger ../preproc_rrfs/jrefs_preproc_rrfs_f01 == complete
@@ -1663,9 +1682,7 @@ suite prod
           edit NTASK '12'
           edit PTILE '12'
           edit MEM '128GB'
-          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /prod/primary/00/refs/v1.0/conus/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /prod/primary/00/refs/v1.0/conus/preproc_hrrr == complete and /prod/primary/00/refs/v1.0/conus/preproc_rrfs == complete
-#         trigger preproc_hrrr/jrefs_preproc_hrrr == complete
+          trigger preproc_hrrr/jrefs_preproc_hrrr == complete and /prod/primary/00/refs/v1.0/conus/preproc_hrrr == complete and /prod/primary/00/refs/v1.0/conus/preproc_rrfs == complete
           task jrefs_eas_f01
             edit FHR '01'
             trigger ../preproc_rrfs/jrefs_preproc_rrfs_f01 == complete
