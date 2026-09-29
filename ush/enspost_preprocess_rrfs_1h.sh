@@ -113,9 +113,14 @@ echo filecheck is $filecheck
         if [ -s $filecheck ]
         then
         $WGRIB2 $filecheck | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -grib fv3.t${cyc}z.f${hr} $filecheck
-        $WGRIB2 $filecheck2d | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -append -grib fv3.t${cyc}z.f${hr} $filecheck2d
-
-        $WGRIB2 $filecheck2d -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        if [[ ${name} == "03" || ${name} == "04" || ${name} == "05" ]]; then
+          echo attempting special NSSL MP processing for m${name}
+          $WGRIB2 $filecheck2d | grep -F -f $PARMrefs/enspost_fv3_filter.txt | grep -v FRZR | $WGRIB2 -i -append -grib fv3.t${cyc}z.f${hr} $filecheck2d
+          $WGRIB2 $filecheck2d -match ":(HINDEX|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        else
+          $WGRIB2 $filecheck2d | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -append -grib fv3.t${cyc}z.f${hr} $filecheck2d
+          $WGRIB2 $filecheck2d -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        fi
         $WGRIB2 $filecheck2d -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck2d -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
         
