@@ -1,4 +1,4 @@
-  18      row variables and mean/spread/prob info
+  13      row variables and mean/spread/prob info
 AP6h   1 8     1 M1  0 
 AP1h   1 8     1 P1  0  A1  0   > A4 12.7 25.4 50.8 76.2
 AP3h   1 8     1 P1  0  A1  0   > A5 12.7 25.4 50.8 76.2 127.0
@@ -12,11 +12,6 @@ ASN3   1 29    1 M1  0  K1  0   > K3 0.025 0.076 0.152
 ASN6   1 29    1 M1  0  K1  0   > K4 0.025 0.076 0.152 0.304
 SN12   1 29    1 M1  0  K1  0   > K5 0.025 0.076 0.152 0.304 0.457
 SN24   1 29    1 M1  0  K1  0   > K5 0.025 0.076 0.152 0.304 0.457
-FZ1h   1 225   1 M0     K1  0   > K3 0.254 2.54 6.35
-FZ3h   1 225   1 M0     K1  0   > K3 0.254 2.54 6.35
-FZ6h   1 225   1 M0     K1  0   > K4 0.254 2.54 6.35 12.7
-FZ12   1 225   1 M0     K1  0   > K4 0.254 2.54 6.35 12.7
-FZ24   1 225   1 M0     K1  0   > K5 0.254 2.54 6.35 12.7 25.4
 
    0       special derived variables, each  of which, needs code to process specially
 
