@@ -95,7 +95,7 @@
 
         real:: rinc(5),sprecip(IM*JM)
         real:: asnowprecip(IM*JM)
-        real:: fzprecip(IM*JM)
+!        real:: fzprecip(IM*JM)
         integer:: idat(8),jdat(8)
 
         INTEGER :: IBM,LEN,ISCALE,NBIT,IBITM
@@ -111,7 +111,7 @@
         TYPE(GRIBFIELD) :: GFLD, GFLD_QPF
         real, allocatable :: s_later(:),s_earlier(:)
         real, allocatable :: asnow_later(:),asnow_earlier(:)
-        real, allocatable :: fz_later(:),fz_earlier(:)
+!        real, allocatable :: fz_later(:),fz_earlier(:)
 
         call baopenr(11,fname1,ierr1)
         call baopenr(12,fname2,ierr2)
@@ -128,8 +128,8 @@
 
         allocate(s_earlier(IM*JM))
         allocate(s_later(IM*JM))
-        allocate(fz_earlier(IM*JM))
-        allocate(fz_later(IM*JM))
+!        allocate(fz_earlier(IM*JM))
+!        allocate(fz_later(IM*JM))
         allocate(asnow_earlier(IM*JM))
         allocate(asnow_later(IM*JM))
         allocate(GROUND(IM*JM))
@@ -178,26 +178,26 @@
           write(0,*) 'maxval(s_earlier): ', maxval(s_earlier)
          endif
 
-        if (is_hrrr .eq. 1) then
-          J=0
-          JIDS=-9999
-          JPDT=-9999
-          JPDT(2)=225
-          JGDTN=-1
-          JGDT=-9999
-          UNPACK=.true.
-
-          call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET)
-
-          if (IRET .ne. 0) then
-            write(0,*) 'bad getgb1 (225)  earlier ', IRET
-            STOP 999
-          endif
-
-          fz_earlier=gfld%fld
-          write(0,*) 'maxval(fz_earlier): ', maxval(fz_earlier)
-         endif
+!        if (is_hrrr .eq. 1) then
+!          J=0
+!          JIDS=-9999
+!          JPDT=-9999
+!          JPDT(2)=225
+!          JGDTN=-1
+!          JGDT=-9999
+!          UNPACK=.true.
+!
+!          call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &     UNPACK,K,GFLD,IRET)
+!
+!          if (IRET .ne. 0) then
+!            write(0,*) 'bad getgb1 (225)  earlier ', IRET
+!            STOP 999
+!          endif
+!
+!          fz_earlier=gfld%fld
+!          write(0,*) 'maxval(fz_earlier): ', maxval(fz_earlier)
+!         endif
 
 ! -------------------------------
 
@@ -263,38 +263,38 @@
           write(0,*) 'maxval(s_later): ', maxval(s_later)
         endif
 
-        if (is_hrrr .eq. 1) then
+!        if (is_hrrr .eq. 1) then
+!
+!          J=0
+!          JIDS=-9999
+!          JPDT=-9999
+!          JPDT(2)=225
+!          JGDTN=-1
+!          JGDT=-9999
+!
+!          call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &     UNPACK,K,GFLD,IRET1)
+!
+!          write(0,*) 'K: ', K
+!
+!          if (IRET1 .ne. 0) then
+!            write(0,*) 'bad getgb later (225) ', IRET1
+!            STOP 9999
+!          endif
+!
+!          write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
+!
+!          if (associated(gfld%bmap)) then
+!            bmap_f=gfld%bmap
+!          else
+!            bmap_f(:)=.true.
+!          endif
+!
+!          write(0,*) 'set fz_later to gfld%fld'
+!          fz_later=gfld%fld
+!          write(0,*) 'maxval(fz_later): ', maxval(fz_later)
 
-          J=0
-          JIDS=-9999
-          JPDT=-9999
-          JPDT(2)=225
-          JGDTN=-1
-          JGDT=-9999
-
-          call getgb2(12,0,0,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET1)
-
-          write(0,*) 'K: ', K
-
-          if (IRET1 .ne. 0) then
-            write(0,*) 'bad getgb later (225) ', IRET1
-            STOP 9999
-          endif
-
-          write(0,*) 'pulled gfld%ipdtnum: ', gfld%ipdtnum
-
-          if (associated(gfld%bmap)) then
-            bmap_f=gfld%bmap
-          else
-            bmap_f(:)=.true.
-          endif
-
-          write(0,*) 'set fz_later to gfld%fld'
-          fz_later=gfld%fld
-          write(0,*) 'maxval(fz_later): ', maxval(fz_later)
-
-        endif
+!        endif
 
 ! -------------------------------
 
@@ -360,9 +360,9 @@
 
             asnowprecip(NPT)=asnow_later(NPT)
 
-            if (is_hrrr .eq. 1) then
-              fzprecip(NPT)=fz_later(NPT)
-            endif
+!            if (is_hrrr .eq. 1) then
+!              fzprecip(NPT)=fz_later(NPT)
+!            endif
          enddo
 
         else
@@ -377,9 +377,9 @@
               sprecip(NPT)=max(s_later(NPT)-s_earlier(NPT),0.0)
             endif
 
-            if (is_hrrr .eq. 1) then
-              fzprecip(NPT)=max(fz_later(NPT)-fz_earlier(NPT),0.0)
-            endif
+!            if (is_hrrr .eq. 1) then
+!              fzprecip(NPT)=max(fz_later(NPT)-fz_earlier(NPT),0.0)
+!            endif
 
             if (NPT .eq. 1) then
               write(*,*) 'creating asnowprecip field'
@@ -395,10 +395,10 @@
               write(0,*) 'min,max of sprecip: ', minval(sprecip), 
      &                                          maxval(sprecip)
             endif
-            if (is_hrrr .eq. 1) then
-              write(0,*) 'min,max of fzprecip: ', minval(fzprecip), 
-     &                                           maxval(fzprecip)
-            endif
+!            if (is_hrrr .eq. 1) then
+!              write(0,*) 'min,max of fzprecip: ', minval(fzprecip), 
+!     &                                           maxval(fzprecip)
+!            endif
             write(0,*) 'min,max of asnowprecip: ', minval(asnowprecip), 
      &          maxval(asnowprecip)
             write(0,*) 'min,max of asnow_later: ', minval(asnow_later), 

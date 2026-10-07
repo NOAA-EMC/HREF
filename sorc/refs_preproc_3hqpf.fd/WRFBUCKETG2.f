@@ -203,16 +203,16 @@ C    &                  UNPACK,K,GFLD,IRET)
         enddo
         write(0,*) 'maxval(p_earlier): ', maxval(p_earlier)
 
-        J=0
-        JIDS=-9999
-        JPDT=-9999
-        JPDT(1)=1
-        JPDT(2)=225
+!        J=0
+!        JIDS=-9999
+!        JPDT=-9999
+!        JPDT(1)=1
+!        JPDT(2)=225
 ! try force getting the 0-hr total
-        JPDT(9)=0
-        JGDTN=-1
-        JGDT=-9999
-        UNPACK=.true.
+!        JPDT(9)=0
+!        JGDTN=-1
+!        JGDT=-9999
+!        UNPACK=.true.
 
 !        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
 !     &     UNPACK,K,GFLD,IRET)
@@ -283,15 +283,14 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 
 ! later frzr
-        J=0
-        JIDS=-9999
-        JPDT=-9999
-        JPDT(2)=225
+!        J=0
+!        JIDS=-9999
+!        JPDT=-9999
+!        JPDT(2)=225
 ! try force getting the 0-hr total
-        JPDT(9)=0
-!        JPDT(intv_rec)=interv
-        JGDTN=-1
-        JGDT=-9999
+!        JPDT(9)=0
+!        JGDTN=-1
+!        JGDT=-9999
 
 !        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
 !     &     UNPACK,K,GFLD,IRET1)
@@ -355,28 +354,28 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	call putgb2(13,GFLD,IRET)
 
-        write(0,*) 'define gfld%fld with dfrzr'
+!        write(0,*) 'define gfld%fld with dfrzr'
 
-        do K=1,gfld%ipdtlen
-        gfld%ipdtmpl(K)=PDS_FRZR_HOLD_EARLY(K)
-        enddo
+!        do K=1,gfld%ipdtlen
+!        gfld%ipdtmpl(K)=PDS_FRZR_HOLD_EARLY(K)
+!        enddo
 
-        gfld%ipdtmpl(9)=ihrs1
+!        gfld%ipdtmpl(9)=ihrs1
       
-        do J=time_s_rec,time_e_rec
-        gfld%ipdtmpl(J)=PDS_FRZR_HOLD(J)
-        enddo
+!        do J=time_s_rec,time_e_rec
+!        gfld%ipdtmpl(J)=PDS_FRZR_HOLD(J)
+!        enddo
 
-        gfld%ipdtmpl(num_time_rec)=1
-        gfld%ipdtmpl(intv_rec)=interv
+!        gfld%ipdtmpl(num_time_rec)=1
+!        gfld%ipdtmpl(intv_rec)=interv
 
-        write(0,*) 'interval specified in intv_rec: ', interv
+!        write(0,*) 'interval specified in intv_rec: ', interv
 
-        gfld%fld=dfrzr
+!        gfld%fld=dfrzr
 
-	call putgb2(13,GFLD,IRET)
+!	call putgb2(13,GFLD,IRET)
 
-        write(0,*) 'IRET from putgb2 for dprecip', IRET
+!        write(0,*) 'IRET from putgb2 for dprecip', IRET
 
 ! -------------------------------------------
 
@@ -384,8 +383,8 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	write(*,*) 'extremes of precip: ', 
      +		maxval(dprecip)
-	write(*,*) 'extremes of frzr: ', 
-     +		maxval(dfrzr)
+!	write(*,*) 'extremes of frzr: ', 
+!     +		maxval(dfrzr)
 
   633	format(25(f4.1,1x))
 
