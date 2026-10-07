@@ -617,50 +617,50 @@
      +           maxval(sprecip),maxval(asnowprecip)
 
 ! add frzr piece
-      if (is_hrrr .eq. 1) then
+!      if (is_hrrr .eq. 1) then
 
-        gfld_qpf%ipdtmpl(2)=225
-        gfld_qpf%fld=fzprecip
+!        gfld_qpf%ipdtmpl(2)=225
+!        gfld_qpf%fld=fzprecip
 
 !! use GET_BITS to compute nbits?
 
-        IBM=0
-        IBITM = 0
-        gfld_qpf%idrtmpl(2)=0.0
-        gfld_qpf%idrtmpl(3)=5.0
-        SGDS  = gfld_qpf%idrtmpl(3)
+!        IBM=0
+!        IBITM = 0
+!        gfld_qpf%idrtmpl(2)=0.0
+!        gfld_qpf%idrtmpl(3)=5.0
+!        SGDS  = gfld_qpf%idrtmpl(3)
 
 !     set bitmap
-        DO N=1,IM*JM
-          IF( gfld_qpf%bmap(N) ) THEN
-             ibmap(N) = 1
-             ibitm = ibitm+1
-          ELSE
-             ibmap(N) = 0
-          ENDIF
-        ENDDO
+!        DO N=1,IM*JM
+!          IF( gfld_qpf%bmap(N) ) THEN
+!             ibmap(N) = 1
+!             ibitm = ibitm+1
+!          ELSE
+!             ibmap(N) = 0
+!          ENDIF
+!        ENDDO
 
 !     set bitmap
-        IF (IBITM.EQ.IM*JM) THEN
-          IBM = 0
-        ELSE
-          IBM = 1
-        ENDIF
-        call GET_BITS(IBM,SGDS,IM*JM,ibmap,gfld_qpf%fld,
-     &                ISCALE,GROUND,GMIN,GMAX,NBIT)
+!        IF (IBITM.EQ.IM*JM) THEN
+!          IBM = 0
+!        ELSE
+!          IBM = 1
+!        ENDIF
+!        call GET_BITS(IBM,SGDS,IM*JM,ibmap,gfld_qpf%fld,
+!     &                ISCALE,GROUND,GMIN,GMAX,NBIT)
+!
+!        write(0,*) 'returned NBIT for FZ as: ', NBIT
+!
+!        gfld_qpf%idrtmpl(4)=NBIT
+!
+!        write(0,*) 'use gfld%idrtmpl(1:5): ', gfld%idrtmpl(1:5)
+!
+!        call putgb2(13,GFLD_QPF,IRET)
+!        write(0,*) 'IRET from putgb2 for fzprecip ', IRET
+!        write(0,*) 'extremes of fzprecip ', 
+!     +            maxval(fzprecip)
 
-        write(0,*) 'returned NBIT for FZ as: ', NBIT
-
-        gfld_qpf%idrtmpl(4)=NBIT
-
-        write(0,*) 'use gfld%idrtmpl(1:5): ', gfld%idrtmpl(1:5)
-
-        call putgb2(13,GFLD_QPF,IRET)
-        write(0,*) 'IRET from putgb2 for fzprecip ', IRET
-        write(0,*) 'extremes of fzprecip ', 
-     +            maxval(fzprecip)
-
-      endif
+!      endif
 
       call baclose(13,IRET)
 

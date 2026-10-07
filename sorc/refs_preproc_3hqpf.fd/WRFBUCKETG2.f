@@ -214,20 +214,19 @@ C    &                  UNPACK,K,GFLD,IRET)
         JGDT=-9999
         UNPACK=.true.
 
-        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET)
+!        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &     UNPACK,K,GFLD,IRET)
+!
+!	if (IRET .ne. 0) then
+!	write(0,*) 'bad getgb2 earlier for FRZR ', IRET
+!	STOP 99
+!	endif
 
-	if (IRET .ne. 0) then
-	write(0,*) 'bad getgb2 earlier for FRZR ', IRET
-	STOP 99
-	endif
-
-        frzr_earlier=gfld%fld
-        do K=1,gfld%ipdtlen
-        PDS_FRZR_HOLD_EARLY(K)=gfld%ipdtmpl(K)
-!	write(0,*) 'K, PDS_FRZR_HOLD_EARLY(K): ', K, PDS_RAIN_HOLD_EARLY(K)
-        enddo
-        write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
+!        frzr_earlier=gfld%fld
+!        do K=1,gfld%ipdtlen
+!        PDS_FRZR_HOLD_EARLY(K)=gfld%ipdtmpl(K)
+!        enddo
+!        write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
 
         endif  ! make sure reset_flag = 0 
 
@@ -294,41 +293,39 @@ C    &                  UNPACK,K,GFLD,IRET)
         JGDTN=-1
         JGDT=-9999
 
-        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET1)
+!        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &     UNPACK,K,GFLD,IRET1)
 
-        write(0,*) 'K: ', K
+!	if (IRET1 .ne. 0) then
+!	 write(0,*) 'bad FRZR getgb later ', IRET1
+!	STOP 999
+!	endif
 
-	if (IRET1 .ne. 0) then
-	 write(0,*) 'bad FRZR getgb later ', IRET1
-	STOP 999
-	endif
+!        write(0,*) 'set frzr_later to gfld%fld'
+!        frzr_later=gfld%fld
+!        write(0,*) 'maxval(frzr_later): ', maxval(frzr_later)
+!
+!        do K=1,gfld%ipdtlen
+!        PDS_FRZR_HOLD(K)=gfld%ipdtmpl(K)
+!        enddo
 
-        write(0,*) 'set frzr_later to gfld%fld'
-        frzr_later=gfld%fld
-        write(0,*) 'maxval(frzr_later): ', maxval(frzr_later)
+!	if (reset_flag .eq. 1) then
+!	write(0,*) 'just later value'
+!        PDS_FRZR_HOLD_EARLY=PDS_FRZR_HOLD
 
-        do K=1,gfld%ipdtlen
-        PDS_FRZR_HOLD(K)=gfld%ipdtmpl(K)
-        enddo
+!	do NPT=1,IM*JM
+!	dfrzr(NPT)=frzr_later(NPT)
+!	enddo
 
-	if (reset_flag .eq. 1) then
-	write(0,*) 'just later value'
-        PDS_FRZR_HOLD_EARLY=PDS_FRZR_HOLD
+!	else
 
-	do NPT=1,IM*JM
-	dfrzr(NPT)=frzr_later(NPT)
-	enddo
+!	write(0,*) 'take normal difference for frzr ', IM*JM
+!
+!	do NPT=1,IM*JM
+!	dfrzr(NPT)=frzr_later(NPT)-frzr_earlier(NPT)
+!	enddo
 
-	else
-
-	write(0,*) 'take normal difference for frzr ', IM*JM
-
-	do NPT=1,IM*JM
-	dfrzr(NPT)=frzr_later(NPT)-frzr_earlier(NPT)
-	enddo
-
-	endif
+!	endif
 
         write(0,*) 'define gfld%fld with dprecip'
 
