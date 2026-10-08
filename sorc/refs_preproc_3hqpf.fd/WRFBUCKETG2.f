@@ -99,15 +99,15 @@ C grib2
       INTEGER,DIMENSION(:) :: JIDS(200),JPDT(200),JGDT(200)
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD(200)
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD_EARLY(200)
-      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD(200)
-      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD_EARLY(200)
+!      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD(200)
+!      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD_EARLY(200)
       INTEGER :: intv_rec,time_s_rec,time_e_rec,num_time_rec
       LOGICAL :: UNPACK
       INTEGER :: K,IRET
       TYPE(GRIBFIELD) :: GFLD
 C grib2
 	real:: p_later(IM*JM),p_earlier(IM*JM),dprecip(im*jm)
-	real:: frzr_later(IM*JM),frzr_earlier(IM*JM),dfrzr(im*jm)
+!	real:: frzr_later(IM*JM),frzr_earlier(IM*JM),dfrzr(im*jm)
 	
 	call baopenr(11,fname1,ierr1)
 	call baopenr(12,fname2,ierr2)

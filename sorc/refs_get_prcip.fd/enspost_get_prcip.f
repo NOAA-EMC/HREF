@@ -1,9 +1,10 @@
 C  raw data
        use grib_mod
-       real,allocatable,dimension(:,:) :: dp3,sn3,asn3,fz3 !jf,4        
+!       real,allocatable,dimension(:,:) :: dp3,sn3,asn3,fz3 !jf,4        
+       real,allocatable,dimension(:,:) :: dp3,sn3,asn3 !jf,4        
        real,allocatable,dimension(:) :: dp6,dp12,dp24 !jf         
        real,allocatable,dimension(:) :: sn6,sn12,sn24 !jf         
-       real,allocatable,dimension(:) :: fz6,fz12,fz24 !jf         
+!       real,allocatable,dimension(:) :: fz6,fz12,fz24 !jf         
        real,allocatable,dimension(:) :: asn6,asn12,asn24 !jf         
  
        integer iyr,imon,idy,ihr
@@ -115,10 +116,10 @@ cc     NAM has no one-hour accumu precip, so two files are needed
        allocate(asn12(jf))
        allocate(asn24(jf))
 
-       allocate(fz3(jf,8))
-       allocate(fz6(jf))
-       allocate(fz12(jf))
-       allocate(fz24(jf))
+!       allocate(fz3(jf,8))
+!       allocate(fz6(jf))
+!       allocate(fz12(jf))
+!       allocate(fz24(jf))
 
        if (ff.ge.24) then
          nfile=8
@@ -241,9 +242,9 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         asn6=0.0
         asn24=0.0
         asn12=0.0
-        fz6=0.0
-        fz24=0.0
-        fz12=0.0
+!        fz6=0.0
+!        fz24=0.0
+!        fz12=0.0
 
 
        if (ff.ge.24) then
@@ -256,9 +257,9 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          asn6(:)=asn3(:,1)+asn3(:,2)
          asn12(:)=asn6(:)+asn3(:,3)+asn3(:,4)
          asn24(:)=asn12(:)+asn3(:,5)+asn3(:,6)+asn3(:,7)+asn3(:,8)
-         fz6(:)=fz3(:,1)+fz3(:,2)
-         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
-         fz24(:)=fz12(:)+fz3(:,5)+fz3(:,6)+fz3(:,7)+fz3(:,8)
+!         fz6(:)=fz3(:,1)+fz3(:,2)
+!         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
+!         fz24(:)=fz12(:)+fz3(:,5)+fz3(:,6)+fz3(:,7)+fz3(:,8)
        else if (ff.lt.24.and.ff.ge.12) then
          dp6(:)=dp3(:,1)+dp3(:,2)
          dp12(:)=dp6(:)+dp3(:,3)+dp3(:,4)
@@ -266,8 +267,8 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          sn12(:)=sn6(:)+sn3(:,3)+sn3(:,4)
          asn6(:)=asn3(:,1)+asn3(:,2)
          asn12(:)=asn6(:)+asn3(:,3)+asn3(:,4)
-         fz6(:)=fz3(:,1)+fz3(:,2)
-         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
+!         fz6(:)=fz3(:,1)+fz3(:,2)
+!         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
        else if (ff.lt.12.and.ff.ge.6) then
 	write(0,*) 'adding to create dp6'
 	write(0,*) 'maxvals of dp3 inputs: ', 
@@ -275,7 +276,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          dp6(:)=dp3(:,1)+dp3(:,2)
          sn6(:)=sn3(:,1)+sn3(:,2)
          asn6(:)=asn3(:,1)+asn3(:,2)
-         fz6(:)=fz3(:,1)+fz3(:,2)
+!         fz6(:)=fz3(:,1)+fz3(:,2)
        end if
             
 !       do i=382461,382470
@@ -606,8 +607,8 @@ C  raw data
        real,allocatable,dimension(:)   ::  dp1
        real,allocatable,dimension(:,:) ::  snhold !jf,4        
        real,allocatable,dimension(:)   ::  sn1
-       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
-       real,allocatable,dimension(:)   ::  fz1
+!       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
+!       real,allocatable,dimension(:)   ::  fz1
        real,allocatable,dimension(:,:) ::  asnhold !jf,4        
        real,allocatable,dimension(:)   ::  asn1
 
@@ -646,8 +647,8 @@ C  raw data
        allocate(dp1(jf))
        allocate(snhold(jf,3))
        allocate(sn1(jf))
-       allocate(fzhold(jf,3))
-       allocate(fz1(jf))
+!       allocate(fzhold(jf,3))
+!       allocate(fz1(jf))
        allocate(asnhold(jf,3))
        allocate(asn1(jf))
 
@@ -1720,8 +1721,8 @@ C  raw data
        real,allocatable,dimension(:)   ::  dp1
        real,allocatable,dimension(:,:) ::  snhold !jf,4        
        real,allocatable,dimension(:)   ::  sn1
-       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
-       real,allocatable,dimension(:)   ::  fz1
+!       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
+!       real,allocatable,dimension(:)   ::  fz1
        integer iyr,imon,idy,ihr,jpdtn_use
        character*50 gdss(400)
        integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
@@ -1754,8 +1755,8 @@ C  raw data
        allocate(dp1(jf))
        allocate(snhold(jf,3))
        allocate(sn1(jf))
-       allocate(fzhold(jf,3))
-       allocate(fz1(jf))
+!       allocate(fzhold(jf,3))
+!       allocate(fz1(jf))
 
 !! these numbers need to change for hourly
 
