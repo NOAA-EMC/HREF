@@ -147,7 +147,7 @@ echo filecheck is $filecheck
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 
-$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 hrold=$((hr-1)) 
 hrold3=$((hr-3)) 
 
@@ -274,7 +274,7 @@ fi # 3 hour time
 else
 # just extract for f00
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
-$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
         cpreq ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/preproc/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2

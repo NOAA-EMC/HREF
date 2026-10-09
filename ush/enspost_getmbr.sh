@@ -204,7 +204,7 @@ typeset -Z2 fcheckloc
         then
 	echo here a $ff
 
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f${ff}
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
         if [ ${ff}%3 -eq 0 ]
         then
@@ -229,7 +229,7 @@ typeset -Z2 fcheckloc
 
 #	if [ $err -ne 0 ]
 #        then
-#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
 #        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
 #        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
 #        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
@@ -303,7 +303,7 @@ typeset -Z2 fcheckloc
         then
 	echo here a $ff
 
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f${ff}
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
         if [ ${ff}%3 -eq 0 ]
         then
@@ -326,7 +326,7 @@ typeset -Z2 fcheckloc
 
 #	if [ $err -ne 0 ]
 #        then
-#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
 #        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
 #        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
 #        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
@@ -401,11 +401,11 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
         echo here a $ff
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f${ff}
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
         if [ $ff -eq 1 ]
         then
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f00 -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f00
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f00 -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f00
         fi
 
         echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
@@ -479,11 +479,11 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
-         ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f${ff}
+         ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
         if [ $ff -eq 1 ]
         then
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f00 -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f00
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f00 -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f00
         fi
 
          echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
@@ -560,7 +560,7 @@ typeset -Z2 fcheckloc
 	echo here a $ff
 
 
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f${ff}
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
         if [ ${ff}%3 -eq 0 ]
         then
@@ -581,7 +581,7 @@ typeset -Z2 fcheckloc
 
 #        if [ $err -ne 0 ]
 #        then
-#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
 #        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
 #        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
 #        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
@@ -658,7 +658,7 @@ typeset -Z2 fcheckloc
         then
 	echo here a $ff
 
-        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD|FRZR):" -grib inps.m${m}.t${cyc}z.f${ff}
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
         if [ ${ff}%3 -eq 0 ]
         then
@@ -679,7 +679,7 @@ typeset -Z2 fcheckloc
 
 #	if [ $err -ne 0 ]
 #	then
-#	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
 #        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
 #        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
 #        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1

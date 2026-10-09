@@ -185,6 +185,8 @@ C for variable table:
            write(0,*) 'skipped spread for LPM mean precip'
         else if (imean .eq. 208 .and.  jpd2 .eq. 8) then
            write(0,*) 'skipped spread for LPM avg precip'
+        else if (ipdtmpl(3) .eq. 193 .and.  jpd2 .eq. 5) then
+           write(0,*) 'skipped spread for PM sfc HGT'
         else
     
           gfld%fld=vrbl_sp(:,ml)

@@ -1,9 +1,10 @@
 C  raw data
        use grib_mod
-       real,allocatable,dimension(:,:) :: dp3,sn3,asn3,fz3 !jf,4        
+!       real,allocatable,dimension(:,:) :: dp3,sn3,asn3,fz3 !jf,4        
+       real,allocatable,dimension(:,:) :: dp3,sn3,asn3 !jf,4        
        real,allocatable,dimension(:) :: dp6,dp12,dp24 !jf         
        real,allocatable,dimension(:) :: sn6,sn12,sn24 !jf         
-       real,allocatable,dimension(:) :: fz6,fz12,fz24 !jf         
+!       real,allocatable,dimension(:) :: fz6,fz12,fz24 !jf         
        real,allocatable,dimension(:) :: asn6,asn12,asn24 !jf         
  
        integer iyr,imon,idy,ihr
@@ -115,10 +116,10 @@ cc     NAM has no one-hour accumu precip, so two files are needed
        allocate(asn12(jf))
        allocate(asn24(jf))
 
-       allocate(fz3(jf,8))
-       allocate(fz6(jf))
-       allocate(fz12(jf))
-       allocate(fz24(jf))
+!       allocate(fz3(jf,8))
+!       allocate(fz6(jf))
+!       allocate(fz12(jf))
+!       allocate(fz24(jf))
 
        if (ff.ge.24) then
          nfile=8
@@ -173,21 +174,21 @@ cc     NAM has no one-hour accumu precip, so two files are needed
 
 !       FRZR
 
-        jpd1=1
-        jpd2=225
-        jpd27=3 !3 hr accumulation
-        jpdtn=jpdtn_use   !APCP's Product Template# is  4.8  (or 4.11)
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
-
-        if (ie.eq.0) then
-         fz3(:,nf)=gfld%fld(:)
-         write(*,*) 'maxval of fz3: ', maxval(gfld%fld(:))
-         if (nf.eq.1) then 
-           gfld_save_frzr=gfld
-         end if
-        else
-         write(*,*) '3h readGB2 frzr error=',ie
-        end if
+!        jpd1=1
+!        jpd2=225
+!        jpd27=3 !3 hr accumulation
+!        jpdtn=jpdtn_use   !APCP's Product Template# is  4.8  (or 4.11)
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
+!
+!        if (ie.eq.0) then
+!         fz3(:,nf)=gfld%fld(:)
+!         write(*,*) 'maxval of fz3: ', maxval(gfld%fld(:))
+!         if (nf.eq.1) then 
+!           gfld_save_frzr=gfld
+!         end if
+!        else
+!         write(*,*) '3h readGB2 frzr error=',ie
+!        end if
 
 !       ASNOW
 
@@ -241,9 +242,9 @@ cc     NAM has no one-hour accumu precip, so two files are needed
         asn6=0.0
         asn24=0.0
         asn12=0.0
-        fz6=0.0
-        fz24=0.0
-        fz12=0.0
+!        fz6=0.0
+!        fz24=0.0
+!        fz12=0.0
 
 
        if (ff.ge.24) then
@@ -256,9 +257,9 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          asn6(:)=asn3(:,1)+asn3(:,2)
          asn12(:)=asn6(:)+asn3(:,3)+asn3(:,4)
          asn24(:)=asn12(:)+asn3(:,5)+asn3(:,6)+asn3(:,7)+asn3(:,8)
-         fz6(:)=fz3(:,1)+fz3(:,2)
-         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
-         fz24(:)=fz12(:)+fz3(:,5)+fz3(:,6)+fz3(:,7)+fz3(:,8)
+!         fz6(:)=fz3(:,1)+fz3(:,2)
+!         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
+!         fz24(:)=fz12(:)+fz3(:,5)+fz3(:,6)+fz3(:,7)+fz3(:,8)
        else if (ff.lt.24.and.ff.ge.12) then
          dp6(:)=dp3(:,1)+dp3(:,2)
          dp12(:)=dp6(:)+dp3(:,3)+dp3(:,4)
@@ -266,8 +267,8 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          sn12(:)=sn6(:)+sn3(:,3)+sn3(:,4)
          asn6(:)=asn3(:,1)+asn3(:,2)
          asn12(:)=asn6(:)+asn3(:,3)+asn3(:,4)
-         fz6(:)=fz3(:,1)+fz3(:,2)
-         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
+!         fz6(:)=fz3(:,1)+fz3(:,2)
+!         fz12(:)=fz6(:)+fz3(:,3)+fz3(:,4)
        else if (ff.lt.12.and.ff.ge.6) then
 	write(0,*) 'adding to create dp6'
 	write(0,*) 'maxvals of dp3 inputs: ', 
@@ -275,7 +276,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          dp6(:)=dp3(:,1)+dp3(:,2)
          sn6(:)=sn3(:,1)+sn3(:,2)
          asn6(:)=asn3(:,1)+asn3(:,2)
-         fz6(:)=fz3(:,1)+fz3(:,2)
+!         fz6(:)=fz3(:,1)+fz3(:,2)
        end if
             
 !       do i=382461,382470
@@ -318,10 +319,10 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(jpd27_rec)=3
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz3(:,1)
+!             gfld%ipdtmpl(jpd27_rec)=3
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
@@ -348,11 +349,11 @@ c      so use previously saved gfld_save
              gfld%fld(:)=asn6(:)
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%ipdtmpl(jpd27_rec)=6
-             gfld%ipdtmpl(9)=-3 + pdt9_orig
-             gfld%fld(:)=fz6(:)
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%ipdtmpl(jpd27_rec)=6
+!             gfld%ipdtmpl(9)=-3 + pdt9_orig
+!             gfld%fld(:)=fz6(:)
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp12(:)
@@ -373,11 +374,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(9)=-9 + pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz12(:)
-             gfld%ipdtmpl(jpd27_rec)=12
-             gfld%ipdtmpl(9)=-9 + pdt9_orig
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz12(:)
+!             gfld%ipdtmpl(jpd27_rec)=12
+!             gfld%ipdtmpl(9)=-9 + pdt9_orig
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp24(:)
@@ -398,11 +399,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(9)=-21+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz24(:)
-             gfld%ipdtmpl(jpd27_rec)=24
-             gfld%ipdtmpl(9)=-21+pdt9_orig
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz24(:)
+!             gfld%ipdtmpl(jpd27_rec)=24
+!             gfld%ipdtmpl(9)=-21+pdt9_orig
+!             call putgb2_wrap(ounit,gfld,ierr)
 
           else if (ff.lt.24.and.ff.ge.12) then
 
@@ -417,10 +418,10 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(jpd27_rec)=3
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz3(:,1)
+!             gfld%ipdtmpl(jpd27_rec)=3
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
@@ -447,11 +448,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(9)=-3+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz6(:)
-             gfld%ipdtmpl(jpd27_rec)=6
-             gfld%ipdtmpl(9)=-3+pdt9_orig
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz6(:)
+!             gfld%ipdtmpl(jpd27_rec)=6
+!             gfld%ipdtmpl(9)=-3+pdt9_orig
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save
              gfld%fld(:)=dp12(:)
@@ -472,11 +473,11 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(9)=-9+pdt9_orig
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz12(:)
-             gfld%ipdtmpl(jpd27_rec)=12
-             gfld%ipdtmpl(9)=-9+pdt9_orig
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz12(:)
+!             gfld%ipdtmpl(jpd27_rec)=12
+!             gfld%ipdtmpl(9)=-9+pdt9_orig
+!             call putgb2_wrap(ounit,gfld,ierr)
 
           else if (ff.lt.12.and.ff.ge.6) then
 
@@ -491,10 +492,10 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(jpd27_rec)=3
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz3(:,1)
+!             gfld%ipdtmpl(jpd27_rec)=3
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
@@ -522,11 +523,11 @@ c      so use previously saved gfld_save
 	     write(0,*) 'ASN 6 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz6(:)
-             gfld%ipdtmpl(jpd27_rec)=6
-             gfld%ipdtmpl(9)=-3+pdt9_orig
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz6(:)
+!             gfld%ipdtmpl(jpd27_rec)=6
+!             gfld%ipdtmpl(9)=-3+pdt9_orig
+!             call putgb2_wrap(ounit,gfld,ierr)
 
            else
 
@@ -540,10 +541,10 @@ c      so use previously saved gfld_save
              gfld%ipdtmpl(jpd27_rec)=3
              call putgb2_wrap(ounit,gfld,ierr)
 
-	     gfld=gfld_save_frzr
-             gfld%fld(:)=fz3(:,1)
-             gfld%ipdtmpl(jpd27_rec)=3
-             call putgb2_wrap(ounit,gfld,ierr)
+!	     gfld=gfld_save_frzr
+!             gfld%fld(:)=fz3(:,1)
+!             gfld%ipdtmpl(jpd27_rec)=3
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	     gfld=gfld_save_asn
              gfld%fld(:)=asn3(:,1)
@@ -606,8 +607,8 @@ C  raw data
        real,allocatable,dimension(:)   ::  dp1
        real,allocatable,dimension(:,:) ::  snhold !jf,4        
        real,allocatable,dimension(:)   ::  sn1
-       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
-       real,allocatable,dimension(:)   ::  fz1
+!       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
+!       real,allocatable,dimension(:)   ::  fz1
        real,allocatable,dimension(:,:) ::  asnhold !jf,4        
        real,allocatable,dimension(:)   ::  asn1
 
@@ -646,8 +647,8 @@ C  raw data
        allocate(dp1(jf))
        allocate(snhold(jf,3))
        allocate(sn1(jf))
-       allocate(fzhold(jf,3))
-       allocate(fz1(jf))
+!       allocate(fzhold(jf,3))
+!       allocate(fz1(jf))
        allocate(asnhold(jf,3))
        allocate(asn1(jf))
 
@@ -762,34 +763,34 @@ c default is set to APCP
 
 !       FRZR
 
-        jpd1=1
-        jpd2=225
-        jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
+!        jpd1=1
+!        jpd2=225
+!        jpd27=1 !1 hr accumulation
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
 
-        if (ie.eq.0) then
+!        if (ie.eq.0) then
 
 
 !  	 write(0,*) 'populate FRZR nf (mod=0) of nfile: ', nf, nfile
-         fz1(:)=gfld%fld(:)
-         if (nf.eq.1) then 
-           gfld_save_1h_frzr=gfld
-         end if
+!         fz1(:)=gfld%fld(:)
+!         if (nf.eq.1) then 
+!           gfld_save_1h_frzr=gfld
+!         end if
 
-        else
+!        else
 
-        jpd1=1
-        jpd2=225
-        jpd27=3 !3 hr accumulation
+!        jpd1=1
+!        jpd2=225
+!        jpd27=3 !3 hr accumulation
 !	write(0,*) 'seek 3 h FRZR accum'
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
 
-        if (ie.eq.0) then
+!        if (ie.eq.0) then
 !	write(0,*) 'populate 3 h FRZR accum  nf of nfile: ', nf, nfile
-        fzhold(:,3)=gfld%fld(:)
-	endif
+!        fzhold(:,3)=gfld%fld(:)
+!	endif
 
-        endif ! ie=0 for 1 h accum
+!        endif ! ie=0 for 1 h accum
 
 !       ASNOW
 
@@ -908,39 +909,39 @@ c default is set to APCP
 
 ! FRZR
 
-        jpd1=1
-        jpd2=225
-        jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !
+!        jpd1=1
+!        jpd2=225
+!        jpd27=1 !1 hr accumulation
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  !
 
-        if (ie.eq.0) then
+!        if (ie.eq.0) then
 
-	if (nf .eq. 1) then
+!	if (nf .eq. 1) then
 !	write(0,*) 'mod=1, FRZR populate nf of nfile: ', nf, nfile
-         fz1(:)=gfld%fld(:)
-           gfld_save_1h_frzr=gfld
+!         fz1(:)=gfld%fld(:)
+!           gfld_save_1h_frzr=gfld
 
 !           do i=1,gfld_save_1h%ipdtlen
 !            write(0,*) 'MOD=1 ', i, gfld_save_1h%ipdtmpl(i)
 !           enddo
 
-        else
+!        else
 
 !	write(0,*) 'in here when 1 h old from 2 h block'
-          fz1(:)=fzhold(:,2)-gfld%fld(:)
-	   gfld%fld(:)=fz1(:)
-           gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+1
-           gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
-           gfld_save_1h_frzr=gfld
+!          fz1(:)=fzhold(:,2)-gfld%fld(:)
+!	   gfld%fld(:)=fz1(:)
+!           gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+1
+!           gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
+!           gfld_save_1h_frzr=gfld
 
-        endif ! nf=1
+!        endif ! nf=1
 
-         if (nf.eq.1) then 
-           gfld_save_1h_frzr=gfld
-         end if
+!         if (nf.eq.1) then 
+!           gfld_save_1h_frzr=gfld
+!         end if
 
 
-        endif ! ie=0
+!        endif ! ie=0
 
 ! ASNOW
 
@@ -1066,57 +1067,60 @@ c default is set to APCP
          endif ! ie=0
 
 ! FRZR
+!
+!         jpd1=1
+!         jpd2=225
+!         jpd27=1 !1 hr accumulation
 
-         jpd1=1
-         jpd2=225
-         jpd27=1 !1 hr accumulation
+!         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
+!
+!         if (ie.eq.0) then
 
-         call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
-         if (ie.eq.0) then
 ! 	  write(0,*) 'mod=2, 1h accum FZ populate nf of nfile: ', nf, nfile
-          fz1(:)=gfld%fld(:)
-          fzhold(:,1)=gfld%fld(:)
+!          fz1(:)=gfld%fld(:)
+!          fzhold(:,1)=gfld%fld(:)
 !	  write(0,*) 'maxval(fzhold(:,2)) ', maxval(fzhold(:,2))
 
 !!! is this safe??
 
-	if ( maxval(fzhold(:,2)) .gt. 0) then 
+!	if ( maxval(fzhold(:,2)) .gt. 0) then 
 !	write(0,*) 'inside maxval(snhold(:,2) '
-            fz1(:)=fzhold(:,2)-fzhold(:,1)
+!            fz1(:)=fzhold(:,2)-fzhold(:,1)
 !	write(0,*) 'maxval fzholds, fz1: ', maxval(fzhold(:,1)), 
 !     +                       maxval(fzhold(:,2)), maxval(fz1)
-        endif
+!        endif
 
-         if (nf.eq.1) then 
-           gfld_save_1h_frzr=gfld
+!         if (nf.eq.1) then 
+!           gfld_save_1h_frzr=gfld
 !           do i=1,gfld_save_1h%ipdtlen
 !            write(0,*) 'MOD=2 ', i, gfld_save_1h%ipdtmpl(i)
 !          enddo
-         end if
+!         end if
 
-         else ! ie not = 0
+!         else ! ie not = 0
 
-          jpd1=1
-          jpd2=225
-          jpd27=2 !2 hr accumulation
-          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
-          if (ie.eq.0) then
+!          jpd1=1
+!          jpd2=225
+!          jpd27=2 !2 hr accumulation
+!          call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
+
+!          if (ie.eq.0) then
 !	    write(0,*) 'populate FZ mod=2, 2 h accum nf of nfile: ',nf,nfile
-            fzhold(:,2)=gfld%fld(:)
+!            fzhold(:,2)=gfld%fld(:)
 !            write(0,*) 'maxval(fzhold(:,2)) ', maxval(fzhold(:,2))
 	
-	if (nf .eq. 2) then
-	 fz1(:)=fzhold(:,3)-fzhold(:,2)
+!	if (nf .eq. 2) then
+!	 fz1(:)=fzhold(:,3)-fzhold(:,2)
 !	 write(0,*) 'definined fz1 from difference'
 !	 write(0,*) 'maxval(fz1): ', maxval(fz1)
-	 gfld%fld(:)=fz1(:)
-         gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
-         gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
-         gfld_save_1h_frzr=gfld
-	endif
+!	 gfld%fld(:)=fz1(:)
+!         gfld%ipdtmpl(9)=gfld%ipdtmpl(9)+2
+!         gfld%ipdtmpl(19)=gfld%ipdtmpl(19)+1
+!         gfld_save_1h_frzr=gfld
+!	endif
 
-         endif ! ie=0
-         endif ! ie=0
+!         endif ! ie=0
+!         endif ! ie=0
 
 ! ASNOW
 
@@ -1231,11 +1235,11 @@ c      so use previously saved gfld_save
 	write(0,*) 'SNOW 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
              call putgb2_wrap(ounit,gfld,ierr)
 
-	   gfld=gfld_save_1h_frzr
-           gfld%fld(:)=fz1(:)
-           gfld%ipdtmpl(jpd27_rec)=1
-	write(0,*) 'FRZR 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
-             call putgb2_wrap(ounit,gfld,ierr)
+!	   gfld=gfld_save_1h_frzr
+!           gfld%fld(:)=fz1(:)
+!           gfld%ipdtmpl(jpd27_rec)=1
+!	write(0,*) 'FRZR 1 h maxval(gfld%fld(:)): ', maxval(gfld%fld(:))
+!             call putgb2_wrap(ounit,gfld,ierr)
 
 	   gfld=gfld_save_1h_asn
            gfld%fld(:)=asn1(:)
@@ -1717,8 +1721,8 @@ C  raw data
        real,allocatable,dimension(:)   ::  dp1
        real,allocatable,dimension(:,:) ::  snhold !jf,4        
        real,allocatable,dimension(:)   ::  sn1
-       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
-       real,allocatable,dimension(:)   ::  fz1
+!       real,allocatable,dimension(:,:) ::  fzhold !jf,4        
+!       real,allocatable,dimension(:)   ::  fz1
        integer iyr,imon,idy,ihr,jpdtn_use
        character*50 gdss(400)
        integer IENS, GRIBID, kgdss(200), lengds,im,jm,km,jf
@@ -1751,8 +1755,8 @@ C  raw data
        allocate(dp1(jf))
        allocate(snhold(jf,3))
        allocate(sn1(jf))
-       allocate(fzhold(jf,3))
-       allocate(fz1(jf))
+!       allocate(fzhold(jf,3))
+!       allocate(fz1(jf))
 
 !! these numbers need to change for hourly
 
@@ -1808,15 +1812,15 @@ CCCCCCCCCCCCCCCCCCCCCCCCCC
          gfld_save_curr_snow=gfld
         endif
 
-        jpd1=1
-        jpd2=225
-        jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
-        if (ie.eq.0) then
-         fzhold(:,1)=gfld%fld(:)
-         gfld%ipdtmpl(9)=-2 + pdt9_orig
-         gfld_save_curr_frzr=gfld
-        endif
+!        jpd1=1
+!        jpd2=225
+!        jpd27=1 !1 hr accumulation
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! FRZR
+!        if (ie.eq.0) then
+!         fzhold(:,1)=gfld%fld(:)
+!         gfld%ipdtmpl(9)=-2 + pdt9_orig
+!         gfld_save_curr_frzr=gfld
+!        endif
 
 
 CCCCCCCCCCCCCCCCCCCCCCCCC
@@ -1842,13 +1846,13 @@ CCCCCCCCCCCCCCCCCCCCCCCCC
          snhold(:,2)=gfld%fld(:)
         endif
 
-        jpd1=1
-        jpd2=225
-        jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! frzr
-        if (ie.eq.0) then
-         fzhold(:,2)=gfld%fld(:)
-        endif
+!        jpd1=1
+!        jpd2=225
+!        jpd27=1 !1 hr accumulation
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! frzr
+!        if (ie.eq.0) then
+!         fzhold(:,2)=gfld%fld(:)
+!        endif
 
 CCCCCCCCCCCCCCCCCCCCCCCCC
 
@@ -1873,13 +1877,13 @@ CCCCCCCCCCCCCCCCCCCCCCCCC
          snhold(:,3)=gfld%fld(:)
         endif
 
-        jpd1=1
-        jpd2=225
-        jpd27=1 !1 hr accumulation
-        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! frzr
-        if (ie.eq.0) then
-         fzhold(:,3)=gfld%fld(:)
-        endif
+!        jpd1=1
+!        jpd2=225
+!        jpd27=1 !1 hr accumulation
+!        call readGB2(iunit,jpdtn,jpd1,jpd2,jpd27,gfld,ie)  ! frzr
+!        if (ie.eq.0) then
+!         fzhold(:,3)=gfld%fld(:)
+!        endif
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
