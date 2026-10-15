@@ -26,6 +26,50 @@ def simplewgrib2(txtfile):
         data = np.loadtxt(f, dtype=np.float32).reshape((ny, nx))
         return data, nx, ny
 
+def read_qpf_step_was(file_path, s_hr, f_hr, step_tag):
+    txt_filename = f'qpf_{step_tag}_{memcount}.txt'
+    cmd = f'{WGRIB2} {file_path} -match "APCP:surface:{s_hr}-{f_hr}" -end -text {txt_filename}'
+    os.system(cmd)
+
+    if not os.path.exists(txt_filename) or os.path.getsize(txt_filename) == 0:
+       print(f"WARNING: wgrib2 produced no data for {file_path} with APCP:surface:{s_hr}-{f_hr}")
+       # Fallback to zeros matching grid shape if file missing or empty
+       data = np.zeros((nlats, nlons), dtype=np.float32)
+    else:
+        data, _, _ = simplewgrib2(txt_filename)
+        os.remove(txt_filename)
+    return data
+
+# Use RAM disk (/dev/shm) for temporary files if available; fallback to DATA
+shm_dir = '/dev/shm' if os.path.exists('/dev/shm') and os.access('/dev/shm', os.W_OK) else DATA
+
+def read_qpf_step(file_path, s_hr, f_hr, step_tag):
+    """
+    Fast binary reader:
+    Uses wgrib2 -no_header -bin to dump raw IEEE 754 floats to RAM (/dev/shm),
+    then loads instantly via np.fromfile.
+    """
+    bin_filename = f'{shm_dir}/qpf_{step_tag}_{memcount}_{os.getpid()}.bin'
+
+    # Dump raw single-precision IEEE binary floats (no text formatting)
+    cmd = f'{WGRIB2} {file_path} -match "APCP:surface:{s_hr}-{f_hr}" -end -no_header -bin {bin_filename}'
+    os.system(cmd)
+
+    if not os.path.exists(bin_filename) or os.path.getsize(bin_filename) == 0:
+        print(f"WARNING: wgrib2 produced no data for {file_path} with APCP:surface:{s_hr}-{f_hr}")
+        data = np.zeros((nlats, nlons), dtype=np.float32)
+    else:
+        # np.fromfile reads raw float32 bytes in ~10 milliseconds
+        data = np.fromfile(bin_filename, dtype=np.float32).reshape((nlats, nlons))
+        # Zero out wgrib2 undefined value (9.999e20)
+        data = np.where(data > 9.0e20, 0, data)
+        try:
+            os.remove(bin_filename)
+        except OSError:
+            pass
+
+    return data
+
 def get_footprint(r, dx):
     """Compute structural element/footprint for a given radius."""
     r_idx = int(r / dx)
@@ -520,19 +564,36 @@ for mem in members:
     for itime in itimes[memcount:memcount + 2]:
         mfiles = memfiles[itime]
 
-        def read_qpf_step(file_path, s_hr, f_hr, step_tag):
-            txt_filename = f'qpf_{step_tag}_{memcount}.txt'
-            cmd = f'{WGRIB2} {file_path} -match "APCP:surface:{s_hr}-{f_hr}" -end -text {txt_filename}'
-            os.system(cmd)
+        # Use RAM disk (/dev/shm) for temporary files if available; fallback to DATA
+        shm_dir = '/dev/shm' if os.path.exists('/dev/shm') and os.access('/dev/shm', os.W_OK) else DATA
 
-            if not os.path.exists(txt_filename) or os.path.getsize(txt_filename) == 0:
-                print(f"WARNING: wgrib2 produced no data for {file_path} with APCP:surface:{s_hr}-{f_hr}")
-                # Fallback to zeros matching grid shape if file missing or empty
-                data = np.zeros((nlats, nlons), dtype=np.float32)
-            else:
-                data, _, _ = simplewgrib2(txt_filename)
-                os.remove(txt_filename)
-            return data
+        def read_qpf_step(file_path, s_hr, f_hr, step_tag):
+         """
+         Fast binary reader:
+         Uses wgrib2 -no_header -bin to dump raw IEEE 754 floats to RAM (/dev/shm),
+         then loads instantly via np.fromfile.
+         """
+         bin_filename = f'{shm_dir}/qpf_{step_tag}_{memcount}_{os.getpid()}.bin'
+
+         # Dump raw single-precision IEEE binary floats (no text formatting)
+         cmd = f'{WGRIB2} {file_path} -match "APCP:surface:{s_hr}-{f_hr}" -end -no_header -bin {bin_filename}'
+         os.system(cmd)
+
+         if not os.path.exists(bin_filename) or os.path.getsize(bin_filename) == 0:
+           print(f"WARNING: wgrib2 produced no data for {file_path} with APCP:surface:{s_hr}-{f_hr}")
+           data = np.zeros((nlats, nlons), dtype=np.float32)
+         else:
+           # np.fromfile reads raw float32 bytes in ~10 milliseconds
+           data = np.fromfile(bin_filename, dtype=np.float32).reshape((nlats, nlons))
+           # Zero out wgrib2 undefined value (9.999e20)
+           data = np.where(data > 9.0e20, 0, data)
+           try:
+             os.remove(bin_filename)
+           except OSError:
+             pass
+
+         return data
+
 
         base_fhr = fhours[memcount]
 
