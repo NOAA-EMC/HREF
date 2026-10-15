@@ -35,7 +35,7 @@ def get_footprint(r, dx):
     dist = ndimage.distance_transform_edt(footprint, sampling=[dx, dx])
     return np.where(dist <= r, 1, 0)
 
-def process_radius(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx):
+def process_radius_orig(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx):
     """Process a single radius from rlist without redundant allocations."""
     r = rlist_i
     footprint = get_footprint(r, dx)
@@ -62,7 +62,141 @@ def process_radius(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx)
 
     return r, meets_criteria
 
-def calculate_eas_probability_para(ensemble_qpf, t, rlist, alpha, dx, p_smooth, n_processes=None):
+def process_radius(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx, active_mask=None):
+    """
+    Memory-efficient process_radius:
+    Uses algebraic identity to avoid allocating giant 91-pair 3D arrays.
+    """
+    r = rlist_i
+    footprint = get_footprint(r, dx)
+    footprint_sum = float(np.sum(footprint))
+
+    frac = np.zeros((nm_use, isize, jsize), dtype=np.float32)
+    for mem in range(nm_use):
+        frac[mem] = np.around(signal.fftconvolve(exceed3d[mem], footprint, mode='same')) / footprint_sum
+
+    num_pairs = len(pr1)
+    sim_sum = np.zeros((isize, jsize), dtype=np.float32)
+
+    # Accumulate similarity in-place using only 2D slices (no 3D allocation)
+    for m1, m2 in zip(pr1, pr2):
+        f1 = frac[m1]
+        f2 = frac[m2]
+        pair_mask = (f1 > 0) & (f2 > 0)
+        if active_mask is not None:
+            pair_mask &= active_mask
+
+        if not np.any(pair_mask):
+            continue
+
+        num = 2.0 * (f1 * f2)
+        den = f1 * f1 + f2 * f2
+        sim_sum += np.where(pair_mask, num / np.maximum(den, 1e-10), 0.0)
+
+    # dijmean = 1.0 - mean(similarity)
+    dijmean = 1.0 - (sim_sum / float(num_pairs))
+    meets_criteria = dijmean <= alpha
+
+    return r, meets_criteria
+
+def process_radius_new_bad(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx):
+    """Process a single radius from rlist without redundant allocations."""
+    r = rlist_i
+    footprint = get_footprint(r, dx)
+    footprint_sum = float(np.sum(footprint))
+
+    # Pre-allocate normalized footprint (float32) for fast spatial convolution
+    kernel = (footprint / footprint_sum).astype(np.float32)
+
+    # Direct spatial convolution (faster than FFT for typical meteorology footprint sizes)
+    frac = np.zeros((nm_use, isize, jsize), dtype=np.float32)
+    for mem in range(nm_use):
+        frac[mem] = np.around(ndimage.convolve(exceed3d[mem], kernel, mode='constant', cval=0.0))
+
+    # Broadcast calculations across all member pairs simultaneously
+    f1 = frac[pr1]  # Shape: (num_pairs, isize, jsize)
+    f2 = frac[pr2]  # Shape: (num_pairs, isize, jsize)
+
+    mask = (f1 > 0) & (f2 > 0)
+    diff_sq = (f1 - f2) ** 2
+    sum_sq = np.maximum(f1 ** 2 + f2 ** 2, 1e-10)
+
+    ratio = np.ones_like(diff_sq)
+    np.putmask(ratio, mask, diff_sq / sum_sq)
+
+    dijmean = np.mean(ratio, axis=0)
+    meets_criteria = dijmean <= alpha
+
+    return r, meets_criteria
+
+
+def calculate_eas_probability_para(ensemble_qpf, t, rlist, alpha, dx, p_smooth, pool=None):
+    """
+    Optimized EAS probability calculation:
+    - Skips redundant max-radius convolution (Tweak B)
+    - Uses an external persistent process pool (Tweak C)
+    - Restricts pairwise math to points with active precipitation
+    """
+    t_mm = t * 25.4
+    exceed3d = (ensemble_qpf >= t_mm).astype(np.float32)
+    print(f'sum of exceed3d for t: {t} is : {np.sum(exceed3d)}')
+
+    nm_use, isize, jsize = exceed3d.shape
+    pr1, pr2 = np.triu_indices(nm_use, k=1)
+
+    rlist_sorted = sorted(rlist, reverse=True)
+    max_r = rlist_sorted[0]
+    remaining_radii = rlist_sorted[1:]  # e.g., [85, 70, 55, 40, 25, 10]
+
+    # --- TWEAK B: Convolve max radius ONCE for fracsum & optrad default ---
+    initial_footprint = get_footprint(max_r, dx)
+    footprint_sum = float(np.sum(initial_footprint))
+    frac_initial = np.zeros((nm_use, isize, jsize), dtype=np.float32)
+
+    for mem in range(nm_use):
+        frac_initial[mem] = np.around(
+            signal.fftconvolve(exceed3d[mem], initial_footprint, mode='same')
+        ) / footprint_sum
+
+    fracsum = np.sum(frac_initial, axis=0)
+    active_mask = fracsum > 0  # Only compute similarity where precip is present
+
+    # Initialize optrad to the max radius
+    optrad = np.full((isize, jsize), float(max_r), dtype=np.float32)
+
+    # --- TWEAK C: Use the persistent pool on remaining_radii ---
+    partial_process = partial(
+        process_radius,
+        exceed3d=exceed3d,
+        nm_use=nm_use,
+        isize=isize,
+        jsize=jsize,
+        pr1=pr1,
+        pr2=pr2,
+        alpha=alpha,
+        dx=dx,
+        active_mask=active_mask
+    )
+
+    if pool is not None:
+        # pool.map preserves order: results correspond to remaining_radii in descending order
+        results = pool.map(partial_process, remaining_radii)
+    else:
+        results = [partial_process(r) for r in remaining_radii]
+
+    # Update optrad: as smaller radii meet criteria, they overwrite larger ones
+    for r, meets_criteria in results:
+        optrad = np.where(meets_criteria, r, optrad)
+
+    if p_smooth > 0:
+        optrad = ndimage.gaussian_filter(optrad, p_smooth)
+
+    # Zero out completely dry areas
+    optrad = np.where(fracsum == 0, 0, optrad)
+
+    return optrad
+
+def calculate_eas_probability_para_was(ensemble_qpf, t, rlist, alpha, dx, p_smooth, n_processes=None):
     """Optimized parallel EAS probability calculation function."""
     exceed3d = (ensemble_qpf / 25.4 >= t).astype(np.float32)
     print('sum of exceed3d for t: ', t, ' is : ', np.sum(exceed3d))
@@ -88,7 +222,8 @@ def calculate_eas_probability_para(ensemble_qpf, t, rlist, alpha, dx, p_smooth, 
     # Parallel process pool setup
     if n_processes is None:
         n_processes = mp.cpu_count()
-    n_processes = max(1, min(n_processes, len(rlist_sorted), mp.cpu_count()))
+    remaining_radii = rlist_sorted[1:]
+    n_processes = max(1, min(n_processes, len(remaining_radii), mp.cpu_count()))
 
     if n_processes > 1:
         partial_process = partial(
@@ -103,12 +238,12 @@ def calculate_eas_probability_para(ensemble_qpf, t, rlist, alpha, dx, p_smooth, 
             dx=dx
         )
         with mp.Pool(processes=n_processes) as pool:
-            results = pool.map(partial_process, rlist_sorted)
+            results = pool.map(partial_process, remaining_radii)
 
         for r, meets_criteria in results:
             optrad = np.where(meets_criteria, r, optrad)
     else:
-        for r in rlist_sorted:
+        for r in remaining_radii:
             r, meets_criteria = process_radius(r, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx)
             optrad = np.where(meets_criteria, r, optrad)
 
@@ -379,63 +514,63 @@ for mem in members:
 
         latency += 6
 
+# before
+
 #### READ IN QPF ####
     for itime in itimes[memcount:memcount + 2]:
         mfiles = memfiles[itime]
 
-        def read_qpf_step(file_path, shour, fhour, out_txt='qpf.txt'):
-            os.system(f'{WGRIB2} {file_path} -match "APCP:surface:{shour}-{fhour}" -end -text {out_txt}')
-            data, _, _ = simplewgrib2(out_txt)
-            if os.path.exists(out_txt):
-                os.remove(out_txt)
+        def read_qpf_step(file_path, s_hr, f_hr, step_tag):
+            txt_filename = f'qpf_{step_tag}_{memcount}.txt'
+            cmd = f'{WGRIB2} {file_path} -match "APCP:surface:{s_hr}-{f_hr}" -end -text {txt_filename}'
+            os.system(cmd)
+
+            if not os.path.exists(txt_filename) or os.path.getsize(txt_filename) == 0:
+                print(f"WARNING: wgrib2 produced no data for {file_path} with APCP:surface:{s_hr}-{f_hr}")
+                # Fallback to zeros matching grid shape if file missing or empty
+                data = np.zeros((nlats, nlons), dtype=np.float32)
+            else:
+                data, _, _ = simplewgrib2(txt_filename)
+                os.remove(txt_filename)
             return data
 
+        base_fhr = fhours[memcount]
+
         if qpf_interval in (6, 12, 24):
-            fhour = fhours[memcount]
-            shour = fhour - 3
-            q1 = read_qpf_step(mfiles[0], shour, fhour)
-            q2 = read_qpf_step(mfiles[1], shour, fhour + incr)
+            # First 6 hours (two 3-hr blocks)
+            q1 = read_qpf_step(mfiles[0], base_fhr - 3, base_fhr, 'q1')
+            q2 = read_qpf_step(mfiles[1], base_fhr, base_fhr + incr, 'q2')
             qpf12 = q1 + q2
             if qpf_interval == 6:
                 qpf[itime] = qpf12
 
         if qpf_interval in (12, 24):
-            q3 = read_qpf_step(mfiles[2], shour, fhours[memcount] + incr * 2)
-            q4 = read_qpf_step(mfiles[3], shour, fhours[memcount] + incr * 3)
+            # Second 6 hours (two 3-hr blocks)
+            q3 = read_qpf_step(mfiles[2], base_fhr + incr, base_fhr + incr * 2, 'q3')
+            q4 = read_qpf_step(mfiles[3], base_fhr + incr * 2, base_fhr + incr * 3, 'q4')
             qpf34 = q3 + q4
             if qpf_interval == 12:
                 qpf[itime] = qpf12 + qpf34
 
         if qpf_interval == 24:
-            q5 = read_qpf_step(mfiles[4], shour, fhours[memcount] + incr * 4)
-            q6 = read_qpf_step(mfiles[5], shour, fhours[memcount] + incr * 5)
-            q7 = read_qpf_step(mfiles[6], shour, fhours[memcount] + incr * 6)
-            q8 = read_qpf_step(mfiles[7], shour, fhours[memcount] + incr * 7)
+            # Third and fourth 6-hr blocks
+            q5 = read_qpf_step(mfiles[4], base_fhr + incr * 3, base_fhr + incr * 4, 'q5')
+            q6 = read_qpf_step(mfiles[5], base_fhr + incr * 4, base_fhr + incr * 5, 'q6')
+            q7 = read_qpf_step(mfiles[6], base_fhr + incr * 5, base_fhr + incr * 6, 'q7')
+            q8 = read_qpf_step(mfiles[7], base_fhr + incr * 6, base_fhr + incr * 7, 'q8')
             qpf[itime] = qpf12 + qpf34 + (q5 + q6) + (q7 + q8)
 
         if qpf_interval == 3:
-            fhour = fhours[memcount]
-            shour = fhour - 3
-            qpf[itime] = read_qpf_step(mfiles[0], shour, fhour)
+            qpf[itime] = read_qpf_step(mfiles[0], base_fhr - 3, base_fhr, 'q3h')
 
         if qpf_interval == 1:
-            fhour = fhours[memcount]
-            shour = fhour - 1
-            qpf[itime] = read_qpf_step(mfiles[1], shour, fhour)
+            qpf[itime] = read_qpf_step(mfiles[1], base_fhr - 1, base_fhr, 'q1h')
 
         if dom == 'ak' and maskregion is not None:
             qpf[itime] = np.where(maskregion == -9999, 0, qpf[itime])
 
         qpf[memcount] = qpf[itime]
 
-        # Calculate exceedance per threshold & radius footprint
-        for t in thresh_use:
-            exceed = (qpf[itime] / 25.4 >= t).astype(np.float32)
-            for size in rlist:
-                if memcount == 0:
-                    prob[t, size] = np.zeros((nlats, nlons), dtype=np.float32)
-                fp = get_footprint(size, dx)
-                prob[t, size] += signal.fftconvolve(exceed, fp, mode='same')
 
         memcount += 1
 
@@ -447,53 +582,78 @@ ensemble_qpf = np.zeros((nm_use, nlats, nlons), dtype=np.float32)
 for mem in range(nm_use):
     ensemble_qpf[mem] = qpf[mem]
 
-# Pre-compute footprint filters
+    # Pre-compute footprint filters once
 sizes = [10, 25, 40, 55, 70, 85, 100]
 filter_footprints = {sz: get_footprint(sz, dx) for sz in sizes}
 
-for t in thresh_use:
-    t3 = time.time()
-    exceed3d = (ensemble_qpf / 25.4 >= t).astype(np.float32)
-    exceed_sum = np.sum(exceed3d)
+# Cap workers: remaining_radii has 6 tasks, so 4 to 6 workers is optimal
+n_workers = min(4, len(rlist) - 1, mp.cpu_count())
+print(f"Starting persistent process pool with {n_workers} workers...")
 
-    optrad = calculate_eas_probability_para(ensemble_qpf, t, rlist, alpha, dx, p_smooth)
-    t4 = time.time()
-    pnt_prob = calculate_pnt_probability(ensemble_qpf, t, p_smooth)
+with mp.Pool(processes=n_workers) as pool:
+    for t in thresh_use:
+        t3 = time.time()
+        t_mm = t * 25.4
+        exceed3d = (ensemble_qpf >= t_mm).astype(np.float32)
+        exceed_sum = np.sum(exceed3d)
 
-    t8a = time.time()
-    if exceed_sum > 0:
-        probfinal, optrad = optimize_footprint_calculation(
-            optrad, prob, t, nm_use, nlats, nlons, dx,
-            filter_footprints
-        )
-    else:
-        probfinal = np.zeros((nlats, nlons), dtype=np.float32)
+        # Pre-sum exceedance across all members (cuts 784 convolutions down to 56)
+        sum_exceed_members = np.sum(exceed3d, axis=0)
+        for sz in sizes:
+            if exceed_sum > 0:
+                prob[t, sz] = signal.fftconvolve(sum_exceed_members, filter_footprints[sz], mode='same')
+            else:
+                prob[t, sz] = np.zeros((nlats, nlons), dtype=np.float32)
 
-    probfinal = ndimage.gaussian_filter(probfinal, 1)
+        # Skip all heavy computation if there is no rain anywhere in domain
+        if exceed_sum > 0:
+            optrad = calculate_eas_probability_para(
+                ensemble_qpf, t, rlist, alpha, dx, p_smooth, pool=pool
+            )
+            t4 = time.time()
+            print(f'Time for optrad routine: {t4 - t3:.2f}s')
 
-    if dom == 'ak' and maskregion is not None:
-        probfinal = np.where(maskregion == -9999, 0, probfinal)
+            pnt_prob = calculate_pnt_probability(ensemble_qpf, t, p_smooth)
 
-    probfinal = np.clip(probfinal, 0.0, 100.0)
+            probfinal, optrad = optimize_footprint_calculation(
+                optrad, prob, t, nm_use, nlats, nlons, dx,
+                filter_footprints
+            )
+        else:
+            t4 = time.time()
+            print(f'Time for optrad routine (bypassed, dry domain): {t4 - t3:.4f}s')
+            optrad = np.zeros((nlats, nlons), dtype=np.float32)
+            probfinal = np.zeros((nlats, nlons), dtype=np.float32)
 
-    probstr = str(t * 25.4)
-    byte = int(m.ceil(t * 25.4 * 1000))
-    byte45 = byte // 65536
-    byte45rem = byte % 65536
-    byte46 = byte45rem // 256
-    byte47 = byte45rem % 256
+        # Smoothing and masking
+        probfinal = ndimage.gaussian_filter(probfinal, 1)
 
-    with FortranFile('record_out.bin', mode='w') as myfort:
-        myfort.write_record(probfinal.astype(np.float32))
+        if dom == 'ak' and maskregion is not None:
+            probfinal = np.where(maskregion == -9999, 0, probfinal)
 
-    string = f"0:0:d={wgribdate}:APCP:surface:{fhr_range} hour acc fcst:prob >{probstr}:"
+        probfinal = np.clip(probfinal, 0.0, 100.0)
 
-    os.system(f'{WGRIB2} {template} -import_bin record_out.bin -set_metadata_str "{string}" -set_grib_type c3 -grib_out premod.grb')
-    os.system(f'{WGRIB2} premod.grb -set_byte 4 14 136 -set_byte 4 12 197 -set_byte 4 17 0 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 {nm_use} -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 {byte45} -set_byte 4 46 {byte46} -set_byte 4 47 {byte47} -set_byte 4 67 1 -append -set_grib_type c3 -grib_out {outfile}')
+        t5 = time.time()
+        print(f'Time for get final probability routine for {t} inch threshold: {t5 - t4:.2f}s')
 
-    if os.path.exists('record_out.bin'):
-        os.remove('record_out.bin')
-    if os.path.exists('premod.grb'):
-        os.remove('premod.grb')
+        # --- GRIB2 writing section continues as normal below ---
+        probstr = str(t * 25.4)
+        byte = int(m.ceil(t * 25.4 * 1000))
+        byte45 = byte // 65536
+        byte45rem = byte % 65536
+        byte46 = byte45rem // 256
+        byte47 = byte45rem % 256
+
+        with FortranFile('record_out.bin', mode='w') as myfort:
+            myfort.write_record(probfinal.astype(np.float32))
+
+        string = f"0:0:d={wgribdate}:APCP:surface:{fhr_range} hour acc fcst:prob >{probstr}:"
+        os.system(f'{WGRIB2} {template} -import_bin record_out.bin -set_metadata_str "{string}" -set_grib_type c3 -grib_out premod.grb')
+        os.system(f'{WGRIB2} premod.grb -set_byte 4 14 136 -set_byte 4 12 197 -set_byte 4 17 0 -set_byte 4 24:35 0:0:0:0:0:255:0:0:0:0:0:0 -set_byte 4 36 {nm_use} -set_byte 4 38:42 0:0:0:0:0 -set_byte 4 43 3 -set_byte 4 44 0 -set_byte 4 45 {byte45} -set_byte 4 46 {byte46} -set_byte 4 47 {byte47} -set_byte 4 67 1 -append -set_grib_type c3 -grib_out {outfile}')
+
+        if os.path.exists('record_out.bin'):
+            os.remove('record_out.bin')
+        if os.path.exists('premod.grb'):
+            os.remove('premod.grb')
 
     print(f'Wrote {qpf_interval} PQPF to:{outfile} for {t} inch threshold')
