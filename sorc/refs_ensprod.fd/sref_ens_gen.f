@@ -1930,6 +1930,16 @@ c Loop 1-3:  Packing  mean/spread/prob for this direct variable
 !	write(0,*) 'calling packGB2_mean for M 1,2,27 ', jpd1,jpd2, jpd27
 
 
+        if(k4(nv).eq.3.and.k5(nv).eq.5.and.(k6(nv).eq.2.or.
+     +        k6(nv).eq.3)) then  
+         write(*,*) 'redefine idrtmpl for cloud base/top'
+              gfld%idrtmpl(2)=3
+              gfld%idrtmpl(3)=-1
+        endif
+
+
+
+
 ! reset EMSL to write out as PMSL?
 !	if (jpd1 .eq. 3 .and. jpd2 .eq. 192) then
 !        jpd2=1
@@ -2475,6 +2485,14 @@ C
      +                             dk6(nv).eq.108) then
                     gfld%idrtmpl(2)=-5
                 endif
+
+! modify packing for cloud ceiling
+          if (dk4(nv).eq.3.and.dk5(nv).eq.5.and.dk6(nv).eq.215) then
+              write(*,*) 'setting idrtmpl for cloud ceiling'
+              gfld%idrtmpl(2)=3
+              gfld%idrtmpl(3)=-1
+          endif
+                    
 
 
                call packGB2_mean_derv(imean,isprd,derv_mn,

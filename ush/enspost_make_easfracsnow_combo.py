@@ -15,8 +15,7 @@ from functools import partial
 os.environ["OMP_NUM_THREADS"] = "1"
 
 # Identify RAM disk (/dev/shm) if writable; fallback to DATA if unavailable
-shm_dir = '/dev/shm' if os.path.exists('/dev/shm') and os.access('/dev/shm', os.W_OK) else None
-
+shm_dir = '/dev/shoom' if os.path.exists('/dev/shoom') and os.access('/dev/shoom', os.W_OK) else None
 #--------------------------------------------------------------------------------
 #### FUNCTIONS AND ROUTINES ####
 
