@@ -17,17 +17,18 @@ rm -rf ./refs_qpfeasfrac_${dom}_${cyc}_para_??.*
 
 rm -rf ./refs_awips_${dom}_${cyc}_para.*
 rm -rf ./refs_preprocfv3_${dom}_${cyc}_para_??.*
-rm -rf ./refs_preprocfv3_${dom}_${cyc}_para
-rm -rf ./refs_ensprod_${dom}_${cyc}_para
+rm -rf ./refs_preproc_rrfs_${dom}_${cyc}_v1.0_para
+rm -rf ./refs_ensprod_${dom}_${cyc}_v1.0_para
 rm -rf ./refs_gempak_${dom}_${cyc}_para.*
+rm -rf ./refs_prdgen_${dom}_${cyc}_para.*
 
 if [ $dom = "conus" ]
 then
 rm -rf refs_ffggen_${dom}_${cyc}_para.*
-rm -rf refs_preprochrrr_${dom}_${cyc}_para.*
+rm -rf refs_preproc_hrrr_${dom}_${cyc}_v1.0_para
 fi
 
 if [ $dom = "ak" ]
 then
-rm -rf refs_preprochrrr_${dom}_${cyc}_para.*
+rm -rf refs_preproc_hrrr_${dom}_${cyc}_v1.0_para
 fi

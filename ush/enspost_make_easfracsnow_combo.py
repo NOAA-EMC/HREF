@@ -320,11 +320,22 @@ lats, nx, ny = simplewgrib2('lat.txt')
 nlats, nlons = lats.shape
 
 maskregion = None
+
+
 if dom == 'ak':
     maskfile = os.path.join(HOMErefs, 'fix/akrrfs_mask.grib2')
-    os.system(f'{WGRIB2} {maskfile} -text mask.txt')
-    undefmask, nx, ny = simplewgrib2('mask.txt')
-    maskregion = np.where(undefmask > 9.0e20, -9999, undefmask)
+    tmp_mask_bin = f'./mask_{os.getpid()}.bin'
+    os.system(f'{WGRIB2} {maskfile} -no_header -bin {tmp_mask_bin}')
+    if os.path.exists(tmp_mask_bin) and os.path.getsize(tmp_mask_bin) > 0:
+        undefmask = np.fromfile(tmp_mask_bin, dtype=np.float32).reshape((nlats, nlons))
+        maskregion = np.where(undefmask > 9.0e20, -9999, undefmask)
+        try:
+            os.remove(tmp_mask_bin) 
+        except OSError:
+            pass
+        print('Alaska maskregion defined via binary dump')
+    else:
+        raise RuntimeError(f"Failed to extract mask from {maskfile}")
 
 if qpf_interval == 1:
     outbase = f'refs.t{cyc[0:2]}z.snow01_easfrac.f{start_hour+qpf_interval:02d}.{dom}.grib2'

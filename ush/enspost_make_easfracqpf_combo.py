@@ -35,33 +35,6 @@ def get_footprint(r, dx):
     dist = ndimage.distance_transform_edt(footprint, sampling=[dx, dx])
     return np.where(dist <= r, 1, 0)
 
-def process_radius_orig(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx):
-    """Process a single radius from rlist without redundant allocations."""
-    r = rlist_i
-    footprint = get_footprint(r, dx)
-    footprint_sum = float(np.sum(footprint))
-
-    # Vectorized convolution for all members at once
-    frac = np.zeros((nm_use, isize, jsize), dtype=np.float32)
-    for mem in range(nm_use):
-        frac[mem] = np.around(signal.fftconvolve(exceed3d[mem], footprint, mode='same')) / footprint_sum
-
-    # Broadcast calculations across all member pairs simultaneously
-    f1 = frac[pr1]  # Shape: (num_pairs, isize, jsize)
-    f2 = frac[pr2]  # Shape: (num_pairs, isize, jsize)
-
-    mask = (f1 > 0) & (f2 > 0)
-    diff_sq = (f1 - f2) ** 2
-    sum_sq = np.maximum(f1 ** 2 + f2 ** 2, 1e-10)
-
-    ratio = np.ones_like(diff_sq)
-    np.putmask(ratio, mask, diff_sq / sum_sq)
-
-    dijmean = np.mean(ratio, axis=0)
-    meets_criteria = dijmean <= alpha
-
-    return r, meets_criteria
-
 def process_radius(rlist_i, exceed3d, nm_use, isize, jsize, pr1, pr2, alpha, dx, active_mask=None):
     """
     Memory-efficient process_radius:
@@ -309,9 +282,18 @@ nlats, nlons = lats.shape
 maskregion = None
 if dom == 'ak':
     maskfile = os.path.join(HOMErefs, 'fix/akrrfs_mask.grib2')
-    os.system(f'{WGRIB2} {maskfile} -text mask.txt')
-    undefmask, nx, ny = simplewgrib2('mask.txt')
-    maskregion = np.where(undefmask > 9.0e20, -9999, undefmask)
+    tmp_mask_bin = f'./mask_{os.getpid()}.bin'
+    os.system(f'{WGRIB2} {maskfile} -no_header -bin {tmp_mask_bin}')
+    if os.path.exists(tmp_mask_bin) and os.path.getsize(tmp_mask_bin) > 0:
+        undefmask = np.fromfile(tmp_mask_bin, dtype=np.float32).reshape((nlats, nlons))
+        maskregion = np.where(undefmask > 9.0e20, -9999, undefmask)
+        try:
+            os.remove(tmp_mask_bin) 
+        except OSError:
+            pass
+        print('Alaska maskregion defined via binary dump')
+    else:
+        raise RuntimeError(f"Failed to extract mask from {maskfile}")
 
 os.makedirs(COMOUT, exist_ok=True)
 
