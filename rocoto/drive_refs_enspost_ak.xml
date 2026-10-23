@@ -13,7 +13,7 @@
 <!ENTITY ENDHOUR "18">
 
 <!ENTITY USER "Matthew.Pyle">
-<!ENTITY ACCOUNT "RRFS-DEV">
+<!ENTITY ACCOUNT "REFS-DEV">
 <!ENTITY RUN "refs">
 
 <!ENTITY HOMErefs "/lfs/h2/emc/lam/noscrub/&USER;/enspost/refs.v1.0.0">
@@ -63,7 +63,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="10" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="8" cyclethrottle="3" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -488,7 +488,7 @@
     </envar>
     <envar>
       <name>KEEPDATA</name>
-      <value>&KEEPDATA;</value>
+      <value>NO</value>
     </envar>
     <envar>
       <name>envir</name>
