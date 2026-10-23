@@ -98,8 +98,7 @@ c        write(*,*) 'dPlvl dTlvl=',dPlvl(nv),dTlvl(nv)
              ipdtmpl(2)=jpd2
              ipdtmpl(3)=4
              ipdtmpl(4)=0
-c            ipdtmpl(5)=132              !assigned 20161214
-             ipdtmpl(5)=134              !for refs
+             ipdtmpl(5)=136              !for refs
              ipdtmpl(6)=0
              ipdtmpl(7)=0
              ipdtmpl(8)=1
@@ -190,6 +189,13 @@ c            ipdtmpl(5)=132              !assigned 20161214
              ipdtmpl(13)=103
              ipdtmpl(14)=0
              ipdtmpl(15)=6000
+          else if (jpd2 .eq. 192 .and. jpd10 .eq. 1) then ! bulk shear
+             ipdtmpl(10)=103
+             ipdtmpl(11)=0
+             ipdtmpl(12)=PPairLevel(nv,pl,1)*100
+             ipdtmpl(13)=103
+             ipdtmpl(14)=0
+             ipdtmpl(15)=609
           else
             ipdtmpl(12)=dprobLevel(nv,pl)
           end if

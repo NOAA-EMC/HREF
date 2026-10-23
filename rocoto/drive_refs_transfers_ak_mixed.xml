@@ -7,7 +7,7 @@
 <!ENTITY STARTDAY "10">
 <!ENTITY STARTHOUR "12">
 
-<!ENTITY ENDYEAR "2025">
+<!ENTITY ENDYEAR "2026">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "12">
@@ -33,7 +33,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="2" cyclethrottle="10" cyclelifespan="00:32:00:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="4" cyclethrottle="10" cyclelifespan="00:32:00:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
 

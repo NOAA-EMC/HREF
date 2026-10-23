@@ -1,8 +1,10 @@
+#! /bin/bash
+
 ################################################################################
 ####  UNIX Script Documentation Block
 #                      .                                             .
 # Script name:         enspost_mkawp.sh
-# Script description:  To generate the AWIPS products for the RRFS ensemble prods
+# Script description:  To generate the WMO products for the RRFS ensemble prods
 #
 # Author:      G Manikin /  EMC         Date: 2014-06-30
 #
@@ -18,6 +20,9 @@
 set -xa
 
 dom=${1}
+
+DBNDOM="${dom^^}"
+
 type=${2}
 
 runhrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60"
@@ -56,73 +61,73 @@ fi
 
 
 loop=0
-while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 -a $loop -lt $looplim ]
+while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2 -a $loop -lt $looplim ]
 do
-         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
+         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
          sleep ${sleeptime}
          let loop=loop+1
 done
 
 loop=0
-while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2 -a $loop -lt $looplim ]
+while [ ! -e ${COMIN}/${RUN}.t${cyc}z.${alttype}.f${fhr}.${dom}.grib2 -a $loop -lt $looplim ]
 do
-         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2
+         echo waiting on ${COMIN}/${RUN}.t${cyc}z.${alttype}.f${fhr}.${dom}.grib2
          sleep ${sleeptime}
          let loop=loop+1
 done
 
-if [ ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2  -o ! -e ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2 ]
+if [ ! -e ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2  -o ! -e ${COMIN}/${RUN}.t${cyc}z.${alttype}.f${fhr}.${dom}.grib2 ]
 then
-         msg="FATAL ERROR: ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 or ${COMIN}/${RUN}.t${cyc}z.${dom}.${alttype}.f${fhr}.grib2 missing but required"
+         msg="FATAL ERROR: ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2 or ${COMIN}/${RUN}.t${cyc}z.${alttype}.f${fhr}.${dom}.grib2 missing but required"
          err_exit $msg
 fi
 
   if [ $type = "prob" ]
   then
-  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 .
+  cpfs ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2 .
 # also want EAS prob
-  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 .
+  cpfs ${COMIN}/${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 .
 # want FFRI prob for conus
   if [ $dom = "conus" ]
   then
-    cp ${COMIN}/${RUN}.t${cyc}z.${dom}.ffri.f${fhr}.grib2 .
-    cat ${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${dom}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
+    cpfs ${COMIN}/${RUN}.t${cyc}z.ffri.f${fhr}.${dom}.grib2 .
+    cat ${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 ${RUN}.t${cyc}z.ffri.f${fhr}.${dom}.grib2 >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
   else
-    cat ${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2  >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
+    cat ${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2  >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
   fi
 
-  cat ${RUN}.t${cyc}z.${dom}.eas.f${fhr}.grib2 ${RUN}.t${cyc}z.${dom}.ffri.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
+#avoid  cat ${RUN}.t${cyc}z.eas.f${fhr}.${dom}.grib2 ${RUN}.t${cyc}z.ffri.f${fhr}.${dom}.grib2 >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
 
   elif [ $type = "pmmn" ]
   then
-  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.lpmm.f${fhr}.grib2 .
-  cp ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 .
-  cat ${RUN}.t${cyc}z.${dom}.lpmm.f${fhr}.grib2 >> ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
+  cpfs ${COMIN}/${RUN}.t${cyc}z.lpmm.f${fhr}.${dom}.grib2 .
+  cpfs ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2 .
+  cat ${RUN}.t${cyc}z.lpmm.f${fhr}.${dom}.grib2 >> ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
 
   else
-  ln -sf ${COMIN}/${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 .
+  ln -sf ${COMIN}/${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2 .
   fi
 
-  $GRBINDEX ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2 ${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2i 
+  $GRBINDEX ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2 ${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2i 
   export pgm=tocgrib2
   . prep_step
   startmsg
 
   export FORTREPORTS=unit_vars=yes 
-  export FORT11=${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2
-  export FORT12=${RUN}.t${cyc}z.${dom}.${type}.f${fhr}.grib2i
+  export FORT11=${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2
+  export FORT12=${RUN}.t${cyc}z.${type}.f${fhr}.${dom}.grib2i
   export FORT51=xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr}
-  $TOCGRIB2 <$PARMwmo/grib2_awips_${RUN}_${dom}_${type}f${fhr} parm='KWBB'
+  $TOCGRIB2 <$PARMwmo/grib2_${RUN}_${dom}_${type}f${fhr} parm='KWDB'
   err=$?;export err ;err_chk
 
   if test "$SENDCOM" = 'YES'
   then
-    cp xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
+    cpreq xtrn.${cycle}.${RUN}.${dom}_${type}_${fhr} $COMOUT/grib2.${RUN}.t${cyc}z.${type}.f${fhr}.${dom}
   fi
 
   if test "$SENDDBN_NTC" = 'YES'
   then
-    $DBNROOT/bin/dbn_alert NTC_LOW RRFS_ENSPOST_AWIPS $job $COMOUT/grib2.t${cyc}z.awp${RUN}_${dom}_${type}_f${fhr}_${cyc}
+    $DBNROOT/bin/dbn_alert NTC_LOW REFS_ENSPOST_${DBNDOM} $job $COMOUT/grib2.${RUN}.t${cyc}z.${type}.f${fhr}.${dom}
   fi
 
 done

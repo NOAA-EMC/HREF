@@ -43,22 +43,29 @@ export RUN=${RUN:-refs}
 # how handle DCOMROOT - hardcode backup definition, or use $envir?
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
-#export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
-#export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
-export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}}
-
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/${cyc}}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/${cyc}}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
 fi
 
-export pgmout=OUTPUT.$$
+export pgmout="OUTPUT.$$"
 
 #################################################################
 # Execute the script
 $HOMErefs/scripts/exrefs_ffg_gen.sh
+export err=$?; err_chk 
 #################################################################
+
+# Post successful completion message
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg $jlogfile "$msg"
+
+# Print exec output
+if [ -e $pgmout ]; then
+  cat $pgmout
+fi
 
 cd ${DATAROOT}
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

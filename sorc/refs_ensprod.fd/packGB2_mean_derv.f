@@ -90,8 +90,7 @@ c    for derived variables
              ipdtmpl(2)=jpd2
              ipdtmpl(3)=4
              ipdtmpl(4)=0
-c            ipdtmpl(5)=132              !assigned 20161214
-             ipdtmpl(5)=134              !for refs 
+             ipdtmpl(5)=136              !for refs 
              ipdtmpl(6)=0
              ipdtmpl(7)=0
              ipdtmpl(8)=1
@@ -178,8 +177,15 @@ c            ipdtmpl(5)=132              !assigned 20161214
             ipdtmpl(13)=103
             ipdtmpl(14)=0
             ipdtmpl(15)=6000
-!           write(0,*) 'defined 12 and 15: ', 
-!     &           ipdtmpl(12),ipdtmpl(15)
+
+          else if (jpd10 .eq. 1 .and. jpd2 .eq. 192) then
+
+            ipdtmpl(10)=103
+            ipdtmpl(11)=0
+            ipdtmpl(12)=dMeanLevel(nv,ml)
+            ipdtmpl(13)=103
+            ipdtmpl(14)=0
+            ipdtmpl(15)=609
 
 
           else

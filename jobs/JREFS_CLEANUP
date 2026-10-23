@@ -1,0 +1,107 @@
+#!/bin/bash
+
+#############################################################
+# 03/12/2026 SPA Simon - Init. version to cleanup the shared
+#                        working dir for preproc_rrfs and ensprod
+#############################################################
+
+########################################
+# Preliminary data setup step
+########################################
+
+set -xa
+export PS4='$SECONDS + ' 
+date
+
+###################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-refs}
+export RUN=${RUN:-refs}
+
+###############################################################
+# This block can be modified for different Production test
+# environment. This is used for operational testings
+###############################################################
+
+export HOMErefs=${HOMErefs:-$NWROOT/refs.${refs_ver}} 
+export EXECrefs=${EXECrefs:-$HOMErefs/exec}
+export PARMrefs=${PARMrefs:-$HOMErefs/parm}
+export USHrefs=${USHrefs:-$HOMErefs/ush}
+export FIXrefs=${FIXrefs:-$HOMErefs/fix}
+export SCRIPTSrefs=${SCRIPTSrefs:-$HOMErefs/scripts}
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/${jobid}}
+mkdir -p $DATA
+
+echo here with DATA $DATA
+echo here with DATAROOT $DATAROOT
+
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.$$"
+
+##################################################
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+
+###################################
+# Set up the UTILITIES
+###################################
+
+msg="JOB $job HAS BEGUN"
+postmsg "$msg"
+
+###################################################
+# Run setpdy and initialize PDY variables
+###################################################
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
+
+echo have PDY as $PDY
+
+###################################################
+###################################################
+domains="ak conus hi pr"
+for NEST in $domains; do 
+  export SHARED_preproc_rrfs=${DATAROOT}/${NET}_preproc_rrfs_${NEST}_${cyc}_${refs_ver_2d}_${envir} 
+  export SHARED_preproc_hrrr=${DATAROOT}/${NET}_preproc_hrrr_${NEST}_${cyc}_${refs_ver_2d}_${envir}
+  export SHARED_ensprod=${DATAROOT}/${NET}_ensprod_${NEST}_${cyc}_${refs_ver_2d}_${envir} 
+# echo "SHARED_preproc_rrfs=${SHARED_preproc_rrfs}" 
+# echo "SHARED_ensprod=${SHARED_ensprod}" 
+  if [ -s ${SHARED_preproc_rrfs} ]; then 
+    echo "${SHARED_preproc_rrfs} existed and cleanup now ..."
+    rm -rf ${SHARED_preproc_rrfs}
+  fi
+
+  if [ -s ${SHARED_preproc_hrrr} ]; then 
+    echo "${SHARED_preproc_hrrr} existed and cleanup now ..."
+    rm -rf ${SHARED_preproc_hrrr}
+  fi
+
+  if [ -s ${SHARED_ensprod} ]; then 
+    echo "${SHARED_ensprod} existed and cleanup now ..."
+    rm -rf ${SHARED_ensprod}
+  fi
+done
+ 
+cd $DATAROOT
+if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi
+
+msg="JOB $job HAS COMPLETE"
+postmsg "$msg"
+date

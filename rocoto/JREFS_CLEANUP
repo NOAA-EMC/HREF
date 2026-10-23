@@ -17,6 +17,7 @@ rm -rf ./refs_qpfeasfrac_${dom}_${cyc}_para_??.*
 
 rm -rf ./refs_awips_${dom}_${cyc}_para.*
 rm -rf ./refs_preprocfv3_${dom}_${cyc}_para_??.*
+rm -rf ./refs_preprocfv3_${dom}_${cyc}_para
 rm -rf ./refs_ensprod_${dom}_${cyc}_para
 rm -rf ./refs_gempak_${dom}_${cyc}_para.*
 

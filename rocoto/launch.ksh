@@ -41,7 +41,7 @@ module load cray-pals/${crap_pals_ver}
 
 module load prod_util/${prod_util_ver}
 module load wgrib2/${wgrib2_ver}
-module load netcdf-D/${netcdf_ver}
+module load netcdf-D/${netcdf_D_ver}
 module load g2/${g2_ver}
 module load g2c/${g2c_ver}
 module load g2tmpl/${g2tmpl_ver}

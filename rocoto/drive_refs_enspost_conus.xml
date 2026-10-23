@@ -27,8 +27,8 @@
 <!ENTITY SCRIPTS "&HOMErefs;/scripts">
 <!ENTITY COMINhrrr "/lfs/h1/ops/prod/com/hrrr/v4.1/hrrr">
 <!ENTITY COMINrrfsdet "/lfs/h1/ops/para/com/rrfs/v1.0/">
-<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/refsprep/&RUN;">
-<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/refsprep/">
+<!ENTITY COMINall "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/&RUN;">
+<!ENTITY GESROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
 <!ENTITY MYCOMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com/refs/v1.0/">
 <!ENTITY COMROOT "/lfs/h2/emc/ptmp/&USER;/&envir;/com">
 <!ENTITY COMPATH "/lfs/h2/emc/ptmp/&USER;">
@@ -63,7 +63,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="11" cyclethrottle="3" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="12" cyclethrottle="3" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
@@ -184,11 +184,11 @@
 
     <dependency>
     <and>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m003/rrfs.t@Hz.m003.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m004/rrfs.t@Hz.m004.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
-          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m005/rrfs.t@Hz.m005.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m003/rrfs.t@Hz.m003.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m004/rrfs.t@Hz.m004.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
+          <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m005/rrfs.t@Hz.m005.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
           <datadep age="02:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfs.@Y@m@d/@H/rrfs.t@Hz.prslev.3km.f0#fhr#.conus.grib2</cyclestr></datadep>
     </and>
     </dependency>
@@ -375,8 +375,8 @@
 
       <dependency>
        <and>
-        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f001.conus.grib2</cyclestr></datadep>
-        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/refs.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f001.conus.grib2</cyclestr></datadep>
+        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m001/rrfs.t@Hz.m001.prslev.3km.f001.conus.grib2</cyclestr></datadep>
+        <datadep age="05:00" minsize="300000000"><cyclestr>&COMINrrfsdet;/rrfsens.@Y@m@d/@H/m002/rrfs.t@Hz.m002.prslev.3km.f001.conus.grib2</cyclestr></datadep>
        </and>
       </dependency>
   </task>
@@ -389,7 +389,7 @@
 
   <metatask name="eas_gen">
   <var name="fhr">&FHRS;</var>
-  <task name="eas_gen_f#fhr#" cycledefs="regional" maxtries="3">
+  <task name="eas_gen_#fhr#" cycledefs="regional" maxtries="3">
     &RESERVATION;
     &EAS_RESOURCES;
     <nodes>1:ppn=12</nodes>
@@ -626,13 +626,13 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* WMO/AWIP piece *****************************  -->
 
-  <task name="refs_awips" cycledefs="regional" maxtries="2">
+  <task name="refs_prdgen" cycledefs="regional" maxtries="2">
   &RESERVATION;
   &GEMPAK_RESOURCES;
   <nodes>1:ppn=1</nodes>
-    <command>&PRE; &JOBS;/JREFS_AWIPS</command>
-    <jobname><cyclestr>refsawips_&domain;_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_refs/refsawips_&domain;_@Y@m@d@H.log</cyclestr></join>
+    <command>&PRE; &JOBS;/JREFS_PRDGEN</command>
+    <jobname><cyclestr>refsprdgen_&domain;_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_refs/refsprdgen_&domain;_@Y@m@d@H.log</cyclestr></join>
 
 
     <envar>
@@ -641,7 +641,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value><cyclestr>awips_&domain;_@Y@m@d</cyclestr></value>
+      <value><cyclestr>prdgen_&domain;_@Y@m@d</cyclestr></value>
     </envar>
     <envar>
       <name>machine</name>
@@ -690,7 +690,7 @@
       <value>&envir;</value>
     </envar>
 
-    <envar><name>jobid</name><value>refs_awips_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
+    <envar><name>jobid</name><value>refs_prdgen_&domain;_<cyclestr>@H</cyclestr>_&envir;</value></envar>
 
     <dependency>
      <and>
@@ -874,7 +874,7 @@
      <metataskdep metatask="ensprod"/>
      <metataskdep metatask="eas_gen"/>
      <taskdep task="refs_gempak"/>
-     <taskdep task="refs_awips"/>
+     <taskdep task="refs_prdgen"/>
      </and>
     </dependency>
 

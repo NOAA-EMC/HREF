@@ -1,5 +1,5 @@
 #!/bin/ksh
-# Name of Script:  exrrfs_enspost_ffggen.sh.ecf
+# Name of Script:  exrefs_ffg_gen.sh
 #
 # This script :
 #  (1) Copies latest FFG files from dcom
@@ -11,7 +11,7 @@
 #      into final output
 #
 # Author: Matthew Pyle, NCEP/EMC, 05/02/2019
-#  04/10/2023:  Jun Du -- renamed href to rrfs_enspost
+#  04/10/2023:  Jun Du -- renamed href to refs
 #         
 ###########################################################
 set -x
@@ -24,7 +24,7 @@ msg="$job HAS BEGUN"
 postmsg "$msg"
 
 RFC_LIST="150 152 153 154 155 156 157 158 159 160 161 162"
-MAILTO=${MAILTO:-"jun.du@noaa.gov"}
+MAILTO=${MAILTO:-"matthew.pyle@noaa.gov"}
 echo $MAILTO
 
 echo here with PDY $PDY
@@ -45,56 +45,56 @@ PDY_CHECK=$PDY
 
 if [ -e $DCOMROOT/${PDY}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDY}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 
 elif [ -e $DCOMROOT/${PDYm1}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm1}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm1
 
 elif [ -e $DCOMROOT/${PDYm2}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm2}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm2
 
 elif [ -e $DCOMROOT/${PDYm3}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm3}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm3}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm3
 
 elif [ -e $DCOMROOT/${PDYm4}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm4}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm4}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm4
 
 elif [ -e $DCOMROOT/${PDYm5}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm5}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm5}/wgrbbul/FFG.009.${RFC}   ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm5
 
 elif [ -e $DCOMROOT/${PDYm6}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm6}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm6}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm6
 
 elif [ -e $DCOMROOT/${PDYm7}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm7}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm7}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm7
 
 elif [ -e $DCOMROOT/${PDYm8}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm8}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm8}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm8
 
 elif [ -e $DCOMROOT/${PDYm9}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm9}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm9}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm9
 
 elif [ -e $DCOMROOT/${PDYm10}/wgrbbul/FFG.009.${RFC} ]
 then
-cp $DCOMROOT/${PDYm10}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
+cpfs $DCOMROOT/${PDYm10}/wgrbbul/FFG.009.${RFC}  ffg.${PDY}.009.${RFC}_full
 PDY_CHECK=$PDYm10
 
 else
@@ -189,9 +189,9 @@ $EXECrefs/enspost_ffg_gen < itag
 if [ $SENDCOM = "YES" ]
 then
 echo try copying to COMOUT
-cp full.g227.grib2_ffg1h ${COMOUT}/${RUN}.t${cyc}z.ffg1h.3km.grib2
-cp full.g227.grib2_ffg3h ${COMOUT}/${RUN}.t${cyc}z.ffg3h.3km.grib2
-cp full.g227.grib2_ffg6h ${COMOUT}/${RUN}.t${cyc}z.ffg6h.3km.grib2
+cpreq full.g227.grib2_ffg1h ${COMOUT}/${RUN}.t${cyc}z.ffg1h.3km.grib2
+cpreq full.g227.grib2_ffg3h ${COMOUT}/${RUN}.t${cyc}z.ffg3h.3km.grib2
+cpreq full.g227.grib2_ffg6h ${COMOUT}/${RUN}.t${cyc}z.ffg6h.3km.grib2
 fi
 
 #####################################################################

@@ -1,0 +1,134 @@
+
+REFS v1.0.0 - released December 29, 2025
+
+Google docs version at: https://docs.google.com/document/d/1RVMkbCL_RDPif7WIWrjYwb5RXo5KxnCs82xVLcUfA1c/edit?usp=sharing
+
+#####################
+Update overview 
+#####################
+
+* Provides a system that generates ensemble products over CONUS, Alaska, Hawaii, and Puerto Rico domains, combining forecasts from the RRFS deterministic, RRFS ensemble, and HRRR (for CONUS and Alaska) into ensemble products
+
+* Is a functional replacement for the HREF system, but generates products out to 60 h (HREF is limited to 48 h), and also is processed on higher resolution grids than HREF.
+
+* Adds some new products relative to HREF, which are described below in the “Product changes relative to HREF v3” section below.
+
+#####################
+Obtaining and building the package
+#####################
+
+Clone it with this command (but change $PACKAGEROOT refs.v1.0.0 to whatever you want to call it in the directory that it is cloned into):
+
+git clone -b release_refs.v1.0  https://github.com/NOAA-EMC/HREF.git $PACKAGEROOT
+
+cd ${PACKAGEROOT}/sorc
+./build_refs.sh (builds software)
+./install_refs.sh (copies to ${PACKAGEROOT}/exec)
+./link_refs_fix.sh (installs into ${PACKAGEROOT}/fix)
+
+#####################
+Software utilized from outside of vertical structure 
+####################
+
+export craype_ver=2.7.31
+export intel_ver=19.1.3.304
+export cray_mpich_ver=8.1.19
+export cray_pals_ver=1.3.2
+export PrgEnv_intel_ver=8.5.0
+export refs_ver=v1.0
+export rrfs_ver=v1.0
+export hrrr_ver=v4.1
+
+export ip_ver=5.2.0
+export bacio_ver=2.4.1
+export w3emc_ver=2.12.0
+export g2_ver=3.5.1
+export g2c_ver=2.3.0
+export g2tmpl_ver=1.17.0
+export jasper_ver=2.0.25
+export libpng_ver=1.6.37
+export prod_util_ver=2.0.8
+export zlib_ver=1.2.11
+export python_ver=3.8.6 (efforting a python VE based on python/3.12)
+export libjpeg_ver=9c
+export libjpeg_turbo_ver=2.1.0
+export gempak_ver=7.15.1
+export cfp_ver=2.0.4
+export wgrib2_ver=3.8.0
+export netcdf_ver=4.9.2
+export libaec_ver=1.1.3
+export grib_util_ver=1.5.0
+
+#####################
+Product changes relative to HREF v3
+#####################
+
+The following is quoted from a PNS about RRFS/REFS and related retirements of legacy systems (including HREF) (https://www.weather.gov/media/notification/pdf_2025/pns25-41_RRFS_legacy_model_cessation.pdf)
+
+FOR THE PROPOSED RETIREMENT OF THE HREF:
+
+The entire HREF system would be replaced by RRFS Ensemble Forecast System (REFS) products covering CONUS, AK, HI, and PR.
+
+List of HREF output grids being retired due to change in grid spacing and geographic coverage: https://www.emc.ncep.noaa.gov/mmb/mpyle/rrfs_info/href_grids.txt
+  
+Changes in timing:
+- The REFS generates products to 60 h, while HREF only makes forecasts to 48 h  
+- While HREF generates products twice daily for non-CONUS domains (AK & PR at 06Z/18Z, and HI at 00Z/12Z), REFS products will be generated at 00Z/06Z/12Z/18Z for all regions
+
+HREF TO REFS PRODUCT CHANGES BY OUTPUT FILE TYPE:
+
+https://www.emc.ncep.noaa.gov/mmb/mpyle/rrfs_info/href_product_changes.txt
+
+#############################
+Job/script changes of note (relative to HREF):
+#############################
+
+Relative to the HREF system, a major change in the REFS is that the JREFS_PREPROC_RRFS, JREFS_ENSPROD, and JREFS_EAS jobs are run separately for individual hours, rather than being run in batches as in HREF (which has separate jobs covering f01-f36, and f37-f48 for the ENSPROD and EAS jobs) .  However, the JREFS_ENSPROD hourly jobs do rely upon previous hours having been processed (used in generating longer accumulation QPF buckets).
+
+#############################
+Resource changes (relative to HREF):
+#############################
+
+The rocoto/drive_refs*.xml files show how jobs are organized, and how the resources are assigned.
+
+All individual hour JREFS_ENSPROD and JREFS_EAS jobs run on single nodes.  The JREFS_PREPROC_RRFS jobs probably could be run shared on the prepost nodes.  
+
+DISK SPACE CHANGES:
+
+OPS com/href/v3.1/prod/
+
+24 GB       href.${PDY}/ensprod
+2.4 GB       href.${PDY}/verf_g2g
+8.2 GB         href.${PDY}/wmo
+102 GB       href.${PDY}/gempak
+saved preprocessed inputs:
+83 GB    nwges/href.${PDY}
+OPS HREF TOT:  ~219.6 GB/day
+
+para com/refs/v1.0/prod/ 
+
+96GB       refs.${PDY/ensprod
+639 GB refs.${PDY}/verf_g2g  
+7.2 GB	refs.${PDY}/wmo
+300 GB    refs.${PDY}/gempak
+saved preprocessed inputs: 
+1.2 TB     refsprep/refs.${PDY} 
+PARA REFS TOT:  ~ 2 TB/day
+
+####################
+## Archiving to HPSS
+####################
+
+The extension to 60 h, higher resolution output grids, and addition of new products leads to needed changes (relative to HREF) to keep the data volume under control.
+
+Current HREF volume is about 12.2 GB/day
+
+Save three hourly from f03 to f24, then 6 hourly to f60
+
+Save mean, eas, prob, pmmn, lpmm, and ffri output types.
+
+I have a prototype file showing these changes (/lfs/h2/emc/lam/noscrub/emc.lam/rrfs_archive/parm/models/refs_enspost, but it isn’t contained within the released code
+
+This setup has the REFS enspost volume down to about 16.4 GB/day being archived.  
+
+

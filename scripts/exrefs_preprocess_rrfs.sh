@@ -1,4 +1,13 @@
 #!/bin/ksh
+# Name of Script:  exrefs_preprocess_rrfs.sh
+#
+# This script :
+# 1) executes the enspost_preprocess_rrfs_1h.sh ush script for hours 00-60
+# 2) executes the enspost_preprocess_rrfs_3hapcp.sh ush script for additional QPF/snow processing
+# 3) The end result is preprocessed RRFS and RRFSens data ready to be ingested by the ensprod and eas codes.
+#
+# Updated 2022(?) for REFS purposes, largely by Jun Du.
+#
 ###########################################################
 set -x
 
@@ -41,7 +50,7 @@ if [ $mem = 04 ]; then name=03; fi
 if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
- echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region}" >> ./poe.rrfs.${hr}
+ echo "$USHrefs/enspost_preprocess_rrfs_1h.sh $PDY ${cyc} ${mem} ${name} $hr ${region} " >> ./poe.rrfs.${hr}
 
 done
 
@@ -76,7 +85,7 @@ if [ $mem = 05 ]; then name=04; fi
 if [ $mem = 06 ]; then name=05; fi
 
 
-echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr}" >> ./poe.3hqpf.${hr}
+echo "$USHrefs/enspost_preprocess_rrfs_3hapcp.sh ${region} ${PDY} ${cyc} ${mem} ${name} ${hr} " >> ./poe.3hqpf.${hr}
 
 done
 

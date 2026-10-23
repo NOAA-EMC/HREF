@@ -1,4 +1,4 @@
-  23      row variables and mean/spread/prob info
+  22      row variables and mean/spread/prob info
 U10   2  2  103  M1  10
 V10   2  3  103  M1  10
 U     2  2  100  M6  250 500 550 700 850 925
@@ -21,7 +21,6 @@ TCDC  6  1  200  M1  0
 AP1h   1 8     1 P1  0  A1  0   > A4 12.7 25.4 50.8 76.2
 SN1h   1 13    1 M1  0
 ASN1   1 29    1 M1  0  K1  0   > K2 0.025 0.076
-FZ1h   1 225   1 M0     K1  0   > K3 0.254 2.54 6.35
 
 
    0       special derived variables, each  of which, needs code to process specially

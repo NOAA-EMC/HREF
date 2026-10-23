@@ -31,6 +31,7 @@
 ! force reflectivity type fields to be zero
          if(jpd1.eq.16.and.(jpd2.eq.195 
      &                 .or. jpd2.eq.196
+     &                 .or. jpd2.eq.4 .or. jpd2.eq.5
      &                 .or. jpd2.eq.198) .and. 
      &   rawdata_mn(J,I,lv) .lt. 0.) then
 

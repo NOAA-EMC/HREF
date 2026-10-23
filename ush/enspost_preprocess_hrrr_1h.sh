@@ -25,6 +25,7 @@ hr=${3}
 dom=${4}
 JPDTN=8
 
+export PS4='$SECONDS + preproc_hrrr_1h:${dom}_${PDY}_${cyc}_${hr}: '
 
 if [ $dom = 'conus' ]
 then
@@ -42,9 +43,9 @@ fi
 
 echo $dom $hr
 
-if [ ! -e $GESOUT.${PDY} ]
+if [ ! -e $GESOUT.${PDY}/${cyc}/preproc ]
 then
-mkdir -p $GESOUT.${PDY}
+mkdir -p $GESOUT.${PDY}/${cyc}/preproc
 fi
 
 cd ${DATA}
@@ -92,7 +93,6 @@ fi
 
          $WGRIB2 $filecheck -match "WEASD" -match "hour acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match "FRZR" -grib nn3b.t${cyc}z.f${hr}.grb
          $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
 
          $WGRIB2 $filecheck -match "HGT:cloud base:" -grib base.t${cyc}z.f${hr}.grb
@@ -101,13 +101,13 @@ fi
 
 
          cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb  nn3.t${cyc}z.f${hr}.grb \
-	 nn3b.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+	 ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
          top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb \
          refd.t${cyc}z.f${hr}.grb refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb \
          soil.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
          rm nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb \
-	 nn3b.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
+	 ceiling.t${cyc}z.f${hr}.grb retop.t${cyc}z.f${hr}.grb  \
          refc.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb ltng.t${cyc}z.f${hr}.grb  \
 	 top.t${cyc}z.f${hr}.grb base.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb soil.t${cyc}z.f${hr}.grb
 
@@ -133,7 +133,7 @@ fi
          then
           echo working to generate ../temp.t${cyc}z.f${hr}.grib2
 
-	  $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
+	  $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
 	  hrold=$((hr-1))
 	  hrold3=$((hr-3))
 
@@ -187,14 +187,14 @@ fi
     echo $JPDTN >> input.${hr}.hrrr.snow
 
     $EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
-    export err=$? # ; err_chk
+    export err=$? ; err_chk
 
  # 1 h added to f01
  
  if [ -s ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
  then
 	 $EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
-	 export err=$? # ; err_chk
+	 export err=$? ; err_chk
 	 cat ./PCP1HR${hr}.tm00 >> ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
  fi
 
@@ -239,7 +239,7 @@ echo $JPDTN >> input.${hr}.hrrr.snow
 if [ -s ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -a -s temp.t${cyc}z.f${hrold}.grib2 ]
 then
 	$EXECrefs/enspost_snowbucket < input.${hr}.hrrr.snow
-	export err=$? # ; err_chk
+	export err=$? ; err_chk
 	cat ./PCP3HR${hr}.tm00 >> ../hrrr.t${cyc}z.${dom}.f${hr}.grib2
 fi
 
@@ -252,11 +252,11 @@ else
 
 	# just extract for f00
  echo working to generate ../temp.t${cyc}z.f${hr}.grib2
-$WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
+$WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|ASNOW):"  -grib  ../temp.t${cyc}z.f${hr}.grib2
  fi
 
 
-         cp ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/hrrr.t${cyc}z.${dom}.f${hr}.grib2
+         cpreq ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 ${GESOUT}.${PDY}/${cyc}/preproc/hrrr.t${cyc}z.${dom}.f${hr}.grib2
         err=$? ; export err
 
         if [ $err -ne 0 ]
@@ -275,3 +275,4 @@ $WGRIB2 ../hrrr.t${cyc}z.${dom}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):" 
          err_exit $msg
 
         fi
+echo "exiting ..."

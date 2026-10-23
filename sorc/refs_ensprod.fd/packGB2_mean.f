@@ -87,8 +87,7 @@ C for variable table:
              ipdtmpl(2)=jpd2
              ipdtmpl(3)=4
              ipdtmpl(4)=0
-c            ipdtmpl(5)=132              !assigned 20161214
-             ipdtmpl(5)=134              !for refs 
+             ipdtmpl(5)=136              !for refs 
              ipdtmpl(6)=0
              ipdtmpl(7)=0
              ipdtmpl(8)=1
@@ -186,6 +185,8 @@ c            ipdtmpl(5)=132              !assigned 20161214
            write(0,*) 'skipped spread for LPM mean precip'
         else if (imean .eq. 208 .and.  jpd2 .eq. 8) then
            write(0,*) 'skipped spread for LPM avg precip'
+        else if (ipdtmpl(3) .eq. 193 .and.  jpd2 .eq. 5) then
+           write(0,*) 'skipped spread for PM sfc HGT'
         else
     
           gfld%fld=vrbl_sp(:,ml)

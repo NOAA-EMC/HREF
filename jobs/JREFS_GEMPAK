@@ -36,7 +36,7 @@ export finc=1
 export fend=60
 export fstart=01
 
-export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-RRFS_GEMPAK}
+export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-REFS_GEMPAK}
 
 ###############################
 # Specify NET and RUN name
@@ -44,8 +44,8 @@ export DBN_ALERT_TYPE=${DBN_ALERT_TYPE:-RRFS_GEMPAK}
 export NET=${NET:-refs}
 export RUN=${RUN:-refs} 
   
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/gempak}
-export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/ensprod}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/${cyc}/gempak}
+export COMIN=${COMIN:-$(compath.py -o $NET/${refs_ver})/${RUN}.${PDY}/${cyc}/ensprod}
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
@@ -92,6 +92,15 @@ then
 cat $DATA/${NEST}_ffri.$$
 fi
 #################################################################
+
+# Post successful completion message
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg $jlogfile "$msg"
+
+# Print exec output
+if [ -e $pgmout ]; then
+  cat $pgmout
+fi
 
 cd ${DATAROOT}
 if [ $KEEPDATA = NO ]; then rm -rf $DATA; fi

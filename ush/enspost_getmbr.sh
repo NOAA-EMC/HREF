@@ -158,19 +158,19 @@ echo made it to conus fv3 check
       if [  $ff -eq 01  ] ; then
 
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo filecheck00 is $filecheck00
 
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
 
-        filecheck=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 	if [ -e $filecheck ]
         then
          ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
@@ -203,9 +203,12 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 	echo here a $ff
+
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
+
         if [ ${ff}%3 -eq 0 ]
         then
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 conus non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
+        echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 conus non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
         fi
         fi
@@ -221,10 +224,17 @@ typeset -Z2 fcheckloc
         done	
         
 
-
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 conus yes  8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
-
         export err=$? ; err_chk
+
+#	if [ $err -ne 0 ]
+#        then
+#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+#        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+#        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -247,19 +257,19 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo filecheck00 is $filecheck00
 
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
 
-        filecheck=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 	if [ -e $filecheck ]
         then
          ln -sf $filecheck  $DATA/${RUN}.m${m}.t${cyc}z.f${ff}
@@ -292,24 +302,16 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 	echo here a $ff
+
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
+
         if [ ${ff}%3 -eq 0 ]
         then
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
+        echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
-	if [ $err -ne 0 ]
-	then
-	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
-        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}_retry 2>&1
-        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        fi
-
         fi
         fi
-
-
 
         loop=0
         while [ ! -e $DATA/${RUN}.m${m}.t${cyc}z.f${ff1} -a $loop -lt $looplim ]
@@ -319,20 +321,17 @@ typeset -Z2 fcheckloc
           let loop=loop+1
         done	
         
-
-
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} yes 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
-
         export err=$? ; err_chk
 
-	if [ $err -ne 0 ]
-	then
-	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
-        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff}_retry 2>&1
-        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        fi
+#	if [ $err -ne 0 ]
+#        then
+#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+#        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 11 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+#        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -345,10 +344,8 @@ typeset -Z2 fcheckloc
 
       fi
       #
-      
  
 	echo here with file ${file}
-
 
 ###### HRRR
 
@@ -360,18 +357,18 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 14  ];then
-         filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
 	 echo filecheck00 is $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
     
-        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
+        filecheck=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.conus.f${fcst}.grib2
 
         if [ -e $filecheck ]
         then
@@ -404,13 +401,19 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
         echo here a $ff
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
 
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+        if [ $ff -eq 1 ]
+        then
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f00 -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f00
+        fi
+
+        echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
 
         if [ ${ff}%3 -eq 0 ]
         then
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
+         echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
          export err=$? ; err_chk
         fi
 
@@ -424,9 +427,6 @@ typeset -Z2 fcheckloc
 
       fi
 
-
-
-
 ###### HRRRAK
 
       if [ ${file[$m]} = 'hrrrak' -a $fcst -le 48  ] ; then
@@ -435,17 +435,17 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 14  ];then
-         filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f06.grib2
 	 echo filecheck00 is $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
+         filecheck00=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.${dom}.f00.grib2
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
-        filecheck=${COMINhrrr}.${day[$m]}/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
+        filecheck=${COMINhrrr}.${day[$m]}/${cycloc[$m]}/preproc/hrrr.t${cycloc[$m]}z.ak.f${fcst}.grib2
 
         if [ -e $filecheck ]
         then
@@ -479,11 +479,18 @@ typeset -Z2 fcheckloc
         if [ $ff -gt 0 ]
         then
 ## actually now have the summing of 3 h totals done in the HRRR preproc job
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+         ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
+
+        if [ $ff -eq 1 ]
+        then
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f00 -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f00
+        fi
+
+         echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
 
         if [ ${ff}%3 -eq 0 ]
         then
-         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
+         echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 ${dom} non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}
          export err=$? ; err_chk
         fi
 
@@ -497,9 +504,6 @@ typeset -Z2 fcheckloc
 
       fi
 
-
- 
-
 ###### FV3S - HI/PR
        echo down here trying to define with ${file[$m]}
 
@@ -508,19 +512,19 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 07 -o $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 ];then
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
 	 echo here ontime with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
  
-        filecheck=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then
@@ -555,9 +559,12 @@ typeset -Z2 fcheckloc
         then
 	echo here a $ff
 
+
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
+
         if [ ${ff}%3 -eq 0 ]
         then
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
+        echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
         fi
 
@@ -571,6 +578,15 @@ typeset -Z2 fcheckloc
 
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
+
+#        if [ $err -ne 0 ]
+#        then
+#        wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+#        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+#        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then
@@ -595,19 +611,19 @@ typeset -Z2 fcheckloc
 
       if [  $ff -eq 01  ] ; then
         if [ $m = 08 -o $m = 09 -o $m = 10 -o $m = 11 -o $m = 12 -o $m = 13 ];then
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f06.grib2
 	 echo here TL with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
         else
-         filecheck00=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
+         filecheck00=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f00.grib2
 	 echo here ontime with filecheck00 $filecheck00
          ln -sf $filecheck00  $DATA/${RUN}.m${m}.t${cyc}z.f00
          ln -sf $DATA/${RUN}.m${m}.t${cyc}z.f00  $DATA/${ff}/${RUN}.m${m}.t${cyc}z.f00
 	fi
       fi
  
-        filecheck=${COMIN}.${day[$m]}/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
+        filecheck=${COMIN}.${day[$m]}/${cycloc[$m]}/preproc/fv3s.t${cycloc[$m]}z.${dom}.${nam[$m]}.f${fcst}.grib2
 
 	if [ -e $filecheck ]
         then
@@ -642,20 +658,12 @@ typeset -Z2 fcheckloc
         then
 	echo here a $ff
 
+        ${WGRIB2} ${RUN}.m${m}.t${cyc}z.f${ff} -match ":(APCP|ASNOW|WEASD):" -grib inps.m${m}.t${cyc}z.f${ff}
+
         if [ ${ff}%3 -eq 0 ]
         then
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
+        echo inps.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
-
-	if [ $err -ne 0 ]
-	then
-	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
-        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 3 $dom non 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip3h.m${m}.f${ff}_retry 2>&1
-        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        fi
-
         fi
 
         loop=0
@@ -668,14 +676,15 @@ typeset -Z2 fcheckloc
 
         echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
         export err=$? ; err_chk
-	if [ $err -ne 0 ]
-	then
-	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|FRZR|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
-        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
-        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
-        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
-        fi
+
+#	if [ $err -ne 0 ]
+#	then
+#	wgrib2 ${RUN}.m${m}.t${cyc}z.f$ff  -match  ":(APCP|WEASD|ASNOW):" -grib apcp.m${m}.t${cyc}z.f$ff
+#        cat apcp.m${m}.t${cyc}z.f$ff ${RUN}.m${m}.t${cyc}z.f$ff > ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        cpfs ${RUN}.m${m}.t${cyc}z.f${ff}_new ${RUN}.m${m}.t${cyc}z.f${ff}
+#        echo ${RUN}.m${m}.t${cyc}z. $ff .false. .false. .false. .false. .false. 1 $dom yes 8 |$EXECrefs/enspost_get_prcip > $DATA/output.enspost_get_prcip1h.m${m}.f${ff} 2>&1
+#        rm ${RUN}.m${m}.t${cyc}z.f${ff}_new
+#        fi
 
         if [ ${ff}%3 -eq 0 ] 
         then

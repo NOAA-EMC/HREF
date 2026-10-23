@@ -61,9 +61,9 @@ while [ $fhcnt -le $fend ] ; do
   fhr3=$fhcnt
   fhr3=$(printf "%03d" $fhr3)
 
-  GRIBIN=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2
+  GRIBIN=$COMIN/${RUN}.t${cyc}z.${TYPE}.f${fhr}.${NEST}.grib2
   GEMGRD=${RUN}_${NEST}_${TYPE}_${PDY}${cyc}f${fhr3} 
-  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${NEST}.${TYPE}.f${fhr}.grib2.idx
+  GRIBIN_chk=$COMIN/${RUN}.t${cyc}z.${TYPE}.f${fhr}.${NEST}.grib2.idx
 
   icnt=1
   while [ $icnt -lt 1000 ]
@@ -77,11 +77,12 @@ while [ $fhcnt -le $fend ] ; do
     if [ $icnt -ge $maxtries ]
     then
       msg="FATAL ERROR: ABORTING after 1 hour of waiting for F$fhr to end."
-      err_exit $msg
+#      err_exit $msg
+      return 99
     fi
   done
 
-  cp $GRIBIN grib$fhr
+  cpfs $GRIBIN grib$fhr
 
   export pgm="nagrib2 F$fhr"
 
@@ -118,9 +119,10 @@ EOF
   fi
 
   if [ $SENDCOM = "YES" ] ; then
-    cp $GEMGRD $COMOUT/.${GEMGRD}
+#   cp $GEMGRD $COMOUT/.${GEMGRD}
+    cpreq $GEMGRD $COMOUT/${GEMGRD}
     export err=$?;err_chk
-    mv $COMOUT/.${GEMGRD} $COMOUT/${GEMGRD}
+#    mv $COMOUT/.${GEMGRD} $COMOUT/${GEMGRD} 
 
     if [ $SENDDBN = "YES" ] ; then
          $DBNROOT/bin/dbn_alert MODEL ${DBN_ALERT_TYPE} $job \
@@ -136,7 +138,7 @@ done # while fhcnt -lt fend
 #####################################################################
 # GOOD RUN
 set +x
-echo "**************JOB RRFS_ENSPOST GEMPAK COMPLETED NORMALLY "
+echo "**************JOB REFS_ENSPOST GEMPAK COMPLETED NORMALLY "
 echo "**************JOB RRFS ENSPOST COMPLETED NORMALLY "
 echo "**************JOB RRFS ENSPOST GEMPAK COMPLETED NORMALLY "
 set -x

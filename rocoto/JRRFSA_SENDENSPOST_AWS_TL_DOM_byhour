@@ -7,9 +7,17 @@ dom=${DOM}
 
 ff=${fhr}
 
+primary=$(head -1 /lfs/h1/ops/prod/config/prodmachinefile | cut -d ":" -f2-)
+
 # If the data directory does not exist, then stop the job
 export DATA=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refs.${PDY}/ensprod/
 export DATASNOW=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.2/refs.${PDY}/ensprod/
+
+if [ "$primary" == "cactus" ]; then
+  desmachine=emc.lam@ddxfer.wcoss2.ncep.noaa.gov
+else
+  desmachine=emc.lam@cdxfer.wcoss2.ncep.noaa.gov
+fi
 
 
 if [ -d $DATA ]; then
@@ -27,8 +35,21 @@ export pgmout="OUTPUT.${pid}"
 
 types="prob avrg eas ffri lpmm mean pmmn sprd"
 
+echo "[DEBUG] Attempting upload for PDY=${PDY}, cyc=${cyc}, dom=${dom}, ff=${ff}"
+
+MATCHING_FILES=$(ls -1 refs.t${cyc}z.${dom}.*.f${ff}.grib2* 2>/dev/null | wc -l)
+echo "[DEBUG] Found $MATCHING_FILES files matching the pattern."
+
+if [ "$MATCHING_FILES" -eq 0 ]; then
+    echo "[WARNING] No files found for cycle ${cyc}! AWS CLI will skip this silently."
+    exit 99
+fi
+
 aws s3 cp ./ s3://noaa-rrfs-pds/rrfs_a/refs.${PDY}/${cyc}/enspost_timelag/ --recursive --exclude "*" --include "refs.t${cyc}z.${dom}.*.f${ff}.grib2*"
 
+# add an rsync here as well?
+
+# rsync -arv "refs.t${cyc}z.${dom}.*.f${ff}.grib2*" ${desmachine}:/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0/refs.${PDY}/ensprod/
 
 # if [ -d $DATASNOW ]; then
 # cd $DATASNOW

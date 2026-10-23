@@ -99,15 +99,15 @@ C grib2
       INTEGER,DIMENSION(:) :: JIDS(200),JPDT(200),JGDT(200)
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD(200)
       INTEGER,DIMENSION(:) :: PDS_RAIN_HOLD_EARLY(200)
-      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD(200)
-      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD_EARLY(200)
+!      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD(200)
+!      INTEGER,DIMENSION(:) :: PDS_FRZR_HOLD_EARLY(200)
       INTEGER :: intv_rec,time_s_rec,time_e_rec,num_time_rec
       LOGICAL :: UNPACK
       INTEGER :: K,IRET
       TYPE(GRIBFIELD) :: GFLD
 C grib2
 	real:: p_later(IM*JM),p_earlier(IM*JM),dprecip(im*jm)
-	real:: frzr_later(IM*JM),frzr_earlier(IM*JM),dfrzr(im*jm)
+!	real:: frzr_later(IM*JM),frzr_earlier(IM*JM),dfrzr(im*jm)
 	
 	call baopenr(11,fname1,ierr1)
 	call baopenr(12,fname2,ierr2)
@@ -203,31 +203,30 @@ C    &                  UNPACK,K,GFLD,IRET)
         enddo
         write(0,*) 'maxval(p_earlier): ', maxval(p_earlier)
 
-        J=0
-        JIDS=-9999
-        JPDT=-9999
-        JPDT(1)=1
-        JPDT(2)=225
+!        J=0
+!        JIDS=-9999
+!        JPDT=-9999
+!        JPDT(1)=1
+!        JPDT(2)=225
 ! try force getting the 0-hr total
-        JPDT(9)=0
-        JGDTN=-1
-        JGDT=-9999
-        UNPACK=.true.
+!        JPDT(9)=0
+!        JGDTN=-1
+!        JGDT=-9999
+!        UNPACK=.true.
 
-        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET)
+!        call getgb2(11,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &     UNPACK,K,GFLD,IRET)
+!
+!	if (IRET .ne. 0) then
+!	write(0,*) 'bad getgb2 earlier for FRZR ', IRET
+!	STOP 99
+!	endif
 
-	if (IRET .ne. 0) then
-	write(0,*) 'bad getgb2 earlier for FRZR ', IRET
-	STOP 99
-	endif
-
-        frzr_earlier=gfld%fld
-        do K=1,gfld%ipdtlen
-        PDS_FRZR_HOLD_EARLY(K)=gfld%ipdtmpl(K)
-!	write(0,*) 'K, PDS_FRZR_HOLD_EARLY(K): ', K, PDS_RAIN_HOLD_EARLY(K)
-        enddo
-        write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
+!        frzr_earlier=gfld%fld
+!        do K=1,gfld%ipdtlen
+!        PDS_FRZR_HOLD_EARLY(K)=gfld%ipdtmpl(K)
+!        enddo
+!        write(0,*) 'maxval(frzr_earlier): ', maxval(frzr_earlier)
 
         endif  ! make sure reset_flag = 0 
 
@@ -284,51 +283,48 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 
 ! later frzr
-        J=0
-        JIDS=-9999
-        JPDT=-9999
-        JPDT(2)=225
+!        J=0
+!        JIDS=-9999
+!        JPDT=-9999
+!        JPDT(2)=225
 ! try force getting the 0-hr total
-        JPDT(9)=0
-!        JPDT(intv_rec)=interv
-        JGDTN=-1
-        JGDT=-9999
+!        JPDT(9)=0
+!        JGDTN=-1
+!        JGDT=-9999
 
-        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
-     &     UNPACK,K,GFLD,IRET1)
+!        call getgb2(12,0,J,0,JIDS,JPDTN,JPDT,JGDTN,JGDT,
+!     &     UNPACK,K,GFLD,IRET1)
 
-        write(0,*) 'K: ', K
+!	if (IRET1 .ne. 0) then
+!	 write(0,*) 'bad FRZR getgb later ', IRET1
+!	STOP 999
+!	endif
 
-	if (IRET1 .ne. 0) then
-	 write(0,*) 'bad FRZR getgb later ', IRET1
-	STOP 999
-	endif
+!        write(0,*) 'set frzr_later to gfld%fld'
+!        frzr_later=gfld%fld
+!        write(0,*) 'maxval(frzr_later): ', maxval(frzr_later)
+!
+!        do K=1,gfld%ipdtlen
+!        PDS_FRZR_HOLD(K)=gfld%ipdtmpl(K)
+!        enddo
 
-        write(0,*) 'set frzr_later to gfld%fld'
-        frzr_later=gfld%fld
-        write(0,*) 'maxval(frzr_later): ', maxval(frzr_later)
+!	if (reset_flag .eq. 1) then
+!	write(0,*) 'just later value'
+!        PDS_FRZR_HOLD_EARLY=PDS_FRZR_HOLD
 
-        do K=1,gfld%ipdtlen
-        PDS_FRZR_HOLD(K)=gfld%ipdtmpl(K)
-        enddo
+!	do NPT=1,IM*JM
+!	dfrzr(NPT)=frzr_later(NPT)
+!	enddo
 
-	if (reset_flag .eq. 1) then
-	write(0,*) 'just later value'
-        PDS_FRZR_HOLD_EARLY=PDS_FRZR_HOLD
+!	else
 
-	do NPT=1,IM*JM
-	dfrzr(NPT)=frzr_later(NPT)
-	enddo
+!	write(0,*) 'take normal difference for frzr ', IM*JM
+!
+!	do NPT=1,IM*JM
+!	dfrzr(NPT)=frzr_later(NPT)-frzr_earlier(NPT)
+!	enddo
 
-	else
-
-	write(0,*) 'take normal difference for frzr ', IM*JM
-
-	do NPT=1,IM*JM
-	dfrzr(NPT)=frzr_later(NPT)-frzr_earlier(NPT)
-	enddo
-
-	endif
+!	endif
 
         write(0,*) 'define gfld%fld with dprecip'
 
@@ -358,28 +354,28 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	call putgb2(13,GFLD,IRET)
 
-        write(0,*) 'define gfld%fld with dfrzr'
+!        write(0,*) 'define gfld%fld with dfrzr'
 
-        do K=1,gfld%ipdtlen
-        gfld%ipdtmpl(K)=PDS_FRZR_HOLD_EARLY(K)
-        enddo
+!        do K=1,gfld%ipdtlen
+!        gfld%ipdtmpl(K)=PDS_FRZR_HOLD_EARLY(K)
+!        enddo
 
-        gfld%ipdtmpl(9)=ihrs1
+!        gfld%ipdtmpl(9)=ihrs1
       
-        do J=time_s_rec,time_e_rec
-        gfld%ipdtmpl(J)=PDS_FRZR_HOLD(J)
-        enddo
+!        do J=time_s_rec,time_e_rec
+!        gfld%ipdtmpl(J)=PDS_FRZR_HOLD(J)
+!        enddo
 
-        gfld%ipdtmpl(num_time_rec)=1
-        gfld%ipdtmpl(intv_rec)=interv
+!        gfld%ipdtmpl(num_time_rec)=1
+!        gfld%ipdtmpl(intv_rec)=interv
 
-        write(0,*) 'interval specified in intv_rec: ', interv
+!        write(0,*) 'interval specified in intv_rec: ', interv
 
-        gfld%fld=dfrzr
+!        gfld%fld=dfrzr
 
-	call putgb2(13,GFLD,IRET)
+!	call putgb2(13,GFLD,IRET)
 
-        write(0,*) 'IRET from putgb2 for dprecip', IRET
+!        write(0,*) 'IRET from putgb2 for dprecip', IRET
 
 ! -------------------------------------------
 
@@ -387,8 +383,8 @@ C    &                  UNPACK,K,GFLD,IRET)
 
 	write(*,*) 'extremes of precip: ', 
      +		maxval(dprecip)
-	write(*,*) 'extremes of frzr: ', 
-     +		maxval(dfrzr)
+!	write(*,*) 'extremes of frzr: ', 
+!     +		maxval(dfrzr)
 
   633	format(25(f4.1,1x))
 

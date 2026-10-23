@@ -18,7 +18,9 @@ set -x
 if [ $# -ne 6 ]
 then
 echo need 6 arguments, day,cycle,member,member file name,forecast hour,and domain
-exit
+msg="need 6 arguments, day,cycle,member,member file name,forecast hour,and domain in $0"
+err_exit $msg 
+#exit
 fi
 
 day=${1}
@@ -27,6 +29,8 @@ mem=${3}
 name=${4}
 hr=${5}
 dom=${6}
+
+export PS4='$SECONDS + preproc_rrfs_1h:${dom}_${cyc}_${mem}_${name}_${hr}: '
 
 if [ ${mem} = '01' ]
 then
@@ -66,9 +70,9 @@ fi
 #then
 #mkdir -p $GESOUT.${PDY}
 #fi
-if [ ! -e $GESOUT.${day} ]
+if [ ! -e $GESOUT.${day}/${cyc}/preproc ]
 then
-mkdir -p $GESOUT.${day}
+mkdir -p $GESOUT.${day}/${cyc}/preproc
 fi
 
 cd ${DATA}
@@ -83,25 +87,21 @@ if [ $name = 00 ];then
 if [[ $dom == "conus" || $dom == "ak" ]]
 then
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
-# need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.3km.f0${hr}.${dom}.grib2
+ filecheck2d=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.2dfld.3km.f0${hr}.${dom}.grib2
 else # HI/PR
  filecheck=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
-# need logic for mphys to find ctrl member
- altfilecheck=$COMINrrfs/../../prod/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.2p5km.f0${hr}.${dom}.grib2
-fi
-
-if [ ! -e $filecheck -a -e $altfilecheck ]
-then
-filecheck=$altfilecheck
+ filecheck2d=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.2dfld.2p5km.f0${hr}.${dom}.grib2
 fi
 
 else
+
 if [[ $dom == "conus" || $dom == "ak" ]]
 then
- filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2
+ filecheck=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.3km.f0${hr}.${dom}.grib2
+ filecheck2d=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.2dfld.3km.f0${hr}.${dom}.grib2
 else # HI/PR
- filecheck=$COMINrrfs/refs.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2
+ filecheck=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.prslev.2p5km.f0${hr}.${dom}.grib2
+ filecheck2d=$COMINrrfs/rrfsens.${day}/${cyc}/m0$name/rrfs.t${cyc}z.m0${name}.2dfld.2p5km.f0${hr}.${dom}.grib2
 
 fi
 
@@ -113,27 +113,28 @@ echo filecheck is $filecheck
         if [ -s $filecheck ]
         then
         $WGRIB2 $filecheck | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -grib fv3.t${cyc}z.f${hr} $filecheck
-        $WGRIB2 $filecheck -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d | grep -F -f $PARMrefs/enspost_fv3_filter.txt | $WGRIB2 -i -append -grib fv3.t${cyc}z.f${hr} $filecheck2d
+
+        $WGRIB2 $filecheck2d -match ":(HINDEX|CSNOW|CICEP|CFRZR|CRAIN|RETOP|REFD|MAXREF|MXUPHL|REFC|APCP|LTNG):" -grib nn.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "WEASD" -match "acc fcst" -grib nn2.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck2d -match  ":(TSOIL|SOILW):" -match "0-0 m below ground" -grib soil.t${cyc}z.f${hr}.grb
         
-        $WGRIB2 $filecheck -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "WEASD" -match "hour fcst" -grib nn3.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "ASNOW" -grib nn4.t${cyc}z.f${hr}.grb
 
         cat nn3.t${cyc}z.f${hr}.grb nn4.t${cyc}z.f${hr}.grb soil.t${cyc}z.f${hr}.grb  >> nn2.t${cyc}z.f${hr}.grb
 
         if [ $hr -eq 0 ]
         then
-#        $WGRIB2 $filecheck -match "WEASD" -match "anl" -grib nn2b.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match "WEASD" -grib nn2b.t${cyc}z.f${hr}.grb
-         $WGRIB2 $filecheck -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck2d -match "WEASD" -grib nn2b.t${cyc}z.f${hr}.grb
+         $WGRIB2 $filecheck2d -match "ASNOW" -grib nn3.t${cyc}z.f${hr}.grb
          cat nn2b.t${cyc}z.f${hr}.grb nn3.t${cyc}z.f${hr}.grb >> nn2.t${cyc}z.f${hr}.grb
         fi
 
-        $WGRIB2 $filecheck -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
-        $WGRIB2 $filecheck -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "TCDC:entire atmosphere"  -grib tcdc.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "HGT:cloud ceiling:" -grib ceiling.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "HGT:cloud top:" -grib top.t${cyc}z.f${hr}.grb
+        $WGRIB2 $filecheck2d -match "0C isotherm:" -grib frzh.t${cyc}z.f${hr}.grb
         cat nn.t${cyc}z.f${hr}.grb  nn2.t${cyc}z.f${hr}.grb ceiling.t${cyc}z.f${hr}.grb top.t${cyc}z.f${hr}.grb frzh.t${cyc}z.f${hr}.grb tcdc.t${cyc}z.f${hr}.grb > inputs_nn.t${cyc}z.f${hr}.grb
 
        cat fv3.t${cyc}z.f${hr} inputs_nn.t${cyc}z.f${hr}.grb > ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2
@@ -146,7 +147,7 @@ echo filecheck is $filecheck
 
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 
-$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD|FRZR):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|ASNOW|WEASD):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 hrold=$((hr-1)) 
 hrold3=$((hr-3)) 
 
@@ -273,10 +274,10 @@ fi # 3 hour time
 else
 # just extract for f00
 echo working to generate ../temp.t${cyc}z.m${mem}.f${hr}.grib2
-$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|FRZR|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
+$WGRIB2 ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 -match ":(APCP|WEASD|ASNOW):"  -grib  ../temp.t${cyc}z.m${mem}.f${hr}.grib2
 fi
 
-        cp ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
+        cpreq ../fv3s.t${cyc}z.${dom}.m${mem}.f${hr}.grib2 ${GESOUT}.${day}/${cyc}/preproc/fv3s.t${cyc}z.${dom}.m${name1}.f${hr}.grib2
         err=$? ; export err
 	if [ $err -ne 0 ]
          then
