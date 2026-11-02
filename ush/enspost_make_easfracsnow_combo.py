@@ -314,10 +314,20 @@ stop = max_latency
 wgribdate = PDY + cyc
 
 # Grid coordinates
-os.system(f'{WGRIB2} {template} -rpn rcl_lat -text lat.txt -rpn rcl_lon -text lon.txt')
-lons, nx, ny = simplewgrib2('lon.txt')
-lats, nx, ny = simplewgrib2('lat.txt')
+
+lon_file =  f'./lon_{os.getpid()}.txt'
+lat_file =  f'./lat_{os.getpid()}.txt'
+os.system(f'{WGRIB2} {template} -rpn rcl_lat -text {lat_file} -rpn rcl_lon -text {lon_file}')
+    
+lons, nx, ny = simplewgrib2(lon_file)
+lats, nx, ny = simplewgrib2(lat_file)
 nlats, nlons = lats.shape
+
+try:
+  os.remove(lon_file)
+  os.remove(lat_file)
+except OSError:
+  pass
 
 maskregion = None
 
