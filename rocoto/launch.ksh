@@ -28,7 +28,9 @@ fi
 
 module list
 
-source /lfs/h2/emc/lam/noscrub/emc.lam/enspost/refs.v1.0.0/versions/run.ver
+source /lfs/h2/emc/lam/noscrub/Matthew.Pyle/enspost/refs.v1.0.0/versions/run.ver
+
+module unload netcdf
 
 module load prod_envir/2.0.6
 module load cfp/2.0.4

@@ -28,8 +28,30 @@ from functools import partial
 # CRITICAL: Prevent numpy/scipy from fighting for threads inside multiprocessing
 os.environ["OMP_NUM_THREADS"] = "1"
 
+
 #--------------------------------------------------------------------------------
 #### FUNCTIONS AND ROUTINES ####
+
+def read_snow_step(file_path, s_hr, f_hr, step_tag, mem_idx, nlats, nlons, wgrib2_cmd, tmp_dir):
+    """
+    Direct binary reader replacing wgrib2 -text.
+    Dumps raw single-precision IEEE 754 floats to RAM/disk and reads via np.fromfile.
+    """
+    bin_filename = f'{tmp_dir}/snow_{step_tag}_{mem_idx}_{os.getpid()}.bin'
+    cmd = f'{wgrib2_cmd} {file_path} -match "ASNOW:surface:{s_hr}-{f_hr}" -end -no_header -bin {bin_filename}'
+    os.system(cmd)
+
+    if not os.path.exists(bin_filename) or os.path.getsize(bin_filename) == 0:
+        data = np.zeros((nlats, nlons), dtype=np.float32)
+    else:
+        data = np.fromfile(bin_filename, dtype=np.float32).reshape((nlats, nlons))
+        data = np.where(data > 9.0e20, 0, data)
+        try:
+            os.remove(bin_filename)
+        except OSError:
+            pass
+
+    return data
 
 def simplewgrib2(txtfile):
   tmps= []
@@ -490,6 +512,8 @@ except KeyError:
 DATA=os.environ.get('DATA','trash')
 print('found DATA as ', DATA)
 
+shm_dir = DATA
+
 sys.path.append(HOMErefs)
 from eas_config import *
 
@@ -703,13 +727,8 @@ for mem in members:
         fhour=fhours[memcount]-3
         shour=fhour-3
       print('for file3 shour fhour: ', shour,fhour)
-      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
-      qpf3,nx,ny=simplewgrib2('qpf.txt')
 
-      undefsnow,nx,ny=simplewgrib2('qpf.txt')
-      undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
-      snowmaskregion = np.ma.filled(undefsnow,-9999)
-      qpf3 = np.where(np.equal(snowmaskregion,-9999),0,qpf3)
+      qpf3 = read_snow_step(file3, shour, fhour, 's3', memcount, nlats, nlons, WGRIB2, shm_dir)
 
     else:
 
@@ -717,33 +736,21 @@ for mem in members:
       fhour=fhours[memcount]
       shour=fhour-1
       print('ASNOW accum from : ', shour, ' to : ', fhour)
-      os.system(WGRIB2+' '+file3+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
-      qpf1,nx,ny=simplewgrib2('qpf.txt')
+      qpf1 = read_snow_step(file3, shour, fhour, 's1', memcount, nlats, nlons, WGRIB2, shm_dir)
 
-      undefsnow,nx,ny=simplewgrib2('qpf.txt')
-      undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
-      snowmaskregion = np.ma.filled(undefsnow,-9999)
-      qpf1 = np.where(np.equal(snowmaskregion,-9999),0,qpf1)
-
-      print('defining qpf from qpf1')
       qpf[itime] = qpf1*39.370079 # meters to inches
 
     if qpf_interval == 6:
       fhour=fhours[memcount]
       shour=fhour-3
       print('6h shour fhour: ', shour,fhour)
-      os.system(WGRIB2+' '+file6+' -match "ASNOW:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt')
-      qpf6,nx,ny=simplewgrib2('qpf.txt')
-      undefsnow,nx,ny=simplewgrib2('qpf.txt')
-      undefsnow=np.ma.masked_greater(undefsnow,9.0e+20)
-      snowmaskregion = np.ma.filled(undefsnow,-9999)
-      qpf6 = np.where(np.equal(snowmaskregion,-9999),0,qpf6)
+      qpf6 = read_snow_step(file6, shour, fhour, 's6', memcount, nlats, nlons, WGRIB2, shm_dir)
       qpf[itime] = (qpf3 + qpf6) * 39.370079
     if qpf_interval == 3:
       qpf[itime] = qpf3*39.370079   # convert meters to inches
 
 
-    print('max of qpf as snow: ', np.max(qpf[itime]))
+#    print('max of qpf as snow: ', np.max(qpf[itime]))
     print('dom is: ', dom)
     if dom == 'ak':
       print('qpf shape: ', np.shape(qpf))
@@ -796,7 +803,7 @@ ensemble_qpf = np.zeros((nm_use,nlats,nlons),dtype=float)
 for mem in range(0,len(itimes)):
   print('mem, itimes[mem],max(qpf): ',mem, itimes[mem], np.max(qpf[mem]))
   ensemble_qpf[mem,:,:] = qpf[mem]
-  print('max of member: ', np.max(ensemble_qpf[mem,:,:]))
+#  print('max of member: ', np.max(ensemble_qpf[mem,:,:]))
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
@@ -813,7 +820,7 @@ for t in thresh_use:
   t3 = time.time()
   exceed3d = np.where(np.greater_equal(ensemble_qpf/1.0,t),1,0)
   exceed_sum=np.sum(exceed3d)
-  print('t, dx, max(ensemble_qpf): ', t, dx, np.max(ensemble_qpf))
+#  print('t, dx, max(ensemble_qpf): ', t, dx, np.max(ensemble_qpf))
   optrad = calculate_eas_probability_para(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
   print('Time for optrad routine:', t4-t3)
@@ -849,9 +856,9 @@ for t in thresh_use:
   print('Time for get final probability routine for ',t, 'inch threshold: ',t5-t4)
 #  print('max of probfinal pre cap: ', np.max(probfinal))
 #  probfinal = np.where(probfinal > 100.0,100.0,probfinal)
-  print('max of probfinal post cap: ', np.max(probfinal))
-  print('mean of probfinal: ', np.mean(probfinal))
-  print('probfinal dims: ', np.shape(probfinal))
+#  print('max of probfinal post cap: ', np.max(probfinal))
+#  print('mean of probfinal: ', np.mean(probfinal))
+#  print('probfinal dims: ', np.shape(probfinal))
 
 
 # can we keep as doing in mm - might be confusing if kept in meters?
