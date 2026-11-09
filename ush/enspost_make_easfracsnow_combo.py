@@ -750,7 +750,7 @@ for mem in members:
       qpf[itime] = qpf3*39.370079   # convert meters to inches
 
 
-    print('max of qpf as snow: ', np.max(qpf[itime]))
+#    print('max of qpf as snow: ', np.max(qpf[itime]))
     print('dom is: ', dom)
     if dom == 'ak':
       print('qpf shape: ', np.shape(qpf))
@@ -803,7 +803,7 @@ ensemble_qpf = np.zeros((nm_use,nlats,nlons),dtype=float)
 for mem in range(0,len(itimes)):
   print('mem, itimes[mem],max(qpf): ',mem, itimes[mem], np.max(qpf[mem]))
   ensemble_qpf[mem,:,:] = qpf[mem]
-  print('max of member: ', np.max(ensemble_qpf[mem,:,:]))
+#  print('max of member: ', np.max(ensemble_qpf[mem,:,:]))
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
@@ -820,7 +820,7 @@ for t in thresh_use:
   t3 = time.time()
   exceed3d = np.where(np.greater_equal(ensemble_qpf/1.0,t),1,0)
   exceed_sum=np.sum(exceed3d)
-  print('t, dx, max(ensemble_qpf): ', t, dx, np.max(ensemble_qpf))
+#  print('t, dx, max(ensemble_qpf): ', t, dx, np.max(ensemble_qpf))
   optrad = calculate_eas_probability_para(ensemble_qpf,t,rlist,alpha,dx,p_smooth)
   t4 = time.time()
   print('Time for optrad routine:', t4-t3)
@@ -856,9 +856,9 @@ for t in thresh_use:
   print('Time for get final probability routine for ',t, 'inch threshold: ',t5-t4)
 #  print('max of probfinal pre cap: ', np.max(probfinal))
 #  probfinal = np.where(probfinal > 100.0,100.0,probfinal)
-  print('max of probfinal post cap: ', np.max(probfinal))
-  print('mean of probfinal: ', np.mean(probfinal))
-  print('probfinal dims: ', np.shape(probfinal))
+#  print('max of probfinal post cap: ', np.max(probfinal))
+#  print('mean of probfinal: ', np.mean(probfinal))
+#  print('probfinal dims: ', np.shape(probfinal))
 
 
 # can we keep as doing in mm - might be confusing if kept in meters?

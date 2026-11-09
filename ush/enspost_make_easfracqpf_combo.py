@@ -850,20 +850,15 @@ for mem in members:
  
       wgribzero=time.time()
       print('dealing with file1: ', file1)
-#      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf1.txt ')
-#      qpf1,nx,ny=simplewgrib2('qpf1.txt')
       qpf1 = read_qpf_step(file1, shour, fhour, 'qpf1')
 
 ## how get the proper hours for each file??
       fhour=fhours[memcount]+incr
       shour=fhour-3
-#      os.system(WGRIB2+' '+file2+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf2.txt ')
-#      qpf2,nx,ny=simplewgrib2('qpf2.txt')
       qpf2 = read_qpf_step(file2, shour, fhour, 'qpf2')
 
       qpf12 = qpf1 + qpf2    
 
-#      print('max of qpf12: ', np.max(qpf12))
 
       if qpf_interval == 6:
          print('defined qpf[itime] from qpf12')
@@ -879,15 +874,11 @@ for mem in members:
       fhour=fhr+6
       fhour=fhours[memcount]+incr*2
       shour=fhour-3
-#      os.system(WGRIB2+' '+file3+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf3.txt ')
-#      qpf3,nx,ny=simplewgrib2('qpf3.txt')
       qpf3 = read_qpf_step(file3, shour, fhour, 'qpf3')
 
       fhour=fhr+9
       fhour=fhours[memcount]+incr*3
       shour=fhour-3
-#      os.system(WGRIB2+' '+file4+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf4.txt ')
-#      qpf4,nx,ny=simplewgrib2('qpf4.txt')
       qpf4 = read_qpf_step(file4, shour, fhour, 'qpf4')
 
 
@@ -905,15 +896,11 @@ for mem in members:
       fhour=fhr+12
       fhour=fhours[memcount]+incr*4
       shour=fhour-3
-#      os.system(WGRIB2+' '+file5+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf5.txt ')
-#      qpf5,nx,ny=simplewgrib2('qpf5.txt')
       qpf5 = read_qpf_step(file5, shour, fhour, 'qpf5')
 
       fhour=fhr+15
       fhour=fhours[memcount]+incr*5
       shour=fhour-3
-#      os.system(WGRIB2+' '+file6+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf6.txt ')
-#      qpf6,nx,ny=simplewgrib2('qpf6.txt')
       qpf6 = read_qpf_step(file6, shour, fhour, 'qpf6')
 
       qpf56 = qpf5 + qpf6
@@ -924,16 +911,12 @@ for mem in members:
       fhour=fhr+18
       fhour=fhours[memcount]+incr*6
       shour=fhour-3
-#      os.system(WGRIB2+' '+file7+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf7.txt ')
-#      qpf7,nx,ny=simplewgrib2('qpf7.txt')
       qpf7 = read_qpf_step(file7, shour, fhour, 'qpf7')
 
 
       fhour=fhr+21
       fhour=fhours[memcount]+incr*7
       shour=fhour-3
-#      os.system(WGRIB2+' '+file8+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf8.txt ')
-#      qpf8,nx,ny=simplewgrib2('qpf8.txt')
       qpf8 = read_qpf_step(file8, shour, fhour, 'qpf8')
 
       qpf78 = qpf7 + qpf8
@@ -959,15 +942,9 @@ for mem in members:
 
       print('nx, ny: ', nx, ny)
       print('for file1: ', file1)
-#      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-#      qpfhere,nx,ny=simplewgrib2('qpf.txt')
-
       qpfhere = read_qpf_step(file1, shour, fhour, 'qpfhere')
-#      os.system('rm -f qpf.txt')
       qpf[itime]=qpfhere
       print('from file1: ', file1)
-#      print('max 3 h qpf: ', np.max(qpf[itime]))
-#      print('mean 3 h qpf: ', np.mean(qpf[itime]))
 
 ######### 1 h APCP
 
@@ -983,12 +960,9 @@ for mem in members:
       shour=fhour-1
       print('from memfiles file1 for 1 h qpf: ', file1)
       print('fhour is: ', fhour)
-#      os.system(WGRIB2+' '+file1+' -match "APCP:surface:%i'%shour+'-%i'%fhour+'" -end -text qpf.txt ')
-#      qpf1,nx,ny=simplewgrib2('qpf.txt')
       qpf1 = read_qpf_step(file1, shour, fhour, 'qpf1')
       qpf[itime] = qpf1
 
-#      print('max of 1 h APCP: ', np.max(qpf[itime]))
 
 ###############
 
@@ -1040,7 +1014,6 @@ ensemble_qpf = np.zeros((nm_use,nlats,nlons),dtype=float)
 for mem in range(0,len(itimes)):
   print('mem, itimes[mem],max(qpf): ',mem, itimes[mem], np.max(qpf[mem]))
   ensemble_qpf[mem,:,:] = qpf[mem]
-#  print('max of member: ', np.max(ensemble_qpf[mem,:,:]))
 
 # Get final probabilities
 probfinal = np.zeros((nlats,nlons))
@@ -1097,13 +1070,8 @@ for t in thresh_use:
   t5 = time.time()
 
 # cap at 100
-#  print('max of probfinal pre cap: ', np.max(probfinal))
   probfinal = np.where(probfinal > 100.0,100.0,probfinal)
   print('Time for get final probability routine for ',t, 'inch threshold: ',t5-t4)
-#  print('max of probfinal post cap: ', np.max(probfinal))
-#  print('mean of probfinal: ', np.mean(probfinal))
-#  print('probfinal dims: ', np.shape(probfinal))
-
 
   probstr=str(t*25.4)
   byte=int(m.ceil(t*25.4*1000))
@@ -1117,7 +1085,7 @@ for t in thresh_use:
 
   probwrite=np.float32(probfinal)
   myfort.write_record(probwrite)
-  print('max of probwrite: ', np.max(probwrite))
+#  print('max of probwrite: ', np.max(probwrite))
 #  myfort.write_record(probfinal)
 
 #  myfort = F.FortranFile('record_out.bin',mode='w')
