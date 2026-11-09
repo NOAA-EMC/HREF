@@ -753,8 +753,6 @@ for mem in members:
 #    print('max of qpf as snow: ', np.max(qpf[itime]))
     print('dom is: ', dom)
     if dom == 'ak':
-      print('qpf shape: ', np.shape(qpf))
-      print('maskregion shape: ', np.shape(maskregion))
       qpf[itime] = np.where(np.equal(maskregion,-9999),0,qpf[itime])
 
     # calculate threshold exceedance
