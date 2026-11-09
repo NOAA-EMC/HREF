@@ -353,12 +353,10 @@
       <value>&envir;</value>
     </envar>
     <envar><name>jobid</name><value>refs_qpfeasfrac_&domain;_<cyclestr>@H</cyclestr>_&envir;_#fhr#</value></envar>
-
-
       <dependency>
-        <and>
-       <taskdep task="preproc_fv3_f#fhr#"/>
-       <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
+       <and>
+         <taskdep task="preproc_fv3_f#fhr#"/>
+         <metataskdep metatask="preproc_fv3" cycle_offset="-6:00:00"/>
        </and>
       </dependency>
   </task>

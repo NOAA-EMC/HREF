@@ -8,8 +8,8 @@
 <!ENTITY STARTHOUR "18">
 
 <!ENTITY ENDYEAR "2026">
-<!ENTITY ENDMONTH "10">
-<!ENTITY ENDDAY "25">
+<!ENTITY ENDMONTH "11">
+<!ENTITY ENDDAY "09">
 <!ENTITY ENDHOUR "12">
 
 <!ENTITY USER "Matthew.Pyle">
@@ -48,8 +48,8 @@
 <!ENTITY PREPROC_RESOURCES '<walltime>00:09:00</walltime><native></native>'>
 
 <!ENTITY FFG_RESOURCES '<walltime>00:10:00</walltime><native></native>'>
-<!ENTITY EAS_RESOURCES '<walltime>00:30:00</walltime><native></native>'>
-<!ENTITY ENSPROD_RESOURCES '<walltime>00:45:00</walltime><native></native>'>
+<!ENTITY EAS_RESOURCES '<walltime>00:20:00</walltime><native></native>'>
+<!ENTITY ENSPROD_RESOURCES '<walltime>00:20:00</walltime><native></native>'>
 <!ENTITY GEMPAK_RESOURCES '<walltime>01:39:00</walltime><native></native>'>
 <!ENTITY SENDDBN "NO">
 <!ENTITY FHRSZERO "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
@@ -62,7 +62,7 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<workflow realtime="T" scheduler="pbspro" taskthrottle="8" cyclethrottle="4" cyclelifespan="00:23:30:00">
+<workflow realtime="T" scheduler="pbspro" taskthrottle="10" cyclethrottle="4" cyclelifespan="00:23:30:00">
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 06:00:00</cycledef>
   <cycledef group="regional_justontime">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
